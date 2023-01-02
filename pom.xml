@@ -34,7 +34,7 @@
 <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<dependency.locations.enabled>false</dependency.locations.enabled>
-	<maven.version>3.3.9</maven.version>
+	<maven.version>3.8.1</maven.version>
 	<owasp.check.skip>false</owasp.check.skip>
 
 	<!-- project dependencies -->
@@ -138,8 +138,8 @@
 	<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 	<maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
 
-	<maven.compiler.source>11</maven.compiler.source>
-	<maven.compiler.target>11</maven.compiler.target>
+	<maven.compiler.source>17</maven.compiler.source>
+	<maven.compiler.target>17</maven.compiler.target>
 
 	<amqp-client.version>4.8.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
@@ -546,6 +546,12 @@ IoT data streams.
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-core</artifactId>
 					<version>${maven.version}</version>
+					<exclusions>
+						<exclusion>
+							<groupId>com.google.inject</groupId>
+							<artifactId>guice</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
@@ -1011,7 +1017,7 @@ IoT data streams.
 				<dependency>
 					<groupId>com.google.inject</groupId>
 					<artifactId>guice</artifactId>
-					<version>4.1.0</version>
+					<version>5.1.0</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
@@ -1517,7 +1523,7 @@ IoT data streams.
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
-						<release>11</release>
+						<release>17</release>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
@@ -1623,7 +1629,7 @@ IoT data streams.
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>check-at-least-java-11</id>
+						<id>check-at-least-java-17</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>enforce</goal>
@@ -1631,7 +1637,7 @@ IoT data streams.
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>1.11.0</version>
+									<version>1.17.0</version>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
@@ -1815,7 +1821,7 @@ IoT data streams.
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<release>11</release>
+					<release>17</release>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
