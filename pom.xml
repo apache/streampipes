@@ -996,7 +996,7 @@ IoT data streams.
 				<dependency>
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4-runtime</artifactId>
-					<version>4.11.1</version>
+					<version>4.9</version>
 				</dependency>
 				<dependency>
 					<groupId>io.netty</groupId>
