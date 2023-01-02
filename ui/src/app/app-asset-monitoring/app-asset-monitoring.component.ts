@@ -25,22 +25,21 @@ import { SpAppAssetMonitoringRoutes } from './app-asset-monitoring.routes';
 @Component({
     selector: 'sp-app-asset-monitoring',
     templateUrl: './app-asset-monitoring.component.html',
-    styleUrls: ['./app-asset-monitoring.component.css']
+    styleUrls: ['./app-asset-monitoring.component.css'],
 })
 export class AppAssetMonitoringComponent implements OnInit {
-
-
     selectedIndex = 0;
     dashboardSelected = false;
     selectedDashboard: DashboardConfiguration;
     @Output() appOpened = new EventEmitter<boolean>();
 
-    constructor(private breadcrumbService: SpBreadcrumbService) {
-
-    }
+    constructor(private breadcrumbService: SpBreadcrumbService) {}
 
     ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb([SpAppRoutes.BASE, this.breadcrumbService.removeLink(SpAppAssetMonitoringRoutes.BASE)]);
+        this.breadcrumbService.updateBreadcrumb([
+            SpAppRoutes.BASE,
+            this.breadcrumbService.removeLink(SpAppAssetMonitoringRoutes.BASE),
+        ]);
         this.appOpened.emit(true);
     }
 
@@ -62,5 +61,4 @@ export class AppAssetMonitoringComponent implements OnInit {
         this.selectedDashboard = dashboardConfig;
         this.selectedIndex = 1;
     }
-
 }

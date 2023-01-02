@@ -16,7 +16,7 @@
  *
  */
 
-import Konva from "konva";
+import Konva from 'konva';
 
 export interface CanvasConfiguration {
     file: File;

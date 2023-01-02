@@ -17,44 +17,72 @@
   -->
 
 <div fxLayout="column" fxFlex="100">
-    <input type="file" (change)="handleFileInput($event)" accept="image/*" #file style="display:none;">
+    <input
+        type="file"
+        (change)="handleFileInput($event)"
+        accept="image/*"
+        #file
+        style="display: none"
+    />
     <div class="sp-tab-bg sp-blue-bg page-container-nav">
         <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
             <div>
-                <button color="accent" class="mat-basic" mat-button (click)="prepareDashboard()" type="submit"
-                        [disabled]="!backgroundImagePresent || !measurementPresent">
+                <button
+                    color="accent"
+                    class="mat-basic"
+                    mat-button
+                    (click)="prepareDashboard()"
+                    type="submit"
+                    [disabled]="!backgroundImagePresent || !measurementPresent"
+                >
                     <mat-icon>save</mat-icon>&nbsp;Save
                 </button>
             </div>
             <div>
-                <button color="accent" mat-button (click)="file.click()" type="submit"
-                        [disabled]="backgroundImagePresent">
+                <button
+                    color="accent"
+                    mat-button
+                    (click)="file.click()"
+                    type="submit"
+                    [disabled]="backgroundImagePresent"
+                >
                     <i class="material-icons">file_upload</i>&nbsp;Add image
                 </button>
             </div>
             <div>
-                <button color="accent" mat-button (click)="openAddPipelineDialog()">
+                <button
+                    color="accent"
+                    mat-button
+                    (click)="openAddPipelineDialog()"
+                >
                     <i class="material-icons">add</i>&nbsp;Add value
                 </button>
             </div>
             <div>
                 <button color="accent" mat-button (click)="openAddLinkDialog()">
-                    <span fxLayoutAlign="start center"><i class="material-icons">link</i>&nbsp;Add link</span>
+                    <span fxLayoutAlign="start center"
+                        ><i class="material-icons">link</i>&nbsp;Add link</span
+                    >
                 </button>
             </div>
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                <button color="accent" mat-button mat-icon-button (click)="clearCanvas()" matTooltip="Clear">
-                    <i class="material-icons">
-                        clear
-                    </i>
+                <button
+                    color="accent"
+                    mat-button
+                    mat-icon-button
+                    (click)="clearCanvas()"
+                    matTooltip="Clear"
+                >
+                    <i class="material-icons"> clear </i>
                 </button>
             </div>
         </div>
     </div>
     <div id="outerAssemblyArea" class="asset-configuration-board-panel">
-        <div id="asset-configuration-board-canvas" class="asset-configuration-board-canvas"
-             fxLayoutAlign="center center">
-
-        </div>
+        <div
+            id="asset-configuration-board-canvas"
+            class="asset-configuration-board-canvas"
+            fxLayoutAlign="center center"
+        ></div>
     </div>
 </div>

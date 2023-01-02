@@ -30,7 +30,6 @@ import Stage = Konva.Stage;
     styleUrls: ['./save-dashboard-dialog.component.scss'],
 })
 export class SaveDashboardDialogComponent implements OnInit {
-
     dashboardName: string;
     dashboardDescription: string;
 
@@ -48,13 +47,14 @@ export class SaveDashboardDialogComponent implements OnInit {
 
     constructor(
         private dialogRef: DialogRef<SaveDashboardDialogComponent>,
-        private restService: RestService) {
-    }
+        private restService: RestService,
+    ) {}
 
     ngOnInit() {
         if (this.editMode) {
             this.dashboardName = this.dashboardConfig.dashboardName;
-            this.dashboardDescription = this.dashboardConfig.dashboardDescription;
+            this.dashboardDescription =
+                this.dashboardConfig.dashboardDescription;
         }
     }
 
@@ -65,8 +65,7 @@ export class SaveDashboardDialogComponent implements OnInit {
     save() {
         // save image
         if (this.file) {
-            this.restService.storeImage(this.file).subscribe(response => {
-            });
+            this.restService.storeImage(this.file).subscribe(response => {});
         }
 
         // save dashboard
@@ -84,9 +83,9 @@ export class SaveDashboardDialogComponent implements OnInit {
             dashboardConfig.dashboardId = this.dashboardConfig.dashboardId;
         }
 
-        const observable = this.editMode ?
-            this.restService.updateDashboard(dashboardConfig) :
-            this.restService.storeDashboard(dashboardConfig);
+        const observable = this.editMode
+            ? this.restService.updateDashboard(dashboardConfig)
+            : this.restService.storeDashboard(dashboardConfig);
         observable.subscribe(response => {
             this.dialogRef.close();
         });

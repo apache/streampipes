@@ -16,10 +16,12 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 import { SpAppRoutes } from '../app-overview/apps.routes';
 
 export class SpAppAssetMonitoringRoutes {
-
-  static BASE: SpBreadcrumbItem = {label: 'Asset Monitoring', link: [SpAppRoutes.APP_BASE_LINK, 'asset-monitoring']};
+    static BASE: SpBreadcrumbItem = {
+        label: 'Asset Monitoring',
+        link: [SpAppRoutes.APP_BASE_LINK, 'asset-monitoring'],
+    };
 }

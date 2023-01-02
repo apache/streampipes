@@ -23,32 +23,39 @@
             <div class="dialog-margin-bottom" fxLayout="column">
                 <mat-form-field class="dialog-margin-bottom" color="accent">
                     <mat-label>Dashboard Name</mat-label>
-                    <input matInput placeholder="Label" [(ngModel)]="dashboardName">
+                    <input
+                        matInput
+                        placeholder="Label"
+                        [(ngModel)]="dashboardName"
+                    />
                     <mat-hint>The name of your new asset dashboard</mat-hint>
                 </mat-form-field>
                 <mat-form-field color="accent">
                     <mat-label>Description</mat-label>
-                    <input matInput placeholder="Label" [(ngModel)]="dashboardDescription">
-                    <mat-hint>The description of your new asset dashboard</mat-hint>
+                    <input
+                        matInput
+                        placeholder="Label"
+                        [(ngModel)]="dashboardDescription"
+                    />
+                    <mat-hint
+                        >The description of your new asset dashboard</mat-hint
+                    >
                 </mat-form-field>
             </div>
-
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button
-                mat-raised-button
-                class="mat-basic mr-10"
-                (click)="cancel()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="cancel()"
+        >
             Cancel
         </button>
-        <button mat-button
-                mat-raised-button
-                color="accent"
-                (click)="save()">
+        <button mat-button mat-raised-button color="accent" (click)="save()">
             Save
         </button>
     </div>
 </div>
-
