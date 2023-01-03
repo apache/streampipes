@@ -47,6 +47,7 @@ public class RenameTransformationRuleTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void renameNested() {
     Map<String, Object> nestedEvent = new HashMap<>();
     nestedEvent.put("old_key", "test");
