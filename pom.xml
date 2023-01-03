@@ -53,7 +53,6 @@
         <elasticsearch.version>6.8.17</elasticsearch.version>
         <file-management.version>3.1.0</file-management.version>
         <flink.version>1.13.5</flink.version>
-        <flinkspector.version>0.9.4</flinkspector.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <fst.version>2.57</fst.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
@@ -992,23 +991,6 @@
                 <artifactId>rest-assured</artifactId>
                 <version>${rest-assured.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.flinkspector</groupId>
-                <artifactId>flinkspector-datastream_2.11</artifactId>
-                <version>${flinkspector.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-test-utils_2.11</artifactId>
-                <version>${flink.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-slf4j-impl</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
