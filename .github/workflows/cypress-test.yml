@@ -47,7 +47,7 @@ jobs:
           npm run build
 
       - name: Build with Maven
-        run: mvn clean package -Dmaven.test.skip=true
+        run: mvn clean package
 
       - name: Build and run streampipes
         run: docker-compose up --build -d
