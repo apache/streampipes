@@ -17,13 +17,15 @@
  */
 package org.apache.streampipes.wrapper.siddhi.utils;
 
-import io.siddhi.core.event.Event;
-import io.siddhi.query.api.definition.Attribute;
+
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+
+import io.siddhi.core.event.Event;
+import io.siddhi.query.api.definition.Attribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,10 +35,10 @@ import java.util.Map;
 public class SiddhiUtils {
 
   public static org.apache.streampipes.model.runtime.Event toSpEvent(List<Event> events,
-                                                                    String listFieldName,
-                                                                    SchemaInfo schemaInfo,
-                                                                    SourceInfo sourceInfo,
-                                                                    List<Attribute> streamAttributes) {
+                                                                     String listFieldName,
+                                                                     SchemaInfo schemaInfo,
+                                                                     SourceInfo sourceInfo,
+                                                                     List<Attribute> streamAttributes) {
     List<Map<String, Object>> allEvents = new ArrayList<>();
 
     events.forEach(event -> allEvents.add(toMap(event, streamAttributes)));
@@ -61,8 +63,8 @@ public class SiddhiUtils {
 
     for (int i = 0; i < streamAttributes.size(); i++) {
       String outputKey = streamAttributes.get(i).getName();
-      if (outputKey.startsWith(SiddhiConstants.FIRST_STREAM_PREFIX) ||
-              outputKey.startsWith(SiddhiConstants.SECOND_STREAM_PREFIX)) {
+      if (outputKey.startsWith(SiddhiConstants.FIRST_STREAM_PREFIX)
+          || outputKey.startsWith(SiddhiConstants.SECOND_STREAM_PREFIX)) {
         outputKey = outputKey.substring(2);
       }
       Object data = event.getData(i);
@@ -87,19 +89,19 @@ public class SiddhiUtils {
 
   public static String getOutputTopicName(EventProcessorBindingParams parameters) {
     return parameters
-            .getGraph()
-            .getOutputStream()
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName();
+        .getGraph()
+        .getOutputStream()
+        .getEventGrounding()
+        .getTransportProtocol()
+        .getTopicDefinition()
+        .getActualTopicName();
   }
 
   public static String prepareName(String eventName) {
     return eventName
-            .replaceAll("\\.", "")
-            .replaceAll("-", "")
-            .replaceAll("::", "");
+        .replaceAll("\\.", "")
+        .replaceAll("-", "")
+        .replaceAll("::", "");
   }
 
   public static String prepareProperty(String propertyName) {

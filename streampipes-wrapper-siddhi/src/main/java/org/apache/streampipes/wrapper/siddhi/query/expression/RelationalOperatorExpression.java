@@ -21,10 +21,10 @@ import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 public class RelationalOperatorExpression extends Expression {
 
-  private PropertyExpressionBase exp1;
-  private PropertyExpressionBase exp2;
+  private final PropertyExpressionBase exp1;
+  private final PropertyExpressionBase exp2;
 
-  private RelationalOperator operator;
+  private final RelationalOperator operator;
 
   public RelationalOperatorExpression(RelationalOperator operator,
                                       PropertyExpressionBase exp1,
@@ -38,8 +38,8 @@ public class RelationalOperatorExpression extends Expression {
   @Override
   public String toSiddhiEpl() {
     return joinWithParenthesis(SiddhiConstants.EMPTY,
-            exp1.toSiddhiEpl(),
-            operator.toOperatorString(),
-            exp2.toSiddhiEpl());
+        exp1.toSiddhiEpl(),
+        operator.toOperatorString(),
+        exp2.toSiddhiEpl());
   }
 }

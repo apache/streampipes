@@ -21,6 +21,6 @@ public enum PatternCountOperator {
 
   MIN_N,
   MAX_N,
-  EXACTLY_N;
+  EXACTLY_N
 
 }

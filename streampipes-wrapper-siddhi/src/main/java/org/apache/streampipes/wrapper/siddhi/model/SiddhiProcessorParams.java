@@ -27,15 +27,15 @@ import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import java.util.List;
 import java.util.Map;
 
-public class SiddhiProcessorParams<B extends EventProcessorBindingParams> {
+public class SiddhiProcessorParams<T extends EventProcessorBindingParams> {
 
-  private final B params;
+  private final T params;
   private final List<String> inputStreamNames;
   private final Map<String, List<EventPropertyDef>> eventTypeInfo;
   private final List<String> outputEventKeys;
   private final List<EventPropertyDef> outTypeInfo;
 
-  public SiddhiProcessorParams(B params,
+  public SiddhiProcessorParams(T params,
                                List<String> inputStreamNames,
                                Map<String, List<EventPropertyDef>> eventTypeInfo,
                                List<String> outputEventKeys,
@@ -47,7 +47,7 @@ public class SiddhiProcessorParams<B extends EventProcessorBindingParams> {
     this.outTypeInfo = outTypeInfo;
   }
 
-  public B getParams() {
+  public T getParams() {
     return params;
   }
 
@@ -73,15 +73,15 @@ public class SiddhiProcessorParams<B extends EventProcessorBindingParams> {
     selectString.append(SiddhiConstants.SELECT).append(" ");
 
     if (outputEventKeys.size() > 0) {
-      for (int i=0; i<outputEventKeys.size() - 1; i++) {
+      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
         selectString
-                .append(SiddhiConstants.FIRST_STREAM_PREFIX)
-                .append(outputEventKeys.get(i))
-                .append(",");
+            .append(SiddhiConstants.FIRST_STREAM_PREFIX)
+            .append(outputEventKeys.get(i))
+            .append(",");
       }
       selectString
-              .append(SiddhiConstants.FIRST_STREAM_PREFIX)
-              .append(outputEventKeys.get(outputEventKeys.size() - 1));
+          .append(SiddhiConstants.FIRST_STREAM_PREFIX)
+          .append(outputEventKeys.get(outputEventKeys.size() - 1));
     }
     return selectString.toString();
   }

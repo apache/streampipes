@@ -21,8 +21,8 @@ import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 public class InsertIntoClause extends SiddhiStatement {
 
-  private boolean insertAllEvents;
-  private String streamName;
+  private final boolean insertAllEvents;
+  private final String streamName;
 
   public static InsertIntoClause create(String streamName) {
     return new InsertIntoClause(streamName, false);
@@ -40,7 +40,7 @@ public class InsertIntoClause extends SiddhiStatement {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE, this.insertAllEvents ?
-            "insert all events into" : "insert into", streamName);
+    return join(SiddhiConstants.WHITESPACE, this.insertAllEvents
+        ? "insert all events into" : "insert into", streamName);
   }
 }
