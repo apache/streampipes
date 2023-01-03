@@ -75,6 +75,7 @@
 	<jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
 	<jakarta-validation.version>3.0.2</jakarta-validation.version>
 	<jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
+	<javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
 	<javapoet.version>1.6.1</javapoet.version>
 	<jakarta-json.version>2.0.1</jakarta-json.version>
 	<jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
@@ -158,7 +159,7 @@
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
 	<google-maps-services.version>0.10.0</google-maps-services.version>
 	<graalvm.js.version>21.3.0</graalvm.js.version>
-	<iotdb.version>0.12.0</iotdb.version>
+	<iotdb.version>1.0.0</iotdb.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
 	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
@@ -470,6 +471,11 @@
 					<groupId>jakarta.ws.rs</groupId>
 					<artifactId>jakarta.ws.rs-api</artifactId>
 					<version>${jakarta.ws.rs.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+					<version>${javax.xml.bind.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>net.minidev</groupId>
