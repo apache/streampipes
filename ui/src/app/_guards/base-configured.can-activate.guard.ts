@@ -17,34 +17,44 @@
  */
 
 import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree
+    ActivatedRouteSnapshot,
+    CanActivate,
+    Router,
+    RouterStateSnapshot,
+    UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export abstract class BaseConfiguredCanActivateGuard implements CanActivate {
+    constructor(protected router: Router, protected authService: AuthService) {}
 
-  constructor(protected router: Router,
-              protected authService: AuthService) { }
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ):
+        | Observable<boolean | UrlTree>
+        | Promise<boolean | UrlTree>
+        | boolean
+        | UrlTree {
+        return new Promise(resolve =>
+            this.authService.checkConfiguration().subscribe(
+                configured => {
+                    if (!configured) {
+                        resolve(this.onIsUnconfigured());
+                    } else {
+                        resolve(this.onIsConfigured());
+                    }
+                },
+                error => {
+                    const url = this.router.parseUrl('startup');
+                    resolve(url);
+                },
+            ),
+        );
+    }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return new Promise((resolve) => this.authService.checkConfiguration().subscribe((configured) => {
-      if (!configured) {
-        resolve(this.onIsUnconfigured());
-      } else {
-        resolve(this.onIsConfigured());
-      }
-    }, error => {
-      const url = this.router.parseUrl('startup');
-      resolve(url);
-    }));
-  }
+    abstract onIsConfigured(): boolean | UrlTree;
 
-  abstract onIsConfigured(): boolean | UrlTree;
-
-  abstract onIsUnconfigured(): boolean | UrlTree;
+    abstract onIsUnconfigured(): boolean | UrlTree;
 }

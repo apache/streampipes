@@ -16,101 +16,218 @@
   ~
   -->
 <sp-basic-view [showBackLink]="false" [padding]="true">
-
-    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
-        <button mat-button
-                mat-raised-button
-                color="accent"
-                data-cy="connect-create-new-adapter-button"
-                (click)="createNewAsset()">
+    <div
+        nav
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        class="pl-10"
+    >
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            data-cy="connect-create-new-adapter-button"
+            (click)="createNewAsset()"
+        >
             <i class="material-icons">add</i>&nbsp;New asset
         </button>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-            <button mat-button mat-icon-button matTooltip="Refresh assets" matTooltipPosition="below" color="accent"
-                    (click)="loadAssets()">
-                <i class="material-icons">
-                    refresh
-                </i>
+            <button
+                mat-button
+                mat-icon-button
+                matTooltip="Refresh assets"
+                matTooltipPosition="below"
+                color="accent"
+                (click)="loadAssets()"
+            >
+                <i class="material-icons"> refresh </i>
             </button>
-            <button mat-button mat-icon-button matTooltip="Upload assets" matTooltipPosition="below" color="accent"
-                    (click)="uploadAsset()">
-                <i class="material-icons">
-                    cloud_upload
-                </i>
+            <button
+                mat-button
+                mat-icon-button
+                matTooltip="Upload assets"
+                matTooltipPosition="below"
+                color="accent"
+                (click)="uploadAsset()"
+            >
+                <i class="material-icons"> cloud_upload </i>
             </button>
         </div>
     </div>
     <div fxFlex="100" fxLayout="column">
-        <sp-basic-header-title-component title="My assets"></sp-basic-header-title-component>
+        <sp-basic-header-title-component
+            title="My assets"
+        ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-            <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90" [hideToolbar]="true">
-                <div fxFlex="100" fxLayout="column" *ngIf="existingAssets.length > 0">
+            <sp-basic-inner-panel
+                [showTitle]="false"
+                innerPadding="0"
+                outerMargin="0"
+                fxFlex="90"
+                [hideToolbar]="true"
+            >
+                <div
+                    fxFlex="100"
+                    fxLayout="column"
+                    *ngIf="existingAssets.length > 0"
+                >
                     <div fxFlex="100" fxLayout="column">
-                        <table fxFlex="100" mat-table [dataSource]="dataSource" style="width: 100%;" matSort>
-
+                        <table
+                            fxFlex="100"
+                            mat-table
+                            [dataSource]="dataSource"
+                            style="width: 100%"
+                            matSort
+                        >
                             <ng-container matColumnDef="name">
-                                <th mat-header-cell mat-sort-header *matHeaderCellDef> Name</th>
+                                <th
+                                    mat-header-cell
+                                    mat-sort-header
+                                    *matHeaderCellDef
+                                >
+                                    Name
+                                </th>
                                 <td mat-cell *matCellDef="let asset">
-                                    <div fxLayout="row" fxLayoutAlign="start center">
+                                    <div
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
+                                    >
                                         <div fxLayoutAlign="start center">
-                                            <i class="material-icons">precision_manufacturing</i>
+                                            <i class="material-icons"
+                                                >precision_manufacturing</i
+                                            >
                                         </div>
-                                        <div fxLayoutAlign="center start" fxLayout="column" class="ml-10">
-                                            <h4 style="margin-bottom:0px;">{{asset.assetName}}</h4>
-                                            <h5>{{asset.assetDescription != '' ? asset.assetDescription : '-'}}</h5>
+                                        <div
+                                            fxLayoutAlign="center start"
+                                            fxLayout="column"
+                                            class="ml-10"
+                                        >
+                                            <h4 style="margin-bottom: 0px">
+                                                {{ asset.assetName }}
+                                            </h4>
+                                            <h5>
+                                                {{
+                                                    asset.assetDescription !==
+                                                    ''
+                                                        ? asset.assetDescription
+                                                        : '-'
+                                                }}
+                                            </h5>
                                         </div>
                                     </div>
-
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="action">
-                                <th mat-header-cell *matHeaderCellDef style="justify-content: center;"> Actions</th>
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    style="justify-content: center"
+                                >
+                                    Actions
+                                </th>
                                 <td mat-cell *matCellDef="let asset">
                                     <div fxLayout="row">
-                            <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
-                                <button color="accent" mat-button mat-icon-button matTooltip="Show info"
-                                        matTooltipPosition="above" (click)="goToDetailsView(asset)"><i
-                                        class="material-icons">search</i>
-                                </button>
-                            </span>
-                            <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">
-                                <button color="accent" mat-button mat-icon-button matTooltip="Edit asset"
-                                        matTooltipPosition="above" (click)="goToDetailsView(asset, true)"><i
-                                        class="material-icons">edit</i>
-                                </button>
-                            </span>
-                                        <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
-<!--                    <button color="accent" mat-button mat-icon-button matTooltip="Manage permissions"-->
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="1"
+                                            fxLayout="row"
+                                            fxLayoutAlign="center center"
+                                        >
+                                            <button
+                                                color="accent"
+                                                mat-button
+                                                mat-icon-button
+                                                matTooltip="Show info"
+                                                matTooltipPosition="above"
+                                                (click)="goToDetailsView(asset)"
+                                            >
+                                                <i class="material-icons"
+                                                    >search</i
+                                                >
+                                            </button>
+                                        </span>
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="2"
+                                            fxLayout="row"
+                                            fxLayoutAlign="center center"
+                                        >
+                                            <button
+                                                color="accent"
+                                                mat-button
+                                                mat-icon-button
+                                                matTooltip="Edit asset"
+                                                matTooltipPosition="above"
+                                                (click)="
+                                                    goToDetailsView(asset, true)
+                                                "
+                                            >
+                                                <i class="material-icons"
+                                                    >edit</i
+                                                >
+                                            </button>
+                                        </span>
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="3"
+                                            fxLayout="row"
+                                            fxLayoutAlign="center center"
+                                        >
+                                            <!--                    <button color="accent" mat-button mat-icon-button matTooltip="Manage permissions"-->
                                             <!--                            matTooltipPosition="above" (click)="showPermissionsDialog(adapter)"><i-->
                                             <!--                            class="material-icons">share</i>-->
                                             <!--                    </button>-->
-                </span>
-                                        <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center">
-                    <button color="accent" mat-button mat-icon-button matTooltip="Delete adapter"
-                            data-cy="delete" matTooltipPosition="above" (click)="deleteAsset(asset)">
-                        <i class="material-icons">delete</i>
-                    </button>
-                </span>
+                                        </span>
+                                        <span
+                                            fxFlex
+                                            fxFlexOrder="4"
+                                            fxLayout="row"
+                                            fxLayoutAlign="center center"
+                                        >
+                                            <button
+                                                color="accent"
+                                                mat-button
+                                                mat-icon-button
+                                                matTooltip="Delete adapter"
+                                                data-cy="delete"
+                                                matTooltipPosition="above"
+                                                (click)="deleteAsset(asset)"
+                                            >
+                                                <i class="material-icons"
+                                                    >delete</i
+                                                >
+                                            </button>
+                                        </span>
                                     </div>
                                 </td>
                             </ng-container>
 
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
+                            <tr
+                                mat-header-row
+                                *matHeaderRowDef="displayedColumns"
+                            ></tr>
+                            <tr
+                                mat-row
+                                *matRowDef="let row; columns: displayedColumns"
+                            ></tr>
                         </table>
                     </div>
                     <div fxFlex="100" fxLayoutAlign="end end">
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
-                                       [pageSize]="20"
-                                       color="accent">
+                        <mat-paginator
+                            [pageSizeOptions]="[5, 10, 25, 100]"
+                            [pageSize]="20"
+                            color="accent"
+                        >
                         </mat-paginator>
                     </div>
                 </div>
-                <div fxFlex="100"
-                     fxLayout="column"
-                     fxLayoutAlign="center center"
-                     *ngIf="existingAssets.length == 0">
+                <div
+                    fxFlex="100"
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                    *ngIf="existingAssets.length === 0"
+                >
                     <h5>(no assets available)</h5>
                 </div>
             </sp-basic-inner-panel>

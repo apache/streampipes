@@ -28,5 +28,4 @@ export interface DashboardConfiguration {
     attrs: CanvasAttributes;
     className: string;
     children: CanvasElement[];
-
 }

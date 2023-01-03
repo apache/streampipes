@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.apache.streampipes.manager.selector.TestSelectorUtils.makeSchema;
@@ -34,10 +33,10 @@ public class TestSelector {
 
   @Parameterized.Parameters
   public static Iterable<Object[]> data() {
-    return Arrays.asList(new Object[][]{
-        {Arrays.asList("s0::testDimension"), 1},
-        {Arrays.asList("s0::location", "s0::location::latitude"), 1},
-        {Arrays.asList("s0::testDimension", "s0::testMeasurement"), 2}
+    return List.of(new Object[][]{
+        {List.of("s0::testDimension"), 1},
+        {List.of("s0::location", "s0::location::latitude"), 1},
+        {List.of("s0::testDimension", "s0::testMeasurement"), 2}
 
     });
   }

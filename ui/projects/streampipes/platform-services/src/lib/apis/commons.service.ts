@@ -19,23 +19,20 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class PlatformServicesCommons {
+    constructor() {}
 
-  constructor() { }
+    get basePath(): string {
+        return '/streampipes-backend';
+    }
 
-  get basePath(): string {
-    return '/streampipes-backend';
-  }
+    get apiBasePath() {
+        return this.basePath + '/api/v2';
+    }
 
-  get apiBasePath() {
-    return this.basePath + '/api/v2';
-  }
-
-  get unauthenticatedBasePath() {
-    return this.basePath + '/api/v2';
-  }
-
+    get unauthenticatedBasePath() {
+        return this.basePath + '/api/v2';
+    }
 }
-

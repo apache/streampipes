@@ -17,18 +17,27 @@
   -->
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="p-0 sp-bg-lightgray page-container-nav" *ngIf="!hideNavbar">
+    <div
+        fxLayout="row"
+        class="p-0 sp-bg-lightgray page-container-nav"
+        *ngIf="!hideNavbar"
+    >
         <div fxLayout="fill" fxFlex="100" class="pl-5 pr-5">
-            <div fxLayout="row"
-                 fxLayoutAlign="start center"
-                 style="border-right: 2px solid var(--color-bg-2)" *ngIf="showBackLink">
-                <button mat-button
-                        mat-icon-button
-                        color="accent"
-                        matTooltip="Back"
-                        (click)="navigateBack()"
-                        class="edit-menu-btn"
-                        data-cy="save-data-explorer-go-back-to-overview">
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                style="border-right: 2px solid var(--color-bg-2)"
+                *ngIf="showBackLink"
+            >
+                <button
+                    mat-button
+                    mat-icon-button
+                    color="accent"
+                    matTooltip="Back"
+                    (click)="navigateBack()"
+                    class="edit-menu-btn"
+                    data-cy="save-data-explorer-go-back-to-overview"
+                >
                     <mat-icon>arrow_back</mat-icon>
                 </button>
             </div>
@@ -36,8 +45,11 @@
         </div>
     </div>
 
-    <div [ngClass]="padding ? 'page-container-padding-inner' : ''" fxLayout="column" fxFlex="100">
+    <div
+        [ngClass]="padding ? 'page-container-padding-inner' : ''"
+        fxLayout="column"
+        fxFlex="100"
+    >
         <ng-content fxFlex="100"></ng-content>
     </div>
 </div>
-

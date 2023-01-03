@@ -19,11 +19,26 @@
 <div fxFlex="100" fxLayout="column" class="page-container-padding-inner">
     <div fxLayout="row">
         <div fxLayout="fill">
-            <h1>{{dashboardConfig.dashboardName}}</h1>
+            <h1>{{ dashboardConfig.dashboardName }}</h1>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-            <button mat-button mat-raised-button color="accent" (click)="editDashboard()" class="mr-10">Edit dashboard</button>
-            <button mat-button mat-raised-button class="mat-basic" (click)="closeDashboard()">Close dashboard</button>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="editDashboard()"
+                class="mr-10"
+            >
+                Edit dashboard
+            </button>
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic"
+                (click)="closeDashboard()"
+            >
+                Close dashboard
+            </button>
         </div>
     </div>
     <div id="container" class="asset-view-canvas"></div>

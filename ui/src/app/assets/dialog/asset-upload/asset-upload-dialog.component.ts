@@ -16,62 +16,59 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { GenericStorageService } from '@streampipes/platform-services';
 import { AssetConstants } from '../../constants/asset.constants';
 
 @Component({
-  selector: 'sp-file-upload-dialog-component',
-  templateUrl: './asset-upload-dialog.component.html',
-  styleUrls: ['./asset-upload-dialog.component.scss']
+    selector: 'sp-file-upload-dialog-component',
+    templateUrl: './asset-upload-dialog.component.html',
+    styleUrls: ['./asset-upload-dialog.component.scss'],
 })
-export class AssetUploadDialogComponent implements OnInit {
+export class AssetUploadDialogComponent {
+    inputValue: string;
+    fileName: string;
 
-  inputValue: string;
-  fileName: string;
+    jsonModel: string;
 
-  jsonModel: string;
+    hasInput: boolean;
+    errorMessage = 'Please enter a value';
 
-  hasInput: boolean;
-  errorMessage = 'Please enter a value';
+    uploadStatus = 0;
 
-  uploadStatus = 0;
+    constructor(
+        private dialogRef: DialogRef<AssetUploadDialogComponent>,
+        private genericStorageService: GenericStorageService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<AssetUploadDialogComponent>,
-              private genericStorageService: GenericStorageService) {
+    handleFileInput(files: any) {
+        this.uploadStatus = 0;
 
-  }
+        const fr = new FileReader();
 
-  ngOnInit(): void {
-  }
+        fr.onload = ev => {
+            const jsonObject = JSON.parse(ev.target.result as string);
+            this.jsonModel = JSON.stringify(jsonObject, null, 2);
+        };
 
-  handleFileInput(files: any) {
-    this.uploadStatus = 0;
-
-    const fr = new FileReader();
-
-    fr.onload = (ev => {
-      const jsonObject = JSON.parse(ev.target.result as string);
-      this.jsonModel = JSON.stringify(jsonObject, null, 2);
-    });
-
-    fr.readAsText(files.item(0));
-  }
-
-  store() {
-    this.uploadStatus = 0;
-    if (this.jsonModel !== undefined) {
-      const jsonObject = JSON.parse(this.jsonModel);
-      jsonObject._rev = undefined;
-      this.genericStorageService.createDocument(AssetConstants.ASSET_APP_DOC_NAME, jsonObject).subscribe(result => {
-        this.dialogRef.close(true);
-      });
+        fr.readAsText(files.item(0));
     }
-  }
 
-  cancel() {
-    this.dialogRef.close();
-  }
+    store() {
+        this.uploadStatus = 0;
+        if (this.jsonModel !== undefined) {
+            const jsonObject = JSON.parse(this.jsonModel);
+            jsonObject._rev = undefined;
+            this.genericStorageService
+                .createDocument(AssetConstants.ASSET_APP_DOC_NAME, jsonObject)
+                .subscribe(result => {
+                    this.dialogRef.close(true);
+                });
+        }
+    }
 
+    cancel() {
+        this.dialogRef.close();
+    }
 }

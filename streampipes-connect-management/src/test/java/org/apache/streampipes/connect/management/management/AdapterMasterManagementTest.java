@@ -26,7 +26,6 @@ import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -49,7 +48,7 @@ public class AdapterMasterManagementTest {
 
   @Test(expected = AdapterException.class)
   public void getAdapterFail() throws AdapterException {
-    List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
+    List<AdapterDescription> adapterDescriptions = List.of(new GenericAdapterStreamDescription());
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
@@ -62,7 +61,7 @@ public class AdapterMasterManagementTest {
 
   @Test
   public void getAllAdaptersSuccess() throws AdapterException {
-    List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
+    List<AdapterDescription> adapterDescriptions = List.of(new GenericAdapterStreamDescription());
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);

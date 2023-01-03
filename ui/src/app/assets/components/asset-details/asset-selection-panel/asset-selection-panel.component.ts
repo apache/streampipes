@@ -16,89 +16,102 @@
  *
  */
 
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+} from '@angular/core';
 import { SpAsset, SpAssetModel } from '@streampipes/platform-services';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 @Component({
-  selector: 'sp-asset-selection-panel-component',
-  templateUrl: './asset-selection-panel.component.html',
-  styleUrls: ['./asset-selection-panel.component.scss']
+    selector: 'sp-asset-selection-panel-component',
+    templateUrl: './asset-selection-panel.component.html',
+    styleUrls: ['./asset-selection-panel.component.scss'],
 })
 export class SpAssetSelectionPanelComponent implements OnInit {
+    @Input()
+    assetModel: SpAssetModel;
 
-  @Input()
-  assetModel: SpAssetModel;
+    @Input()
+    selectedAsset: SpAsset;
 
-  @Input()
-  selectedAsset: SpAsset;
+    @Input()
+    editMode: boolean;
 
-  @Input()
-  editMode: boolean;
+    @Output()
+    selectedAssetEmitter: EventEmitter<SpAsset> = new EventEmitter<SpAsset>();
 
-  @Output()
-  selectedAssetEmitter: EventEmitter<SpAsset> = new EventEmitter<SpAsset>();
+    treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
+    dataSource = new MatTreeNestedDataSource<SpAsset>();
 
-  treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
-  dataSource = new MatTreeNestedDataSource<SpAsset>();
+    @ViewChild('tree') tree;
 
-  @ViewChild('tree') tree;
+    hasChild = (_: number, node: SpAsset) =>
+        !!node.assets && node.assets.length > 0;
 
-  hasChild = (_: number, node: SpAsset) => !!node.assets && node.assets.length > 0;
-
-  ngOnInit(): void {
-    this.treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
-    this.dataSource = new MatTreeNestedDataSource<SpAsset>();
-    this.dataSource.data = [this.assetModel];
-    this.treeControl.dataNodes = [this.assetModel];
-    this.treeControl.expandAll();
-  }
-
-  selectNode(asset: SpAsset) {
-    this.selectedAssetEmitter.emit(asset);
-  }
-
-  addAsset(node: SpAsset) {
-    if (!node.assets) {
-      node.assets = [];
+    ngOnInit(): void {
+        this.treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
+        this.dataSource = new MatTreeNestedDataSource<SpAsset>();
+        this.dataSource.data = [this.assetModel];
+        this.treeControl.dataNodes = [this.assetModel];
+        this.treeControl.expandAll();
     }
-    node.assets.push(this.makeNewAsset());
-    this.dataSource.data = [this.assetModel];
-    this.treeControl.dataNodes = [this.assetModel];
-    this.rerenderTree();
-  }
 
-  deleteAsset(node: SpAsset) {
-    this.removeAssetWithId(this.assetModel.assets, node.assetId);
-    this.rerenderTree();
-  }
-
-  removeAssetWithId(assets: SpAsset[], id: string) {
-    for (let i = 0; i < assets.length; i++) {
-      if (assets[i].assetId === id) {
-        assets.splice(i, 1);
-        return;
-      }
-      if (assets[i].assets) {
-        this.removeAssetWithId(assets[i].assets, id);
-      }
+    selectNode(asset: SpAsset) {
+        this.selectedAssetEmitter.emit(asset);
     }
-  }
 
-  rerenderTree(): void {
-    this.dataSource.data = null;
-    this.dataSource.data = [this.assetModel];
-    this.treeControl.expandAll();
+    addAsset(node: SpAsset) {
+        if (!node.assets) {
+            node.assets = [];
+        }
+        node.assets.push(this.makeNewAsset());
+        this.dataSource.data = [this.assetModel];
+        this.treeControl.dataNodes = [this.assetModel];
+        this.rerenderTree();
+    }
 
+    deleteAsset(node: SpAsset) {
+        this.removeAssetWithId(this.assetModel.assets, node.assetId);
+        this.rerenderTree();
+    }
 
-  }
+    removeAssetWithId(assets: SpAsset[], id: string) {
+        for (let i = 0; i < assets.length; i++) {
+            if (assets[i].assetId === id) {
+                assets.splice(i, 1);
+                return;
+            }
+            if (assets[i].assets) {
+                this.removeAssetWithId(assets[i].assets, id);
+            }
+        }
+    }
 
-  makeNewAsset(): SpAsset {
-    return {assetId: this.makeAssetId(), assetName: 'New Asset', assetDescription: '', assetLinks: [], assetType: undefined, assets: []};
-  }
+    rerenderTree(): void {
+        this.dataSource.data = null;
+        this.dataSource.data = [this.assetModel];
+        this.treeControl.expandAll();
+    }
 
-  makeAssetId(): string {
-    return 'a' + Math.random().toString(36).substring(2, 9);
-  }
+    makeNewAsset(): SpAsset {
+        return {
+            assetId: this.makeAssetId(),
+            assetName: 'New Asset',
+            assetDescription: '',
+            assetLinks: [],
+            assetType: undefined,
+            assets: [],
+        };
+    }
+
+    makeAssetId(): string {
+        return 'a' + Math.random().toString(36).substring(2, 9);
+    }
 }

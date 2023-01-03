@@ -20,13 +20,34 @@
     <div class="sp-dialog-content p-15">
         <h5><b>Existing Endpoints</b></h5>
         <div>
-            <div *ngFor="let rdfEndpoint of rdfEndpoints | orderBy: 'asc':'endpointUrl'">
-                <div layout="row" class="md-with-secondary" *ngIf="rdfEndpoint._id !== undefined">
-                    <div class="md-list-item-text" fxFlex="80" fxLayout="column">
-                        {{rdfEndpoint.endpointUrl}}
+            <div
+                *ngFor="
+                    let rdfEndpoint of rdfEndpoints
+                        | orderBy : 'asc' : 'endpointUrl'
+                "
+            >
+                <div
+                    layout="row"
+                    class="md-with-secondary"
+                    *ngIf="rdfEndpoint._id !== undefined"
+                >
+                    <div
+                        class="md-list-item-text"
+                        fxFlex="80"
+                        fxLayout="column"
+                    >
+                        {{ rdfEndpoint.endpointUrl }}
                     </div>
-                    <div class="md-list-item-text" fxFlex="20" fxLayout="column">
-                        <button mat-button mat-flat-button (click)="removeRdfEndpoint(rdfEndpoint._id)">
+                    <div
+                        class="md-list-item-text"
+                        fxFlex="20"
+                        fxLayout="column"
+                    >
+                        <button
+                            mat-button
+                            mat-flat-button
+                            (click)="removeRdfEndpoint(rdfEndpoint._id)"
+                        >
                             <mat-icon color="accent">delete</mat-icon>
                         </button>
                     </div>
@@ -35,27 +56,55 @@
             <mat-divider></mat-divider>
             <div *ngIf="addSelected">
                 <div fxLayout="row" class="md-with-secondary">
-                    <div class="md-list-item-text" fxFlex="80" fxLayout="column">
+                    <div
+                        class="md-list-item-text"
+                        fxFlex="80"
+                        fxLayout="column"
+                    >
                         <mat-form-field>
                             <mat-label>Endpoint URL</mat-label>
-                            <input matInput type="text" [(ngModel)]="newEndpoint.endpointUrl">
+                            <input
+                                matInput
+                                type="text"
+                                [(ngModel)]="newEndpoint.endpointUrl"
+                            />
                         </mat-form-field>
                     </div>
-                    <div class="md-list-item-text" fxFlex="20" fxlayout="column">
-                        <button mat-button mat-flat-button (click)="addRdfEndpoint(newEndpoint)">
+                    <div
+                        class="md-list-item-text"
+                        fxFlex="20"
+                        fxlayout="column"
+                    >
+                        <button
+                            mat-button
+                            mat-flat-button
+                            (click)="addRdfEndpoint(newEndpoint)"
+                        >
                             <mat-icon>save</mat-icon>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        <div style="margin-top:10px;">
-            <button mat-button mat-raised-button color="accent" (click)="showAddInput()">Add Endpoint</button>
+        <div style="margin-top: 10px">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="showAddInput()"
+            >
+                Add Endpoint
+            </button>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
             Close
         </button>
     </div>

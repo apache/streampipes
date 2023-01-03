@@ -20,27 +20,31 @@ import { BehaviorSubject } from 'rxjs';
 import { SpBreadcrumbItem } from '../models/sp-navigation.model';
 import { Injectable } from '@angular/core';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class SpBreadcrumbService {
+    currentNavHierarchy$: BehaviorSubject<SpBreadcrumbItem[]> =
+        new BehaviorSubject<SpBreadcrumbItem[]>([]);
 
-  currentNavHierarchy$: BehaviorSubject<SpBreadcrumbItem[]> = new BehaviorSubject<SpBreadcrumbItem[]>([]);
+    updateBreadcrumb(breadcrumbItems: SpBreadcrumbItem[]) {
+        this.currentNavHierarchy$.next(breadcrumbItems);
+    }
 
-  updateBreadcrumb(breadcrumbItems: SpBreadcrumbItem[]) {
-    this.currentNavHierarchy$.next(breadcrumbItems);
-  }
+    public getRootLink(baseRoute: SpBreadcrumbItem): SpBreadcrumbItem[] {
+        return [this.removeLink({ ...baseRoute })];
+    }
 
-  public getRootLink(baseRoute: SpBreadcrumbItem): SpBreadcrumbItem[] {
-    return [this.removeLink({...baseRoute})];
-  }
+    public makeRoute(
+        baseItems: SpBreadcrumbItem[],
+        label: string,
+        link?: string[],
+    ) {
+        baseItems.push({ label, link });
+        return baseItems;
+    }
 
-  public makeRoute(baseItems: SpBreadcrumbItem[], label: string, link?: string[]) {
-    baseItems.push({label, link});
-    return baseItems;
-  }
-
-  public removeLink(item: SpBreadcrumbItem): SpBreadcrumbItem {
-    const newItem = {...item};
-    newItem.link = undefined;
-    return newItem;
-  }
+    public removeLink(item: SpBreadcrumbItem): SpBreadcrumbItem {
+        const newItem = { ...item };
+        newItem.link = undefined;
+        return newItem;
+    }
 }

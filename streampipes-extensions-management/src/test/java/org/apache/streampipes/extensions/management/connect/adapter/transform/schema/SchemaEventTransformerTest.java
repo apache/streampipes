@@ -28,7 +28,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.preprocessin
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,17 +38,18 @@ import static org.junit.Assert.assertTrue;
 public class SchemaEventTransformerTest {
 
   @Test
+  @SuppressWarnings("unchecked")
   public void transform() {
     Map<String, Object> event = getFirstEvent();
 
     List<TransformationRule> rules = new ArrayList<>();
-    rules.add(new RenameTransformationRule(Arrays.asList("a"), "a1"));
-    rules.add(new RenameTransformationRule(Arrays.asList("b"), "b1"));
-    rules.add(new RenameTransformationRule(Arrays.asList("c"), "c1"));
-    rules.add(new RenameTransformationRule(Arrays.asList("c1", "d"), "d1"));
-    rules.add(new CreateNestedTransformationRule(Arrays.asList("c1", "f")));
-    rules.add(new MoveTransformationRule(Arrays.asList("b1"), Arrays.asList("c1", "f")));
-    rules.add(new DeleteTransformationRule(Arrays.asList("e")));
+    rules.add(new RenameTransformationRule(List.of("a"), "a1"));
+    rules.add(new RenameTransformationRule(List.of("b"), "b1"));
+    rules.add(new RenameTransformationRule(List.of("c"), "c1"));
+    rules.add(new RenameTransformationRule(List.of("c1", "d"), "d1"));
+    rules.add(new CreateNestedTransformationRule(List.of("c1", "f")));
+    rules.add(new MoveTransformationRule(List.of("b1"), List.of("c1", "f")));
+    rules.add(new DeleteTransformationRule(List.of("e")));
 
     SchemaEventTransformer eventTransformer = new SchemaEventTransformer(rules);
 

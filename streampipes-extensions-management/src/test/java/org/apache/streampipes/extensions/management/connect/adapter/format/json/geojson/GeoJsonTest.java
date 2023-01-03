@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.geojson;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.geojson.GeoJsonParser;
 import org.apache.streampipes.model.schema.EventSchema;
 
@@ -26,7 +25,6 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
@@ -38,10 +36,10 @@ import static org.junit.Assert.assertEquals;
 public class GeoJsonTest {
 
   @Test
-  public void getSchema1() throws UnsupportedEncodingException {
+  public void getSchema1() {
     GeoJsonParser parser = new GeoJsonParser();
 
-    byte[] event = getOneEventExampleMultiPolygon().getBytes("UTF-8");
+    byte[] event = getOneEventExampleMultiPolygon().getBytes(StandardCharsets.UTF_8);
 
     EventSchema eventSchema = parser.getEventSchema(Collections.singletonList(event));
 
@@ -50,10 +48,10 @@ public class GeoJsonTest {
   }
 
   @Test
-  public void getSchema2() throws UnsupportedEncodingException {
+  public void getSchema2() {
     GeoJsonParser parser = new GeoJsonParser();
 
-    byte[] event = getOneEventExample().getBytes("UTF-8");
+    byte[] event = getOneEventExample().getBytes(StandardCharsets.UTF_8);
 
     EventSchema eventSchema = parser.getEventSchema(Collections.singletonList(event));
 
@@ -63,7 +61,7 @@ public class GeoJsonTest {
 
 
   @Test
-  public void parseOneEvent() throws AdapterException {
+  public void parseOneEvent() {
 
     String jo = getFullExampleWithOneElement();
 
@@ -91,7 +89,7 @@ public class GeoJsonTest {
 
   @SuppressWarnings("checkstyle:OperatorWrap")
   @Test
-  public void parseThreeEvents() throws AdapterException {
+  public void parseThreeEvents() {
 
     String jo = getFullExampleWithThreeElements();
     GeoJsonParser parser = new GeoJsonParser();
@@ -142,185 +140,191 @@ public class GeoJsonTest {
   }
 
   private String getOneEventExampleMultiPolygon() {
-    return "{\n" +
-           "      \"type\": \"Feature\",\n" +
-           "      \"geometry\": {\n" +
-           "        \"type\": \"MultiPolygon\",\n" +
-           "        \"coordinates\": [\n" +
-           "          [\n" +
-           "            [\n" +
-           "              [\n" +
-           "                30,\n" +
-           "                20\n" +
-           "              ],\n" +
-           "              [\n" +
-           "                45,\n" +
-           "                40\n" +
-           "              ],\n" +
-           "              [\n" +
-           "                10,\n" +
-           "                40\n" +
-           "              ],\n" +
-           "              [\n" +
-           "                30,\n" +
-           "                20\n" +
-           "              ]\n" +
-           "            ]\n" +
-           "          ],\n" +
-           "          [\n" +
-           "            [\n" +
-           "              [\n" +
-           "                15,\n" +
-           "                5\n" +
-           "              ],\n" +
-           "              [\n" +
-           "                40,\n" +
-           "                10\n" +
-           "              ],\n" +
-           "              [\n" +
-           "                10,\n" +
-           "                20\n" +
-           "              ],\n" +
-           "              [\n" +
-           "                5,\n" +
-           "                10\n" +
-           "              ],\n" +
-           "              [\n" +
-           "                15,\n" +
-           "                5\n" +
-           "              ]\n" +
-           "            ]\n" +
-           "          ]\n" +
-           "        ]\n" +
-           "      },\n" +
-           "      \"properties\": {\n" +
-           "        \"measurementOrCalculationTime\": \"20180724160327\",\n" +
-           "        \"publicationTime\": \"20161026212501\",\n" +
-           "        \"lorryFlowRate\": \"4\",\n" +
-           "        \"lorryAverageVehicleSpeed\": \"84.0\",\n" +
-           "        \"anyVehicleAverageVehicleSpeed\": \"84.0\",\n" +
-           "        \"carAverageVehicleSpeed\": \"85.0\",\n" +
-           "        \"anyVehicleFlowRate\": \"21\",\n" +
-           "        \"anyVehiclePercentageLongVehicle\": \"19.0\",\n" +
-           "        \"carFlowRate\": \"17\",\n" +
-           "        \"id\": \"fs.MQ_A40-10E_HFB_NO_1\"\n" +
-           "      }\n" +
-           "    }";
+    return """
+        {
+              "type": "Feature",
+              "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [
+                        30,
+                        20
+                      ],
+                      [
+                        45,
+                        40
+                      ],
+                      [
+                        10,
+                        40
+                      ],
+                      [
+                        30,
+                        20
+                      ]
+                    ]
+                  ],
+                  [
+                    [
+                      [
+                        15,
+                        5
+                      ],
+                      [
+                        40,
+                        10
+                      ],
+                      [
+                        10,
+                        20
+                      ],
+                      [
+                        5,
+                        10
+                      ],
+                      [
+                        15,
+                        5
+                      ]
+                    ]
+                  ]
+                ]
+              },
+              "properties": {
+                "measurementOrCalculationTime": "20180724160327",
+                "publicationTime": "20161026212501",
+                "lorryFlowRate": "4",
+                "lorryAverageVehicleSpeed": "84.0",
+                "anyVehicleAverageVehicleSpeed": "84.0",
+                "carAverageVehicleSpeed": "85.0",
+                "anyVehicleFlowRate": "21",
+                "anyVehiclePercentageLongVehicle": "19.0",
+                "carFlowRate": "17",
+                "id": "fs.MQ_A40-10E_HFB_NO_1"
+              }
+            }""";
   }
 
   private String getOneEventExample() {
-    return "{\n" +
-           "\t\t\t\"type\" : \"Feature\",\n" +
-           "\t\t\t\"geometry\" : {\n" +
-           "\t\t\t\t\"type\" : \"Point\",\n" +
-           "\t\t\t\t\"coordinates\" : [ 6.946535, 51.437344 ]\n" +
-           "\t\t\t},\n" +
-           "\t\t\t\"properties\" : {\n" +
-           "\t\t\t\t\"measurementOrCalculationTime\" : \"20180717121027\",\n" +
-           "\t\t\t\t\"publicationTime\" : \"20161026212501\",\n" +
-           "\t\t\t\t\"lorryFlowRate\" : \"5\",\n" +
-           "\t\t\t\t\"lorryAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"anyVehicleAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"carAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"anyVehicleFlowRate\" : \"15\",\n" +
-           "\t\t\t\t\"anyVehiclePercentageLongVehicle\" : \"33.0\",\n" +
-           "\t\t\t\t\"carFlowRate\" : \"10\",\n" +
-           "\t\t\t\t\"id\" : \"fs.MQ_A40-10E_HFB_NO_1\"\n" +
-           "\t\t\t}\n" +
-           "\t\t}";
+    return """
+        {
+        \t\t\t"type" : "Feature",
+        \t\t\t"geometry" : {
+        \t\t\t\t"type" : "Point",
+        \t\t\t\t"coordinates" : [ 6.946535, 51.437344 ]
+        \t\t\t},
+        \t\t\t"properties" : {
+        \t\t\t\t"measurementOrCalculationTime" : "20180717121027",
+        \t\t\t\t"publicationTime" : "20161026212501",
+        \t\t\t\t"lorryFlowRate" : "5",
+        \t\t\t\t"lorryAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"anyVehicleAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"carAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"anyVehicleFlowRate" : "15",
+        \t\t\t\t"anyVehiclePercentageLongVehicle" : "33.0",
+        \t\t\t\t"carFlowRate" : "10",
+        \t\t\t\t"id" : "fs.MQ_A40-10E_HFB_NO_1"
+        \t\t\t}
+        \t\t}""";
   }
 
   private String getFullExampleWithOneElement() {
-    return "{\n" +
-           "\t\"type\" : \"FeatureCollection\",\n" +
-           "\t\"name\" : \"geschwindigkeitsdaten_NRW\",\n" +
-           "\t\"features\" : [\n" +
-           "\t\t{\n" +
-           "\t\t\t\"type\" : \"Feature\",\n" +
-           "\t\t\t\"geometry\" : {\n" +
-           "\t\t\t\t\"type\" : \"Point\",\n" +
-           "\t\t\t\t\"coordinates\" : [ 6.946535, 51.437344 ]\n" +
-           "\t\t\t},\n" +
-           "\t\t\t\"properties\" : {\n" +
-           "\t\t\t\t\"measurementOrCalculationTime\" : \"20180717121027\",\n" +
-           "\t\t\t\t\"publicationTime\" : \"20161026212501\",\n" +
-           "\t\t\t\t\"lorryFlowRate\" : \"5\",\n" +
-           "\t\t\t\t\"lorryAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"anyVehicleAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"carAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"anyVehicleFlowRate\" : \"15\",\n" +
-           "\t\t\t\t\"anyVehiclePercentageLongVehicle\" : \"33.0\",\n" +
-           "\t\t\t\t\"carFlowRate\" : \"10\",\n" +
-           "\t\t\t\t\"id\" : \"fs.MQ_A40-10E_HFB_NO_1\"\n" +
-           "\t\t\t}\n" +
-           "\t\t}\n" +
-           "\t\n" +
-           "         ]\n" +
-           "}\n";
+    return """
+        {
+        \t"type" : "FeatureCollection",
+        \t"name" : "geschwindigkeitsdaten_NRW",
+        \t"features" : [
+        \t\t{
+        \t\t\t"type" : "Feature",
+        \t\t\t"geometry" : {
+        \t\t\t\t"type" : "Point",
+        \t\t\t\t"coordinates" : [ 6.946535, 51.437344 ]
+        \t\t\t},
+        \t\t\t"properties" : {
+        \t\t\t\t"measurementOrCalculationTime" : "20180717121027",
+        \t\t\t\t"publicationTime" : "20161026212501",
+        \t\t\t\t"lorryFlowRate" : "5",
+        \t\t\t\t"lorryAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"anyVehicleAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"carAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"anyVehicleFlowRate" : "15",
+        \t\t\t\t"anyVehiclePercentageLongVehicle" : "33.0",
+        \t\t\t\t"carFlowRate" : "10",
+        \t\t\t\t"id" : "fs.MQ_A40-10E_HFB_NO_1"
+        \t\t\t}
+        \t\t}
+        \t
+                 ]
+        }
+        """;
   }
 
   private String getFullExampleWithThreeElements() {
-    return "{\n" +
-           "\t\"type\" : \"FeatureCollection\",\n" +
-           "\t\"name\" : \"geschwindigkeitsdaten_NRW\",\n" +
-           "\t\"features\" : [\n" +
-           "\t\t{\n" +
-           "\t\t\t\"type\" : \"Feature\",\n" +
-           "\t\t\t\"geometry\" : {\n" +
-           "\t\t\t\t\"type\" : \"Point\",\n" +
-           "\t\t\t\t\"coordinates\" : [ 6.946535, 51.437344 ]\n" +
-           "\t\t\t},\n" +
-           "\t\t\t\"properties\" : {\n" +
-           "\t\t\t\t\"measurementOrCalculationTime\" : \"20180717121027\",\n" +
-           "\t\t\t\t\"publicationTime\" : \"20161026212501\",\n" +
-           "\t\t\t\t\"lorryFlowRate\" : \"5\",\n" +
-           "\t\t\t\t\"lorryAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"anyVehicleAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"carAverageVehicleSpeed\" : \"81.0\",\n" +
-           "\t\t\t\t\"anyVehicleFlowRate\" : \"15\",\n" +
-           "\t\t\t\t\"anyVehiclePercentageLongVehicle\" : \"33.0\",\n" +
-           "\t\t\t\t\"carFlowRate\" : \"10\",\n" +
-           "\t\t\t\t\"id\" : \"fs.MQ_A40-10E_HFB_NO_1\"\n" +
-           "\t\t\t}\n" +
-           "\t\t},\n" +
-           "\t\t{\n" +
-           "\t\t\t\"type\" : \"Feature\",\n" +
-           "\t\t\t\"geometry\" : {\n" +
-           "\t\t\t\t\"type\" : \"Point\",\n" +
-           "\t\t\t\t\"coordinates\" : [ 6.946535, 51.437344 ]\n" +
-           "\t\t\t},\n" +
-           "\t\t\t\"properties\" : {\n" +
-           "\t\t\t\t\"measurementOrCalculationTime\" : \"20180717121027\",\n" +
-           "\t\t\t\t\"publicationTime\" : \"20161026212501\",\n" +
-           "\t\t\t\t\"lorryFlowRate\" : \"0\",\n" +
-           "\t\t\t\t\"anyVehicleAverageVehicleSpeed\" : \"107.0\",\n" +
-           "\t\t\t\t\"carAverageVehicleSpeed\" : \"107.0\",\n" +
-           "\t\t\t\t\"anyVehicleFlowRate\" : \"6\",\n" +
-           "\t\t\t\t\"anyVehiclePercentageLongVehicle\" : \"0.0\",\n" +
-           "\t\t\t\t\"carFlowRate\" : \"6\",\n" +
-           "\t\t\t\t\"id\" : \"fs.MQ_A40-10E_HFB_NO_2\"\n" +
-           "\t\t\t}\n" +
-           "\t\t},\n" +
-           "\t\t{\n" +
-           "\t\t\t\"type\" : \"Feature\",\n" +
-           "\t\t\t\"geometry\" : {\n" +
-           "\t\t\t\t\"type\" : \"Point\",\n" +
-           "\t\t\t\t\"coordinates\" : [ 7.545113, 51.474907 ]\n" +
-           "\t\t\t},\n" +
-           "\t\t\t\"properties\" : {\n" +
-           "\t\t\t\t\"measurementOrCalculationTime\" : \"20180717121027\",\n" +
-           "\t\t\t\t\"publicationTime\" : \"20161026212501\",\n" +
-           "\t\t\t\t\"lorryFlowRate\" : \"1\",\n" +
-           "\t\t\t\t\"lorryAverageVehicleSpeed\" : \"71.0\",\n" +
-           "\t\t\t\t\"anyVehicleAverageVehicleSpeed\" : \"72.0\",\n" +
-           "\t\t\t\t\"carAverageVehicleSpeed\" : \"73.0\",\n" +
-           "\t\t\t\t\"anyVehicleFlowRate\" : \"9\",\n" +
-           "\t\t\t\t\"anyVehiclePercentageLongVehicle\" : \"11.0\",\n" +
-           "\t\t\t\t\"carFlowRate\" : \"8\",\n" +
-           "\t\t\t\t\"id\" : \"fs.MQ_Bergh.09_HFB_SW_1\"\n" +
-           "\t\t\t}\n" +
-           "\t\t}\n" +
-           "         ]\n" +
-           "}\n";
+    return """
+        {
+        \t"type" : "FeatureCollection",
+        \t"name" : "geschwindigkeitsdaten_NRW",
+        \t"features" : [
+        \t\t{
+        \t\t\t"type" : "Feature",
+        \t\t\t"geometry" : {
+        \t\t\t\t"type" : "Point",
+        \t\t\t\t"coordinates" : [ 6.946535, 51.437344 ]
+        \t\t\t},
+        \t\t\t"properties" : {
+        \t\t\t\t"measurementOrCalculationTime" : "20180717121027",
+        \t\t\t\t"publicationTime" : "20161026212501",
+        \t\t\t\t"lorryFlowRate" : "5",
+        \t\t\t\t"lorryAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"anyVehicleAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"carAverageVehicleSpeed" : "81.0",
+        \t\t\t\t"anyVehicleFlowRate" : "15",
+        \t\t\t\t"anyVehiclePercentageLongVehicle" : "33.0",
+        \t\t\t\t"carFlowRate" : "10",
+        \t\t\t\t"id" : "fs.MQ_A40-10E_HFB_NO_1"
+        \t\t\t}
+        \t\t},
+        \t\t{
+        \t\t\t"type" : "Feature",
+        \t\t\t"geometry" : {
+        \t\t\t\t"type" : "Point",
+        \t\t\t\t"coordinates" : [ 6.946535, 51.437344 ]
+        \t\t\t},
+        \t\t\t"properties" : {
+        \t\t\t\t"measurementOrCalculationTime" : "20180717121027",
+        \t\t\t\t"publicationTime" : "20161026212501",
+        \t\t\t\t"lorryFlowRate" : "0",
+        \t\t\t\t"anyVehicleAverageVehicleSpeed" : "107.0",
+        \t\t\t\t"carAverageVehicleSpeed" : "107.0",
+        \t\t\t\t"anyVehicleFlowRate" : "6",
+        \t\t\t\t"anyVehiclePercentageLongVehicle" : "0.0",
+        \t\t\t\t"carFlowRate" : "6",
+        \t\t\t\t"id" : "fs.MQ_A40-10E_HFB_NO_2"
+        \t\t\t}
+        \t\t},
+        \t\t{
+        \t\t\t"type" : "Feature",
+        \t\t\t"geometry" : {
+        \t\t\t\t"type" : "Point",
+        \t\t\t\t"coordinates" : [ 7.545113, 51.474907 ]
+        \t\t\t},
+        \t\t\t"properties" : {
+        \t\t\t\t"measurementOrCalculationTime" : "20180717121027",
+        \t\t\t\t"publicationTime" : "20161026212501",
+        \t\t\t\t"lorryFlowRate" : "1",
+        \t\t\t\t"lorryAverageVehicleSpeed" : "71.0",
+        \t\t\t\t"anyVehicleAverageVehicleSpeed" : "72.0",
+        \t\t\t\t"carAverageVehicleSpeed" : "73.0",
+        \t\t\t\t"anyVehicleFlowRate" : "9",
+        \t\t\t\t"anyVehiclePercentageLongVehicle" : "11.0",
+        \t\t\t\t"carFlowRate" : "8",
+        \t\t\t\t"id" : "fs.MQ_Bergh.09_HFB_SW_1"
+        \t\t\t}
+        \t\t}
+                 ]
+        }
+        """;
   }
 }

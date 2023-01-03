@@ -16,7 +16,7 @@
  *
  */
 
-import {CanvasAttributes} from "./canvas-attributes.model";
+import { CanvasAttributes } from './canvas-attributes.model';
 
 export interface CanvasElement {
     attrs: CanvasAttributes;

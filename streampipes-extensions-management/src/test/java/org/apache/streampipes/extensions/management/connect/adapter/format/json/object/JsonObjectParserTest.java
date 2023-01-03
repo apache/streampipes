@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.object;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -34,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 public class JsonObjectParserTest {
 
   @Test
-  public void parseOneEvent() throws AdapterException {
+  public void parseOneEvent() {
 
     JsonObject jo = makeJsonObject("one", 1);
 
@@ -49,7 +47,7 @@ public class JsonObjectParserTest {
   }
 
   @Test
-  public void parseMoreThenExist() throws AdapterException {
+  public void parseMoreThenExist() {
 
     JsonObject jo = makeJsonObject("one", 1);
 

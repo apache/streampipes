@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.arraykey;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.TestUtils;
 
 import com.google.gson.JsonObject;
@@ -34,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 public class JsonParserTest {
 
   @Test
-  public void parseOneEvent() throws AdapterException {
+  public void parseOneEvent() {
 
     String jo = TestUtils.getJsonArrayWithThreeElements();
 
@@ -51,7 +50,7 @@ public class JsonParserTest {
 
 
   @Test
-  public void parseThreeEvents() throws AdapterException {
+  public void parseThreeEvents() {
 
     String jo = TestUtils.getJsonArrayWithThreeElements();
     JsonParser parser = new JsonParser(true, "key0");
@@ -71,7 +70,7 @@ public class JsonParserTest {
 
 
   @Test
-  public void parseMoreThenExist() throws AdapterException {
+  public void parseMoreThenExist() {
 
     JsonObject jo = new JsonObject();
     jo.add("key0", TestUtils.makeJsonArray(

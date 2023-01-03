@@ -25,13 +25,15 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.Geo;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestPrimitivePropertyMatch extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class TestPrimitivePropertyMatch {
 
   @Test
   public void testPositivePrimitivePropertyMatch() {

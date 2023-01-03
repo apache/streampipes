@@ -23,37 +23,33 @@ import { PanelType } from '../../dialog/base-dialog/base-dialog.model';
 import { SpExceptionDetailsDialogComponent } from './exception-details-dialog/exception-details-dialog.component';
 
 @Component({
-  selector: 'sp-exception-message',
-  templateUrl: './sp-exception-message.component.html',
-  styleUrls: ['./sp-exception-message.component.scss']
+    selector: 'sp-exception-message',
+    templateUrl: './sp-exception-message.component.html',
+    styleUrls: ['./sp-exception-message.component.scss'],
 })
 export class SpExceptionMessageComponent {
+    @Input()
+    level = 'error';
 
-  @Input()
-  level = 'error';
+    @Input()
+    showDetails = true;
 
-  @Input()
-  showDetails = true;
+    @Input()
+    message: StreamPipesErrorMessage;
 
-  @Input()
-  message: StreamPipesErrorMessage;
+    @Input()
+    messageTimestamp: number;
 
-  @Input()
-  messageTimestamp: number;
+    constructor(private dialogService: DialogService) {}
 
-  constructor(private dialogService: DialogService) {
-
-  }
-
-  openDetailsDialog() {
-    this.dialogService.open(SpExceptionDetailsDialogComponent, {
-      panelType: PanelType.STANDARD_PANEL,
-      width: '80vw',
-      title: 'Error Details',
-      data: {
-        'message': this.message
-      }
-    });
-  }
-
+    openDetailsDialog() {
+        this.dialogService.open(SpExceptionDetailsDialogComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            width: '80vw',
+            title: 'Error Details',
+            data: {
+                message: this.message,
+            },
+        });
+    }
 }

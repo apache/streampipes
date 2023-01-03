@@ -46,57 +46,57 @@ import { SpCreateAssetDialogComponent } from './dialog/create-asset/create-asset
 import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/manage-asset-links-dialog.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    CustomMaterialModule,
-    FlexLayoutModule,
-    MatGridListModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatDividerModule,
-    MatTooltipModule,
-    FormsModule,
-    DragDropModule,
-    CoreUiModule,
-    ReactiveFormsModule,
-    PlatformServicesModule,
-    RouterModule.forChild([
-      {
-        path: 'assets',
-        children: [
-          {
-            path: '',
-            redirectTo: 'overview',
-            pathMatch: 'full'
-          },
-          {
-            path: 'overview',
-            component: SpAssetOverviewComponent
-          },
-          {
-            path: 'details/:assetId',
-            component: SpAssetDetailsComponent
-          }
-        ]
-      }
-    ]),
-    SharedUiModule,
-    MatTreeModule,
-  ],
-  declarations: [
-    AssetUploadDialogComponent,
-    EditAssetLinkDialogComponent,
-    SpAssetDetailsComponent,
-    SpAssetDetailsPanelComponent,
-    SpAssetLinkItemComponent,
-    SpAssetOverviewComponent,
-    SpAssetSelectionPanelComponent,
-    SpCreateAssetDialogComponent,
-    SpManageAssetLinksDialogComponent
-  ],
-  providers: [],
+    imports: [
+        CommonModule,
+        CustomMaterialModule,
+        FlexLayoutModule,
+        MatGridListModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatDividerModule,
+        MatTooltipModule,
+        FormsModule,
+        DragDropModule,
+        CoreUiModule,
+        ReactiveFormsModule,
+        PlatformServicesModule,
+        RouterModule.forChild([
+            {
+                path: 'assets',
+                children: [
+                    {
+                        path: '',
+                        redirectTo: 'overview',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: 'overview',
+                        component: SpAssetOverviewComponent,
+                    },
+                    {
+                        path: 'details/:assetId',
+                        component: SpAssetDetailsComponent,
+                    },
+                ],
+            },
+        ]),
+        SharedUiModule,
+        MatTreeModule,
+    ],
+    declarations: [
+        AssetUploadDialogComponent,
+        EditAssetLinkDialogComponent,
+        SpAssetDetailsComponent,
+        SpAssetDetailsPanelComponent,
+        SpAssetLinkItemComponent,
+        SpAssetOverviewComponent,
+        SpAssetSelectionPanelComponent,
+        SpCreateAssetDialogComponent,
+        SpManageAssetLinksDialogComponent,
+    ],
+    providers: [],
 })
 export class AssetsModule {}

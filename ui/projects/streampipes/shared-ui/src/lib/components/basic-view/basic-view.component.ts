@@ -20,29 +20,26 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'sp-basic-view',
-  templateUrl: './basic-view.component.html',
-  styleUrls: ['./basic-view.component.scss']
+    selector: 'sp-basic-view',
+    templateUrl: './basic-view.component.html',
+    styleUrls: ['./basic-view.component.scss'],
 })
 export class SpBasicViewComponent {
+    @Input()
+    padding = false;
 
-  @Input()
-  padding = false;
+    @Input()
+    showBackLink = false;
 
-  @Input()
-  showBackLink = false;
+    @Input()
+    backLinkTarget: string[];
 
-  @Input()
-  backLinkTarget: string[];
+    @Input()
+    hideNavbar = false;
 
-  @Input()
-  hideNavbar = false;
+    constructor(private router: Router) {}
 
-  constructor(private router: Router) {
-
-  }
-
-  navigateBack() {
-    this.router.navigate(this.backLinkTarget);
-  }
+    navigateBack() {
+        this.router.navigate(this.backLinkTarget);
+    }
 }

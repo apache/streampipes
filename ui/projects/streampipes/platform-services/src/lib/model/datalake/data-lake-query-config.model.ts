@@ -19,60 +19,60 @@
 import { DataLakeMeasure } from '../gen/streampipes-model';
 
 export interface DataExplorerFieldCharacteristics {
-  dimension: boolean;
-  numeric: boolean;
-  binary: boolean;
-  semanticTypes: string[];
+    dimension: boolean;
+    numeric: boolean;
+    binary: boolean;
+    semanticTypes: string[];
 }
 
 export interface DataExplorerField {
-  runtimeName: string;
-  aggregation?: string;
-  measure: string;
-  fullDbName: string;
-  sourceIndex: number;
-  fieldCharacteristics: DataExplorerFieldCharacteristics;
+    runtimeName: string;
+    aggregation?: string;
+    measure: string;
+    fullDbName: string;
+    sourceIndex: number;
+    fieldCharacteristics: DataExplorerFieldCharacteristics;
 }
 
 export interface FieldConfig {
-  runtimeName: string;
-  aggregations?: string[];
-  alias?: string;
-  selected: boolean;
-  numeric: boolean;
+    runtimeName: string;
+    aggregations?: string[];
+    alias?: string;
+    selected: boolean;
+    numeric: boolean;
 }
 
 export interface SelectedFilter {
-  field?: DataExplorerField;
-  operator: string;
-  value: any;
+    field?: DataExplorerField;
+    operator: string;
+    value: any;
 }
 
 export interface QueryConfig {
-  selectedFilters: SelectedFilter[];
-  fields?: FieldConfig[];
-  groupBy?: FieldConfig[];
-  limit?: number;
-  page?: number;
-  order?: 'ASC' | 'DESC';
-  autoAggregate?: boolean;
-  aggregationValue?: number;
-  aggregationTimeUnit?: string;
-  aggregationFunction?: string;
+    selectedFilters: SelectedFilter[];
+    fields?: FieldConfig[];
+    groupBy?: FieldConfig[];
+    limit?: number;
+    page?: number;
+    order?: 'ASC' | 'DESC';
+    autoAggregate?: boolean;
+    aggregationValue?: number;
+    aggregationTimeUnit?: string;
+    aggregationFunction?: string;
 }
 
 export interface SourceConfig {
-  measureName: string;
-  measure?: DataLakeMeasure;
-  queryConfig: QueryConfig;
-  queryType: 'raw' | 'aggregated' | 'single';
-  sourceType: 'pipeline' | 'measurement';
+    measureName: string;
+    measure?: DataLakeMeasure;
+    queryConfig: QueryConfig;
+    queryType: 'raw' | 'aggregated' | 'single';
+    sourceType: 'pipeline' | 'measurement';
 }
 
 export interface DataExplorerDataConfig {
-  sourceConfigs: SourceConfig[];
-  ignoreTooMuchDataWarning: boolean;
-  ignoreMissingValues: boolean;
+    sourceConfigs: SourceConfig[];
+    ignoreTooMuchDataWarning: boolean;
+    ignoreMissingValues: boolean;
 }
 
 export type MissingValueBehaviour = 'ignore' | 'empty';

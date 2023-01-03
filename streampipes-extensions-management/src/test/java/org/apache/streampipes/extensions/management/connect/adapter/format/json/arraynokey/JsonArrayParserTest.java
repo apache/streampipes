@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.arraynokey;
 
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+
 import org.apache.streampipes.extensions.management.connect.adapter.TestUtils;
 
 import com.google.gson.JsonArray;
@@ -35,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 public class JsonArrayParserTest {
 
   @Test
-  public void parseOneEvent() throws AdapterException {
+  public void parseOneEvent() {
 
     String jo = TestUtils.getJsonArrayWithThreeElements();
 
@@ -51,7 +51,7 @@ public class JsonArrayParserTest {
 
 
   @Test
-  public void parseThreeEvents() throws AdapterException {
+  public void parseThreeEvents() {
 
     String jo = TestUtils.getJsonArrayWithThreeElements();
     JsonArrayParser parser = new JsonArrayParser();
@@ -71,7 +71,7 @@ public class JsonArrayParserTest {
 
 
   @Test
-  public void parseMoreThenExist() throws AdapterException {
+  public void parseMoreThenExist() {
 
     JsonArray jsonArray = new JsonArray();
     jsonArray.add(TestUtils.makeJsonObject("one", 1));

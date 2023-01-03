@@ -20,14 +20,15 @@ package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestMeasurementUnitMatch extends TestCase {
+import static org.junit.Assert.assertTrue;
+
+public class TestMeasurementUnitMatch {
 
   @Test
   public void testPositiveMeasurementUnitMatch() {

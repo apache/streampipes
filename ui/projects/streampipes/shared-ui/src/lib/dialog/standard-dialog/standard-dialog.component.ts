@@ -20,22 +20,22 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 
 @Component({
-  selector: 'standard-dialog-container',
-  templateUrl: './standard-dialog.component.html',
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./standard-dialog.component.scss']
+    selector: 'standard-dialog-container',
+    templateUrl: './standard-dialog.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['./standard-dialog.component.scss'],
 })
-export class StandardDialogComponent<T> extends BaseDialogComponent<T> implements OnInit {
+export class StandardDialogComponent<T>
+    extends BaseDialogComponent<T>
+    implements OnInit
+{
+    constructor() {
+        super();
+    }
 
-  constructor() {
-    super();
-  }
+    ngOnInit() {}
 
-  ngOnInit() {
-  }
-
-  closeDialog() {
-    this.containerEvent.emit({key: 'CLOSE'});
-  }
-
+    closeDialog() {
+        this.containerEvent.emit({ key: 'CLOSE' });
+    }
 }

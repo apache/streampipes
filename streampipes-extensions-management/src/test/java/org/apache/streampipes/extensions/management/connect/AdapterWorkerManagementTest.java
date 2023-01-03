@@ -27,16 +27,13 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({AdapterRegistry.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class AdapterWorkerManagementTest {
@@ -44,7 +41,7 @@ public class AdapterWorkerManagementTest {
   @Test
   public void stopStreamAdapterSuccess() throws AdapterException {
     TestAdapter testAdapter = getTestAdapterInstance();
-    RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
+    RunningAdapterInstances.INSTANCE.addAdapter("https://t.de/", testAdapter, null);
     AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
     adapterWorkerManagement.stopStreamAdapter(Utils.getMinimalStreamAdapter());
 
@@ -56,7 +53,7 @@ public class AdapterWorkerManagementTest {
   public void stopSetAdapterSuccess() throws AdapterException {
     TestAdapter testAdapter = getTestAdapterInstance();
 
-    RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
+    RunningAdapterInstances.INSTANCE.addAdapter("https://t.de/", testAdapter, null);
     AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
     adapterWorkerManagement.stopSetAdapter(Utils.getMinimalSetAdapter());
 
@@ -66,12 +63,10 @@ public class AdapterWorkerManagementTest {
   private TestAdapter getTestAdapterInstance() {
     SpecificAdapterSetDescription description = new SpecificAdapterSetDescription();
     description.setRules(new ArrayList<>());
-    TestAdapter testAdapter = new TestAdapter(description);
-
-    return testAdapter;
+    return new TestAdapter(description);
   }
 
-  private class TestAdapter extends SpecificDataSetAdapter {
+  private static class TestAdapter extends SpecificDataSetAdapter {
 
     public boolean calledStart = false;
     public boolean calledStop = false;
@@ -86,17 +81,17 @@ public class AdapterWorkerManagementTest {
     }
 
     @Override
-    public void startAdapter() throws AdapterException {
+    public void startAdapter() {
       calledStart = true;
     }
 
     @Override
-    public void stopAdapter() throws AdapterException {
+    public void stopAdapter() {
       calledStop = true;
     }
 
     @Override
-    public Adapter getInstance(SpecificAdapterSetDescription adapterDescription) {
+    public Adapter<SpecificAdapterSetDescription> getInstance(SpecificAdapterSetDescription adapterDescription) {
       return null;
     }
 

@@ -33,7 +33,7 @@ public class ListPropertyMatchTest {
 
 
   @Test
-  public void matchSameDomainProperty() throws Exception {
+  public void matchSameDomainProperty() {
     List<URI> domainProperties = new ArrayList<>();
     domainProperties.add(URI.create("http://test.org/property"));
 
@@ -50,7 +50,7 @@ public class ListPropertyMatchTest {
   }
 
   @Test
-  public void matchListWithNoFurtherRequirements() throws Exception {
+  public void matchListWithNoFurtherRequirements() {
 
     EventPropertyList offer = new EventPropertyList();
     EventPropertyList requirement = new EventPropertyList();

@@ -16,7 +16,14 @@
  *
  */
 
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    Output,
+} from '@angular/core';
 import Konva from 'konva';
 import { AddPipelineDialogComponent } from '../../dialog/add-pipeline/add-pipeline-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,10 +44,9 @@ declare const window: Window;
 @Component({
     selector: 'sp-create-asset',
     templateUrl: './create-asset.component.html',
-    styleUrls: ['./create-asset.component.css']
+    styleUrls: ['./create-asset.component.css'],
 })
 export class CreateAssetComponent implements AfterViewInit {
-
     fileName: any;
     selectedUploadFile: File;
 
@@ -64,11 +70,12 @@ export class CreateAssetComponent implements AfterViewInit {
 
     keyboardListenerActive = true;
 
-    constructor(public dialog: MatDialog,
-                public shapeService: ShapeService,
-                private dialogService: DialogService,
-                private restService: RestService) {
-    }
+    constructor(
+        public dialog: MatDialog,
+        public shapeService: ShapeService,
+        private dialogService: DialogService,
+        private restService: RestService,
+    ) {}
 
     ngAfterViewInit() {
         const width = 1400;
@@ -77,23 +84,26 @@ export class CreateAssetComponent implements AfterViewInit {
             this.mainCanvasStage = new Konva.Stage({
                 container: 'asset-configuration-board-canvas',
                 width,
-                height
+                height,
             });
             this.initLayers();
         } else {
             this.editMode = true;
             this.makeEditable();
-            this.mainCanvasStage = Konva.Node.create(this.dashboardConfig, 'asset-configuration-board-canvas');
+            this.mainCanvasStage = Konva.Node.create(
+                this.dashboardConfig,
+                'asset-configuration-board-canvas',
+            );
             this.mainCanvasStage.draw();
 
             this.backgroundImageLayer = this.mainCanvasStage.children[0];
             this.mainLayer = this.mainCanvasStage.children[1];
             const groups = this.mainLayer.getChildren().find('Group');
             groups.forEach(g => {
-               const id = this.makeId();
-               g.id(id);
-               g.setDraggable(true);
-               this.addTransformerToShape(id, g);
+                const id = this.makeId();
+                g.id(id);
+                g.setDraggable(true);
+                this.addTransformerToShape(id, g);
             });
             this.makeClickable();
             this.showImage();
@@ -140,9 +150,15 @@ export class CreateAssetComponent implements AfterViewInit {
 
         const image = new window.Image();
         image.onload = () => {
-            const desiredWidth = Math.min(this.mainCanvasStage.width(), image.width);
+            const desiredWidth = Math.min(
+                this.mainCanvasStage.width(),
+                image.width,
+            );
             const aspectRatio = image.width / image.height;
-            const desiredHeight = image.width > image.height ? desiredWidth / aspectRatio : desiredWidth * aspectRatio;
+            const desiredHeight =
+                image.width > image.height
+                    ? desiredWidth / aspectRatio
+                    : desiredWidth * aspectRatio;
             const imageCanvas = new Konva.Image({
                 image,
                 width: desiredWidth,
@@ -150,7 +166,7 @@ export class CreateAssetComponent implements AfterViewInit {
                 x: 0,
                 y: 0,
                 draggable: true,
-                id: this.IMAGE_ID
+                id: this.IMAGE_ID,
             });
 
             this.addImageTransformer(imageCanvas);
@@ -158,11 +174,10 @@ export class CreateAssetComponent implements AfterViewInit {
         };
 
         const reader = new FileReader();
-        reader.onload = e => image.src = reader.result;
+        reader.onload = e => (image.src = reader.result);
 
         reader.readAsDataURL(this.selectedUploadFile);
         event.target.value = null;
-
     }
 
     addImageTransformer(imageCanvas: any) {
@@ -178,17 +193,20 @@ export class CreateAssetComponent implements AfterViewInit {
     }
 
     prepareDashboard() {
-        const dialogRef = this.dialogService.open(SaveDashboardDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Save asset dashboard',
-            width: '50vw',
-            data: {
-                dashboardCanvas: this.mainCanvasStage as any,
-                file: this.selectedUploadFile,
-                editMode: this.editMode,
-                dashboardConfig: this.dashboardConfig
-            }
-        });
+        const dialogRef = this.dialogService.open(
+            SaveDashboardDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Save asset dashboard',
+                width: '50vw',
+                data: {
+                    dashboardCanvas: this.mainCanvasStage as any,
+                    file: this.selectedUploadFile,
+                    editMode: this.editMode,
+                    dashboardConfig: this.dashboardConfig,
+                },
+            },
+        );
         dialogRef.afterClosed().subscribe(closed => {
             this.dashboardClosed.emit(true);
         });
@@ -208,13 +226,13 @@ export class CreateAssetComponent implements AfterViewInit {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: 'Add visualization',
             width: '50vw',
-            data: {
-            }
+            data: {},
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                const visGroup = this.shapeService.makeNewMeasurementShape(result);
+                const visGroup =
+                    this.shapeService.makeNewMeasurementShape(result);
                 this.addNewVisulizationItem(visGroup);
                 this.measurementPresent = true;
                 this.mainLayer.draw();
@@ -229,8 +247,7 @@ export class CreateAssetComponent implements AfterViewInit {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: 'Add link',
             width: '50vw',
-            data: {
-            }
+            data: {},
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -248,7 +265,9 @@ export class CreateAssetComponent implements AfterViewInit {
             const delta = 4;
             if (event.code === 'Delete') {
                 const id = this.currentlySelectedShape.id();
-                this.mainCanvasStage.findOne('#' + id + '-transformer').destroy();
+                this.mainCanvasStage
+                    .findOne('#' + id + '-transformer')
+                    .destroy();
                 this.currentlySelectedShape.destroy();
                 if (id === this.IMAGE_ID) {
                     this.backgroundImagePresent = false;
@@ -259,13 +278,21 @@ export class CreateAssetComponent implements AfterViewInit {
                     }
                 }
             } else if (event.code === 'ArrowLeft') {
-                this.currentlySelectedShape.x(this.currentlySelectedShape.x() - delta);
+                this.currentlySelectedShape.x(
+                    this.currentlySelectedShape.x() - delta,
+                );
             } else if (event.code === 'ArrowRight') {
-                this.currentlySelectedShape.x(this.currentlySelectedShape.x() + delta);
+                this.currentlySelectedShape.x(
+                    this.currentlySelectedShape.x() + delta,
+                );
             } else if (event.code === 'ArrowDown') {
-                this.currentlySelectedShape.y(this.currentlySelectedShape.y() + delta);
+                this.currentlySelectedShape.y(
+                    this.currentlySelectedShape.y() + delta,
+                );
             } else if (event.code === 'ArrowUp') {
-                this.currentlySelectedShape.y(this.currentlySelectedShape.y() - delta);
+                this.currentlySelectedShape.y(
+                    this.currentlySelectedShape.y() - delta,
+                );
             }
             this.backgroundImageLayer.draw();
             this.mainLayer.draw();
@@ -295,16 +322,19 @@ export class CreateAssetComponent implements AfterViewInit {
             borderStroke: 'green',
             borderDash: [3, 3],
             keepRatio: true,
-            id: id + '-transformer'
+            id: id + '-transformer',
         });
     }
 
     makeId() {
         let text = '';
-        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const possible =
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
         for (let i = 0; i < 6; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
+            text += possible.charAt(
+                Math.floor(Math.random() * possible.length),
+            );
         }
 
         return text;
@@ -312,12 +342,13 @@ export class CreateAssetComponent implements AfterViewInit {
 
     showImage() {
         const image = new window.Image();
-        image.src = this.restService.getImageUrl(this.dashboardConfig.imageInfo.imageName);
+        image.src = this.restService.getImageUrl(
+            this.dashboardConfig.imageInfo.imageName,
+        );
         this.dashboardConfig.imageInfo.image = image;
         image.onload = () => {
             const imageCanvas = new Konva.Image(this.dashboardConfig.imageInfo);
             this.addImageTransformer(imageCanvas);
         };
     }
-
 }
