@@ -12,8 +12,7 @@
       <env name="SP_PRIORITIZED_PROTOCOL" value="kafka" />
     </envs>
     <module name="streampipes-service-core" />
-    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.backend.StreamPipesBackendApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.service.core.StreamPipesBackendApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

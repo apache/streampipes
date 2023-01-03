@@ -26,7 +26,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 import java.util.Map;
 

@@ -21,7 +21,7 @@ import org.apache.streampipes.extensions.api.declarer.PipelineTemplateDeclarer;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 import java.util.Map;
 

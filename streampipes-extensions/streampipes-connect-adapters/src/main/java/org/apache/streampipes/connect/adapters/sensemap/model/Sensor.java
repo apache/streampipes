@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.adapters.sensemap.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")

@@ -114,7 +114,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
         <module name="ImportOrder">
             <!-- Checks for out of order import statements. -->
             <property name="severity" value="error"/>
-            <property name="groups" value="org.apache.streampipes,*,javax,java,scala"/>
+            <property name="groups" value="org.apache.streampipes,*,jakarta,javax,java,scala"/>
             <property name="separated" value="true"/>
             <property name="sortStaticImportsAlphabetically" value="true"/>
             <property name="option" value="bottom"/>

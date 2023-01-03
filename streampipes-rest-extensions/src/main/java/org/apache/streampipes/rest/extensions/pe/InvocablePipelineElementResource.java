@@ -40,14 +40,14 @@ import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 import java.util.Map;
 
@@ -70,7 +70,7 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId,
+  public jakarta.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId,
                                                  K graph) {
 
     try {
@@ -115,7 +115,7 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
+  public jakarta.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
                                                        RuntimeOptionsRequest req) {
 
     T declarer = getDeclarerById(elementId);
@@ -132,10 +132,10 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
             new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
         return ok(responseOptions);
       } else {
-        return javax.ws.rs.core.Response.status(500).build();
+        return jakarta.ws.rs.core.Response.status(500).build();
       }
     } catch (SpConfigurationException e) {
-      return javax.ws.rs.core.Response
+      return jakarta.ws.rs.core.Response
           .status(400)
           .entity(e)
           .build();
@@ -147,7 +147,7 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId,
+  public jakarta.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId,
                                                        K runtimeOptionsRequest) {
     try {
       //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
@@ -167,7 +167,7 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   @DELETE
   @Path("{elementId}/{runningInstanceId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public javax.ws.rs.core.Response detach(@PathParam("elementId") String elementId,
+  public jakarta.ws.rs.core.Response detach(@PathParam("elementId") String elementId,
                                           @PathParam("runningInstanceId") String runningInstanceId) {
 
     InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
@@ -188,7 +188,7 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   @GET
   @Path("{elementId}/instances")
   @Produces(MediaType.APPLICATION_JSON)
-  public javax.ws.rs.core.Response listRunningInstances(@PathParam("elementId") String elementId) {
+  public jakarta.ws.rs.core.Response listRunningInstances(@PathParam("elementId") String elementId) {
     return ok(RunningInstances.INSTANCE.getRunningInstanceIdsForElement(elementId));
   }
 

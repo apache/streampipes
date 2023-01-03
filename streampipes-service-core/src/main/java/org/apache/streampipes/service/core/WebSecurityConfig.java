@@ -36,6 +36,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -69,11 +70,17 @@ public class WebSecurityConfig {
         .exceptionHandling()
         .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
         .and()
-        .authorizeRequests()
-        .antMatchers(UnauthenticatedInterfaces.get().toArray(new String[0])).permitAll()
-        .anyRequest()
-        .authenticated().and()
-        .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        .authorizeHttpRequests((authz) -> authz
+            .requestMatchers(UnauthenticatedInterfaces
+                .get()
+                .stream()
+                .map(AntPathRequestMatcher::new)
+                .toList()
+                .toArray(new AntPathRequestMatcher[0]))
+            .permitAll()
+            .anyRequest()
+            .authenticated().and()
+            .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class));
 
     return http.build();
   }

@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +35,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -42,13 +44,15 @@ public class WebSecurityConfig {
 
   private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
 
-  public WebSecurityConfig() {
+  private final UserDetailsService userDetailsService;
 
+  public WebSecurityConfig() {
+    this.userDetailsService = username -> null;
   }
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService());
+    auth.userDetailsService(userDetailsService);
   }
 
   @Bean
@@ -59,7 +63,7 @@ public class WebSecurityConfig {
           .and()
           .csrf().disable()
           .formLogin().disable()
-          .httpBasic().disable().authorizeRequests().antMatchers("/**").permitAll();
+          .httpBasic().disable().authorizeHttpRequests().requestMatchers("/**").permitAll();
     } else {
       http
           .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -70,10 +74,17 @@ public class WebSecurityConfig {
           .exceptionHandling()
           .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
           .and()
-          .authorizeRequests()
-          .antMatchers(UnauthenticatedInterfaces.get().toArray(new String[0])).permitAll()
-          .anyRequest().authenticated().and()
-          .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+          .authorizeHttpRequests((authz) -> authz
+              .requestMatchers(UnauthenticatedInterfaces
+                  .get()
+                  .stream()
+                  .map(AntPathRequestMatcher::new)
+                  .toList()
+                  .toArray(new AntPathRequestMatcher[0]))
+              .permitAll()
+              .anyRequest().authenticated()
+              .and()
+              .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class));
     }
 
     return http.build();
@@ -100,8 +111,9 @@ public class WebSecurityConfig {
     return new TokenAuthenticationFilter();
   }
 
+  @Bean(BeanIds.USER_DETAILS_SERVICE)
   public UserDetailsService userDetailsService() {
-    return username -> null;
+    return userDetailsService;
   }
 
 }

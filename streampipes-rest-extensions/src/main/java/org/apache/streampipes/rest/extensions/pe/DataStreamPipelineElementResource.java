@@ -29,14 +29,14 @@ import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 import java.io.IOException;
 import java.util.Map;
@@ -52,14 +52,14 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
   @GET
   @Path("{streamId}/assets")
   @Produces("application/zip")
-  public javax.ws.rs.core.Response getAssets(@PathParam("streamId") String streamId) {
+  public jakarta.ws.rs.core.Response getAssets(@PathParam("streamId") String streamId) {
     try {
       return ok(new AssetZipGenerator(streamId,
           getById(streamId)
               .getIncludedAssets()).makeZip());
     } catch (IOException e) {
       e.printStackTrace();
-      return javax.ws.rs.core.Response.status(500).build();
+      return jakarta.ws.rs.core.Response.status(500).build();
     }
   }
 
@@ -67,7 +67,7 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
   @Path("{streamId}")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public javax.ws.rs.core.Response invokeRuntime(@PathParam("streamId") String streamId, String
+  public jakarta.ws.rs.core.Response invokeRuntime(@PathParam("streamId") String streamId, String
       payload) {
     DataStreamDeclarer streamDeclarer = getDeclarerById(streamId);
 
@@ -94,7 +94,7 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
   @DELETE
   @Path("/{streamId}/{runningInstanceId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public javax.ws.rs.core.Response detach(@PathParam("runningInstanceId") String runningInstanceId) {
+  public jakarta.ws.rs.core.Response detach(@PathParam("runningInstanceId") String runningInstanceId) {
 
     DataSetDeclarer runningInstance = RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId);
 
