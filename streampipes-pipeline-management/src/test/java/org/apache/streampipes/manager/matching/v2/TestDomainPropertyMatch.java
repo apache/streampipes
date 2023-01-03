@@ -21,15 +21,16 @@ package org.apache.streampipes.manager.matching.v2;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.vocabulary.Geo;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class TestDomainPropertyMatch extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class TestDomainPropertyMatch {
 
   @Test
   public void testPositiveDomainPropertyMatch() {
@@ -56,6 +57,6 @@ public class TestDomainPropertyMatch extends TestCase {
   }
 
   private List<URI> buildDomainProperties(String name) {
-    return Arrays.asList(URI.create(name));
+    return List.of(URI.create(name));
   }
 }

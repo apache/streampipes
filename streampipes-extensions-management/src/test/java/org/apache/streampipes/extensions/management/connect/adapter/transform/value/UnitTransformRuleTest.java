@@ -35,6 +35,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("unchecked")
 public class UnitTransformRuleTest {
 
   @Test
@@ -60,11 +61,12 @@ public class UnitTransformRuleTest {
     UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
         "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
-    Map result = unitTransformationRule.transform(event);
+    var result = unitTransformationRule.transform(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals(273.15,
-        ((Map) result.get(eventPropertyList.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+        ((Map<String, Object>) result.get(eventPropertyList.getRuntimeName()))
+            .get(eventPropertyValue.getRuntimeName()));
   }
 
 
@@ -92,11 +94,12 @@ public class UnitTransformRuleTest {
     UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
         "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
-    Map result = unitTransformationRule.transform(event);
+    var result = unitTransformationRule.transform(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals(283.15,
-        ((Map) result.get(eventPropertyMainKey.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+        ((Map<String, Object>) result.get(eventPropertyMainKey.getRuntimeName()))
+            .get(eventPropertyValue.getRuntimeName()));
   }
 
 
@@ -121,7 +124,7 @@ public class UnitTransformRuleTest {
     event.put("value1", 0.0);
     event.put("value2", 10.0);
 
-    Map result = unitTransformationRule.transform(event);
+    var result = unitTransformationRule.transform(event);
     assertEquals(2, result.keySet().size());
     assertEquals(283.15, result.get(eventPropertyValue2.getLabel()));
 

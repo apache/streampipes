@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -35,7 +36,7 @@ public class DeleteTransformationRuleTest {
     Map<String, Object> event = new HashMap<>();
     event.put("key", "value");
 
-    DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("key"));
+    DeleteTransformationRule deleteRule = new DeleteTransformationRule(List.of("key"));
 
     Map<String, Object> result = deleteRule.transform(event);
 

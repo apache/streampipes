@@ -23,13 +23,15 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestGroundingMatch extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class TestGroundingMatch {
 
   @Test
   public void testPositiveGroundingMatch() {
@@ -103,19 +105,4 @@ public class TestGroundingMatch extends TestCase {
     assertFalse(matches);
   }
 
-  @Test
-  public void testPositiveGroundingMatchWithRealEpa() {
-
-//    RandomDataProducer producer = new RandomDataProducer();
-//    SpDataStream offer = producer.getEventStreams().get(0).declareModel(producer.declareModel());
-//
-//    DataProcessorDescription requirement = (new AggregationController().declareModel());
-//
-//    List<MatchingResultMessage> errorLog = new ArrayList<>();
-//    boolean match = new GroundingMatch().match(offer.getEventGrounding(),
-//        requirement.getSupportedGrounding(), errorLog);
-
-    assertTrue(true);
-
-  }
 }

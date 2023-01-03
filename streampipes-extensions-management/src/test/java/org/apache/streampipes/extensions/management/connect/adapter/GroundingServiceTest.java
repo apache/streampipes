@@ -18,45 +18,20 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({BackendConfig.class, SpConfig.class})
 public class GroundingServiceTest {
-
-  @Before
-  public void before() {
-    PowerMockito.mockStatic(SpConfig.class);
-  }
-
-//    @Test
-//    public void extractBrokerForGenericAdapterSetTest() {
-//        AdapterDescription adapterDescription = getGenericAdapterSetDescription();
-//
-//        String result = GroundingService.extractBroker(adapterDescription);
-//
-//        assertEquals("localhost:1111", result);
-//    }
-
 
   @Test
   public void extractTopicForGenericAdapterSetTest() {
@@ -67,35 +42,6 @@ public class GroundingServiceTest {
     assertEquals("test.topic", result);
   }
 
-//    @Test
-//    public void extractBrokerForSpecificAdapterSetTest() {
-//        AdapterDescription adapterDescription = getSpecificAdapterSetDescription();
-//
-//        String result = GroundingService.extractBroker(adapterDescription);
-//
-//        assertEquals("localhost:1111", result);
-//    }
-
-
-//    @Test
-//    public void extractTopicForSpecificAdapterSetTest() {
-//        AdapterDescription adapterDescription = getSpecificAdapterSetDescription();
-//
-//        String result = GroundingService.extractTopic(adapterDescription);
-//
-//        assertEquals("test.topic", result);
-//    }
-
-//    @Test
-//    public void extractBrokerForStreamTest() {
-//        AdapterDescription adapterDescription = getAdapterStreamDescription();
-//
-//        String result = GroundingService.extractBroker(adapterDescription);
-//
-//        assertEquals("localhost:1111", result);
-//    }
-
-
   @Test
   public void extractTopicForStreamTest() {
     AdapterDescription adapterDescription = getAdapterStreamDescription();
@@ -104,23 +50,6 @@ public class GroundingServiceTest {
 
     assertEquals("test.topic", result);
   }
-
-//    @Test
-//    public void createEventGroundingTest() {
-//
-//        when(SpConfig.getSpConfig(anyString())).thenReturn(new MockSpConfig(""));
-//
-//        BackendConfig backendConfig = mock(BackendConfig.INSTANCE.getClass());
-//        when(backendConfig.getMessagingSettings()).thenReturn(MessagingSettings.fromDefault());
-//        Whitebox.setInternalState(BackendConfig.class, "INSTANCE", backendConfig);
-//        EventGrounding eventGrounding = GroundingService.createEventGrounding();
-//
-////        assertEquals("localhost", eventGrounding.getTransportProtocol().getBrokerHostname());
-////        assertEquals(0, ((KafkaTransportProtocol)eventGrounding.getTransportProtocol()).getKafkaPort());
-//        assertTrue(eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName()
-//        .startsWith("org.apache.streampipes.connect"));
-//
-//    }
 
   private AdapterDescription getAdapterStreamDescription() {
     AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
@@ -132,15 +61,6 @@ public class GroundingServiceTest {
 
   private AdapterDescription getGenericAdapterSetDescription() {
     GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
-    SpDataSet set = new SpDataSet();
-    adapterDescription.setDataSet(set);
-
-    set.setEventGrounding(getEventGrounding());
-    return adapterDescription;
-  }
-
-  private AdapterDescription getSpecificAdapterSetDescription() {
-    SpecificAdapterSetDescription adapterDescription = new SpecificAdapterSetDescription();
     SpDataSet set = new SpDataSet();
     adapterDescription.setDataSet(set);
 
