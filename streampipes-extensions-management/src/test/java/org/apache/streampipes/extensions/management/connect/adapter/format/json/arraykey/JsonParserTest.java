@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.arraykey;
 
+import org.apache.streampipes.extensions.management.connect.adapter.TestUtils;
+
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.extensions.management.connect.adapter.TestUtils;
 import org.junit.Test;
 
 import java.io.InputStream;

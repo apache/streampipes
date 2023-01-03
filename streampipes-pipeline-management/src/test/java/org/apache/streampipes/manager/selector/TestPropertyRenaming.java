@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 
 public class TestPropertyRenaming {
 
-
   @Test
   public void testRenaming() {
     EventSchema schema1 = TestSelectorUtils.makeSimpleSchema();
