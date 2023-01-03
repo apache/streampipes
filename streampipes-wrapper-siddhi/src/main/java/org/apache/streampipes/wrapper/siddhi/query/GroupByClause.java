@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class GroupByClause extends SiddhiStatement {
 
-  private List<PropertyExpression> propertyExpressions;
+  private final List<PropertyExpression> propertyExpressions;
 
   public static GroupByClause create(List<PropertyExpression> groupByProperties) {
     return new GroupByClause(groupByProperties);

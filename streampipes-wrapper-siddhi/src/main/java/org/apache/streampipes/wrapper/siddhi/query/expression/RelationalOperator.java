@@ -26,7 +26,7 @@ public enum RelationalOperator {
   LESSER_EQUALS("<="),
   NOT_EQUALS("!=");
 
-  private String operator;
+  private final String operator;
 
   RelationalOperator(String operator) {
     this.operator = operator;

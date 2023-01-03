@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 
 public class SelectClause extends SiddhiStatement {
 
-  private boolean wildcard;
-  private List<Expression> outputProperties;
+  private final boolean wildcard;
+  private final List<Expression> outputProperties;
 
   private SelectClause(boolean wildcard) {
     this.wildcard = wildcard;

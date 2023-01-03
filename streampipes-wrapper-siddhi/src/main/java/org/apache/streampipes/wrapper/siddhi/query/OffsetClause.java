@@ -21,7 +21,7 @@ import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 public class OffsetClause extends SiddhiStatement {
 
-  private Integer offset;
+  private final Integer offset;
 
   public static OffsetClause create(Integer offset) {
     return new OffsetClause(offset);

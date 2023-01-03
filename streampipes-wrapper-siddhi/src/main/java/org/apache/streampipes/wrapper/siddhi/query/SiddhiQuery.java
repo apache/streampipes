@@ -136,6 +136,6 @@ public class SiddhiQuery {
 
     joiner.add(insertIntoClause);
 
-    return joiner.toString() + ";";
+    return joiner + ";";
   }
 }

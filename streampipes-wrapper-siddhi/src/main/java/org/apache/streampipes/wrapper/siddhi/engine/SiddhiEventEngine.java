@@ -24,15 +24,16 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationConfigGenerator;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
-        EventProcessor<B>, SiddhiStatementGenerator<B> {
+public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> implements
+    EventProcessor<T>, SiddhiStatementGenerator<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
-  private SiddhiEngine siddhiEngine;
+  private final SiddhiEngine siddhiEngine;
 
   public SiddhiEventEngine() {
     this.siddhiEngine = new SiddhiEngine();
@@ -43,9 +44,10 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   @Override
-  public void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-    SiddhiInvocationConfigGenerator<B> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
-           this::makeStatements);
+  public void onInvocation(T parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    SiddhiInvocationConfigGenerator<T> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
+        this::makeStatements);
     this.siddhiEngine.initializeEngine(siddhiConfigGenerator, spOutputCollector, runtimeContext);
   }
 

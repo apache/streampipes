@@ -22,7 +22,7 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
 public class PatternCountExpression extends Expression {
 
-  private String countString;
+  private final String countString;
 
   public PatternCountExpression(Integer count, PatternCountOperator operator) {
     String countValue = "";
