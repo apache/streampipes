@@ -76,6 +76,7 @@
 	<jakarta-validation.version>3.0.2</jakarta-validation.version>
 	<jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
 	<javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
+	<javax-websocket-api.version>1.1</javax-websocket-api.version>
 	<javapoet.version>1.6.1</javapoet.version>
 	<jakarta-json.version>2.0.1</jakarta-json.version>
 	<jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
@@ -131,16 +132,16 @@
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
 
-        <!-- Test dependencies -->
-        <junit.version>4.13.2</junit.version>
-        <mockito.version>4.11.0</mockito.version>
-        <powermock.version>2.0.9</powermock.version>
-        <rest-assured.version>2.9.0</rest-assured.version>
-        <wiremock.version>2.27.2</wiremock.version>
+	<!-- Test dependencies -->
+	<junit.version>4.13.2</junit.version>
+	<mockito.version>4.11.0</mockito.version>
+	<powermock.version>2.0.9</powermock.version>
+	<rest-assured.version>2.9.0</rest-assured.version>
+	<wiremock.version>2.27.2</wiremock.version>
 
 
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+	<maven.compiler.source>17</maven.compiler.source>
+	<maven.compiler.target>17</maven.compiler.target>
 
 	<amqp-client.version>4.8.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
@@ -471,6 +472,11 @@
 					<groupId>jakarta.ws.rs</groupId>
 					<artifactId>jakarta.ws.rs-api</artifactId>
 					<version>${jakarta.ws.rs.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.websocket</groupId>
+					<artifactId>javax.websocket-api</artifactId>
+					<version>${javax-websocket-api.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>javax.xml.bind</groupId>
