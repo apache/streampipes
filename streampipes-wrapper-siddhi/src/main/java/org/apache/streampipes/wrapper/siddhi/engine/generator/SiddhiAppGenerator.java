@@ -19,24 +19,25 @@ package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
-import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.StringJoiner;
 
-public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
+public class SiddhiAppGenerator<T extends EventProcessorBindingParams> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiAppGenerator.class);
 
-  private final SiddhiProcessorParams<B> siddhiParams;
+  private final SiddhiProcessorParams<T> siddhiParams;
   private final SiddhiAppConfig siddhiAppConfig;
   private final StringBuilder siddhiAppString;
 
-  public SiddhiAppGenerator(SiddhiProcessorParams<B> siddhiParams,
+  public SiddhiAppGenerator(SiddhiProcessorParams<T> siddhiParams,
                             SiddhiAppConfig siddhiAppConfig) {
     this.siddhiParams = siddhiParams;
     this.siddhiAppConfig = siddhiAppConfig;
@@ -57,26 +58,26 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
     String defineStreamPrefix = "define stream " + SiddhiUtils.prepareName(eventTypeName);
     StringJoiner joiner = new StringJoiner(",");
 
-    eventSchema.forEach(typeInfo -> {
-        joiner.add(typeInfo.getSelectorPrefix() + typeInfo.getFieldName() + " " + typeInfo.getFieldType());
-    });
+    eventSchema
+        .forEach(typeInfo ->
+            joiner.add(typeInfo.getSelectorPrefix() + typeInfo.getFieldName() + " " + typeInfo.getFieldType()));
 
     this.siddhiAppString
-            .append(defineStreamPrefix)
-            .append("(")
-            .append(joiner.toString())
-            .append(") ;\n");
+        .append(defineStreamPrefix)
+        .append("(")
+        .append(joiner)
+        .append(") ;\n");
   }
 
   private void registerStatements(SiddhiAppConfig siddhiAppConfig) {
 
     siddhiAppConfig
-            .getDefinitions()
-            .forEach(definition -> this.siddhiAppString.append(definition).append("\n"));
+        .getDefinitions()
+        .forEach(definition -> this.siddhiAppString.append(definition).append("\n"));
 
     siddhiAppConfig
-            .getQueries()
-            .forEach(query -> this.siddhiAppString.append(query).append("\n"));
+        .getQueries()
+        .forEach(query -> this.siddhiAppString.append(query).append("\n"));
 
     LOG.info("Registering statement: \n" + this.siddhiAppString);
 

@@ -23,8 +23,8 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression
 
 public class ContainsListExpression extends PropertyExpressionBase {
 
-  private Object value;
-  private PropertyExpression propertyExpression;
+  private final Object value;
+  private final PropertyExpression propertyExpression;
 
   public ContainsListExpression(PropertyExpression propertyExp, Object value) {
     this.propertyExpression = propertyExp;
@@ -34,12 +34,12 @@ public class ContainsListExpression extends PropertyExpressionBase {
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.EMPTY,
-            "list:contains",
-            SiddhiConstants.PARENTHESIS_OPEN,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.COMMA,
-            prepare(value),
-            SiddhiConstants.PARENTHESIS_CLOSE);
+        "list:contains",
+        SiddhiConstants.PARENTHESIS_OPEN,
+        propertyExpression.toSiddhiEpl(),
+        SiddhiConstants.COMMA,
+        prepare(value),
+        SiddhiConstants.PARENTHESIS_CLOSE);
   }
 
   public String prepare(Object value) {

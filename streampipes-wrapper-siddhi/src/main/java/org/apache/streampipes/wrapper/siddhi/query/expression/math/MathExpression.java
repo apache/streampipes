@@ -22,9 +22,9 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression
 
 public class MathExpression extends PropertyExpressionBase {
 
-  private MathOperator operator;
-  private PropertyExpressionBase op1;
-  private PropertyExpressionBase op2;
+  private final MathOperator operator;
+  private final PropertyExpressionBase op1;
+  private final PropertyExpressionBase op2;
 
   public MathExpression(MathOperator operator,
                         PropertyExpressionBase op1,
@@ -37,8 +37,8 @@ public class MathExpression extends PropertyExpressionBase {
   @Override
   public String toSiddhiEpl() {
     return joinWithParenthesis(SiddhiConstants.WHITESPACE,
-            op1.toSiddhiEpl(),
-            operator.toOperatorString(),
-            op2.toSiddhiEpl());
+        op1.toSiddhiEpl(),
+        operator.toOperatorString(),
+        op2.toSiddhiEpl());
   }
 }

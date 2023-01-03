@@ -26,8 +26,8 @@ import java.util.List;
 
 public class SiddhiAppConfig {
 
-  private List<String> queries;
-  private List<String> definitions;
+  private final List<String> queries;
+  private final List<String> definitions;
   private SiddhiOutputConfig outputConfig;
 
   public SiddhiAppConfig() {

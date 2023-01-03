@@ -23,11 +23,11 @@ import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InputStreamNameGenerator<B extends EventProcessorBindingParams> {
+public class InputStreamNameGenerator<T extends EventProcessorBindingParams> {
 
-  private B params;
+  private final T params;
 
-  public InputStreamNameGenerator(B params) {
+  public InputStreamNameGenerator(T params) {
     this.params = params;
   }
 

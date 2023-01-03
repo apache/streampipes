@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
-import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 import org.apache.streampipes.wrapper.siddhi.query.expression.aggregation.AndExpression;
@@ -45,6 +44,8 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.window.SortWindowE
 import org.apache.streampipes.wrapper.siddhi.query.expression.window.TimeBatchWindowExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.window.TimeWindowExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.window.WindowExpression;
+
+import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 
 import java.util.Arrays;
 
@@ -109,6 +110,7 @@ public class Expressions {
   public static PropertyExpressionBase stdDev(PropertyExpression property) {
     return new StandardDeviationExpression(property);
   }
+
   public static PropertyExpressionBase unionSet(PropertyExpression property) {
     return new UnionSetExpression(property);
   }
@@ -133,8 +135,8 @@ public class Expressions {
                                               PatternCountExpression patternCountExpression,
                                               Expression... filterExpressions) {
     return new StreamFilterExpression(streamExpression,
-            Arrays.asList(filterExpressions),
-            patternCountExpression);
+        Arrays.asList(filterExpressions),
+        patternCountExpression);
   }
 
   public static RelationalOperatorExpression ge(PropertyExpressionBase exp1, PropertyExpressionBase exp2) {

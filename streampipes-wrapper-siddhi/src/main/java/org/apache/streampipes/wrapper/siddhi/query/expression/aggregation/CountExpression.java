@@ -23,7 +23,7 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression
 
 public class CountExpression extends PropertyExpressionBase {
 
-  private PropertyExpression propertyExpression;
+  private final PropertyExpression propertyExpression;
 
   public CountExpression(PropertyExpression property) {
     this.propertyExpression = property;
@@ -32,9 +32,9 @@ public class CountExpression extends PropertyExpressionBase {
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.EMPTY,
-            AggregationFunction.COUNT.toAggregationFunction(),
-            SiddhiConstants.PARENTHESIS_OPEN,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.PARENTHESIS_CLOSE);
+        AggregationFunction.COUNT.toAggregationFunction(),
+        SiddhiConstants.PARENTHESIS_OPEN,
+        propertyExpression.toSiddhiEpl(),
+        SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }
