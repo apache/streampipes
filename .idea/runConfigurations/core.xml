@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="core" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" />
     <envs>
       <env name="SP_BACKEND_HOST" value="localhost" />
       <env name="SP_COUCHDB_HOST" value="localhost" />
@@ -12,8 +13,7 @@
       <env name="SP_PRIORITIZED_PROTOCOL" value="kafka" />
     </envs>
     <module name="streampipes-service-core" />
-    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.backend.StreamPipesBackendApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.service.core.StreamPipesBackendApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
