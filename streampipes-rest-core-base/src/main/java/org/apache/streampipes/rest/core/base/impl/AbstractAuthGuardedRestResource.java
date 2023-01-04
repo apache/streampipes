@@ -22,8 +22,8 @@ import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;

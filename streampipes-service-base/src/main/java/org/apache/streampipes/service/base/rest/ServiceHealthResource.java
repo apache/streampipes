@@ -20,10 +20,10 @@ package org.apache.streampipes.service.base.rest;
 
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Response;
 
 @Path("")
 public class ServiceHealthResource {

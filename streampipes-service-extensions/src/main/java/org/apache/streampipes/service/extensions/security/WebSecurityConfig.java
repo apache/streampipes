@@ -24,41 +24,46 @@ import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoin
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
-  private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfigurerAdapter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
+
+  private final UserDetailsService userDetailsService;
 
   public WebSecurityConfig() {
-
+    this.userDetailsService = username -> null;
   }
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService());
+    auth.userDetailsService(userDetailsService);
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
     if (isAnonymousAccess()) {
       http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
           .and()
           .csrf().disable()
           .formLogin().disable()
-          .httpBasic().disable().authorizeRequests().antMatchers("/**").permitAll();
+          .httpBasic().disable().authorizeHttpRequests().requestMatchers("/**").permitAll();
     } else {
       http
           .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -69,11 +74,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
           .exceptionHandling()
           .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
           .and()
-          .authorizeRequests()
-          .antMatchers(UnauthenticatedInterfaces.get().toArray(new String[0])).permitAll()
-          .anyRequest().authenticated().and()
-          .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+          .authorizeHttpRequests((authz) -> authz
+              .requestMatchers(UnauthenticatedInterfaces
+                  .get()
+                  .stream()
+                  .map(AntPathRequestMatcher::new)
+                  .toList()
+                  .toArray(new AntPathRequestMatcher[0]))
+              .permitAll()
+              .anyRequest().authenticated()
+              .and()
+              .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class));
     }
+
+    return http.build();
   }
 
   private boolean isAnonymousAccess() {
@@ -97,9 +111,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return new TokenAuthenticationFilter();
   }
 
-  @Override
+  @Bean(BeanIds.USER_DETAILS_SERVICE)
   public UserDetailsService userDetailsService() {
-    return username -> null;
+    return userDetailsService;
   }
 
 }

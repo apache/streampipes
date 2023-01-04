@@ -43,7 +43,7 @@ import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.apache.http.client.ClientProtocolException;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.net.URI;

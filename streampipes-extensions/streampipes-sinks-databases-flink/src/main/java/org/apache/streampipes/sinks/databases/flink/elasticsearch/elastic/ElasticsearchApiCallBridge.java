@@ -22,7 +22,7 @@ import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.client.Client;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.Map;
