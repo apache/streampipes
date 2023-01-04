@@ -95,7 +95,7 @@
 	<json-smart.version>2.4.8</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
 	<kafka.version>3.3.1</kafka.version>
-	<kotlin-stdlib.version>1.4.30</kotlin-stdlib.version>
+	<kotlin-stdlib.version>1.8.0</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
 	<log4j.version>2.19.0</log4j.version>
 	<lz4.version>1.7.1</lz4.version>
