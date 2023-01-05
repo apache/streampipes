@@ -18,60 +18,79 @@
 
 <div fxLayout="column">
     <div>
-        <button mat-button mat-raised-button color="accent" (click)="createUser()"><i
-                class="material-icons">add</i><span>&nbsp;New Service Account</span></button>
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="createUser()"
+        >
+            <i class="material-icons">add</i
+            ><span>&nbsp;New Service Account</span>
+        </button>
     </div>
     <div fxFlex="100" fxLayout="column">
         <table
-                fxFlex="100"
-                mat-table
-                data-cy="security-service-config"
-                [dataSource]="dataSource"
-                style="width: 100%;"
-                matSort>
-
+            fxFlex="100"
+            mat-table
+            data-cy="security-service-config"
+            [dataSource]="dataSource"
+            style="width: 100%"
+            matSort
+        >
             <ng-container matColumnDef="username">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>Username</th>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    Username
+                </th>
                 <td mat-cell *matCellDef="let account">
-                    <h4 style="margin-bottom:0px;">{{account.username}}</h4>
+                    <h4 style="margin-bottom: 0px">{{ account.username }}</h4>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="edit">
-                <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
+                <th mat-header-cell *matHeaderCellDef class="text-right">
+                    Actions
+                </th>
                 <td mat-cell *matCellDef="let account">
                     <div fxLayout="row">
-                            <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="end center">
-                                <div class="mr-15">
-                                <button color="accent"
-                                        mat-button
-                                        mat-raised-button
-                                        matTooltip="Edit user"
-                                        matTooltipPosition="above"
-                                        data-cy="service-edit-btn"
-                                        (click)="editService(account)">
-                                        <i class="material-icons">edit</i>
-                                        <span>&nbsp;Edit</span>
-                                    </button>
-                                    </div>
-                                <button color="warn"
-                                        mat-button
-                                        mat-raised-button
-                                        matTooltip="Delete service"
-                                        matTooltipPosition="above"
-                                        data-cy="service-delete-btn"
-                                        (click)="deleteUser(account)">
-                                        <i class="material-icons">delete</i>
-                                        <span>&nbsp;Delete</span>
-                                    </button>
-                                </span>
+                        <span
+                            fxFlex
+                            fxFlexOrder="3"
+                            fxLayout="row"
+                            fxLayoutAlign="end center"
+                        >
+                            <div class="mr-15">
+                                <button
+                                    color="accent"
+                                    mat-button
+                                    mat-raised-button
+                                    matTooltip="Edit user"
+                                    matTooltipPosition="above"
+                                    data-cy="service-edit-btn"
+                                    (click)="editService(account)"
+                                >
+                                    <i class="material-icons">edit</i>
+                                    <span>&nbsp;Edit</span>
+                                </button>
+                            </div>
+                            <button
+                                color="warn"
+                                mat-button
+                                mat-raised-button
+                                matTooltip="Delete service"
+                                matTooltipPosition="above"
+                                data-cy="service-delete-btn"
+                                (click)="deleteUser(account)"
+                            >
+                                <i class="material-icons">delete</i>
+                                <span>&nbsp;Delete</span>
+                            </button>
+                        </span>
                     </div>
                 </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
     </div>
 </div>

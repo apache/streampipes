@@ -16,80 +16,81 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { AssetExportConfiguration } from '../../../../../dist/streampipes/platform-services';
 
 @Component({
-  selector: 'sp-data-import-dialog',
-  templateUrl: './data-import-dialog.component.html',
-  styleUrls: ['./data-import-dialog.component.scss'],
+    selector: 'sp-data-import-dialog',
+    templateUrl: './data-import-dialog.component.html',
+    styleUrls: ['./data-import-dialog.component.scss'],
 })
-export class SpDataImportDialogComponent implements OnInit {
+export class SpDataImportDialogComponent {
+    currentImportStep = 0;
 
-  currentImportStep = 0;
+    inputValue: string;
+    fileName: string;
 
-  inputValue: string;
-  fileName: string;
+    selectedUploadFile: File;
+    importConfiguration: AssetExportConfiguration;
 
-  selectedUploadFile: File;
-  importConfiguration: AssetExportConfiguration;
+    hasInput = false;
+    errorMessage = 'Please enter a value';
 
-  hasInput = false;
-  errorMessage = 'Please enter a value';
+    uploadStatus = 0;
 
-  uploadStatus = 0;
+    constructor(
+        private dialogRef: DialogRef<SpDataImportDialogComponent>,
+        private dataExportService: DataExportService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<SpDataImportDialogComponent>,
-              private dataExportService: DataExportService) {
-
-  }
-
-  ngOnInit(): void {
-  }
-
-  handleFileInput(files: any) {
-    this.hasInput = true;
-    this.selectedUploadFile = files[0];
-    this.fileName = this.selectedUploadFile.name;
-    this.uploadStatus = 0;
-  }
-
-  performPreview(): void {
-    this.uploadStatus = 0;
-    if (this.selectedUploadFile !== undefined) {
-      this.dataExportService.getImportPreview(this.selectedUploadFile).subscribe(
-        event => {
-          if (event.type === HttpEventType.UploadProgress) {
-            this.uploadStatus = Math.round(100 * event.loaded / event.total);
-          } else if (event instanceof HttpResponse) {
-           this.importConfiguration = event.body as AssetExportConfiguration;
-           this.importConfiguration.overrideBrokerSettings = true;
-           this.currentImportStep++;
-          }
-        },
-        error => {
-        },
-      );
+    handleFileInput(files: any) {
+        this.hasInput = true;
+        this.selectedUploadFile = files[0];
+        this.fileName = this.selectedUploadFile.name;
+        this.uploadStatus = 0;
     }
-  }
 
-  performImport(): void {
-    this.currentImportStep = 2;
-    this.dataExportService.triggerImport(this.selectedUploadFile, this.importConfiguration).subscribe(result => {
-      this.dialogRef.close();
-    });
-  }
+    performPreview(): void {
+        this.uploadStatus = 0;
+        if (this.selectedUploadFile !== undefined) {
+            this.dataExportService
+                .getImportPreview(this.selectedUploadFile)
+                .subscribe(
+                    event => {
+                        if (event.type === HttpEventType.UploadProgress) {
+                            this.uploadStatus = Math.round(
+                                (100 * event.loaded) / event.total,
+                            );
+                        } else if (event instanceof HttpResponse) {
+                            this.importConfiguration =
+                                event.body as AssetExportConfiguration;
+                            this.importConfiguration.overrideBrokerSettings =
+                                true;
+                            this.currentImportStep++;
+                        }
+                    },
+                    error => {},
+                );
+        }
+    }
 
-  back(): void {
-    this.currentImportStep--;
-  }
+    performImport(): void {
+        this.currentImportStep = 2;
+        this.dataExportService
+            .triggerImport(this.selectedUploadFile, this.importConfiguration)
+            .subscribe(result => {
+                this.dialogRef.close();
+            });
+    }
 
-  close(): void {
-    this.dialogRef.close();
-  }
+    back(): void {
+        this.currentImportStep--;
+    }
 
-
+    close(): void {
+        this.dialogRef.close();
+    }
 }

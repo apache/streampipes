@@ -20,72 +20,76 @@ import { Directive, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ServiceAccount, UserAccount, UserService } from '@streampipes/platform-services';
+import {
+    ServiceAccount,
+    UserAccount,
+    UserService,
+} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 
 @Directive()
-export abstract class AbstractSecurityPrincipalConfig<T extends (UserAccount | ServiceAccount)> implements OnInit {
+export abstract class AbstractSecurityPrincipalConfig<
+    T extends UserAccount | ServiceAccount,
+> implements OnInit
+{
+    users: T[] = [];
 
-  users: T[] = [];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    pageSize = 1;
+    @ViewChild(MatSort) sort: MatSort;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  pageSize = 1;
-  @ViewChild(MatSort) sort: MatSort;
+    dataSource: MatTableDataSource<T>;
 
-  dataSource: MatTableDataSource<T>;
+    constructor(
+        protected userService: UserService,
+        protected dialogService: DialogService,
+    ) {}
 
-  constructor(protected userService: UserService,
-              protected dialogService: DialogService) {
-  }
-
-  ngOnInit(): void {
-    this.load();
-  }
-
-  openEditDialog(user: (UserAccount | ServiceAccount),
-                 editMode: boolean) {
-    const dialogRef = this.dialogService.open(EditUserDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: editMode ? 'Edit user ' + user.username : 'Add user',
-      width: '50vw',
-      data: {
-        'user': user,
-        'editMode': editMode
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(refresh => {
-      if (refresh) {
+    ngOnInit(): void {
         this.load();
-      }
-    });
-  }
+    }
 
-  createUser() {
-    const principal = this.getNewInstance();
-    principal.roles = [];
-    principal.groups = [];
-    this.openEditDialog(principal, false);
-  }
+    openEditDialog(user: UserAccount | ServiceAccount, editMode: boolean) {
+        const dialogRef = this.dialogService.open(EditUserDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: editMode ? 'Edit user ' + user.username : 'Add user',
+            width: '50vw',
+            data: {
+                user: user,
+                editMode: editMode,
+            },
+        });
 
-  load() {
-    this.getObservable().subscribe(response => {
-      this.users = response;
-      this.dataSource = new MatTableDataSource(this.users);
-    });
-  }
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.load();
+            }
+        });
+    }
 
-  deleteUser(account: UserAccount | ServiceAccount) {
-    this.userService.deleteUser(account.principalId).subscribe(() => {
-      this.load();
-    });
-  }
+    createUser() {
+        const principal = this.getNewInstance();
+        principal.roles = [];
+        principal.groups = [];
+        this.openEditDialog(principal, false);
+    }
 
-  abstract getObservable(): Observable<T[]>;
+    load() {
+        this.getObservable().subscribe(response => {
+            this.users = response;
+            this.dataSource = new MatTableDataSource(this.users);
+        });
+    }
 
-  abstract getNewInstance(): T;
+    deleteUser(account: UserAccount | ServiceAccount) {
+        this.userService.deleteUser(account.principalId).subscribe(() => {
+            this.load();
+        });
+    }
 
+    abstract getObservable(): Observable<T[]>;
 
+    abstract getNewInstance(): T;
 }

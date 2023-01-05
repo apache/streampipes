@@ -24,30 +24,26 @@ import { StreampipesPeContainerConifgs } from './streampipes-pe-container-config
 
 @Injectable()
 export class ConfigurationMockService {
-
-    constructor() {
-    }
+    constructor() {}
 
     getServerUrl() {
         return '/streampipes-backend';
     }
 
     getConsulServices(): Observable<StreampipesPeContainer[]> {
-
         const config: StreampipesPeContainerConifgs[] = [];
-        config[0] = new StreampipesPeContainerConifgs;
+        config[0] = new StreampipesPeContainerConifgs();
         config[0].description = 'test int';
         config[0].key = 'testint';
         config[0].value = '80';
         config[0].valueType = 'xs:integer';
         config[0].isPassword = false;
 
-
         return of([
             {
                 mainKey: 'sp/test/1',
                 meta: {
-                    status: 'passing'
+                    status: 'passing',
                 },
                 name: 'test1',
                 configs: [
@@ -57,14 +53,14 @@ export class ConfigurationMockService {
                         value: '765',
                         valueType: 'xs:string',
                         isPassword: false,
-                        description: 'test string'
-                    }
-                ]
+                        description: 'test string',
+                    },
+                ],
             },
             {
                 mainKey: 'sp/test/2',
                 meta: {
-                    status: 'critical'
+                    status: 'critical',
                 },
                 name: 'test2',
                 configs: [
@@ -73,15 +69,16 @@ export class ConfigurationMockService {
                         value: 'false',
                         valueType: 'xs:boolean',
                         isPassword: false,
-                        description: 'test bool'
-                    }
-                ]
-            }
+                        description: 'test bool',
+                    },
+                ],
+            },
         ] as StreampipesPeContainer[]);
     }
 
-    updateConsulService(consulService: StreampipesPeContainer): Observable<Object> {
+    updateConsulService(
+        consulService: StreampipesPeContainer,
+    ): Observable<Object> {
         return of({});
     }
-
 }

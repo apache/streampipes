@@ -19,21 +19,22 @@
 import { HttpResponse } from '@angular/common/http';
 
 export class MultipartUtils {
+    extractMultipartPlainTextContent(resp: HttpResponse<string>): string[] {
+        const boundary = this.getBoundary(resp);
+        const parts = resp.body.split(boundary);
+        parts.shift();
+        parts.pop();
+        return parts.map(part => part.replace('Content-Type: text/plain', ''));
+    }
 
-  extractMultipartPlainTextContent(resp: HttpResponse<string>): string[] {
+    getBoundary(resp: HttpResponse<string>) {
+        return (
+            '--' +
+            this.getContentType(resp).split(';')[1].replace('boundary=', '')
+        );
+    }
 
-    const boundary = this.getBoundary(resp);
-    const parts = resp.body.split(boundary);
-    parts.shift();
-    parts.pop();
-    return parts.map(part => part.replace('Content-Type: text/plain', ''));
-  }
-
-  getBoundary(resp: HttpResponse<string>) {
-    return '--' + this.getContentType(resp).split(';')[1].replace('boundary=', '');
-  }
-
-  getContentType(resp: HttpResponse<string>) {
-    return resp.headers.get('Content-type');
-  }
+    getContentType(resp: HttpResponse<string>) {
+        return resp.headers.get('Content-type');
+    }
 }

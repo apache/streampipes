@@ -21,45 +21,48 @@ import { DialogRef } from '@streampipes/shared-ui';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-delete-datalake-index-dialog',
-  templateUrl: './delete-datalake-index-dialog.component.html',
-  styleUrls: ['./delete-datalake-index-dialog.component.scss']
+    selector: 'sp-delete-datalake-index-dialog',
+    templateUrl: './delete-datalake-index-dialog.component.html',
+    styleUrls: ['./delete-datalake-index-dialog.component.scss'],
 })
 export class DeleteDatalakeIndexComponent {
+    @Input()
+    measurementIndex: string;
 
-  @Input()
-  measurementIndex: string;
+    @Input()
+    deleteDialog: boolean;
 
-  @Input()
-  deleteDialog: boolean;
+    isInProgress = false;
+    currentStatus: any;
 
-  isInProgress = false;
-  currentStatus: any;
+    constructor(
+        private dialogRef: DialogRef<DeleteDatalakeIndexComponent>,
+        private datalakeRestService: DatalakeRestService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<DeleteDatalakeIndexComponent>,
-              private datalakeRestService: DatalakeRestService) {
-  }
+    close(refreshDataLakeIndex: boolean) {
+        this.dialogRef.close(refreshDataLakeIndex);
+    }
 
-  close(refreshDataLakeIndex: boolean) {
-    this.dialogRef.close(refreshDataLakeIndex);
-  }
+    truncateData() {
+        this.isInProgress = true;
+        this.currentStatus = 'Truncating data...';
+        this.datalakeRestService
+            .removeData(this.measurementIndex)
+            .subscribe(data => {
+                this.close(true);
+            });
+    }
 
-  truncateData() {
-    this.isInProgress = true;
-    this.currentStatus = 'Truncating data...';
-    this.datalakeRestService.removeData(this.measurementIndex).subscribe(data => {
-      this.close(true);
-    });
-  }
+    deleteData() {
+        this.isInProgress = true;
+        this.currentStatus = 'Deleting data...';
 
-  deleteData() {
-    this.isInProgress = true;
-    this.currentStatus = 'Deleting data...';
-
-    // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
-    this.datalakeRestService.dropSingleMeasurementSeries(this.measurementIndex).subscribe(data => {
-      this.close(true);
-    });
-  }
-
+        // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
+        this.datalakeRestService
+            .dropSingleMeasurementSeries(this.measurementIndex)
+            .subscribe(data => {
+                this.close(true);
+            });
+    }
 }

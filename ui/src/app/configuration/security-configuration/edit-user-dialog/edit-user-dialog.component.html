@@ -22,87 +22,137 @@
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
                     <span class="general-options-header">Basics</span>
-                    <mat-error *ngIf="registrationError">{{registrationError}}</mat-error>
+                    <mat-error *ngIf="registrationError">{{
+                        registrationError
+                    }}</mat-error>
                     <mat-form-field color="accent" *ngIf="!isUserAccount">
                         <mat-label>Username</mat-label>
-                        <input formControlName="username" fxFlex
-                               matInput
-                               required>
+                        <input
+                            formControlName="username"
+                            fxFlex
+                            matInput
+                            required
+                        />
                     </mat-form-field>
                     <mat-form-field color="accent" *ngIf="isUserAccount">
                         <mat-label>Email</mat-label>
-                        <input formControlName="username" fxFlex type="email"
-                               matInput
-                               required
-                               data-cy="new-user-email">
+                        <input
+                            formControlName="username"
+                            fxFlex
+                            type="email"
+                            matInput
+                            required
+                            data-cy="new-user-email"
+                        />
                         <mat-error>Must be a valid email address.</mat-error>
                     </mat-form-field>
-                    <div class="email-changed" *ngIf="emailChanged">Changing the current user's email will require a re-login.</div>
+                    <div class="email-changed" *ngIf="emailChanged">
+                        Changing the current user's email will require a
+                        re-login.
+                    </div>
                     <mat-form-field color="accent" *ngIf="isUserAccount">
                         <mat-label>Full Name</mat-label>
-                        <input formControlName="fullName" fxFlex
-                               matInput
-                               required
-                               data-cy="new-user-full-name">
+                        <input
+                            formControlName="fullName"
+                            fxFlex
+                            matInput
+                            required
+                            data-cy="new-user-full-name"
+                        />
                     </mat-form-field>
                 </div>
-                <div fxLayout="column" class="general-options-panel" *ngIf="!editMode && isUserAccount">
+                <div
+                    fxLayout="column"
+                    class="general-options-panel"
+                    *ngIf="!editMode && isUserAccount"
+                >
                     <span class="general-options-header">Password</span>
-                    <mat-checkbox formControlName="sendPasswordToUser" *ngIf="emailConfigured">Auto-create password and send to user</mat-checkbox>
+                    <mat-checkbox
+                        formControlName="sendPasswordToUser"
+                        *ngIf="emailConfigured"
+                        >Auto-create password and send to user</mat-checkbox
+                    >
                     <mat-form-field color="accent" *ngIf="!sendPasswordToUser">
                         <mat-label>Initial password</mat-label>
-                        <input formControlName="password" fxFlex
-                               type="password"
-                               matInput
-                               required
-                               data-cy="new-user-password">
+                        <input
+                            formControlName="password"
+                            fxFlex
+                            type="password"
+                            matInput
+                            required
+                            data-cy="new-user-password"
+                        />
                     </mat-form-field>
                     <mat-form-field color="accent" *ngIf="!sendPasswordToUser">
                         <mat-label>Repeat password</mat-label>
-                        <input formControlName="repeatPassword" fxFlex
-                               type="password"
-                               matInput
-                               required
-                               data-cy="new-user-password-repeat">
+                        <input
+                            formControlName="repeatPassword"
+                            fxFlex
+                            type="password"
+                            matInput
+                            required
+                            data-cy="new-user-password-repeat"
+                        />
                     </mat-form-field>
-                    <mat-error *ngIf="parentForm.hasError('notMatching')">Passwords do not match.</mat-error>
+                    <mat-error *ngIf="parentForm.hasError('notMatching')"
+                        >Passwords do not match.</mat-error
+                    >
                 </div>
-                <div fxLayout="column" class="general-options-panel" *ngIf="!isUserAccount">
+                <div
+                    fxLayout="column"
+                    class="general-options-panel"
+                    *ngIf="!isUserAccount"
+                >
                     <span class="general-options-header">Authentication</span>
                     <mat-form-field color="accent">
                         <mat-label>Client Secret</mat-label>
-                        <input formControlName="clientSecret" fxFlex
-                               type="password"
-                               matInput
-                               required>
+                        <input
+                            formControlName="clientSecret"
+                            fxFlex
+                            type="password"
+                            matInput
+                            required
+                        />
                     </mat-form-field>
-                    <mat-error *ngIf="parentForm.controls.clientSecret.errors">Minimum length 35 characters.</mat-error>
+                    <mat-error *ngIf="parentForm.controls.clientSecret.errors"
+                        >Minimum length 35 characters.</mat-error
+                    >
                 </div>
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Groups</span>
-                    <mat-checkbox *ngFor="let group of availableGroups" [value]="group.groupId"
-                                  [checked]="user.groups.indexOf(group.groupId) > -1"
-                                  (change)="changeGroupAssignment($event)">
-                        {{group.groupName}}
+                    <mat-checkbox
+                        *ngFor="let group of availableGroups"
+                        [value]="group.groupId"
+                        [checked]="user.groups.indexOf(group.groupId) > -1"
+                        (change)="changeGroupAssignment($event)"
+                    >
+                        {{ group.groupName }}
                     </mat-checkbox>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Roles</span>
-                    <mat-checkbox *ngFor="let role of availableRoles" [value]="role.role"
-                                  [checked]="user.roles.indexOf(role.role) > -1"
-                                  (change)="changeRoleAssignment($event)"
-                                  [attr.data-cy]="'role-' + role.role">
-                        {{role.roleTitle}}
+                    <mat-checkbox
+                        *ngFor="let role of availableRoles"
+                        [value]="role.role"
+                        [checked]="user.roles.indexOf(role.role) > -1"
+                        (change)="changeRoleAssignment($event)"
+                        [attr.data-cy]="'role-' + role.role"
+                    >
+                        {{ role.roleTitle }}
                     </mat-checkbox>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Account</span>
-                    <mat-checkbox formControlName="accountEnabled"
-                                  data-cy="new-user-enabled">
+                    <mat-checkbox
+                        formControlName="accountEnabled"
+                        data-cy="new-user-enabled"
+                    >
                         Enabled
                     </mat-checkbox>
-                    <mat-checkbox formControlName="accountLocked"
-                                  data-cy="new-user-locked">
+                    <mat-checkbox
+                        formControlName="accountLocked"
+                        data-cy="new-user-locked"
+                    >
                         Locked
                     </mat-checkbox>
                 </div>
@@ -113,12 +163,23 @@
     <div class="sp-dialog-actions">
         <div fxLayout="column">
             <div fxLayout="row">
-                <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
-                        [disabled]="!parentForm.valid"
-                        data-cy="sp-element-edit-user-save">
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    (click)="save()"
+                    style="margin-right: 10px"
+                    [disabled]="!parentForm.valid"
+                    data-cy="sp-element-edit-user-save"
+                >
                     <i class="material-icons">save</i><span>&nbsp;Save</span>
                 </button>
-                <button mat-button mat-raised-button class="mat-basic" (click)="close(false)">
+                <button
+                    mat-button
+                    mat-raised-button
+                    class="mat-basic"
+                    (click)="close(false)"
+                >
                     Cancel
                 </button>
             </div>

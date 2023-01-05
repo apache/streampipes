@@ -21,13 +21,11 @@ import { StreampipesPeContainerConifgs } from '../shared/streampipes-pe-containe
 import { ConfigurationService } from '../shared/configuration.service';
 
 @Component({
-    selector: 'consul-configs-number',
+    selector: 'sp-consul-configs-number',
     templateUrl: './consul-configs-number.component.html',
-    styleUrls: ['./consul-configs-number.component.css']
+    styleUrls: ['./consul-configs-number.component.css'],
 })
 export class ConsulConfigsNumberComponent {
     @Input() configuration: StreampipesPeContainerConifgs;
-    constructor(public configService: ConfigurationService) {
-    }
-
+    constructor(public configService: ConfigurationService) {}
 }

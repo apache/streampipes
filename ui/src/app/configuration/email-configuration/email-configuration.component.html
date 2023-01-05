@@ -18,91 +18,196 @@
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'email'">
     <div fxLayout="column" class="page-container-padding">
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="formReady">
-            <sp-split-section title="Mail Settings" subtitle="Settings to connect to a mail server">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="start start"
+            *ngIf="formReady"
+        >
+            <sp-split-section
+                title="Mail Settings"
+                subtitle="Settings to connect to a mail server"
+            >
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                     <div class="subsection-title">Mail Server</div>
                     <mat-form-field color="accent">
                         <mat-label>SMTP Host</mat-label>
-                        <input formControlName="smtpServerHost" fxFlex matInput required>
+                        <input
+                            formControlName="smtpServerHost"
+                            fxFlex
+                            matInput
+                            required
+                        />
                     </mat-form-field>
                     <mat-form-field color="accent">
                         <mat-label>SMTP Port</mat-label>
-                        <input type="number" formControlName="smtpServerPort" fxFlex matInput required>
+                        <input
+                            type="number"
+                            formControlName="smtpServerPort"
+                            fxFlex
+                            matInput
+                            required
+                        />
                     </mat-form-field>
                     <div class="subsection-title">Transport</div>
-                    <mat-radio-group fxLayout="column" formControlName="transport">
-                        <mat-radio-button value="SMTP" class="m-5">SMTP</mat-radio-button>
-                        <mat-radio-button value="SMTPS" class="m-5">SMTPS</mat-radio-button>
-                        <mat-radio-button value="SMTP_TLS" class="m-5">TLS</mat-radio-button>
+                    <mat-radio-group
+                        fxLayout="column"
+                        formControlName="transport"
+                    >
+                        <mat-radio-button value="SMTP" class="m-5"
+                            >SMTP</mat-radio-button
+                        >
+                        <mat-radio-button value="SMTPS" class="m-5"
+                            >SMTPS</mat-radio-button
+                        >
+                        <mat-radio-button value="SMTP_TLS" class="m-5"
+                            >TLS</mat-radio-button
+                        >
                     </mat-radio-group>
                     <div class="subsection-title mt-20">Authentication</div>
-                    <mat-checkbox formControlName="usesAuthentication">SMTP server requires authentication
+                    <mat-checkbox formControlName="usesAuthentication"
+                        >SMTP server requires authentication
                     </mat-checkbox>
-                    <mat-form-field color="accent" *ngIf="mailConfig.usesAuthentication">
+                    <mat-form-field
+                        color="accent"
+                        *ngIf="mailConfig.usesAuthentication"
+                    >
                         <mat-label>SMTP Username</mat-label>
-                        <input formControlName="smtpUsername" fxFlex matInput>
+                        <input formControlName="smtpUsername" fxFlex matInput />
                     </mat-form-field>
-                    <mat-form-field color="accent" *ngIf="mailConfig.usesAuthentication">
+                    <mat-form-field
+                        color="accent"
+                        *ngIf="mailConfig.usesAuthentication"
+                    >
                         <mat-label>SMTP Password</mat-label>
-                        <input formControlName="smtpPassword" fxFlex type="password" matInput>
+                        <input
+                            formControlName="smtpPassword"
+                            fxFlex
+                            type="password"
+                            matInput
+                        />
                     </mat-form-field>
                     <div class="subsection-title mt-20">Proxy</div>
-                    <mat-checkbox formControlName="usesProxy">Uses proxy</mat-checkbox>
+                    <mat-checkbox formControlName="usesProxy"
+                        >Uses proxy</mat-checkbox
+                    >
                     <mat-form-field color="accent" *ngIf="mailConfig.usesProxy">
                         <mat-label>Proxy Host</mat-label>
-                        <input formControlName="proxyHost" fxFlex matInput>
+                        <input formControlName="proxyHost" fxFlex matInput />
                     </mat-form-field>
                     <mat-form-field color="accent" *ngIf="mailConfig.usesProxy">
                         <mat-label>Proxy Port</mat-label>
-                        <input formControlName="proxyPort" fxFlex matInput>
+                        <input formControlName="proxyPort" fxFlex matInput />
                     </mat-form-field>
-                    <mat-checkbox formControlName="usesProxyAuthentication" *ngIf="mailConfig.usesProxy">
+                    <mat-checkbox
+                        formControlName="usesProxyAuthentication"
+                        *ngIf="mailConfig.usesProxy"
+                    >
                         Proxy requires authentication
                     </mat-checkbox>
-                    <mat-form-field color="accent" *ngIf="mailConfig.usesProxy && mailConfig.usesProxyAuthentication">
+                    <mat-form-field
+                        color="accent"
+                        *ngIf="
+                            mailConfig.usesProxy &&
+                            mailConfig.usesProxyAuthentication
+                        "
+                    >
                         <mat-label>Proxy Username</mat-label>
-                        <input formControlName="proxyUsername" fxFlex matInput>
+                        <input
+                            formControlName="proxyUsername"
+                            fxFlex
+                            matInput
+                        />
                     </mat-form-field>
-                    <mat-form-field color="accent" *ngIf="mailConfig.usesProxy && mailConfig.usesProxyAuthentication">
+                    <mat-form-field
+                        color="accent"
+                        *ngIf="
+                            mailConfig.usesProxy &&
+                            mailConfig.usesProxyAuthentication
+                        "
+                    >
                         <mat-label>Proxy Password</mat-label>
-                        <input formControlName="proxyPassword" fxFlex type="password" matInput>
+                        <input
+                            formControlName="proxyPassword"
+                            fxFlex
+                            type="password"
+                            matInput
+                        />
                     </mat-form-field>
                     <div class="subsection-title mt-20">Sender</div>
                     <mat-form-field color="accent">
                         <mat-label>Sender Email Address</mat-label>
-                        <input formControlName="senderAddress" fxFlex matInput required>
+                        <input
+                            formControlName="senderAddress"
+                            fxFlex
+                            matInput
+                            required
+                        />
                     </mat-form-field>
                     <mat-form-field color="accent">
                         <mat-label>Sender Name</mat-label>
-                        <input formControlName="senderName" fxFlex matInput>
+                        <input formControlName="senderName" fxFlex matInput />
                     </mat-form-field>
                     <mat-form-field color="accent">
                         <mat-label>Recipient for test mail</mat-label>
-                        <input formControlName="defaultRecipient" fxFlex matInput>
+                        <input
+                            formControlName="defaultRecipient"
+                            fxFlex
+                            matInput
+                        />
                     </mat-form-field>
                     <div fxLayout="row">
-                        <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
-                            [disabled]="!parentForm.valid" data-cy="sp-element-email-config-save">
-                            <i class="material-icons">save</i><span>&nbsp;Save</span>
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            (click)="save()"
+                            style="margin-right: 10px"
+                            [disabled]="!parentForm.valid"
+                            data-cy="sp-element-email-config-save"
+                        >
+                            <i class="material-icons">save</i
+                            ><span>&nbsp;Save</span>
                         </button>
-                        <button mat-button mat-raised-button class="mat-basic" (click)="sendTestMail()"
-                            style="margin-right:10px;" [disabled]="!parentForm.valid || sendingTestMailInProgress"
-                            data-cy="sp-element-email-config-test">
+                        <button
+                            mat-button
+                            mat-raised-button
+                            class="mat-basic"
+                            (click)="sendTestMail()"
+                            style="margin-right: 10px"
+                            [disabled]="
+                                !parentForm.valid || sendingTestMailInProgress
+                            "
+                            data-cy="sp-element-email-config-test"
+                        >
                             <span>Send Test Mail</span>
                         </button>
                     </div>
                     <div fxLayout="column" *ngIf="attemptSendingTestMail">
                         <div fxLayout="row" *ngIf="sendingTestMailInProgress">
-                            <mat-progress-spinner diameter="10"></mat-progress-spinner>
+                            <mat-progress-spinner
+                                diameter="10"
+                            ></mat-progress-spinner>
                             <h5>Trying to send test mail...</h5>
                         </div>
                         <div fxLayout="row">
-                            <h5 *ngIf="!sendingTestMailInProgress && sendingTestMailSuccess">Success - please check your
-                                mail inbox.</h5>
-                            <div fxLayout="column" *ngIf="!sendingTestMailInProgress && !sendingTestMailSuccess">
+                            <h5
+                                *ngIf="
+                                    !sendingTestMailInProgress &&
+                                    sendingTestMailSuccess
+                                "
+                            >
+                                Success - please check your mail inbox.
+                            </h5>
+                            <div
+                                fxLayout="column"
+                                *ngIf="
+                                    !sendingTestMailInProgress &&
+                                    !sendingTestMailSuccess
+                                "
+                            >
                                 Failure
-                                <h5>{{sendingEmailErrorMessage}}</h5>
+                                <h5>{{ sendingEmailErrorMessage }}</h5>
                             </div>
                         </div>
                     </div>
@@ -110,7 +215,5 @@
             </sp-split-section>
         </div>
         <mat-divider></mat-divider>
-
-
     </div>
 </sp-basic-nav-tabs>
