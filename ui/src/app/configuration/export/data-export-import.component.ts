@@ -17,80 +17,86 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    DialogService,
+    PanelType,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { SpConfigurationTabs } from '../configuration-tabs';
-import { AssetManagementService, SpAsset } from '@streampipes/platform-services';
+import {
+    AssetManagementService,
+    SpAsset,
+} from '@streampipes/platform-services';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
 
 @Component({
-  selector: 'sp-data-export-import',
-  templateUrl: './data-export-import.component.html',
-  styleUrls: ['./data-export-import.component.scss']
+    selector: 'sp-data-export-import',
+    templateUrl: './data-export-import.component.html',
+    styleUrls: ['./data-export-import.component.scss'],
 })
 export class SpDataExportImportComponent implements OnInit {
+    tabs = SpConfigurationTabs.getTabs();
 
-  tabs = SpConfigurationTabs.getTabs();
+    assets: SpAsset[];
+    selectedAssets: string[] = [];
 
-  assets: SpAsset[];
-  selectedAssets: string[] = [];
+    constructor(
+        private breadcrumbService: SpBreadcrumbService,
+        private assetManagementService: AssetManagementService,
+        private dialogService: DialogService,
+    ) {}
 
-  constructor(private breadcrumbService: SpBreadcrumbService,
-              private assetManagementService: AssetManagementService,
-              private dialogService: DialogService) {
-
-  }
-
-  ngOnInit(): void {
-    this.breadcrumbService
-      .updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[3].itemTitle}]);
-    this.loadAssets();
-  }
-
-  loadAssets(): void {
-    this.assetManagementService
-      .getAllAssets()
-      .subscribe(assets => this.assets = assets.sort((a, b) => a.assetName.localeCompare(b.assetName)));
-  }
-
-  handleSelectionChange(event: MatCheckboxChange,
-                        assetId: string) {
-    if (event.checked) {
-      this.selectedAssets.push(assetId);
-    } else {
-      this.selectedAssets.splice(this.selectedAssets.indexOf(assetId), 1);
+    ngOnInit(): void {
+        this.breadcrumbService.updateBreadcrumb([
+            SpConfigurationRoutes.BASE,
+            { label: SpConfigurationTabs.getTabs()[3].itemTitle },
+        ]);
+        this.loadAssets();
     }
-  }
 
-  openExportDialog(): void {
-    const dialogRef = this.dialogService.open(SpDataExportDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Export resources',
-      width: '50vw',
-      data: {
-        'selectedAssets': this.selectedAssets,
-      }
-    });
+    loadAssets(): void {
+        this.assetManagementService
+            .getAllAssets()
+            .subscribe(
+                assets =>
+                    (this.assets = assets.sort((a, b) =>
+                        a.assetName.localeCompare(b.assetName),
+                    )),
+            );
+    }
 
-    dialogRef.afterClosed().subscribe(() => {
+    handleSelectionChange(event: MatCheckboxChange, assetId: string) {
+        if (event.checked) {
+            this.selectedAssets.push(assetId);
+        } else {
+            this.selectedAssets.splice(this.selectedAssets.indexOf(assetId), 1);
+        }
+    }
 
-    });
-  }
+    openExportDialog(): void {
+        const dialogRef = this.dialogService.open(SpDataExportDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Export resources',
+            width: '50vw',
+            data: {
+                selectedAssets: this.selectedAssets,
+            },
+        });
 
-  openImportDialog(): void {
-    const dialogRef = this.dialogService.open(SpDataImportDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Import resources',
-      width: '50vw',
-      data: {
-      }
-    });
+        dialogRef.afterClosed().subscribe(() => {});
+    }
 
-    dialogRef.afterClosed().subscribe(() => {
+    openImportDialog(): void {
+        const dialogRef = this.dialogService.open(SpDataImportDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Import resources',
+            width: '50vw',
+            data: {},
+        });
 
-    });
-  }
-
+        dialogRef.afterClosed().subscribe(() => {});
+    }
 }

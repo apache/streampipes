@@ -16,12 +16,25 @@
   ~
   -->
 
-<section class="checkbox-field" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="100">
-    <mat-checkbox matInput [(ngModel)]="configuration.value" type="checkbox"
-                  [ngModelOptions]="{standalone: true}">
-        {{configService.adjustConfigurationKey(configuration.key)}}
+<section
+    class="checkbox-field"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxFlex="100"
+>
+    <mat-checkbox
+        matInput
+        [(ngModel)]="configuration.value"
+        type="checkbox"
+        [ngModelOptions]="{ standalone: true }"
+    >
+        {{ configService.adjustConfigurationKey(configuration.key) }}
     </mat-checkbox>
-    <mat-icon [matTooltip]="configuration.description" matTooltipPosition="left" class="tooltip-icon">
+    <mat-icon
+        [matTooltip]="configuration.description"
+        matTooltipPosition="left"
+        class="tooltip-icon"
+    >
         help
     </mat-icon>
 </section>

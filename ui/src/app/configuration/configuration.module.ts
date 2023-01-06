@@ -60,90 +60,90 @@ import { SpDataImportDialogComponent } from './export/import-dialog/data-import-
 import { SpDataExportItemComponent } from './export/export-dialog/data-export-item/data-export-item.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    CustomMaterialModule,
-    FlexLayoutModule,
-    MatGridListModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatDividerModule,
-    MatTooltipModule,
-    FormsModule,
-    DragDropModule,
-    CoreUiModule,
-    ReactiveFormsModule,
-    PlatformServicesModule,
-    RouterModule.forChild([
-      {
-        path: 'configuration',
-        children: [
-          {
-            path: '',
-            redirectTo: 'general',
-            pathMatch: 'full'
-          },
-          {
-            path: 'general',
-            component: GeneralConfigurationComponent
-          },
-          {
-            path: 'datalake',
-            component: DatalakeConfigurationComponent
-          },
-          {
-            path: 'email',
-            component: EmailConfigurationComponent
-          },
-          {
-            path: 'export',
-            component: SpDataExportImportComponent
-          },
-          {
-            path: 'messaging',
-            component: MessagingConfigurationComponent
-          },
-          {
-            path: 'pipelineelement',
-            component: PipelineElementConfigurationComponent
-          },
-          {
-            path: 'security',
-            component: SecurityConfigurationComponent
-          }
-        ]
-      }
-    ]),
-    SharedUiModule,
-  ],
-  declarations: [
-    ConsulServiceComponent,
-    ConsulConfigsComponent,
-    ConsulConfigsTextComponent,
-    ConsulConfigsPasswordComponent,
-    ConsulConfigsBooleanComponent,
-    ConsulConfigsNumberComponent,
-    DeleteDatalakeIndexComponent,
-    EditUserDialogComponent,
-    EditGroupDialogComponent,
-    EmailConfigurationComponent,
-    GeneralConfigurationComponent,
-    PipelineElementConfigurationComponent,
-    SecurityAuthenticationConfigurationComponent,
-    SecurityConfigurationComponent,
-    SecurityUserConfigComponent,
-    SecurityUserGroupConfigComponent,
-    SecurityServiceConfigComponent,
-    MessagingConfigurationComponent,
-    DatalakeConfigurationComponent,
-    SpDataExportImportComponent,
-    SpDataExportDialogComponent,
-    SpDataExportItemComponent,
-    SpDataImportDialogComponent
-  ],
-  providers: [ConfigurationService],
+    imports: [
+        CommonModule,
+        CustomMaterialModule,
+        FlexLayoutModule,
+        MatGridListModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatDividerModule,
+        MatTooltipModule,
+        FormsModule,
+        DragDropModule,
+        CoreUiModule,
+        ReactiveFormsModule,
+        PlatformServicesModule,
+        RouterModule.forChild([
+            {
+                path: 'configuration',
+                children: [
+                    {
+                        path: '',
+                        redirectTo: 'general',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: 'general',
+                        component: GeneralConfigurationComponent,
+                    },
+                    {
+                        path: 'datalake',
+                        component: DatalakeConfigurationComponent,
+                    },
+                    {
+                        path: 'email',
+                        component: EmailConfigurationComponent,
+                    },
+                    {
+                        path: 'export',
+                        component: SpDataExportImportComponent,
+                    },
+                    {
+                        path: 'messaging',
+                        component: MessagingConfigurationComponent,
+                    },
+                    {
+                        path: 'pipelineelement',
+                        component: PipelineElementConfigurationComponent,
+                    },
+                    {
+                        path: 'security',
+                        component: SecurityConfigurationComponent,
+                    },
+                ],
+            },
+        ]),
+        SharedUiModule,
+    ],
+    declarations: [
+        ConsulServiceComponent,
+        ConsulConfigsComponent,
+        ConsulConfigsTextComponent,
+        ConsulConfigsPasswordComponent,
+        ConsulConfigsBooleanComponent,
+        ConsulConfigsNumberComponent,
+        DeleteDatalakeIndexComponent,
+        EditUserDialogComponent,
+        EditGroupDialogComponent,
+        EmailConfigurationComponent,
+        GeneralConfigurationComponent,
+        PipelineElementConfigurationComponent,
+        SecurityAuthenticationConfigurationComponent,
+        SecurityConfigurationComponent,
+        SecurityUserConfigComponent,
+        SecurityUserGroupConfigComponent,
+        SecurityServiceConfigComponent,
+        MessagingConfigurationComponent,
+        DatalakeConfigurationComponent,
+        SpDataExportImportComponent,
+        SpDataExportDialogComponent,
+        SpDataExportItemComponent,
+        SpDataImportDialogComponent,
+    ],
+    providers: [ConfigurationService],
 })
 export class ConfigurationModule {}

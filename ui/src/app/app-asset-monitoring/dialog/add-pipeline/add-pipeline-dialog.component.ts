@@ -34,7 +34,7 @@ import { zip } from 'rxjs';
     templateUrl: './add-pipeline-dialog.component.html',
     styleUrls: ['./add-pipeline-dialog.component.scss'],
 })
-export class AddPipelineDialogComponent {
+export class AddPipelineDialogComponent implements OnInit {
     pages = [
         {
             type: 'select-pipeline',

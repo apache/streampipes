@@ -21,20 +21,19 @@ import { StreampipesPeContainer } from '../shared/streampipes-pe-container.model
 import { XsService } from '../../NS/xs.service';
 
 @Component({
-  selector: 'consul-configs',
-  templateUrl: './consul-configs.component.html',
-  styleUrls: ['./consul-configs.component.css'],
-  providers: [XsService]
+    selector: 'sp-consul-configs',
+    templateUrl: './consul-configs.component.html',
+    styleUrls: ['./consul-configs.component.css'],
+    providers: [XsService],
 })
 export class ConsulConfigsComponent {
-  @Input() consulService: StreampipesPeContainer;
-  @Output() updateConsulService: EventEmitter<StreampipesPeContainer> = new EventEmitter<StreampipesPeContainer>();
+    @Input() consulService: StreampipesPeContainer;
+    @Output() updateConsulService: EventEmitter<StreampipesPeContainer> =
+        new EventEmitter<StreampipesPeContainer>();
 
-  constructor(private service: XsService) {
-  }
+    constructor(private service: XsService) {}
 
-  updateConfiguration(): void {
-    this.updateConsulService.emit(this.consulService);
-  }
-
+    updateConfiguration(): void {
+        this.updateConsulService.emit(this.consulService);
+    }
 }

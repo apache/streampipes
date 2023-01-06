@@ -16,35 +16,58 @@
   ~
   -->
 
-<div fxLayout="row" fxFlex="100"
-     style="border-top:1px solid lightgray;padding:10px;margin-bottom:5px;">
+<div
+    fxLayout="row"
+    fxFlex="100"
+    style="border-top: 1px solid lightgray; padding: 10px; margin-bottom: 5px"
+>
     <form (ngSubmit)="updateConfiguration()" fxFlex="100">
         <mat-grid-list cols="4" rowHeight="3:1" gutterSize="10px">
             <mat-grid-tile *ngFor="let configuration of consulService.configs">
-                <consul-configs-password fxFlex="100" *ngIf="configuration.isPassword" [configuration]="configuration">
-                </consul-configs-password>
+                <sp-consul-configs-password
+                    fxFlex="100"
+                    *ngIf="configuration.isPassword"
+                    [configuration]="configuration"
+                >
+                </sp-consul-configs-password>
 
-                <consul-configs-text fxFlex="100"
-                                     *ngIf="configuration.valueType == service.XS_STRING && !configuration.isPassword"
-                                     [configuration]="configuration">
-                </consul-configs-text>
+                <sp-consul-configs-text
+                    fxFlex="100"
+                    *ngIf="
+                        configuration.valueType === service.XS_STRING &&
+                        !configuration.isPassword
+                    "
+                    [configuration]="configuration"
+                >
+                </sp-consul-configs-text>
 
-                <consul-configs-number
-                        fxFlex="100"
-                        *ngIf="configuration.valueType == service.XS_INTEGER || configuration.valueType == service.XS_DOUBLE"
-                        [configuration]="configuration">
-                </consul-configs-number>
+                <sp-consul-configs-number
+                    fxFlex="100"
+                    *ngIf="
+                        configuration.valueType === service.XS_INTEGER ||
+                        configuration.valueType === service.XS_DOUBLE
+                    "
+                    [configuration]="configuration"
+                >
+                </sp-consul-configs-number>
 
-                <consul-configs-boolean fxFlex="100" *ngIf="configuration.valueType == service.XS_BOOLEAN"
-                                        [configuration]="configuration">
-                </consul-configs-boolean>
-
+                <sp-consul-configs-boolean
+                    fxFlex="100"
+                    *ngIf="configuration.valueType === service.XS_BOOLEAN"
+                    [configuration]="configuration"
+                >
+                </sp-consul-configs-boolean>
             </mat-grid-tile>
         </mat-grid-list>
         <div fxLayoutAlign="end center">
-            <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button">Update
+            <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                class="md-raised md-primary submit-button"
+            >
+                Update
             </button>
         </div>
-
     </form>
 </div>

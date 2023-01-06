@@ -18,89 +18,169 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
-        <div fxFlex="100" fxLayout="column" class="p-15" *ngIf="currentImportStep === 0">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            class="p-15"
+            *ngIf="currentImportStep === 0"
+        >
             <h4>Upload application package file</h4>
-            <mat-form-field style="width: 95%" (click)="fileInput.click();" color="accent">
-                <input matInput placeholder="File" disabled (value)="fileName">
-                <input #fileInput type="file" style="display:none;"
-                       (change)="handleFileInput($event.target.files)">
+            <mat-form-field
+                style="width: 95%"
+                (click)="fileInput.click()"
+                color="accent"
+            >
+                <input
+                    matInput
+                    placeholder="File"
+                    disabled
+                    (value)="(fileName)"
+                />
+                <input
+                    #fileInput
+                    type="file"
+                    style="display: none"
+                    (change)="handleFileInput($event.target.files)"
+                />
                 <div>
-                    {{fileName}}
-                    <mat-progress-bar mode="determinate"
-                                      value="{{uploadStatus}}" *ngIf="uploadStatus > 0"
-                                      color="accent">
+                    {{ fileName }}
+                    <mat-progress-bar
+                        mode="determinate"
+                        value="{{ uploadStatus }}"
+                        *ngIf="uploadStatus > 0"
+                        color="accent"
+                    >
                     </mat-progress-bar>
                 </div>
-                <button color="accent"
-                        matSuffix
-                        mat-button
-                        style="min-width: 0px">
-                    <mat-icon *ngIf="uploadStatus < 99">insert_drive_file</mat-icon>
-                    <mat-icon *ngIf="uploadStatus == 100" class="green-icon">check_circle</mat-icon>
+                <button
+                    color="accent"
+                    matSuffix
+                    mat-button
+                    style="min-width: 0px"
+                >
+                    <mat-icon *ngIf="uploadStatus < 99"
+                        >insert_drive_file</mat-icon
+                    >
+                    <mat-icon *ngIf="uploadStatus === 100" class="green-icon"
+                        >check_circle</mat-icon
+                    >
                 </button>
                 <mat-error *ngIf="!hasInput">
-                    {{errorMessage}}
+                    {{ errorMessage }}
                 </mat-error>
             </mat-form-field>
         </div>
-        <div fxFlex="100" fxLayout="column" class="p-15" *ngIf="currentImportStep === 1">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            class="p-15"
+            *ngIf="currentImportStep === 1"
+        >
             <h4>Select resources to import</h4>
-            <sp-data-export-item [exportItems]="importConfiguration.assets" sectionTitle="Assets"></sp-data-export-item>
-            <sp-data-export-item [exportItems]="importConfiguration.adapters" sectionTitle="Adapters"></sp-data-export-item>
-            <sp-data-export-item [exportItems]="importConfiguration.dashboards" sectionTitle="Dashboards"></sp-data-export-item>
-            <sp-data-export-item [exportItems]="importConfiguration.dataViews" sectionTitle="Data Views"></sp-data-export-item>
-            <sp-data-export-item [exportItems]="importConfiguration.dataSources" sectionTitle="Data Sources"></sp-data-export-item>
-            <sp-data-export-item [exportItems]="importConfiguration.dataLakeMeasures" sectionTitle="Data Lake Storage"></sp-data-export-item>
-            <sp-data-export-item [exportItems]="importConfiguration.files" sectionTitle="Files"></sp-data-export-item>
-            <sp-data-export-item [exportItems]="importConfiguration.pipelines" sectionTitle="Pipelines"></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.assets"
+                sectionTitle="Assets"
+            ></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.adapters"
+                sectionTitle="Adapters"
+            ></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.dashboards"
+                sectionTitle="Dashboards"
+            ></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.dataViews"
+                sectionTitle="Data Views"
+            ></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.dataSources"
+                sectionTitle="Data Sources"
+            ></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.dataLakeMeasures"
+                sectionTitle="Data Lake Storage"
+            ></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.files"
+                sectionTitle="Files"
+            ></sp-data-export-item>
+            <sp-data-export-item
+                [exportItems]="importConfiguration.pipelines"
+                sectionTitle="Pipelines"
+            ></sp-data-export-item>
 
-            <div fxFlex="100" fxLayout="column" *ngIf="currentImportStep === 1" class="mt-10">
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                *ngIf="currentImportStep === 1"
+                class="mt-10"
+            >
                 <h4>Import options</h4>
-                <div fxLayout="column"*ngIf="importConfiguration">
-                    <mat-checkbox [(ngModel)]="importConfiguration.overrideBrokerSettings">Use broker settings from this instance</mat-checkbox>
+                <div fxLayout="column" *ngIf="importConfiguration">
+                    <mat-checkbox
+                        [(ngModel)]="importConfiguration.overrideBrokerSettings"
+                        >Use broker settings from this instance</mat-checkbox
+                    >
                 </div>
             </div>
         </div>
-        <div fxFlex="100" fxLayout="column" *ngIf="currentImportStep === 2" class="mt-10" fxLayoutAlign="center center">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            *ngIf="currentImportStep === 2"
+            class="mt-10"
+            fxLayoutAlign="center center"
+        >
             <mat-spinner [diameter]="50" color="accent"></mat-spinner>
             <h4 class="mt-10">Importing resources...</h4>
         </div>
-
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="column">
             <div fxLayout="row">
-                <button mat-button
-                        mat-raised-button
-                        color="accent"
-                        style="margin-right: 10px;" (click)="performPreview()"
-                        *ngIf="currentImportStep === 0"
-                        [disabled]="!hasInput">
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    style="margin-right: 10px"
+                    (click)="performPreview()"
+                    *ngIf="currentImportStep === 0"
+                    [disabled]="!hasInput"
+                >
                     <span>&nbsp;Next</span>
                 </button>
-                <button mat-button
-                        mat-raised-button
-                        color="accent"
-                        style="margin-right: 10px;"
-                        *ngIf="currentImportStep === 1" (click)="performImport()">
-                    <i class="material-icons">file_download</i><span>&nbsp;Import data</span>
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    style="margin-right: 10px"
+                    *ngIf="currentImportStep === 1"
+                    (click)="performImport()"
+                >
+                    <i class="material-icons">file_download</i
+                    ><span>&nbsp;Import data</span>
                 </button>
-                <button mat-button
-                        mat-raised-button
-                        class="mat-basic"
-                        style="margin-right: 10px;"
-                        (click)="back()" *ngIf="currentImportStep > 0">
+                <button
+                    mat-button
+                    mat-raised-button
+                    class="mat-basic"
+                    style="margin-right: 10px"
+                    (click)="back()"
+                    *ngIf="currentImportStep > 0"
+                >
                     Back
                 </button>
-                <button mat-button
-                        mat-raised-button
-                        class="mat-basic"
-                        (click)="close()">
+                <button
+                    mat-button
+                    mat-raised-button
+                    class="mat-basic"
+                    (click)="close()"
+                >
                     Cancel
                 </button>
             </div>
         </div>
     </div>
 </div>
-

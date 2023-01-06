@@ -17,9 +17,11 @@
   -->
 
 <mat-form-field class="form-field" fxFlex="100">
-
-<input 
-        matInput [(ngModel)]="configuration.value" [placeholder]="configService.adjustConfigurationKey(configuration.key)" type="number"
-        [ngModelOptions]="{standalone: true}">
-
+    <input
+        matInput
+        [(ngModel)]="configuration.value"
+        [placeholder]="configService.adjustConfigurationKey(configuration.key)"
+        type="number"
+        [ngModelOptions]="{ standalone: true }"
+    />
 </mat-form-field>
