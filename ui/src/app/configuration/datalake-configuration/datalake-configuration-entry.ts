@@ -16,12 +16,10 @@
  *
  */
 export class DataLakeConfigurationEntry {
+    public name: string;
+    public pipelines: string[] = [];
+    public events = 0;
+    public remove = true;
 
-  public name: string;
-  public pipelines: string[] = [];
-  public events = 0;
-  public remove = true;
-
-  constructor() {
-  }
+    constructor() {}
 }

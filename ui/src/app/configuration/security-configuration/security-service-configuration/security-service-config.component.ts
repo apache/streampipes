@@ -22,26 +22,22 @@ import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'sp-security-service-config',
-  templateUrl: './security-service-config.component.html',
-  styleUrls: ['./security-service-config.component.scss']
+    selector: 'sp-security-service-config',
+    templateUrl: './security-service-config.component.html',
+    styleUrls: ['./security-service-config.component.scss'],
 })
 export class SecurityServiceConfigComponent extends AbstractSecurityPrincipalConfig<ServiceAccount> {
+    displayedColumns: string[] = ['username', 'edit'];
 
+    getObservable(): Observable<ServiceAccount[]> {
+        return this.userService.getAllServiceAccounts();
+    }
 
-  displayedColumns: string[] = ['username', 'edit'];
+    editService(account: ServiceAccount) {
+        this.openEditDialog(account, true);
+    }
 
-  getObservable(): Observable<ServiceAccount[]> {
-    return this.userService.getAllServiceAccounts();
-  }
-
-  editService(account: ServiceAccount) {
-    this.openEditDialog(account, true);
-  }
-
-  getNewInstance(): ServiceAccount {
-    return new ServiceAccount();
-  }
-
-
+    getNewInstance(): ServiceAccount {
+        return new ServiceAccount();
+    }
 }

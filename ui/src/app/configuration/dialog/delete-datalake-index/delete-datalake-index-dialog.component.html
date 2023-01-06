@@ -19,46 +19,71 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div *ngIf="!isInProgress" fxLayout="column">
-            <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column">
-                <b *ngIf="deleteDialog"><h4>Do you really want to delete the data index {{measurementIndex}}?</h4></b>
-                <b *ngIf="!deleteDialog"><h4>Do you really want to truncate the data in {{measurementIndex}}?</h4></b>
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <b *ngIf="deleteDialog"
+                    ><h4>
+                        Do you really want to delete the data index
+                        {{ measurementIndex }}?
+                    </h4></b
+                >
+                <b *ngIf="!deleteDialog"
+                    ><h4>
+                        Do you really want to truncate the data in
+                        {{ measurementIndex }}?
+                    </h4></b
+                >
                 <b><h5>This operation cannot be undone.</h5></b>
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <button mat-button
-                        mat-raised-button
-                        color="accent"
-                        data-cy="confirm-truncate-data-btn"
-                        *ngIf="!deleteDialog"
-                        (click)="truncateData()"
-                >Truncate Data
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    data-cy="confirm-truncate-data-btn"
+                    *ngIf="!deleteDialog"
+                    (click)="truncateData()"
+                >
+                    Truncate Data
                 </button>
                 <button
-                        mat-button
-                        mat-raised-button
-                        color="accent"
-                        data-cy="confirm-delete-data-btn"
-                        *ngIf="deleteDialog"
-                        (click)="deleteData()"
-                >Delete Data
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    data-cy="confirm-delete-data-btn"
+                    *ngIf="deleteDialog"
+                    (click)="deleteData()"
+                >
+                    Delete Data
                 </button>
             </div>
         </div>
-        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="isInProgress"
-             data-cy="adapter-deletion-in-progress">
+        <div
+            fxFlex="100"
+            fxLayoutAlign="center center"
+            fxLayout="column"
+            *ngIf="isInProgress"
+            data-cy="adapter-deletion-in-progress"
+        >
             <div fxLayout="row" fxLayoutAlign="space-around">
-                <mat-spinner [mode]="'indeterminate'" color="accent"></mat-spinner>
+                <mat-spinner
+                    [mode]="'indeterminate'"
+                    color="accent"
+                ></mat-spinner>
             </div>
-            <b><h4>{{currentStatus}}</h4></b>
+            <b
+                ><h4>{{ currentStatus }}</h4></b
+            >
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close(false)">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close(false)"
+        >
             Close
         </button>
     </div>

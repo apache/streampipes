@@ -23,74 +23,91 @@ import { map } from 'rxjs/operators';
 
 import { StreampipesPeContainer } from './streampipes-pe-container.model';
 import { MessagingSettings } from './messaging-settings.model';
-import { MultipartUtils } from "./multipart-utils";
+import { MultipartUtils } from './multipart-utils';
 
 @Injectable()
 export class ConfigurationService {
-
-
-    constructor(private http: HttpClient) {
-    }
+    constructor(private http: HttpClient) {}
 
     getServerUrl() {
         return '/streampipes-backend';
     }
 
     generateKeyPair(): Observable<string[]> {
-      return this.http.get(this.getServerUrl() + '/api/v2/admin/general-config/keys', {responseType: 'text', observe: 'response'})
-        .pipe(map(response => {
-          return new MultipartUtils().extractMultipartPlainTextContent(response);
-      }));
+        return this.http
+            .get(this.getServerUrl() + '/api/v2/admin/general-config/keys', {
+                responseType: 'text',
+                observe: 'response',
+            })
+            .pipe(
+                map(response => {
+                    return new MultipartUtils().extractMultipartPlainTextContent(
+                        response,
+                    );
+                }),
+            );
     }
 
     getMessagingSettings(): Observable<MessagingSettings> {
-        return this.http.get(this.getServerUrl() + '/api/v2/consul/messaging')
+        return this.http
+            .get(this.getServerUrl() + '/api/v2/consul/messaging')
             .pipe(
                 map(response => {
                     return response as MessagingSettings;
-                })
+                }),
             );
     }
 
     getConsulServices(): Observable<StreampipesPeContainer[]> {
-        return this.http.get(this.getServerUrl() + '/api/v2/consul')
-            .pipe(
-                map(response => {
-                    for (const service of response as any[]) {
-                        for (const config of service['configs']) {
-                            if (config.valueType === 'xs:integer') {
-                                config.value = parseInt(config.value);
-                            } else if (config.valueType === 'xs:double') {
-                                config.value = parseFloat('xs:double');
-                            } else if (config.valueType === 'xs:boolean') {
-                                config.value = (config.value === 'true');
-                            }
+        return this.http.get(this.getServerUrl() + '/api/v2/consul').pipe(
+            map(response => {
+                for (const service of response as any[]) {
+                    for (const config of service['configs']) {
+                        if (config.valueType === 'xs:integer') {
+                            config.value = parseInt(config.value);
+                        } else if (config.valueType === 'xs:double') {
+                            config.value = parseFloat('xs:double');
+                        } else if (config.valueType === 'xs:boolean') {
+                            config.value = config.value === 'true';
                         }
                     }
-                    return response as StreampipesPeContainer[];
-                })
-            );
+                }
+                return response as StreampipesPeContainer[];
+            }),
+        );
     }
 
-    updateConsulService(consulService: StreampipesPeContainer): Observable<Object> {
-        return this.http.post(this.getServerUrl() + '/api/v2/consul', consulService);
+    updateConsulService(
+        consulService: StreampipesPeContainer,
+    ): Observable<Object> {
+        return this.http.post(
+            this.getServerUrl() + '/api/v2/consul',
+            consulService,
+        );
     }
 
-    updateMessagingSettings(messagingSettings: MessagingSettings): Observable<Object> {
-        return this.http.post(this.getServerUrl() + '/api/v2/consul/messaging', messagingSettings);
+    updateMessagingSettings(
+        messagingSettings: MessagingSettings,
+    ): Observable<Object> {
+        return this.http.post(
+            this.getServerUrl() + '/api/v2/consul/messaging',
+            messagingSettings,
+        );
     }
 
     adjustConfigurationKey(consulKey) {
+        const removedKey = consulKey.substr(
+            consulKey.lastIndexOf('/') + 1,
+            consulKey.length,
+        );
 
-            const removedKey = consulKey.substr(consulKey.lastIndexOf('/') + 1, consulKey.length);
+        // console.log(removedKey);
 
-            // console.log(removedKey);
-
-            let str1 = removedKey.replace(/SP/g, '');
-            str1 = str1.replace(/_/g, ' ');
-            if (str1.startsWith(' ')) {
-                str1 = str1.slice(1, str1.length);
-            }
-            return str1;
+        let str1 = removedKey.replace(/SP/g, '');
+        str1 = str1.replace(/_/g, ' ');
+        if (str1.startsWith(' ')) {
+            str1 = str1.slice(1, str1.length);
+        }
+        return str1;
     }
 }

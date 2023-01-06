@@ -23,13 +23,12 @@ import { ConfigurationService } from '../shared/configuration.service';
 const hiddenPasswordString = '*****';
 
 @Component({
-    selector: 'consul-configs-password',
+    selector: 'sp-consul-configs-password',
     templateUrl: './consul-configs-password.component.html',
     styleUrls: ['./consul-configs-password.component.css'],
-    providers: [ConfigurationService]
+    providers: [ConfigurationService],
 })
 export class ConsulConfigsPasswordComponent {
-
     @Input() configuration: StreampipesPeContainerConifgs;
 
     password: string;
@@ -40,7 +39,7 @@ export class ConsulConfigsPasswordComponent {
     constructor(public configService: ConfigurationService) {
         this.password = hiddenPasswordString;
         this.show = false;
-        this.className  = 'hideText';
+        this.className = 'hideText';
         this.hide = true;
     }
 
@@ -57,5 +56,4 @@ export class ConsulConfigsPasswordComponent {
 
         this.className = !this.hide ? '' : 'hideText';
     }
-
 }

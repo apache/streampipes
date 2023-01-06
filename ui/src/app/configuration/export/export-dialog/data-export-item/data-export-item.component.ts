@@ -16,30 +16,23 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'sp-data-export-item',
-  templateUrl: './data-export-item.component.html',
-  styleUrls: ['./data-export-item.component.scss'],
+    selector: 'sp-data-export-item',
+    templateUrl: './data-export-item.component.html',
+    styleUrls: ['./data-export-item.component.scss'],
 })
-export class SpDataExportItemComponent implements OnInit {
+export class SpDataExportItemComponent {
+    @Input()
+    exportItems: ExportItem[];
 
-  @Input()
-  exportItems: ExportItem[];
+    @Input()
+    sectionTitle: string;
 
-  @Input()
-  sectionTitle: string;
-
-  ngOnInit(): void {
-  }
-
-  changeItem(event: MatCheckboxChange,
-             index: number) {
-    this.exportItems[index].selected = event.checked;
-  }
-
-
+    changeItem(event: MatCheckboxChange, index: number) {
+        this.exportItems[index].selected = event.checked;
+    }
 }

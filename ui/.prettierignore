@@ -21,7 +21,7 @@ dist
 
 # Ignore csv files required for e2e tests
 cypress/fixtures/**/*.csv
-src/app/configuration
+
 src/app/connect
 src/app/core
 src/app/core-model
