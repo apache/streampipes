@@ -18,6 +18,10 @@ dist
 
 # Remove these in the future to format additional modules
 # Please also see .eslintignore
+
+# Ignore csv files required for e2e tests
+cypress/fixtures/**/*.csv
+
 src/app/connect
 src/app/core
 src/app/core-model

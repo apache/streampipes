@@ -18,6 +18,9 @@ dist
 
 # Remove these in the future to lint additional modules
 # Please also see .prettierignore
+
+# Ignore csv files required for e2e tests
+cypress/fixtures/**/*.csv
 src/app/connect
 src/app/core
 src/app/core-model
