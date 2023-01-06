@@ -154,7 +154,7 @@
 	<commons-compress.version>1.21</commons-compress.version>
 	<commons-text.version>1.10.0</commons-text.version>
 	<commons-pool2.version>2.9.0</commons-pool2.version>
-	<ditto-client.version>1.0.0</ditto-client.version>
+	<ditto-client.version>3.1.1</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
 	<ddogleg.version>0.16</ddogleg.version>
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
