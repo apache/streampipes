@@ -51,8 +51,8 @@
 </div>
 
 <div class="sp-blue-border" *ngIf="showConfiguration" style="padding: 5px">
-    <consul-configs
+    <sp-consul-configs
         [consulService]="consulService"
         (updateConsulService)="updateConfiguration()"
-    ></consul-configs>
+    ></sp-consul-configs>
 </div>
