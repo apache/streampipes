@@ -24,67 +24,98 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
 import {
-  AdapterDescription,
-  AdapterEventPreview,
-  FormatDescription,
-  GuessSchema,
-  GuessTypeInfo,
-  PlatformServicesCommons,
-  SpDataStream
+    AdapterDescription,
+    AdapterEventPreview,
+    FormatDescription,
+    GuessSchema,
+    GuessTypeInfo,
+    PlatformServicesCommons,
+    SpDataStream,
 } from '@streampipes/platform-services';
 
 @Injectable()
 export class RestService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(
-    private http: HttpClient,
-    private platformServicesCommons: PlatformServicesCommons) {
-  }
+    get connectPath() {
+        return this.platformServicesCommons.apiBasePath + '/connect';
+    }
 
-  get connectPath() {
-    return this.platformServicesCommons.apiBasePath + '/connect';
-  }
+    getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
+        return this.http
+            .post(`${this.connectPath}/master/guess/schema`, adapter)
+            .pipe(
+                map(response => {
+                    return GuessSchema.fromData(response as GuessSchema);
+                }),
+            );
+    }
 
-  getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
-    return this.http
-      .post(`${this.connectPath}/master/guess/schema`, adapter)
-      .pipe(map(response => {
-        return GuessSchema.fromData(response as GuessSchema);
-      }));
-  }
+    getAdapterEventPreview(
+        adapterEventPreview: AdapterEventPreview,
+    ): Observable<Record<string, GuessTypeInfo>> {
+        return this.http
+            .post(
+                `${this.connectPath}/master/guess/schema/preview`,
+                adapterEventPreview,
+            )
+            .pipe(map(response => response as Record<string, GuessTypeInfo>));
+    }
 
-  getAdapterEventPreview(adapterEventPreview: AdapterEventPreview): Observable<Record<string, GuessTypeInfo>> {
-    return this.http.post(`${this.connectPath}/master/guess/schema/preview`, adapterEventPreview)
-      .pipe(map(response => response as Record<string, GuessTypeInfo>));
-  }
+    getSourceDetails(sourceElementId): Observable<SpDataStream> {
+        return this.http
+            .get(
+                `${
+                    this.platformServicesCommons.apiBasePath
+                }/streams/${encodeURIComponent(sourceElementId)}`,
+            )
+            .pipe(
+                map(response => {
+                    return SpDataStream.fromData(response as SpDataStream);
+                }),
+            );
+    }
 
-  getSourceDetails(sourceElementId): Observable<SpDataStream> {
-    return this.http
-      .get(`${this.platformServicesCommons.apiBasePath}/streams/${encodeURIComponent(sourceElementId)}`).pipe(map(response => {
-        return SpDataStream.fromData(response as SpDataStream);
-      }));
-  }
+    getRuntimeInfo(sourceDescription): Observable<any> {
+        return this.http.post(
+            `${this.platformServicesCommons.apiBasePath}/pipeline-element/runtime`,
+            sourceDescription,
+            {
+                headers: { ignoreLoadingBar: '' },
+            },
+        );
+    }
 
-  getRuntimeInfo(sourceDescription): Observable<any> {
-    return this.http.post(`${this.platformServicesCommons.apiBasePath}/pipeline-element/runtime`, sourceDescription, {
-      headers: {ignoreLoadingBar: ''}
-    });
-  }
+    getFormats(): Observable<FormatDescription[]> {
+        return this.http
+            .get(`${this.connectPath}/master/description/formats`)
+            .pipe(
+                map(response => {
+                    return (response as any[]).map(f =>
+                        FormatDescription.fromData(f),
+                    );
+                }),
+            );
+    }
 
-  getFormats(): Observable<FormatDescription[]> {
-    return this.http
-      .get(`${this.connectPath}/master/description/formats`)
-      .pipe(map(response => {
-        return (response as any[]).map(f => FormatDescription.fromData(f));
-      }));
-  }
-
-  getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
-    return this.http
-      .post<UnitDescription[]>(`${this.connectPath}/master/unit`, unitDescription)
-      .pipe(map(response => {
-        const descriptions = response as UnitDescription[];
-        return descriptions.filter(entry => entry.resource !== unitDescription.resource);
-      }));
-  }
+    getFittingUnits(
+        unitDescription: UnitDescription,
+    ): Observable<UnitDescription[]> {
+        return this.http
+            .post<UnitDescription[]>(
+                `${this.connectPath}/master/unit`,
+                unitDescription,
+            )
+            .pipe(
+                map(response => {
+                    const descriptions = response as UnitDescription[];
+                    return descriptions.filter(
+                        entry => entry.resource !== unitDescription.resource,
+                    );
+                }),
+            );
+    }
 }

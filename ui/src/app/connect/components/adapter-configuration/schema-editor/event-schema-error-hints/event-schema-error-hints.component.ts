@@ -20,21 +20,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 
 @Component({
-  selector: 'sp-event-schema-error-hints',
-  templateUrl: './event-schema-error-hints.component.html',
-  styleUrls: ['./event-schema-error-hints.component.scss']
+    selector: 'sp-event-schema-error-hints',
+    templateUrl: './event-schema-error-hints.component.html',
+    styleUrls: ['./event-schema-error-hints.component.scss'],
 })
-export class EventSchemaErrorHintsComponent implements OnInit {
+export class EventSchemaErrorHintsComponent {
+    @Input() schemaErrorHints: UserErrorMessage[];
 
-  @Input() schemaErrorHints: UserErrorMessage[];
+    @Input() isLoading: boolean;
 
-  @Input() isLoading: boolean;
+    @Input() isError: boolean;
 
-  @Input() isError: boolean;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+    constructor() {}
 }

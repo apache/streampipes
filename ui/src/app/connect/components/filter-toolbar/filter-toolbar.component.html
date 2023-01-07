@@ -17,29 +17,45 @@
   -->
 
 <div fxLayout="row" fxFlex="100">
-
-    <div class="data-marketplace-options-item pl-5 form-style" fxLayoutAlign="start center"
-         fxLayout="row">
+    <div
+        class="data-marketplace-options-item pl-5 form-style"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+    >
         <mat-icon color="accent">search</mat-icon>
         <mat-form-field class="form-style" color="accent" floatLabel="never">
-            <input matInput placeholder="Find Element" value="" (input)="updateFilterTerm($event.target.value)"
-                   name="something">
+            <input
+                matInput
+                placeholder="Find Element"
+                value=""
+                (input)="updateFilterTerm($event.target.value)"
+                name="something"
+            />
         </mat-form-field>
     </div>
     <div class="data-marketplace-options-item">
         <mat-form-field color="accent">
-            <mat-select [(value)]="currentFilter.selectedType" (selectionChange)="filterAdapter($event)">
+            <mat-select
+                [(value)]="currentFilter.selectedType"
+                (selectionChange)="filterAdapter($event)"
+            >
                 <mat-option *ngFor="let type of adapterTypes" [value]="type">
-                    {{type}}
+                    {{ type }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     <div class="data-marketplace-options-item">
         <mat-form-field color="accent">
-            <mat-select [(value)]="currentFilter.selectedCategory" (selectionChange)="filterAdapter($event)">
-                <mat-option *ngFor="let category of adapterCategories" [value]="category.code">
-                    {{category.label}}
+            <mat-select
+                [(value)]="currentFilter.selectedCategory"
+                (selectionChange)="filterAdapter($event)"
+            >
+                <mat-option
+                    *ngFor="let category of adapterCategories"
+                    [value]="category.code"
+                >
+                    {{ category.label }}
                 </mat-option>
             </mat-select>
         </mat-form-field>

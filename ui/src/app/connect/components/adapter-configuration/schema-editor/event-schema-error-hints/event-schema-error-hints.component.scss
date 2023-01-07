@@ -17,34 +17,33 @@
  */
 
 .schema-validation {
-  margin-bottom: 10px;
-  border: 2px solid var(--color-bg-3);
-  padding: 10px;
-  min-height: 50px;
-  text-align: center;
+    margin-bottom: 10px;
+    border: 2px solid var(--color-bg-3);
+    padding: 10px;
+    min-height: 50px;
+    text-align: center;
 }
 
 .schema-validation-ok {
-  border: 2px solid #629f62;
+    border: 2px solid #629f62;
 }
 
 .schema-validation-error {
-  border: 2px solid #963e3e;
+    border: 2px solid #963e3e;
 }
 
 .schema-validation-warning {
-  border: 2px solid #d09836;
+    border: 2px solid #d09836;
 }
 
 .schema-validation-text-ok {
-  color: #629f62;
+    color: #629f62;
 }
 
 .schema-validation-text-error {
-  color: #963e3e;
+    color: #963e3e;
 }
 
 .schema-validation-text-warning {
-  color: #d09836;
+    color: #d09836;
 }
-

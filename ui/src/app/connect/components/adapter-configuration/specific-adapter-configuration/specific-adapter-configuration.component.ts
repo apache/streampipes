@@ -17,58 +17,72 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { AdapterDescription, PipelineElementTemplateService } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    PipelineElementTemplateService,
+} from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DialogService } from '@streampipes/shared-ui';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
 
 @Component({
-  selector: 'sp-specific-adapter-configuration',
-  templateUrl: './specific-adapter-configuration.component.html',
-  styleUrls: ['./specific-adapter-configuration.component.scss']
+    selector: 'sp-specific-adapter-configuration',
+    templateUrl: './specific-adapter-configuration.component.html',
+    styleUrls: ['./specific-adapter-configuration.component.scss'],
 })
-export class SpecificAdapterConfigurationComponent extends AdapterTemplateConfigurationDirective implements OnInit {
+export class SpecificAdapterConfigurationComponent
+    extends AdapterTemplateConfigurationDirective
+    implements OnInit
+{
+    specificAdapterSettingsFormValid: boolean;
 
-  specificAdapterSettingsFormValid: boolean;
+    specificAdapterForm: UntypedFormGroup;
 
-  specificAdapterForm: UntypedFormGroup;
-
-
-  constructor(_formBuilder: UntypedFormBuilder,
-              dialogService: DialogService,
-              pipelineElementTemplateService: PipelineElementTemplateService,
-              adapterTemplateService: AdapterTemplateService) {
-    super(_formBuilder, dialogService, pipelineElementTemplateService, adapterTemplateService);
-  }
-
-  ngOnInit(): void {
-    super.onInit();
-    this.cachedAdapterDescription = {...this.adapterDescription};
-    // initialize form for validation
-    this.specificAdapterForm = this._formBuilder.group({});
-    this.specificAdapterForm.statusChanges.subscribe((_) => {
-      this.specificAdapterSettingsFormValid = this.specificAdapterForm.valid;
-    });
-
-    // Go directly to event schema configuration when adapter has no configuration properties
-    if (this.adapterDescription.config.length === 0) {
-      this.specificAdapterSettingsFormValid = true;
+    constructor(
+        _formBuilder: UntypedFormBuilder,
+        dialogService: DialogService,
+        pipelineElementTemplateService: PipelineElementTemplateService,
+        adapterTemplateService: AdapterTemplateService,
+    ) {
+        super(
+            _formBuilder,
+            dialogService,
+            pipelineElementTemplateService,
+            adapterTemplateService,
+        );
     }
-  }
 
-  openTemplateDialog(): void {
-    const dialogRef = this.adapterTemplateService.getDialog(this.adapterDescription.config, this.adapterDescription.appId);
+    ngOnInit(): void {
+        super.onInit();
+        this.cachedAdapterDescription = { ...this.adapterDescription };
+        // initialize form for validation
+        this.specificAdapterForm = this._formBuilder.group({});
+        this.specificAdapterForm.statusChanges.subscribe(_ => {
+            this.specificAdapterSettingsFormValid =
+                this.specificAdapterForm.valid;
+        });
 
-    dialogRef.afterClosed().subscribe(_ => {
-      this.loadPipelineElementTemplates();
-    });
-  }
+        // Go directly to event schema configuration when adapter has no configuration properties
+        if (this.adapterDescription.config.length === 0) {
+            this.specificAdapterSettingsFormValid = true;
+        }
+    }
 
-  afterTemplateReceived(adapterDescription: any) {
-    this.adapterDescription = AdapterDescription.fromDataUnion(adapterDescription);
-    this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
-  }
+    openTemplateDialog(): void {
+        const dialogRef = this.adapterTemplateService.getDialog(
+            this.adapterDescription.config,
+            this.adapterDescription.appId,
+        );
 
+        dialogRef.afterClosed().subscribe(_ => {
+            this.loadPipelineElementTemplates();
+        });
+    }
+
+    afterTemplateReceived(adapterDescription: any) {
+        this.adapterDescription =
+            AdapterDescription.fromDataUnion(adapterDescription);
+        this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
+    }
 }
-

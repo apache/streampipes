@@ -16,12 +16,13 @@
   ~
   -->
 
-<div fxFlex="100"
-     fxLayout="column"
-     matTooltip="Select one of the supported json formats"
-     data-cy="connect-select-json-formats"
-     class="format-box"
-     [ngClass]="{selectedItem: isSelected}" >
+<div
+    fxFlex="100"
+    fxLayout="column"
+    matTooltip="Select one of the supported json formats"
+    data-cy="connect-select-json-formats"
+    class="format-box"
+    [ngClass]="{ selectedItem: isSelected }"
+>
     <div class="format-label">Json</div>
 </div>
-

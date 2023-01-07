@@ -20,11 +20,15 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Pipe({
-  name: 'timestampFilter',
-  pure: false
+    name: 'timestampFilter',
+    pure: false,
 })
 export class TimestampPipe implements PipeTransform {
-  transform(items: EventPropertyUnion[]): EventPropertyUnion[] {
-    return items.filter(item => item.domainProperties.some(dp => dp === 'http://schema.org/DateTime'));
-  }
+    transform(items: EventPropertyUnion[]): EventPropertyUnion[] {
+        return items.filter(item =>
+            item.domainProperties.some(
+                dp => dp === 'http://schema.org/DateTime',
+            ),
+        );
+    }
 }

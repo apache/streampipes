@@ -17,18 +17,23 @@
   -->
 
 <div fxLayout="column" fxFlex="100">
-  <div fxLayout="row" fxLayoutAlign="start center">
-    <mat-icon *ngIf="!isDataStreamDescription" class="historic">lens</mat-icon>
-    <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
-    </mat-icon>
-    <div fxLayoutAlign="start center">
-      <p *ngIf="!isDataStreamDescription">Data Set</p>
-      <p *ngIf="isDataStreamDescription">Data Stream</p>
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon *ngIf="!isDataStreamDescription" class="historic"
+            >lens</mat-icon
+        >
+        <mat-icon *ngIf="isDataStreamDescription" class="real-time"
+            >lens
+        </mat-icon>
+        <div fxLayoutAlign="start center">
+            <p *ngIf="!isDataStreamDescription">Data Set</p>
+            <p *ngIf="isDataStreamDescription">Data Stream</p>
+        </div>
+        <span fxFlex></span>
     </div>
-    <span fxFlex></span>
-  </div>
-  <h1 *ngIf="!isEditMode"
-      class="new-adapter-title">New Adapter: {{displayName}}</h1>
-  <h1 *ngIf="isEditMode"
-      class="new-adapter-title">Edit Adapter: {{displayName}}</h1>
+    <h1 *ngIf="!isEditMode" class="new-adapter-title">
+        New Adapter: {{ displayName }}
+    </h1>
+    <h1 *ngIf="isEditMode" class="new-adapter-title">
+        Edit Adapter: {{ displayName }}
+    </h1>
 </div>

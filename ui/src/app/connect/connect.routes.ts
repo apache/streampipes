@@ -16,12 +16,16 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpConnectRoutes {
-
-  static BASE: SpBreadcrumbItem = {label: 'Connect', link: ['connect']};
-  static CREATE: SpBreadcrumbItem = {label: 'New Adapter', link: ['connect', 'create']};
-  static EDIT: SpBreadcrumbItem = {label: 'Edit Adapter', link: ['connect', 'edit']};
-
+    static BASE: SpBreadcrumbItem = { label: 'Connect', link: ['connect'] };
+    static CREATE: SpBreadcrumbItem = {
+        label: 'New Adapter',
+        link: ['connect', 'create'],
+    };
+    static EDIT: SpBreadcrumbItem = {
+        label: 'Edit Adapter',
+        link: ['connect', 'edit'],
+    };
 }

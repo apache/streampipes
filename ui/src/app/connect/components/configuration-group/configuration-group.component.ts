@@ -22,27 +22,22 @@ import { StaticPropertyUnion } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 
 @Component({
-  selector: 'sp-configuration-group',
-  templateUrl: './configuration-group.component.html',
-  styleUrls: ['./configuration-group.component.scss']
+    selector: 'sp-configuration-group',
+    templateUrl: './configuration-group.component.html',
+    styleUrls: ['./configuration-group.component.scss'],
 })
-export class ConfigurationGroupComponent implements OnInit {
+export class ConfigurationGroupComponent {
+    @Input() configurationGroup: UntypedFormGroup;
 
-  @Input() configurationGroup: UntypedFormGroup;
+    @Input() adapterId: string;
 
-  @Input() adapterId: string;
+    @Input() configuration: StaticPropertyUnion[];
 
-  @Input() configuration: StaticPropertyUnion[];
+    completedStaticProperty: ConfigurationInfo;
 
-  completedStaticProperty: ConfigurationInfo;
+    constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  triggerUpdate(configurationInfo: ConfigurationInfo) {
-    this.completedStaticProperty = {...configurationInfo};
-  }
-
+    triggerUpdate(configurationInfo: ConfigurationInfo) {
+        this.completedStaticProperty = { ...configurationInfo };
+    }
 }

@@ -19,75 +19,83 @@
 import { Component, OnInit } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
-import { AdapterDescriptionUnion, AdapterService } from '@streampipes/platform-services';
+import {
+    AdapterDescriptionUnion,
+    AdapterService,
+} from '@streampipes/platform-services';
 import { DialogService, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { SpConnectRoutes } from '../../connect.routes';
 
 @Component({
-  selector: 'sp-data-marketplace',
-  templateUrl: './data-marketplace.component.html',
-  styleUrls: ['./data-marketplace.component.scss']
+    selector: 'sp-data-marketplace',
+    templateUrl: './data-marketplace.component.html',
+    styleUrls: ['./data-marketplace.component.scss'],
 })
 export class DataMarketplaceComponent implements OnInit {
+    adapterDescriptions: AdapterDescriptionUnion[];
 
-  adapterDescriptions: AdapterDescriptionUnion[];
+    adaptersLoading = true;
+    adapterLoadingError = false;
 
-  adaptersLoading = true;
-  adapterLoadingError = false;
+    currentFilter: AdapterFilterSettingsModel;
 
-  currentFilter: AdapterFilterSettingsModel;
+    constructor(
+        private dataMarketplaceService: AdapterService,
+        private shepherdService: ShepherdService,
+        private connectService: ConnectService,
+        private dialogService: DialogService,
+        private router: Router,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
-  constructor(private dataMarketplaceService: AdapterService,
-              private shepherdService: ShepherdService,
-              private connectService: ConnectService,
-              private dialogService: DialogService,
-              private router: Router,
-              private breadcrumbService: SpBreadcrumbService) {
-  }
+    ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb([
+            SpConnectRoutes.BASE,
+            this.breadcrumbService.removeLink(SpConnectRoutes.CREATE),
+        ]);
+        this.getAdapterDescriptions();
+    }
 
-  ngOnInit() {
-    this.breadcrumbService.updateBreadcrumb([SpConnectRoutes.BASE, this.breadcrumbService.removeLink(SpConnectRoutes.CREATE)]);
-    this.getAdapterDescriptions();
-  }
+    getAdapterDescriptions(): void {
+        this.adaptersLoading = true;
+        this.adapterDescriptions = [];
 
-  getAdapterDescriptions(): void {
-    this.adaptersLoading = true;
-    this.adapterDescriptions = [];
+        this.dataMarketplaceService.getAdapterDescriptions().subscribe(
+            allAdapters => {
+                this.adapterDescriptions = allAdapters;
+                this.adapterDescriptions.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                this.adaptersLoading = false;
+            },
+            error => {
+                console.log(error);
+                this.adaptersLoading = false;
+                this.adapterLoadingError = true;
+            },
+        );
+    }
 
-    this.dataMarketplaceService
-      .getAdapterDescriptions()
-      .subscribe((allAdapters) => {
-        this.adapterDescriptions = allAdapters;
-        this.adapterDescriptions
-          .sort((a, b) => a.name.localeCompare(b.name));
-        this.adaptersLoading = false;
-      }, error => {
-        console.log(error);
-        this.adaptersLoading = false;
-        this.adapterLoadingError = true;
-      });
-  }
+    startAdapterTutorial() {
+        this.shepherdService.startAdapterTour();
+    }
 
-  startAdapterTutorial() {
-    this.shepherdService.startAdapterTour();
-  }
+    startAdapterTutorial2() {
+        this.shepherdService.startAdapterTour2();
+    }
 
-  startAdapterTutorial2() {
-    this.shepherdService.startAdapterTour2();
-  }
+    startAdapterTutorial3() {
+        this.shepherdService.startAdapterTour3();
+    }
 
-  startAdapterTutorial3() {
-    this.shepherdService.startAdapterTour3();
-  }
+    selectAdapter(appId: string) {
+        this.router.navigate(['connect', 'create', appId]);
+        // this.shepherdService.trigger('select-adapter');
+    }
 
-  selectAdapter(appId: string) {
-    this.router.navigate(['connect', 'create', appId]);
-    // this.shepherdService.trigger('select-adapter');
-  }
-
-  applyFilter(filter: AdapterFilterSettingsModel) {
-    this.currentFilter = { ...filter };
-  }
+    applyFilter(filter: AdapterFilterSettingsModel) {
+        this.currentFilter = { ...filter };
+    }
 }

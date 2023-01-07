@@ -16,17 +16,19 @@
   ~
   -->
 
-<div style="padding: 15px;">
+<div style="padding: 15px">
     <form [formGroup]="configurationGroup" fxFlex="100">
-        <div fxFlex="100" >
-            <app-static-property *ngFor="let config of configuration"
-                                 [staticProperty]="config"
-                                 [staticProperties]="configuration"
-                                 [adapterId]="adapterId"
-                                 [parentForm]="configurationGroup"
-                                 [fieldName]="config.internalName"
-                                 (updateEmitter)="triggerUpdate($event)"
-                                 [completedStaticProperty]="completedStaticProperty">
+        <div fxFlex="100">
+            <app-static-property
+                *ngFor="let config of configuration"
+                [staticProperty]="config"
+                [staticProperties]="configuration"
+                [adapterId]="adapterId"
+                [parentForm]="configurationGroup"
+                [fieldName]="config.internalName"
+                (updateEmitter)="triggerUpdate($event)"
+                [completedStaticProperty]="completedStaticProperty"
+            >
             </app-static-property>
         </div>
     </form>

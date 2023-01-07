@@ -18,9 +18,11 @@
 
 <div fxLayout="row" fxLayoutAlign="start">
     <mat-form-field class="w-100" color="accent" fxFlex="100">
-        <mat-select placeholder="Timestamp converter (unix timestamp)"
-                    [(value)]="cachedProperty.timestampTransformationMode"
-                    data-cy="connect-timestamp-converter">
+        <mat-select
+            placeholder="Timestamp converter (unix timestamp)"
+            [(value)]="cachedProperty.timestampTransformationMode"
+            data-cy="connect-timestamp-converter"
+        >
             <mat-option value="none">None</mat-option>
             <mat-option value="formatString">Date String</mat-option>
             <mat-option value="timeUnit">Date Number</mat-option>
@@ -28,27 +30,48 @@
     </mat-form-field>
 </div>
 
-
 <div fxLayout="row" fxLayoutAlign="start">
     <div class="form-group" fxFlexAlign="center" fxFlex="100">
-        <mat-form-field class="w-100"
-                        *ngIf="cachedProperty.timestampTransformationMode === 'formatString'"
-                        color="accent"
-                        fxFlex="100">
-            <input class="w-100" matInput
-                   placeholder="E.g. yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-                   data-cy="connect-timestamp-string-regex"
-                   [(ngModel)]="cachedProperty.timestampTransformationFormatString">
+        <mat-form-field
+            class="w-100"
+            *ngIf="
+                cachedProperty.timestampTransformationMode === 'formatString'
+            "
+            color="accent"
+            fxFlex="100"
+        >
+            <input
+                class="w-100"
+                matInput
+                placeholder="E.g. yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                data-cy="connect-timestamp-string-regex"
+                [(ngModel)]="cachedProperty.timestampTransformationFormatString"
+            />
         </mat-form-field>
-        <mat-form-field class="w-100"
-                        *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'"
-                        color="accent"
-                        fxFlex="100">
-            <mat-select placeholder="Current time unit" [(value)]="selectedTimeMultiplier">
-                <mat-option value="milliseconds" (click)="cachedProperty.timestampTransformationMultiplier = 0">
+        <mat-form-field
+            class="w-100"
+            *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'"
+            color="accent"
+            fxFlex="100"
+        >
+            <mat-select
+                placeholder="Current time unit"
+                [(value)]="selectedTimeMultiplier"
+            >
+                <mat-option
+                    value="milliseconds"
+                    (click)="
+                        cachedProperty.timestampTransformationMultiplier = 0
+                    "
+                >
                     Milliseconds
                 </mat-option>
-                <mat-option value="second" (click)="cachedProperty.timestampTransformationMultiplier = 1000">Seconds
+                <mat-option
+                    value="second"
+                    (click)="
+                        cachedProperty.timestampTransformationMultiplier = 1000
+                    "
+                    >Seconds
                 </mat-option>
             </mat-select>
         </mat-form-field>

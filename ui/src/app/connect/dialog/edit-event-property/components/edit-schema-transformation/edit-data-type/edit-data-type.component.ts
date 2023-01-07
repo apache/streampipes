@@ -20,24 +20,22 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataTypesService } from '../../../../../services/data-type.service';
 
 @Component({
-  selector: 'sp-edit-data-type',
-  templateUrl: './edit-data-type.component.html',
-  styleUrls: ['./edit-data-type.component.scss']
+    selector: 'sp-edit-data-type',
+    templateUrl: './edit-data-type.component.html',
+    styleUrls: ['./edit-data-type.component.scss'],
 })
 export class EditDataTypeComponent implements OnInit {
+    @Input() cachedProperty: any;
+    @Output() dataTypeChanged = new EventEmitter<boolean>();
 
-  @Input() cachedProperty: any;
-  @Output() dataTypeChanged = new EventEmitter<boolean>();
+    runtimeDataTypes;
+    constructor(private dataTypeService: DataTypesService) {}
 
-  runtimeDataTypes;
-  constructor(private dataTypeService: DataTypesService) { }
+    ngOnInit() {
+        this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+    }
 
-  ngOnInit() {
-    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-  }
-
-  valueChanged() {
-    this.dataTypeChanged.emit(true);
-  }
-
+    valueChanged() {
+        this.dataTypeChanged.emit(true);
+    }
 }

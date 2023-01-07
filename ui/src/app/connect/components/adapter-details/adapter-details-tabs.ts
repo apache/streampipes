@@ -19,12 +19,19 @@
 import { SpNavigationItem } from '@streampipes/shared-ui';
 
 export class SpAdapterDetailsTabs {
-
-  public getTabs(elementId: string): SpNavigationItem[] {
-    return [
-      //{itemId: 'overview', itemTitle: 'Overview', itemLink: ['connect', 'details', elementId, 'overview']},
-      {itemId: 'metrics', itemTitle: 'Metrics', itemLink: ['connect', 'details', elementId, 'metrics']},
-      {itemId: 'logs', itemTitle: 'Logs', itemLink: ['connect', 'details', elementId, 'logs']}
-    ];
-  }
+    public getTabs(elementId: string): SpNavigationItem[] {
+        return [
+            //{itemId: 'overview', itemTitle: 'Overview', itemLink: ['connect', 'details', elementId, 'overview']},
+            {
+                itemId: 'metrics',
+                itemTitle: 'Metrics',
+                itemLink: ['connect', 'details', elementId, 'metrics'],
+            },
+            {
+                itemId: 'logs',
+                itemTitle: 'Logs',
+                itemLink: ['connect', 'details', elementId, 'logs'],
+            },
+        ];
+    }
 }

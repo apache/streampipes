@@ -19,27 +19,23 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'sp-adapter-options-panel',
-  templateUrl: './adapter-options-panel.component.html',
-  styleUrls: ['./adapter-options-panel.component.scss']
+    selector: 'sp-adapter-options-panel',
+    templateUrl: './adapter-options-panel.component.html',
+    styleUrls: ['./adapter-options-panel.component.scss'],
 })
 export class SpAdapterOptionsPanelComponent {
+    @Input()
+    optionTitle: string;
 
-  @Input()
-  optionTitle: string;
+    @Input()
+    optionDescription: string;
 
-  @Input()
-  optionDescription: string;
+    @Input()
+    optionIcon: string;
 
-  @Input()
-  optionIcon: string;
+    @Input()
+    dataCy: string;
 
-  @Input()
-  dataCy: string;
-
-  @Output()
-  optionSelectedEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
+    @Output()
+    optionSelectedEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 }
-
-

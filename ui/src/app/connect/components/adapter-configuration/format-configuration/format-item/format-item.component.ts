@@ -21,41 +21,42 @@ import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { FormatDescription } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-format-item',
-  templateUrl: './format-item.component.html',
-  styleUrls: ['./format-item.component.scss'],
+    selector: 'sp-format-item',
+    templateUrl: './format-item.component.html',
+    styleUrls: ['./format-item.component.scss'],
 })
 export class FormatItemComponent {
-  @Input()
-  format: FormatDescription;
-  @Input()
-  selectedFormat: FormatDescription;
-  @Output()
-  validateEmitter = new EventEmitter();
-  @Output()
-  editableEmitter = new EventEmitter();
-  @Output()
-  selectedFormatEmitter = new EventEmitter();
+    @Input()
+    format: FormatDescription;
+    @Input()
+    selectedFormat: FormatDescription;
+    @Output()
+    validateEmitter = new EventEmitter();
+    @Output()
+    editableEmitter = new EventEmitter();
+    @Output()
+    selectedFormatEmitter = new EventEmitter();
 
-  hasConfig: boolean;
+    hasConfig: boolean;
 
-  constructor(private shepherdService: ShepherdService) {
-    this.hasConfig = true;
-  }
-
-  formatEditable() {
-    this.selectedFormat = this.format;
-    this.selectedFormatEmitter.emit(this.selectedFormat);
-
-    this.shepherdService.trigger('select-' + this.selectedFormat.name.toLocaleLowerCase());
-
-  }
-
-  isSelected(): boolean {
-    if (!this.selectedFormat || !this.format) {
-      return false;
-    } else {
-        return this.selectedFormat.name === this.format.name;
+    constructor(private shepherdService: ShepherdService) {
+        this.hasConfig = true;
     }
-  }
+
+    formatEditable() {
+        this.selectedFormat = this.format;
+        this.selectedFormatEmitter.emit(this.selectedFormat);
+
+        this.shepherdService.trigger(
+            'select-' + this.selectedFormat.name.toLocaleLowerCase(),
+        );
+    }
+
+    isSelected(): boolean {
+        if (!this.selectedFormat || !this.format) {
+            return false;
+        } else {
+            return this.selectedFormat.name === this.format.name;
+        }
+    }
 }

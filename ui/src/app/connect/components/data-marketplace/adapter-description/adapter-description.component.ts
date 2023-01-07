@@ -19,81 +19,102 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConnectService } from '../../../services/connect.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AdapterDescription, AdapterService } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    AdapterService,
+} from '@streampipes/platform-services';
 import { DialogService } from '@streampipes/shared-ui';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'sp-adapter-description',
-  templateUrl: './adapter-description.component.html',
-  styleUrls: ['./adapter-description.component.scss']
+    selector: 'sp-adapter-description',
+    templateUrl: './adapter-description.component.html',
+    styleUrls: ['./adapter-description.component.scss'],
 })
 export class AdapterDescriptionComponent implements OnInit {
+    @Input()
+    adapter: AdapterDescription;
 
-  @Input()
-  adapter: AdapterDescription;
+    @Output()
+    updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-  @Output()
-  updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
+    @Output()
+    createTemplateEmitter: EventEmitter<AdapterDescription> =
+        new EventEmitter<AdapterDescription>();
 
-  @Output()
-  createTemplateEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
+    deleting = false;
+    className = '';
+    isDataSetDescription = false;
+    isDataStreamDescription = false;
+    isRunningAdapter = false;
+    adapterLabel: string;
 
-  deleting = false;
-  className = '';
-  isDataSetDescription = false;
-  isDataStreamDescription = false;
-  isRunningAdapter = false;
-  adapterLabel: string;
+    constructor(
+        private connectService: ConnectService,
+        private dataMarketplaceService: AdapterService,
+        private dialogService: DialogService,
+        public dialog: MatDialog,
+        private _snackBar: MatSnackBar,
+    ) {}
 
-  constructor(private connectService: ConnectService,
-              private dataMarketplaceService: AdapterService,
-              private dialogService: DialogService,
-              public dialog: MatDialog,
-              private _snackBar: MatSnackBar) {
-  }
-
-  ngOnInit() {
-    if (this.adapter.name == null) {
-      this.adapter.name = '';
-    }
-    this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
-    this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-    this.isRunningAdapter = (this.adapter.elementId !== undefined && !(this.adapter as any).isTemplate);
-    this.adapterLabel = this.adapter.name.split(' ').join('_');
-    this.className = this.getClassName();
-  }
-
-  isGenericDescription(): boolean {
-    return this.connectService.isGenericDescription(this.adapter);
-  }
-
-  getClassName() {
-    let className = this.isRunningAdapter ? 'adapter-box' : 'adapter-description-box';
-
-    if (this.isDataSetDescription) {
-      className += ' adapter-box-set';
-    } else {
-      className += ' adapter-box-stream';
+    ngOnInit() {
+        if (this.adapter.name == null) {
+            this.adapter.name = '';
+        }
+        this.isDataSetDescription = this.connectService.isDataSetDescription(
+            this.adapter,
+        );
+        this.isDataStreamDescription =
+            this.connectService.isDataStreamDescription(this.adapter);
+        this.isRunningAdapter =
+            this.adapter.elementId !== undefined &&
+            !(this.adapter as any).isTemplate;
+        this.adapterLabel = this.adapter.name.split(' ').join('_');
+        this.className = this.getClassName();
     }
 
-    return className;
-  }
-
-  getIconUrl() {
-    // TODO Use "this.adapter.includesAssets" if boolean demoralizing is working
-    if (this.adapter.includedAssets.length > 0) {
-      return this.dataMarketplaceService.getAssetUrl(this.adapter.appId) + '/icon';
-    } else {
-      return `assets/img/connect/${this.adapter.iconUrl}`;
+    isGenericDescription(): boolean {
+        return this.connectService.isGenericDescription(this.adapter);
     }
-  }
 
-  removeAdapter(): void {
-    this.dataMarketplaceService.deleteAdapterDescription(this.adapter.elementId).subscribe(_ => {
-      this.updateAdapterEmitter.emit();
-    }, _ => {
-      this._snackBar.open('Cannot delete an adapter which has an active instance running.');
-    });
-  }
+    getClassName() {
+        let className = this.isRunningAdapter
+            ? 'adapter-box'
+            : 'adapter-description-box';
+
+        if (this.isDataSetDescription) {
+            className += ' adapter-box-set';
+        } else {
+            className += ' adapter-box-stream';
+        }
+
+        return className;
+    }
+
+    getIconUrl() {
+        // TODO Use "this.adapter.includesAssets" if boolean demoralizing is working
+        if (this.adapter.includedAssets.length > 0) {
+            return (
+                this.dataMarketplaceService.getAssetUrl(this.adapter.appId) +
+                '/icon'
+            );
+        } else {
+            return `assets/img/connect/${this.adapter.iconUrl}`;
+        }
+    }
+
+    removeAdapter(): void {
+        this.dataMarketplaceService
+            .deleteAdapterDescription(this.adapter.elementId)
+            .subscribe(
+                _ => {
+                    this.updateAdapterEmitter.emit();
+                },
+                _ => {
+                    this._snackBar.open(
+                        'Cannot delete an adapter which has an active instance running.',
+                    );
+                },
+            );
+    }
 }
