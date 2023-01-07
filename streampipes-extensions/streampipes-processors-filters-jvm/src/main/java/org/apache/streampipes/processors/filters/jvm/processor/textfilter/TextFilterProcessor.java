@@ -72,7 +72,7 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
         StringOperator.valueOf(processorParams.extractor().selectedSingleValue(OPERATION_ID, String.class));
     this.filterProperty = processorParams.extractor().mappingPropertyValue(MAPPING_PROPERTY_ID);
 
-    logger.info("Text Property: " + filterProperty);
+    LOGGER.info("Text Property: " + filterProperty);
   }
 
   @Override

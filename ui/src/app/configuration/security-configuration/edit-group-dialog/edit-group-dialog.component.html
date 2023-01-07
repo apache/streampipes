@@ -24,16 +24,23 @@
                     <span class="general-options-header">Basics</span>
                     <mat-form-field color="accent">
                         <mat-label>Group Name</mat-label>
-                        <input formControlName="groupName" fxFlex
-                               matInput
-                               required>
+                        <input
+                            formControlName="groupName"
+                            fxFlex
+                            matInput
+                            required
+                        />
                     </mat-form-field>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Roles</span>
-                    <mat-checkbox *ngFor="let role of availableRoles" [value]="role.role"
-                                  [checked]="group.roles.indexOf(role.role) > -1" (change)="changeRoleAssignment($event)">
-                        {{role.roleTitle}}
+                    <mat-checkbox
+                        *ngFor="let role of availableRoles"
+                        [value]="role.role"
+                        [checked]="group.roles.indexOf(role.role) > -1"
+                        (change)="changeRoleAssignment($event)"
+                    >
+                        {{ role.roleTitle }}
                     </mat-checkbox>
                 </div>
             </form>
@@ -42,12 +49,23 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="row">
-            <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
-                    [disabled]="!parentForm.valid || clonedGroup.roles.length == 0"
-                    data-cy="sp-element-edit-user-save">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="save()"
+                style="margin-right: 10px"
+                [disabled]="!parentForm.valid || clonedGroup.roles.length === 0"
+                data-cy="sp-element-edit-user-save"
+            >
                 <i class="material-icons">save</i><span>&nbsp;Save</span>
             </button>
-            <button mat-button mat-raised-button class="mat-basic" (click)="close(false)">
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic"
+                (click)="close(false)"
+            >
                 Cancel
             </button>
         </div>

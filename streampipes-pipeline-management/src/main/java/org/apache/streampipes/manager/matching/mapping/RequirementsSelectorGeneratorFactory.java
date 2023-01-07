@@ -25,13 +25,14 @@ import java.util.List;
 
 public class RequirementsSelectorGeneratorFactory {
 
-  public static AbstractRequirementsSelectorGenerator getRequirementsSelector(MappingProperty mappingProperty,
-                                                                              List<SpDataStream> inputStreams,
-                                                                              InvocableStreamPipesEntity rootPipelineElement) {
+  public static AbstractRequirementsSelectorGenerator getRequirementsSelector(
+      MappingProperty mappingProperty,
+      List<SpDataStream> inputStreams,
+      InvocableStreamPipesEntity rootPipelineElement) {
     if (!mappingProperty.getRequirementSelector().equals("")) {
       return new RequirementsSelectorGenerator(inputStreams,
-              rootPipelineElement,
-              mappingProperty.getRequirementSelector());
+          rootPipelineElement,
+          mappingProperty.getRequirementSelector());
     } else {
       return new EmptyRequirementsSelectorGenerator(inputStreams);
     }

@@ -46,14 +46,14 @@ public class SPSensor {
 
   public static List<String> getAll() {
     return Arrays.asList(ACCELERATION_X,
-            ACCELERATION_Y,
-            ACCELERATION_Z,
-            GYROSCOPE_X,
-            GYROSCOPE_Y,
-            GYROSCOPE_Z,
-            AMBIENT_LIGHT,
-            IMAGE,
-            STATE);
+        ACCELERATION_Y,
+        ACCELERATION_Z,
+        GYROSCOPE_X,
+        GYROSCOPE_Y,
+        GYROSCOPE_Z,
+        AMBIENT_LIGHT,
+        IMAGE,
+        STATE);
   }
 
 }

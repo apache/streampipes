@@ -20,9 +20,9 @@ package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
-import org.apache.streampipes.container.util.GroundingDebugUtils;
+import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
@@ -35,6 +35,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.wrapper.routing.RawDataProcessor;
 import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +48,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclarer, RawDataProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesFunction.class);
-  private Map<String, SpInputCollector> inputCollectors;
   private final Map<String, SourceInfo> sourceInfoMapper;
   private final Map<String, SchemaInfo> schemaInfoMapper;
+  private Map<String, SpInputCollector> inputCollectors;
 
   public StreamPipesFunction() {
     this.sourceInfoMapper = new HashMap<>();

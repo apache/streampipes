@@ -58,9 +58,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.finishEventSchemaConfiguration();
 
-        cy.dataCy('sp-adapter-name')
-            .clear()
-            .type(newAdapterName);
+        cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
 
         ConnectBtns.storeEditAdapter().click();
 
@@ -76,10 +74,7 @@ describe('Test Edit Adapter', () => {
 
         // View data
         ConnectBtns.infoAdapter().click();
-        cy.get('div')
-            .contains('Values')
-            .parent()
-            .click();
+        cy.get('div').contains('Values').parent().click();
 
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-live-preview', { timeout: 10000 }).should(

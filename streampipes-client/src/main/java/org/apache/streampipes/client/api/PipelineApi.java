@@ -38,11 +38,12 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
 
   /**
    * Receives all pipelines owned by the current user
+   *
    * @return (list) {@link org.apache.streampipes.model.pipeline.Pipeline} a list of all pipelines
    */
   @Override
   public List<Pipeline> all() {
-      return getAll(getBaseResourcePath().addToPath("own"));
+    return getAll(getBaseResourcePath().addToPath("own"));
   }
 
   @Override
@@ -52,6 +53,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
 
   /**
    * Deletes the pipeline with a given id
+   *
    * @param pipelineId The id of the pipeline
    */
   @Override
@@ -66,6 +68,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
 
   /**
    * Starts a pipeline by given id
+   *
    * @param pipelineId The id of the pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
@@ -75,6 +78,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
 
   /**
    * Starts a pipeline by given id
+   *
    * @param pipeline The pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
@@ -84,6 +88,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
 
   /**
    * Stops a pipeline by given id
+   *
    * @param pipeline The pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
@@ -93,6 +98,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
 
   /**
    * Stops a pipeline by given id
+   *
    * @param pipelineId The id of the pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
@@ -103,6 +109,6 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-            .addToPath("pipelines");
+        .addToPath("pipelines");
   }
 }

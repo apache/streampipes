@@ -16,37 +16,28 @@
  *
  */
 
-
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ConfigurationService } from '../../shared/configuration.service';
 import * as FileSaver from 'file-saver';
 
 @Component({
-  selector: 'sp-authentication-configuration',
-  templateUrl: './authentication-configuration.component.html',
-  styleUrls: ['./authentication-configuration.component.scss']
+    selector: 'sp-authentication-configuration',
+    templateUrl: './authentication-configuration.component.html',
+    styleUrls: ['./authentication-configuration.component.scss'],
 })
-export class SecurityAuthenticationConfigurationComponent implements OnInit {
+export class SecurityAuthenticationConfigurationComponent {
+    constructor(private configurationService: ConfigurationService) {}
 
-  constructor(private configurationService: ConfigurationService) {
+    generateKeyPair() {
+        this.configurationService.generateKeyPair().subscribe(result => {
+            console.log(result);
+            this.saveKeyfile('public.key', result[0]);
+            this.saveKeyfile('private.pem', result[1]);
+        });
+    }
 
-  }
-
-  ngOnInit(): void {
-  }
-
-  generateKeyPair() {
-    this.configurationService.generateKeyPair().subscribe(result => {
-      console.log(result);
-      this.saveKeyfile('public.key', result[0]);
-      this.saveKeyfile('private.pem', result[1]);
-    });
-  }
-
-  saveKeyfile(filename: string,
-              content: string) {
-    const blob = new Blob([content], {type: 'text/plain'});
-    FileSaver.saveAs(blob, filename);
-  }
-
+    saveKeyfile(filename: string, content: string) {
+        const blob = new Blob([content], { type: 'text/plain' });
+        FileSaver.saveAs(blob, filename);
+    }
 }

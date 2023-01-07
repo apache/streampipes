@@ -18,47 +18,48 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import org.junit.Test;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.schema.EventPropertyList;
+
+import org.junit.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class ListPropertyMatchTest {
 
 
-    @Test
-    public void matchSameDomainProperty() throws Exception {
-        List<URI> domainProperties = new ArrayList<>();
-        domainProperties.add(URI.create("http://test.org/property"));
+  @Test
+  public void matchSameDomainProperty() {
+    List<URI> domainProperties = new ArrayList<>();
+    domainProperties.add(URI.create("http://test.org/property"));
 
-        EventPropertyList offer = new EventPropertyList();
-        offer.setDomainProperties(domainProperties);
-        EventPropertyList requirement = new EventPropertyList();
-        requirement.setDomainProperties(domainProperties);
+    EventPropertyList offer = new EventPropertyList();
+    offer.setDomainProperties(domainProperties);
+    EventPropertyList requirement = new EventPropertyList();
+    requirement.setDomainProperties(domainProperties);
 
-        List<MatchingResultMessage> errorLog = new ArrayList<>();
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
 
-        boolean result = new ListPropertyMatch().match(offer, requirement, errorLog);
+    boolean result = new ListPropertyMatch().match(offer, requirement, errorLog);
 
-        assertTrue(result);
-    }
+    assertTrue(result);
+  }
 
-    @Test
-    public void matchListWithNoFurtherRequirements() throws Exception {
+  @Test
+  public void matchListWithNoFurtherRequirements() {
 
-        EventPropertyList offer = new EventPropertyList();
-        EventPropertyList requirement = new EventPropertyList();
+    EventPropertyList offer = new EventPropertyList();
+    EventPropertyList requirement = new EventPropertyList();
 
-        List<MatchingResultMessage> errorLog = new ArrayList<>();
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
 
-        boolean result = new ListPropertyMatch().match(offer, requirement, errorLog);
+    boolean result = new ListPropertyMatch().match(offer, requirement, errorLog);
 
-        assertTrue(result);
-    }
+    assertTrue(result);
+  }
 
 }

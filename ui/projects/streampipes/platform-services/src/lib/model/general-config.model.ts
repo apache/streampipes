@@ -17,12 +17,12 @@
  */
 
 export interface GeneralConfigModel {
-  hostname: string;
-  port: number;
-  protocol: 'http' | 'https';
-  configured: boolean;
-  allowPasswordRecovery: boolean;
-  allowSelfRegistration: boolean;
-  defaultUserRoles: string[];
-  appName: string;
+    hostname: string;
+    port: number;
+    protocol: 'http' | 'https';
+    configured: boolean;
+    allowPasswordRecovery: boolean;
+    allowSelfRegistration: boolean;
+    defaultUserRoles: string[];
+    appName: string;
 }

@@ -1,0 +1,42 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+dist
+.angular
+
+# Remove these in the future to lint additional modules
+# Please also see .prettierignore
+
+# Ignore csv files required for e2e tests
+cypress/fixtures/**/*.csv
+src/app/connect
+src/app/core
+src/app/core-model
+src/app/core-services
+src/app/core-ui
+src/app/CustomMaterial
+src/app/dashboard
+src/app/data-explorer
+src/app/editor
+src/app/files
+src/app/info
+src/app/login
+src/app/notifications
+src/app/NS
+src/app/pipeline-details
+src/app/pipelines
+src/app/profile
+src/app/services
+src/scss

@@ -1,4 +1,6 @@
-[{"timestamp": 1623871499055, "arrayProperty": [1,2,4,4]},
-{"timestamp": 1623871500059, "arrayProperty": [1,4]},
-{"timestamp": 1623871507091, "arrayProperty": [1,3,3,3,4]},
-{"timestamp": 1623871508093, "arrayProperty": [1]}]
+[
+  { "timestamp": 1623871499055, "arrayProperty": [1, 2, 4, 4] },
+  { "timestamp": 1623871500059, "arrayProperty": [1, 4] },
+  { "timestamp": 1623871507091, "arrayProperty": [1, 3, 3, 3, 4] },
+  { "timestamp": 1623871508093, "arrayProperty": [1] }
+]

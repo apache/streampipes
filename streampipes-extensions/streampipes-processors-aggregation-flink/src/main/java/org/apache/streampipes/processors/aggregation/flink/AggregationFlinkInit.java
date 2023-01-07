@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.processors.aggregation.flink;
 
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
@@ -33,8 +32,9 @@ import org.apache.streampipes.processors.aggregation.flink.processor.aggregation
 import org.apache.streampipes.processors.aggregation.flink.processor.count.CountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.eventcount.EventCountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.rate.EventRateController;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
-public class AggregationFlinkInit extends StandaloneModelSubmitter {
+public class AggregationFlinkInit extends ExtensionsModelSubmitter {
 
   public static final String SERVICE_GROUP = "org.apache.streampipes.processors.aggregation.flink";
 

@@ -18,17 +18,17 @@
 
 package org.apache.streampipes.wrapper.declarer;
 
-import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 
-public abstract class EventSinkDeclarer<B extends EventSinkBindingParams, ES extends
-        PipelineElementRuntime>
-        extends PipelineElementDeclarer<B, ES, DataSinkInvocation,
-        DataSinkParameterExtractor> implements SemanticEventConsumerDeclarer {
+public abstract class EventSinkDeclarer<K extends EventSinkBindingParams, V extends
+    PipelineElementRuntime>
+    extends PipelineElementDeclarer<K, V, DataSinkInvocation,
+    DataSinkParameterExtractor> implements SemanticEventConsumerDeclarer {
 
   @Override
   protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {

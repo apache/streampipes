@@ -1,8 +1,8 @@
 {
- "name": "text_filter",
- "config": [
-   {"type":  "drop-down", "selector": "text", "value":  "randomchar"},
-   {"type":  "radio", "selector": "operation", "value":  "MATCHES"},
-   {"type":  "input", "selector": "keyword", "value":  "c"}
- ]
+  "name": "text_filter",
+  "config": [
+    { "type": "drop-down", "selector": "text", "value": "randomchar" },
+    { "type": "radio", "selector": "operation", "value": "MATCHES" },
+    { "type": "input", "selector": "keyword", "value": "c" }
+  ]
 }

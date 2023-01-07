@@ -33,21 +33,27 @@
  */
 
 /***************************************************************************************************
-* BROWSER POLYFILLS
-*/
+ * BROWSER POLYFILLS
+ */
 
-
-let __zone_symbol__BLACK_LISTED_EVENTS = ['scroll', 'mouseenter', 'mouseleave', 'mousemove', 'mouseover', 'mouseout', 'mousewheel', 'pointermove', 'keypress', 'keyup'];
+let __zone_symbol__BLACK_LISTED_EVENTS = [
+    'scroll',
+    'mouseenter',
+    'mouseleave',
+    'mousemove',
+    'mouseover',
+    'mouseout',
+    'mousewheel',
+    'pointermove',
+    'keypress',
+    'keyup',
+];
 let __Zone_disable_PromiseRejectionEvent = true;
-
-
 
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js';  // Included with Angular CLI.
-
-
+import 'zone.js'; // Included with Angular CLI.
 
 /***************************************************************************************************
  * APPLICATION IMPORTS

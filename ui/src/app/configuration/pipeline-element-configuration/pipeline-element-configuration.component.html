@@ -19,58 +19,135 @@
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'pipelineelement'">
     <div fxLayout="row" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="Pipeline Element Configuration"
-                subtitle="Configure basic settings of core and extensions services">
-                <table fxFlex="100" mat-table [dataSource]="dataSource" multiTemplateDataRows>
-
+            <sp-split-section
+                title="Pipeline Element Configuration"
+                subtitle="Configure basic settings of core and extensions services"
+            >
+                <table
+                    fxFlex="100"
+                    mat-table
+                    [dataSource]="dataSource"
+                    multiTemplateDataRows
+                >
                     <ng-container matColumnDef="status">
-                        <th fxFlex="30" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Status</th>
-                        <td fxFlex="30" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                            <span *ngIf="element.meta.status === 'passing'" fxLayoutAlign="center center">
-                                <mat-icon class="service-icon-passing">lens</mat-icon>
+                        <th
+                            fxFlex="30"
+                            fxLayoutAlign="start center"
+                            mat-header-cell
+                            *matHeaderCellDef
+                        >
+                            Status
+                        </th>
+                        <td
+                            fxFlex="30"
+                            fxLayoutAlign="start center"
+                            mat-cell
+                            *matCellDef="let element"
+                        >
+                            <span
+                                *ngIf="element.meta.status === 'passing'"
+                                fxLayoutAlign="center center"
+                            >
+                                <mat-icon class="service-icon-passing"
+                                    >lens</mat-icon
+                                >
                             </span>
-                            <span *ngIf="element.meta.status === 'critical'" fxLayoutAlign="center center">
-                                <mat-icon class="service-icon-critical">lens</mat-icon>
+                            <span
+                                *ngIf="element.meta.status === 'critical'"
+                                fxLayoutAlign="center center"
+                            >
+                                <mat-icon class="service-icon-critical"
+                                    >lens</mat-icon
+                                >
                             </span>
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="name">
-                        <th fxFlex="40" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Extensions
-                            Service Group
+                        <th
+                            fxFlex="40"
+                            fxLayoutAlign="start center"
+                            mat-header-cell
+                            *matHeaderCellDef
+                        >
+                            Extensions Service Group
                         </th>
-                        <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                            {{element.name}}
+                        <td
+                            fxFlex="40"
+                            fxLayoutAlign="start center"
+                            mat-cell
+                            *matCellDef="let element"
+                        >
+                            {{ element.name }}
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="action">
-                        <th fxFlex="30" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Action</th>
-                        <td fxFlex="30" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                            <button mat-button mat-raised-button color="accent" (click)="expand(element)">
+                        <th
+                            fxFlex="30"
+                            fxLayoutAlign="start center"
+                            mat-header-cell
+                            *matHeaderCellDef
+                        >
+                            Action
+                        </th>
+                        <td
+                            fxFlex="30"
+                            fxLayoutAlign="start center"
+                            mat-cell
+                            *matCellDef="let element"
+                        >
+                            <button
+                                mat-button
+                                mat-raised-button
+                                color="accent"
+                                (click)="expand(element)"
+                            >
                                 Edit
                             </button>
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="expandedDetail">
-                        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-                            <div class="consul-configuration-detail"
-                                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <td
+                            mat-cell
+                            *matCellDef="let element"
+                            [attr.colspan]="displayedColumns.length"
+                        >
+                            <div
+                                class="consul-configuration-detail"
+                                [@detailExpand]="
+                                    element === expandedElement
+                                        ? 'expanded'
+                                        : 'collapsed'
+                                "
+                            >
                                 <div fxFlex="100">
-                                    <consul-configs [consulService]="element"
-                                        (updateConsulService)="updateConsulService($event)"></consul-configs>
+                                    <sp-consul-configs
+                                        [consulService]="element"
+                                        (updateConsulService)="
+                                            updateConsulService($event)
+                                        "
+                                    ></sp-consul-configs>
                                 </div>
                             </div>
                         </td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="consul-configuration-row"
-                        [class.consul-configuration-row-expanded]="expandedElement === element">
-                    </tr>
-                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']"
-                        class="consul-configuration-detail-row"></tr>
+                    <tr
+                        mat-row
+                        *matRowDef="let element; columns: displayedColumns"
+                        class="consul-configuration-row"
+                        [class.consul-configuration-row-expanded]="
+                            expandedElement === element
+                        "
+                    ></tr>
+                    <tr
+                        mat-row
+                        *matRowDef="let row; columns: ['expandedDetail']"
+                        class="consul-configuration-detail-row"
+                    ></tr>
                 </table>
             </sp-split-section>
         </div>

@@ -17,10 +17,6 @@
  */
 package org.apache.streampipes.wrapper.kafka;
 
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.ValueMapper;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -32,16 +28,21 @@ import org.apache.streampipes.wrapper.kafka.converter.MapToJsonFormat;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
 
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.ValueMapper;
+
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public abstract class KafkaStreamsDataProcessorRuntime<B extends
-        EventProcessorBindingParams>
-        extends KafkaStreamsRuntime<EventProcessorRuntimeParams<B>, B,
-        DataProcessorInvocation, EventProcessorRuntimeContext> {
+public abstract class KafkaStreamsDataProcessorRuntime<T extends
+    EventProcessorBindingParams>
+    extends KafkaStreamsRuntime<EventProcessorRuntimeParams<T>, T,
+    DataProcessorInvocation, EventProcessorRuntimeContext> {
 
 
-  public KafkaStreamsDataProcessorRuntime(EventProcessorRuntimeParams<B> runtimeParams) {
+  public KafkaStreamsDataProcessorRuntime(EventProcessorRuntimeParams<T> runtimeParams) {
     super(runtimeParams);
   }
 
@@ -53,7 +54,7 @@ public abstract class KafkaStreamsDataProcessorRuntime<B extends
       StreamsBuilder builder = new StreamsBuilder();
       SpDataStream inputStream = runtimeParams.getBindingParams().getGraph().getInputStreams().get(0);
       TransportProtocol protocol = protocol(inputStream);
-      KStream<String, String> stream ;
+      KStream<String, String> stream;
 
       if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
         stream = builder.stream(getTopic(inputStream));
@@ -62,12 +63,12 @@ public abstract class KafkaStreamsDataProcessorRuntime<B extends
       }
 
       KStream<String, Map<String, Object>> mapFormat = stream.flatMapValues((ValueMapper<String, Iterable<Map<String,
-              Object>>>) s -> new JsonToMapFormat(getGraph()).apply(s));
+          Object>>>) s -> new JsonToMapFormat(getGraph()).apply(s));
 
       KStream<String, String> outStream = getApplicationLogic(mapFormat).flatMapValues(new
-              MapToJsonFormat());
+          MapToJsonFormat());
       outStream.to(getTopic(runtimeParams.getBindingParams().getGraph()
-              .getOutputStream()));
+          .getOutputStream()));
       streams = new KafkaStreams(builder.build(), config);
 
       streams.start();

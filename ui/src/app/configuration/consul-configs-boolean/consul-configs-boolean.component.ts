@@ -21,14 +21,12 @@ import { StreampipesPeContainerConifgs } from '../shared/streampipes-pe-containe
 import { ConfigurationService } from '../shared/configuration.service';
 
 @Component({
-    selector: 'consul-configs-boolean',
+    selector: 'sp-consul-configs-boolean',
     templateUrl: './consul-configs-boolean.component.html',
     styleUrls: ['./consul-configs-boolean.component.css'],
-    providers: [ConfigurationService]
+    providers: [ConfigurationService],
 })
 export class ConsulConfigsBooleanComponent {
     @Input() configuration: StreampipesPeContainerConifgs;
-    constructor(public configService: ConfigurationService) {
-    }
-
+    constructor(public configService: ConfigurationService) {}
 }

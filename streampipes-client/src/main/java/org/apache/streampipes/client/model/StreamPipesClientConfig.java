@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.client.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;

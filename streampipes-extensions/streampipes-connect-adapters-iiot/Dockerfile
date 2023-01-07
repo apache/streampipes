@@ -13,11 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:11-jre-focal
-
-ENV CONSUL_LOCATION consul
-
-EXPOSE 8090
+FROM eclipse-temurin:17-jre-focal
 
 COPY target/streampipes-connect-adapters-iiot.jar  /streampipes-connect-adapters-iiot.jar
 

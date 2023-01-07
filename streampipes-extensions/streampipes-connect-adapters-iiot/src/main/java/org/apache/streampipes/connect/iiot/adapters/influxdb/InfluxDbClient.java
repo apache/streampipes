@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.iiot.adapters.influxdb;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.vocabulary.SO.DateTime;
+import static org.apache.streampipes.vocabulary.SO.DATE_TIME;
 
 public class InfluxDbClient {
 
@@ -176,7 +176,7 @@ public class InfluxDbClient {
           .label(column.getName());
       // Setting the timestamp field to the correct domainProperty
       if (column.getName().equals("time")) {
-        property.domainProperty(DateTime);
+        property.domainProperty(DATE_TIME);
       }
       allProperties.add(property.build());
     }

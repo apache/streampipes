@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.smp.generator;
 
+import org.apache.streampipes.smp.model.AssetModel;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.apache.streampipes.smp.model.AssetModel;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class SidebarConfigGenerator extends OutputGenerator {
 
   public String generate() {
     JsonArray pipelineElements = new JsonArray();
-    assetModels.forEach(pe -> pipelineElements.add("pe/" +pe.getAppId()));
+    assetModels.forEach(pe -> pipelineElements.add("pe/" + pe.getAppId()));
 
     JsonObject pipelineElementObject = new JsonObject();
     pipelineElementObject.add("Pipeline Elements", pipelineElements);

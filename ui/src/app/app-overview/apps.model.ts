@@ -17,9 +17,9 @@
  */
 
 export interface App {
-  appName: string;
-  appDescription: string;
-  appId: string;
-  appLink: string;
-  appModuleLink?: any;
+    appName: string;
+    appDescription: string;
+    appId: string;
+    appLink: string;
+    appModuleLink?: any;
 }

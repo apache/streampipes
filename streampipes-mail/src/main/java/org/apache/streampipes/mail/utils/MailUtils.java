@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.mail.utils;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.GeneralConfig;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
 import java.io.IOException;
 

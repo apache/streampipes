@@ -21,8 +21,8 @@ import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 public class WithinExpression extends Expression {
 
-  private SiddhiTimeUnit timeUnit;
-  private Integer duration;
+  private final SiddhiTimeUnit timeUnit;
+  private final Integer duration;
 
   public WithinExpression(Integer duration, SiddhiTimeUnit timeUnit) {
     this.duration = duration;
@@ -32,9 +32,9 @@ public class WithinExpression extends Expression {
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.WHITESPACE,
-            SiddhiConstants.WITHIN,
-            String.valueOf(this.duration),
-            this.timeUnit.toTimeUnitString());
+        SiddhiConstants.WITHIN,
+        String.valueOf(this.duration),
+        this.timeUnit.toTimeUnitString());
   }
 
 }

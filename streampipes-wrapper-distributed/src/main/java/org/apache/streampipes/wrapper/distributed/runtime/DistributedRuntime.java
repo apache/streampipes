@@ -18,14 +18,18 @@
 package org.apache.streampipes.wrapper.distributed.runtime;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.grounding.*;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportFormat;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.context.RuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.BindingParams;
 import org.apache.streampipes.wrapper.params.runtime.RuntimeParams;
@@ -33,24 +37,24 @@ import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 
 import java.util.Properties;
 
-public abstract class DistributedRuntime<RP extends RuntimeParams<B, I, RC>, B extends
-        BindingParams<I>, I extends InvocableStreamPipesEntity, RC extends RuntimeContext> extends
-        PipelineElementRuntime {
+public abstract class DistributedRuntime<RpT extends RuntimeParams<V, W, X>, V extends
+    BindingParams<W>, W extends InvocableStreamPipesEntity, X extends RuntimeContext> extends
+    PipelineElementRuntime {
 
-  protected RP runtimeParams;
-  protected B bindingParams;
+  protected RpT runtimeParams;
+  protected V bindingParams;
 
   @Deprecated
-  protected B params;
+  protected V params;
 
-  public DistributedRuntime(RP runtimeParams) {
+  public DistributedRuntime(RpT runtimeParams) {
     super();
     this.runtimeParams = runtimeParams;
     this.bindingParams = runtimeParams.getBindingParams();
     this.params = runtimeParams.getBindingParams();
   }
 
-  public DistributedRuntime(B bindingParams,
+  public DistributedRuntime(V bindingParams,
                             ConfigExtractor configExtractor,
                             StreamPipesClient streamPipesClient) {
     super();
@@ -59,7 +63,7 @@ public abstract class DistributedRuntime<RP extends RuntimeParams<B, I, RC>, B e
     this.runtimeParams = makeRuntimeParams(configExtractor, streamPipesClient);
   }
 
-  protected I getGraph() {
+  protected W getGraph() {
     return runtimeParams.getBindingParams().getGraph();
   }
 
@@ -77,8 +81,8 @@ public abstract class DistributedRuntime<RP extends RuntimeParams<B, I, RC>, B e
 
   protected String getTopic(SpDataStream stream) {
     return protocol(stream)
-            .getTopicDefinition()
-            .getActualTopicName();
+        .getTopicDefinition()
+        .getActualTopicName();
   }
 
   protected JmsTransportProtocol getJmsProtocol(SpDataStream stream) {
@@ -103,15 +107,15 @@ public abstract class DistributedRuntime<RP extends RuntimeParams<B, I, RC>, B e
 
   protected TransportProtocol protocol(SpDataStream stream) {
     return stream
-            .getEventGrounding()
-            .getTransportProtocol();
+        .getEventGrounding()
+        .getTransportProtocol();
   }
 
   protected String getKafkaUrl(SpDataStream stream) {
     // TODO add also jms support
-    return protocol(stream).getBrokerHostname() +
-            ":" +
-            ((KafkaTransportProtocol) protocol(stream)).getKafkaPort();
+    return protocol(stream).getBrokerHostname()
+        + ":"
+        + ((KafkaTransportProtocol) protocol(stream)).getKafkaPort();
   }
 
   protected String replaceWildcardWithPatternFormat(String topic) {
@@ -119,7 +123,7 @@ public abstract class DistributedRuntime<RP extends RuntimeParams<B, I, RC>, B e
     return topic.replaceAll("\\*", ".*");
   }
 
-  protected abstract RP makeRuntimeParams(ConfigExtractor configExtractor,
-                                          StreamPipesClient streamPipesClient);
+  protected abstract RpT makeRuntimeParams(ConfigExtractor configExtractor,
+                                           StreamPipesClient streamPipesClient);
 
 }

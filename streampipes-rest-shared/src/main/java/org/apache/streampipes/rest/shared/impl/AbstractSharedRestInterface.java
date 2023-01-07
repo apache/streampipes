@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.shared.impl;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 public abstract class AbstractSharedRestInterface {
 

@@ -24,7 +24,7 @@ import org.apache.streampipes.wrapper.siddhi.query.SiddhiQuery;
 
 public class SiddhiAppConfigBuilder {
 
-  private SiddhiAppConfig siddhiAppConfig;
+  private final SiddhiAppConfig siddhiAppConfig;
 
   public static SiddhiAppConfigBuilder create(SiddhiOutputConfig outputConfig) {
     return new SiddhiAppConfigBuilder(outputConfig);

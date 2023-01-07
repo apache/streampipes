@@ -18,42 +18,46 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import java.util.List;
-
 import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.client.matching.MatchingResultType;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
+import java.util.List;
+
 public class DatatypeMatch extends AbstractMatcher<String, String> {
 
-	public DatatypeMatch() {
-		super(MatchingResultType.DATATYPE_MATCH);
-	}
+  public DatatypeMatch() {
+    super(MatchingResultType.DATATYPE_MATCH);
+  }
 
-	@Override
-	public boolean match(String offer, String requirement, List<MatchingResultMessage> errorLog) {
-		
-		boolean match = MatchingUtils.nullCheckReqAllowed(offer, requirement)
-				|| requirement.equals(offer) 
-				|| subClassOf(offer, requirement) 
-				|| MatchingUtils.nullCheck(offer, requirement);
-		
-		if (!match) buildErrorMessage(errorLog, requirement);
-		return match;
-	}
-	
-	private boolean subClassOf(String offer, String requirement) {
-		if (!requirement.equals(SO.Number)) return false;
-		else {
-			if (offer.equals(XSD._integer.toString())
-					|| offer.equals(XSD._long.toString()) 
-					|| offer.equals(XSD._double.toString()) 
-					|| offer.equals(XSD._float.toString())) 
-				return true;
-		}
-		return false;
-	}
+  @Override
+  public boolean match(String offer, String requirement, List<MatchingResultMessage> errorLog) {
+
+    boolean match = MatchingUtils.nullCheckReqAllowed(offer, requirement)
+                    || requirement.equals(offer)
+                    || subClassOf(offer, requirement)
+                    || MatchingUtils.nullCheck(offer, requirement);
+
+    if (!match) {
+      buildErrorMessage(errorLog, requirement);
+    }
+    return match;
+  }
+
+  private boolean subClassOf(String offer, String requirement) {
+    if (!requirement.equals(SO.NUMBER)) {
+      return false;
+    } else {
+      if (offer.equals(XSD.INTEGER.toString())
+          || offer.equals(XSD.LONG.toString())
+          || offer.equals(XSD.DOUBLE.toString())
+          || offer.equals(XSD.FLOAT.toString())) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 }

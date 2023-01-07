@@ -19,22 +19,24 @@
 import * as CSV from 'csv-string';
 
 export class DataSetUtils {
-  public static csvEqual(actualCsv: string, expectedCsv: string, ignoreTime: boolean) {
-    let actualResult;
-    if (ignoreTime) {
-      actualResult = DataSetUtils.parseCsv(actualCsv).map(row => {
-        return row.splice(1);
-      });
-    } else {
-      actualResult = DataSetUtils.parseCsv(actualCsv);
+    public static csvEqual(
+        actualCsv: string,
+        expectedCsv: string,
+        ignoreTime: boolean,
+    ) {
+        let actualResult;
+        if (ignoreTime) {
+            actualResult = DataSetUtils.parseCsv(actualCsv).map(row => {
+                return row.splice(1);
+            });
+        } else {
+            actualResult = DataSetUtils.parseCsv(actualCsv);
+        }
+        const expectedResult = DataSetUtils.parseCsv(expectedCsv);
+        expect(actualResult).to.deep.equal(expectedResult);
     }
-    const expectedResult = DataSetUtils.parseCsv(expectedCsv);
-    expect(actualResult).to.deep.equal(expectedResult);
-  }
 
-
-  private static parseCsv(csv: string) {
-    return CSV.parse(csv, ';');
-  }
-
+    private static parseCsv(csv: string) {
+        return CSV.parse(csv, ';');
+    }
 }

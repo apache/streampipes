@@ -48,16 +48,16 @@ public enum ActivePipelinePreviews {
   }
 
   public Optional<NamedStreamPipesEntity> getInvocationGraphForPipelineELement(String previewId,
-                                                       String pipelineElementDomId) {
+                                                                               String pipelineElementDomId) {
     List<NamedStreamPipesEntity> graphs = this.activePreviews.get(previewId);
 
     if (graphs == null || graphs.size() == 0) {
       return Optional.empty();
     } else {
       return graphs
-              .stream()
-              .filter(g -> g.getDom().equals(pipelineElementDomId))
-              .findFirst();
+          .stream()
+          .filter(g -> g.getDom().equals(pipelineElementDomId))
+          .findFirst();
     }
   }
 }

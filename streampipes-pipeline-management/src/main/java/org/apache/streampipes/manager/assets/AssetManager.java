@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.manager.assets;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class AssetManager {
   public static void storeAsset(SpServiceUrlProvider spServiceUrlProvider,
                                 String appId) throws IOException, NoServiceEndpointsAvailableException {
     InputStream assetStream = new AssetFetcher(spServiceUrlProvider, appId)
-            .fetchPipelineElementAssets();
+        .fetchPipelineElementAssets();
     new AssetExtractor(assetStream, appId).extractAssetContents();
   }
 

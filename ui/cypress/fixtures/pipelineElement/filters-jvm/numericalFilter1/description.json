@@ -1,8 +1,12 @@
 {
- "name": "numerical_filter",
- "config": [
-   {"type":  "drop-down", "selector": "number-mapping", "value":  "randomnumber"},
-   {"type":  "radio", "selector": "operation", "value":  "\\>"},
-   {"type":  "input", "selector": "value", "value":  "50"}
- ]
+  "name": "numerical_filter",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "number-mapping",
+      "value": "randomnumber"
+    },
+    { "type": "radio", "selector": "operation", "value": "\\>" },
+    { "type": "input", "selector": "value", "value": "50" }
+  ]
 }

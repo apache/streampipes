@@ -17,7 +17,21 @@
  */
 package org.apache.streampipes.client;
 
-import org.apache.streampipes.client.api.*;
+import org.apache.streampipes.client.api.AdminApi;
+import org.apache.streampipes.client.api.CustomRequestApi;
+import org.apache.streampipes.client.api.DataLakeMeasureApi;
+import org.apache.streampipes.client.api.DataProcessorApi;
+import org.apache.streampipes.client.api.DataSinkApi;
+import org.apache.streampipes.client.api.DataStreamApi;
+import org.apache.streampipes.client.api.FileApi;
+import org.apache.streampipes.client.api.NotificationsApi;
+import org.apache.streampipes.client.api.PipelineApi;
+import org.apache.streampipes.client.api.PipelineElementTemplateApi;
+import org.apache.streampipes.client.api.SupportsDataProcessorApi;
+import org.apache.streampipes.client.api.SupportsDataSinkApi;
+import org.apache.streampipes.client.api.SupportsDataStreamApi;
+import org.apache.streampipes.client.api.SupportsPipelineApi;
+import org.apache.streampipes.client.api.SupportsPipelineElementTemplateApi;
 import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
@@ -32,71 +46,15 @@ import org.apache.streampipes.model.mail.SpEmail;
 import java.io.Serializable;
 
 public class StreamPipesClient implements SupportsPipelineApi,
-        SupportsPipelineElementTemplateApi,
-        SupportsDataSinkApi,
-        SupportsDataStreamApi,
-        SupportsDataProcessorApi,
-        Serializable {
+    SupportsPipelineElementTemplateApi,
+    SupportsDataSinkApi,
+    SupportsDataStreamApi,
+    SupportsDataProcessorApi,
+    Serializable {
 
   private static final Integer SP_DEFAULT_PORT = 80;
 
   private StreamPipesClientConfig config;
-
-  /**
-   * Create a new StreamPipes API client with a runtime connection resolver
-   * @param connectionConfig A ClientConnectionConfigResolver providing connection details
-   */
-  public static StreamPipesClient create(ClientConnectionUrlResolver connectionConfig) {
-    return new StreamPipesClient(connectionConfig);
-  }
-
-  /**
-   * Create a new StreamPipes API client with default port and custom HTTPS settings
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param credentials The credentials object
-   * @param httpsDisabled Set true if the instance is not served over HTTPS
-   */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         CredentialsProvider credentials,
-                                         boolean httpsDisabled) {
-    return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, httpsDisabled);
-  }
-
-  /**
-   * Create a new StreamPipes API client with default port 80 and HTTPS settings (HTTPS enabled)
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param credentials The credentials object
-   */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         CredentialsProvider credentials) {
-    return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, false);
-  }
-
-  /**
-   * Create a new StreamPipes API client with custom port and default HTTPS settings
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param streamPipesPort The port of the StreamPipes instance
-   * @param credentials The credentials object
-   */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         Integer streamPipesPort,
-                                         CredentialsProvider credentials) {
-    return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, false);
-  }
-
-  /**
-   * Create a new StreamPipes API client with custom port and HTTPS settings
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param streamPipesPort The port of the StreamPipes instance
-   * @param credentials The credentials object
-   * @param httpsDisabled Set true if the instance is not served over HTTPS
-   */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         Integer streamPipesPort,
-                                         CredentialsProvider credentials,
-                                         boolean httpsDisabled) {
-    return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, httpsDisabled);
-  }
 
   private StreamPipesClient(ClientConnectionUrlResolver connectionConfig) {
     this.config = new StreamPipesClientConfig(connectionConfig);
@@ -113,7 +71,69 @@ public class StreamPipesClient implements SupportsPipelineApi,
   }
 
   /**
+   * Create a new StreamPipes API client with a runtime connection resolver
+   *
+   * @param connectionConfig A ClientConnectionConfigResolver providing connection details
+   */
+  public static StreamPipesClient create(ClientConnectionUrlResolver connectionConfig) {
+    return new StreamPipesClient(connectionConfig);
+  }
+
+  /**
+   * Create a new StreamPipes API client with default port and custom HTTPS settings
+   *
+   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
+   * @param credentials     The credentials object
+   * @param httpsDisabled   Set true if the instance is not served over HTTPS
+   */
+  public static StreamPipesClient create(String streamPipesHost,
+                                         CredentialsProvider credentials,
+                                         boolean httpsDisabled) {
+    return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, httpsDisabled);
+  }
+
+  /**
+   * Create a new StreamPipes API client with default port 80 and HTTPS settings (HTTPS enabled)
+   *
+   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
+   * @param credentials     The credentials object
+   */
+  public static StreamPipesClient create(String streamPipesHost,
+                                         CredentialsProvider credentials) {
+    return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, false);
+  }
+
+  /**
+   * Create a new StreamPipes API client with custom port and default HTTPS settings
+   *
+   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
+   * @param streamPipesPort The port of the StreamPipes instance
+   * @param credentials     The credentials object
+   */
+  public static StreamPipesClient create(String streamPipesHost,
+                                         Integer streamPipesPort,
+                                         CredentialsProvider credentials) {
+    return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, false);
+  }
+
+  /**
+   * Create a new StreamPipes API client with custom port and HTTPS settings
+   *
+   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
+   * @param streamPipesPort The port of the StreamPipes instance
+   * @param credentials     The credentials object
+   * @param httpsDisabled   Set true if the instance is not served over HTTPS
+   */
+  public static StreamPipesClient create(String streamPipesHost,
+                                         Integer streamPipesPort,
+                                         CredentialsProvider credentials,
+                                         boolean httpsDisabled) {
+    return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, httpsDisabled);
+  }
+
+  /**
    * Register a new data format that is used by the live API
+   *
    * @param spDataFormatFactory The data format factory
    */
   public void registerDataFormat(SpDataFormatFactory spDataFormatFactory) {
@@ -134,6 +154,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
 
   /**
    * Get API to work with pipelines
+   *
    * @return {@link org.apache.streampipes.client.api.PipelineApi}
    */
   @Override
@@ -143,6 +164,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
 
   /**
    * Get API to work with pipline element templates
+   *
    * @return {@link org.apache.streampipes.client.api.PipelineElementTemplateApi}
    */
   @Override
@@ -152,6 +174,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
 
   /**
    * Get API to work with data sinks
+   *
    * @return {@link org.apache.streampipes.client.api.DataSinkApi}
    */
   @Override
@@ -161,6 +184,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
 
   /**
    * Get API to work with data streams
+   *
    * @return {@link org.apache.streampipes.client.api.DataStreamApi}
    */
   @Override
@@ -170,6 +194,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
 
   /**
    * Get API to work with data processors
+   *
    * @return {@link org.apache.streampipes.client.api.DataProcessorApi}
    */
   @Override

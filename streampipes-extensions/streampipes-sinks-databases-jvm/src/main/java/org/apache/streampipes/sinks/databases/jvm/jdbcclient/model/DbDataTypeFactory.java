@@ -171,15 +171,15 @@ public class DbDataTypeFactory {
   }
 
   public static DbDataTypes getFromUri(final String uri, SupportedDbEngines sqlEngine) {
-    if (uri.equals(XSD._integer.toString())) {
+    if (uri.equals(XSD.INTEGER.toString())) {
       return getInteger(sqlEngine);
-    } else if (uri.equals(XSD._long.toString())) {
+    } else if (uri.equals(XSD.LONG.toString())) {
       return getLong(sqlEngine);
-    } else if (uri.equals(XSD._float.toString())) {
+    } else if (uri.equals(XSD.FLOAT.toString())) {
       return getFloat(sqlEngine);
-    } else if (uri.equals(XSD._double.toString())) {
+    } else if (uri.equals(XSD.DOUBLE.toString())) {
       return getDouble(sqlEngine);
-    } else if (uri.equals(XSD._boolean.toString())) {
+    } else if (uri.equals(XSD.BOOLEAN.toString())) {
       return getBoolean(sqlEngine);
     } else {
       return getLongString(sqlEngine);

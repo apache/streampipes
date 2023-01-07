@@ -21,13 +21,15 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.mail.config.MailConfigurationBuilder;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
+
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.email.EmailPopulatingBuilder;
 import org.simplejavamail.api.email.Recipient;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.email.EmailBuilder;
 
-import javax.mail.Message;
+import jakarta.mail.Message;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,14 +78,14 @@ public class AbstractMailer {
 
   protected EmailPopulatingBuilder baseEmail(EmailConfig config) {
     return EmailBuilder
-            .startingBlank()
-            .from(config.getSenderAddress());
+        .startingBlank()
+        .from(config.getSenderAddress());
   }
 
   protected List<Recipient> toSimpleRecipientList(List<String> recipients) {
     return recipients
-            .stream()
-            .map(r -> new Recipient("", r, Message.RecipientType.TO))
-            .collect(Collectors.toList());
+        .stream()
+        .map(r -> new Recipient("", r, Message.RecipientType.TO))
+        .collect(Collectors.toList());
   }
 }

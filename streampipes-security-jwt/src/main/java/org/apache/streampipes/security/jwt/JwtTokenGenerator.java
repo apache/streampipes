@@ -23,6 +23,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +51,8 @@ public class JwtTokenGenerator {
   public static String makeJwtToken(String subject,
                                     Path keyFilePath,
                                     Map<String, Object> claims,
-                                    Date expirationDate) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+                                    Date expirationDate)
+      throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
 
     JwtBuilder builder = prepareJwtToken(subject, makeRsaKey(keyFilePath), expirationDate);
 
@@ -71,7 +73,8 @@ public class JwtTokenGenerator {
     return Keys.hmacShaKeyFor(tokenSecret.getBytes(StandardCharsets.UTF_8));
   }
 
-  private static RSAPrivateKey makeRsaKey(Path keyFilePath) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+  private static RSAPrivateKey makeRsaKey(Path keyFilePath)
+      throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
     String key = Files.readString(keyFilePath, Charset.defaultCharset());
 
     byte[] decoded = KeyUtils.extractPrivate(key);
@@ -85,10 +88,10 @@ public class JwtTokenGenerator {
                                             Key key,
                                             Date expirationDate) {
     return Jwts
-            .builder()
-            .setSubject(subject)
-            .setIssuedAt(new Date())
-            .setExpiration(expirationDate)
-            .signWith(key);
+        .builder()
+        .setSubject(subject)
+        .setIssuedAt(new Date())
+        .setExpiration(expirationDate)
+        .signWith(key);
   }
 }

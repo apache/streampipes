@@ -20,27 +20,30 @@ import { UserInput } from '../model/UserInput';
 import { UserInputType } from '../model/UserInputType';
 
 export class UserInputBuilder {
-  userInputs: UserInput[];
+    userInputs: UserInput[];
 
-  constructor() {
-    this.userInputs = [];
-  }
+    constructor() {
+        this.userInputs = [];
+    }
 
-  public static create(): UserInputBuilder {
-    return new UserInputBuilder();
-  }
+    public static create(): UserInputBuilder {
+        return new UserInputBuilder();
+    }
 
-  public add(type: UserInputType, selector: string, value?: string): UserInputBuilder {
-    const userInput = new UserInput();
-    userInput.type = type;
-    userInput.selector = selector;
-    userInput.value = value;
-    this.userInputs.push(userInput);
-    return this;
-  }
+    public add(
+        type: UserInputType,
+        selector: string,
+        value?: string,
+    ): UserInputBuilder {
+        const userInput = new UserInput();
+        userInput.type = type;
+        userInput.selector = selector;
+        userInput.value = value;
+        this.userInputs.push(userInput);
+        return this;
+    }
 
-  build(): UserInput[] {
-    return this.userInputs;
-  }
-
+    build(): UserInput[] {
+        return this.userInputs;
+    }
 }

@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.connect.adapters.iex;
 
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.iex.model.IexStockData;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -100,9 +100,9 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
     return GuessSchemaBuilder.create()
         .property(EpProperties.timestampProperty(LatestUpdate))
         .property(EpProperties.stringEp(Labels.from("symbol", "Symbol",
-            "The stock symbol"), Symbol, SO.Text))
+            "The stock symbol"), Symbol, SO.TEXT))
         .property(EpProperties.doubleEp(Labels.from("latest-price", "Latest price",
-            "The latest stock price"), LatestPrice, SO.Number))
+            "The latest stock price"), LatestPrice, SO.NUMBER))
         .build();
   }
 

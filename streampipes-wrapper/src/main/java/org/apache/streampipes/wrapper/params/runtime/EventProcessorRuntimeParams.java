@@ -19,8 +19,8 @@
 package org.apache.streampipes.wrapper.params.runtime;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.context.SpEventProcessorRuntimeContext;
@@ -28,10 +28,10 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 import java.io.Serializable;
 
-public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> extends
-    RuntimeParams<B, DataProcessorInvocation, EventProcessorRuntimeContext> implements Serializable {
+public class EventProcessorRuntimeParams<T extends EventProcessorBindingParams> extends
+    RuntimeParams<T, DataProcessorInvocation, EventProcessorRuntimeContext> implements Serializable {
 
-  public EventProcessorRuntimeParams(B bindingParams,
+  public EventProcessorRuntimeParams(T bindingParams,
                                      Boolean singletonEngine,
                                      ConfigExtractor configExtractor,
                                      StreamPipesClient streamPipesClient) {

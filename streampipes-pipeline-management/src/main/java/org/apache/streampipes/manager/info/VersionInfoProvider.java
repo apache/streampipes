@@ -22,11 +22,11 @@ import org.apache.streampipes.model.client.version.VersionInfo;
 public class VersionInfoProvider {
 
   public VersionInfo makeVersionInfo() {
-   VersionInfo versionInfo = new VersionInfo();
-   versionInfo.setBackendVersion(getClass().getPackage().getImplementationVersion());
+    VersionInfo versionInfo = new VersionInfo();
+    versionInfo.setBackendVersion(getClass().getPackage().getImplementationVersion());
 
-   // TODO add versions of other services
+    // TODO add versions of other services
 
-   return versionInfo;
+    return versionInfo;
   }
 }

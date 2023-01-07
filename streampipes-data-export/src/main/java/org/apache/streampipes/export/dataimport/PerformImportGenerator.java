@@ -18,9 +18,16 @@
 
 package org.apache.streampipes.export.dataimport;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.export.model.PermissionInfo;
-import org.apache.streampipes.export.resolver.*;
+import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.DashboardResolver;
+import org.apache.streampipes.export.resolver.DashboardWidgetResolver;
+import org.apache.streampipes.export.resolver.DataSourceResolver;
+import org.apache.streampipes.export.resolver.DataViewResolver;
+import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
+import org.apache.streampipes.export.resolver.FileResolver;
+import org.apache.streampipes.export.resolver.MeasurementResolver;
+import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -32,6 +39,8 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -123,7 +132,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     var resolver = new FileResolver();
     var fileMetadata = resolver.readDocument(document);
     resolver.writeDocument(document);
-    byte[] file = zipContent.get(fileMetadata.getInternalFilename().substring(0, fileMetadata.getInternalFilename().lastIndexOf(".")));
+    byte[] file = zipContent.get(
+        fileMetadata.getInternalFilename().substring(0, fileMetadata.getInternalFilename().lastIndexOf(".")));
     new FileHandler().storeFile(fileMetadata.getInternalFilename(), new ByteArrayInputStream(file));
   }
 
@@ -136,19 +146,19 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   protected void afterResourcesCreated() {
     var resourceManager = new PermissionResourceManager();
     this.permissionsToStore
-      .forEach(info -> resourceManager.createDefault(
-        info.getInstanceId(),
-        info.getInstanceClass(),
-        this.ownerSid,
-        true));
+        .forEach(info -> resourceManager.createDefault(
+            info.getInstanceId(),
+            info.getInstanceClass(),
+            this.ownerSid,
+            true));
   }
 
   private boolean shouldStore(String adapterId,
                               Set<ExportItem> adapters) {
     return adapters
-      .stream()
-      .filter(item -> item.getResourceId().equals(adapterId))
-      .allMatch(ExportItem::isSelected);
+        .stream()
+        .filter(item -> item.getResourceId().equals(adapterId))
+        .allMatch(ExportItem::isSelected);
   }
 
 }

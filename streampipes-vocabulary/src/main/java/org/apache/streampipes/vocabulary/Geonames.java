@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -25,22 +24,22 @@ import java.util.List;
 
 public class Geonames {
 
-    public static String AlternateName = "http://www.geonames.org/ontology#alternateName";
-    public static String CountryCode = "http://www.geonames.org/ontology#countryCode";
-    public static String Name = "http://www.geonames.org/ontology#name";
-    public static String OfficialName = "http://www.geonames.org/ontology#officialName";
-    public static String Population = "http://www.geonames.org/ontology#population";
-    public static String PostalCode = "http://www.geonames.org/ontology#postalCode";
-    public static String ShortName = "http://www.geonames.org/ontology#shortName";
+  public static String alternateName = "http://www.geonames.org/ontology#alternateName";
+  public static String countryCode = "http://www.geonames.org/ontology#countryCode";
+  public static String name = "http://www.geonames.org/ontology#name";
+  public static String officialName = "http://www.geonames.org/ontology#officialName";
+  public static String population = "http://www.geonames.org/ontology#population";
+  public static String postalCode = "http://www.geonames.org/ontology#postalCode";
+  public static String shortName = "http://www.geonames.org/ontology#shortName";
 
-    public static List<String> getAll() {
-        return Arrays.asList(AlternateName,
-                CountryCode,
-                Name,
-                OfficialName,
-                Population,
-                PostalCode,
-                ShortName);
-    }
+  public static List<String> getAll() {
+    return Arrays.asList(alternateName,
+        countryCode,
+        name,
+        officialName,
+        population,
+        postalCode,
+        shortName);
+  }
 
 }

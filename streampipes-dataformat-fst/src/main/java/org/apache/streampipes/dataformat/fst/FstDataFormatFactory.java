@@ -25,7 +25,7 @@ public class FstDataFormatFactory extends SpDataFormatFactory {
 
   @Override
   public String getTransportFormatRdfUri() {
-    return MessageFormat.Fst;
+    return MessageFormat.FST;
   }
 
   @Override

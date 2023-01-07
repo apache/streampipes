@@ -19,7 +19,7 @@
 package org.apache.streampipes.processor.geo.flink.processor.gridenricher;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -53,24 +53,24 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .requiredStream(StreamRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT)
                 , Labels.withId(MAPPING_LATITUDE), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG)
                 , Labels.withId(MAPPING_LONGITUDE), PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .outputStrategy(OutputStrategies.append(
-            EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_X_KEY, SO.Number),
-            EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_Y_KEY, SO.Number),
-            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LAT_NW_KEY, Geo.lat),
-            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LON_NW_KEY, Geo.lng),
-            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LAT_SE_KEY, Geo.lat),
-            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LON_SE_KEY, Geo.lng),
-            EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_CELLSIZE_KEY, SO.Number)))
+            EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_X_KEY, SO.NUMBER),
+            EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_Y_KEY, SO.NUMBER),
+            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LAT_NW_KEY, Geo.LAT),
+            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LON_NW_KEY, Geo.LNG),
+            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LAT_SE_KEY, Geo.LAT),
+            EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LON_SE_KEY, Geo.LNG),
+            EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_CELLSIZE_KEY, SO.NUMBER)))
         .requiredIntegerParameter(Labels.withId(CELLSIZE),
             100, 10000, 100)
         .requiredOntologyConcept(Labels.withId(STARTING_CELL), StaticProperties
-            .supportedDomainProperty(Geo.lat, true), StaticProperties
-            .supportedDomainProperty(Geo.lng, true))
+            .supportedDomainProperty(Geo.LAT, true), StaticProperties
+            .supportedDomainProperty(Geo.LNG, true))
         .build();
   }
 
@@ -85,10 +85,10 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
     String latitudePropertyName = extractor.mappingPropertyValue(MAPPING_LATITUDE);
     String longitudePropertyName = extractor.mappingPropertyValue(MAPPING_LONGITUDE);
 
-    Double startingLatitude = extractor.supportedOntologyPropertyValue(STARTING_CELL, Geo.lat,
+    Double startingLatitude = extractor.supportedOntologyPropertyValue(STARTING_CELL, Geo.LAT,
         Double.class);
 
-    Double startingLongitude = extractor.supportedOntologyPropertyValue(STARTING_CELL, Geo.lng,
+    Double startingLongitude = extractor.supportedOntologyPropertyValue(STARTING_CELL, Geo.LNG,
         Double.class);
 
     EnrichmentSettings enrichmentSettings = new EnrichmentSettings(

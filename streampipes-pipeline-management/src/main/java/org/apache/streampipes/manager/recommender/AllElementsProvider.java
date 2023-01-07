@@ -33,11 +33,11 @@ public class AllElementsProvider {
 
   public AllElementsProvider(Pipeline pipeline) {
     this.allElements = Stream.of(
-                    pipeline.getStreams(),
-                    pipeline.getSepas(),
-                    pipeline.getActions())
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
+            pipeline.getStreams(),
+            pipeline.getSepas(),
+            pipeline.getActions())
+        .flatMap(Collection::stream)
+        .collect(Collectors.toList());
   }
 
   public List<NamedStreamPipesEntity> getAllElements() {
@@ -46,10 +46,10 @@ public class AllElementsProvider {
 
   public NamedStreamPipesEntity findElement(String domId) {
     return this.allElements
-            .stream()
-            .filter(p -> p.getDom().equals(domId))
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+        .stream()
+        .filter(p -> p.getDom().equals(domId))
+        .findFirst()
+        .orElseThrow(IllegalArgumentException::new);
   }
 
 }

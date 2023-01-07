@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.verification;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.verification.messages.VerificationError;
@@ -28,11 +27,17 @@ import org.apache.streampipes.manager.verification.structure.Verifier;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
-import org.apache.streampipes.model.message.*;
+import org.apache.streampipes.model.message.ErrorMessage;
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.management.StorageManager;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +46,7 @@ import java.util.logging.Logger;
 
 public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
-  protected static final Logger logger = Logger.getAnonymousLogger();
+  protected static final Logger LOGGER = Logger.getAnonymousLogger();
 
   private String graphData;
   private Class<T> elementClass;
@@ -53,7 +58,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected List<Verifier> validators;
 
   protected IPipelineElementDescriptionStorageCache storageApi =
-          StorageManager.INSTANCE.getPipelineElementStorage();
+      StorageManager.INSTANCE.getPipelineElementStorage();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
     this.elementClass = elementClass;
@@ -177,9 +182,9 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   private void createAndStorePermission(String principalSid,
                                         boolean publicElement) {
     Permission permission = makePermission(
-            this.elementDescription.getElementId(),
-            this.elementDescription.getClass(),
-            principalSid, publicElement
+        this.elementDescription.getElementId(),
+        this.elementDescription.getClass(),
+        principalSid, publicElement
     );
 
     storeNewObjectPermission(permission);
@@ -190,9 +195,9 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
                                       String principalSid,
                                       boolean publicElement) {
     return PermissionBuilder
-            .create(objectInstanceId, objectInstanceClass, principalSid)
-            .publicElement(publicElement)
-            .build();
+        .create(objectInstanceId, objectInstanceClass, principalSid)
+        .publicElement(publicElement)
+        .build();
   }
 
   protected void storeNewObjectPermission(Permission permission) {

@@ -20,29 +20,25 @@ import { DashboardUtils } from '../../../support/utils/DashboardUtils';
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Validate StreamPipes after restart', () => {
-  beforeEach('Setup Test', () => {
-    cy.login();
-  });
+    beforeEach('Setup Test', () => {
+        cy.login();
+    });
 
-  it('Perform Test', () => {
-    // Truncate data in db
-    DataLakeUtils.goToDatalakeConfiguration();
-    cy.dataCy('datalake-truncate-btn')
-        .should('be.visible')
-        .click();
-    cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
-        .should('be.visible')
-        .click();
+    it('Perform Test', () => {
+        // Truncate data in db
+        DataLakeUtils.goToDatalakeConfiguration();
+        cy.dataCy('datalake-truncate-btn').should('be.visible').click();
+        cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
+            .should('be.visible')
+            .click();
 
+        // open dashboard
+        DashboardUtils.goToDashboard();
+        DashboardUtils.showDashboard('testDashboard');
 
-    // open dashboard
-    DashboardUtils.goToDashboard();
-    DashboardUtils.showDashboard('testDashboard');
+        cy.wait(6000);
 
-    cy.wait(6000);
-
-    // validate that data is coming
-    DashboardUtils.validateRawWidgetEvents(3);
-  });
+        // validate that data is coming
+        DashboardUtils.validateRawWidgetEvents(3);
+    });
 });
-

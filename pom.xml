@@ -17,140 +17,142 @@
 ~
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-<parent>
-	<groupId>org.apache</groupId>
-	<artifactId>apache</artifactId>
-	<version>25</version>
-</parent>
+    <parent>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>25</version>
+    </parent>
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
     <version>0.91.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-<properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<dependency.locations.enabled>false</dependency.locations.enabled>
-	<maven.version>3.3.9</maven.version>
-	<owasp.check.skip>false</owasp.check.skip>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dependency.locations.enabled>false</dependency.locations.enabled>
+        <maven.version>3.8.1</maven.version>
+        <owasp.check.skip>false</owasp.check.skip>
 
 	<!-- project dependencies -->
-	<activemq-client.version>5.16.3</activemq-client.version>
-	<asm.version>7.0</asm.version>
+	<activemq-client.version>5.17.3</activemq-client.version>
+	<asm.version>9.4</asm.version>
 	<byte-buddy.version>1.12.6</byte-buddy.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
+	<commons-codec.version>1.11</commons-codec.version>
 	<commons-collections.version>3.2.2</commons-collections.version>
 	<commons-io.version>2.11.0</commons-io.version>
 	<commons-lang3.version>3.12.0</commons-lang3.version>
 	<commons-logging.version>1.2</commons-logging.version>
 	<consul-client.version>1.5.2</consul-client.version>
 	<elasticsearch.version>6.8.17</elasticsearch.version>
+	<file-management.version>3.1.0</file-management.version>
 	<flink.version>1.16.0</flink.version>
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
-	<fst.version>2.56</fst.version>
-	<geojson-jackson.version>1.8</geojson-jackson.version>
+	<fst.version>2.57</fst.version>
+	<geojson-jackson.version>1.14</geojson-jackson.version>
 	<guava.version>27.1-jre</guava.version>
-	<hibernate-validator.version>6.2.1.Final</hibernate-validator.version>
+	<gson.version>2.10</gson.version>
+	<hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
 	<httpclient.version>4.5.13</httpclient.version>
 	<httpcore.version>4.4.9</httpcore.version>
 	<httpcore-osgi.version>4.4.9</httpcore-osgi.version>
-	<influxdb.version>2.22</influxdb.version>
-	<j2html.version>1.4.0</j2html.version>
-	<jackson.version>2.13.2</jackson.version>
-        <jackson.databind.version>2.13.4.1</jackson.databind.version>
-	<jakarta-annotation.version>1.3.5</jakarta-annotation.version>
+	<immutable-value.version>2.9.3</immutable-value.version>
+	<influxdb.version>2.23</influxdb.version>
+	<j2html.version>1.6.0</j2html.version>
+	<jackson.version>2.14.1</jackson.version>
+	<jackson.databind.version>2.14.1</jackson.databind.version>
+	<jakarta-annotation.version>2.1.1</jakarta-annotation.version>
 	<jakarta-activation-api.version>1.2.2</jakarta-activation-api.version>
-	<jakarta-mail.version>1.6.7</jakarta-mail.version>
-	<jakarta-servlet-api.version>4.0.4</jakarta-servlet-api.version>
-	<jakarta-validation.version>2.0.2</jakarta-validation.version>
-	<jakarta-xml-bind-api.version>2.3.3</jakarta-xml-bind-api.version>
+	<jakarta-json-api.version>2.1.1</jakarta-json-api.version>
+	<jakarta-inject-api.version>2.0.1</jakarta-inject-api.version>
+	<jakarta-mail.version>2.0.1</jakarta-mail.version>
+	<jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
+	<jakarta-validation.version>3.0.2</jakarta-validation.version>
+	<jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
+	<javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
+	<javax-websocket-api.version>1.1</javax-websocket-api.version>
 	<javapoet.version>1.6.1</javapoet.version>
-	<javax-annotation.version>1.3.2</javax-annotation.version>
-	<javax-json.version>1.0.2</javax-json.version>
-	<javax-persistence-api.version>1.0.2</javax-persistence-api.version>
-	<javax-servlet-api.version>4.0.1</javax-servlet-api.version>
-	<javax-validation.version>2.0.1.Final</javax-validation.version>
-	<javax.ws.rs.version>2.1</javax.ws.rs.version>
+	<jakarta-json.version>2.0.1</jakarta-json.version>
+	<jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
+	<jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
 	<javassist.version>3.25.0-GA</javassist.version>
-	<jaxb-api.version>2.3.1</jaxb-api.version>
 	<jboss-logging.version>3.4.0.Final</jboss-logging.version>
 	<jboss-logging-annotations.version>2.2.1.Final</jboss-logging-annotations.version>
 	<jboss-logging-processor.version>2.2.1.Final</jboss-logging-processor.version>
-	<jersey.version>2.35</jersey.version>
+	<jersey.version>3.1.0</jersey.version>
 	<jetbrains-annotations.version>16.0.2</jetbrains-annotations.version>
 	<jetty.version>10.0.10</jetty.version>
 	<jgrapht.version>1.3.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
-	<json-path.version>3.1.0</json-path.version>
+	<jna.version>5.8.0</jna.version>
+	<json-path.version>5.3.0</json-path.version>
+	<json-smart.version>2.4.8</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
-	<kafka.version>2.7.0</kafka.version>
+	<kafka.version>3.3.1</kafka.version>
+	<kotlin-stdlib.version>1.4.30</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
-	<log4j.version>2.17.2</log4j.version>
+	<log4j.version>2.19.0</log4j.version>
 	<lz4.version>1.7.1</lz4.version>
-	<logback-classic.version>1.2.9</logback-classic.version>
+	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
+	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
+	<maven-plugin-testing-harness.version>3.3.0</maven-plugin-testing-harness.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
-	<objenesis.version>2.5.1</objenesis.version>
+	<objenesis.version>3.3</objenesis.version>
 	<okio.version>1.16.0</okio.version>
 	<okhttp.version>3.12.2</okhttp.version>
 	<osgi.version>6.0.0</osgi.version>
 	<plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
-	<plexus-utils.version>3.4.1</plexus-utils.version>
+	<plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
+	<plexus-utils.version>3.5.0</plexus-utils.version>
 	<rdf4j.version>3.5.0</rdf4j.version>
+	<reflections.version>0.9.10</reflections.version>
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<retrofit.version>2.5.0</retrofit.version>
-	<siddhi.version>5.1.21</siddhi.version>
-	<simple-java-mail.version>6.7.5</simple-java-mail.version>
-	<slf4j.version>1.7.30</slf4j.version>
-	<snakeyaml.version>1.26</snakeyaml.version>
+	<roaster.version>2.28.0.Final</roaster.version>
+	<siddhi.version>5.1.26</siddhi.version>
+	<simple-java-mail.version>7.5.2</simple-java-mail.version>
+	<slf4j.version>2.0.6</slf4j.version>
+	<snakeyaml.version>1.32</snakeyaml.version>
 	<snappy-java.version>1.1.7.7</snappy-java.version>
-	<spring.version>5.3.20</spring.version>
-	<spring-boot.version>2.6.7</spring-boot.version>
-	<spring-security.version>5.6.9</spring-security.version>
-	<swagger.version>2.1.12</swagger.version>
-	<type-parser.version>0.6.0</type-parser.version>
+	<spring.version>6.0.3</spring.version>
+	<spring-boot.version>3.0.1</spring-boot.version>
+	<spring-security.version>6.0.1</spring-security.version>
+	<swagger.version>2.2.7</swagger.version>
+	<type-parser.version>0.7.0</type-parser.version>
 	<underscore.version>1.47</underscore.version>
-	<wildfly-common.version>1.5.4.Final</wildfly-common.version>
+	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
-	<mockito.version>3.12.4</mockito.version>
+	<mockito.version>4.11.0</mockito.version>
 	<powermock.version>2.0.9</powermock.version>
 	<rest-assured.version>2.9.0</rest-assured.version>
 	<wiremock.version>2.27.2</wiremock.version>
 
-	<!-- Maven Plugins -->
-	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
-	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-	<maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-	<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-	<maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
-	<maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
-	<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-	<maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
-	<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 
-	<maven.compiler.source>11</maven.compiler.source>
-	<maven.compiler.target>11</maven.compiler.target>
+	<maven.compiler.source>17</maven.compiler.source>
+	<maven.compiler.target>17</maven.compiler.target>
 
 	<amqp-client.version>4.8.0</amqp-client.version>
-	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
+	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
 	<boofcv.version>0.33</boofcv.version>
 	<bcprov.version>1.66</bcprov.version>
-	<bcpkix.version>1.66</bcpkix.version>
+	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
-	<checker-qual.version>2.5.2</checker-qual.version>
+	<checker-qual.version>3.28.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
 	<commons-compress.version>1.21</commons-compress.version>
-	<commons-text.version>1.4</commons-text.version>
+	<commons-text.version>1.10.0</commons-text.version>
 	<commons-pool2.version>2.9.0</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
@@ -158,9 +160,10 @@
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
 	<google-maps-services.version>0.10.0</google-maps-services.version>
 	<graalvm.js.version>21.3.0</graalvm.js.version>
-	<iotdb.version>0.12.0</iotdb.version>
+	<iotdb.version>1.0.0</iotdb.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
-	<javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
+	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
+	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
 	<jsrosbridge.version>0.2.0</jsrosbridge.version>
 	<jedis.version>3.3.0</jedis.version>
 	<j2objc-annotations.version>1.3</j2objc-annotations.version>
@@ -168,18 +171,19 @@
 	<log4j-to-slf4j.version>2.8.2</log4j-to-slf4j.version>
 	<lombok.version>1.18.22</lombok.version>
 	<mailapi.version>1.4.3</mailapi.version>
-	<metrics-core.version>3.1.2</metrics-core.version>
+	<metrics-core.version>4.2.15</metrics-core.version>
 	<nekohtml.version>1.9.13</nekohtml.version>
 	<netty-resolver.version>4.1.72.Final</netty-resolver.version>
 	<okhttp.version>3.13.1</okhttp.version>
-	<opennlp.version>1.9.0</opennlp.version>
+	<opennlp.version>2.1.0</opennlp.version>
 	<postgresql.version>42.4.3</postgresql.version>
 	<pulsar.version>2.10.1</pulsar.version>
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
-	<scala-lang.version>2.11.12</scala-lang.version>
+	<scala-lang.version>2.13.10</scala-lang.version>
+	<scala-lang-xml.version>1.0.5</scala-lang-xml.version>
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
-	<slack-api.version>1.2.0</slack-api.version>
+	<slack-api.version>1.4.0</slack-api.version>
 	<snakeyaml.version>1.26</snakeyaml.version>
 	<xerces.version>2.12.2</xerces.version>
 	<zstd-jni.version>1.4.3-1</zstd-jni.version>
@@ -189,38 +193,54 @@
 
 	<!-- Connect Dependencies-->
 	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
+	<antlr4-runtime.version>4.9</antlr4-runtime.version>
 	<bcprov.version>1.68</bcprov.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<commons-text.version>1.8</commons-text.version>
-	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
-	<java-websocket.version>1.4.0</java-websocket.version>
-	<javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
+	<guice.version>5.1.0</guice.version>
 	<jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
-	<jsrosbridge.version>0.2.0</jsrosbridge.version>
-	<influxdb.java.version>2.14</influxdb.java.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
-	<mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
-	<mysql-connector-java.version>8.0.28</mysql-connector-java.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
 	<opencsv.version>5.5.2</opencsv.version>
 	<plc4x.version>0.9.1</plc4x.version>
 	<protobuf.version>3.16.3</protobuf.version>
+	<proton-j.version>0.30.0</proton-j.version>
+
+	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
+	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
+	<checkstyle.version>9.2.1</checkstyle.version>
+	<extra-enforcer-rules.version>1.6.1</extra-enforcer-rules.version>
+	<formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
+	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+	<maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+	<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+	<maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
+	<maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
+	<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+	<mave-release-plugin.version>3.0.0-M5</mave-release-plugin.version>
+	<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+	<maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
 </properties>
 
-<name>Apache StreamPipes</name>
-<description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore
-IoT data streams.
-		</description>
-		<url>https://streampipes.apache.org</url>
+    <name>Apache StreamPipes</name>
+    <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore
+        IoT data streams.
+    </description>
+    <url>https://streampipes.apache.org</url>
 
 		<dependencyManagement>
 			<dependencies>
 				<dependency>
 					<groupId>ch.qos.logback</groupId>
 					<artifactId>logback-classic</artifactId>
-					<version>${logback-classic.version}</version>
+					<version>${logback.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-core</artifactId>
+					<version>${logback.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>com.fasterxml.jackson.core</groupId>
@@ -273,6 +293,12 @@ IoT data streams.
 					<version>${jackson.version}</version>
 				</dependency>
 				<dependency>
+					<groupId>com.fasterxml.jackson.module</groupId>
+					<artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+					<version>${jackson.version}</version>
+				</dependency>
+
+				<dependency>
 					<groupId>com.j2html</groupId>
 					<artifactId>j2html</artifactId>
 					<version>${j2html.version}</version>
@@ -290,7 +316,7 @@ IoT data streams.
 				<dependency>
 					<groupId>com.google.code.gson</groupId>
 					<artifactId>gson</artifactId>
-					<version>2.8.9</version>
+					<version>${gson.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>com.google.guava</groupId>
@@ -330,7 +356,7 @@ IoT data streams.
 				<dependency>
 					<groupId>commons-codec</groupId>
 					<artifactId>commons-codec</artifactId>
-					<version>1.11</version>
+					<version>${commons-codec.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>commons-collections</groupId>
@@ -394,12 +420,12 @@ IoT data streams.
 				</dependency>
 				<dependency>
 					<groupId>io.swagger.core.v3</groupId>
-					<artifactId>swagger-annotations</artifactId>
+					<artifactId>swagger-annotations-jakarta</artifactId>
 					<version>${swagger.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>io.swagger.core.v3</groupId>
-					<artifactId>swagger-jaxrs2</artifactId>
+					<artifactId>swagger-jaxrs2-jakarta</artifactId>
 					<version>${swagger.version}</version>
 				</dependency>
 				<dependency>
@@ -413,14 +439,14 @@ IoT data streams.
 					<version>${jakarta-annotation.version}</version>
 				</dependency>
 				<dependency>
+					<groupId>jakarta.inject</groupId>
+					<artifactId>jakarta.inject-api</artifactId>
+					<version>${jakarta-inject-api.version}</version>
+				</dependency>
+				<dependency>
 					<groupId>jakarta.validation</groupId>
 					<artifactId>jakarta.validation-api</artifactId>
 					<version>${jakarta-validation.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>javax.annotation</groupId>
-					<artifactId>javax.annotation-api</artifactId>
-					<version>${javax-annotation.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>jakarta.servlet</groupId>
@@ -433,39 +459,34 @@ IoT data streams.
 					<version>${jakarta-xml-bind-api.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>javax.persistence</groupId>
+					<groupId>jakarta.persistence</groupId>
 					<artifactId>persistence-api</artifactId>
-					<version>${javax-persistence-api.version}</version>
+					<version>${jakarta-persistence-api.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-					<version>2.5</version>
-				</dependency>
-				<dependency>
-					<groupId>javax.servlet</groupId>
-					<artifactId>javax.servlet-api</artifactId>
-					<version>${javax-servlet-api.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>javax.validation</groupId>
+					<groupId>jakarta.validation</groupId>
 					<artifactId>validation-api</artifactId>
-					<version>${javax-validation.version}</version>
+					<version>${jakarta-validation.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>javax.ws.rs</groupId>
-					<artifactId>javax.ws.rs-api</artifactId>
-					<version>${javax.ws.rs.version}</version>
+					<groupId>jakarta.ws.rs</groupId>
+					<artifactId>jakarta.ws.rs-api</artifactId>
+					<version>${jakarta.ws.rs.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.websocket</groupId>
+					<artifactId>javax.websocket-api</artifactId>
+					<version>${javax-websocket-api.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>javax.xml.bind</groupId>
 					<artifactId>jaxb-api</artifactId>
-					<version>2.3.1</version>
+					<version>${javax.xml.bind.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>net.minidev</groupId>
 					<artifactId>json-smart</artifactId>
-					<version>1.3.3</version>
+					<version>${json-smart.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.httpcomponents</groupId>
@@ -546,6 +567,12 @@ IoT data streams.
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-core</artifactId>
 					<version>${maven.version}</version>
+					<exclusions>
+						<exclusion>
+							<groupId>com.google.inject</groupId>
+							<artifactId>guice</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
@@ -685,8 +712,8 @@ IoT data streams.
 				</dependency>
 				<dependency>
 					<groupId>org.glassfish</groupId>
-					<artifactId>javax.json</artifactId>
-					<version>${javax-json.version}</version>
+					<artifactId>jakarta.json</artifactId>
+					<version>${jakarta-json.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.glassfish.jersey.core</groupId>
@@ -781,7 +808,7 @@ IoT data streams.
 				<dependency>
 					<groupId>org.reflections</groupId>
 					<artifactId>reflections</artifactId>
-					<version>0.9.10</version>
+					<version>${reflections.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.rendersnake</groupId>
@@ -876,7 +903,7 @@ IoT data streams.
 				<dependency>
 					<groupId>org.yaml</groupId>
 					<artifactId>snakeyaml</artifactId>
-					<version>1.32</version>
+					<version>${snakeyaml.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>io.fogsy</groupId>
@@ -925,6 +952,12 @@ IoT data streams.
 					<artifactId>wiremock</artifactId>
 					<version>${wiremock.version}</version>
 					<scope>test</scope>
+					<exclusions>
+						<exclusion>
+							<groupId>javax.servlet</groupId>
+							<artifactId>servlet-api</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>junit</groupId>
@@ -968,12 +1001,7 @@ IoT data streams.
 					<version>${rest-assured.version}</version>
 					<scope>test</scope>
 				</dependency>
-        <dependency>
-          <groupId>io.flinkspector</groupId>
-          <artifactId>flinkspector-datastream_2.11</artifactId>
-          <version>0.9.4</version>
-          <scope>test</scope>
-        </dependency>
+
         <dependency>
           <groupId>org.apache.flink</groupId>
           <artifactId>flink-test-utils</artifactId>
@@ -991,41 +1019,75 @@ IoT data streams.
           <version>${flink.version}</version>
           <type>test-jar</type>
         </dependency>
-
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-aether-provider</artifactId>
+					<version>${maven.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-model</artifactId>
+					<version>${maven.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven.plugin-tools</groupId>
+					<artifactId>maven-plugin-annotations</artifactId>
+					<version>${maven-plugin-annotations.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven.plugin-testing</groupId>
+					<artifactId>maven-plugin-testing-harness</artifactId>
+					<version>${maven-plugin-testing-harness.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven.shared</groupId>
+					<artifactId>file-management</artifactId>
+					<version>${file-management.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.codehaus.plexus</groupId>
+					<artifactId>plexus-interactivity-api</artifactId>
+					<version>${plexus-interactivity-api.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.jboss.forge.roaster</groupId>
+					<artifactId>roaster-api</artifactId>
+					<version>${roaster.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.jboss.forge.roaster</groupId>
+					<artifactId>roaster-jdt</artifactId>
+					<version>${roaster.version}</version>
+				</dependency>
 				<!-- Extensions dependencies -->
 				<dependency>
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4-runtime</artifactId>
-					<version>4.9</version>
+					<version>${antlr4-runtime.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>io.netty</groupId>
 					<artifactId>netty-handler</artifactId>
-					<version>4.1.72.Final</version>
+					<version>${netty.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.qpid</groupId>
 					<artifactId>proton-j</artifactId>
-					<version>0.30.0</version>
+					<version>${proton-j.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>com.google.inject</groupId>
 					<artifactId>guice</artifactId>
-					<version>4.1.0</version>
+					<version>${guice.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.scala-lang.modules</groupId>
 					<artifactId>scala-xml_2.11</artifactId>
-					<version>1.0.5</version>
+					<version>${scala-lang-xml.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<!-- External Connect dependencies -->
-				<dependency>
-					<groupId>com.github.shyiko</groupId>
-					<artifactId>mysql-binlog-connector-java</artifactId>
-					<version>${mysql-binlog-connector.version}</version>
-				</dependency>
 				<dependency>
 					<groupId>com.google.j2objc</groupId>
 					<artifactId>j2objc-annotations</artifactId>
@@ -1042,9 +1104,9 @@ IoT data streams.
 					<version>${netty-resolver.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>javax.websocket</groupId>
-					<artifactId>javax.websocket-api</artifactId>
-					<version>${javax-websocket-client-api.version}</version>
+					<groupId>jakarta.websocket</groupId>
+					<artifactId>jakarta.websocket-api</artifactId>
+					<version>${jakarta-websocket-client-api.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.commons</groupId>
@@ -1102,119 +1164,119 @@ IoT data streams.
 					<version>${graalvm.js.version}</version>
 				</dependency>
 
-				<dependency>
-					<groupId>org.java-websocket</groupId>
-					<artifactId>Java-WebSocket</artifactId>
-					<version>${java-websocket.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.projectlombok</groupId>
-					<artifactId>lombok</artifactId>
-					<version>${lombok.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.slf4j</groupId>
-					<artifactId>jcl-over-slf4j</artifactId>
-					<version>${jcl-over-slf4j.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>mysql</groupId>
-					<artifactId>mysql-connector-java</artifactId>
-					<version>${mysql-connector-java.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-buffer</artifactId>
-					<version>${netty.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-codec</artifactId>
-					<version>${netty.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-common</artifactId>
-					<version>${netty.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-transport</artifactId>
-					<version>${netty.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.nimbusds</groupId>
-					<artifactId>nimbus-jose-jwt</artifactId>
-					<version>${nimbus-jose-jwt.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.opencsv</groupId>
-					<artifactId>opencsv</artifactId>
-					<version>${opencsv.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.plc4x</groupId>
-					<artifactId>plc4j-api</artifactId>
-					<version>${plc4x.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.plc4x</groupId>
-					<artifactId>plc4j-connection-pool</artifactId>
-					<version>${plc4x.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.plc4x</groupId>
-					<artifactId>plc4j-driver-s7</artifactId>
-					<version>${plc4x.version}</version>
-					<scope>runtime</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.plc4x</groupId>
-					<artifactId>plc4j-driver-modbus</artifactId>
-					<version>${plc4x.version}</version>
-					<scope>runtime</scope>
-				</dependency>
-				<dependency>
-					<groupId>com.google.protobuf</groupId>
-					<artifactId>protobuf-java</artifactId>
-					<version>${protobuf.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.google.errorprone</groupId>
-					<artifactId>error_prone_annotations</artifactId>
-					<version>${errorprone-annotations.version}</version>
-				</dependency>
+            <dependency>
+                <groupId>org.java-websocket</groupId>
+                <artifactId>Java-WebSocket</artifactId>
+                <version>${java-websocket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${jcl-over-slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-buffer</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${opencsv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-api</artifactId>
+                <version>${plc4x.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-connection-pool</artifactId>
+                <version>${plc4x.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-driver-s7</artifactId>
+                <version>${plc4x.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-driver-modbus</artifactId>
+                <version>${plc4x.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.errorprone</groupId>
+                <artifactId>error_prone_annotations</artifactId>
+                <version>${errorprone-annotations.version}</version>
+            </dependency>
 
-				<!-- External dependencies -->
-				<dependency>
-					<groupId>com.github.luben</groupId>
-					<artifactId>zstd-jni</artifactId>
-					<version>${zstd-jni.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.google.maps</groupId>
-					<artifactId>google-maps-services</artifactId>
-					<version>${google-maps-services.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.optimaize.languagedetector</groupId>
-					<artifactId>language-detector</artifactId>
-					<version>${language-detector.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.rabbitmq</groupId>
-					<artifactId>amqp-client</artifactId>
-					<version>${amqp-client.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.ullink.slack</groupId>
-					<artifactId>simpleslackapi</artifactId>
-					<version>${slack-api.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.dropwizard.metrics</groupId>
-					<artifactId>metrics-core</artifactId>
-					<version>${metrics-core.version}</version>
+            <!-- External dependencies -->
+            <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>${zstd-jni.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.maps</groupId>
+                <artifactId>google-maps-services</artifactId>
+                <version>${google-maps-services.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.optimaize.languagedetector</groupId>
+                <artifactId>language-detector</artifactId>
+                <version>${language-detector.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${amqp-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ullink.slack</groupId>
+                <artifactId>simpleslackapi</artifactId>
+                <version>${slack-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>${metrics-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.json</groupId>
+					<artifactId>jakarta.json-api</artifactId>
+					<version>${jakarta-json-api.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>javax.mail</groupId>
@@ -1255,6 +1317,12 @@ IoT data streams.
 					<groupId>org.apache.iotdb</groupId>
 					<artifactId>iotdb-jdbc</artifactId>
 					<version>${iotdb.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.opennlp</groupId>
@@ -1265,6 +1333,12 @@ IoT data streams.
 					<groupId>org.apache.pulsar</groupId>
 					<artifactId>pulsar-client</artifactId>
 					<version>${pulsar.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.rocketmq</groupId>
@@ -1327,586 +1401,578 @@ IoT data streams.
 					<version>${quartz.version}</version>
 				</dependency>
 
-				<!-- dependency convergence -->
-				<dependency>
-					<groupId>org.glassfish.jaxb</groupId>
-					<artifactId>jaxb-runtime</artifactId>
-					<version>2.3.3</version>
-				</dependency>
-				<dependency>
-					<groupId>net.java.dev.jna</groupId>
-					<artifactId>jna</artifactId>
-					<version>5.8.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.immutables</groupId>
-					<artifactId>value</artifactId>
-					<version>2.8.8</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jetbrains.kotlin</groupId>
-					<artifactId>kotlin-stdlib-jdk8</artifactId>
-					<version>1.4.30</version>
-				</dependency>
-			</dependencies>
-		</dependencyManagement>
+            <!-- dependency convergence -->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb-runtime.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${jna.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.immutables</groupId>
+                <artifactId>value</artifactId>
+                <version>${immutable-value.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+                <version>${kotlin-stdlib.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-		<modules>
-			<module>archetypes/streampipes-archetype-extensions-jvm</module>
-			<module>archetypes/streampipes-archetype-pe-sinks-flink</module>
-			<module>archetypes/streampipes-archetype-pe-processors-flink</module>
-			<module>streampipes-backend</module>
-			<module>streampipes-client</module>
-			<module>streampipes-commons</module>
-			<module>streampipes-config</module>
-			<module>streampipes-connect</module>
-			<module>streampipes-connect-api</module>
-			<module>streampipes-connect-container-master</module>
-			<module>streampipes-connect-container-worker</module>
-			<module>streampipes-container</module>
-			<module>streampipes-container-extensions</module>
-			<module>streampipes-container-standalone</module>
-			<module>streampipes-data-explorer</module>
-			<module>streampipes-dataformat</module>
-			<module>streampipes-dataformat-cbor</module>
-			<module>streampipes-dataformat-fst</module>
-			<module>streampipes-dataformat-json</module>
-			<module>streampipes-dataformat-smile</module>
-			<module>streampipes-extensions</module>
-			<module>streampipes-logging</module>
-			<module>streampipes-maven-plugin</module>
-			<module>streampipes-measurement-units</module>
-			<module>streampipes-messaging-kafka</module>
-			<module>streampipes-messaging</module>
-			<module>streampipes-messaging-jms</module>
-			<module>streampipes-messaging-mqtt</module>
-			<module>streampipes-model</module>
-			<module>streampipes-model-client</module>
-			<module>streampipes-model-shared</module>
-			<module>streampipes-performance-tests</module>
-			<module>streampipes-platform-services</module>
-			<module>streampipes-pipeline-management</module>
-			<module>streampipes-sources</module>
-			<module>streampipes-rest</module>
-			<module>streampipes-rest-core-base</module>
-			<module>streampipes-rest-shared</module>
-			<module>streampipes-sdk</module>
-			<module>streampipes-security-jwt</module>
-			<module>streampipes-serializers-json</module>
-			<module>streampipes-service-base</module>
-			<module>streampipes-service-discovery</module>
-			<module>streampipes-service-discovery-consul</module>
-			<module>streampipes-service-discovery-api</module>
-			<module>streampipes-service-extensions-base</module>
-			<module>streampipes-storage-api</module>
-			<module>streampipes-storage-management</module>
-			<module>streampipes-storage-couchdb</module>
-			<module>streampipes-test-utils</module>
-			<module>streampipes-user-management</module>
-			<module>streampipes-vocabulary</module>
-			<module>streampipes-wrapper</module>
-			<module>streampipes-wrapper-distributed</module>
-			<module>streampipes-wrapper-flink</module>
-			<module>streampipes-wrapper-kafka-streams</module>
-			<module>streampipes-wrapper-python</module>
-			<module>streampipes-wrapper-siddhi</module>
-			<module>streampipes-wrapper-standalone</module>
-			<module>streampipes-mail</module>
-			<module>streampipes-resource-management</module>
-			<module>streampipes-sdk-bundle</module>
-			<module>streampipes-data-explorer-commons</module>
-			<module>streampipes-data-export</module>
-			<module>streampipes-messaging-nats</module>
-			<module>streampipes-integration-tests</module>
-		</modules>
+    <modules>
+        <module>archetypes/streampipes-archetype-extensions-jvm</module>
+        <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
+        <module>archetypes/streampipes-archetype-pe-processors-flink</module>
+        <module>streampipes-service-core</module>
+        <module>streampipes-client</module>
+        <module>streampipes-commons</module>
+        <module>streampipes-config</module>
+        <module>streampipes-extensions-api</module>
+        <module>streampipes-connect-management</module>
+        <module>streampipes-extensions-management</module>
+        <module>streampipes-service-extensions</module>
+        <module>streampipes-data-explorer</module>
+        <module>streampipes-dataformat</module>
+        <module>streampipes-dataformat-cbor</module>
+        <module>streampipes-dataformat-fst</module>
+        <module>streampipes-dataformat-json</module>
+        <module>streampipes-dataformat-smile</module>
+        <module>streampipes-extensions</module>
+        <module>streampipes-logging</module>
+        <module>streampipes-maven-plugin</module>
+        <module>streampipes-measurement-units</module>
+        <module>streampipes-messaging-kafka</module>
+        <module>streampipes-messaging</module>
+        <module>streampipes-messaging-jms</module>
+        <module>streampipes-messaging-mqtt</module>
+        <module>streampipes-model</module>
+        <module>streampipes-model-client</module>
+        <module>streampipes-model-shared</module>
+        <module>streampipes-performance-tests</module>
+        <module>streampipes-platform-services</module>
+        <module>streampipes-pipeline-management</module>
+        <module>streampipes-sources</module>
+        <module>streampipes-rest</module>
+        <module>streampipes-rest-core-base</module>
+        <module>streampipes-rest-shared</module>
+        <module>streampipes-sdk</module>
+        <module>streampipes-security-jwt</module>
+        <module>streampipes-serializers-json</module>
+        <module>streampipes-service-base</module>
+        <module>streampipes-service-discovery</module>
+        <module>streampipes-service-discovery-consul</module>
+        <module>streampipes-service-discovery-api</module>
+        <module>streampipes-storage-api</module>
+        <module>streampipes-storage-management</module>
+        <module>streampipes-storage-couchdb</module>
+        <module>streampipes-test-utils</module>
+        <module>streampipes-user-management</module>
+        <module>streampipes-vocabulary</module>
+        <module>streampipes-wrapper</module>
+        <module>streampipes-wrapper-distributed</module>
+        <module>streampipes-wrapper-flink</module>
+        <module>streampipes-wrapper-kafka-streams</module>
+        <module>streampipes-wrapper-python</module>
+        <module>streampipes-wrapper-siddhi</module>
+        <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-mail</module>
+        <module>streampipes-resource-management</module>
+        <module>streampipes-sdk-bundle</module>
+        <module>streampipes-data-explorer-commons</module>
+        <module>streampipes-data-export</module>
+        <module>streampipes-messaging-nats</module>
+        <module>streampipes-integration-tests</module>
+		<module>streampipes-rest-extensions</module>
+    </modules>
 
-	<profiles>
-			<profile>
-				<id>apache-release</id>
-				<build>
-					<plugins>
-						<!--
-							Create MD5 and SHA512 checksum files for the release artifacts.
-						-->
-						<plugin>
-							<groupId>net.nicoulaj.maven.plugins</groupId>
-							<artifactId>checksum-maven-plugin</artifactId>
-							<version>1.11</version>
-							<inherited>false</inherited>
-							<executions>
-								<execution>
-									<goals>
-										<goal>files</goal>
-									</goals>
-								</execution>
-							</executions>
-							<configuration>
-								<algorithms>
-									<algorithm>SHA-512</algorithm>
-								</algorithms>
-								<fileSets>
-									<fileSet>
-										<directory>${project.build.directory}</directory>
-										<includes>
-											<include>apache-streampipes-${project.version}-source-release.zip
-										</include>
-									</includes>
-								</fileSet>
-							</fileSets>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-								<configuration>
-									<failOnError>false</failOnError>
-									<additionalJOption>-Xdoclint:none</additionalJOption>
-									<doclint>none</doclint>
-									<additionalJOption>-Xdoclint:none</additionalJOption>
-									<source>11</source>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>java8-doclint-disabled</id>
-			<activation>
-				<jdk>[1.8,)</jdk>
-			</activation>
-			<properties>
-				<javadoc.opts>-Xdoclint:none</javadoc.opts>
-			</properties>
-		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+            <id>apache-release</id>
+            <build>
+                <plugins>
+                    <!--
+                        Create MD5 and SHA512 checksum files for the release artifacts.
+                    -->
+                    <plugin>
+                        <groupId>net.nicoulaj.maven.plugins</groupId>
+                        <artifactId>checksum-maven-plugin</artifactId>
+                        <version>${checksum-maven-plugin.version}</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>files</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <algorithms>
+                                <algorithm>SHA-512</algorithm>
+                            </algorithms>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>apache-streampipes-${project.version}-source-release.zip
+                                        </include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                                    <doclint>none</doclint>
+                                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                                    <source>11</source>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
-	<!-- Build Settings -->
+    <!-- Build Settings -->
 
 
-	<build>
+    <build>
 
-		<!-- Plugin Management -->
+        <!-- Plugin Management -->
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>net.revelc.code.formatter</groupId>
-					<artifactId>formatter-maven-plugin</artifactId>
-					<version>2.11.0</version>
-					<configuration>
-						<lineEnding>LF</lineEnding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler-plugin.version}</version>
-					<configuration>
-						<release>11</release>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.0.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${maven-javadoc-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-shade-plugin</artifactId>
-					<version>${maven-shade-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>3.0.0-M5</version>
-					<configuration>
-						<useReleaseProfile>true</useReleaseProfile>
-						<autoVersionSubmodules>true</autoVersionSubmodules>
-						<releaseProfiles>apache-release</releaseProfiles>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>${maven-assembly-plugin.version}</version>
-					<configuration>
-						<finalName>apache-streampipes-${project.version}</finalName>
-						<descriptors>
-							<descriptor>tools/maven/assembly.xml</descriptor>
-						</descriptors>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>${maven-dependency-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<dependencies>
-						<dependency>
-							<groupId>com.puppycrawl.tools</groupId>
-							<artifactId>checkstyle</artifactId>
-							<version>9.2.1</version>
-						</dependency>
-					</dependencies>
-					<executions>
-						<execution>
-							<id>validate</id>
-							<phase>validate</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<suppressionsLocation>tools/maven/suppressions.xml</suppressionsLocation>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-						<configLocation>tools/maven/checkstyle.xml</configLocation>
-						<encoding>UTF-8</encoding>
-						<logViolationsToConsole>true</logViolationsToConsole>
-						<failOnViolation>true</failOnViolation>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>${maven-source-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.rat</groupId>
-					<artifactId>apache-rat-plugin</artifactId>
-					<version>${apache-rat-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.owasp</groupId>
-					<artifactId>dependency-check-maven</artifactId>
-					<version>${maven.dependency.check.plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<version>${spring-boot.version}</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
-
-		<!-- Plugins -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>net.revelc.code.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>${formatter-maven-plugin.version}</version>
+                    <configuration>
+                        <lineEnding>LF</lineEnding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <release>17</release>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                    <configuration>
+                        <useReleaseProfile>true</useReleaseProfile>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <releaseProfiles>apache-release</releaseProfiles>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                    <configuration>
+                        <finalName>apache-streampipes-${project.version}</finalName>
+                        <descriptors>
+                            <descriptor>tools/maven/assembly.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <suppressionsLocation>tools/maven/suppressions.xml</suppressionsLocation>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        <configLocation>tools/maven/checkstyle.xml</configLocation>
+                        <encoding>UTF-8</encoding>
+                        <logViolationsToConsole>true</logViolationsToConsole>
+                        <failOnViolation>true</failOnViolation>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <version>${apache-rat-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${maven.dependency.check.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>check-at-least-java-11</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireJavaVersion>
-									<version>1.11.0</version>
-								</requireJavaVersion>
-							</rules>
-						</configuration>
-					</execution>
-					<!-- Ensure we're not mixing dependency versions -->
-					<execution>
-						<id>enforce-version-convergence</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<dependencyConvergence />
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>extra-enforcer-rules</artifactId>
-						<version>1.2</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<failOnError>false</failOnError>
-							<failOnWarnings>false</failOnWarnings>
-							<additionalJOption>-Xdoclint:none</additionalJOption>
-							<doclint>none</doclint>
-							<additionalJOption>-Xdoclint:none</additionalJOption>
-							<release>11</release>
-						</configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<failOnWarnings>false</failOnWarnings>
-					<failOnError>false</failOnError>
-					<source>8</source>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.rat</groupId>
-				<artifactId>apache-rat-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>license-check</id>
-						<inherited>false</inherited>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludeSubProjects>false</excludeSubProjects>
-					<useMavenDefaultExcludes>true</useMavenDefaultExcludes>
-					<consoleOutput>true</consoleOutput>
-					<excludes>
-						<!-- Git related files -->
-						<exclude>**/.git/**</exclude>
-						<exclude>**/.gitignore</exclude>
-						<exclude>**/.spignore</exclude>
+        <!-- Plugins -->
 
-						<!-- License Files for other licenses -->
-						<exclude>**/UNLICENSE</exclude>
 
-						<!-- Maven related files -->
-						<exclude>**/target/**</exclude>
-						<exclude>target/**</exclude>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>check-at-least-java-17</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>1.17.0</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <!-- Ensure we're not mixing dependency versions -->
+                    <execution>
+                        <id>enforce-version-convergence</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>${extra-enforcer-rules.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <failOnWarnings>false</failOnWarnings>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <doclint>none</doclint>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <release>11</release>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <failOnWarnings>false</failOnWarnings>
+                    <failOnError>false</failOnError>
+                    <source>8</source>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>license-check</id>
+                        <inherited>false</inherited>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludeSubProjects>false</excludeSubProjects>
+                    <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
+                    <consoleOutput>true</consoleOutput>
+                    <excludes>
+                        <!-- Git related files -->
+                        <exclude>**/.git/**</exclude>
+                        <exclude>**/.gitignore</exclude>
+                        <exclude>**/.spignore</exclude>
 
-						<!-- Eclipse related files -->
-						<exclude>**/.project</exclude>
-						<exclude>**/.settings/**</exclude>
-						<exclude>**/.classpath</exclude>
-						<exclude>**/.factorypath</exclude>
+                        <!-- License Files for other licenses -->
+                        <exclude>**/UNLICENSE</exclude>
 
-						<!-- IntelliJ related files -->
-						<exclude>**/.idea/**</exclude>
-						<exclude>**/*.iml</exclude>
+                        <!-- Maven related files -->
+                        <exclude>**/target/**</exclude>
+                        <exclude>target/**</exclude>
 
-						<!-- JSON doesn't like comments -->
-						<exclude>**/*.json</exclude>
-						<exclude>**/*.jsonld</exclude>
-						<exclude>**/*.txt</exclude>
+                        <!-- Eclipse related files -->
+                        <exclude>**/.project</exclude>
+                        <exclude>**/.settings/**</exclude>
+                        <exclude>**/.classpath</exclude>
+                        <exclude>**/.factorypath</exclude>
 
-						<!-- CSV also doesn't like comments -->
-						<exclude>**/*.csv</exclude>
+                        <!-- IntelliJ related files -->
+                        <exclude>**/.idea/**</exclude>
+                        <exclude>**/*.iml</exclude>
 
-						<!-- Jupyter Notebooks as well -->
-						<exclude>**/*.ipynb</exclude>
+                        <!-- JSON doesn't like comments -->
+                        <exclude>**/*.json</exclude>
+                        <exclude>**/*.jsonld</exclude>
+                        <exclude>**/*.txt</exclude>
+
+                        <!-- CSV also doesn't like comments -->
+                        <exclude>**/*.csv</exclude>
+
+                        <!-- Jupyter Notebooks as well -->
+                        <exclude>**/*.ipynb</exclude>
 
                         <exclude>**/system</exclude>
 
-						<!-- Test files -->
-						<exclude>streampipes-code-generation/src/main/resources/pom</exclude>
-						<exclude>streampipes-code-generation/src/main/resources/web</exclude>
-						<exclude>streampipes-code-generation/src/test/resources/*_java</exclude>
-						<exclude>streampipes-code-generation/src/test/resources/expected_pom_xml</exclude>
-						<exclude>streampipes-code-generation/src/test/resources/expected_web_xml</exclude>
+                        <!-- Test files -->
+                        <exclude>streampipes-code-generation/src/main/resources/pom</exclude>
+                        <exclude>streampipes-code-generation/src/main/resources/web</exclude>
+                        <exclude>streampipes-code-generation/src/test/resources/*_java</exclude>
+                        <exclude>streampipes-code-generation/src/test/resources/expected_pom_xml</exclude>
+                        <exclude>streampipes-code-generation/src/test/resources/expected_web_xml</exclude>
 
-						<!-- Archetype resources should not have ASF license header -->
-						<exclude>archetypes/streampipes-archetype-pe-processors-flink/src/main/resources/**</exclude>
-						<exclude>archetypes/streampipes-archetype-pe-processors-jvm/src/main/resources/**</exclude>
-						<exclude>archetypes/streampipes-archetype-pe-sinks-flink/src/main/resources/**</exclude>
-						<exclude>archetypes/streampipes-archetype-pe-sinks-jvm/src/main/resources/**</exclude>
-						<exclude>archetypes/streampipes-archetype-pe-sources/src/main/resources/**</exclude>
+                        <!-- Archetype resources should not have ASF license header -->
+                        <exclude>archetypes/streampipes-archetype-pe-processors-flink/src/main/resources/**</exclude>
+                        <exclude>archetypes/streampipes-archetype-pe-processors-jvm/src/main/resources/**</exclude>
+                        <exclude>archetypes/streampipes-archetype-pe-sinks-flink/src/main/resources/**</exclude>
+                        <exclude>archetypes/streampipes-archetype-pe-sinks-jvm/src/main/resources/**</exclude>
+                        <exclude>archetypes/streampipes-archetype-pe-sources/src/main/resources/**</exclude>
 
-						<!-- External files -->
-						<exclude>
-							streampipes-extensions/streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**
-						</exclude>
-						<exclude>
-							streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
-						</exclude>
+                        <!-- External files -->
+                        <exclude>
+                            streampipes-extensions/streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**
+                        </exclude>
+                        <exclude>
+                            streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
+                        </exclude>
 
-						<!-- External vocabularies -->
-						<exclude>streampipes-measurement-units/src/main/java/com/github/jqudt/**</exclude>
+                        <!-- External vocabularies -->
+                        <exclude>streampipes-measurement-units/src/main/java/com/github/jqudt/**</exclude>
 
-						<!-- Exclude some UI files which we need to check in more detail -->
-						<exclude>ui/src/assets/img/svg/**</exclude>
+                        <!-- Exclude some UI files which we need to check in more detail -->
+                        <exclude>ui/src/assets/img/svg/**</exclude>
 
-						<!-- Exclude .angular folder -->
-						<exclude>ui/.angular/**</exclude>
+                        <!-- Exclude .angular folder -->
+                        <exclude>ui/.angular/**</exclude>
 
-						<!-- Exclude disclaimer and notice files -->
-						<exclude>DISCLAIMER</exclude>
-						<exclude>NOTICE-binary</exclude>
+                        <!-- Exclude disclaimer and notice files -->
+                        <exclude>DISCLAIMER</exclude>
+                        <exclude>NOTICE-binary</exclude>
 
-						<!-- Exclude license files in license folder -->
-						<exclude>licenses/BSD_3-Clause</exclude>
-						<exclude>licenses/CDDL_1.1</exclude>
-						<exclude>licenses/CDDL_1.0</exclude>
-						<exclude>licenses/Eclipse_Distribution_License_v1.0</exclude>
-						<exclude>licenses/EPL_2.0</exclude>
-						<exclude>licenses/CDDL_LICENSE_1.1</exclude>
-						<exclude>licenses/EPL_1.0</exclude>
-						<exclude>licenses/BSD_2-Clause</exclude>
+                        <!-- Exclude license files in license folder -->
+                        <exclude>licenses/BSD_3-Clause</exclude>
+                        <exclude>licenses/CDDL_1.1</exclude>
+                        <exclude>licenses/CDDL_1.0</exclude>
+                        <exclude>licenses/Eclipse_Distribution_License_v1.0</exclude>
+                        <exclude>licenses/EPL_2.0</exclude>
+                        <exclude>licenses/CDDL_LICENSE_1.1</exclude>
+                        <exclude>licenses/EPL_1.0</exclude>
+                        <exclude>licenses/BSD_2-Clause</exclude>
 
-						<!-- Exclude Python env -->
-						<exclude>**/venv/**</exclude>
-						<exclude>**/.pytest_cache/**</exclude>
-						<exclude>.ruff_cache/**</exclude>
-						<exclude>.mypy_cache/**</exclude>
+                        <!-- Exclude Python env -->
+                        <exclude>**/venv/**</exclude>
+                        <exclude>**/.pytest_cache/**</exclude>
+                        <exclude>.ruff_cache/**</exclude>
+                        <exclude>.mypy_cache/**</exclude>
+                        <exclude>**/site/**</exclude>
+                        <exclude>**/.mypy_cache/**</exclude>
 
+                        <!-- Exclude Husky which defines its own gitignore and is not detected by rat -->
+                        <exclude>ui/.husky/**</exclude>
 
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<release>11</release>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${maven-checkstyle-plugin.version}</version>
-				<configuration>
-					<logViolationsToConsole>false</logViolationsToConsole>
-					<failOnViolation>false</failOnViolation>
-				</configuration>
-				<inherited>false</inherited>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.owasp</groupId>
-				<artifactId>dependency-check-maven</artifactId>
-				<configuration>
-					<!-- use -Dowasp.check.skip=true to skip dependency check -->
-					<skip>${owasp.check.skip}</skip>
-					<format>HTML</format>
-					<bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
-					<assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-					<failOnError>false</failOnError>
-					<suppressionFile>tools/maven/owasp-dependency-check-suppression.xml</suppressionFile>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<!-- generates aggregated reports in target/ -->
-							<goal>check</goal>
-							<goal>aggregate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<argLine>
-						--add-opens java.base/java.lang=ALL-UNNAMED
-						--add-opens java.base/java.util=ALL-UNNAMED
-						--add-opens java.base/java.base=ALL-UNNAMED
-						--add-opens java.base/java.util.stream=ALL-UNNAMED
-					</argLine>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>17</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <configuration>
+                    <logViolationsToConsole>false</logViolationsToConsole>
+                    <failOnViolation>false</failOnViolation>
+                </configuration>
+                <inherited>false</inherited>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <configuration>
+                    <!-- use -Dowasp.check.skip=true to skip dependency check -->
+                    <skip>${owasp.check.skip}</skip>
+                    <format>HTML</format>
+                    <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
+                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                    <failOnError>false</failOnError>
+                    <suppressionFile>tools/maven/owasp-dependency-check-suppression.xml</suppressionFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- generates aggregated reports in target/ -->
+                            <goal>check</goal>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        --add-opens java.base/java.lang=ALL-UNNAMED
+                        --add-opens java.base/java.util=ALL-UNNAMED
+                        --add-opens java.base/java.base=ALL-UNNAMED
+                        --add-opens java.base/java.util.stream=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<scm>
-		<developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
-		<connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
-		<url>https://github.com/apache/streampipes</url>
-		<tag>dev</tag>
-	</scm>
+    <scm>
+        <developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
+        <url>https://github.com/apache/streampipes</url>
+        <tag>dev</tag>
+    </scm>
 
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/apache/streampipes/issues</url>
-	</issueManagement>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/apache/streampipes/issues</url>
+    </issueManagement>
 
-	<mailingLists>
-		<mailingList>
-			<name>Apache StreamPipes Developer List</name>
-			<subscribe>mailto:dev-subscribe@streampipes.apache.org</subscribe>
-			<unsubscribe>mailto:dev-unsubscribe@streampipes.apache.org</unsubscribe>
-			<post>mailto:dev@streampipes.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/streampipes-dev/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Apache StreamPipes User List</name>
-			<subscribe>mailto:users-subscribe@streampipes.apache.org</subscribe>
-			<unsubscribe>mailto:users-unsubscribe@streampipes.apache.org</unsubscribe>
-			<post>mailto:users@streampipes.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/streampipes-users/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Apache StreamPipes Commits List</name>
-			<subscribe>mailto:commits-subscribe@streampipes.apache.org</subscribe>
-			<unsubscribe>mailto:commits-unsubscribe@streampipes.apache.org</unsubscribe>
-			<post>mailto:commits@streampipes.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/streampipes-commits/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Apache StreamPipes Issue Notifications List</name>
-			<subscribe>mailto:issues-subscribe@streampipes.apache.org</subscribe>
-			<unsubscribe>mailto:issues-unsubscribe@streampipes.apache.org</unsubscribe>
-			<post>mailto:issues@streampipes.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/streampipes-issues/</archive>
-		</mailingList>
-	</mailingLists>
+    <mailingLists>
+        <mailingList>
+            <name>Apache StreamPipes Developer List</name>
+            <subscribe>mailto:dev-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:dev-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:dev@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-dev/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Apache StreamPipes User List</name>
+            <subscribe>mailto:users-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:users-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:users@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-users/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Apache StreamPipes Commits List</name>
+            <subscribe>mailto:commits-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:commits-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:commits@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-commits/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Apache StreamPipes Issue Notifications List</name>
+            <subscribe>mailto:issues-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:issues-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:issues@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-issues/</archive>
+        </mailingList>
+    </mailingLists>
 
 </project>

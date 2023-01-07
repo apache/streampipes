@@ -19,16 +19,43 @@
 import { SpNavigationItem } from '@streampipes/shared-ui';
 
 export class SpConfigurationTabs {
-
-  public static getTabs(): SpNavigationItem[] {
-    return [
-      {itemId: 'general', itemTitle: 'General', itemLink: ['configuration', 'general']},
-      {itemId: 'datalake', itemTitle: 'Data Lake', itemLink: ['configuration', 'datalake']},
-      {itemId: 'email', itemTitle: 'Mail', itemLink: ['configuration', 'email']},
-      {itemId: 'export', itemTitle: 'Export/Import', itemLink: ['configuration', 'export']},
-      {itemId: 'messaging', itemTitle: 'Messaging', itemLink: ['configuration', 'messaging']},
-      {itemId: 'pipelineelement', itemTitle: 'Pipeline Element Configuration', itemLink: ['configuration', 'pipelineelement']},
-      {itemId: 'security', itemTitle: 'Security', itemLink: ['configuration', 'security']}
-    ];
-  }
+    public static getTabs(): SpNavigationItem[] {
+        return [
+            {
+                itemId: 'general',
+                itemTitle: 'General',
+                itemLink: ['configuration', 'general'],
+            },
+            {
+                itemId: 'datalake',
+                itemTitle: 'Data Lake',
+                itemLink: ['configuration', 'datalake'],
+            },
+            {
+                itemId: 'email',
+                itemTitle: 'Mail',
+                itemLink: ['configuration', 'email'],
+            },
+            {
+                itemId: 'export',
+                itemTitle: 'Export/Import',
+                itemLink: ['configuration', 'export'],
+            },
+            {
+                itemId: 'messaging',
+                itemTitle: 'Messaging',
+                itemLink: ['configuration', 'messaging'],
+            },
+            {
+                itemId: 'pipelineelement',
+                itemTitle: 'Pipeline Element Configuration',
+                itemLink: ['configuration', 'pipelineelement'],
+            },
+            {
+                itemId: 'security',
+                itemTitle: 'Security',
+                itemLink: ['configuration', 'security'],
+            },
+        ];
+    }
 }

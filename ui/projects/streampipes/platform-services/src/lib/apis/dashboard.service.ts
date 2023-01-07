@@ -22,115 +22,161 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { MeasurementUnit } from '../model/measurement-unit/MeasurementUnit';
 import { PlatformServicesCommons } from './commons.service';
-import { DashboardWidgetModel, Pipeline, VisualizablePipeline } from '../model/gen/streampipes-model';
+import {
+    DashboardWidgetModel,
+    Pipeline,
+    VisualizablePipeline,
+} from '../model/gen/streampipes-model';
 import { Dashboard } from '../model/dashboard/dashboard.model';
 
-
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class DashboardService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
+    getPipelineById(id: string): Observable<Pipeline> {
+        return this.http.get(this.pipelinesUrl + '/' + id).pipe(
+            map(data => {
+                return Pipeline.fromData(data as any);
+            }),
+        );
+    }
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    getVisualizablePipelines(): Observable<VisualizablePipeline[]> {
+        return this.http.get(this.visualizablePipelineUrl).pipe(
+            map(data => {
+                return (data as []).map(p =>
+                    VisualizablePipeline.fromData(p as VisualizablePipeline),
+                );
+            }),
+        );
+    }
 
-  getPipelineById(id: string): Observable<Pipeline> {
-    return this.http.get(this.pipelinesUrl + '/' + id).pipe(map(data => {
-      return Pipeline.fromData(data as any);
-    }));
-  }
+    getVisualizablePipelineByPipelineIdAndVisualizationName(
+        pipelineId: string,
+        visualizationName: string,
+    ): Observable<VisualizablePipeline> {
+        return this.http
+            .get(
+                this.visualizablePipelineUrl +
+                    '/' +
+                    pipelineId +
+                    '/' +
+                    visualizationName,
+            )
+            .pipe(
+                map(data => {
+                    return VisualizablePipeline.fromData(
+                        data as VisualizablePipeline,
+                    );
+                }),
+            );
+    }
 
-  getVisualizablePipelines(): Observable<VisualizablePipeline[]> {
-    return this.http
-        .get(this.visualizablePipelineUrl)
-        .pipe(map(data => {
-          return (data as []).map(p => VisualizablePipeline.fromData(p as VisualizablePipeline));
-        }));
-  }
+    getDashboards(): Observable<Dashboard[]> {
+        return this.http.get(this.dashboardUrl).pipe(
+            map(data => {
+                return data as Dashboard[];
+            }),
+        );
+    }
 
-  getVisualizablePipelineByPipelineIdAndVisualizationName(pipelineId: string, visualizationName: string): Observable<VisualizablePipeline> {
-    return this.http
-        .get(this.visualizablePipelineUrl + '/' + pipelineId + '/' + visualizationName)
-        .pipe(map(data => {
-          return VisualizablePipeline.fromData(data as VisualizablePipeline);
-        }));
-  }
+    getDashboard(dashboardId: string): Observable<Dashboard> {
+        return this.http.get(this.dashboardUrl + '/' + dashboardId).pipe(
+            map(data => {
+                return data as Dashboard;
+            }),
+        );
+    }
 
-  getDashboards(): Observable<Dashboard[]> {
-    return this.http.get(this.dashboardUrl).pipe(map(data => {
-      return data as Dashboard[];
-    }));
-  }
+    getMeasurementUnitInfo(
+        measurementUnitResource: string,
+    ): Observable<MeasurementUnit> {
+        return this.http
+            .get(
+                this.measurementUnitsUrl +
+                    '/' +
+                    encodeURIComponent(measurementUnitResource),
+            )
+            .pipe(
+                map(data => {
+                    return data as MeasurementUnit;
+                }),
+            );
+    }
 
-  getDashboard(dashboardId: string): Observable<Dashboard> {
-    return this.http.get(this.dashboardUrl + '/' + dashboardId).pipe(map(data => {
-      return data as Dashboard;
-    }));
-  }
+    updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
+        return this.http
+            .put(this.dashboardUrl + '/' + dashboard._id, dashboard)
+            .pipe(
+                map(data => {
+                    return data as Dashboard;
+                }),
+            );
+    }
 
-  getMeasurementUnitInfo(measurementUnitResource: string): Observable<MeasurementUnit> {
-    return this.http.get(this.measurementUnitsUrl + '/' + encodeURIComponent(measurementUnitResource)).pipe(map(data => {
-      return data as MeasurementUnit;
-    }));
-  }
+    deleteDashboard(dashboard: Dashboard): Observable<any> {
+        return this.http.delete(this.dashboardUrl + '/' + dashboard._id);
+    }
 
-  updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
-    return this.http.put(this.dashboardUrl + '/' + dashboard._id, dashboard).pipe(map(data => {
-      return data as Dashboard;
-    }));
-  }
+    saveDashboard(dashboard: Dashboard): Observable<any> {
+        return this.http.post(this.dashboardUrl, dashboard);
+    }
 
-  deleteDashboard(dashboard: Dashboard): Observable<any> {
-    return this.http.delete(this.dashboardUrl + '/' + dashboard._id);
-  }
+    private get baseUrl() {
+        return this.platformServicesCommons.apiBasePath;
+    }
 
-  saveDashboard(dashboard: Dashboard): Observable<any> {
-    return this.http.post(this.dashboardUrl, dashboard);
-  }
+    private get measurementUnitsUrl() {
+        return this.baseUrl + '/measurement-units';
+    }
 
-  private get baseUrl() {
-    return this.platformServicesCommons.apiBasePath;
-  }
+    private get dashboardUrl() {
+        return this.baseUrl + '/dashboard/dashboards';
+    }
 
-  private get measurementUnitsUrl() {
-    return this.baseUrl + '/measurement-units';
-  }
+    private get pipelinesUrl() {
+        return this.baseUrl + '/pipelines';
+    }
 
-  private get dashboardUrl() {
-    return this.baseUrl + '/dashboard/dashboards';
-  }
+    private get dashboardWidgetUrl() {
+        return this.baseUrl + '/dashboard/widgets';
+    }
 
-  private get pipelinesUrl() {
-    return this.baseUrl + '/pipelines';
-  }
+    private get visualizablePipelineUrl() {
+        return this.baseUrl + '/dashboard/pipelines';
+    }
 
-  private get dashboardWidgetUrl() {
-    return this.baseUrl + '/dashboard/widgets';
-  }
+    getWidget(widgetId: string): Observable<DashboardWidgetModel> {
+        return this.http.get(this.dashboardWidgetUrl + '/' + widgetId).pipe(
+            map(d => {
+                return DashboardWidgetModel.fromData(d as DashboardWidgetModel);
+            }),
+        );
+    }
 
-  private get visualizablePipelineUrl() {
-    return this.baseUrl + '/dashboard/pipelines';
-  }
+    saveWidget(widget: DashboardWidgetModel): Observable<DashboardWidgetModel> {
+        return this.http.post(this.dashboardWidgetUrl, widget).pipe(
+            map(response => {
+                return DashboardWidgetModel.fromData(
+                    response as DashboardWidgetModel,
+                );
+            }),
+        );
+    }
 
-  getWidget(widgetId: string): Observable<DashboardWidgetModel> {
-    return this.http.get(this.dashboardWidgetUrl + '/' + widgetId).pipe(map(d => {
-      return DashboardWidgetModel.fromData(d as DashboardWidgetModel);
-    }));
-  }
+    deleteWidget(widgetId: string): Observable<any> {
+        return this.http.delete(this.dashboardWidgetUrl + '/' + widgetId);
+    }
 
-  saveWidget(widget: DashboardWidgetModel): Observable<DashboardWidgetModel> {
-    return this.http.post(this.dashboardWidgetUrl, widget).pipe(map(response => {
-      return DashboardWidgetModel.fromData(response as DashboardWidgetModel);
-    }));
-  }
-
-  deleteWidget(widgetId: string): Observable<any> {
-    return this.http.delete(this.dashboardWidgetUrl + '/' + widgetId);
-  }
-
-  updateWidget(widget: DashboardWidgetModel): Observable<any> {
-    return this.http.put(this.dashboardWidgetUrl + '/' + widget._id, widget);
-  }
+    updateWidget(widget: DashboardWidgetModel): Observable<any> {
+        return this.http.put(
+            this.dashboardWidgetUrl + '/' + widget._id,
+            widget,
+        );
+    }
 }

@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.sources;
 
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.container.declarer.DataStreamDeclarer;
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 
 public abstract class AbstractAdapterIncludedStream implements DataStreamDeclarer {
 

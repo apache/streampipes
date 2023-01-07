@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink;
 
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
@@ -33,8 +32,9 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.absen
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.sequence.SequenceController;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
-public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
+public class PatternDetectionFlinkInit extends ExtensionsModelSubmitter {
 
   public static final String SERVICE_GROUP = "org.apache.streampipes.processors.patterndetection.flink";
 

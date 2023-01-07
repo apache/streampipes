@@ -45,9 +45,9 @@ public class ConnectionStorageHandler {
     pipeline.getActions().forEach(sink -> findConnections(sink, connections));
 
     connections.forEach(connection -> StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getConnectionStorageApi()
-            .addConnection(connection));
+        .getNoSqlStore()
+        .getConnectionStorageApi()
+        .addConnection(connection));
   }
 
   private void findConnections(NamedStreamPipesEntity target,

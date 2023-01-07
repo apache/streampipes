@@ -17,10 +17,10 @@
  */
 
 import {
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './services/auth.service';
@@ -28,18 +28,22 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class HttpInterceptorProvider implements HttpInterceptor {
+    constructor(private authService: AuthService) {}
 
-  constructor(private authService: AuthService) { }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.authService.authToken$.getValue()) {
-      const clonedReq = req.clone({
-        headers: req.headers
-            .set('Authorization', 'Bearer ' + this.authService.authToken$.getValue()),
-      });
-      return next.handle(clonedReq);
-    } else {
-      return next.handle(req);
+    intercept(
+        req: HttpRequest<any>,
+        next: HttpHandler,
+    ): Observable<HttpEvent<any>> {
+        if (this.authService.authToken$.getValue()) {
+            const clonedReq = req.clone({
+                headers: req.headers.set(
+                    'Authorization',
+                    'Bearer ' + this.authService.authToken$.getValue(),
+                ),
+            });
+            return next.handle(clonedReq);
+        } else {
+            return next.handle(req);
+        }
     }
-  }
 }

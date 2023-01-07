@@ -19,12 +19,12 @@
 package org.apache.streampipes.connect.adapters.iss;
 
 
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
 import org.apache.streampipes.connect.adapters.iss.model.IssModel;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -135,10 +135,10 @@ public class IssAdapter extends PullAdapter {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(Timestamp))
         .property(doubleEp(Labels.from(Latitude, "Latitude", "The latitude value of the current ISS location"),
-            Latitude, Geo.lat))
+            Latitude, Geo.LAT))
         .property(doubleEp(Labels.from(Longitude, "Longitude",
                 "The longitude value of the current ISS location"),
-            Longitude, Geo.lng))
+            Longitude, Geo.LNG))
         .build();
   }
 

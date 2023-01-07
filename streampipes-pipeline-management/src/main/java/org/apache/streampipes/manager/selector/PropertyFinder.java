@@ -46,7 +46,7 @@ public class PropertyFinder {
           return Collections.singletonList(property);
         } else {
           return findProperty(((EventPropertyNested) property).getEventProperties(),
-                  currentPointer + 1);
+              currentPointer + 1);
         }
       }
     }

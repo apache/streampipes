@@ -22,18 +22,17 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 
 public class HeartbeatMessageGenerator {
 
-	private DataProcessorDescription description;
-	
-	public HeartbeatMessageGenerator(DataProcessorDescription description)
-	{
-		this.description = description;
-	}
+  private DataProcessorDescription description;
 
-	public DataProcessorDescription getDescription() {
-		return description;
-	}
+  public HeartbeatMessageGenerator(DataProcessorDescription description) {
+    this.description = description;
+  }
 
-	public void setDescription(DataProcessorDescription description) {
-		this.description = description;
-	}
+  public DataProcessorDescription getDescription() {
+    return description;
+  }
+
+  public void setDescription(DataProcessorDescription description) {
+    this.description = description;
+  }
 }

@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.processors.transformation.jvm;
 
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
@@ -51,8 +50,9 @@ import org.apache.streampipes.processors.transformation.jvm.processor.timestampe
 import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanController;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
-public class TransformationJvmInit extends StandaloneModelSubmitter {
+public class TransformationJvmInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new TransformationJvmInit().init();

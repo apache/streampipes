@@ -17,13 +17,12 @@
  */
 package org.apache.streampipes.pe.flink;
 
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
@@ -34,10 +33,11 @@ import org.apache.streampipes.processors.pattern.detection.flink.PatternDetectio
 import org.apache.streampipes.processors.statistics.flink.StatisticsFlinkInit;
 import org.apache.streampipes.processors.textmining.flink.TextMiningFlinkInit;
 import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.databases.flink.DatabasesFlinkInit;
 
 
-public class AllFlinkPipelineElementsInit extends StandaloneModelSubmitter {
+public class AllFlinkPipelineElementsInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new AllFlinkPipelineElementsInit().init();

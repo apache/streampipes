@@ -18,14 +18,21 @@
 
 package org.apache.streampipes.export;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.export.constants.ResolvableAssetLinks;
-import org.apache.streampipes.export.resolver.*;
+import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.DashboardResolver;
+import org.apache.streampipes.export.resolver.DataSourceResolver;
+import org.apache.streampipes.export.resolver.DataViewResolver;
+import org.apache.streampipes.export.resolver.FileResolver;
+import org.apache.streampipes.export.resolver.MeasurementResolver;
+import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Map;
@@ -53,9 +60,11 @@ public class AssetLinkResolver {
       exportConfig.setAdapters(new AdapterResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
       exportConfig.setDashboards(new DashboardResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataViews(new DataViewResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_VIEW)));
-      exportConfig.setDataSources(new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));
+      exportConfig.setDataSources(
+          new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));
       exportConfig.setPipelines(new PipelineResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.PIPELINE)));
-      exportConfig.setDataLakeMeasures(new MeasurementResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.MEASUREMENT)));
+      exportConfig.setDataLakeMeasures(
+          new MeasurementResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.MEASUREMENT)));
       exportConfig.setFiles(new FileResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.FILE)));
 
       return exportConfig;
@@ -68,9 +77,9 @@ public class AssetLinkResolver {
   private Set<AssetLink> getLinks(Set<AssetLink> assetLinks,
                                   String queryHint) {
     return assetLinks
-      .stream()
-      .filter(link -> link.getQueryHint().equals(queryHint))
-      .collect(Collectors.toSet());
+        .stream()
+        .filter(link -> link.getQueryHint().equals(queryHint))
+        .collect(Collectors.toSet());
   }
 
   private SpAssetModel getAsset() throws IOException {

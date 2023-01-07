@@ -23,31 +23,30 @@ import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 import { ParameterUtils } from '../../support/utils/ParameterUtils';
 
 describe('Test MQTT Integration', () => {
-  beforeEach('Setup Test', () => {
-    cy.initStreamPipesTest();
-  });
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+    });
 
-  it('Perform Test', () => {
-    const topicName = 'cypresstopic';
-    const host: string = ParameterUtils.get('localhost', 'activemq');
+    it('Perform Test', () => {
+        const topicName = 'cypresstopic';
+        const host: string = ParameterUtils.get('localhost', 'activemq');
 
-    const sink: PipelineElementInput =
-      PipelineElementBuilder.create('mqtt_publisher')
-        .addInput('input', 'host', host)
-        .addInput('input', 'topic', topicName)
-        .build();
+        const sink: PipelineElementInput = PipelineElementBuilder.create(
+            'mqtt_publisher',
+        )
+            .addInput('input', 'host', host)
+            .addInput('input', 'topic', topicName)
+            .build();
 
-    const adapter = GenericAdapterBuilder
-      .create('MQTT')
-      .setName('Adapter Mqtt')
-      .setTimestampProperty('timestamp')
-      .addProtocolInput('select', 'access-mode-unauthenticated', 'check')
-      .addProtocolInput('input', 'broker_url', 'tcp://' + host + ':1883')
-      .addProtocolInput('input', 'topic', topicName)
-      .setFormat('json_object')
-      .build();
+        const adapter = GenericAdapterBuilder.create('MQTT')
+            .setName('Adapter Mqtt')
+            .setTimestampProperty('timestamp')
+            .addProtocolInput('select', 'access-mode-unauthenticated', 'check')
+            .addProtocolInput('input', 'broker_url', 'tcp://' + host + ':1883')
+            .addProtocolInput('input', 'topic', topicName)
+            .setFormat('json_object')
+            .build();
 
-    ThirdPartyIntegrationUtils.runTest(sink, adapter);
-  });
-
+        ThirdPartyIntegrationUtils.runTest(sink, adapter);
+    });
 });

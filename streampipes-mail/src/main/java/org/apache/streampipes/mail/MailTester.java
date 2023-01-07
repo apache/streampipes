@@ -20,6 +20,7 @@ package org.apache.streampipes.mail;
 import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.mail.template.TestMailTemplate;
 import org.apache.streampipes.mail.utils.MailUtils;
+
 import org.simplejavamail.api.email.Email;
 
 import java.io.IOException;
@@ -32,9 +33,9 @@ public class MailTester extends AbstractMailer {
 
   private Email makeTestMail(EmailConfig emailConfig) throws IOException {
     return baseEmail(emailConfig)
-            .withSubject("Hello from " + MailUtils.extractAppName())
-            .appendTextHTML(new TestMailTemplate().generateTemplate())
-            .to(emailConfig.getTestRecipientAddress())
-            .buildEmail();
+        .withSubject("Hello from " + MailUtils.extractAppName())
+        .appendTextHTML(new TestMailTemplate().generateTemplate())
+        .to(emailConfig.getTestRecipientAddress())
+        .buildEmail();
   }
 }

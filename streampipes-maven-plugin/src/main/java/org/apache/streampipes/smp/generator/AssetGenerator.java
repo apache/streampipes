@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.smp.generator;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.streampipes.smp.model.AssetModel;
 import org.apache.streampipes.smp.parser.DocumentationParser;
 import org.apache.streampipes.smp.util.Utils;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,10 +31,9 @@ import java.io.InputStream;
 
 public class AssetGenerator {
 
+  private static final String DOCUMENTATION_FILE = "documentation.md";
   private AssetModel assetModel;
   private String baseDir;
-
-  private static final String DOCUMENTATION_FILE = "documentation.md";
 
   public AssetGenerator(String baseDir, AssetModel assetModel) {
     this.assetModel = assetModel;
@@ -48,10 +48,10 @@ public class AssetGenerator {
     InputStream inputStream = classLoader.getResourceAsStream(DOCUMENTATION_FILE);
     try {
       String content =
-              new DocumentationParser(assetModel)
-                      .parseAndStoreDocumentation(IOUtils.toString(inputStream));
+          new DocumentationParser(assetModel)
+              .parseAndStoreDocumentation(IOUtils.toString(inputStream));
       FileUtils.writeStringToFile(new File(resourcePath + File.separator + DOCUMENTATION_FILE),
-              content);
+          content);
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -17,41 +17,42 @@
  */
 
 export class DashboardUtils {
+    public static goToDashboard() {
+        cy.visit('#/dashboard');
+    }
 
-  public static goToDashboard() {
-    cy.visit('#/dashboard');
-  }
+    public static showDashboard(dashboardName: string) {
+        cy.dataCy('show-dashboard-' + dashboardName).click();
+    }
 
-  public static showDashboard(dashboardName: string) {
-    cy.dataCy('show-dashboard-' + dashboardName).click();
-  }
+    public static addAndEditDashboard(dashboardName: string) {
+        cy.dataCy('new-dashboard-btn').click();
+        cy.dataCy('dashboard-name-input').type(dashboardName);
+        cy.dataCy('dashboard-save-btn').click();
 
-  public static addAndEditDashboard(dashboardName: string) {
-    cy.dataCy('new-dashboard-btn').click();
-    cy.dataCy('dashboard-name-input').type(dashboardName);
-    cy.dataCy('dashboard-save-btn').click();
+        // Start editing dashboard dashboard
+        cy.dataCy('edit-dashboard-' + dashboardName).click();
+    }
 
-    // Start editing dashboard dashboard
-    cy.dataCy('edit-dashboard-' + dashboardName).click();
-  }
+    public static addWidget(pipelineName: string, widgetType: string) {
+        // Add raw data widget
+        cy.dataCy('dashboard-add-widget').click();
 
-  public static addWidget(pipelineName: string, widgetType: string) {
-    // Add raw data widget
-    cy.dataCy('dashboard-add-widget').click();
+        // Select Pipeline to visualize
+        cy.dataCy('dashboard-visualize-pipeline-' + pipelineName).click();
 
-    // Select Pipeline to visualize
-    cy.dataCy('dashboard-visualize-pipeline-' + pipelineName).click();
+        // Select widget
+        cy.dataCy('dashboard-select-widget-' + widgetType).click();
+        // optional configure widget
+        cy.dataCy('dashboard-new-widget-next-btn').click();
 
-    // Select widget
-    cy.dataCy('dashboard-select-widget-' + widgetType).click();
-    // optional configure widget
-    cy.dataCy('dashboard-new-widget-next-btn').click();
+        // Finish edit mode
+        cy.dataCy('dashboard-save-edit-mode').click();
+    }
 
-    // Finish edit mode
-    cy.dataCy('dashboard-save-edit-mode').click();
-  }
-
-  public static validateRawWidgetEvents(amountOfEvents: number) {
-    cy.dataCy('dashboard-raw-item', {timeout: 10000}).its('length').should('be.gte', amountOfEvents);
-  }
+    public static validateRawWidgetEvents(amountOfEvents: number) {
+        cy.dataCy('dashboard-raw-item', { timeout: 10000 })
+            .its('length')
+            .should('be.gte', amountOfEvents);
+    }
 }

@@ -21,33 +21,30 @@ import { Router } from '@angular/router';
 import { SpNavigationItem } from '../../models/sp-navigation.model';
 
 @Component({
-  selector: 'sp-basic-nav-tabs',
-  templateUrl: './basic-nav-tabs.component.html',
-  styleUrls: ['./basic-nav-tabs.component.scss']
+    selector: 'sp-basic-nav-tabs',
+    templateUrl: './basic-nav-tabs.component.html',
+    styleUrls: ['./basic-nav-tabs.component.scss'],
 })
 export class SpBasicNavTabsComponent {
+    @Input()
+    spNavigationItems: SpNavigationItem[];
 
-  @Input()
-  spNavigationItems: SpNavigationItem[];
+    @Input()
+    activeLink: string;
 
-  @Input()
-  activeLink: string;
+    @Input()
+    showBackLink = false;
 
-  @Input()
-  showBackLink = false;
+    @Input()
+    backLinkTarget: string[] = [];
 
-  @Input()
-  backLinkTarget: string[] = [];
+    constructor(private router: Router) {}
 
-  constructor(private router: Router) {
+    navigateTo(spNavigationItem: SpNavigationItem) {
+        this.router.navigate(spNavigationItem.itemLink);
+    }
 
-  }
-
-  navigateTo(spNavigationItem: SpNavigationItem) {
-    this.router.navigate(spNavigationItem.itemLink);
-  }
-
-  navigateBack() {
-    this.router.navigate(this.backLinkTarget);
-  }
+    navigateBack() {
+        this.router.navigate(this.backLinkTarget);
+    }
 }

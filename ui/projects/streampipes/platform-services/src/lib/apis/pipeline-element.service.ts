@@ -20,74 +20,93 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  SpDataSet,
-  SpDataStream
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataSet,
+    SpDataStream,
 } from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class PipelineElementService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    getDataProcessors(): Observable<DataProcessorInvocation[]> {
+        return this.http.get(this.dataProcessorsUrl + '/own').pipe(
+            map(data => {
+                return (data as []).map(dpi =>
+                    DataProcessorInvocation.fromData(dpi),
+                );
+            }),
+        );
+    }
 
-  getDataProcessors(): Observable<DataProcessorInvocation[]> {
-    return this.http.get(this.dataProcessorsUrl + '/own').pipe(map(data => {
-      return (data as []).map(dpi => DataProcessorInvocation.fromData(dpi));
-    }));
-  }
+    getDataSinks(): Observable<DataSinkInvocation[]> {
+        return this.http.get(this.dataSinksUrl + '/own').pipe(
+            map(data => {
+                return (data as []).map(dpi =>
+                    DataSinkInvocation.fromData(dpi),
+                );
+            }),
+        );
+    }
 
-  getDataSinks(): Observable<DataSinkInvocation[]> {
-    return this.http.get(this.dataSinksUrl + '/own').pipe(map(data => {
-      return (data as []).map(dpi => DataSinkInvocation.fromData(dpi));
-    }));
-  }
+    getDataStreams(): Observable<SpDataStream[]> {
+        return this.http.get(this.dataStreamsUrl + '/own').pipe(
+            map(data => {
+                return (data as []).map(dpi => {
+                    if (
+                        dpi['@class'] ===
+                        'org.apache.streampipes.model.SpDataSet'
+                    ) {
+                        return SpDataSet.fromData(dpi);
+                    } else {
+                        return SpDataStream.fromData(dpi);
+                    }
+                });
+            }),
+        );
+    }
 
-  getDataStreams(): Observable<SpDataStream[]> {
-    return this.http.get(this.dataStreamsUrl + '/own').pipe(map(data => {
-      return (data as []).map(dpi => {
-        if (dpi['@class'] === 'org.apache.streampipes.model.SpDataSet') {
-          return SpDataSet.fromData(dpi);
-        } else {
-          return SpDataStream.fromData(dpi);
-        }
-      });
-    }));
-  }
+    getDataStreamByElementId(elementId: string): Observable<SpDataStream> {
+        return this.http.get(`${this.dataStreamsUrl}/${elementId}`).pipe(
+            map(data => {
+                if (
+                    data['@class'] === 'org.apache.streampipes.model.SpDataSet'
+                ) {
+                    return SpDataSet.fromData(data as any);
+                } else {
+                    return SpDataStream.fromData(data as any);
+                }
+            }),
+        );
+    }
 
-  getDataStreamByElementId(elementId: string): Observable<SpDataStream> {
-    return this.http.get(`${this.dataStreamsUrl}/${elementId}`).pipe(map(data => {
-      if (data['@class'] === 'org.apache.streampipes.model.SpDataSet') {
-        return SpDataSet.fromData(data as any);
-      } else {
-        return SpDataStream.fromData(data as any);
-      }
-    }));
-  }
+    getDocumentation(appId) {
+        return this.http.get(
+            this.platformServicesCommons.apiBasePath +
+                '/pe/' +
+                appId +
+                '/assets/documentation',
+            { responseType: 'text' },
+        );
+    }
 
-  getDocumentation(appId) {
-    return this.http.get(this.platformServicesCommons.apiBasePath
-        + '/pe/'
-        + appId
-        + '/assets/documentation', {responseType: 'text'});
-  }
+    private get dataProcessorsUrl(): string {
+        return this.platformServicesCommons.apiBasePath + '/sepas';
+    }
 
-  private get dataProcessorsUrl(): string {
-    return this.platformServicesCommons.apiBasePath + '/sepas';
-  }
+    private get dataStreamsUrl(): string {
+        return this.platformServicesCommons.apiBasePath + '/streams';
+    }
 
-  private get dataStreamsUrl(): string {
-    return this.platformServicesCommons.apiBasePath + '/streams';
-  }
-
-  private get dataSinksUrl(): string {
-    return this.platformServicesCommons.apiBasePath + '/actions';
-  }
-
+    private get dataSinksUrl(): string {
+        return this.platformServicesCommons.apiBasePath + '/actions';
+    }
 }

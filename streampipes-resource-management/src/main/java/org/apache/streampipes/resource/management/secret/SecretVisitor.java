@@ -17,7 +17,25 @@
  */
 package org.apache.streampipes.resource.management.secret;
 
-import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
+import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
+import org.apache.streampipes.model.staticproperty.FileStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
+import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
+import org.apache.streampipes.model.staticproperty.StaticPropertyVisitor;
 
 public class SecretVisitor implements StaticPropertyVisitor {
 

@@ -16,7 +16,6 @@
  *
  */
 
-
 import { TableConfig } from '../../../src/app/dashboard/components/widgets/table/table-config';
 
 export class DataExplorerWidget {

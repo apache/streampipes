@@ -25,13 +25,13 @@ public class PipelineValidationSteps {
 
   public List<AbstractPipelineValidationStep> collect() {
     return Arrays.asList(
-            new PrepareStep(),
-            new ApplyGroundingStep(),
-            new SchemaValidationStep(),
-            new UpdateStaticPropertiesStep(),
-            new UpdateOutputStrategiesStep(),
-            new ComputeOutputStep(),
-            new CheckCompletedStep()
+        new PrepareStep(),
+        new ApplyGroundingStep(),
+        new SchemaValidationStep(),
+        new UpdateStaticPropertiesStep(),
+        new UpdateOutputStrategiesStep(),
+        new ComputeOutputStep(),
+        new CheckCompletedStep()
     );
   }
 }

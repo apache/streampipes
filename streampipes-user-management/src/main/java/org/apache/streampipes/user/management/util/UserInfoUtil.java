@@ -28,20 +28,20 @@ import java.util.Set;
 public class UserInfoUtil {
 
   public static UserInfo toUserInfoObj(Principal principal,
-                                    Set<String> roles) {
+                                       Set<String> roles) {
     return principal instanceof UserAccount ? toUserInfo((UserAccount) principal, roles) :
         toServiceUserInfo((ServiceAccount) principal, roles);
   }
 
   private static UserInfo toUserInfo(UserAccount userAccount,
-                              Set<String> roles) {
+                                     Set<String> roles) {
     UserInfo userInfo = prepareUserInfo(userAccount, roles);
     userInfo.setShowTutorial(!userAccount.isHideTutorial());
     return userInfo;
   }
 
   private static UserInfo toServiceUserInfo(ServiceAccount serviceAccount,
-                                    Set<String> roles) {
+                                            Set<String> roles) {
     return prepareUserInfo(serviceAccount, roles);
   }
 

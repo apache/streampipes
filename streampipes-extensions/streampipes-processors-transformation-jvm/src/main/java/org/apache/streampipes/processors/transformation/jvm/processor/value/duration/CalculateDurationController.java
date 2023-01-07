@@ -67,7 +67,7 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
         .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
             Options.from(MS, SECONDS, MINUTES, HOURS))
         .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
-            SO.Number)))
+            SO.NUMBER)))
         .build();
   }
 

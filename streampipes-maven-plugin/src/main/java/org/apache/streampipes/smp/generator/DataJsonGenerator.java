@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.smp.generator;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class DataJsonGenerator extends OutputGenerator {
 
   private String makeDockerHubLink(PeType peType, String moduleName) {
     String dockerHubRepoName = peType == PeType.ADAPTER ? "connect-worker" : moduleName.replace("streampipes-", "");
-    return "https://hub.docker.com/r/apachestreampipes/" +dockerHubRepoName;
+    return "https://hub.docker.com/r/apachestreampipes/" + dockerHubRepoName;
   }
 
   private String makeGithubLink(String moduleName) {

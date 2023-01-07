@@ -31,4 +31,3 @@ npx cypress run --spec 'cypress/tests/experimental/restartStreamPipes/restartStr
 
 cd ../installer/compose/
 docker-compose down -v
-

@@ -32,37 +32,37 @@ public class TestSelectorUtils {
 
   public static EventSchema makeSchema() {
     return DataStreamBuilder.create("complex-stream", "", "")
-            .property(EpProperties.timestampProperty("timestamp"))
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Integer, "testMeasurement")
-                    .domainProperty(SO.Number)
-                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Integer, "testDimension")
-                    .domainProperty(SO.Number)
-                    .scope(PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .property(EpProperties.stringEp(Labels.withTitle("string", "string description"), "testString",
-                    "http://test.de", ValueSpecifications.from("A", "B", "C")))
-            .property(EpProperties.stringEp(Labels.withTitle("string2", "string description"), "testString2",
-                    "http://test.de", ValueSpecifications.from("A", "B", "C", "D")))
-            .property(EpProperties.integerEp(Labels.withTitle("integer2", "integerDescription"), "testInteger2",
-                    SO.Number, ValueSpecifications.from(0.0f, 1.0f, 1.f)))
-            .property(EpProperties.integerEp(Labels.withTitle("integer", "integerDescription"), "testInteger",
-                    SO.Number, ValueSpecifications.from(10.0f, 100.0f, 10.0f)))
-            .property(EpProperties.nestedEp(Labels.from("location", "", ""), "location",
-                    EpProperties.doubleEp(Labels.withId("latitude"), "latitude", Geo
-                            .lat),
-                    EpProperties.doubleEp(Labels.withId("longitude"), "longitude", Geo.lng)))
-            .build()
-            .getEventSchema();
+        .property(EpProperties.timestampProperty("timestamp"))
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Integer, "testMeasurement")
+            .domainProperty(SO.NUMBER)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Integer, "testDimension")
+            .domainProperty(SO.NUMBER)
+            .scope(PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .property(EpProperties.stringEp(Labels.withTitle("string", "string description"), "testString",
+            "http://test.de", ValueSpecifications.from("A", "B", "C")))
+        .property(EpProperties.stringEp(Labels.withTitle("string2", "string description"), "testString2",
+            "http://test.de", ValueSpecifications.from("A", "B", "C", "D")))
+        .property(EpProperties.integerEp(Labels.withTitle("integer2", "integerDescription"), "testInteger2",
+            SO.NUMBER, ValueSpecifications.from(0.0f, 1.0f, 1.f)))
+        .property(EpProperties.integerEp(Labels.withTitle("integer", "integerDescription"), "testInteger",
+            SO.NUMBER, ValueSpecifications.from(10.0f, 100.0f, 10.0f)))
+        .property(EpProperties.nestedEp(Labels.from("location", "", ""), "location",
+            EpProperties.doubleEp(Labels.withId("latitude"), "latitude", Geo
+                .LAT),
+            EpProperties.doubleEp(Labels.withId("longitude"), "longitude", Geo.LNG)))
+        .build()
+        .getEventSchema();
   }
 
   public static EventSchema makeSimpleSchema() {
     return DataStreamBuilder.create("simple-stream", "", "")
-            .property(EpProperties.timestampProperty("timestamp"))
-            .build()
-            .getEventSchema();
+        .property(EpProperties.timestampProperty("timestamp"))
+        .build()
+        .getEventSchema();
   }
 }

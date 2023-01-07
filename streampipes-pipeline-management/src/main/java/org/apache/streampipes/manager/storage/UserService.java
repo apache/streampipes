@@ -40,7 +40,7 @@ public class UserService {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p
             .getCreatedByUser()
             .equals(email))
-            .collect(Collectors.toList());
+        .collect(Collectors.toList());
   }
 
   public void deleteOwnSource(String username, String sourceId) {
@@ -58,13 +58,15 @@ public class UserService {
   public List<String> getOwnActionUris(String username) {
     // TODO permissions
     return new ArrayList<>();
-    //return userStorage.getUser(username).getOwnActions().stream().map(r -> r.getElementId()).collect(Collectors.toList());
+    //return userStorage.getUser(username)
+    // .getOwnActions().stream().map(r -> r.getElementId()).collect(Collectors.toList());
   }
 
   public List<String> getOwnSepaUris(String username) {
     // TODO Permissions
     return new ArrayList<>();
-    //return userStorage.getUser(username).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
+    //return userStorage.getUser(username)
+    // .getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
   }
 
 

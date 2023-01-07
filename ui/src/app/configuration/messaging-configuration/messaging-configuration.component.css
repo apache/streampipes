@@ -21,7 +21,7 @@
 }
 
 .form-width {
-    width:80%;
+    width: 80%;
 }
 
 .data-format-list {
@@ -38,7 +38,7 @@
 .data-format-box {
     padding: 20px 10px;
     border-bottom: solid 1px var(--color-bg-3);
-    color:var(--color-default-text);
+    color: var(--color-default-text);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -53,8 +53,7 @@
     box-sizing: border-box;
     border-radius: 4px;
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14),
-    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cdk-drag-placeholder {
@@ -69,6 +68,7 @@
     border: none;
 }
 
-.data-format-list.cdk-drop-list-dragging .data-format-box:not(.cdk-drag-placeholder) {
+.data-format-list.cdk-drop-list-dragging
+    .data-format-box:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

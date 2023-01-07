@@ -21,35 +21,35 @@ import org.apache.streampipes.model.client.version.SystemInfo;
 
 public class SystemInfoProvider {
 
-    public SystemInfo getSystemInfo() {
-      SystemInfo systemInfo = new SystemInfo();
+  public SystemInfo getSystemInfo() {
+    SystemInfo systemInfo = new SystemInfo();
 
-      systemInfo.setJavaVmName(getProperty("java.vm.name"));
-      systemInfo.setJavaVmVendor(getProperty("java.vm.vendor"));
-      systemInfo.setJavaVmVersion(getProperty("java.vm.version"));
-      systemInfo.setJavaRuntimeName(getProperty("java.runtime.name"));
-      systemInfo.setJavaRuntimeVersion(getProperty("java.runtime.version"));
-      systemInfo.setOsName(getProperty("os.name"));
-      systemInfo.setOsVersion(getProperty("os.version"));
-      systemInfo.setCpu(getProperty("sun.cpu.isalist"));
+    systemInfo.setJavaVmName(getProperty("java.vm.name"));
+    systemInfo.setJavaVmVendor(getProperty("java.vm.vendor"));
+    systemInfo.setJavaVmVersion(getProperty("java.vm.version"));
+    systemInfo.setJavaRuntimeName(getProperty("java.runtime.name"));
+    systemInfo.setJavaRuntimeVersion(getProperty("java.runtime.version"));
+    systemInfo.setOsName(getProperty("os.name"));
+    systemInfo.setOsVersion(getProperty("os.version"));
+    systemInfo.setCpu(getProperty("sun.cpu.isalist"));
 
-      Runtime runtime = Runtime.getRuntime();
-      systemInfo.setTotalMemory(runtime.totalMemory());
-      systemInfo.setFreeMemory(runtime.freeMemory());
-      systemInfo.setTotalMemoryKB(runtime.totalMemory() / 1024);
-      systemInfo.setFreeMemoryKB(runtime.freeMemory() / 1024);
+    Runtime runtime = Runtime.getRuntime();
+    systemInfo.setTotalMemory(runtime.totalMemory());
+    systemInfo.setFreeMemory(runtime.freeMemory());
+    systemInfo.setTotalMemoryKB(runtime.totalMemory() / 1024);
+    systemInfo.setFreeMemoryKB(runtime.freeMemory() / 1024);
 
-      return systemInfo;
-    }
-
-    private String getProperty(String key) {
-      String propValue = null;
-      try {
-        propValue = System.getProperty(key, "");
-      } catch (Exception ex) {
-        propValue = "unknown";
-      }
-      return propValue;
-    }
-
+    return systemInfo;
   }
+
+  private String getProperty(String key) {
+    String propValue = null;
+    try {
+      propValue = System.getProperty(key, "");
+    } catch (Exception ex) {
+      propValue = "unknown";
+    }
+    return propValue;
+  }
+
+}

@@ -99,7 +99,7 @@ body:
       description: Please provide some additional information about your technical setup
       placeholder: Here you can provide additional information about the technical environment you are using (OS, browser, docker version, StreamPipes version, etc.)
 
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: Are you willing to submit a PR?
       description: >
@@ -108,7 +108,8 @@ body:
         StreamPipes is a community-driven project and we welcome new contributors.
         Find us [here](https://github.com/apache/streampipes/discussions/categories/q-a) or contact us on our mailing list (dev@streampipes.apache.org).
       options:
-        - label: Yes I am willing to submit a PR!
+        - Yes, I am willing to submit a PR!
+        - No, I don't want to submit a PR.
 
   - type: markdown
     attributes:

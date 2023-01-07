@@ -22,20 +22,19 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testNames = ['staticmath1'];
+    const testNames = ['staticmath1'];
 
-  const processorTest = test as ProcessorTest;
+    const processorTest = test as ProcessorTest;
 
-  if (testNames.includes(processorTest.name)) {
+    if (testNames.includes(processorTest.name)) {
+        describe('Test Processor ' + test.dir, () => {
+            beforeEach('Setup Test', () => {
+                cy.initStreamPipesTest();
+            });
 
-    describe('Test Processor ' + test.dir, () => {
-      beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
+            it('Initialize Test', () => {
+                ProcessingElementTestUtils.testElement(processorTest);
+            });
+        });
+    }
 });

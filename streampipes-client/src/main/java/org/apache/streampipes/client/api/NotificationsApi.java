@@ -31,7 +31,7 @@ public class NotificationsApi extends AbstractTypedClientApi<Notification> {
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-            .addToPath("notifications");
+        .addToPath("notifications");
   }
 
   public void add(Notification notification) {

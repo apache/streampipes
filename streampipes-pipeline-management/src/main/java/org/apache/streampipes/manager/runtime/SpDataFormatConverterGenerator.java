@@ -47,19 +47,19 @@ public class SpDataFormatConverterGenerator {
   }
 
   private boolean isSmileFormat(TransportFormat transportFormat) {
-    return isFormat(MessageFormat.Smile, transportFormat);
+    return isFormat(MessageFormat.SMILE, transportFormat);
   }
 
   private boolean isFstFormat(TransportFormat transportFormat) {
-    return isFormat(MessageFormat.Fst, transportFormat);
+    return isFormat(MessageFormat.FST, transportFormat);
   }
 
   private boolean isCborFormat(TransportFormat transportFormat) {
-    return isFormat(MessageFormat.Cbor, transportFormat);
+    return isFormat(MessageFormat.CBOR, transportFormat);
   }
 
   private Boolean isJsonFormat(TransportFormat transportFormat) {
-    return isFormat(MessageFormat.Json, transportFormat);
+    return isFormat(MessageFormat.JSON, transportFormat);
   }
 
   private boolean isFormat(String format, TransportFormat transportFormat) {

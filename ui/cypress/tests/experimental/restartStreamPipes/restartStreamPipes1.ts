@@ -24,35 +24,34 @@ import { DashboardUtils } from '../../../support/utils/DashboardUtils';
 
 const adapterName = 'simulator';
 
-
 describe('Prepare StreamPipes for restart test', () => {
-  beforeEach('Setup Test', () => {
-    cy.initStreamPipesTest();
-    ConnectUtils.addMachineDataSimulator(adapterName);
-  });
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+        ConnectUtils.addMachineDataSimulator(adapterName);
+    });
 
-  it('Perform Test', () => {
-    const pipelineName = 'DashboardPipeline';
-    const pipelineInput = PipelineBuilder.create(pipelineName)
-        .addSource(adapterName)
-        .addSink(
-            PipelineElementBuilder.create('data_lake')
-                .addInput('input', 'db_measurement', 'demo')
-                .build())
-        .build();
+    it('Perform Test', () => {
+        const pipelineName = 'DashboardPipeline';
+        const pipelineInput = PipelineBuilder.create(pipelineName)
+            .addSource(adapterName)
+            .addSink(
+                PipelineElementBuilder.create('data_lake')
+                    .addInput('input', 'db_measurement', 'demo')
+                    .build(),
+            )
+            .build();
 
-    PipelineUtils.addPipeline(pipelineInput);
+        PipelineUtils.addPipeline(pipelineInput);
 
-    DashboardUtils.goToDashboard();
+        DashboardUtils.goToDashboard();
 
-    // Add new dashboard
-    const dashboardName = 'testDashboard';
-    DashboardUtils.addAndEditDashboard(dashboardName);
+        // Add new dashboard
+        const dashboardName = 'testDashboard';
+        DashboardUtils.addAndEditDashboard(dashboardName);
 
-    DashboardUtils.addWidget(pipelineName, 'raw');
+        DashboardUtils.addWidget(pipelineName, 'raw');
 
-    // Validate that data is coming (at least 3 events)
-    DashboardUtils.validateRawWidgetEvents(3);
-  });
+        // Validate that data is coming (at least 3 events)
+        DashboardUtils.validateRawWidgetEvents(3);
+    });
 });
-

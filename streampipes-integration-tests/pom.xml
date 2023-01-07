@@ -40,13 +40,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-connect</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container</artifactId>
+            <artifactId>streampipes-extensions-management</artifactId>
             <version>0.91.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>

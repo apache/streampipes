@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -69,7 +69,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Float, "level")
             .label("Water Level")
             .description("Denotes the current water level in the container")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .sample("level", 5.25f)
@@ -77,7 +77,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Boolean, "overflow")
             .label("Overflow")
             .description("Indicates whether the tank overflows")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .sample("overflow", true)
@@ -100,7 +100,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Float, "pressure")
             .label("Pressure")
             .description("Denotes the current pressure in the pressure tank")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .valueSpecification(0.0f, 100.0f, 0.5f)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
@@ -124,7 +124,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Float, MASS_FLOW)
             .label("Mass Flow")
             .description("Denotes the current mass flow in the sensor")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .sample(MASS_FLOW, 5.76f)
@@ -132,7 +132,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Float, "volume_flow")
             .label("Volume Flow")
             .description("Denotes the current volume flow")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .sample("volume_flow", 3.34f)
@@ -140,7 +140,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Float, TEMPERATURE)
             .label("Temperature")
             .description("Denotes the current temperature in degrees celsius")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .measurementUnit(URI.create("http://codes.wmo.int/common/unit/degC"))
             .valueSpecification(0.0f, 100.0f, 0.1f)
@@ -150,7 +150,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Float, "density")
             .label("Density")
             .description("Denotes the current density of the fluid")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .sample("density", 5.0f)
@@ -158,7 +158,7 @@ public class MachineDataSimulatorUtils {
             .create(Datatypes.Boolean, "sensor_fault_flags")
             .label("Sensor Fault Flags")
             .description("Any fault flags of the sensors")
-            .domainProperty(SO.Boolean)
+            .domainProperty(SO.BOOLEAN)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .sample("sensor_fault_flags", true)

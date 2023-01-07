@@ -18,24 +18,25 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({name: 'orderBy'})
+@Pipe({ name: 'orderBy' })
 export class OrderByPipe implements PipeTransform {
-
-  transform(value: any[], order = '', column: string = ''): any[] {
-    if (!value || order === '' || !order) {
-      return value;
+    transform(value: any[], order = '', column: string = ''): any[] {
+        if (!value || order === '' || !order) {
+            return value;
+        }
+        if (value.length <= 1) {
+            return value;
+        }
+        if (!column || column === '') {
+            if (order === 'asc') {
+                return value.sort();
+            } else {
+                return value.sort().reverse();
+            }
+        }
+        const sortedValues = value.sort((a, b) =>
+            a[column].localeCompare(b[column]),
+        );
+        return order === 'asc' ? sortedValues : sortedValues.reverse();
     }
-    if (value.length <= 1) {
-      return value;
-    }
-    if (!column || column === '') {
-      if (order === 'asc') {
-        return value.sort();
-      } else {
-        return value.sort().reverse();
-      }
-    }
-    const sortedValues = value.sort((a, b) => a[column].localeCompare(b[column]));
-    return order === 'asc' ? sortedValues : sortedValues.reverse();
-  }
 }

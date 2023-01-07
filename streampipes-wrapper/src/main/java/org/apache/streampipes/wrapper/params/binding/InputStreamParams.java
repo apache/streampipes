@@ -41,7 +41,7 @@ public class InputStreamParams implements Serializable {
   private SchemaInfo schemaInfo;
 
   public InputStreamParams(Integer streamId, SpDataStream inputStream, List<PropertyRenameRule>
-          propertyRenameRules) {
+      propertyRenameRules) {
     super();
     this.eventGrounding = inputStream.getEventGrounding();
     this.inName = eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
@@ -56,12 +56,12 @@ public class InputStreamParams implements Serializable {
 
   private SourceInfo makeSourceInfo(Integer streamId) {
     return new SourceInfo(eventGrounding.getTransportProtocol().getTopicDefinition()
-            .getActualTopicName(), makeStreamPrefix(streamId));
+        .getActualTopicName(), makeStreamPrefix(streamId));
   }
 
   private String makeStreamPrefix(Integer streamId) {
     return streamId == 0 ? PropertySelectorConstants.FIRST_STREAM_ID_PREFIX :
-            PropertySelectorConstants.SECOND_STREAM_ID_PREFIX;
+        PropertySelectorConstants.SECOND_STREAM_ID_PREFIX;
   }
 
   public EventGrounding getEventGrounding() {

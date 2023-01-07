@@ -31,8 +31,8 @@ public interface ClientConnectionConfigResolver extends ClientConnectionUrlResol
     StringJoiner joiner = new StringJoiner("");
     String protocol = isHttpsDisabled() ? "http://" : "https://";
     joiner.add(protocol + getStreamPipesHost()
-            + ":"
-            + getStreamPipesPort());
+        + ":"
+        + getStreamPipesPort());
 
     return joiner.toString();
   }

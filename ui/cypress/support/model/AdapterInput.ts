@@ -17,10 +17,10 @@
  */
 
 export class AdapterInput {
-  adapterType: string;
-  adapterName: string;
-  timestampProperty: string;
-  dimensionProperties: string[] = [];
-  storeInDataLake: boolean;
-  autoAddTimestamp = false;
+    adapterType: string;
+    adapterName: string;
+    timestampProperty: string;
+    dimensionProperties: string[] = [];
+    storeInDataLake: boolean;
+    autoAddTimestamp = false;
 }

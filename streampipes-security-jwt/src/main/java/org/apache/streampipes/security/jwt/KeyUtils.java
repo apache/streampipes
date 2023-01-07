@@ -24,16 +24,16 @@ public class KeyUtils {
 
   public static byte[] extractPrivate(String key) {
     return decode(key
-      .replace("-----BEGIN PRIVATE KEY-----", "")
-      .replaceAll(System.lineSeparator(), "")
-      .replace("-----END PRIVATE KEY-----", ""));
+        .replace("-----BEGIN PRIVATE KEY-----", "")
+        .replaceAll(System.lineSeparator(), "")
+        .replace("-----END PRIVATE KEY-----", ""));
   }
 
   public static byte[] extractPublic(String key) {
     return decode(key
-            .replace("-----BEGIN PUBLIC KEY-----", "")
-            .replaceAll(System.lineSeparator(), "")
-            .replace("-----END PUBLIC KEY-----", ""));
+        .replace("-----BEGIN PUBLIC KEY-----", "")
+        .replaceAll(System.lineSeparator(), "")
+        .replace("-----END PUBLIC KEY-----", ""));
   }
 
   private static byte[] decode(String key) {

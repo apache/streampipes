@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.manager.verification.structure;
 
-import java.util.List;
-
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
+
+import java.util.List;
 
 public interface Verifier {
 
-	List<VerificationResult> validate();
+  List<VerificationResult> validate();
 }

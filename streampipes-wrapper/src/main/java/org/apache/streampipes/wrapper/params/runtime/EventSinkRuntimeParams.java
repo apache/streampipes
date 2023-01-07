@@ -19,17 +19,17 @@
 package org.apache.streampipes.wrapper.params.runtime;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.context.SpEventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
-    RuntimeParams<B, DataSinkInvocation, EventSinkRuntimeContext> {
+public class EventSinkRuntimeParams<T extends EventSinkBindingParams> extends
+    RuntimeParams<T, DataSinkInvocation, EventSinkRuntimeContext> {
 
-  public EventSinkRuntimeParams(B bindingParams,
+  public EventSinkRuntimeParams(T bindingParams,
                                 Boolean singletonEngine,
                                 ConfigExtractor configExtractor,
                                 StreamPipesClient streamPipesClient) {

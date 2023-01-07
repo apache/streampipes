@@ -33,6 +33,7 @@ import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,9 +82,10 @@ public class PipelineTemplateGenerator {
         streamOffer = new SpDataStream(streamOffer);
       }
       if (streamOffer != null) {
-        for(PipelineTemplateDescription pipelineTemplateDescription : getAllPipelineTemplates()) {
+        for (PipelineTemplateDescription pipelineTemplateDescription : getAllPipelineTemplates()) {
           // TODO make this work for 2+ input streams
-          InvocableStreamPipesEntity entity = cloneInvocation(pipelineTemplateDescription.getBoundTo().get(0).getPipelineElementTemplate());
+          InvocableStreamPipesEntity entity =
+              cloneInvocation(pipelineTemplateDescription.getBoundTo().get(0).getPipelineElementTemplate());
           if (verifier.verify(streamOffer, entity)) {
             compatibleTemplates.add(pipelineTemplateDescription);
           }
@@ -114,40 +116,40 @@ public class PipelineTemplateGenerator {
 
   protected SpDataStream getStream(String streamId) throws ElementNotFoundException {
     SpDataStream result = getStorage()
-            .getEventStreamById(streamId);
+        .getEventStreamById(streamId);
 
     if (result == null) {
       throw new ElementNotFoundException("Data stream " + streamId + " is not installed!");
     }
 
-    return  result;
+    return result;
   }
 
   protected DataProcessorDescription getProcessor(String id) throws ElementNotFoundException {
     DataProcessorDescription result = getStorage()
-            .getDataProcessorByAppId(id);
+        .getDataProcessorByAppId(id);
 
     if (result == null) {
       throw new ElementNotFoundException("Data processor " + id + " is not installed!");
     }
 
-    return  result;
+    return result;
   }
 
   protected DataSinkDescription getSink(String id) throws ElementNotFoundException {
     DataSinkDescription result = getStorage()
-            .getDataSinkByAppId(id);
+        .getDataSinkByAppId(id);
 
     if (result == null) {
       throw new ElementNotFoundException("Data stream " + id + " is not installed!");
     }
 
-    return  result;
+    return result;
   }
 
   protected IPipelineElementDescriptionStorage getStorage() {
     return StorageManager
-            .INSTANCE
-            .getPipelineElementStorage();
+        .INSTANCE
+        .getPipelineElementStorage();
   }
 }

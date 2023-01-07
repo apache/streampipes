@@ -16,83 +16,89 @@
   ~
   -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <base href="/" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-    <base href="/" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Apache StreamPipes - Self-Service IIoT Toolbox</title>
 
-    <title>Apache StreamPipes - Self-Service IIoT Toolbox</title>
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="96x96"
+            href="assets/img/favicon/favicon-96x96.png"
+        />
+        <meta name="theme-color" content="#ffffff" />
 
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon/favicon-96x96.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <style type="text/css">
-
-        body {
-            margin: 0;
-        }
-
-        .app-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            width: 100%;
-            z-index: 80;
-        }
-
-        .logo-splash {
-            width: 50px;
-            height: 50px;
-        }
-
-        @keyframes heartbeat-anim
-        {
-            0% {
-                transform: scale( .75 );
+        <style type="text/css">
+            body {
+                margin: 0;
             }
-            20% {
-                transform: scale( 1 );
-            }
-            40% {
-                transform: scale( .75 );
-            }
-            60% {
-                transform: scale( 1 );
-            }
-            80% {
-                transform: scale( .75 );
-            }
-            100% {
-                transform: scale( .75 );
-            }
-        }
 
-        .animated-logo {
-            width: 50px;
-            height: 50px;
-            animation: heartbeat-anim 1.5s infinite;
-        }
-    </style>
+            .app-loading {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                width: 100%;
+                z-index: 80;
+            }
 
-</head>
+            .logo-splash {
+                width: 50px;
+                height: 50px;
+            }
 
-<body>
-<app-root>
-    <div style="height:100%;" role="main" tabindex="-1" flex>
-        <div class="sp-fade" style="min-height: 100vh; max-height: 100vh;">
-            <div class="app-loading">
-                <div class="animated-logo">
-                    <img src="/assets/img/favicon/favicon-96x96.png" class="logo-splash"/>
+            @keyframes heartbeat-anim {
+                0% {
+                    transform: scale(0.75);
+                }
+                20% {
+                    transform: scale(1);
+                }
+                40% {
+                    transform: scale(0.75);
+                }
+                60% {
+                    transform: scale(1);
+                }
+                80% {
+                    transform: scale(0.75);
+                }
+                100% {
+                    transform: scale(0.75);
+                }
+            }
+
+            .animated-logo {
+                width: 50px;
+                height: 50px;
+                animation: heartbeat-anim 1.5s infinite;
+            }
+        </style>
+    </head>
+
+    <body>
+        <sp-app-root>
+            <div style="height: 100%" role="main" tabindex="-1" flex>
+                <div
+                    class="sp-fade"
+                    style="min-height: 100vh; max-height: 100vh"
+                >
+                    <div class="app-loading">
+                        <div class="animated-logo">
+                            <img
+                                src="/assets/img/favicon/favicon-96x96.png"
+                                class="logo-splash"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</app-root>
-</body>
+        </sp-app-root>
+    </body>
 </html>

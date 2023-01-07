@@ -18,16 +18,16 @@
 
 package org.apache.streampipes.sinks.brokers.jvm;
 
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
@@ -39,7 +39,7 @@ import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
 import org.apache.streampipes.sinks.brokers.jvm.rocketmq.RocketMQPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
 
-public class BrokersJvmInit extends StandaloneModelSubmitter {
+public class BrokersJvmInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new BrokersJvmInit().init();

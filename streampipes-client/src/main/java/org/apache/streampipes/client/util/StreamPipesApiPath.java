@@ -17,12 +17,20 @@
  */
 package org.apache.streampipes.client.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringJoiner;
 
 public class StreamPipesApiPath {
 
-  private List<String> pathItems;
   private static final List<String> BaseApiPathV2 = Arrays.asList("streampipes-backend", "api", "v2");
+  private List<String> pathItems;
+
+  private StreamPipesApiPath(List<String> initialPathItems) {
+    this.pathItems = initialPathItems;
+  }
 
   public static StreamPipesApiPath fromStreamPipesBasePath() {
     List<String> path = new ArrayList<>(Collections.singletonList("streampipes-backend"));
@@ -36,10 +44,6 @@ public class StreamPipesApiPath {
 
   public static StreamPipesApiPath fromStreamPipesBasePath(String allSubPaths) {
     return fromStreamPipesBasePath().addToPath(allSubPaths);
-  }
-
-  private StreamPipesApiPath(List<String> initialPathItems) {
-    this.pathItems = initialPathItems;
   }
 
   public StreamPipesApiPath addToPath(String pathItem) {

@@ -22,25 +22,23 @@ import { ProcessorTest } from '../model/ProcessorTest';
 import { PipelineElementInput } from '../model/PipelineElementInput';
 
 export class ProcessorTestBuilder {
+    processorTest: ProcessorTest;
 
+    constructor(name: string) {
+        this.processorTest = new ProcessorTest();
+        this.processorTest.name = name;
+    }
 
-  processorTest: ProcessorTest;
+    public static create(name: string) {
+        return new ProcessorTestBuilder(name);
+    }
 
-  constructor(name: string) {
-    this.processorTest = new ProcessorTest();
-    this.processorTest.name = name;
-  }
+    public setProcessor(processor: PipelineElementInput) {
+        this.processorTest.processor = processor;
+        return this;
+    }
 
-  public static create(name: string) {
-    return new ProcessorTestBuilder(name);
-  }
-
-  public setProcessor(processor: PipelineElementInput) {
-    this.processorTest.processor = processor;
-    return this;
-  }
-
-  build() {
-    return this.processorTest;
-  }
+    build() {
+        return this.processorTest;
+    }
 }

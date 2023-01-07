@@ -22,8 +22,8 @@ import org.apache.streampipes.model.message.NotificationType;
 
 public class VerificationWarning extends VerificationResult {
 
-	public VerificationWarning(NotificationType type) {
-		super(type);
-	}
+  public VerificationWarning(NotificationType type) {
+    super(type);
+  }
 
 }

@@ -19,35 +19,42 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
-import { FunctionDefinition, SpLogEntry, SpMetricsEntry } from '../model/gen/streampipes-model';
+import {
+    FunctionDefinition,
+    SpLogEntry,
+    SpMetricsEntry,
+} from '../model/gen/streampipes-model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class FunctionsService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(
-    private http: HttpClient,
-    private platformServicesCommons: PlatformServicesCommons) {
-  }
+    public getActiveFunctions(): Observable<FunctionDefinition[]> {
+        return this.http
+            .get(this.functionsPath)
+            .pipe(map(res => res as FunctionDefinition[]));
+    }
 
-  public getActiveFunctions(): Observable<FunctionDefinition[]> {
-    return this.http.get(this.functionsPath).pipe(map(res => res as FunctionDefinition[]));
-  }
+    public getFunctionLogs(functionId: string): Observable<SpLogEntry[]> {
+        return this.http
+            .get(`${this.functionsPath}/${functionId}/logs`)
+            .pipe(map(res => res as SpLogEntry[]));
+    }
 
-  public getFunctionLogs(functionId: string): Observable<SpLogEntry[]> {
-    return this.http.get(`${this.functionsPath}/${functionId}/logs`)
-      .pipe(map(res => res as SpLogEntry[]));
-  }
+    public getFunctionMetrics(functionId: string): Observable<SpMetricsEntry> {
+        return this.http
+            .get(`${this.functionsPath}/${functionId}/metrics`)
+            .pipe(map(res => res as SpMetricsEntry));
+    }
 
-  public getFunctionMetrics(functionId: string): Observable<SpMetricsEntry> {
-    return this.http.get(`${this.functionsPath}/${functionId}/metrics`)
-      .pipe(map(res => res as SpMetricsEntry));
-  }
-
-  private get functionsPath() {
-    return this.platformServicesCommons.apiBasePath + '/functions';
-  }
+    private get functionsPath() {
+        return this.platformServicesCommons.apiBasePath + '/functions';
+    }
 }

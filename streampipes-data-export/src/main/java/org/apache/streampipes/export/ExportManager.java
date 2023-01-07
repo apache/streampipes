@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExportManager {
-  
+
   public static ExportConfiguration getExportPreview(List<String> selectedAssetIds) {
     var exportConfig = new ExportConfiguration();
     var assetExportConfigurations = selectedAssetIds
-      .stream()
-      .map(assetId -> new AssetLinkResolver(assetId).resolveResources())
-      .collect(Collectors.toList());
+        .stream()
+        .map(assetId -> new AssetLinkResolver(assetId).resolveResources())
+        .collect(Collectors.toList());
 
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
 

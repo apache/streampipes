@@ -25,23 +25,41 @@
                 </div>
                 <div fxLayout="column" fxFlex="100" class="home-margin">
                     <div fxFlex="100" fxLayoutAlign="start center">
-                        <status fxFlex="100" *ngIf="showStatus"></status>
+                        <sp-status fxFlex="100" *ngIf="showStatus"></sp-status>
                     </div>
                     <div fxFlex="100">
-                        <div class="assemblyOptions sp-blue-bg mt-0 round-border" style="padding:5px;">
-                            <h4>{{appConstants.APP_NAME}} Modules</h4>
+                        <div
+                            class="assemblyOptions sp-blue-bg mt-0 round-border"
+                            style="padding: 5px"
+                        >
+                            <h4>{{ appConstants.APP_NAME }} Modules</h4>
                         </div>
                         <div class="sp-blue-border pt-0" fxLayout="column">
                             <div fxFlex="100" fxLayout="column">
                                 <mat-list class="modules-list">
-                                    <mat-list-item *ngFor="let link of serviceLinks"
-                                                   (click)="openLink(link)" class="list-item">
-                                        <div mat-list-avatar
-                                             class="pipeline-avatar sp-accent-bg">
-                                            <mat-icon>{{link.icon}}</mat-icon>
+                                    <mat-list-item
+                                        *ngFor="let link of serviceLinks"
+                                        (click)="openLink(link)"
+                                        class="list-item"
+                                    >
+                                        <div
+                                            mat-list-avatar
+                                            class="pipeline-avatar sp-accent-bg"
+                                        >
+                                            <mat-icon>{{ link.icon }}</mat-icon>
                                         </div>
-                                        <div mat-line style="font-weight:bold;font-size:14pt;">{{link.name}}</div>
-                                        <p mat-line class="module-description">{{link.description}}</p>
+                                        <div
+                                            mat-line
+                                            style="
+                                                font-weight: bold;
+                                                font-size: 14pt;
+                                            "
+                                        >
+                                            {{ link.name }}
+                                        </div>
+                                        <p mat-line class="module-description">
+                                            {{ link.description }}
+                                        </p>
                                         <mat-divider></mat-divider>
                                     </mat-list-item>
                                 </mat-list>

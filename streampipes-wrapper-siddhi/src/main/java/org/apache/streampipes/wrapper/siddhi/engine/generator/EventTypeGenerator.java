@@ -21,22 +21,26 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class EventTypeGenerator<B extends EventProcessorBindingParams> {
+public class EventTypeGenerator<T extends EventProcessorBindingParams> {
 
-  private B params;
+  private final T params;
 
-  public EventTypeGenerator(B params) {
+  public EventTypeGenerator(T params) {
     this.params = params;
   }
 
   public List<EventPropertyDef> generateOutEventTypes() {
     List<EventPropertyDef> sortedEventKeys = new ArrayList<>();
     params.getOutEventType().forEach((key, value) -> {
-        sortedEventKeys.add(makeEventType(key, value));
-        sortedEventKeys.sort(Comparator.comparing(EventPropertyDef::getFieldName));
+      sortedEventKeys.add(makeEventType(key, value));
+      sortedEventKeys.sort(Comparator.comparing(EventPropertyDef::getFieldName));
     });
     return sortedEventKeys;
   }
@@ -80,7 +84,7 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
       return SiddhiConstants.SIDDHI_DOUBLE_TYPE;
     } else if (o.equals(Boolean.class)) {
       return SiddhiConstants.SIDDHI_BOOLEAN_TYPE;
-    } else if (o.equals(String.class)){
+    } else if (o.equals(String.class)) {
       return SiddhiConstants.SIDDHI_STRING_TYPE;
     } else {
       return SiddhiConstants.SIDDHI_OBJECT_TYPE;

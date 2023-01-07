@@ -19,45 +19,45 @@
 @import '../../../../../../../src/scss/sp/colors';
 
 standard-dialog-container {
-  width: 100%;
-  background-color: var(--color-bg-dialog);
-  color: var(--color-default-text);
-  border-radius: 5px;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
-  -moz-box-shadow: 0 10px 6px -6px #777;
-  box-shadow: 0 10px 6px -6px #777;
+    width: 100%;
+    background-color: var(--color-bg-dialog);
+    color: var(--color-default-text);
+    border-radius: 5px;
+    -webkit-box-shadow: 0 10px 6px -6px #777;
+    -moz-box-shadow: 0 10px 6px -6px #777;
+    box-shadow: 0 10px 6px -6px #777;
 }
 
 .standard-dialog-panel {
-  max-height: 80vh;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 50px auto;
+    max-height: 80vh;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 50px auto;
 }
 
 .standard-dialog-panel-header {
-  display: flex;
-  justify-content: space-between;
-  height: 50px;
-  min-height: 50px;
-  width: 100%;
-  background: var(--color-primary);
-  align-items: center;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    min-height: 50px;
+    width: 100%;
+    background: var(--color-primary);
+    align-items: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .dialog-panel-content {
-  height: 100%;
-  overflow-y:auto;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .dialog-title {
-  padding: 5px 5px 5px 15px;
-  font-size:20px;
-  color: white;
+    padding: 5px 5px 5px 15px;
+    font-size: 20px;
+    color: white;
 }
 
 #portal {
-  width:100%;
+    width: 100%;
 }

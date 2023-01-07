@@ -17,35 +17,36 @@
  */
 package org.apache.streampipes.client.http;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.fluent.Request;
+
 import java.io.IOException;
 
-public class GetRequest<DSO, DT> extends HttpRequest<Void, DSO, DT> {
+public class GetRequest<K, V> extends HttpRequest<Void, K, V> {
 
-  private Class<DSO> targetClass;
+  private Class<K> targetClass;
 
   public GetRequest(StreamPipesClientConfig clientConfig,
                     StreamPipesApiPath apiPath,
-                    Class<DSO> targetClass,
-                    Serializer<Void, DSO, DT> serializer) {
+                    Class<K> targetClass,
+                    Serializer<Void, K, V> serializer) {
     super(clientConfig, apiPath, serializer);
     this.targetClass = targetClass;
   }
 
   @Override
-  protected Request makeRequest(Serializer<Void, DSO, DT> serializer) {
+  protected Request makeRequest(Serializer<Void, K, V> serializer) {
     return Request
-            .Get(makeUrl())
-            .setHeaders(standardJsonHeaders());
+        .Get(makeUrl())
+        .setHeaders(standardJsonHeaders());
   }
 
   @Override
-  protected DT afterRequest(Serializer<Void, DSO, DT> serializer, HttpEntity entity) throws IOException {
+  protected V afterRequest(Serializer<Void, K, V> serializer, HttpEntity entity) throws IOException {
     return serializer.deserialize(entityAsString(entity), targetClass);
   }
 }

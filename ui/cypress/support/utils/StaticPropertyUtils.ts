@@ -19,31 +19,37 @@
 import { UserInput } from '../model/UserInput';
 
 export class StaticPropertyUtils {
-
-  public static input(configs: UserInput[]) {
-
-    // Configure Properties
-    configs.forEach(config => {
-      if (config.type === 'checkbox') {
-        cy.dataCy(config.selector).children().click();
-      } else if (config.type === 'button') {
-        cy.dataCy(config.selector).click();
-      } else if (config.type === 'drop-down') {
-        cy.dataCy(config.selector).click().get('mat-option').contains(config.value).click();
-      } else if (config.type === 'radio') {
-        cy.dataCy(config.selector.replace(' ', '_').toLowerCase() + '-' + config.value.replace(' ', '_').toLowerCase()).click();
-      } else if (config.type === 'click') {
-        cy.dataCy(config.selector).click({force: true});
-      } else if (config.type === 'code-input') {
-        cy.dataCy('reset-code-' + config.selector).click();
-        cy.dataCy('code-editor-' + config.selector).type(config.value);
-      } else if (config.type === 'input') {
-        cy.dataCy(config.selector).clear().type(config.value).blur();
-      } else if (config.type === 'slider') {
-        cy.dataCy(config.selector).type(config.value);
-      } else {
-        cy.dataCy(config.selector).type(config.value);
-      }
-    });
-  }
+    public static input(configs: UserInput[]) {
+        // Configure Properties
+        configs.forEach(config => {
+            if (config.type === 'checkbox') {
+                cy.dataCy(config.selector).children().click();
+            } else if (config.type === 'button') {
+                cy.dataCy(config.selector).click();
+            } else if (config.type === 'drop-down') {
+                cy.dataCy(config.selector)
+                    .click()
+                    .get('mat-option')
+                    .contains(config.value)
+                    .click();
+            } else if (config.type === 'radio') {
+                cy.dataCy(
+                    config.selector.replace(' ', '_').toLowerCase() +
+                        '-' +
+                        config.value.replace(' ', '_').toLowerCase(),
+                ).click();
+            } else if (config.type === 'click') {
+                cy.dataCy(config.selector).click({ force: true });
+            } else if (config.type === 'code-input') {
+                cy.dataCy('reset-code-' + config.selector).click();
+                cy.dataCy('code-editor-' + config.selector).type(config.value);
+            } else if (config.type === 'input') {
+                cy.dataCy(config.selector).clear().type(config.value).blur();
+            } else if (config.type === 'slider') {
+                cy.dataCy(config.selector).type(config.value);
+            } else {
+                cy.dataCy(config.selector).type(config.value);
+            }
+        });
+    }
 }

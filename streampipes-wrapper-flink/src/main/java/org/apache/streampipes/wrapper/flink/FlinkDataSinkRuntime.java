@@ -18,24 +18,25 @@
 
 package org.apache.streampipes.wrapper.flink;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
+
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends
-        FlinkRuntime<EventSinkRuntimeParams<B>, B, DataSinkInvocation, EventSinkRuntimeContext> {
+public abstract class FlinkDataSinkRuntime<T extends EventSinkBindingParams> extends
+    FlinkRuntime<EventSinkRuntimeParams<T>, T, DataSinkInvocation, EventSinkRuntimeContext> {
 
   private static final long serialVersionUID = 1L;
   private static final Logger LOG = LoggerFactory.getLogger(FlinkDataSinkRuntime.class);
 
-  public FlinkDataSinkRuntime(B params,
+  public FlinkDataSinkRuntime(T params,
                               ConfigExtractor configExtractor,
                               StreamPipesClient streamPipesClient) {
     super(params, configExtractor, streamPipesClient);
@@ -49,9 +50,11 @@ public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> ext
 
   public abstract void getSink(DataStream<Event>... convertedStream1);
 
-  protected EventSinkRuntimeParams<B> makeRuntimeParams(ConfigExtractor configExtractor,
+  protected EventSinkRuntimeParams<T> makeRuntimeParams(ConfigExtractor configExtractor,
                                                         StreamPipesClient streamPipesClient) {
-    LOG.warn("The config extractor and StreamPipes Client can currently not be accessed by a deployed Flink program due to non-serializable classes.");
+    LOG.warn(
+        "The config extractor and StreamPipes Client can currently not be accessed by"
+            + " a deployed Flink program due to non-serializable classes.");
     return new EventSinkRuntimeParams<>(bindingParams, false, null, null);
   }
 

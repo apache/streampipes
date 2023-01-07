@@ -18,25 +18,24 @@
 
 package org.apache.streampipes.manager.verification.structure;
 
-import java.util.List;
-
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
 import org.apache.streampipes.model.SpDataStream;
 
+import java.util.List;
+
 public class StreamVerifier extends AbstractVerifier {
 
-	SpDataStream stream;
-	
-	public StreamVerifier(SpDataStream stream)
-	{
-		this.stream = stream;
-	}
-	
-	@Override
-	public List<VerificationResult> validate() {
-		
-		
-		return validationResults;
-	}
+  SpDataStream stream;
+
+  public StreamVerifier(SpDataStream stream) {
+    this.stream = stream;
+  }
+
+  @Override
+  public List<VerificationResult> validate() {
+
+
+    return validationResults;
+  }
 
 }

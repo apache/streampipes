@@ -21,7 +21,12 @@ public enum Envs {
 
   SP_HOST("SP_HOST"),
   SP_PORT("SP_PORT"),
+
+  @Deprecated(since = "0.90.0", forRemoval = true)
   SP_CONSUL_LOCATION("CONSUL_LOCATION"),
+
+  SP_CONSUL_HOST("SP_CONSUL_HOST"),
+  SP_CONSUL_PORT("SP_CONSUL_PORT"),
   SP_KAFKA_RETENTION_MS("SP_KAFKA_RETENTION_MS"),
   SP_JWT_SECRET("JWT_SECRET"),
   SP_JWT_SIGNING_MODE("SP_JWT_SIGNING_MODE"),
@@ -63,6 +68,10 @@ public enum Envs {
 
   public Boolean getValueAsBoolean() {
     return CustomEnvs.getEnvAsBoolean(this.envVariableName);
+  }
+
+  public boolean getValueAsBooleanOrDefault(boolean defaultValue) {
+    return this.exists() ? this.getValueAsBoolean() : defaultValue;
   }
 
   public String getEnvVariableName() {

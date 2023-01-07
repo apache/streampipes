@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.v4.params;
 
+
 import javax.annotation.Nullable;
 
 import java.util.Arrays;

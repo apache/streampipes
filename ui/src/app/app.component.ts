@@ -23,23 +23,25 @@ import { Title } from '@angular/platform-browser';
 import { AppConstants } from './services/app.constants';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  animations: [ slideInAnimation ]
+    selector: 'sp-app-root',
+    templateUrl: './app.component.html',
+    animations: [slideInAnimation],
 })
 export class AppComponent implements OnInit {
+    constructor(
+        private titleService: Title,
+        private appConstants: AppConstants,
+    ) {}
 
-  constructor(private titleService: Title,
-              private appConstants: AppConstants) {
+    ngOnInit(): void {
+        this.titleService.setTitle(this.appConstants.APP_TITLE);
+    }
 
-  }
-
-  ngOnInit(): void {
-    this.titleService.setTitle(this.appConstants.APP_TITLE);
-  }
-
-  prepareRoute(outlet: RouterOutlet) {
-    return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
-  }
-
+    prepareRoute(outlet: RouterOutlet) {
+        return (
+            outlet &&
+            outlet.activatedRouteData &&
+            outlet.activatedRouteData.animation
+        );
+    }
 }

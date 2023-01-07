@@ -19,17 +19,17 @@
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
 
 public class DataProcessorVerifier extends ElementVerifier<DataProcessorDescription> {
 
   public DataProcessorVerifier(String graphData)
-          throws SepaParseException {
+      throws SepaParseException {
     super(graphData, DataProcessorDescription.class);
     // TODO Auto-generated constructor stub
   }

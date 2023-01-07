@@ -23,10 +23,10 @@ import org.apache.streampipes.wrapper.runtime.ExternalEventSink;
 
 import java.util.function.Supplier;
 
-public class ConfiguredExternalEventSink<B extends EventSinkBindingParams>
-        extends AbstractConfiguredPipelineElement<DataSinkInvocation, B, ExternalEventSink<B>> {
+public class ConfiguredExternalEventSink<T extends EventSinkBindingParams>
+    extends AbstractConfiguredPipelineElement<DataSinkInvocation, T, ExternalEventSink<T>> {
 
-  public ConfiguredExternalEventSink(B bindingParams, Supplier<ExternalEventSink<B>> engineSupplier) {
+  public ConfiguredExternalEventSink(T bindingParams, Supplier<ExternalEventSink<T>> engineSupplier) {
     super(bindingParams, engineSupplier);
   }
 }

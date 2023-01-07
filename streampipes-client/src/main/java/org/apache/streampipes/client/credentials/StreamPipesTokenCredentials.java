@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.client.credentials;
 
-import org.apache.http.Header;
 import org.apache.streampipes.client.http.header.Headers;
 import org.apache.streampipes.security.jwt.JwtTokenGenerator;
+
+import org.apache.http.Header;
 
 import java.util.Collections;
 import java.util.Date;

@@ -23,11 +23,11 @@ import java.util.List;
 
 public class Geo {
 
-	public static final String lat = "http://www.w3.org/2003/01/geo/wgs84_pos#lat";
-	public static final String lng = "http://www.w3.org/2003/01/geo/wgs84_pos#long";
-	public static final String alt = "http://www.w3.org/2003/01/geo/wgs84_pos#alt";
+  public static final String LAT = "http://www.w3.org/2003/01/geo/wgs84_pos#lat";
+  public static final String LNG = "http://www.w3.org/2003/01/geo/wgs84_pos#long";
+  public static final String ALT = "http://www.w3.org/2003/01/geo/wgs84_pos#alt";
 
-	public static List<String> getAll() {
-		return Arrays.asList(lat, lng, alt);
-	}
+  public static List<String> getAll() {
+    return Arrays.asList(LAT, LNG, ALT);
+  }
 }

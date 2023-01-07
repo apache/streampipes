@@ -33,5 +33,4 @@ export interface CanvasAttributes {
     name: string;
     align: string;
     fontSize: string;
-
 }

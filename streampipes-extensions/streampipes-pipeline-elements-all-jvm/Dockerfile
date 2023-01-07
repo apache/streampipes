@@ -13,11 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:11-jre-focal
-
-ENV CONSUL_LOCATION consul
-
-EXPOSE 8090
+FROM eclipse-temurin:17-jre-focal
 
 # needed pkgs processors-image-processing-jvm
 RUN apt-get update && apt-get install ttf-dejavu-core && apt-get install fontconfig

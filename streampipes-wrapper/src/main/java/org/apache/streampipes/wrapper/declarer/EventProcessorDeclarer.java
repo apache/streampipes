@@ -18,30 +18,31 @@
 
 package org.apache.streampipes.wrapper.declarer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 
-public abstract class EventProcessorDeclarer<B extends EventProcessorBindingParams, EPR extends
-				PipelineElementRuntime> extends PipelineElementDeclarer<B, EPR, DataProcessorInvocation,
-				ProcessingElementParameterExtractor> implements
-				SemanticEventProcessingAgentDeclarer {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	public static final Logger logger = LoggerFactory.getLogger(EventProcessorDeclarer.class.getCanonicalName());
+public abstract class EventProcessorDeclarer<K extends EventProcessorBindingParams, V extends
+    PipelineElementRuntime> extends PipelineElementDeclarer<K, V, DataProcessorInvocation,
+    ProcessingElementParameterExtractor> implements
+    SemanticEventProcessingAgentDeclarer {
 
-	@Override
-	protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
-		return ProcessingElementParameterExtractor.from(graph);
-	}
+  public static final Logger LOGGER = LoggerFactory.getLogger(EventProcessorDeclarer.class.getCanonicalName());
 
-	@Override
-	public Response invokeRuntime(DataProcessorInvocation graph, String serviceId) {
-		return invokeEPRuntime(graph, serviceId);
-	}
+  @Override
+  protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
+    return ProcessingElementParameterExtractor.from(graph);
+  }
+
+  @Override
+  public Response invokeRuntime(DataProcessorInvocation graph, String serviceId) {
+    return invokeEPRuntime(graph, serviceId);
+  }
 
 }

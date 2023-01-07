@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.export.dataimport;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.commons.zip.ZipFileExtractor;
 import org.apache.streampipes.export.constants.ExportConstants;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +69,7 @@ public abstract class ImportGenerator<T> {
 
     for (String dashboardId : manifest.getDashboards()) {
       try {
-      handleDashboard(asString(previewFiles.get(dashboardId)), dashboardId);
+        handleDashboard(asString(previewFiles.get(dashboardId)), dashboardId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of dashboard {} (already present with the same id)", dashboardId);
       }
@@ -76,7 +77,7 @@ public abstract class ImportGenerator<T> {
 
     for (String dataViewId : manifest.getDataViews()) {
       try {
-      handleDataView(asString(previewFiles.get(dataViewId)), dataViewId);
+        handleDataView(asString(previewFiles.get(dataViewId)), dataViewId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of data view {} (already present with the same id)", dataViewId);
       }
@@ -84,7 +85,7 @@ public abstract class ImportGenerator<T> {
 
     for (String dataSourceId : manifest.getDataSources()) {
       try {
-      handleDataSource(asString(previewFiles.get(dataSourceId)), dataSourceId);
+        handleDataSource(asString(previewFiles.get(dataSourceId)), dataSourceId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of data source {} (already present with the same id)", dataSourceId);
       }
@@ -92,7 +93,7 @@ public abstract class ImportGenerator<T> {
 
     for (String pipelineId : manifest.getPipelines()) {
       try {
-      handlePipeline(asString(previewFiles.get(pipelineId)), pipelineId);
+        handlePipeline(asString(previewFiles.get(pipelineId)), pipelineId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of pipeline {} (already present with the same id)", pipelineId);
       }
@@ -100,7 +101,7 @@ public abstract class ImportGenerator<T> {
 
     for (String measurementId : manifest.getDataLakeMeasures()) {
       try {
-      handleDataLakeMeasure(asString(previewFiles.get(measurementId)), measurementId);
+        handleDataLakeMeasure(asString(previewFiles.get(measurementId)), measurementId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of data lake measure {} (already present with the same id)", measurementId);
       }
@@ -108,7 +109,7 @@ public abstract class ImportGenerator<T> {
 
     for (String dashboardWidgetId : manifest.getDashboardWidgets()) {
       try {
-      handleDashboardWidget(asString(previewFiles.get(dashboardWidgetId)), dashboardWidgetId);
+        handleDashboardWidget(asString(previewFiles.get(dashboardWidgetId)), dashboardWidgetId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of dashboard widget {} (already present with the same id)", dashboardWidgetId);
       }
@@ -116,7 +117,7 @@ public abstract class ImportGenerator<T> {
 
     for (String dataViewWidgetId : manifest.getDataViewWidgets()) {
       try {
-      handleDataViewWidget(asString(previewFiles.get(dataViewWidgetId)), dataViewWidgetId);
+        handleDataViewWidget(asString(previewFiles.get(dataViewWidgetId)), dataViewWidgetId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of data view widget {} (already present with the same id)", dataViewWidgetId);
       }
@@ -124,7 +125,7 @@ public abstract class ImportGenerator<T> {
 
     for (String fileMetadataId : manifest.getFiles()) {
       try {
-      handleFile(asString(previewFiles.get(fileMetadataId)), fileMetadataId, previewFiles);
+        handleFile(asString(previewFiles.get(fileMetadataId)), fileMetadataId, previewFiles);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of file {} (already present with the same id)", fileMetadataId);
       }
@@ -140,7 +141,8 @@ public abstract class ImportGenerator<T> {
   }
 
   private StreamPipesApplicationPackage getManifest(Map<String, byte[]> previewFiles) throws JsonProcessingException {
-    return this.defaultMapper.readValue(asString(previewFiles.get(ExportConstants.MANIFEST)), StreamPipesApplicationPackage.class);
+    return this.defaultMapper.readValue(asString(previewFiles.get(ExportConstants.MANIFEST)),
+        StreamPipesApplicationPackage.class);
   }
 
   protected abstract void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws IOException;
@@ -155,13 +157,16 @@ public abstract class ImportGenerator<T> {
 
   protected abstract void handlePipeline(String document, String pipelineId) throws JsonProcessingException;
 
-  protected abstract void handleDataLakeMeasure(String document, String dataLakeMeasureId) throws JsonProcessingException;
+  protected abstract void handleDataLakeMeasure(String document, String dataLakeMeasureId)
+      throws JsonProcessingException;
 
-  protected abstract void handleDashboardWidget(String document, String dashboardWidgetId) throws JsonProcessingException;
+  protected abstract void handleDashboardWidget(String document, String dashboardWidgetId)
+      throws JsonProcessingException;
 
   protected abstract void handleDataViewWidget(String document, String dataViewWidgetId) throws JsonProcessingException;
 
-  protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent) throws IOException;
+  protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent)
+      throws IOException;
 
   protected abstract T getReturnObject();
 

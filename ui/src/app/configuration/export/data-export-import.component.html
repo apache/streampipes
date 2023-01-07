@@ -20,17 +20,25 @@
     <div fxLayout="column" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section title="Export" subtitle="Export application data">
-                <div class="subsection-title">Export assets and all linked resources</div>
+                <div class="subsection-title">
+                    Export assets and all linked resources
+                </div>
                 <div fxLayout="column" *ngFor="let asset of assets">
-                    <mat-checkbox (change)="handleSelectionChange($event, asset._id)"><h4>{{asset.assetName}}</h4></mat-checkbox>
+                    <mat-checkbox
+                        (change)="handleSelectionChange($event, asset._id)"
+                        ><h4>{{ asset.assetName }}</h4></mat-checkbox
+                    >
                 </div>
                 <div class="mt-10">
-                    <button mat-button
-                            mat-raised-button
-                            color="accent"
-                            [disabled]="selectedAssets.length === 0"
-                            (click)="openExportDialog()">
-                        <i class="material-icons">cloud_download</i><span>&nbsp;Start export process</span>
+                    <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        [disabled]="selectedAssets.length === 0"
+                        (click)="openExportDialog()"
+                    >
+                        <i class="material-icons">cloud_download</i
+                        ><span>&nbsp;Start export process</span>
                     </button>
                 </div>
             </sp-split-section>
@@ -38,15 +46,22 @@
         <mat-divider></mat-divider>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section title="Import" subtitle="Import application data">
-                <div class="subsection-title">Import from application package</div>
+                <div class="subsection-title">
+                    Import from application package
+                </div>
 
                 <div class="mt-10">
-                    <button mat-button mat-raised-button color="accent" (click)="openImportDialog()">
-                        <i class="material-icons">cloud_upload</i><span>&nbsp;Start import process</span>
+                    <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        (click)="openImportDialog()"
+                    >
+                        <i class="material-icons">cloud_upload</i
+                        ><span>&nbsp;Start import process</span>
                     </button>
                 </div>
             </sp-split-section>
         </div>
     </div>
 </sp-basic-nav-tabs>
-

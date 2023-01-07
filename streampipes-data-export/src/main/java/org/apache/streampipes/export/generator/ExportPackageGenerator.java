@@ -18,10 +18,17 @@
 
 package org.apache.streampipes.export.generator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
-import org.apache.streampipes.export.resolver.*;
+import org.apache.streampipes.export.resolver.AbstractResolver;
+import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.DashboardResolver;
+import org.apache.streampipes.export.resolver.DashboardWidgetResolver;
+import org.apache.streampipes.export.resolver.DataSourceResolver;
+import org.apache.streampipes.export.resolver.DataViewResolver;
+import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
+import org.apache.streampipes.export.resolver.FileResolver;
+import org.apache.streampipes.export.resolver.MeasurementResolver;
+import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
@@ -29,6 +36,9 @@ import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,24 +68,24 @@ public class ExportPackageGenerator {
     var manifest = new StreamPipesApplicationPackage();
 
     addAssets(builder, exportConfiguration
-      .getAssetExportConfiguration()
-      .stream()
-      .map(AssetExportConfiguration::getAssetId)
-      .collect(Collectors.toList()), manifest);
+        .getAssetExportConfiguration()
+        .stream()
+        .map(AssetExportConfiguration::getAssetId)
+        .collect(Collectors.toList()), manifest);
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
 
       config.getAdapters().forEach(item -> addDoc(builder,
-        item,
-        new AdapterResolver(),
-        manifest::addAdapter));
+          item,
+          new AdapterResolver(),
+          manifest::addAdapter));
 
       config.getDashboards().forEach(item -> {
         var resolver = new DashboardResolver();
         addDoc(builder,
-          item,
-          resolver,
-          manifest::addDashboard);
+            item,
+            resolver,
+            manifest::addDashboard);
 
         var widgets = resolver.getWidgets(item.getResourceId());
         var widgetResolver = new DashboardWidgetResolver();
@@ -83,26 +93,26 @@ public class ExportPackageGenerator {
       });
 
       config.getDataSources().forEach(item -> addDoc(builder,
-        item,
-        new DataSourceResolver(),
-        manifest::addDataSource));
+          item,
+          new DataSourceResolver(),
+          manifest::addDataSource));
 
       config.getDataLakeMeasures().forEach(item -> addDoc(builder,
-        item,
-        new MeasurementResolver(),
-        manifest::addDataLakeMeasure));
+          item,
+          new MeasurementResolver(),
+          manifest::addDataLakeMeasure));
 
       config.getPipelines().forEach(item -> addDoc(builder,
-        item,
-        new PipelineResolver(),
-        manifest::addPipeline));
+          item,
+          new PipelineResolver(),
+          manifest::addPipeline));
 
       config.getDataViews().forEach(item -> {
         var resolver = new DataViewResolver();
         addDoc(builder,
-          item,
-          resolver,
-          manifest::addDataView);
+            item,
+            resolver,
+            manifest::addDataView);
 
         var widgets = resolver.getWidgets(item.getResourceId());
         var widgetResolver = new DataViewWidgetResolver();
@@ -145,10 +155,10 @@ public class ExportPackageGenerator {
       function.accept(sanitizedResourceId);
     } catch (JsonProcessingException | ElementNotFoundException e) {
       LOG.warn(
-        "Could not find document with resource id {} with resolver {}",
-        exportItem.getResourceId(),
-        resolver.getClass().getCanonicalName(),
-        e);
+          "Could not find document with resource id {} with resolver {}",
+          exportItem.getResourceId(),
+          resolver.getClass().getCanonicalName(),
+          e);
     }
   }
 

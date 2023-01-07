@@ -17,18 +17,18 @@
  */
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      /**
-       * Logout of StreamPipes
-       * @example cy.logout();
-       */
-      logout: typeof logout;
+    namespace Cypress {
+        interface Chainable {
+            /**
+             * Logout of StreamPipes
+             * @example cy.logout();
+             */
+            logout: typeof logout;
+        }
     }
-  }
 }
 
 export const logout = () => {
-  cy.dataCy('sp-user-preferences').click();
-  cy.dataCy('sp-logout').click();
+    cy.dataCy('sp-user-preferences').click();
+    cy.dataCy('sp-logout').click();
 };

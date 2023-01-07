@@ -24,7 +24,12 @@ import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.messaging.mqtt.MqttConsumer;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.grounding.*;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +41,7 @@ public enum PipelineElementRuntimeInfoFetcher {
 
   Logger logger = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
 
-  private final int FETCH_INTERVAL_MS = 300;
+  private static final int FETCH_INTERVAL_MS = 300;
   private final Map<String, SpDataFormatConverter> converterMap;
 
   PipelineElementRuntimeInfoFetcher() {
@@ -58,8 +63,7 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     if (spDataStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
       return getLatestEventFromKafka((KafkaTransportProtocol) protocol, converter, topic);
-    }
-    else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof JmsTransportProtocol) {
+    } else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof JmsTransportProtocol) {
       return getLatestEventFromJms((JmsTransportProtocol) protocol, converter);
     } else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof MqttTransportProtocol) {
       return getLatestEventFromMqtt((MqttTransportProtocol) protocol, converter);
@@ -74,10 +78,10 @@ public enum PipelineElementRuntimeInfoFetcher {
 
   private String getOutputTopic(SpDataStream spDataStream) {
     return spDataStream
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName();
+        .getEventGrounding()
+        .getTransportProtocol()
+        .getTopicDefinition()
+        .getActualTopicName();
   }
 
   private void waitForEvent(String[] result) {
@@ -97,8 +101,8 @@ public enum PipelineElementRuntimeInfoFetcher {
     final String[] result = {null};
     ActiveMQConsumer consumer = new ActiveMQConsumer();
     consumer.connect(protocol, event -> {
-        result[0] = converter.convert(event);
-        consumer.disconnect();
+      result[0] = converter.convert(event);
+      consumer.disconnect();
     });
 
     waitForEvent(result);
@@ -111,8 +115,8 @@ public enum PipelineElementRuntimeInfoFetcher {
     final String[] result = {null};
     MqttConsumer mqttConsumer = new MqttConsumer();
     mqttConsumer.connect(protocol, event -> {
-        result[0] = converter.convert(event);
-        mqttConsumer.disconnect();
+      result[0] = converter.convert(event);
+      mqttConsumer.disconnect();
     });
 
     waitForEvent(result);
@@ -144,7 +148,7 @@ public enum PipelineElementRuntimeInfoFetcher {
     }
 
     SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(protocol, topic, event -> {
-        result[0] = converter.convert(event);
+      result[0] = converter.convert(event);
     });
 
     Thread t = new Thread(kafkaConsumer);

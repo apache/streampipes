@@ -19,23 +19,23 @@
 package org.apache.streampipes.sources;
 
 
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.container.declarer.DataStreamDeclarer;
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 
 public abstract class AbstractAlreadyExistingStream implements DataStreamDeclarer {
 
-	@Override
-	public void executeStream() {		
-	
-	}
+  @Override
+  public void executeStream() {
 
-	@Override
-	public boolean isExecutable() {
-		return false;
-	}
+  }
 
-	public ConfigExtractor configExtractor() {
-		return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
-	}
+  @Override
+  public boolean isExecutable() {
+    return false;
+  }
+
+  public ConfigExtractor configExtractor() {
+    return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
+  }
 }

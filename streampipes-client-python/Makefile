@@ -28,7 +28,7 @@ doc:
 lint:
 	flake8 streampipes_client --max-line-length 120
 
-.PHONY: doc
+.PHONY: livedoc
 livedoc: doc
 	mkdocs serve --dirtyreload
 
@@ -46,6 +46,10 @@ reformat-all:
 	autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes_client tests
 	isort --profile black streampipes_client tests
 	black --line-length=120 streampipes_client tests
+
+.PHONY: pre-commit
+pre-commit:
+	pre-commit run --verbose --all-files
 
 .PHONY: unit-tests
 unit-tests:

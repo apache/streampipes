@@ -18,8 +18,8 @@
 package org.apache.streampipes.wrapper.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 
@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class SpEventSinkRuntimeContext extends SpRuntimeContext implements
-        EventSinkRuntimeContext, Serializable {
+    EventSinkRuntimeContext, Serializable {
 
   public SpEventSinkRuntimeContext(List<SourceInfo> sourceInfo,
                                    List<SchemaInfo> inputSchemaInfo,

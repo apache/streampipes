@@ -25,56 +25,63 @@ import { PlatformServicesCommons } from '@streampipes/platform-services';
 
 @Injectable()
 export class RestService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    getVisualizablePipelines(): Observable<any> {
+        return this.http.get(
+            '/visualizablepipeline/_all_docs?include_docs=true',
+        );
+    }
 
-  getVisualizablePipelines(): Observable<any> {
-    return this.http.get('/visualizablepipeline/_all_docs?include_docs=true');
-  }
+    getPipeline(pipelineId): Observable<any> {
+        return this.http.get('/pipeline/' + pipelineId);
+    }
 
-  getPipeline(pipelineId): Observable<any> {
-    return this.http.get('/pipeline/' + pipelineId);
-  }
+    storeImage(file: File): Observable<any> {
+        const data: FormData = new FormData();
+        data.append('file_upload', file, file.name);
+        return this.http.post(this.imagePath, data).pipe(
+            map(res => {
+                return res;
+            }),
+        );
+    }
 
-  storeImage(file: File): Observable<any> {
-    const data: FormData = new FormData();
-    data.append('file_upload', file, file.name);
-    return this.http.post(this.imagePath, data)
-        .pipe(map(res => {
-          return res;
-        }));
-  }
+    deleteDashboard(dashboardId: string) {
+        return this.http.delete(`${this.url}/${dashboardId}`);
+    }
 
-  deleteDashboard(dashboardId: string) {
-    return this.http.delete(`${this.url}/${dashboardId}`);
-  }
+    storeDashboard(dashboardConfig: DashboardConfiguration) {
+        return this.http.post(this.url, dashboardConfig);
+    }
 
-  storeDashboard(dashboardConfig: DashboardConfiguration) {
-    return this.http.post(this.url, dashboardConfig);
-  }
+    updateDashboard(dashboardConfig: DashboardConfiguration) {
+        return this.http.put(
+            this.url + '/' + dashboardConfig.dashboardId,
+            dashboardConfig,
+        );
+    }
 
-  updateDashboard(dashboardConfig: DashboardConfiguration) {
-    return this.http.put(this.url + '/' + dashboardConfig.dashboardId, dashboardConfig);
-  }
+    getDashboards(): Observable<DashboardConfiguration[]> {
+        return this.http.get(this.url).pipe(
+            map(response => {
+                return response as DashboardConfiguration[];
+            }),
+        );
+    }
 
-  getDashboards(): Observable<DashboardConfiguration[]> {
-    return this.http.get(this.url).pipe(map(response => {
-      return response as DashboardConfiguration[];
-    }));
-  }
+    getImageUrl(imageName: string): string {
+        return `${this.imagePath}/${imageName}`;
+    }
 
-  getImageUrl(imageName: string): string {
-    return `${this.imagePath}/${imageName}`;
-  }
+    private get url() {
+        return `${this.platformServicesCommons.apiBasePath}/asset-dashboards`;
+    }
 
-  private get url() {
-    return `${this.platformServicesCommons.apiBasePath}/asset-dashboards`;
-  }
-
-  private get imagePath() {
-    return `${this.url}/images`;
-  }
-
+    private get imagePath() {
+        return `${this.url}/images`;
+    }
 }

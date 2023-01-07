@@ -16,129 +16,259 @@
 ~
 -->
 
-
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayout="column" *ngIf="clonedAssetLink">
-            <div fxLayout="column" class="link-configuration link-type-selection">
+            <div
+                fxLayout="column"
+                class="link-configuration link-type-selection"
+            >
                 <mat-form-field color="accent">
                     <mat-label>Link Type</mat-label>
-                    <mat-select fxFlex [(value)]="selectedLinkType"
-                                required (selectionChange)="onLinkTypeChanged($event)">
-                        <mat-option *ngFor="let assetLinkType of assetLinkTypes"
-                                    [value]="assetLinkType">{{assetLinkType.linkLabel}}</mat-option>
+                    <mat-select
+                        fxFlex
+                        [(value)]="selectedLinkType"
+                        required
+                        (selectionChange)="onLinkTypeChanged($event)"
+                    >
+                        <mat-option
+                            *ngFor="let assetLinkType of assetLinkTypes"
+                            [value]="assetLinkType"
+                            >{{ assetLinkType.linkLabel }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkQueryHint === 'pipeline'" fxLayout="column" class="link-configuration">
+            <div
+                *ngIf="selectedLinkType.linkQueryHint === 'pipeline'"
+                fxLayout="column"
+                class="link-configuration"
+            >
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Pipelines</mat-label>
-                    <mat-select [(ngModel)]="currentResource"
-                                fxFlex (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
-                                required>
-                        <mat-option *ngFor="let pipeline of pipelines"
-                                    [value]="pipeline">{{pipeline.name}}</mat-option>
+                    <mat-select
+                        [(ngModel)]="currentResource"
+                        fxFlex
+                        (selectionChange)="
+                            changeLabel(
+                                $event.value._id,
+                                $event.value.name,
+                                $event.value
+                            )
+                        "
+                        required
+                    >
+                        <mat-option
+                            *ngFor="let pipeline of pipelines"
+                            [value]="pipeline"
+                            >{{ pipeline.name }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkQueryHint === 'data-source'" fxLayout="column" class="link-configuration">
+            <div
+                *ngIf="selectedLinkType.linkQueryHint === 'data-source'"
+                fxLayout="column"
+                class="link-configuration"
+            >
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Data Source</mat-label>
-                    <mat-select (selectionChange)="changeLabel($event.value.elementId, $event.value.name, $event.value)"
-                                [(value)]="currentResource"
-                                fxFlex
-                                required>
-                        <mat-option *ngFor="let source of dataSources"
-                                    [value]="source">{{source.name}}</mat-option>
+                    <mat-select
+                        (selectionChange)="
+                            changeLabel(
+                                $event.value.elementId,
+                                $event.value.name,
+                                $event.value
+                            )
+                        "
+                        [(value)]="currentResource"
+                        fxFlex
+                        required
+                    >
+                        <mat-option
+                            *ngFor="let source of dataSources"
+                            [value]="source"
+                            >{{ source.name }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkQueryHint === 'dashboard'" fxLayout="column" class="link-configuration">
+            <div
+                *ngIf="selectedLinkType.linkQueryHint === 'dashboard'"
+                fxLayout="column"
+                class="link-configuration"
+            >
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Dashboards</mat-label>
-                    <mat-select (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
-                                [(value)]="currentResource"
-                                fxFlex
-                                required>
-                        <mat-option *ngFor="let dashboard of dashboards"
-                                    [value]="dashboard">{{dashboard.name}}</mat-option>
+                    <mat-select
+                        (selectionChange)="
+                            changeLabel(
+                                $event.value._id,
+                                $event.value.name,
+                                $event.value
+                            )
+                        "
+                        [(value)]="currentResource"
+                        fxFlex
+                        required
+                    >
+                        <mat-option
+                            *ngFor="let dashboard of dashboards"
+                            [value]="dashboard"
+                            >{{ dashboard.name }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkQueryHint === 'data-view'" fxLayout="column" class="link-configuration">
+            <div
+                *ngIf="selectedLinkType.linkQueryHint === 'data-view'"
+                fxLayout="column"
+                class="link-configuration"
+            >
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Data Views</mat-label>
-                    <mat-select (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
-                                [(value)]="currentResource"
-                                fxFlex
-                                required>
-                        <mat-option *ngFor="let dataView of dataViews"
-                                    [value]="dataView">{{dataView.name}}</mat-option>
+                    <mat-select
+                        (selectionChange)="
+                            changeLabel(
+                                $event.value._id,
+                                $event.value.name,
+                                $event.value
+                            )
+                        "
+                        [(value)]="currentResource"
+                        fxFlex
+                        required
+                    >
+                        <mat-option
+                            *ngFor="let dataView of dataViews"
+                            [value]="dataView"
+                            >{{ dataView.name }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkQueryHint === 'adapter'" fxLayout="column" class="link-configuration">
+            <div
+                *ngIf="selectedLinkType.linkQueryHint === 'adapter'"
+                fxLayout="column"
+                class="link-configuration"
+            >
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Adapter</mat-label>
-                    <mat-select (selectionChange)="changeLabel($event.value.elementId, $event.value.name, $event.value)"
-                                [(value)]="currentResource"
-                                fxFlex
-                                required>
-                        <mat-option *ngFor="let adapter of adapters"
-                                    [value]="adapter">{{adapter.name}}</mat-option>
+                    <mat-select
+                        (selectionChange)="
+                            changeLabel(
+                                $event.value.elementId,
+                                $event.value.name,
+                                $event.value
+                            )
+                        "
+                        [(value)]="currentResource"
+                        fxFlex
+                        required
+                    >
+                        <mat-option
+                            *ngFor="let adapter of adapters"
+                            [value]="adapter"
+                            >{{ adapter.name }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkQueryHint === 'measurement'" fxLayout="column" class="link-configuration">
+            <div
+                *ngIf="selectedLinkType.linkQueryHint === 'measurement'"
+                fxLayout="column"
+                class="link-configuration"
+            >
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Data Lake Storage</mat-label>
-                    <mat-select (selectionChange)="changeLabel($event.value.elementId, $event.value.measureName, $event.value)"
-                                [(value)]="currentResource"
-                                fxFlex
-                                required>
-                        <mat-option *ngFor="let measure of dataLakeMeasures"
-                                    [value]="measure">{{measure.measureName}}</mat-option>
+                    <mat-select
+                        (selectionChange)="
+                            changeLabel(
+                                $event.value.elementId,
+                                $event.value.measureName,
+                                $event.value
+                            )
+                        "
+                        [(value)]="currentResource"
+                        fxFlex
+                        required
+                    >
+                        <mat-option
+                            *ngFor="let measure of dataLakeMeasures"
+                            [value]="measure"
+                            >{{ measure.measureName }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkQueryHint === 'file'" fxLayout="column" class="link-configuration">
+            <div
+                *ngIf="selectedLinkType.linkQueryHint === 'file'"
+                fxLayout="column"
+                class="link-configuration"
+            >
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Files</mat-label>
-                    <mat-select (selectionChange)="changeLabel($event.value.fileId, $event.value.originalFilename, $event.value)"
-                                [(value)]="currentResource"
-                                fxFlex
-                                required>
-                        <mat-option *ngFor="let file of files"
-                                    [value]="file">{{file.originalFilename}}</mat-option>
+                    <mat-select
+                        (selectionChange)="
+                            changeLabel(
+                                $event.value.fileId,
+                                $event.value.originalFilename,
+                                $event.value
+                            )
+                        "
+                        [(value)]="currentResource"
+                        fxFlex
+                        required
+                    >
+                        <mat-option *ngFor="let file of files" [value]="file">{{
+                            file.originalFilename
+                        }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent">
                     <mat-label>Label</mat-label>
-                    <input matInput [(ngModel)]="clonedAssetLink.linkLabel" required>
+                    <input
+                        matInput
+                        [(ngModel)]="clonedAssetLink.linkLabel"
+                        required
+                    />
                 </mat-form-field>
             </div>
             <div fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent">
                     <mat-label>Resource ID</mat-label>
-                    <input matInput [(ngModel)]="clonedAssetLink.resourceId" required [disabled]="true">
+                    <input
+                        matInput
+                        [(ngModel)]="clonedAssetLink.resourceId"
+                        required
+                        [disabled]="true"
+                    />
                 </mat-form-field>
             </div>
-            <div fxFlex="100">
-
-            </div>
+            <div fxFlex="100"></div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button
-                mat-raised-button
-                color="accent"
-                (click)="store()" style="margin-right:10px;" [disabled]="!clonedAssetLink.resourceId">
-            {{createMode ? 'Create ' : 'Update' }} link
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="store()"
+            style="margin-right: 10px"
+            [disabled]="!clonedAssetLink.resourceId"
+        >
+            {{ createMode ? 'Create ' : 'Update' }} link
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="cancel()" style="margin-right:10px;">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="cancel()"
+            style="margin-right: 10px"
+        >
             Cancel
         </button>
     </div>

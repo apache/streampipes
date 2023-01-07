@@ -17,14 +17,14 @@
  */
 package com.kohlschutter.boilerpipe.filters.english;
 
-import java.util.List;
-import java.util.ListIterator;
-
 import com.kohlschutter.boilerpipe.BoilerpipeFilter;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.labels.DefaultLabels;
+
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Marks all blocks as "non-content" that occur after blocks that have been marked

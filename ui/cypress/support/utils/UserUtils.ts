@@ -16,45 +16,44 @@
  *
  */
 
-
 import { User } from '../model/User';
 import { UserBuilder } from '../builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
 
 export class UserUtils {
-  public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
-      .setName('admin')
-      .setPassword('admin')
-      .addRole(UserRole.ROLE_ADMIN)
-      .build();
+    public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
+        .setName('admin')
+        .setPassword('admin')
+        .addRole(UserRole.ROLE_ADMIN)
+        .build();
 
-  public static goToUserConfiguration() {
-    cy.visit('#/configuration/security');
-  }
+    public static goToUserConfiguration() {
+        cy.visit('#/configuration/security');
+    }
 
-  public static addUser(user: User) {
-    this.goToUserConfiguration();
+    public static addUser(user: User) {
+        this.goToUserConfiguration();
 
-    // user configuration
-    cy.dataCy('add-new-user').click();
-    cy.dataCy('new-user-email').type(user.email);
-    cy.dataCy('new-user-full-name').type(user.name);
-    cy.dataCy('new-user-password').type(user.password);
-    cy.dataCy('new-user-password-repeat').type(user.password);
+        // user configuration
+        cy.dataCy('add-new-user').click();
+        cy.dataCy('new-user-email').type(user.email);
+        cy.dataCy('new-user-full-name').type(user.name);
+        cy.dataCy('new-user-password').type(user.password);
+        cy.dataCy('new-user-password-repeat').type(user.password);
 
-    // Set role
-    cy.dataCy('role-' + user.role[0]).children().click();
-    cy.dataCy('new-user-enabled').children().click();
+        // Set role
+        cy.dataCy('role-' + user.role[0])
+            .children()
+            .click();
+        cy.dataCy('new-user-enabled').children().click();
 
-    // Store
-    cy.dataCy('sp-element-edit-user-save').click();
-  }
+        // Store
+        cy.dataCy('sp-element-edit-user-save').click();
+    }
 
-  public static deleteUser(user: User) {
-    this.goToUserConfiguration();
+    public static deleteUser(user: User) {
+        this.goToUserConfiguration();
 
-    cy.dataCy('user-delete-btn-' + user.name).click();
-  }
-
-
+        cy.dataCy('user-delete-btn-' + user.name).click();
+    }
 }

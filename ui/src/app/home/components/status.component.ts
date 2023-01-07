@@ -19,38 +19,43 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationCountService } from '../../services/notification-count-service';
-import { PipelineService, PipelineElementService } from '@streampipes/platform-services';
+import {
+    PipelineService,
+    PipelineElementService,
+} from '@streampipes/platform-services';
 
 @Component({
-    selector: 'status',
+    selector: 'sp-status',
     templateUrl: './status.component.html',
-    styleUrls: ['./status.component.css']
+    styleUrls: ['./status.component.css'],
 })
 export class StatusComponent implements OnInit {
-
     pipelines = 0;
     runningPipelines = 0;
     installedPipelineElements = 0;
     unreadNotificationCount = 0;
 
-    constructor(private pipelineElementService: PipelineElementService,
-                private router: Router,
-                public notificationCountService: NotificationCountService,
-                private pipelineService: PipelineService) { }
+    constructor(
+        private pipelineElementService: PipelineElementService,
+        private router: Router,
+        public notificationCountService: NotificationCountService,
+        private pipelineService: PipelineService,
+    ) {}
 
     ngOnInit() {
         this.getPipelines();
         this.getStreams();
         this.getProcessors();
         this.getSinks();
-        this.notificationCountService.unreadNotificationCount$
-          .subscribe(count => this.unreadNotificationCount = count);
+        this.notificationCountService.unreadNotificationCount$.subscribe(
+            count => (this.unreadNotificationCount = count),
+        );
     }
 
     getPipelines() {
         this.pipelineService.getOwnPipelines().subscribe(pipelines => {
-           this.pipelines = pipelines.length;
-           this.runningPipelines = pipelines.filter(p => p.running).length;
+            this.pipelines = pipelines.length;
+            this.runningPipelines = pipelines.filter(p => p.running).length;
         });
     }
 
@@ -61,17 +66,15 @@ export class StatusComponent implements OnInit {
     }
 
     getProcessors() {
-        this.pipelineElementService.getDataProcessors()
-            .subscribe(msg => {
-                this.addPipelineElementList(msg);
-            });
+        this.pipelineElementService.getDataProcessors().subscribe(msg => {
+            this.addPipelineElementList(msg);
+        });
     }
 
     getSinks() {
-        this.pipelineElementService.getDataSinks()
-            .subscribe(msg => {
-               this.addPipelineElementList(msg);
-            });
+        this.pipelineElementService.getDataSinks().subscribe(msg => {
+            this.addPipelineElementList(msg);
+        });
     }
 
     addPipelineElementList(msg) {

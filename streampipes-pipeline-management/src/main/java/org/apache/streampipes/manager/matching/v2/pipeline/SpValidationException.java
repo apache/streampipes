@@ -30,7 +30,8 @@ public class SpValidationException extends Exception {
     this.errorLog = errorLog;
   }
 
-  public SpValidationException() {}
+  public SpValidationException() {
+  }
 
   public List<MatchingResultMessage> getErrorLog() {
     return errorLog;

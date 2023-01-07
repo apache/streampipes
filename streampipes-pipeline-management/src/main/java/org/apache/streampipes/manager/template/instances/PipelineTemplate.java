@@ -25,6 +25,6 @@ import java.net.URISyntaxException;
 
 public interface PipelineTemplate {
 
-    public PipelineTemplateDescription declareModel() throws URISyntaxException, ElementNotFoundException;
+  PipelineTemplateDescription declareModel() throws URISyntaxException, ElementNotFoundException;
 
 }

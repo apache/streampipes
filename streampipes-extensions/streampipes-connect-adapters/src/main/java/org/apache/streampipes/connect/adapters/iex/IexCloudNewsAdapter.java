@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.connect.adapters.iex;
 
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.iex.model.IexNewsData;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -114,22 +114,22 @@ public class IexCloudNewsAdapter extends IexCloudAdapter {
     return GuessSchemaBuilder.create()
         .property(EpProperties.timestampProperty(Timestamp))
         .property(EpProperties.stringEp(Labels.from("headline", "Headline",
-            "The headline of the article"), Headline, SO.Text))
+            "The headline of the article"), Headline, SO.TEXT))
         .property(EpProperties.stringEp(Labels.from("source", "Source",
-            "The source of the article"), Source, SO.Text))
+            "The source of the article"), Source, SO.TEXT))
         .property(EpProperties.stringEp(Labels.from("url", "URL",
-            "The URL of the article"), Url, SO.ContentUrl))
+            "The URL of the article"), Url, SO.CONTENT_URL))
         .property(EpProperties.stringEp(Labels.from("summary", "Summary",
-            "A short summary of the article"), Summary, SO.Text))
+            "A short summary of the article"), Summary, SO.TEXT))
         .property(EpProperties.stringEp(Labels.from("related", "Related",
-            "A comma-separated list of related stock symbols"), Related, SO.Text))
+            "A comma-separated list of related stock symbols"), Related, SO.TEXT))
         .property(EpProperties.stringEp(Labels.from("image", "Image",
-            "Link to an image related to the news article"), Image, SO.Image))
+            "Link to an image related to the news article"), Image, SO.IMAGE))
         .property(EpProperties.stringEp(Labels.from("lang", "Language",
-            "The language the article is writte in"), Lang, SO.InLanguage))
+            "The language the article is writte in"), Lang, SO.IN_LANGUAGE))
         .property(EpProperties.stringEp(Labels.from("paywall", "Has Paywall",
                 "Indicates whether the article is behind a paywall"), HasPaywall,
-            SO.Text))
+            SO.TEXT))
         .build();
   }
 

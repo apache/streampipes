@@ -25,7 +25,6 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -39,12 +38,14 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+
 import org.lightcouch.DocumentConflictException;
 
 import java.util.ArrayList;
@@ -76,11 +77,11 @@ public class PipelineExecutor {
     List<DataSinkInvocation> secs = pipeline.getActions();
 
     List<SpDataSet> dataSets = pipeline
-            .getStreams()
-            .stream()
-            .filter(s -> s instanceof SpDataSet)
-            .map(s -> new SpDataSet((SpDataSet) s))
-            .collect(Collectors.toList());
+        .getStreams()
+        .stream()
+        .filter(s -> s instanceof SpDataSet)
+        .map(s -> new SpDataSet((SpDataSet) s))
+        .collect(Collectors.toList());
 
     List<NamedStreamPipesEntity> failedServices = new ArrayList<>();
 
@@ -99,21 +100,21 @@ public class PipelineExecutor {
 
     decryptSecrets(graphs);
 
-      graphs.forEach(g -> {
-        try {
-          g.setSelectedEndpointUrl(findSelectedEndpoint(g));
-          g.setCorrespondingPipeline(pipeline.getPipelineId());
-        } catch (NoServiceEndpointsAvailableException e) {
-          failedServices.add(g);
-        }
-      });
+    graphs.forEach(g -> {
+      try {
+        g.setSelectedEndpointUrl(findSelectedEndpoint(g));
+        g.setCorrespondingPipeline(pipeline.getPipelineId());
+      } catch (NoServiceEndpointsAvailableException e) {
+        failedServices.add(g);
+      }
+    });
 
     PipelineOperationStatus status;
     if (failedServices.size() == 0) {
 
       status = new GraphSubmitter(pipeline.getPipelineId(),
-              pipeline.getName(), graphs, dataSets)
-              .invokeGraphs();
+          pipeline.getName(), graphs, dataSets)
+          .invokeGraphs();
 
       encryptSecrets(graphs);
 
@@ -121,7 +122,9 @@ public class PipelineExecutor {
         storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
 
         PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
-                new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
+            new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(),
+                PipelineStatusMessageType.PIPELINE_STARTED.title(),
+                PipelineStatusMessageType.PIPELINE_STARTED.description()));
 
         if (storeStatus) {
           pipeline.setHealthStatus(PipelineHealthStatus.OK);
@@ -130,23 +133,23 @@ public class PipelineExecutor {
       }
     } else {
       List<PipelineElementStatus> pe = failedServices.stream().map(fs ->
-              new PipelineElementStatus(fs.getElementId(),
-                      fs.getName(),
-                      false,
-                      "No active supporting service found")).collect(Collectors.toList());
+          new PipelineElementStatus(fs.getElementId(),
+              fs.getName(),
+              false,
+              "No active supporting service found")).collect(Collectors.toList());
       status = new PipelineOperationStatus(pipeline.getPipelineId(),
-              pipeline.getName(),
-              "Could not start pipeline " + pipeline.getName() + ".",
-              pe);
+          pipeline.getName(),
+          "Could not start pipeline " + pipeline.getName() + ".",
+          pe);
     }
     return status;
   }
 
   private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
     return new ExtensionsServiceEndpointGenerator(
-            g.getAppId(),
-            ExtensionsServiceEndpointUtils.getPipelineElementType(g))
-            .getEndpointResourceUrl();
+        g.getAppId(),
+        ExtensionsServiceEndpointUtils.getPipelineElementType(g))
+        .getEndpointResourceUrl();
   }
 
   private String findSelectedEndpoint(SpDataSet ds) throws NoServiceEndpointsAvailableException {
@@ -155,12 +158,14 @@ public class PipelineExecutor {
       return getConnectMasterSourcesUrl();
     } else {
       return new ExtensionsServiceEndpointGenerator(appId, SpServiceUrlProvider.DATA_SET)
-              .getEndpointResourceUrl();
+          .getEndpointResourceUrl();
     }
   }
 
   private String getConnectMasterSourcesUrl() throws NoServiceEndpointsAvailableException {
-    List<String> connectMasterEndpoints = SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(DefaultSpServiceGroups.CORE, true, Collections.singletonList(DefaultSpServiceTags.CONNECT_MASTER.asString()));
+    List<String> connectMasterEndpoints = SpServiceDiscovery.getServiceDiscovery()
+        .getServiceEndpoints(DefaultSpServiceGroups.CORE, true,
+            Collections.singletonList(DefaultSpServiceTags.CONNECT_MASTER.asString()));
     if (connectMasterEndpoints.size() > 0) {
       return connectMasterEndpoints.get(0) + GlobalStreamPipesConstants.CONNECT_MASTER_SOURCES_ENDPOINT;
     } else {
@@ -170,11 +175,11 @@ public class PipelineExecutor {
 
   private void updateGroupIds(InvocableStreamPipesEntity entity) {
     entity.getInputStreams()
-            .stream()
-            .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
-            .map(is -> is.getEventGrounding().getTransportProtocol())
-            .map(KafkaTransportProtocol.class::cast)
-            .forEach(tp -> tp.setGroupId(Utils.filterSpecialChar(pipeline.getName()) + MD5.crypt(tp.getElementId())));
+        .stream()
+        .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
+        .map(is -> is.getEventGrounding().getTransportProtocol())
+        .map(KafkaTransportProtocol.class::cast)
+        .forEach(tp -> tp.setGroupId(Utils.filterSpecialChar(pipeline.getName()) + MD5.crypt(tp.getElementId())));
   }
 
   private void decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
@@ -190,15 +195,15 @@ public class PipelineExecutor {
     List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
 
     PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
-            pipeline.getName(),  graphs, dataSets)
-            .detachGraphs();
+        pipeline.getName(), graphs, dataSets)
+        .detachGraphs();
 
     if (status.isSuccess()) {
       PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
-              new PipelineStatusMessage(pipeline.getPipelineId(),
-                      System.currentTimeMillis(),
-                      PipelineStatusMessageType.PIPELINE_STOPPED.title(),
-                      PipelineStatusMessageType.PIPELINE_STOPPED.description()));
+          new PipelineStatusMessage(pipeline.getPipelineId(),
+              System.currentTimeMillis(),
+              PipelineStatusMessageType.PIPELINE_STOPPED.title(),
+              PipelineStatusMessageType.PIPELINE_STOPPED.description()));
 
     }
 

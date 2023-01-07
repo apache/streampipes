@@ -22,6 +22,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,7 @@ public class ExtensionsServiceEndpointGenerator {
 
   private List<String> getServiceEndpoints() {
     return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(DefaultSpServiceGroups.EXT, true,
-            Collections.singletonList(this.spServiceUrlProvider.getServiceTag(appId).asString()));
+        Collections.singletonList(this.spServiceUrlProvider.getServiceTag(appId).asString()));
   }
 
   private String selectService() throws NoServiceEndpointsAvailableException {
@@ -64,8 +65,10 @@ public class ExtensionsServiceEndpointGenerator {
     if (serviceEndpoints.size() > 0) {
       return getServiceEndpoints().get(0);
     } else {
-      LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId, this.spServiceUrlProvider.getServiceTag(appId).asString());
-      throw new NoServiceEndpointsAvailableException("Could not find any matching service endpoints - are all software components running?");
+      LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId,
+          this.spServiceUrlProvider.getServiceTag(appId).asString());
+      throw new NoServiceEndpointsAvailableException(
+          "Could not find any matching service endpoints - are all software components running?");
     }
   }
 }

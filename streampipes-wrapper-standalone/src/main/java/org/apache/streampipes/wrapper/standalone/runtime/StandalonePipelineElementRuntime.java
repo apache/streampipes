@@ -18,7 +18,7 @@
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -36,19 +36,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I>,
-        I extends InvocableStreamPipesEntity,
-        RP extends RuntimeParams<B, I, RC>,
-        RC extends RuntimeContext,
-        P extends PipelineElement<B, I>>
-        extends PipelineElementRuntime implements RawDataProcessor {
+public abstract class StandalonePipelineElementRuntime<T extends BindingParams<K>,
+    K extends InvocableStreamPipesEntity,
+    V extends RuntimeParams<T, K, X>,
+    X extends RuntimeContext,
+    PeT extends PipelineElement<T, K>>
+    extends PipelineElementRuntime implements RawDataProcessor {
 
-  protected RP params;
-  protected final P engine;
+  protected final PeT engine;
+  protected V params;
   protected SpMonitoringManager monitoringManager;
   protected String resourceId;
 
-  public StandalonePipelineElementRuntime(Supplier<P> supplier, RP runtimeParams) {
+  public StandalonePipelineElementRuntime(Supplier<PeT> supplier, V runtimeParams) {
     super();
     this.engine = supplier.get();
     this.params = runtimeParams;
@@ -56,7 +56,7 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
     this.resourceId = params.getBindingParams().getGraph().getElementId();
   }
 
-  public P getEngine() {
+  public PeT getEngine() {
     return engine;
   }
 
@@ -69,8 +69,8 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
     List<SpInputCollector> inputCollectors = new ArrayList<>();
     for (SpDataStream is : params.getBindingParams().getGraph().getInputStreams()) {
       inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding()
-                      .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0),
-              params.isSingletonEngine()));
+              .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0),
+          params.isSingletonEngine()));
     }
     return inputCollectors;
   }

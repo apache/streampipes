@@ -25,7 +25,11 @@ import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,7 +37,7 @@ public enum ExtensionsLogProvider {
 
   INSTANCE;
 
-  private final int MAX_ITEMS = 50;
+  private static final int MAX_ITEMS = 50;
 
   private final Map<String, List<SpLogEntry>> allLogInfos = new HashMap<>();
   private final Map<String, SpMetricsEntry> allMetricsInfos = new HashMap<>();
@@ -55,7 +59,7 @@ public enum ExtensionsLogProvider {
   }
 
   private <T> Map<String, T> getInfosForPipeline(Map<String, T> allElements,
-                                                       Pipeline pipeline) {
+                                                 Pipeline pipeline) {
     List<String> pipelineElementIds = collectPipelineElementIds(pipeline);
 
     return allElements.entrySet()
@@ -82,7 +86,7 @@ public enum ExtensionsLogProvider {
     if (allMetricsInfos.containsKey(resourceId)) {
       return allMetricsInfos.get(resourceId);
     } else {
-     return new SpMetricsEntry();
+      return new SpMetricsEntry();
     }
   }
 

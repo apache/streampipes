@@ -18,12 +18,12 @@
 
 .service-icon-passing {
     cursor: default;
-    color: #4CAF50;
+    color: #4caf50;
 }
 
 .service-icon-critical {
     cursor: default;
-    color: #F44336;
+    color: #f44336;
 }
 
 .show-configuration-icon {

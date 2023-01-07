@@ -26,13 +26,19 @@ import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';
 import { ProcessorTest } from '../model/ProcessorTest';
 
 export class ProcessingElementTestUtils {
-
     public static testElement(pipelineElementTest: ProcessorTest) {
-        const inputFile = 'pipelineElement/' + pipelineElementTest.dir + '/' + pipelineElementTest.inputFile;
-        const expectedResultFile = 'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
+        const inputFile =
+            'pipelineElement/' +
+            pipelineElementTest.dir +
+            '/' +
+            pipelineElementTest.inputFile;
+        const expectedResultFile =
+            'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
 
         let formatType;
-        pipelineElementTest.inputFile.endsWith('.csv') ? formatType = 'csv' : formatType = 'json_array';
+        pipelineElementTest.inputFile.endsWith('.csv')
+            ? (formatType = 'csv')
+            : (formatType = 'json_array');
 
         FileManagementUtils.addFile(inputFile);
 
@@ -41,16 +47,15 @@ export class ProcessingElementTestUtils {
         const adapterName = pipelineElementTest.name.toLowerCase();
 
         // Build adapter
-        const adapterInputBuilder = GenericAdapterBuilder
-          .create('File_Set')
-          .setName(adapterName)
-          .setTimestampProperty('timestamp')
-          .setFormat(formatType);
+        const adapterInputBuilder = GenericAdapterBuilder.create('File_Set')
+            .setName(adapterName)
+            .setTimestampProperty('timestamp')
+            .setFormat(formatType);
 
         if (formatType === 'csv') {
             adapterInputBuilder
-              .addFormatInput('input', 'delimiter', ';')
-              .addFormatInput('checkbox', 'header', 'check');
+                .addFormatInput('input', 'delimiter', ';')
+                .addFormatInput('checkbox', 'header', 'check');
         }
 
         const adapterInput = adapterInputBuilder.build();
@@ -59,21 +64,25 @@ export class ProcessingElementTestUtils {
 
         // Build Pipeline
         const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)
-          .addSource(adapterName)
-          .addSourceType('set')
-          .addProcessingElement(pipelineElementTest.processor)
-          .addSink(
-            PipelineElementBuilder.create('data_lake')
-              .addInput('input', 'db_measurement', dataLakeIndex)
-              .build())
-          .build();
+            .addSource(adapterName)
+            .addSourceType('set')
+            .addProcessingElement(pipelineElementTest.processor)
+            .addSink(
+                PipelineElementBuilder.create('data_lake')
+                    .addInput('input', 'db_measurement', dataLakeIndex)
+                    .build(),
+            )
+            .build();
 
         PipelineUtils.addPipeline(pipelineInput);
 
         // Wait till data is stored
         cy.wait(10000);
 
-        DataLakeUtils.checkResults(dataLakeIndex, 'cypress/fixtures/' + expectedResultFile, pipelineElementTest.processor.ignoreTimestamp);
-
+        DataLakeUtils.checkResults(
+            dataLakeIndex,
+            'cypress/fixtures/' + expectedResultFile,
+            pipelineElementTest.processor.ignoreTimestamp,
+        );
     }
 }

@@ -18,14 +18,19 @@
 
 package org.apache.streampipes.manager.template;
 
-import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 public class AdapterTemplateHandler extends AbstractTemplateHandler<AdapterDescription> {
 
   public AdapterTemplateHandler(PipelineElementTemplate template,
-                                        AdapterDescription adapterDescription,
-                                        boolean overwriteNameAndDescription) {
+                                AdapterDescription adapterDescription,
+                                boolean overwriteNameAndDescription) {
     super(template, adapterDescription, overwriteNameAndDescription);
   }
 
@@ -34,7 +39,8 @@ public class AdapterTemplateHandler extends AbstractTemplateHandler<AdapterDescr
     if (element instanceof SpecificAdapterStreamDescription || element instanceof SpecificAdapterSetDescription) {
       element.getConfig().forEach(config -> config.accept(visitor));
     } else if (element instanceof GenericAdapterSetDescription || element instanceof GenericAdapterStreamDescription) {
-      ((GenericAdapterDescription) element).getProtocolDescription().getConfig().forEach(config -> config.accept(visitor));
+      ((GenericAdapterDescription) element).getProtocolDescription().getConfig()
+          .forEach(config -> config.accept(visitor));
     }
   }
 

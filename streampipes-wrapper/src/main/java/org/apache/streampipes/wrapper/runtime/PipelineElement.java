@@ -22,8 +22,8 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.wrapper.params.binding.BindingParams;
 
-public interface PipelineElement<B extends BindingParams<I>, I extends
-        InvocableStreamPipesEntity> {
+public interface PipelineElement<K extends BindingParams<V>, V extends
+    InvocableStreamPipesEntity> {
 
   void onDetach() throws SpRuntimeException;
 

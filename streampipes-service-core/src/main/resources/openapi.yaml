@@ -1,0 +1,35 @@
+scannerClass: io.swagger.v3.oas.integration.GenericOpenApiScanner
+resourceClasses:
+  - org.apache.streampipes.ps.PipelineElementTemplateResource
+  - org.apache.streampipes.rest.impl.PipelineResource
+  - org.apache.streampipes.ps.DataLakeResourceV4
+prettyPrint: true
+cacheTTL: 0
+openAPI:
+  info:
+    version: '0.91.0'
+    title: Apache StreamPipes API
+    description: 'This is the documentation of the Apache StreamPipes developer API.'
+    contact:
+      email: dev@streampipes.apache.orgs
+    license:
+      name: Apache 2.0
+      url: http://www.apache.org/licenses/LICENSE-2.0.html
+  servers:
+    - url: /streampipes-backend
+  components:
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+    parameters:
+      usernameParam:
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+          minimum: 0
+        description: The username (currently the email address of the logged in user)
+  security:
+    - bearerAuth: [ ]

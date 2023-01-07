@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.ServiceAccountDetails;
 import org.apache.streampipes.user.management.model.UserAccountDetails;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,6 +33,7 @@ public class SpUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
     Principal user = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(s);
-    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) : new ServiceAccountDetails((ServiceAccount) user);
+    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
+        new ServiceAccountDetails((ServiceAccount) user);
   }
 }

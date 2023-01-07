@@ -18,45 +18,45 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import junit.framework.TestCase;
-
-import org.junit.Test;
-
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.vocabulary.Geo;
 
-public class TestDomainPropertyMatch extends TestCase {
+import org.junit.Test;
 
-	@Test
-	public void testPositiveDomainPropertyMatch() {
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
-		List<URI> offeredDomainProperty = buildDomainProperties(Geo.lat);
-		List<URI> requiredDomainProperty = buildDomainProperties(Geo.lat);
-		
-		List<MatchingResultMessage> resultMessage = new ArrayList<>();
-		
-		boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
-		assertTrue(matches);
-	}
-	
-	@Test
-	public void testNegativeDomainPropertyMatch() {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-		List<URI> offeredDomainProperty = buildDomainProperties(Geo.lat);
-		List<URI> requiredDomainProperty = buildDomainProperties(Geo.lng);
-		
-		List<MatchingResultMessage> resultMessage = new ArrayList<>();
-		
-		boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
-		assertFalse(matches);
-	}
-	
-	private List<URI> buildDomainProperties(String name) {
-		return Arrays.asList(URI.create(name));
-	}
+public class TestDomainPropertyMatch {
+
+  @Test
+  public void testPositiveDomainPropertyMatch() {
+
+    List<URI> offeredDomainProperty = buildDomainProperties(Geo.LAT);
+    List<URI> requiredDomainProperty = buildDomainProperties(Geo.LAT);
+
+    List<MatchingResultMessage> resultMessage = new ArrayList<>();
+
+    boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
+    assertTrue(matches);
+  }
+
+  @Test
+  public void testNegativeDomainPropertyMatch() {
+
+    List<URI> offeredDomainProperty = buildDomainProperties(Geo.LAT);
+    List<URI> requiredDomainProperty = buildDomainProperties(Geo.LNG);
+
+    List<MatchingResultMessage> resultMessage = new ArrayList<>();
+
+    boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
+    assertFalse(matches);
+  }
+
+  private List<URI> buildDomainProperties(String name) {
+    return List.of(URI.create(name));
+  }
 }

@@ -28,15 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BindingParams<I extends InvocableStreamPipesEntity> implements Serializable {
+public abstract class BindingParams<T extends InvocableStreamPipesEntity> implements Serializable {
   private static final long serialVersionUID = 1L;
-
-  protected I graph;
+  private final Map<String, Map<String, Object>> inEventTypes;
+  protected T graph;
   private List<InputStreamParams> inputStreamParams = new ArrayList<>();
 
-  private final Map<String, Map<String, Object>> inEventTypes;
-
-  BindingParams(I graph) {
+  BindingParams(T graph) {
     this.graph = graph;
     this.inEventTypes = new HashMap<>();
     buildInEventTypes();
@@ -45,19 +43,20 @@ public abstract class BindingParams<I extends InvocableStreamPipesEntity> implem
 
   private void buildInEventTypes() {
     graph.getInputStreams().forEach(is ->
-            inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName(), SchemaUtils
-                    .toRuntimeMap
-                            (is.getEventSchema().getEventProperties())));
+        inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName(),
+            SchemaUtils
+                .toRuntimeMap
+                    (is.getEventSchema().getEventProperties())));
   }
 
   private void buildInputStreamParams() {
     for (int i = 0; i < graph.getInputStreams().size(); i++) {
       inputStreamParams.add(new InputStreamParams(i, graph.getInputStreams().get(i),
-              getRenameRules()));
+          getRenameRules()));
     }
   }
 
-  public I getGraph() {
+  public T getGraph() {
     return graph;
   }
 

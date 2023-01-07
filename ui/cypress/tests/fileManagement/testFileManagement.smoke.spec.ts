@@ -18,7 +18,6 @@
 
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 
-
 describe('Test File Management', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();

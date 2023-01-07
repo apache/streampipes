@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.connect.adapters.ti;
 
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
@@ -131,11 +131,11 @@ public class TISensorTag extends SpecificDataStreamAdapter {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(TIMESTAMP))
         .property(doubleEp(Labels.from(AMBIENT_TEMP, "Ambient Temperature", ""),
-            AMBIENT_TEMP, SO.Number))
+            AMBIENT_TEMP, SO.NUMBER))
         .property(doubleEp(Labels.from(OBJECT_TEMP, "Object Temperature", ""),
-            OBJECT_TEMP, SO.Number))
+            OBJECT_TEMP, SO.NUMBER))
         .property(doubleEp(Labels.from(HUMIDITY, "Humidity", ""),
-            HUMIDITY, SO.Number))
+            HUMIDITY, SO.NUMBER))
         .property(doubleEp(Labels.from(ACCELERATION_X, "Acceleration X", ""),
             ACCELERATION_X, SPSensor.ACCELERATION_X))
         .property(doubleEp(Labels.from(ACCELERATION_Y, "Acceleration Y", ""),
@@ -143,23 +143,23 @@ public class TISensorTag extends SpecificDataStreamAdapter {
         .property(doubleEp(Labels.from(ACCELERATION_Z, "Acceleration Z", ""),
             ACCELERATION_Z, SPSensor.ACCELERATION_Z))
         .property(doubleEp(Labels.from(GYROSCOPE_X, "Gyroscope X", ""),
-            GYROSCOPE_X, SO.Number))
+            GYROSCOPE_X, SO.NUMBER))
         .property(doubleEp(Labels.from(GYROSCOPE_Y, "Gyroscope Y", ""),
-            GYROSCOPE_Y, SO.Number))
+            GYROSCOPE_Y, SO.NUMBER))
         .property(doubleEp(Labels.from(GYROSCOPE_Z, "Gyroscope Z", ""),
-            GYROSCOPE_Z, SO.Number))
+            GYROSCOPE_Z, SO.NUMBER))
         .property(doubleEp(Labels.from(MAGNETOMETER_X, "Magnetometer X", ""),
-            MAGNETOMETER_X, SO.Number))
+            MAGNETOMETER_X, SO.NUMBER))
         .property(doubleEp(Labels.from(MAGNETOMETER_Y, "Magnetometer Y", ""),
-            MAGNETOMETER_Y, SO.Number))
+            MAGNETOMETER_Y, SO.NUMBER))
         .property(doubleEp(Labels.from(MAGNETOMETER_Z, "Magnetometer Z", ""),
-            MAGNETOMETER_Z, SO.Number))
+            MAGNETOMETER_Z, SO.NUMBER))
         .property(doubleEp(Labels.from(LIGHT, "Light", ""),
-            LIGHT, SO.Number))
+            LIGHT, SO.NUMBER))
         .property(booleanEp(Labels.from(KEY_1, "Key 1", ""),
-            KEY_1, SO.Boolean))
+            KEY_1, SO.BOOLEAN))
         .property(booleanEp(Labels.from(KEY_2, "Key 2", ""),
-            KEY_2, SO.Boolean))
+            KEY_2, SO.BOOLEAN))
         .build();
   }
 

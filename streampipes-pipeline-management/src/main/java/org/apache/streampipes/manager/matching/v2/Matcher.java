@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import java.util.List;
-
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 
-public interface Matcher<L, R> {
+import java.util.List;
 
-	boolean match(L offer, R requirement, List<MatchingResultMessage> errorLog);
+public interface Matcher<T, K> {
+
+  boolean match(T offer, K requirement, List<MatchingResultMessage> errorLog);
 }

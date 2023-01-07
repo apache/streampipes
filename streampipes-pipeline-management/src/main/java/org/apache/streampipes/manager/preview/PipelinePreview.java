@@ -44,10 +44,10 @@ public class PipelinePreview {
     String previewId = generatePreviewId();
     pipeline.setActions(new ArrayList<>());
     List<NamedStreamPipesEntity> pipelineElements = new PipelineVerificationHandlerV2(pipeline)
-            .verifyAndBuildGraphs(true)
-            .stream()
-            .filter(pe -> !(pe instanceof SpDataSet))
-            .collect(Collectors.toList());
+        .verifyAndBuildGraphs(true)
+        .stream()
+        .filter(pe -> !(pe instanceof SpDataSet))
+        .collect(Collectors.toList());
 
     invokeGraphs(filter(pipelineElements));
     storeGraphs(previewId, pipelineElements);
@@ -64,8 +64,8 @@ public class PipelinePreview {
   public String getPipelineElementPreview(String previewId,
                                           String pipelineElementDomId) throws IllegalArgumentException {
     Optional<NamedStreamPipesEntity> graphOpt = ActivePipelinePreviews
-            .INSTANCE
-            .getInvocationGraphForPipelineELement(previewId, pipelineElementDomId);
+        .INSTANCE
+        .getInvocationGraphForPipelineELement(previewId, pipelineElementDomId);
 
     if (graphOpt.isPresent()) {
       NamedStreamPipesEntity graph = graphOpt.get();
@@ -83,9 +83,9 @@ public class PipelinePreview {
 
   private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
     return new ExtensionsServiceEndpointGenerator(
-            g.getAppId(),
-            ExtensionsServiceEndpointUtils.getPipelineElementType(g))
-            .getEndpointResourceUrl();
+        g.getAppId(),
+        ExtensionsServiceEndpointUtils.getPipelineElementType(g))
+        .getEndpointResourceUrl();
   }
 
   private void invokeGraphs(List<InvocableStreamPipesEntity> graphs) {
@@ -130,16 +130,16 @@ public class PipelinePreview {
 
   private List<String> collectDomIds(List<NamedStreamPipesEntity> graphs) {
     return graphs
-            .stream()
-            .map(NamedStreamPipesEntity::getDom)
-            .collect(Collectors.toList());
+        .stream()
+        .map(NamedStreamPipesEntity::getDom)
+        .collect(Collectors.toList());
   }
 
   private List<InvocableStreamPipesEntity> filter(List<NamedStreamPipesEntity> graphs) {
     List<InvocableStreamPipesEntity> dataProcessors = new ArrayList<>();
     graphs.stream()
-            .filter(g -> g instanceof DataProcessorInvocation)
-            .forEach(p -> dataProcessors.add((DataProcessorInvocation) p));
+        .filter(g -> g instanceof DataProcessorInvocation)
+        .forEach(p -> dataProcessors.add((DataProcessorInvocation) p));
 
     return dataProcessors;
   }

@@ -33,8 +33,8 @@ public class ProtocolMatch extends AbstractMatcher<TransportProtocol, TransportP
 
   @Override
   public boolean match(TransportProtocol offer, TransportProtocol requirement, List<MatchingResultMessage> errorLog) {
-    return MatchingUtils.nullCheck(offer, requirement) ||
-            canonicalName(requirement).equals(canonicalName(offer));
+    return MatchingUtils.nullCheck(offer, requirement)
+        || canonicalName(requirement).equals(canonicalName(offer));
   }
 
   private String canonicalName(TransportProtocol protocol) {

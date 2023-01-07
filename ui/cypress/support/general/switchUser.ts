@@ -19,22 +19,22 @@
 import { User } from '../model/User';
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      /**
-       * Logout and login as new user
-       * @example cy.switchUser();
-       */
-      switchUser: typeof switchUser;
+    namespace Cypress {
+        interface Chainable {
+            /**
+             * Logout and login as new user
+             * @example cy.switchUser();
+             */
+            switchUser: typeof switchUser;
+        }
     }
-  }
 }
 
 export const switchUser = (user: User) => {
-  cy.logout();
-  cy.visit('#/login');
-  cy.dataCy('login-email').type(user.email);
-  cy.dataCy('login-password').type(user.password);
-  cy.dataCy('login-button').click();
-  cy.wait(1000);
+    cy.logout();
+    cy.visit('#/login');
+    cy.dataCy('login-email').type(user.email);
+    cy.dataCy('login-password').type(user.password);
+    cy.dataCy('login-button').click();
+    cy.wait(1000);
 };

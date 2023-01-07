@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.wrapper.flink;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
@@ -35,6 +33,9 @@ import org.apache.streampipes.wrapper.flink.sink.JmsFlinkProducer;
 import org.apache.streampipes.wrapper.flink.sink.MqttFlinkProducer;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
+
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,15 +43,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingParams> extends
-        FlinkRuntime<EventProcessorRuntimeParams<B>, B,
+public abstract class FlinkDataProcessorRuntime<T extends EventProcessorBindingParams> extends
+    FlinkRuntime<EventProcessorRuntimeParams<T>, T,
         DataProcessorInvocation, EventProcessorRuntimeContext> {
 
   private static final long serialVersionUID = 1L;
   private static final Logger LOG = LoggerFactory.getLogger(FlinkDataProcessorRuntime.class);
 
 
-  public FlinkDataProcessorRuntime(B params,
+  public FlinkDataProcessorRuntime(T params,
                                    ConfigExtractor configExtractor,
                                    StreamPipesClient streamPipesClient) {
     super(params, configExtractor, streamPipesClient);
@@ -59,25 +60,25 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
   @SuppressWarnings("deprecation")
   public void appendExecutionConfig(DataStream<Event>... convertedStream) {
     DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream).flatMap
-            (new EventToMapConverter());
+        (new EventToMapConverter());
 
     EventGrounding outputGrounding = getOutputStream().getEventGrounding();
     SpDataFormatDefinition outputDataFormatDefinition =
-            getDataFormatDefinition(outputGrounding.getTransportFormats().get(0));
+        getDataFormatDefinition(outputGrounding.getTransportFormats().get(0));
 
     ByteArraySerializer serializer =
-            new ByteArraySerializer(outputDataFormatDefinition);
+        new ByteArraySerializer(outputDataFormatDefinition);
     if (isKafkaProtocol(getOutputStream())) {
       applicationLogic
-              .addSink(new FlinkKafkaProducer<>(getTopic(getOutputStream()),
-                      serializer,
-                      getProducerProperties((KafkaTransportProtocol) outputGrounding.getTransportProtocol())));
+          .addSink(new FlinkKafkaProducer<>(getTopic(getOutputStream()),
+              serializer,
+              getProducerProperties((KafkaTransportProtocol) outputGrounding.getTransportProtocol())));
     } else if (isJmsProtocol(getOutputStream())) {
       applicationLogic
-              .addSink(new JmsFlinkProducer(getJmsProtocol(getOutputStream()), serializer));
+          .addSink(new JmsFlinkProducer(getJmsProtocol(getOutputStream()), serializer));
     } else if (isMqttProtocol(getOutputStream())) {
       applicationLogic
-              .addSink(new MqttFlinkProducer(getMqttProtocol(getOutputStream()), serializer));
+          .addSink(new MqttFlinkProducer(getMqttProtocol(getOutputStream()), serializer));
     }
 
   }
@@ -100,9 +101,10 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
   }
 
   @Override
-  protected EventProcessorRuntimeParams<B> makeRuntimeParams(ConfigExtractor configExtractor,
+  protected EventProcessorRuntimeParams<T> makeRuntimeParams(ConfigExtractor configExtractor,
                                                              StreamPipesClient streamPipesClient) {
-    LOG.warn("The config extractor and StreamPipes Client can currently not be accessed by a deployed Flink program due to non-serializable classes.");
+    LOG.warn("The config extractor and StreamPipes Client can currently not be accessed by"
+        + " a deployed Flink program due to non-serializable classes.");
     return new EventProcessorRuntimeParams<>(bindingParams, false, null, null);
   }
 }

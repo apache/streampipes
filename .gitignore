@@ -136,7 +136,6 @@ bundle.js.map
 
 .java-version
 
-package-lock.json
 logs/
 
 # Explicit includes

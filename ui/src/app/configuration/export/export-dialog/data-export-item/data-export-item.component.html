@@ -17,10 +17,12 @@
   -->
 
 <div fxLayout="column" fxFlex="100">
-    <h5>{{sectionTitle}}</h5>
-    <mat-checkbox *ngFor="let exportItem of exportItems; let i = index"
-                  [checked]="exportItem.selected"
-                  (change)="changeItem($event, i)">
-        {{exportItem.label}}
+    <h5>{{ sectionTitle }}</h5>
+    <mat-checkbox
+        *ngFor="let exportItem of exportItems; let i = index"
+        [checked]="exportItem.selected"
+        (change)="changeItem($event, i)"
+    >
+        {{ exportItem.label }}
     </mat-checkbox>
 </div>

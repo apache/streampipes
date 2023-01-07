@@ -1,0 +1,4 @@
+{
+  "*.*": "prettier --check",
+  "src/**/*.ts": ["ng-lint-staged lint --"]
+}

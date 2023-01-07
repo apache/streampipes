@@ -26,20 +26,20 @@ import java.util.stream.Collectors;
 
 public class PipelineGraphHelpers {
 
-    public static List<SpDataStream> findStreams(PipelineGraph pipelineGraph) {
-        return find(pipelineGraph, SpDataStream.class);
-    }
+  public static List<SpDataStream> findStreams(PipelineGraph pipelineGraph) {
+    return find(pipelineGraph, SpDataStream.class);
+  }
 
-    public static List<InvocableStreamPipesEntity> findInvocableElements(PipelineGraph pipelineGraph) {
-        return find(pipelineGraph, InvocableStreamPipesEntity.class);
-    }
+  public static List<InvocableStreamPipesEntity> findInvocableElements(PipelineGraph pipelineGraph) {
+    return find(pipelineGraph, InvocableStreamPipesEntity.class);
+  }
 
-    private static <T> List<T> find(PipelineGraph pipelineGraph, Class<T> clazz) {
-        return pipelineGraph
-                .vertexSet()
-                .stream()
-                .filter(clazz::isInstance)
-                .map(clazz::cast)
-                .collect(Collectors.toList());
-    }
+  private static <T> List<T> find(PipelineGraph pipelineGraph, Class<T> clazz) {
+    return pipelineGraph
+        .vertexSet()
+        .stream()
+        .filter(clazz::isInstance)
+        .map(clazz::cast)
+        .collect(Collectors.toList());
+  }
 }

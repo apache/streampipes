@@ -21,70 +21,87 @@ import { DataDownloadDialogUtils } from '../../support/utils/DataDownloadDialogU
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 
-
 describe('Test live data download dialog', () => {
-  before('Setup Test', () => {
-    cy.initStreamPipesTest();
-    PrepareTestDataUtils.loadDataIntoDataLake('dataDownloadDialog/input.json', 'json_array');
-    DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
-    DataLakeUtils.saveDataExplorerWidgetConfiguration();
-  });
+    before('Setup Test', () => {
+        cy.initStreamPipesTest();
+        PrepareTestDataUtils.loadDataIntoDataLake(
+            'dataDownloadDialog/input.json',
+            'json_array',
+        );
+        DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
+        DataLakeUtils.saveDataExplorerWidgetConfiguration();
+    });
 
-  beforeEach('Setup Test', () => {
-    cy.removeDownloadDirectory();
-    cy.login();
-  });
+    beforeEach('Setup Test', () => {
+        cy.removeDownloadDirectory();
+        cy.login();
+    });
 
-  const dataViewName = 'TestView';
+    const dataViewName = 'TestView';
 
-  const formatTestsExportConfig: ExportConfig = {
-    formatExportConfig: undefined,
-    dataExportConfig: {
-      dataRangeConfiguration: 'all',
-      missingValueBehaviour: 'empty',
-      measurement: 'prepared_data'
-    }
-  };
-
-  it('Test csv export with semicolon', () => {
-    formatTestsExportConfig.formatExportConfig = {
-      exportFormat: 'csv',
-      delimiter: 'semicolon'
-    };
-    const resultFile = 'testCsvSemicolon.csv';
-
-    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
-  });
-
-  it('Test csv export with comma', () => {
-    formatTestsExportConfig.formatExportConfig = {
-      exportFormat: 'csv',
-      delimiter: 'comma'
-    };
-    const resultFile = 'testCsvComma.csv';
-
-    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
-  });
-
-  it('Test json export', () => {
-    formatTestsExportConfig.formatExportConfig = {
-      exportFormat: 'json'
+    const formatTestsExportConfig: ExportConfig = {
+        formatExportConfig: undefined,
+        dataExportConfig: {
+            dataRangeConfiguration: 'all',
+            missingValueBehaviour: 'empty',
+            measurement: 'prepared_data',
+        },
     };
 
-    const resultFile = 'testJson.json';
-    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
-  });
+    it('Test csv export with semicolon', () => {
+        formatTestsExportConfig.formatExportConfig = {
+            exportFormat: 'csv',
+            delimiter: 'semicolon',
+        };
+        const resultFile = 'testCsvSemicolon.csv';
 
-  it('Test csv export with semicolon and remove missing values', () => {
-    formatTestsExportConfig.formatExportConfig = {
-      exportFormat: 'csv',
-      delimiter: 'semicolon'
-    };
-    formatTestsExportConfig.dataExportConfig.missingValueBehaviour = 'ignore';
-    const resultFile = 'testRemoveLinesWithMissingValues.csv';
+        DataDownloadDialogUtils.testDownload(
+            formatTestsExportConfig,
+            resultFile,
+            dataViewName,
+        );
+    });
 
-    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
-  });
+    it('Test csv export with comma', () => {
+        formatTestsExportConfig.formatExportConfig = {
+            exportFormat: 'csv',
+            delimiter: 'comma',
+        };
+        const resultFile = 'testCsvComma.csv';
 
+        DataDownloadDialogUtils.testDownload(
+            formatTestsExportConfig,
+            resultFile,
+            dataViewName,
+        );
+    });
 
+    it('Test json export', () => {
+        formatTestsExportConfig.formatExportConfig = {
+            exportFormat: 'json',
+        };
+
+        const resultFile = 'testJson.json';
+        DataDownloadDialogUtils.testDownload(
+            formatTestsExportConfig,
+            resultFile,
+            dataViewName,
+        );
+    });
+
+    it('Test csv export with semicolon and remove missing values', () => {
+        formatTestsExportConfig.formatExportConfig = {
+            exportFormat: 'csv',
+            delimiter: 'semicolon',
+        };
+        formatTestsExportConfig.dataExportConfig.missingValueBehaviour =
+            'ignore';
+        const resultFile = 'testRemoveLinesWithMissingValues.csv';
+
+        DataDownloadDialogUtils.testDownload(
+            formatTestsExportConfig,
+            resultFile,
+            dataViewName,
+        );
+    });
 });

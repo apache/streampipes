@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.CoordinateList;
 import org.locationtech.jts.geom.CoordinateXYM;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -25,7 +26,6 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 
 public class SpTrajectoryBuilder {
-
   private int numberSubPoints;
   private String description;
   private CoordinateList coordinateList;
@@ -52,15 +52,16 @@ public class SpTrajectoryBuilder {
     return description;
   }
 
+
   /**
-   * Adds a Point to the trajectory object and also handle removes old point if {link #numberSubPoints}
-   * threshold is exceeded.
+   * Adds a Point to the trajectory object and also handle removes old point
+   * if {link #numberSubPoints} threshold is exceeded.
    *
    * @param point {@link org.locationtech.jts.geom.Point}
-   * @param m     stores an extra integer to the sub-point of a trajectory
-   * {@link org.locationtech.jts.geom.CoordinateXYM#M}
+   * @param m     stores an extra double value to the subpoint of a
+   *              trajectory {@link org.locationtech.jts.geom.CoordinateXYM#M}
    */
-  public void addPointToTrajectory(Point point, Integer m) {
+  public void addPointToTrajectory(Point point, Double m) {
     coordinateList.add(createSingleTrajectoryCoordinate(point, m));
     if (coordinateList.size() > numberSubPoints) {
       removeOldestPoint();
@@ -69,11 +70,10 @@ public class SpTrajectoryBuilder {
 
 
   /**
-   * returns a JTS LineString geometry from the trajectory object. LineString only stores the point geometry
-   * without M value.
-   * The lineString is oriented to the trajectory direction.
-   * This means: the newest point is always the last point and has the
-   * highest subpoint index. The First point is the oldest point with the lowest index [0]
+   * returns a JTS LineString geometry from the trajectory object. LineString only stores the point
+   * geometry without M value. The lineString is oriented to the trajectory direction. This means: the
+   * newest point is always the last point and has the highest subpoint index. The First point is the
+   * oldest point with the lowest index [0]
    *
    * @param factory a Geometry factory for creating the lineString with the same precision and CRS and should be
    *                the factory of the input point geometry
@@ -88,9 +88,9 @@ public class SpTrajectoryBuilder {
     } else {
       geom = factory.createLineString();
     }
-
     return geom;
   }
+
 
   /**
    * removes the oldest point (Index 0) from the CoordinateList object.
@@ -100,19 +100,18 @@ public class SpTrajectoryBuilder {
   }
 
   /**
-   * Creates an Coordinate object with X, Y and M Value to be stored later directly in the trajectory object.
-   * Should be used always used if adding a subpoint to the trajectory list
+   * Creates a Coordinate object with X, Y and M Value to be stored later directly in the trajectory
+   * object. Should be used always used if adding a subpoint to the trajectory list
    *
    * @param geom Point geometry, which coordinates will be added to the trajectory list
-   * @param m    Integer M value, which will be used to store as extra parameter  in the trajectory list
+   * @param m    Double M value, which will be used to store as extra parameter  in the trajectory list
+   *             for additional calculations
    * @return CoordinateXYM coordinate object
    */
-  private CoordinateXYM createSingleTrajectoryCoordinate(Point geom, Integer m) {
+  private Coordinate createSingleTrajectoryCoordinate(Point geom, Double m) {
     CoordinateXYM coordinate = new CoordinateXYM((geom.getX()), geom.getY(), m);
     return coordinate;
   }
-
-
 }
 
 

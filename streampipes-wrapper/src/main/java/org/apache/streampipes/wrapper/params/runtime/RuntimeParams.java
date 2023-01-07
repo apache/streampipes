@@ -19,7 +19,7 @@
 package org.apache.streampipes.wrapper.params.runtime;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
@@ -35,11 +35,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class RuntimeParams<B extends BindingParams<I>, I extends
-        InvocableStreamPipesEntity, RC extends RuntimeContext> implements Serializable {
+public abstract class RuntimeParams<V extends BindingParams<W>, W extends
+    InvocableStreamPipesEntity, X extends RuntimeContext> implements Serializable {
 
-  protected final B bindingParams;
-  protected RC runtimeContext;
+  protected final V bindingParams;
+  protected X runtimeContext;
   protected ConfigExtractor configExtractor;
   protected StreamPipesClient streamPipesClient;
 
@@ -47,7 +47,7 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
 
   private Boolean singletonEngine;
 
-  public RuntimeParams(B bindingParams,
+  public RuntimeParams(V bindingParams,
                        Boolean singletonEngine,
                        ConfigExtractor configExtractor,
                        StreamPipesClient streamPipesClient) {
@@ -59,32 +59,32 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
     this.runtimeContext = makeRuntimeContext();
   }
 
-  public B getBindingParams() {
+  public V getBindingParams() {
     return bindingParams;
   }
 
   private void buildEventInfoMap() {
     for (int i = 0; i < bindingParams.getInputStreamParams().size(); i++) {
       String sourceInfo = bindingParams.getInputStreamParams().get(i).getSourceInfo()
-              .getSourceId();
+          .getSourceId();
       eventInfoMap.put(sourceInfo, i);
     }
   }
 
   public Event makeEvent(Map<String, Object> mapEvent, String sourceId) {
     return EventFactory.fromMap(mapEvent, getSourceInfo(getIndex(sourceId)), getSchemaInfo
-            (getIndex(sourceId)));
+        (getIndex(sourceId)));
 
   }
 
   public List<SourceInfo> getSourceInfo() {
     return bindingParams.getInputStreamParams().size() == 1 ? Collections.singletonList
-            (getSourceInfo(0)) : Arrays.asList(getSourceInfo(0), getSourceInfo(1));
+        (getSourceInfo(0)) : Arrays.asList(getSourceInfo(0), getSourceInfo(1));
   }
 
   public List<SchemaInfo> getSchemaInfo() {
     return bindingParams.getInputStreamParams().size() == 1 ? Collections.singletonList
-            (getSchemaInfo(0)) : Arrays.asList(getSchemaInfo(0), getSchemaInfo(1));
+        (getSchemaInfo(0)) : Arrays.asList(getSchemaInfo(0), getSchemaInfo(1));
   }
 
   public SourceInfo getSourceInfo(Integer index) {
@@ -99,7 +99,7 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
     return eventInfoMap.get(sourceId);
   }
 
-  public RC getRuntimeContext() {
+  public X getRuntimeContext() {
     return runtimeContext;
   }
 
@@ -107,6 +107,6 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
     return singletonEngine;
   }
 
-  protected abstract RC makeRuntimeContext();
+  protected abstract X makeRuntimeContext();
 
 }

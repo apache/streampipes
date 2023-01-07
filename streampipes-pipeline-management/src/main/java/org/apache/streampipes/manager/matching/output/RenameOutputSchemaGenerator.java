@@ -52,7 +52,7 @@ public class RenameOutputSchemaGenerator extends OutputSchemaGenerator<KeepOutpu
     properties.addAll(stream1.getEventSchema().getEventProperties());
     if (outputStrategy.isKeepBoth()) {
       properties.addAll(new PropertyDuplicateRemover(properties,
-              stream2.getEventSchema().getEventProperties()).rename());
+          stream2.getEventSchema().getEventProperties()).rename());
     }
 
     resultSchema.setEventProperties(properties);

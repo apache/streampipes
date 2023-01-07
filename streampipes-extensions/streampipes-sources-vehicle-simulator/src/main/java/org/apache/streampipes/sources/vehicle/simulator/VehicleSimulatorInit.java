@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.sources.vehicle.simulator;
 
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sources.vehicle.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.vehicle.simulator.vehicle.streams.VehicleStream;
 
-public class VehicleSimulatorInit extends StandaloneModelSubmitter {
+public class VehicleSimulatorInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new VehicleSimulatorInit().init();

@@ -18,47 +18,109 @@
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'messaging'">
     <div fxLayout="column" class="page-container-padding">
-        <sp-split-section title="Kafka Settings" subtitle="Manage Kafka settings for pipeline communication">
-            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner">
-                <form (ngSubmit)="updateMessagingSettings()" class="form-width" fxFlex="100" fxLayout="column"
-                    *ngIf="loadingCompleted">
+        <sp-split-section
+            title="Kafka Settings"
+            subtitle="Manage Kafka settings for pipeline communication"
+        >
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="start start"
+                class="page-container-padding-inner"
+            >
+                <form
+                    (ngSubmit)="updateMessagingSettings()"
+                    class="form-width"
+                    fxFlex="100"
+                    fxLayout="column"
+                    *ngIf="loadingCompleted"
+                >
                     <mat-form-field class="form-field" fxFlex="100">
-                        <input matInput [(ngModel)]="messagingSettings.batchSize" [placeholder]="'Batch Size'"
-                            type="text" [ngModelOptions]="{standalone: true}">
+                        <input
+                            matInput
+                            [(ngModel)]="messagingSettings.batchSize"
+                            [placeholder]="'Batch Size'"
+                            type="text"
+                            [ngModelOptions]="{ standalone: true }"
+                        />
                     </mat-form-field>
                     <mat-form-field class="form-field" fxFlex="100">
-                        <input matInput [(ngModel)]="messagingSettings.messageMaxBytes"
-                            [placeholder]="'Message Max Bytes'" type="text" [ngModelOptions]="{standalone: true}">
+                        <input
+                            matInput
+                            [(ngModel)]="messagingSettings.messageMaxBytes"
+                            [placeholder]="'Message Max Bytes'"
+                            type="text"
+                            [ngModelOptions]="{ standalone: true }"
+                        />
                     </mat-form-field>
                     <mat-form-field class="form-field" fxFlex="100">
-                        <input matInput [(ngModel)]="messagingSettings.acks" [placeholder]="'Acks'" type="text"
-                            [ngModelOptions]="{standalone: true}">
+                        <input
+                            matInput
+                            [(ngModel)]="messagingSettings.acks"
+                            [placeholder]="'Acks'"
+                            type="text"
+                            [ngModelOptions]="{ standalone: true }"
+                        />
                     </mat-form-field>
                     <mat-form-field class="form-field" fxFlex="100">
-                        <input matInput [(ngModel)]="messagingSettings.lingerMs" [placeholder]="'Linger MS'" type="text"
-                            [ngModelOptions]="{standalone: true}">
+                        <input
+                            matInput
+                            [(ngModel)]="messagingSettings.lingerMs"
+                            [placeholder]="'Linger MS'"
+                            type="text"
+                            [ngModelOptions]="{ standalone: true }"
+                        />
                     </mat-form-field>
                     <div fxLayoutAlign="start center" class="mt-10">
-                        <button mat-raised-button color="accent" type="submit"
-                            class="md-raised md-primary submit-button">Update
+                        <button
+                            mat-raised-button
+                            color="accent"
+                            type="submit"
+                            class="md-raised md-primary submit-button"
+                        >
+                            Update
                         </button>
                     </div>
-
                 </form>
             </div>
         </sp-split-section>
         <mat-divider></mat-divider>
 
-        <sp-split-section title="Message Formats" subtitle="Manage the priority of message formats used">
-            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner">
-                <div cdkDropList class="data-format-list" (cdkDropListDropped)="drop($event)" *ngIf="loadingCompleted">
-                    <div class="data-format-box" *ngFor="let format of messagingSettings.prioritizedFormats" cdkDrag>
-                        {{format}}
+        <sp-split-section
+            title="Message Formats"
+            subtitle="Manage the priority of message formats used"
+        >
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="start start"
+                class="page-container-padding-inner"
+            >
+                <div
+                    cdkDropList
+                    class="data-format-list"
+                    (cdkDropListDropped)="drop($event)"
+                    *ngIf="loadingCompleted"
+                >
+                    <div
+                        class="data-format-box"
+                        *ngFor="
+                            let format of messagingSettings.prioritizedFormats
+                        "
+                        cdkDrag
+                    >
+                        {{ format }}
                     </div>
                 </div>
                 <div fxLayoutAlign="start center" class="mt-10">
-                    <button mat-raised-button color="accent" type="submit" class="md-raised md-primary submit-button"
-                        (click)="updateMessagingSettings()">Update
+                    <button
+                        mat-raised-button
+                        color="accent"
+                        type="submit"
+                        class="md-raised md-primary submit-button"
+                        (click)="updateMessagingSettings()"
+                    >
+                        Update
                     </button>
                 </div>
             </div>
@@ -66,18 +128,41 @@
 
         <mat-divider></mat-divider>
 
-        <sp-split-section title="Protocols" subtitle="Manage the priority of protocols used">
-            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner">
-                <div cdkDropList class="data-format-list" (cdkDropListDropped)="dropProtocol($event)"
-                    *ngIf="loadingCompleted">
-                    <div class="data-format-box" *ngFor="let protocol of messagingSettings.prioritizedProtocols"
-                        cdkDrag>
-                        {{protocol}}
+        <sp-split-section
+            title="Protocols"
+            subtitle="Manage the priority of protocols used"
+        >
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="start start"
+                class="page-container-padding-inner"
+            >
+                <div
+                    cdkDropList
+                    class="data-format-list"
+                    (cdkDropListDropped)="dropProtocol($event)"
+                    *ngIf="loadingCompleted"
+                >
+                    <div
+                        class="data-format-box"
+                        *ngFor="
+                            let protocol of messagingSettings.prioritizedProtocols
+                        "
+                        cdkDrag
+                    >
+                        {{ protocol }}
                     </div>
                 </div>
                 <div fxLayoutAlign="start center" class="mt-10">
-                    <button mat-raised-button color="accent" type="submit" class="md-raised md-primary submit-button"
-                        (click)="updateMessagingSettings()">Update
+                    <button
+                        mat-raised-button
+                        color="accent"
+                        type="submit"
+                        class="md-raised md-primary submit-button"
+                        (click)="updateMessagingSettings()"
+                    >
+                        Update
                     </button>
                 </div>
             </div>

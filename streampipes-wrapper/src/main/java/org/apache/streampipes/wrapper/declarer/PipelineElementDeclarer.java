@@ -19,22 +19,22 @@
 package org.apache.streampipes.wrapper.declarer;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.wrapper.params.binding.BindingParams;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
-import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 
-public abstract class PipelineElementDeclarer<B extends BindingParams, EPR extends
-        PipelineElementRuntime, I
-        extends InvocableStreamPipesEntity, EX extends AbstractParameterExtractor<I>> {
+public abstract class PipelineElementDeclarer<T extends BindingParams, V extends
+    PipelineElementRuntime, W
+    extends InvocableStreamPipesEntity, X extends AbstractParameterExtractor<W>> {
 
-  protected EPR epRuntime;
+  protected V epRuntime;
   protected String elementId;
 
-  public Response invokeEPRuntime(I graph, String serviceId) {
+  public Response invokeEPRuntime(W graph, String serviceId) {
 
     try {
       elementId = graph.getElementId();
@@ -61,12 +61,12 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
     }
   }
 
-  protected abstract EX getExtractor(I graph);
+  protected abstract X getExtractor(W graph);
 
-  public abstract EPR getRuntime(I graph,
-                                 EX extractor,
-                                 ConfigExtractor configExtractor,
-                                 StreamPipesClient streamPipesClient);
+  public abstract V getRuntime(W graph,
+                               X extractor,
+                               ConfigExtractor configExtractor,
+                               StreamPipesClient streamPipesClient);
 
   private ConfigExtractor makeConfigExtractor(String serviceId) {
     return ConfigExtractor.from(serviceId);

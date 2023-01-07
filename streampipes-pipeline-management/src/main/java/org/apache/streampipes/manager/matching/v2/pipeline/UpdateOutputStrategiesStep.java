@@ -40,12 +40,12 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
     List<SpDataStream> inputStreams = target.getInputStreams();
     if (target instanceof DataProcessorInvocation) {
       ((DataProcessorInvocation) target)
-        .getOutputStrategies()
-        .forEach(strategy -> {
-          if (strategy instanceof CustomOutputStrategy) {
-            handleCustomOutputStrategy(inputStreams, (CustomOutputStrategy) strategy, validationInfos);
-          }
-        });
+          .getOutputStrategies()
+          .forEach(strategy -> {
+            if (strategy instanceof CustomOutputStrategy) {
+              handleCustomOutputStrategy(inputStreams, (CustomOutputStrategy) strategy, validationInfos);
+            }
+          });
     }
   }
 
@@ -66,14 +66,14 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
                                                  CustomOutputStrategy strategy) {
     if (inputStreams.size() == 1 || (inputStreams.size() > 1 && !strategy.isOutputRight())) {
       return new PropertySelectorGenerator(
-              inputStreams.get(0).getEventSchema(),
-              false
+          inputStreams.get(0).getEventSchema(),
+          false
       );
     } else {
       return new PropertySelectorGenerator(
-              inputStreams.get(0).getEventSchema(),
-              inputStreams.get(1).getEventSchema(),
-              false
+          inputStreams.get(0).getEventSchema(),
+          inputStreams.get(1).getEventSchema(),
+          false
       );
     }
   }
@@ -84,8 +84,8 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
 
   private List<String> getValidSelectedPropertyKeys(CustomOutputStrategy strategy) {
     return strategy
-            .getSelectedPropertyKeys()
-            .stream()
-            .filter(p -> strategy.getAvailablePropertyKeys().contains(p)).collect(Collectors.toList());
+        .getSelectedPropertyKeys()
+        .stream()
+        .filter(p -> strategy.getAvailablePropertyKeys().contains(p)).collect(Collectors.toList());
   }
 }

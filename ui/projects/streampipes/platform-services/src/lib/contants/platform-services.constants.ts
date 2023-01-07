@@ -16,7 +16,4 @@
  *
  */
 
-export class PlatformServicesConstants {
-
-}
-
+export class PlatformServicesConstants {}

@@ -19,14 +19,20 @@
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'security'">
     <div fxLayout="column" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="User Accounts" subtitle="Add and edit user accounts">
+            <sp-split-section
+                title="User Accounts"
+                subtitle="Add and edit user accounts"
+            >
                 <div class="subsection-title">Existing user accounts</div>
                 <sp-security-user-config></sp-security-user-config>
             </sp-split-section>
         </div>
         <mat-divider></mat-divider>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="Service Accounts" subtitle="Add and edit service accounts">
+            <sp-split-section
+                title="Service Accounts"
+                subtitle="Add and edit service accounts"
+            >
                 <div class="subsection-title">Existing service accounts</div>
                 <sp-security-service-config></sp-security-service-config>
             </sp-split-section>
@@ -40,7 +46,10 @@
         </div>
         <mat-divider></mat-divider>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section title="Authentication" subtitle="Auth & token settings">
+            <sp-split-section
+                title="Authentication"
+                subtitle="Auth & token settings"
+            >
                 <div class="subsection-title">JWT Signature</div>
                 <sp-authentication-configuration></sp-authentication-configuration>
             </sp-split-section>

@@ -25,25 +25,24 @@ import { SpAppRoutes } from './apps.routes';
 
 @Component({
     templateUrl: './app-overview.component.html',
-    styleUrls: ['./app-overview.component.css']
+    styleUrls: ['./app-overview.component.css'],
 })
 export class AppOverviewComponent implements OnInit {
-
     apps: App[] = [];
 
-    constructor(private router: Router,
-                private breadcrumbService: SpBreadcrumbService) {
-
-    }
+    constructor(
+        private router: Router,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
     ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpAppRoutes.BASE));
+        this.breadcrumbService.updateBreadcrumb(
+            this.breadcrumbService.getRootLink(SpAppRoutes.BASE),
+        );
         this.apps = AvailableAppsService.apps;
     }
 
     selectApp(appLink: string) {
         this.router.navigate(['apps', appLink]);
     }
-
-
 }

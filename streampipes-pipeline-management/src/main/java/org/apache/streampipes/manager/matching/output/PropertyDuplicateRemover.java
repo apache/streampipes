@@ -45,7 +45,8 @@ public class PropertyDuplicateRemover {
       while (isAlreadyDefined(existingProperties, newProperty)) {
         if (newProperty instanceof EventPropertyPrimitive) {
           EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
-          newProperty = new EventPropertyPrimitive(primitive.getRuntimeType(), primitive.getRuntimeName() + i, "", primitive.getDomainProperties());
+          newProperty = new EventPropertyPrimitive(primitive.getRuntimeType(), primitive.getRuntimeName() + i, "",
+              primitive.getDomainProperties());
           newProperty.setElementId(primitive.getElementId() + i);
         }
         if (newProperty instanceof EventPropertyNested) {
@@ -57,7 +58,9 @@ public class PropertyDuplicateRemover {
           for (EventProperty np : nested.getEventProperties()) {
             if (np instanceof EventPropertyPrimitive) {
               EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
-              EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), "", thisPrimitive.getDomainProperties());
+              EventProperty newNested =
+                  new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), "",
+                      thisPrimitive.getDomainProperties());
               newNested.setElementId(thisPrimitive.getElementId());
               nestedProperties.add(newNested);
             }

@@ -33,61 +33,61 @@ import java.util.Set;
 
 public class UserRegistrationInstallationStep extends InstallationStep {
 
-	private final String adminEmail;
-	private final String adminPassword;
-	private final String initialServiceAccountName;
-	private final String initialServiceAccountSecret;
-	private final String initialAdminUserSid;
-	private final Set<Role> roles;
-	
-	public UserRegistrationInstallationStep(String adminEmail,
-																					String adminPassword,
-																					String initialServiceAccountName,
-																					String initialServiceAccountSecret,
-																					String initialAdminUserSid) {
-		this.adminEmail = adminEmail;
-		this.adminPassword = adminPassword;
-		this.initialServiceAccountName = initialServiceAccountName;
-		this.initialServiceAccountSecret = initialServiceAccountSecret;
-		this.initialAdminUserSid = initialAdminUserSid;
-		roles = new HashSet<>();
-		roles.add(Role.ROLE_ADMIN);
-	}
+  private final String adminEmail;
+  private final String adminPassword;
+  private final String initialServiceAccountName;
+  private final String initialServiceAccountSecret;
+  private final String initialAdminUserSid;
+  private final Set<Role> roles;
 
-	@Override
-	public void install() {
+  public UserRegistrationInstallationStep(String adminEmail,
+                                          String adminPassword,
+                                          String initialServiceAccountName,
+                                          String initialServiceAccountSecret,
+                                          String initialAdminUserSid) {
+    this.adminEmail = adminEmail;
+    this.adminPassword = adminPassword;
+    this.initialServiceAccountName = initialServiceAccountName;
+    this.initialServiceAccountSecret = initialServiceAccountSecret;
+    this.initialAdminUserSid = initialAdminUserSid;
+    roles = new HashSet<>();
+    roles.add(Role.ROLE_ADMIN);
+  }
 
-		try {
-			addAdminUser();
-			addServiceUser();
+  @Override
+  public void install() {
 
-			logSuccess(getTitle());
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			logFailure("Could not encrypt password");
-		}
-	}
+    try {
+      addAdminUser();
+      addServiceUser();
 
-	private void addAdminUser() throws NoSuchAlgorithmException, InvalidKeySpecException {
-		String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
-		UserAccount user = UserAccount.from(adminEmail, encryptedPassword, roles);
-		user.setPrincipalId(initialAdminUserSid);
-		storePrincipal(user);
-	}
+      logSuccess(getTitle());
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+      logFailure("Could not encrypt password");
+    }
+  }
 
-	private void addServiceUser() {
-		ServiceAccount serviceAccount = ServiceAccount.from(initialServiceAccountName, initialServiceAccountSecret, roles);
-		serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(initialServiceAccountSecret));
-		serviceAccount.setSecretEncrypted(true);
-		storePrincipal(serviceAccount);
-	}
+  private void addAdminUser() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
+    UserAccount user = UserAccount.from(adminEmail, encryptedPassword, roles);
+    user.setPrincipalId(initialAdminUserSid);
+    storePrincipal(user);
+  }
 
-	private void storePrincipal(Principal principal) {
-		StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(principal);
-	}
+  private void addServiceUser() {
+    ServiceAccount serviceAccount = ServiceAccount.from(initialServiceAccountName, initialServiceAccountSecret, roles);
+    serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(initialServiceAccountSecret));
+    serviceAccount.setSecretEncrypted(true);
+    storePrincipal(serviceAccount);
+  }
 
-	@Override
-	public String getTitle() {
-		return "Creating admin user...";
-	}
+  private void storePrincipal(Principal principal) {
+    StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(principal);
+  }
+
+  @Override
+  public String getTitle() {
+    return "Creating admin user...";
+  }
 
 }

@@ -18,7 +18,7 @@
 package org.apache.streampipes.processors.textmining.flink;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.processors.textmining.flink.config.ConfigKeys;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;

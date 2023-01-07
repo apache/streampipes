@@ -18,14 +18,15 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import com.google.gson.JsonSyntaxException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+
+import com.google.gson.JsonSyntaxException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class HttpRequestBuilder {
   private final String endpointUrl;
   private String pipelineId;
 
-  private final static Logger LOG = LoggerFactory.getLogger(HttpRequestBuilder.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HttpRequestBuilder.class);
 
   public HttpRequestBuilder(NamedStreamPipesEntity payload,
                             String endpointUrl,
@@ -52,11 +53,11 @@ public class HttpRequestBuilder {
     try {
       String jsonDocument = toJson();
       Response httpResp =
-              Request.Post(endpointUrl)
-                      .addHeader("Authorization", AuthTokenUtils.getAuthToken(this.pipelineId))
-                      .bodyString(jsonDocument, ContentType.APPLICATION_JSON)
-                      .connectTimeout(10000)
-                      .execute();
+          Request.Post(endpointUrl)
+              .addHeader("Authorization", AuthTokenUtils.getAuthToken(this.pipelineId))
+              .bodyString(jsonDocument, ContentType.APPLICATION_JSON)
+              .connectTimeout(10000)
+              .execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error("Could not perform invocation request", e);
@@ -67,8 +68,8 @@ public class HttpRequestBuilder {
   public PipelineElementStatus detach() {
     try {
       Response httpResp = Request.Delete(endpointUrl)
-              .addHeader("Authorization", AuthTokenUtils.getAuthToken(this.pipelineId))
-              .connectTimeout(10000).execute();
+          .addHeader("Authorization", AuthTokenUtils.getAuthToken(this.pipelineId))
+          .connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error("Could not stop pipeline {}", endpointUrl, e);
@@ -79,8 +80,8 @@ public class HttpRequestBuilder {
   private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
     org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer
-            .getObjectMapper()
-            .readValue(resp, org.apache.streampipes.model.Response.class);
+        .getObjectMapper()
+        .readValue(resp, org.apache.streampipes.model.Response.class);
     return convert(streamPipesResp);
   }
 
@@ -89,7 +90,8 @@ public class HttpRequestBuilder {
   }
 
   private PipelineElementStatus convert(org.apache.streampipes.model.Response response) {
-    return new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(), response.getOptionalMessage());
+    return new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(),
+        response.getOptionalMessage());
   }
 
 

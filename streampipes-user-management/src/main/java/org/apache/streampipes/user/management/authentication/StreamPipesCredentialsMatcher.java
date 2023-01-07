@@ -19,6 +19,7 @@
 package org.apache.streampipes.user.management.authentication;
 
 import org.apache.streampipes.user.management.util.PasswordUtil;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.NoSuchAlgorithmException;

@@ -20,8 +20,8 @@ package org.apache.streampipes.processors.aggregation.flink.processor.aggregatio
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -156,7 +156,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
       String propertyPrefix = StringUtils.substringAfterLast(aggregate, ":");
       String runtimeName = propertyPrefix + "_" + operationKey.toLowerCase();
       EventPropertyPrimitive primitive = PrimitivePropertyBuilder.create(Datatypes.Double, runtimeName)
-          .domainProperty(SO.Number)
+          .domainProperty(SO.NUMBER)
           .scope(PropertyScope.MEASUREMENT_PROPERTY)
           .build();
       eventSchema.addEventProperty(primitive);

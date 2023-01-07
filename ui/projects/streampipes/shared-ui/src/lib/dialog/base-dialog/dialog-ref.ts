@@ -23,36 +23,37 @@ import { BaseDialogComponentUnion } from './base-dialog.model';
 import { OverlayConfig, OverlaySizeConfig } from '@angular/cdk/overlay';
 
 export class DialogRef<T> {
-  private _componentInstance: ComponentRef<T>;
-  private _afterClosed: Subject<any> = new Subject<any>();
+    private _componentInstance: ComponentRef<T>;
+    private _afterClosed: Subject<any> = new Subject<any>();
 
-  constructor(private overlayRef: OverlayRef,
-              private dialogContainerRef: ComponentRef<BaseDialogComponentUnion>) {
-  }
+    constructor(
+        private overlayRef: OverlayRef,
+        private dialogContainerRef: ComponentRef<BaseDialogComponentUnion>,
+    ) {}
 
-  get componentInstance() {
-    return this._componentInstance;
-  }
+    get componentInstance() {
+        return this._componentInstance;
+    }
 
-  set componentInstance(c: ComponentRef<T>) {
-    this._componentInstance = c;
-  }
+    set componentInstance(c: ComponentRef<T>) {
+        this._componentInstance = c;
+    }
 
-  public close(data?: any) {
-    this.dialogContainerRef.instance.closeDialog();
-    this._afterClosed.next(data);
-    this._afterClosed.complete();
-  }
+    public close(data?: any) {
+        this.dialogContainerRef.instance.closeDialog();
+        this._afterClosed.next(data);
+        this._afterClosed.complete();
+    }
 
-  public afterClosed(): Observable<any> {
-    return this._afterClosed.asObservable();
-  }
+    public afterClosed(): Observable<any> {
+        return this._afterClosed.asObservable();
+    }
 
-  public changeDialogSize(sizeConfig: OverlaySizeConfig) {
-    this.overlayRef.updateSize(sizeConfig);
-  }
+    public changeDialogSize(sizeConfig: OverlaySizeConfig) {
+        this.overlayRef.updateSize(sizeConfig);
+    }
 
-  public currentConfig(): OverlayConfig {
-    return this.overlayRef.getConfig();
-  }
+    public currentConfig(): OverlayConfig {
+        return this.overlayRef.getConfig();
+    }
 }

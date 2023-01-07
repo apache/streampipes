@@ -17,16 +17,21 @@
  */
 package org.apache.streampipes.client.http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.*;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.util.EntityUtils;
 import org.apache.streampipes.client.http.header.Headers;
 import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.util.EntityUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,17 +44,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class HttpRequest<SO, DSO, DT> {
+public abstract class HttpRequest<K, V, T> {
 
   private final StreamPipesClientConfig clientConfig;
   private final ClientConnectionUrlResolver connectionConfig;
   private final StreamPipesApiPath apiPath;
   private final ObjectMapper objectMapper;
-  private final Serializer<SO, DSO, DT> serializer;
+  private final Serializer<K, V, T> serializer;
 
   public HttpRequest(StreamPipesClientConfig clientConfig,
                      StreamPipesApiPath apiPath,
-                     Serializer<SO, DSO, DT> serializer) {
+                     Serializer<K, V, T> serializer) {
     this.clientConfig = clientConfig;
     this.connectionConfig = clientConfig.getConnectionConfig();
     this.objectMapper = clientConfig.getSerializer();
@@ -87,7 +92,7 @@ public abstract class HttpRequest<SO, DSO, DT> {
     return baseUrl;
   }
 
-  public DT executeRequest() {
+  public T executeRequest() {
     Request request = makeRequest(serializer);
     try {
       HttpResponse response = request.execute().returnResponse();
@@ -96,13 +101,15 @@ public abstract class HttpRequest<SO, DSO, DT> {
         return afterRequest(serializer, response.getEntity());
       } else {
         if (status.getStatusCode() == 401) {
-          throw new SpRuntimeException(" 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?");
+          throw new SpRuntimeException(
+              " 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?");
         } else {
           throw new SpRuntimeException(status.getStatusCode() + " - " + status.getReasonPhrase());
         }
       }
     } catch (IOException | SpRuntimeException e) {
-      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available", e);
+      throw new SpRuntimeException(
+          "Could not connect to the StreamPipes API - please check that StreamPipes is available", e);
     }
   }
 
@@ -119,13 +126,14 @@ public abstract class HttpRequest<SO, DSO, DT> {
     try {
       URLConnection connection = url.openConnection();
 
-      connection.setRequestProperty("Authorization", connectionConfig.getCredentials().makeHeaders().get(0).getElements()[0].getName());
+      connection.setRequestProperty("Authorization",
+          connectionConfig.getCredentials().makeHeaders().get(0).getElements()[0].getName());
 
       try {
         ReadableByteChannel readableByteChannel = Channels.newChannel(connection.getInputStream());
         FileOutputStream fileOutputStream = new FileOutputStream(fileLocation);
         fileOutputStream.getChannel()
-                .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+            .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -143,8 +151,8 @@ public abstract class HttpRequest<SO, DSO, DT> {
     return EntityUtils.toByteArray(entity);
   }
 
-  protected abstract Request makeRequest(Serializer<SO, DSO, DT> serializer);
+  protected abstract Request makeRequest(Serializer<K, V, T> serializer);
 
-  protected abstract DT afterRequest(Serializer<SO, DSO, DT> serializer, HttpEntity entity) throws IOException;
+  protected abstract T afterRequest(Serializer<K, V, T> serializer, HttpEntity entity) throws IOException;
 
 }

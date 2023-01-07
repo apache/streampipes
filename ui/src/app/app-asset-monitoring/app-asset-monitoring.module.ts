@@ -43,41 +43,34 @@ import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    CustomMaterialModule,
-    MatGridListModule,
-    MatInputModule,
-    MatFormFieldModule,
-    FormsModule,
-    ColorPickerModule,
-    DashboardModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: AppAssetMonitoringComponent
-      }
-    ]),
-    SharedUiModule
-  ],
-  declarations: [
-    AppAssetMonitoringComponent,
-    CreateAssetComponent,
-    ViewAssetComponent,
-    AddLinkDialogComponent,
-    AddPipelineDialogComponent,
-    SaveDashboardDialogComponent,
-    AssetDashboardOverviewComponent
-  ],
-  providers: [
-    RestService,
-    ShapeService,
-    ElementIconText
-  ],
-  exports: [
-    AppAssetMonitoringComponent
-  ]
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+        CustomMaterialModule,
+        MatGridListModule,
+        MatInputModule,
+        MatFormFieldModule,
+        FormsModule,
+        ColorPickerModule,
+        DashboardModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: AppAssetMonitoringComponent,
+            },
+        ]),
+        SharedUiModule,
+    ],
+    declarations: [
+        AppAssetMonitoringComponent,
+        CreateAssetComponent,
+        ViewAssetComponent,
+        AddLinkDialogComponent,
+        AddPipelineDialogComponent,
+        SaveDashboardDialogComponent,
+        AssetDashboardOverviewComponent,
+    ],
+    providers: [RestService, ShapeService, ElementIconText],
+    exports: [AppAssetMonitoringComponent],
 })
-export class AppAssetMonitoringModule {
-}
+export class AppAssetMonitoringModule {}

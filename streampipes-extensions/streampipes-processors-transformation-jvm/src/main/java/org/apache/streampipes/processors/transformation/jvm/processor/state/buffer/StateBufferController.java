@@ -69,7 +69,7 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
         )
         .outputStrategy(OutputStrategies.fixed(
             EpProperties.timestampProperty(TIMESTAMP),
-            EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.Number),
+            EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.NUMBER),
             EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)
         ))
         .build();

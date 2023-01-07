@@ -18,10 +18,7 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "codemirror"
-            ],
+            "allowedCommonJsDependencies": ["lodash", "codemirror"],
             "assets": [
               "src/assets",
               {
@@ -30,9 +27,7 @@
                 "output": "assets/img"
               }
             ],
-            "styles": [
-              "src/scss/main.scss"
-            ],
+            "styles": ["src/scss/main.scss"],
             "scripts": [
               "node_modules/plotly.js/dist/plotly.min.js",
               "node_modules/jquery/dist/jquery.min.js",
@@ -96,19 +91,14 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/assets"
-            ],
+            "assets": ["src/assets"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -187,9 +177,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ],
+    "schematicCollections": ["@angular-eslint/schematics"],
     "analytics": false
   }
 }
