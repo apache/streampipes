@@ -16,40 +16,70 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" *ngIf="functions.length > 0" style="margin:1px;">
-  <table fxFlex="100" mat-table [dataSource]="dataSource" style="width: 100%;" matSort>
-    <ng-container matColumnDef="name">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef> Name</th>
-      <td mat-cell *matCellDef="let spFunction">
-        <h4 style="margin-bottom:0px;">{{spFunction.id}}:{{spFunction.version}}</h4>
-      </td>
-    </ng-container>
+<div
+    fxFlex="100"
+    fxLayout="column"
+    *ngIf="functions.length > 0"
+    style="margin: 1px"
+>
+    <table
+        fxFlex="100"
+        mat-table
+        [dataSource]="dataSource"
+        style="width: 100%"
+        matSort
+    >
+        <ng-container matColumnDef="name">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let spFunction">
+                <h4 style="margin-bottom: 0px">
+                    {{ spFunction.id }}:{{ spFunction.version }}
+                </h4>
+            </td>
+        </ng-container>
 
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>
-        <span fxLayoutAlign="end center">Action</span>
-      </th>
-      <td mat-cell *matCellDef="let spFunction">
-        <div fxLayout="row">
-                <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="end center">
-                    <button color="accent" mat-button mat-icon-button matTooltip="Show function details"
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>
+                <span fxLayoutAlign="end center">Action</span>
+            </th>
+            <td mat-cell *matCellDef="let spFunction">
+                <div fxLayout="row">
+                    <span
+                        fxFlex
+                        fxFlexOrder="1"
+                        fxLayout="row"
+                        fxLayoutAlign="end center"
+                    >
+                        <button
+                            color="accent"
+                            mat-button
+                            mat-icon-button
+                            matTooltip="Show function details"
                             matTooltipPosition="above"
-                            (click)="showFunctionDetails(spFunction.id)"><i
-                        class="material-icons">search</i>
-                    </button>
-                </span>
-        </div>
-      </td>
-    </ng-container>
+                            (click)="showFunctionDetails(spFunction.id)"
+                        >
+                            <i class="material-icons">search</i>
+                        </button>
+                    </span>
+                </div>
+            </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-  </table>
-  <div fxFlex="100" fxLayoutAlign="end end">
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="20"></mat-paginator>
-  </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <div fxFlex="100" fxLayoutAlign="end end">
+        <mat-paginator
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            [pageSize]="20"
+        ></mat-paginator>
+    </div>
 </div>
-<div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="functions.length === 0">
-  <h5>(no functions available)</h5>
+<div
+    fxFlex="100"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    *ngIf="functions.length === 0"
+>
+    <h5>(no functions available)</h5>
 </div>

@@ -36,7 +36,6 @@ src/app/login
 src/app/notifications
 src/app/NS
 src/app/pipeline-details
-src/app/pipelines
 src/app/profile
 src/app/services
 src/scss

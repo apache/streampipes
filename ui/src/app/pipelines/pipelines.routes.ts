@@ -16,10 +16,11 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpPipelineRoutes {
-
-  static BASE: SpBreadcrumbItem = {label: 'Pipelines & Functions', link: ['pipelines']};
-
+    static BASE: SpBreadcrumbItem = {
+        label: 'Pipelines & Functions',
+        link: ['pipelines'],
+    };
 }

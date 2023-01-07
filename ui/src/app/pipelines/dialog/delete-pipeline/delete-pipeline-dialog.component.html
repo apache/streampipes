@@ -20,34 +20,68 @@
     <div class="sp-dialog-content p-15">
         <div *ngIf="!isInProgress" fxLayout="column">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b><h4>Do you really want to delete pipeline {{pipeline.name}}?</h4></b>
-                <b><h4 *ngIf="pipeline.running">This pipeline is still running.</h4></b>
+                <b
+                    ><h4>
+                        Do you really want to delete pipeline
+                        {{ pipeline.name }}?
+                    </h4></b
+                >
+                <b
+                    ><h4 *ngIf="pipeline.running">
+                        This pipeline is still running.
+                    </h4></b
+                >
                 <b><h5>This operation cannot be undone.</h5></b>
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <button mat-button mat-raised-button color="accent" *ngIf="!pipeline.running"
-                        (click)="deletePipeline()">Delete
-                    pipeline
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    *ngIf="!pipeline.running"
+                    (click)="deletePipeline()"
+                >
+                    Delete pipeline
                 </button>
-                <button mat-button mat-raised-button color="accent" *ngIf="pipeline.running"
-                        (click)="stopAndDeletePipeline()"
-                        data-cy="sp-pipeline-stop-and-delete">
-                    Stop and
-                    delete pipeline
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    *ngIf="pipeline.running"
+                    (click)="stopAndDeletePipeline()"
+                    data-cy="sp-pipeline-stop-and-delete"
+                >
+                    Stop and delete pipeline
                 </button>
             </div>
         </div>
-        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="isInProgress">
+        <div
+            fxFlex="100"
+            fxLayoutAlign="center center"
+            fxLayout="column"
+            *ngIf="isInProgress"
+        >
             <div fxLayout="row" fxLayoutAlign="space-around">
-                <mat-spinner [diameter]="50" [mode]="'indeterminate'" color="accent"></mat-spinner>
+                <mat-spinner
+                    [diameter]="50"
+                    [mode]="'indeterminate'"
+                    color="accent"
+                ></mat-spinner>
             </div>
-            <b><h4>{{currentStatus}}</h4></b>
+            <b
+                ><h4>{{ currentStatus }}</h4></b
+            >
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close(false)">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close(false)"
+        >
             Close
         </button>
     </div>
