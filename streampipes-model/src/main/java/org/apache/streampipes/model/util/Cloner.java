@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.util;
 
-import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -52,13 +51,6 @@ import org.apache.streampipes.model.output.PropertyRenameRule;
 import org.apache.streampipes.model.output.TransformOperation;
 import org.apache.streampipes.model.output.TransformOutputStrategy;
 import org.apache.streampipes.model.output.UserDefinedOutputStrategy;
-import org.apache.streampipes.model.quality.Accuracy;
-import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
-import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
-import org.apache.streampipes.model.quality.MeasurementCapability;
-import org.apache.streampipes.model.quality.MeasurementObject;
-import org.apache.streampipes.model.quality.Precision;
-import org.apache.streampipes.model.quality.Resolution;
 import org.apache.streampipes.model.schema.Enumeration;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
@@ -212,21 +204,6 @@ public class Cloner {
     }
   }
 
-  public EventPropertyQualityRequirement qualityreq(EventPropertyQualityRequirement o) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public EventPropertyQualityDefinition qualitydef(EventPropertyQualityDefinition o) {
-    if (o instanceof Accuracy) {
-      return new Accuracy((Accuracy) o);
-    } else if (o instanceof Precision) {
-      return new Precision((Precision) o);
-    } else {
-      return new Resolution((Resolution) o);
-    }
-  }
-
   public List<SpDataStream> seq(List<SpDataStream> spDataStreams) {
     return spDataStreams.stream().map(this::mapSequence).collect(Collectors.toList());
   }
@@ -277,16 +254,6 @@ public class Cloner {
     return transformOperations.stream().map(o -> new TransformOperation(o)).collect(Collectors.toList());
   }
 
-  public List<EventPropertyQualityRequirement> reqEpQualitities(
-      List<EventPropertyQualityRequirement> requiresEventPropertyQualities) {
-    return requiresEventPropertyQualities.stream().map(o -> new Cloner().qualityreq(o)).collect(Collectors.toList());
-  }
-
-  public List<EventPropertyQualityDefinition> provEpQualities(
-      List<EventPropertyQualityDefinition> eventPropertyQualities) {
-    return eventPropertyQualities.stream().map(o -> new Cloner().qualitydef(o)).collect(Collectors.toList());
-  }
-
   public List<Option> options(List<Option> options) {
     return options.stream().map(o -> new Option(o)).collect(Collectors.toList());
   }
@@ -302,19 +269,6 @@ public class Cloner {
 
   public List<String> ecTypes(List<String> ecTypes) {
     return ecTypes;
-  }
-
-  public List<MeasurementCapability> mc(
-      List<MeasurementCapability> measurementCapability) {
-    return measurementCapability.stream().map(m -> new MeasurementCapability(m)).collect(Collectors.toList());
-  }
-
-  public List<MeasurementObject> mo(List<MeasurementObject> measurementObject) {
-    return measurementObject.stream().map(m -> new MeasurementObject(m)).collect(Collectors.toList());
-  }
-
-  public List<ApplicationLink> al(List<ApplicationLink> applicationLinks) {
-    return applicationLinks.stream().map(m -> new ApplicationLink(m)).collect(Collectors.toList());
   }
 
   public TopicDefinition topicDefinition(TopicDefinition topicDefinition) {

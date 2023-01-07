@@ -17,8 +17,6 @@
  */
 
 package org.apache.streampipes.model.schema;
-
-import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.util.Cloner;
 
 import java.net.URI;
@@ -56,14 +54,6 @@ public class EventPropertyPrimitive extends EventProperty {
                                 String measurementUnit, List<URI> subClassOf) {
     super(runtimeName, subClassOf);
     this.runtimeType = runtimeType;
-    //this.measurementUnit = measurementUnit;
-  }
-
-  public EventPropertyPrimitive(String propertyType, String propertyName,
-                                String measurementUnit, List<URI> subClassOf,
-                                List<EventPropertyQualityDefinition> qualities) {
-    super(propertyName, subClassOf, qualities);
-    this.runtimeType = propertyType;
     //this.measurementUnit = measurementUnit;
   }
 

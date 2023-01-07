@@ -46,9 +46,6 @@ import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.output.OutputStrategy;
-import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
-import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
-import org.apache.streampipes.model.quality.Frequency;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.ValueSpecification;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
@@ -101,11 +98,6 @@ public class GsonSerializer {
     builder.registerTypeAdapter(Message.class, new JsonLdSerializer<Message>());
     builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
     builder.registerTypeAdapter(URI.class, new UriSerializer());
-    builder.registerTypeAdapter(Frequency.class, new JsonLdSerializer<Frequency>());
-    builder.registerTypeAdapter(EventPropertyQualityDefinition.class,
-        new JsonLdSerializer<EventPropertyQualityDefinition>());
-    builder.registerTypeAdapter(EventStreamQualityDefinition.class,
-        new JsonLdSerializer<EventStreamQualityDefinition>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
     builder.registerTypeAdapter(TransformationRuleDescription.class,
         new JsonLdSerializer<TransformationRuleDescription>());

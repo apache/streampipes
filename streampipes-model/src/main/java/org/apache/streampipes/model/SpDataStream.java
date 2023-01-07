@@ -20,19 +20,12 @@ package org.apache.streampipes.model;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
-import org.apache.streampipes.model.quality.EventStreamQualityRequirement;
-import org.apache.streampipes.model.quality.MeasurementCapability;
-import org.apache.streampipes.model.quality.MeasurementObject;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.util.Cloner;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @JsonSubTypes({
     @JsonSubTypes.Type(SpDataStream.class),
@@ -44,27 +37,18 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   private static final String prefix = "urn:streampipes.apache.org:eventstream:";
 
-  protected transient List<EventStreamQualityDefinition> hasEventStreamQualities;
-
-  protected transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
-
   protected EventGrounding eventGrounding;
 
   protected EventSchema eventSchema;
 
-  protected List<MeasurementCapability> measurementCapability;
-
-  protected List<MeasurementObject> measurementObject;
   protected List<String> category;
   private int index;
   private String correspondingAdapterId;
 
   public SpDataStream(String uri, String name, String description, String iconUrl,
-                      List<EventStreamQualityDefinition> hasEventStreamQualities,
                       EventGrounding eventGrounding,
                       EventSchema eventSchema) {
     super(uri, name, description, iconUrl);
-    this.hasEventStreamQualities = hasEventStreamQualities;
     this.eventGrounding = eventGrounding;
     this.eventSchema = eventSchema;
   }
@@ -90,40 +74,6 @@ public class SpDataStream extends NamedStreamPipesEntity {
     if (other.getEventSchema() != null) {
       this.eventSchema = new EventSchema(other.getEventSchema());
     }
-    if (other.getHasEventStreamQualities() != null) {
-      this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(EventStreamQualityDefinition::new)
-          .collect(Collectors.toCollection(ArrayList::new));
-    }
-    if (other.getRequiresEventStreamQualities() != null) {
-      this.requiresEventStreamQualities =
-          other.getRequiresEventStreamQualities().stream().map(EventStreamQualityRequirement::new)
-              .collect(Collectors.toCollection(ArrayList::new));
-    }
-    if (other.getMeasurementCapability() != null) {
-      this.measurementCapability = new Cloner().mc(other.getMeasurementCapability());
-    }
-    if (other.getMeasurementObject() != null) {
-      this.measurementObject = new Cloner().mo(other.getMeasurementObject());
-    }
-  }
-
-  public List<EventStreamQualityDefinition> getHasEventStreamQualities() {
-    return hasEventStreamQualities;
-  }
-
-  public void setHasEventStreamQualities(
-      List<EventStreamQualityDefinition> hasEventStreamQualities) {
-    this.hasEventStreamQualities = hasEventStreamQualities;
-  }
-
-
-  public List<EventStreamQualityRequirement> getRequiresEventStreamQualities() {
-    return requiresEventStreamQualities;
-  }
-
-  public void setRequiresEventStreamQualities(
-      List<EventStreamQualityRequirement> requiresEventStreamQualities) {
-    this.requiresEventStreamQualities = requiresEventStreamQualities;
   }
 
   public EventSchema getEventSchema() {
@@ -140,23 +90,6 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   public void setEventGrounding(EventGrounding eventGrounding) {
     this.eventGrounding = eventGrounding;
-  }
-
-  public List<MeasurementCapability> getMeasurementCapability() {
-    return measurementCapability;
-  }
-
-  public void setMeasurementCapability(
-      List<MeasurementCapability> measurementCapability) {
-    this.measurementCapability = measurementCapability;
-  }
-
-  public List<MeasurementObject> getMeasurementObject() {
-    return measurementObject;
-  }
-
-  public void setMeasurementObject(List<MeasurementObject> measurementObject) {
-    this.measurementObject = measurementObject;
   }
 
   public List<String> getCategory() {

@@ -19,9 +19,6 @@
 package org.apache.streampipes.model.base;
 
 
-import org.apache.streampipes.model.ApplicationLink;
-import org.apache.streampipes.model.util.Cloner;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
@@ -47,13 +44,11 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   private boolean includesLocales;
   private List<String> includedAssets;
   private List<String> includedLocales;
-  private List<ApplicationLink> applicationLinks;
   private boolean internallyManaged;
 
 
   public NamedStreamPipesEntity() {
     super();
-    this.applicationLinks = new ArrayList<>();
     this.includedAssets = new ArrayList<>();
     this.includedLocales = new ArrayList<>();
   }
@@ -73,7 +68,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.elementId = elementId;
     this.name = name;
     this.description = description;
-    this.applicationLinks = new ArrayList<>();
     this.includedAssets = new ArrayList<>();
     this.includedLocales = new ArrayList<>();
   }
@@ -88,9 +82,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.dom = other.getDom();
     this.internallyManaged = other.isInternallyManaged();
     this.connectedTo = other.getConnectedTo();
-    if (other.getApplicationLinks() != null) {
-      this.applicationLinks = new Cloner().al(other.getApplicationLinks());
-    }
     this.appId = other.getAppId();
     this.includesAssets = other.isIncludesAssets();
     this.includesLocales = other.isIncludesLocales();
@@ -150,14 +141,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setConnectedTo(List<String> connectedTo) {
     this.connectedTo = connectedTo;
-  }
-
-  public List<ApplicationLink> getApplicationLinks() {
-    return applicationLinks;
-  }
-
-  public void setApplicationLinks(List<ApplicationLink> applicationLinks) {
-    this.applicationLinks = applicationLinks;
   }
 
   public String getAppId() {
