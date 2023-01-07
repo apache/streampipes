@@ -16,190 +16,209 @@
  *
  */
 
-
-
-
 .p-0 {
-  padding: 0;
+    padding: 0;
 }
 
 .p-5 {
-  padding: 5px;
+    padding: 5px;
 }
 
 .p-10 {
-  padding: 10px;
+    padding: 10px;
 }
 
 .pl-5 {
-  padding-left: 5px;
+    padding-left: 5px;
 }
 
 .pl-10 {
-  padding-left: 10px;
+    padding-left: 10px;
 }
 
 .pr-5 {
-  padding-right: 5px;
+    padding-right: 5px;
 }
 
 .pr-10 {
-  padding-right: 10px;
+    padding-right: 10px;
 }
 
-
 .ml-0 {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 .mr-0 {
-  margin-right: 0;
+    margin-right: 0;
 }
 
 .m-5 {
-  margin: 5px;
+    margin: 5px;
 }
 
 .mt-0 {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 .mt-10 {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .mt-20 {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .mt-30 {
-  margin-top: 30px;
+    margin-top: 30px;
 }
 
 .mb-10 {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .mr-10 {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .mr-5 {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .ml-5 {
-  margin-left: 5px;
+    margin-left: 5px;
 }
 
 .mr-15 {
-  margin-right: 15px;
+    margin-right: 15px;
 }
 
 .w-50-px {
-  width: 50px;
+    width: 50px;
 }
 
 .w-100-px {
-  width: 100px;
+    width: 100px;
 }
 
 .w-140-px {
-  width: 140px;
+    width: 140px;
 }
 
 .w-100 {
-  width: 100%;
+    width: 100%;
 }
 
 .h-100 {
-  height: 100%;
+    height: 100%;
 }
 
 .page-container-nav {
-  line-height:24px;
-  height: 50px;
-  border-bottom:1px solid var(--color-bg-3);
+    line-height: 24px;
+    height: 50px;
+    border-bottom: 1px solid var(--color-bg-3);
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 .text-left {
-  text-align: left;
+    text-align: left;
 }
 
-
-h4, .h4 {
-  font-size: 18px;
+h4,
+.h4 {
+    font-size: 18px;
 }
 
-h3, .h3 {
-  font-size: 24px;
+h3,
+.h3 {
+    font-size: 24px;
 }
 
-h1, .h1, h2, .h2, h3, .h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
-h4, .h4, h5, .h5, h6, .h6 {
-  margin-top: 10px;
-  margin-bottom: 10px;
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: inherit;
-  font-weight: 500;
-  line-height: 1.1;
-  color: inherit;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
 }
 
 img {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 img {
-  border: 0;
+    border: 0;
 }
 
 .mat-expansion-panel-body {
-  padding: 0 !important;
+    padding: 0 !important;
 }
 
 .small-select mat-select {
-  background-color: rgba(58, 40, 8, 0.12);
-  padding: 6px 10px 6px 10px;
-  box-sizing: border-box;
-  border-radius: 5px;
+    background-color: rgba(58, 40, 8, 0.12);
+    padding: 6px 10px 6px 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
 }
 
 .small-select .mat-select-value {
-  font-size: 16px;
-  color: var(--color-accent);
+    font-size: 16px;
+    color: var(--color-accent);
 }
 
 .small-select .mat-form-field-underline {
-  display: none;
+    display: none;
 }
 
-.small-select mat-select-trigger div>i {
-  margin-right: 8px;
+.small-select mat-select-trigger div > i {
+    margin-right: 8px;
 }
 
 .small-select .mat-form-field-infix {
-  padding: 0;
-  border-top: 0;
+    padding: 0;
+    border-top: 0;
 }
 
 .small-select .mat-form-field-wrapper {
-  padding-bottom: 0;
+    padding-bottom: 0;
 }
 
 .large-checkbox .mat-checkbox-inner-container {
-  width: 20px;
-  height: 20px;
+    width: 20px;
+    height: 20px;
 }
 
-.mat-menu-panel.large-menu { max-width: none; }
-
+.mat-menu-panel.large-menu {
+    max-width: none;
+}
