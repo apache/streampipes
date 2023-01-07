@@ -17,31 +17,38 @@
  */
 
 import { Injectable } from '@angular/core';
-import { EventPropertyNested, EventPropertyUnion } from '@streampipes/platform-services';
+import {
+    EventPropertyNested,
+    EventPropertyUnion,
+} from '@streampipes/platform-services';
 
 @Injectable()
 export class PropertySelectorService {
-
     firstStreamPrefix = 's0';
     secondStreamPrefix = 's1';
     propertyDelimiter = '::';
 
-    constructor() {
+    constructor() {}
 
-    }
-
-    makeProperties(eventProperties: any[], availablePropertyKeys: string[], currentPointer) {
+    makeProperties(
+        eventProperties: any[],
+        availablePropertyKeys: string[],
+        currentPointer,
+    ) {
         const outputProperties = [];
         eventProperties.forEach(ep => {
             availablePropertyKeys.forEach(apk => {
                 if (this.isInSelection(ep, apk, currentPointer)) {
-                    ep.runtimeId = this.makeSelector(currentPointer, ep.runtimeName);
+                    ep.runtimeId = this.makeSelector(
+                        currentPointer,
+                        ep.runtimeName,
+                    );
                     if (this.isNested(ep)) {
-                        ep.eventProperties =
-                            this.makeProperties(
-                                ep.eventProperties,
-                                availablePropertyKeys,
-                                this.makeSelector(currentPointer, ep.runtimeName));
+                        ep.eventProperties = this.makeProperties(
+                            ep.eventProperties,
+                            availablePropertyKeys,
+                            this.makeSelector(currentPointer, ep.runtimeName),
+                        );
                     }
                     outputProperties.push(ep);
                 }
@@ -50,13 +57,18 @@ export class PropertySelectorService {
         return outputProperties;
     }
 
-    makeFlatProperties(eventProperties: EventPropertyUnion[], availablePropertyKeys: string[]) {
+    makeFlatProperties(
+        eventProperties: EventPropertyUnion[],
+        availablePropertyKeys: string[],
+    ) {
         const outputProperties = [];
 
         availablePropertyKeys.forEach(apk => {
             const keyArray = apk.split('::');
             keyArray.shift();
-            outputProperties.push(this.makeProperty(eventProperties, keyArray, apk));
+            outputProperties.push(
+                this.makeProperty(eventProperties, keyArray, apk),
+            );
         });
         return outputProperties;
     }
@@ -67,11 +79,16 @@ export class PropertySelectorService {
             if (ep.runtimeName === propertySelector[0]) {
                 if (this.isNested(ep)) {
                     propertySelector.shift();
-                    outputProperty = this.makeProperty(ep.eventProperties, propertySelector, originalSelector);
+                    outputProperty = this.makeProperty(
+                        ep.eventProperties,
+                        propertySelector,
+                        originalSelector,
+                    );
                 } else {
                     ep.runtimeId = originalSelector;
                     outputProperty = ep;
-                    outputProperty.properties.niceLabel = this.makeNiceLabel(originalSelector);
+                    outputProperty.properties.niceLabel =
+                        this.makeNiceLabel(originalSelector);
                 }
             }
         });
@@ -86,11 +103,17 @@ export class PropertySelectorService {
         return ep instanceof EventPropertyNested;
     }
 
-    isInSelection(inputProperty: EventPropertyUnion, propertySelector, currentPropertyPointer) {
-        return (currentPropertyPointer
-            + this.propertyDelimiter
-            + inputProperty.runtimeName) === propertySelector;
-
+    isInSelection(
+        inputProperty: EventPropertyUnion,
+        propertySelector,
+        currentPropertyPointer,
+    ) {
+        return (
+            currentPropertyPointer +
+                this.propertyDelimiter +
+                inputProperty.runtimeName ===
+            propertySelector
+        );
     }
 
     makeSelector(prefix, current) {
