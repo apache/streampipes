@@ -19,40 +19,59 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column" class="p-15">
-            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column" *ngIf="!operationApplied">
+            <form
+                [formGroup]="parentForm"
+                fxFlex="100"
+                fxLayout="column"
+                *ngIf="!operationApplied"
+            >
                 <div class="general-options-panel" fxLayout="column">
                     <mat-form-field color="accent">
                         <mat-label>New mail address</mat-label>
-                        <input formControlName="email" fxFlex
-                               matInput
-                               required>
+                        <input
+                            formControlName="email"
+                            fxFlex
+                            matInput
+                            required
+                        />
                         <mat-error>Must be a valid email address.</mat-error>
                     </mat-form-field>
                     <mat-form-field color="accent">
                         <mat-label>Re-enter mail address</mat-label>
-                        <input formControlName="emailConfirm" fxFlex
-                               matInput
-                               required>
+                        <input
+                            formControlName="emailConfirm"
+                            fxFlex
+                            matInput
+                            required
+                        />
                         <mat-error>Must be a valid email address.</mat-error>
                     </mat-form-field>
-                    <mat-error *ngIf="parentForm.hasError('notMatching')">Email does not match.</mat-error>
+                    <mat-error *ngIf="parentForm.hasError('notMatching')"
+                        >Email does not match.</mat-error
+                    >
                     <mat-form-field color="accent">
                         <mat-label>Enter password</mat-label>
-                        <input formControlName="passwordConfirm" fxFlex
-                               matInput
-                               type="password"
-                               required>
+                        <input
+                            formControlName="passwordConfirm"
+                            fxFlex
+                            matInput
+                            type="password"
+                            required
+                        />
                     </mat-form-field>
                 </div>
             </form>
             <div *ngIf="operationApplied && error">
                 <div>Could not change email address.</div>
-                <div>Reason: {{errorMessage}}</div>
-                <button class="mt-20"
-                        mat-button
-                        mat-raised-button
-                        color="accent"
-                        (click)="operationApplied = false">Try again
+                <div>Reason: {{ errorMessage }}</div>
+                <button
+                    class="mt-20"
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    (click)="operationApplied = false"
+                >
+                    Try again
                 </button>
             </div>
         </div>
@@ -60,12 +79,24 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="row">
-            <button mat-button mat-raised-button color="accent" (click)="update()" style="margin-right:10px;"
-                    [disabled]="!parentForm.valid || operationApplied"
-                    data-cy="sp-element-edit-user-save">
-                <i class="material-icons">save</i><span>&nbsp;Update email</span>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="update()"
+                style="margin-right: 10px"
+                [disabled]="!parentForm.valid || operationApplied"
+                data-cy="sp-element-edit-user-save"
+            >
+                <i class="material-icons">save</i
+                ><span>&nbsp;Update email</span>
             </button>
-            <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic"
+                (click)="close()"
+            >
                 Cancel
             </button>
         </div>
