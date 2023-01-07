@@ -18,10 +18,7 @@
 package org.apache.streampipes.model;
 
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
 import org.apache.streampipes.model.schema.EventSchema;
-
-import java.util.List;
 
 public class SpDataSet extends SpDataStream {
 
@@ -32,11 +29,13 @@ public class SpDataSet extends SpDataStream {
   private String correspondingPipeline;
   private String selectedEndpointUrl;
 
-  public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
-      hasEventStreamQualities,
+  public SpDataSet(String uri,
+                   String name,
+                   String description,
+                   String iconUrl,
                    EventGrounding eventGrounding,
                    EventSchema eventSchema) {
-    super(uri, name, description, iconUrl, hasEventStreamQualities, eventGrounding, eventSchema);
+    super(uri, name, description, iconUrl, eventGrounding, eventSchema);
   }
 
   public SpDataSet(String uri, String name, String description, EventSchema eventSchema) {
