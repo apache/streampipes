@@ -17,12 +17,10 @@
  */
 package org.apache.streampipes.model.template;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class PipelineTemplateDescriptionContainer extends UnnamedStreamPipesEntity {
+public class PipelineTemplateDescriptionContainer {
 
   private List<PipelineTemplateDescription> list;
 

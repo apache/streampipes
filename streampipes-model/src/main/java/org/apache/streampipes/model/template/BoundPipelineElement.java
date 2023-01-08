@@ -18,13 +18,12 @@
 package org.apache.streampipes.model.template;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoundPipelineElement extends UnnamedStreamPipesEntity {
+public class BoundPipelineElement {
 
   private InvocableStreamPipesEntity pipelineElementTemplate;
 
@@ -36,8 +35,6 @@ public class BoundPipelineElement extends UnnamedStreamPipesEntity {
   }
 
   public BoundPipelineElement(BoundPipelineElement other) {
-    // TODO add cloner
-    super(other);
     this.pipelineElementTemplate = other.getPipelineElementTemplate();
     this.connectedTo = new Cloner().boundPipelineElements(other.getConnectedTo());
   }

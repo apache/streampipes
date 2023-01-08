@@ -20,8 +20,6 @@ package org.apache.streampipes.model.schema;
 
 public class QuantitativeValue extends ValueSpecification {
 
-  private static final long serialVersionUID = 1L;
-
   private Float minValue;
 
   private Float maxValue;
@@ -40,7 +38,6 @@ public class QuantitativeValue extends ValueSpecification {
   }
 
   public QuantitativeValue(QuantitativeValue other) {
-    super(other);
     this.minValue = other.getMinValue();
     this.maxValue = other.getMaxValue();
     this.step = other.getStep();

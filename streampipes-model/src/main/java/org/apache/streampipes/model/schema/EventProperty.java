@@ -18,26 +18,29 @@
 
 package org.apache.streampipes.model.schema;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.collections.ListUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @JsonSubTypes({
     @JsonSubTypes.Type(EventPropertyList.class),
     @JsonSubTypes.Type(EventPropertyNested.class),
     @JsonSubTypes.Type(EventPropertyPrimitive.class)
 })
-public abstract class EventProperty extends UnnamedStreamPipesEntity {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
+public abstract class EventProperty {
 
   protected static final String PREFIX = "urn:streampipes.org:spi:";
   private static final long serialVersionUID = 7079045979946059387L;
+
+  private String elementId;
   private String label;
 
   private String description;
@@ -56,12 +59,12 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
 
   public EventProperty() {
-    super(PREFIX + UUID.randomUUID().toString());
+    this.elementId = ElementIdGenerator.makeElementId(EventProperty.class);
     this.domainProperties = new ArrayList<>();
   }
 
   public EventProperty(EventProperty other) {
-    super(other);
+    this.elementId = other.getElementId();
     this.label = other.getLabel();
     this.description = other.getDescription();
     this.required = other.isRequired();
@@ -174,5 +177,13 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
   public void setIndex(int index) {
     this.index = index;
+  }
+
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
   }
 }

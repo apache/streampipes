@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.monitoring.pipeline;
 
 import org.apache.streampipes.manager.pipeline.PipelineManager;
-import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
@@ -112,8 +112,8 @@ public enum ExtensionsLogProvider {
 
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
     return Stream.concat(
-        pipeline.getSepas().stream().map(AbstractStreamPipesEntity::getElementId),
-        pipeline.getActions().stream().map(AbstractStreamPipesEntity::getElementId)
+        pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),
+        pipeline.getActions().stream().map(NamedStreamPipesEntity::getElementId)
     ).collect(Collectors.toList());
   }
 
