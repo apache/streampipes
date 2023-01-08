@@ -18,94 +18,224 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div *ngFor="let pipelineCategory of pipelineCategories" fxLayout="column">
-            <div style="border: 5px;border-color:blue;">
+        <div
+            *ngFor="let pipelineCategory of pipelineCategories"
+            fxLayout="column"
+        >
+            <div style="border: 5px; border-color: blue">
                 <div fxFlex="80" fxLayout="column">
                     <div fxFlex fxLayout="column">
-                        <h4><b>{{pipelineCategory.categoryName}}</b></h4>
-                        <h5><i>{{pipelineCategory.categoryDescription}}</i></h5>
-                        <div *ngIf="categoryDetailsVisible[pipelineCategory._id]">
-                            <div *ngIf="addPipelineToCategorySelected[pipelineCategory._id]"
-                                 style="padding:10px;">
-                                <div class="md-list-item-text" fxFlex="80" fxLayout="column">
-                                    <mat-select [(ngModel)]="selectedPipelineId"
-                                                placeholder="Select Pipeline">
+                        <h4>
+                            <b>{{ pipelineCategory.categoryName }}</b>
+                        </h4>
+                        <h5>
+                            <i>{{ pipelineCategory.categoryDescription }}</i>
+                        </h5>
+                        <div
+                            *ngIf="categoryDetailsVisible[pipelineCategory._id]"
+                        >
+                            <div
+                                *ngIf="
+                                    addPipelineToCategorySelected[
+                                        pipelineCategory._id
+                                    ]
+                                "
+                                style="padding: 10px"
+                            >
+                                <div
+                                    class="md-list-item-text"
+                                    fxFlex="80"
+                                    fxLayout="column"
+                                >
+                                    <mat-select
+                                        [(ngModel)]="selectedPipelineId"
+                                        placeholder="Select Pipeline"
+                                    >
                                         <mat-option
-                                                *ngFor="let pipeline of pipelines | categoryAlreadyInPipelineFilter: pipelineCategory._id"
-                                                [value]="pipeline._id">
-                                            <b>{{pipeline.name}}</b><br/>
+                                            *ngFor="
+                                                let pipeline of pipelines
+                                                    | categoryAlreadyInPipelineFilter
+                                                        : pipelineCategory._id
+                                            "
+                                            [value]="pipeline._id"
+                                        >
+                                            <b>{{ pipeline.name }}</b
+                                            ><br />
                                         </mat-option>
                                         <mat-option
-                                                *ngFor="let systemPipeline of systemPipelines | categoryAlreadyInPipelineFilter: pipelineCategory._id"
-                                                [value]="systemPipeline._id">
-                                            <b>{{systemPipeline.name}}</b><br/>
+                                            *ngFor="
+                                                let systemPipeline of systemPipelines
+                                                    | categoryAlreadyInPipelineFilter
+                                                        : pipelineCategory._id
+                                            "
+                                            [value]="systemPipeline._id"
+                                        >
+                                            <b>{{ systemPipeline.name }}</b
+                                            ><br />
                                         </mat-option>
                                     </mat-select>
                                 </div>
-                                <div class="md-list-item-text" fxFlex="20" fxLayout="row"
-                                     fxLayoutAlign="end center">
-                                    <div fxFlex="50" fxLayout="row" fxLayoutAlign="center end">
-                                        <button mat-button mat-icon-button
-                                                (click)="addPipelineToCategory(pipelineCategory)"
-                                                color="accent">
+                                <div
+                                    class="md-list-item-text"
+                                    fxFlex="20"
+                                    fxLayout="row"
+                                    fxLayoutAlign="end center"
+                                >
+                                    <div
+                                        fxFlex="50"
+                                        fxLayout="row"
+                                        fxLayoutAlign="center end"
+                                    >
+                                        <button
+                                            mat-button
+                                            mat-icon-button
+                                            (click)="
+                                                addPipelineToCategory(
+                                                    pipelineCategory
+                                                )
+                                            "
+                                            color="accent"
+                                        >
                                             <mat-icon>save</mat-icon>
                                         </button>
                                     </div>
-                                    <div fxFlex="50" fxLayout="row" fxLayoutAlign="center end">
-                                        <button mat-button mat-icon-button
-                                                (click)="showAddToCategoryInput(pipelineCategory._id, false)"
-                                                color="accent">
+                                    <div
+                                        fxFlex="50"
+                                        fxLayout="row"
+                                        fxLayoutAlign="center end"
+                                    >
+                                        <button
+                                            mat-button
+                                            mat-icon-button
+                                            (click)="
+                                                showAddToCategoryInput(
+                                                    pipelineCategory._id,
+                                                    false
+                                                )
+                                            "
+                                            color="accent"
+                                        >
                                             <mat-icon>delete</mat-icon>
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <div *ngFor="let pipeline of pipelines | pipelineInCategoryFilter: pipelineCategory._id">
-                                <div class="md-list-item-text" fxFlex="80" fxLayout="column">
-                                    {{pipeline.name}}
+                            <div
+                                *ngFor="
+                                    let pipeline of pipelines
+                                        | pipelineInCategoryFilter
+                                            : pipelineCategory._id
+                                "
+                            >
+                                <div
+                                    class="md-list-item-text"
+                                    fxFlex="80"
+                                    fxLayout="column"
+                                >
+                                    {{ pipeline.name }}
                                 </div>
-                                <div class="md-list-item-text" fxFlex="20" fxLayout="column"
-                                     fxLayoutAlign="end center">
-                                    <button mat-button mat-icon-button
-                                            (click)="removePipelineFromCategory(pipeline, pipelineCategory._id)"
-                                            color="accent">
+                                <div
+                                    class="md-list-item-text"
+                                    fxFlex="20"
+                                    fxLayout="column"
+                                    fxLayoutAlign="end center"
+                                >
+                                    <button
+                                        mat-button
+                                        mat-icon-button
+                                        (click)="
+                                            removePipelineFromCategory(
+                                                pipeline,
+                                                pipelineCategory._id
+                                            )
+                                        "
+                                        color="accent"
+                                    >
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div fxFlex="20" fxLayout="row">
-                    <div class="md-list-item-text" fxFlex="33" fxLayout="row" fxLayoutAlign="center start">
-                        <button mat-button mat-icon-button *ngIf="categoryDetailsVisible[pipelineCategory._id]"
-                                (click)="toggleCategoryDetailsVisibility(pipelineCategory._id)"
-                                color="accent"
-                                matTooltip="Hide Details" matTooltipPosition="above">
+                    <div
+                        class="md-list-item-text"
+                        fxFlex="33"
+                        fxLayout="row"
+                        fxLayoutAlign="center start"
+                    >
+                        <button
+                            mat-button
+                            mat-icon-button
+                            *ngIf="categoryDetailsVisible[pipelineCategory._id]"
+                            (click)="
+                                toggleCategoryDetailsVisibility(
+                                    pipelineCategory._id
+                                )
+                            "
+                            color="accent"
+                            matTooltip="Hide Details"
+                            matTooltipPosition="above"
+                        >
                             <mat-icon>expand_less</mat-icon>
                         </button>
-                        <button mat-button mat-icon-button
-                                *ngIf="!categoryDetailsVisible[pipelineCategory._id]"
-                                (click)="toggleCategoryDetailsVisibility(pipelineCategory._id)"
-                                color="accent"
-                                matTooltip="Show Details" matTooltipPosition="above">
+                        <button
+                            mat-button
+                            mat-icon-button
+                            *ngIf="
+                                !categoryDetailsVisible[pipelineCategory._id]
+                            "
+                            (click)="
+                                toggleCategoryDetailsVisibility(
+                                    pipelineCategory._id
+                                )
+                            "
+                            color="accent"
+                            matTooltip="Show Details"
+                            matTooltipPosition="above"
+                        >
                             <mat-icon>expand_more</mat-icon>
                         </button>
                     </div>
-                    <div class="md-list-item-text" fxFlex="33" fxLayout="row" fxLayoutAlign="center start">
-                        <button mat-button mat-icon-button
-                                (click)="showAddToCategoryInput(pipelineCategory._id, true)"
-                                color="accent"
-                                matTooltip="Add Pipeline To Category" matTooltipPosition="above">
+                    <div
+                        class="md-list-item-text"
+                        fxFlex="33"
+                        fxLayout="row"
+                        fxLayoutAlign="center start"
+                    >
+                        <button
+                            mat-button
+                            mat-icon-button
+                            (click)="
+                                showAddToCategoryInput(
+                                    pipelineCategory._id,
+                                    true
+                                )
+                            "
+                            color="accent"
+                            matTooltip="Add Pipeline To Category"
+                            matTooltipPosition="above"
+                        >
                             <mat-icon>add_circle_outline</mat-icon>
                         </button>
                     </div>
-                    <div class="md-list-item-text" flex="33" layout="row" layout-align="center start">
-                        <button mat-button mat-icon-button
-                                (click)="deletePipelineCategory(pipelineCategory._id)"
-                                color="accent"
-                                matTooltip="Delete Category" matTooltipPosition="above">
+                    <div
+                        class="md-list-item-text"
+                        flex="33"
+                        layout="row"
+                        layout-align="center start"
+                    >
+                        <button
+                            mat-button
+                            mat-icon-button
+                            (click)="
+                                deletePipelineCategory(pipelineCategory._id)
+                            "
+                            color="accent"
+                            matTooltip="Delete Category"
+                            matTooltipPosition="above"
+                        >
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>
@@ -117,29 +247,50 @@
             <div class="md-list-item-text" fxFlex="20" fxLayout="column">
                 <mat-form-field color="accent">
                     <mat-label>Name</mat-label>
-                    <input matInput type="text" [(ngModel)]="newCategoryName">
+                    <input matInput type="text" [(ngModel)]="newCategoryName" />
                 </mat-form-field>
             </div>
             <div class="md-list-item-text" fxFlex="60" fxLayout="column">
                 <mat-form-field color="accent">
                     <mat-label>Description</mat-label>
-                    <input matInput type="text" [(ngModel)]="newCategoryDescription">
+                    <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="newCategoryDescription"
+                    />
                 </mat-form-field>
             </div>
             <div class="md-list-item-text" fxFlex="20" fxLayout="column">
-                <button mat-button mat-icon-button (click)="addPipelineCategory()" color="accent"
-                        class="md-accent md-icon-button">
+                <button
+                    mat-button
+                    mat-icon-button
+                    (click)="addPipelineCategory()"
+                    color="accent"
+                    class="md-accent md-icon-button"
+                >
                     <mat-icon>save</mat-icon>
                 </button>
             </div>
         </div>
-        <div style="margin-top:10px;">
-            <button mat-button mat-raised-button color="accent" (click)="showAddInput()">Add Category</button>
+        <div style="margin-top: 10px">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="showAddInput()"
+            >
+                Add Category
+            </button>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
             Close
         </button>
     </div>

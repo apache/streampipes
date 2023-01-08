@@ -20,48 +20,86 @@
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
             <!-- Select element to visualize -->
-            <div fxFlex="100" style="margin:5px;width:100%">
-                <div *ngIf="page == 'upload-pipelines'">
-                    <h4>{{pages[0].description}}</h4>
-                    <input type="file"
-                           id="file"
-                           (change)="handleFileInput($event.target.files)">
-<!--                    <button mat-button ngf-select="ctrl.upload($file)">Upload Pipeline JSON</button>-->
+            <div fxFlex="100" style="margin: 5px; width: 100%">
+                <div *ngIf="page === 'upload-pipelines'">
+                    <h4>{{ pages[0].description }}</h4>
+                    <input
+                        type="file"
+                        id="file"
+                        (change)="handleFileInput($event.target.files)"
+                    />
+                    <!--                    <button mat-button ngf-select="ctrl.upload($file)">Upload Pipeline JSON</button>-->
                 </div>
 
                 <!-- Select Type -->
-                <div *ngIf="page == 'select-pipelines'">
-                    <h4>{{pages[1].description}}</h4>
+                <div *ngIf="page === 'select-pipelines'">
+                    <h4>{{ pages[1].description }}</h4>
                     <div *ngFor="let availablePipeline of availablePipelines">
-                        <mat-checkbox (click)="toggleSelectedPipeline(availablePipeline)">
-                            {{availablePipeline.name}}
+                        <mat-checkbox
+                            (click)="toggleSelectedPipeline(availablePipeline)"
+                        >
+                            {{ availablePipeline.name }}
                         </mat-checkbox>
                     </div>
                 </div>
 
                 <!-- Select Scheme -->
                 <div ng-if="page == 'import-pipelines'">
-                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="importing">
-                        <b><h4>{{pages[2].description}}</h4></b>
-                        <mat-spinner [mode]="'indeterminate'" class="md-accent"
-                                              ></mat-spinner>
-                        <b><h4>Importing {{selectedPipelines.length}} {{selectedPipelines.length == 1 ? 'pipeline' : 'pipelines'}}...</h4></b>
+                    <div
+                        fxLayout="column"
+                        fxLayoutAlign="center center"
+                        *ngIf="importing"
+                    >
+                        <b
+                            ><h4>{{ pages[2].description }}</h4></b
+                        >
+                        <mat-spinner
+                            [mode]="'indeterminate'"
+                            class="md-accent"
+                        ></mat-spinner>
+                        <b
+                            ><h4>
+                                Importing {{ selectedPipelines.length }}
+                                {{
+                                    selectedPipelines.length === 1
+                                        ? 'pipeline'
+                                        : 'pipelines'
+                                }}...
+                            </h4></b
+                        >
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close(false)" style="margin-right:10px;">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close(false)"
+            style="margin-right: 10px"
+        >
             Close
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="back()" *ngIf="!('upload-pipelines'===page)" style="margin-right:10px;">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="back()"
+            *ngIf="!('upload-pipelines' === page)"
+            style="margin-right: 10px"
+        >
             Back
         </button>
-        <button mat-button mat-raised-button color="accent" (click)="startImport()"
-                *ngIf="page === 'select-pipelines'">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="startImport()"
+            *ngIf="page === 'select-pipelines'"
+        >
             Import
         </button>
     </div>

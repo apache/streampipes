@@ -17,23 +17,51 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div class="sp-dialog-content p-15" fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="operationInProgress">
+        <div
+            class="sp-dialog-content p-15"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            fxFlex="100"
+        >
+            <div
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="column"
+                *ngIf="operationInProgress"
+            >
                 <div fxFlex="100" fxLayoutAlign="center center">
-                    <mat-spinner color="accent"
-                                 [diameter]="50"
-                                 fxLayoutAlign="center"
-                                 style="margin: 10px 0 5px 0">{{action == 0 ? "Starting..." : "Stopping"}}
+                    <mat-spinner
+                        color="accent"
+                        [diameter]="50"
+                        fxLayoutAlign="center"
+                        style="margin: 10px 0 5px 0"
+                        >{{ action === 0 ? 'Starting...' : 'Stopping' }}
                     </mat-spinner>
                 </div>
-                <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                    <h3>Please wait while the pipeline is {{action == 0 ? "starting..." : "stopping"}}...</h3>
+                <div
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="column"
+                >
+                    <h3>
+                        Please wait while the pipeline is
+                        {{ action === 0 ? 'starting...' : 'stopping' }}...
+                    </h3>
                 </div>
             </div>
 
-            <div *ngIf="!operationInProgress && forceStopActive" fxLayout="column" fxLayoutAlign="center center"
-                 fxFlex="100">
-                <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <div
+                *ngIf="!operationInProgress && forceStopActive"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                fxFlex="100"
+            >
+                <div
+                    class="success-message"
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="column"
+                >
                     <div fxLayout="row">
                         <mat-icon color="accent">done</mat-icon>
                         <span>&nbsp;Forced stop successful</span>
@@ -42,21 +70,27 @@
             </div>
 
             <sp-pipeline-started-status
-                    *ngIf="!operationInProgress && !forceStopActive"
-                    [pipelineOperationStatus]="pipelineOperationStatus"
-                    [action]="action"
-                    (forceStopPipelineEmitter)="forceStopPipeline()"
-                    fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+                *ngIf="!operationInProgress && !forceStopActive"
+                [pipelineOperationStatus]="pipelineOperationStatus"
+                [action]="action"
+                (forceStopPipelineEmitter)="forceStopPipeline()"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                fxFlex="100"
+            >
             </sp-pipeline-started-status>
-
         </div>
     </div>
 
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic"
-                (click)="close()"
-                data-cy="sp-pipeline-dialog-close">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+            data-cy="sp-pipeline-dialog-close"
+        >
             Close
         </button>
     </div>
