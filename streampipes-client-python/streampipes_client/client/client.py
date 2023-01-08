@@ -86,7 +86,7 @@ class StreamPipesClient:
     # [1 rows x 6 columns]
 
     """
-    # note: use python -m mkdocs if building on windows (remove later)
+    
     def __init__(
         self,
         client_config: StreamPipesClientConfig,
