@@ -18,14 +18,16 @@
 package org.apache.streampipes.model.runtime;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.List;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
+public class RuntimeOptionsRequest {
 
   protected String requestId;
 

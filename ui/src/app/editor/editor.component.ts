@@ -18,11 +18,13 @@
 
 import { Component, OnInit } from '@angular/core';
 import { EditorService } from './services/editor.service';
-import { DataSourceDescription, PipelineElementService, SpDataStream } from '@streampipes/platform-services';
+import { PipelineElementService } from '@streampipes/platform-services';
 import { PipelineElementConfig, PipelineElementUnion } from './model/editor.model';
 import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
-import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
+import {
+  MissingElementsForTutorialComponent
+} from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { ShepherdService } from '../services/tour/shepherd.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -98,20 +100,6 @@ export class EditorComponent implements OnInit {
         });
       }
     }
-  }
-
-  collectStreams(sources: DataSourceDescription[]): SpDataStream[] {
-    const streams: SpDataStream[] = [];
-    sources.forEach(source => {
-      source.spDataStreams.forEach(stream => {
-        streams.push(stream);
-      });
-    });
-    return streams;
-  }
-
-  selectPipelineElements(index: number) {
-    // this.shepherdService.trigger('select-' + this.activeShorthand);
   }
 
   startCreatePipelineTour() {

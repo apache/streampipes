@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
@@ -34,7 +33,9 @@ import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescrip
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
 @JsonSubTypes({
     @JsonSubTypes.Type(AddTimestampRuleDescription.class),
@@ -51,14 +52,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
     @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
     @JsonSubTypes.Type(DebugSinkRuleDescription.class)
 })
-public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
+public abstract class TransformationRuleDescription {
 
 
   public TransformationRuleDescription() {
-    super();
-  }
-
-  public TransformationRuleDescription(TransformationRuleDescription other) {
     super();
   }
 }

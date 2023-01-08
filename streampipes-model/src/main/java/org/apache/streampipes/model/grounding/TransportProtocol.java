@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonSubTypes({
     @JsonSubTypes.Type(JmsTransportProtocol.class),
@@ -29,9 +30,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
     @JsonSubTypes.Type(MqttTransportProtocol.class),
     @JsonSubTypes.Type(NatsTransportProtocol.class)
 })
-public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
+public abstract class TransportProtocol {
 
   private static final long serialVersionUID = 7625791395504335184L;
+
+  private String elementId;
 
   private String brokerHostname;
 
@@ -39,6 +43,7 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 
   public TransportProtocol() {
     super();
+    this.elementId = ElementIdGenerator.makeElementId(TransportProtocol.class);
   }
 
   public TransportProtocol(String hostname, TopicDefinition topicDefinition) {
@@ -48,7 +53,7 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
   }
 
   public TransportProtocol(TransportProtocol other) {
-    super(other);
+    this.elementId = other.getElementId();
     this.brokerHostname = other.getBrokerHostname();
     if (other.getTopicDefinition() != null) {
       this.topicDefinition = new Cloner().topicDefinition(other.getTopicDefinition());
@@ -71,4 +76,11 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
     this.topicDefinition = topicDefinition;
   }
 
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 }

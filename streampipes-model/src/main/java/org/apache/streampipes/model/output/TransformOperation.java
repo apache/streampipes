@@ -17,9 +17,7 @@
  */
 package org.apache.streampipes.model.output;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-
-public class TransformOperation extends UnnamedStreamPipesEntity {
+public class TransformOperation {
 
   /**
    * the internal name of the mapping property that linkes to an event property related to this transform operation
@@ -51,7 +49,6 @@ public class TransformOperation extends UnnamedStreamPipesEntity {
   }
 
   public TransformOperation(TransformOperation other) {
-    super(other);
     this.mappingPropertyInternalName = other.getMappingPropertyInternalName();
     this.sourceStaticProperty = other.getSourceStaticProperty();
     this.transformationScope = other.getTransformationScope();
