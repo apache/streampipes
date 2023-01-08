@@ -22,28 +22,27 @@ const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
 
 export class JwtTokenStorageService {
+    constructor() {}
 
-  constructor() { }
+    clearTokens(): void {
+        window.localStorage.clear();
+    }
 
-  clearTokens(): void {
-    window.localStorage.clear();
-  }
+    public saveToken(token: string): void {
+        window.localStorage.removeItem(TOKEN_KEY);
+        window.localStorage.setItem(TOKEN_KEY, token);
+    }
 
-  public saveToken(token: string): void {
-    window.localStorage.removeItem(TOKEN_KEY);
-    window.localStorage.setItem(TOKEN_KEY, token);
-  }
+    public getToken(): string {
+        return localStorage.getItem(TOKEN_KEY);
+    }
 
-  public getToken(): string {
-    return localStorage.getItem(TOKEN_KEY);
-  }
+    public saveUser(user: UserInfo): void {
+        window.localStorage.removeItem(USER_KEY);
+        window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+    }
 
-  public saveUser(user: UserInfo): void {
-    window.localStorage.removeItem(USER_KEY);
-    window.localStorage.setItem(USER_KEY, JSON.stringify(user));
-  }
-
-  public getUser(): UserInfo {
-    return JSON.parse(localStorage.getItem(USER_KEY));
-  }
+    public getUser(): UserInfo {
+        return JSON.parse(localStorage.getItem(USER_KEY));
+    }
 }

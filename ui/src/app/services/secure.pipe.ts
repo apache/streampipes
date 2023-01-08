@@ -16,7 +16,6 @@
  *
  */
 
-
 import { Pipe, PipeTransform } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -25,18 +24,30 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Pipe({
-  name: 'secure'
+    name: 'secure',
 })
 export class SecurePipe implements PipeTransform {
+    constructor(
+        private http: HttpClient,
+        private sanitizer: DomSanitizer,
+        private authService: AuthService,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private sanitizer: DomSanitizer,
-              private authService: AuthService) { }
-
-  transform(url): Observable<SafeUrl> {
-    return this.http
-      .get(url, { responseType: 'blob', headers: {'Authorization': 'Bearer ' + this.authService.authToken$.value}})
-      .pipe(map(val => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(val))));
-  }
-
+    transform(url): Observable<SafeUrl> {
+        return this.http
+            .get(url, {
+                responseType: 'blob',
+                headers: {
+                    Authorization:
+                        'Bearer ' + this.authService.authToken$.value,
+                },
+            })
+            .pipe(
+                map(val =>
+                    this.sanitizer.bypassSecurityTrustUrl(
+                        URL.createObjectURL(val),
+                    ),
+                ),
+            );
+    }
 }
