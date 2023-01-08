@@ -71,6 +71,10 @@ export class ConnectEventSchemaUtils {
             'have.value',
             timestampRegex,
         );
+        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
         cy.dataCy('sp-save-edit-property').click();
     }
 
@@ -91,6 +95,10 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('connect-schema-correction-value', { timeout: 10000 }).should(
             'have.value',
             value,
+        );
+        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
+            'have.length',
+            1,
         );
         cy.dataCy('sp-save-edit-property').click();
     }
@@ -120,6 +128,11 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('connect-schema-unit-to-dropdown', {
             timeout: 10000,
         }).contains(toUnit);
+
+        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
         cy.dataCy('sp-save-edit-property').click();
     }
 
@@ -185,6 +198,7 @@ export class ConnectEventSchemaUtils {
         cy.wait(1000);
         cy.dataCy('sp-save-edit-property').click();
     }
+
     public static eventSchemaNextBtnDisabled() {
         cy.get('#event-schema-next-button').should('be.disabled');
     }

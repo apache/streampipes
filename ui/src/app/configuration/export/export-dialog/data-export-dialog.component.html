@@ -18,36 +18,79 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
-        <div fxFlex="100" fxLayout="column" class="p-15" *ngIf="preview && !exportInProgress">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            class="p-15"
+            *ngIf="preview && !exportInProgress"
+        >
             <div *ngFor="let config of preview.assetExportConfiguration">
-                <h4>Exported items {{config.assetName}}</h4>
-                <sp-data-export-item [exportItems]="config.adapters" sectionTitle="Adapters"></sp-data-export-item>
-                <sp-data-export-item [exportItems]="config.dashboards" sectionTitle="Dashboards"></sp-data-export-item>
-                <sp-data-export-item [exportItems]="config.dataViews" sectionTitle="Data Views"></sp-data-export-item>
-                <sp-data-export-item [exportItems]="config.dataSources" sectionTitle="Data Sources"></sp-data-export-item>
-                <sp-data-export-item [exportItems]="config.dataLakeMeasures" sectionTitle="Data Lake Storage"></sp-data-export-item>
-                <sp-data-export-item [exportItems]="config.files" sectionTitle="Files"></sp-data-export-item>
-                <sp-data-export-item [exportItems]="config.pipelines" sectionTitle="Pipelines"></sp-data-export-item>
+                <h4>Exported items {{ config.assetName }}</h4>
+                <sp-data-export-item
+                    [exportItems]="config.adapters"
+                    sectionTitle="Adapters"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="config.dashboards"
+                    sectionTitle="Dashboards"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="config.dataViews"
+                    sectionTitle="Data Views"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="config.dataSources"
+                    sectionTitle="Data Sources"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="config.dataLakeMeasures"
+                    sectionTitle="Data Lake Storage"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="config.files"
+                    sectionTitle="Files"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="config.pipelines"
+                    sectionTitle="Pipelines"
+                ></sp-data-export-item>
             </div>
         </div>
-        <div fxFlex="100" fxLayout="column" *ngIf="exportInProgress" class="mt-10" fxLayoutAlign="center center">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            *ngIf="exportInProgress"
+            class="mt-10"
+            fxLayoutAlign="center center"
+        >
             <mat-spinner [diameter]="50" color="accent"></mat-spinner>
             <h4 class="mt-10">Exporting resources...</h4>
-            <h5 class="mt-10">Depending on number and size of exported files, this might take a while...</h5>
+            <h5 class="mt-10">
+                Depending on number and size of exported files, this might take
+                a while...
+            </h5>
         </div>
-
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="column">
             <div fxLayout="row">
-                <button mat-button
-                        mat-raised-button
-                        color="accent"
-                        style="margin-right: 10px;" (click)="generateDownloadPackage()">
-                    <i class="material-icons">file_download</i><span>&nbsp;Download export</span>
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    style="margin-right: 10px"
+                    (click)="generateDownloadPackage()"
+                >
+                    <i class="material-icons">file_download</i
+                    ><span>&nbsp;Download export</span>
                 </button>
-                <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+                <button
+                    mat-button
+                    mat-raised-button
+                    class="mat-basic"
+                    (click)="close()"
+                >
                     Cancel
                 </button>
             </div>

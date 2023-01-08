@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.rest;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;

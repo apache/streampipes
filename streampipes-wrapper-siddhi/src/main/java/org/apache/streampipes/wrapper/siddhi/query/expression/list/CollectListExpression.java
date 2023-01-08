@@ -23,7 +23,7 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression
 
 public class CollectListExpression extends PropertyExpressionBase {
 
-  private PropertyExpression propertyExpression;
+  private final PropertyExpression propertyExpression;
 
   public CollectListExpression(PropertyExpression propertyExp) {
     this.propertyExpression = propertyExp;
@@ -32,9 +32,9 @@ public class CollectListExpression extends PropertyExpressionBase {
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.EMPTY,
-            "list:collect",
-            SiddhiConstants.PARENTHESIS_OPEN,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.PARENTHESIS_CLOSE);
+        "list:collect",
+        SiddhiConstants.PARENTHESIS_OPEN,
+        propertyExpression.toSiddhiEpl(),
+        SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }

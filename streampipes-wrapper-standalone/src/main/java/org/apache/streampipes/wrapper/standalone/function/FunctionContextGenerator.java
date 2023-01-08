@@ -19,8 +19,8 @@
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 
 import java.util.List;
 import java.util.stream.Collectors;

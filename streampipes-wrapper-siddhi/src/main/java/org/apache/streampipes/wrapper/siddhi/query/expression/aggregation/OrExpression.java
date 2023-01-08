@@ -22,17 +22,18 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression
 import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpressionBase;
 
 public class OrExpression extends PropertyExpressionBase {
-    private PropertyExpression propertyExpression;
+  private final PropertyExpression propertyExpression;
 
-    public OrExpression(PropertyExpression property) {
-        this.propertyExpression = property;
-    }
-    @Override
-    public String toSiddhiEpl() {
-        return join(SiddhiConstants.EMPTY,
-                AggregationFunction.OR.toAggregationFunction(),
-                SiddhiConstants.PARENTHESIS_OPEN,
-                propertyExpression.toSiddhiEpl(),
-                SiddhiConstants.PARENTHESIS_CLOSE);
-    }
+  public OrExpression(PropertyExpression property) {
+    this.propertyExpression = property;
+  }
+
+  @Override
+  public String toSiddhiEpl() {
+    return join(SiddhiConstants.EMPTY,
+        AggregationFunction.OR.toAggregationFunction(),
+        SiddhiConstants.PARENTHESIS_OPEN,
+        propertyExpression.toSiddhiEpl(),
+        SiddhiConstants.PARENTHESIS_CLOSE);
+  }
 }

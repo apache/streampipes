@@ -19,19 +19,22 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
-  AdapterDescriptionUnion,
-  SpDataStream,
-  AdapterService,
-  AssetLink,
-  AssetLinkType,
-  Dashboard,
-  DashboardService,
-  DataLakeMeasure, DatalakeRestService,
-  DataViewDataExplorerService,
-  GenericStorageService,
-  Pipeline,
-  PipelineService,
-  PipelineElementService, FileMetadata, FilesService
+    AdapterDescriptionUnion,
+    SpDataStream,
+    AdapterService,
+    AssetLink,
+    AssetLinkType,
+    Dashboard,
+    DashboardService,
+    DataLakeMeasure,
+    DatalakeRestService,
+    DataViewDataExplorerService,
+    GenericStorageService,
+    Pipeline,
+    PipelineService,
+    PipelineElementService,
+    FileMetadata,
+    FilesService,
 } from '@streampipes/platform-services';
 import { FormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
@@ -39,121 +42,139 @@ import { MatSelectChange } from '@angular/material/select';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 
 @Component({
-  selector: 'sp-manage-asset-links-dialog-component',
-  templateUrl: './manage-asset-links-dialog.component.html',
-  styleUrls: ['./manage-asset-links-dialog.component.scss']
+    selector: 'sp-manage-asset-links-dialog-component',
+    templateUrl: './manage-asset-links-dialog.component.html',
+    styleUrls: ['./manage-asset-links-dialog.component.scss'],
 })
-export class SpManageAssetLinksDialogComponent extends BaseAssetLinksDirective implements OnInit {
+export class SpManageAssetLinksDialogComponent
+    extends BaseAssetLinksDirective
+    implements OnInit
+{
+    @Input()
+    assetLinks: AssetLink[];
 
-  @Input()
-  assetLinks: AssetLink[];
+    @Input()
+    assetLinkTypes: AssetLinkType[];
 
-  @Input()
-  assetLinkTypes: AssetLinkType[];
+    clonedAssetLinks: AssetLink[] = [];
 
-  clonedAssetLinks: AssetLink[] = [];
+    idFunction = el => el._id;
+    elementIdFunction = el => el.elementId;
+    fileIdFunction = el => el.fileId;
+    nameFunction = el => el.name;
+    filenameFunction = el => el.originalFilename;
+    measureNameFunction = el => el.measureName;
 
-  idFunction = (el) => el._id;
-  elementIdFunction = (el) => el.elementId;
-  fileIdFunction = (el) => el.fileId;
-  nameFunction = (el) => el.name;
-  filenameFunction = (el) => el.originalFilename;
-  measureNameFunction = (el) => el.measureName;
-
-
-  constructor(private dialogRef: DialogRef<SpManageAssetLinksDialogComponent>,
-              protected genericStorageService: GenericStorageService,
-              protected pipelineService: PipelineService,
-              protected dataViewService: DataViewDataExplorerService,
-              protected dashboardService: DashboardService,
-              protected dataLakeService: DatalakeRestService,
-              protected pipelineElementService: PipelineElementService,
-              protected adapterService: AdapterService,
-              protected filesService: FilesService) {
-    super(
-      genericStorageService,
-      pipelineService,
-      dataViewService,
-      dashboardService,
-      dataLakeService,
-      pipelineElementService,
-      adapterService,
-      filesService);
-  }
-
-  ngOnInit(): void {
-    super.onInit();
-    this.clonedAssetLinks = [
-      ...this.assetLinks.map(al => {
-        return {...al};
-      })
-    ];
-  }
-
-  cancel(): void {
-    this.dialogRef.close();
-  }
-
-  store(): void {
-    this.assetLinks = this.clonedAssetLinks;
-    this.dialogRef.close(this.assetLinks);
-  }
-
-  afterResourcesLoaded(): void {
-  }
-
-  linkSelected(resourceId: string): boolean {
-    return this.clonedAssetLinks.find(al => al.resourceId === resourceId) !== undefined;
-  }
-
-  selectLink(checked: boolean,
-             resourceId: string,
-             label: string,
-             assetLinkType: string): void {
-    if (checked) {
-      this.clonedAssetLinks.push(this.makeLink(resourceId, label, assetLinkType));
-    } else {
-      const index = this.clonedAssetLinks.findIndex(al => al.resourceId === resourceId);
-      this.clonedAssetLinks.splice(index, 1);
+    constructor(
+        private dialogRef: DialogRef<SpManageAssetLinksDialogComponent>,
+        protected genericStorageService: GenericStorageService,
+        protected pipelineService: PipelineService,
+        protected dataViewService: DataViewDataExplorerService,
+        protected dashboardService: DashboardService,
+        protected dataLakeService: DatalakeRestService,
+        protected pipelineElementService: PipelineElementService,
+        protected adapterService: AdapterService,
+        protected filesService: FilesService,
+    ) {
+        super(
+            genericStorageService,
+            pipelineService,
+            dataViewService,
+            dashboardService,
+            dataLakeService,
+            pipelineElementService,
+            adapterService,
+            filesService,
+        );
     }
-  }
 
-  makeLink(resourceId: string,
-           label: string,
-           assetLinkType: string): AssetLink {
+    ngOnInit(): void {
+        super.onInit();
+        this.clonedAssetLinks = [
+            ...this.assetLinks.map(al => {
+                return { ...al };
+            }),
+        ];
+    }
 
-    const linkType = this.assetLinkTypes.find(a => a.linkType === assetLinkType);
-    return {
-      linkLabel: label,
-      linkType: linkType.linkType,
-      editingDisabled: false,
-      queryHint: linkType.linkQueryHint,
-      navigationActive: linkType.navigationActive,
-      resourceId
-    };
-  }
+    cancel(): void {
+        this.dialogRef.close();
+    }
 
-  selectAll(elements: any[],
-            idFunction: any,
-            nameFunction: any,
-            assetLinkType: string): void {
-    elements.forEach(el => {
-      const id = idFunction(el);
-      const elementName = nameFunction(el);
-      if (!this.linkSelected(id)) {
-        this.selectLink(true, id, elementName, assetLinkType);
-      }
-    });
-  }
+    store(): void {
+        this.assetLinks = this.clonedAssetLinks;
+        this.dialogRef.close(this.assetLinks);
+    }
 
-  deselectAll(elements: any[],
-              idFunction: any): void {
-    elements.forEach(el => {
-      const id = idFunction(el);
-      const index = this.clonedAssetLinks.findIndex(al => al.resourceId === id);
-      if (index > -1) {
-        this.clonedAssetLinks.splice(index, 1);
-      }
-    });
-  }
+    afterResourcesLoaded(): void {}
+
+    linkSelected(resourceId: string): boolean {
+        return (
+            this.clonedAssetLinks.find(al => al.resourceId === resourceId) !==
+            undefined
+        );
+    }
+
+    selectLink(
+        checked: boolean,
+        resourceId: string,
+        label: string,
+        assetLinkType: string,
+    ): void {
+        if (checked) {
+            this.clonedAssetLinks.push(
+                this.makeLink(resourceId, label, assetLinkType),
+            );
+        } else {
+            const index = this.clonedAssetLinks.findIndex(
+                al => al.resourceId === resourceId,
+            );
+            this.clonedAssetLinks.splice(index, 1);
+        }
+    }
+
+    makeLink(
+        resourceId: string,
+        label: string,
+        assetLinkType: string,
+    ): AssetLink {
+        const linkType = this.assetLinkTypes.find(
+            a => a.linkType === assetLinkType,
+        );
+        return {
+            linkLabel: label,
+            linkType: linkType.linkType,
+            editingDisabled: false,
+            queryHint: linkType.linkQueryHint,
+            navigationActive: linkType.navigationActive,
+            resourceId,
+        };
+    }
+
+    selectAll(
+        elements: any[],
+        idFunction: any,
+        nameFunction: any,
+        assetLinkType: string,
+    ): void {
+        elements.forEach(el => {
+            const id = idFunction(el);
+            const elementName = nameFunction(el);
+            if (!this.linkSelected(id)) {
+                this.selectLink(true, id, elementName, assetLinkType);
+            }
+        });
+    }
+
+    deselectAll(elements: any[], idFunction: any): void {
+        elements.forEach(el => {
+            const id = idFunction(el);
+            const index = this.clonedAssetLinks.findIndex(
+                al => al.resourceId === id,
+            );
+            if (index > -1) {
+                this.clonedAssetLinks.splice(index, 1);
+            }
+        });
+    }
 }

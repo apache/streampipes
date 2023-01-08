@@ -21,7 +21,11 @@ import { ComponentRef, Injectable, Injector } from '@angular/core';
 import { DialogRef } from './dialog-ref';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 import { BaseDialogComponent } from './base-dialog.component';
-import { BaseDialogComponentUnion, DialogConfig, PanelType } from './base-dialog.model';
+import {
+    BaseDialogComponentUnion,
+    DialogConfig,
+    PanelType,
+} from './base-dialog.model';
 import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
 import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
 import { BaseDialogConfig } from './base-dialog.config';
@@ -29,74 +33,90 @@ import { PanelDialogConfig } from '../panel-dialog/panel-dialog.config';
 import { StandardDialogConfig } from '../standard-dialog/standard-dialog.config';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class DialogService {
+    constructor(private overlay: Overlay, private injector: Injector) {}
 
-  constructor(private overlay: Overlay, private injector: Injector) {
+    public open<T>(
+        component: ComponentType<T>,
+        config?: DialogConfig,
+    ): DialogRef<T> {
+        config = config || {
+            width: '60vw',
+            title: '',
+            panelType: PanelType.SLIDE_IN_PANEL,
+        };
 
-  }
+        const positionStrategy = this.getPositionStrategy(config.panelType);
+        const panelConfig: BaseDialogConfig = this.getConfig(config.panelType);
+        const overlay = this.overlay.create(
+            panelConfig.getOverlayConfig(config, positionStrategy),
+        );
 
-  public open<T>(component: ComponentType<T>,
-                 config?: DialogConfig): DialogRef<T> {
-    config = config || {width: '60vw', title: '', panelType: PanelType.SLIDE_IN_PANEL};
+        const panelDialogContainer = new ComponentPortal(
+            this.getPanel(config.panelType),
+        );
+        const panelDialogContainerRef = overlay.attach(panelDialogContainer);
+        panelDialogContainerRef.instance.dialogTitle = config.title;
+        const dialogRef = new DialogRef<T>(overlay, panelDialogContainerRef);
 
-    const positionStrategy = this.getPositionStrategy(config.panelType);
-    const panelConfig: BaseDialogConfig = this.getConfig(config.panelType);
-    const overlay = this.overlay.create(panelConfig.getOverlayConfig(config, positionStrategy));
+        const injector = this.createInjector(dialogRef);
+        panelDialogContainerRef.instance.selectedPortal = new ComponentPortal(
+            component,
+            null,
+            injector,
+        );
+        panelDialogContainerRef.instance.dialogRef = dialogRef;
+        dialogRef.componentInstance = panelDialogContainerRef.instance.attach();
 
-    const panelDialogContainer = new ComponentPortal(this.getPanel(config.panelType));
-    const panelDialogContainerRef = overlay.attach(panelDialogContainer);
-    panelDialogContainerRef.instance.dialogTitle = config.title;
-    const dialogRef = new DialogRef<T>(overlay, panelDialogContainerRef);
+        if (config.data) {
+            Object.keys(config.data).forEach(key => {
+                dialogRef.componentInstance[key] = config.data[key];
+            });
+        }
 
-    const injector = this.createInjector(dialogRef);
-    panelDialogContainerRef.instance.selectedPortal = new ComponentPortal(component,
-        null, injector);
-    panelDialogContainerRef.instance.dialogRef = dialogRef;
-    dialogRef.componentInstance = panelDialogContainerRef.instance.attach();
+        this.applyDialogProperties(panelDialogContainerRef, overlay, config);
 
-    if (config.data) {
-      Object.keys(config.data).forEach(key => {
-        dialogRef.componentInstance[key] = config.data[key];
-      });
+        return dialogRef;
     }
 
-    this.applyDialogProperties(panelDialogContainerRef, overlay, config);
-
-    return dialogRef;
-  }
-
-  private createInjector<T, OUTER extends BaseDialogComponent<T>>(dialogRef: DialogRef<T>) {
-    const injectorMap = new WeakMap();
-    injectorMap.set(DialogRef, dialogRef);
-    return new PortalInjector(this.injector, injectorMap);
-  }
-
-  private applyDialogProperties(panelDialogComponentRef: ComponentRef<any>,
-                                overlayRef: OverlayRef,
-                                config: DialogConfig) {
-    panelDialogComponentRef.instance.containerEvent.subscribe(e => {
-      if (e.key === 'CLOSE') {
-        overlayRef.dispose();
-      }
-    });
-    if (!config.disableClose) {
-      overlayRef.backdropClick().subscribe(() => overlayRef.dispose());
+    private createInjector<T, OUTER extends BaseDialogComponent<T>>(
+        dialogRef: DialogRef<T>,
+    ) {
+        const injectorMap = new WeakMap();
+        injectorMap.set(DialogRef, dialogRef);
+        return new PortalInjector(this.injector, injectorMap);
     }
-  }
 
-  getPositionStrategy(panelType: PanelType) {
-    return this.getConfig(panelType).getPosition(this.overlay);
-  }
+    private applyDialogProperties(
+        panelDialogComponentRef: ComponentRef<any>,
+        overlayRef: OverlayRef,
+        config: DialogConfig,
+    ) {
+        panelDialogComponentRef.instance.containerEvent.subscribe(e => {
+            if (e.key === 'CLOSE') {
+                overlayRef.dispose();
+            }
+        });
+        if (!config.disableClose) {
+            overlayRef.backdropClick().subscribe(() => overlayRef.dispose());
+        }
+    }
 
-  getPanel(panelType: PanelType): ComponentType<BaseDialogComponentUnion> {
-    return panelType === PanelType.SLIDE_IN_PANEL ? PanelDialogComponent : StandardDialogComponent;
-  }
+    getPositionStrategy(panelType: PanelType) {
+        return this.getConfig(panelType).getPosition(this.overlay);
+    }
 
-  getConfig(panelType: PanelType): BaseDialogConfig {
-    return panelType === PanelType.SLIDE_IN_PANEL ? new PanelDialogConfig() :
-        new StandardDialogConfig();
-  }
+    getPanel(panelType: PanelType): ComponentType<BaseDialogComponentUnion> {
+        return panelType === PanelType.SLIDE_IN_PANEL
+            ? PanelDialogComponent
+            : StandardDialogComponent;
+    }
 
+    getConfig(panelType: PanelType): BaseDialogConfig {
+        return panelType === PanelType.SLIDE_IN_PANEL
+            ? new PanelDialogConfig()
+            : new StandardDialogConfig();
+    }
 }

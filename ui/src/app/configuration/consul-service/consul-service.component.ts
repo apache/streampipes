@@ -20,27 +20,23 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StreampipesPeContainer } from '../shared/streampipes-pe-container.model';
 
 @Component({
-    selector: 'consul-service',
+    selector: 'sp-consul-service',
     templateUrl: './consul-service.component.html',
-    styleUrls: ['./consul-service.component.css']
+    styleUrls: ['./consul-service.component.css'],
 })
 export class ConsulServiceComponent {
-
     @Input() consulService: StreampipesPeContainer;
-    @Output() updateConsulService: EventEmitter<StreampipesPeContainer> = new EventEmitter<StreampipesPeContainer>();
+    @Output() updateConsulService: EventEmitter<StreampipesPeContainer> =
+        new EventEmitter<StreampipesPeContainer>();
     showConfiguration = false;
 
-    constructor() {
-
-    }
+    constructor() {}
 
     toggleConfiguration(): void {
         this.showConfiguration = !this.showConfiguration;
-
     }
 
     updateConfiguration(): void {
         this.updateConsulService.emit(this.consulService);
     }
-
 }

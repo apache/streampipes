@@ -17,28 +17,30 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression.window;
 
-import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
 
+import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
+
 public class SortWindowExpression extends WindowExpression {
 
-  private PropertyExpression property;
-  private OrderByAttribute.Order order;
+  private final PropertyExpression property;
+  private final OrderByAttribute.Order order;
 
   public SortWindowExpression(Integer number, PropertyExpression property, OrderByAttribute.Order order) {
     super(number);
     this.property = property;
     this.order = order;
   }
+
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.EMPTY,
-            windowExpression(),
-            "sort",
-            windowValue(join(SiddhiConstants.COMMA,
-                    String.valueOf(windowValue),
-                    property.toSiddhiEpl(),
-                    join(SiddhiConstants.EMPTY, "'", order.toString().toLowerCase(), "'"))));
+        windowExpression(),
+        "sort",
+        windowValue(join(SiddhiConstants.COMMA,
+            String.valueOf(windowValue),
+            property.toSiddhiEpl(),
+            join(SiddhiConstants.EMPTY, "'", order.toString().toLowerCase(), "'"))));
   }
 }

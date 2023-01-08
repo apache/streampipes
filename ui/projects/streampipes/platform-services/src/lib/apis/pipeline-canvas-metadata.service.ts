@@ -24,40 +24,58 @@ import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class PipelineCanvasMetadataService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
+    addPipelineCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
+        return this.http.post(
+            this.pipelineCanvasMetadataBasePath,
+            pipelineCanvasMetadata,
+        );
+    }
 
-  }
+    getPipelineCanvasMetadata(
+        pipelineId: string,
+    ): Observable<PipelineCanvasMetadata> {
+        return this.http
+            .get(this.pipelineCanvasMetadataPipelinePath + pipelineId)
+            .pipe(
+                map(response =>
+                    PipelineCanvasMetadata.fromData(response as any),
+                ),
+            );
+    }
 
-  addPipelineCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
-    return this.http.post(this.pipelineCanvasMetadataBasePath, pipelineCanvasMetadata);
-  }
+    updatePipelineCanvasMetadata(
+        pipelineCanvasMetadata: PipelineCanvasMetadata,
+    ) {
+        return this.http.put(
+            this.pipelineCanvasMetadataBasePath +
+                '/' +
+                pipelineCanvasMetadata.pipelineId,
+            pipelineCanvasMetadata,
+        );
+    }
 
-  getPipelineCanvasMetadata(pipelineId: string): Observable<PipelineCanvasMetadata> {
-    return this.http.get(this.pipelineCanvasMetadataPipelinePath
-        + pipelineId).pipe(map(response => PipelineCanvasMetadata.fromData(response as any)));
-  }
+    deletePipelineCanvasMetadata(pipelineId: string) {
+        return this.http.delete(
+            this.pipelineCanvasMetadataPipelinePath + pipelineId,
+        );
+    }
 
-  updatePipelineCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
-    return this.http.put(this.pipelineCanvasMetadataBasePath
-        + '/'
-        + pipelineCanvasMetadata.pipelineId, pipelineCanvasMetadata);
-  }
+    private get pipelineCanvasMetadataBasePath() {
+        return (
+            this.platformServicesCommons.apiBasePath +
+            '/pipeline-canvas-metadata'
+        );
+    }
 
-  deletePipelineCanvasMetadata(pipelineId: string) {
-    return this.http.delete(this.pipelineCanvasMetadataPipelinePath
-        + pipelineId);
-  }
-
-  private get pipelineCanvasMetadataBasePath() {
-    return this.platformServicesCommons.apiBasePath + '/pipeline-canvas-metadata';
-  }
-
-  private get pipelineCanvasMetadataPipelinePath() {
-    return this.pipelineCanvasMetadataBasePath + '/pipeline/';
-  }
+    private get pipelineCanvasMetadataPipelinePath() {
+        return this.pipelineCanvasMetadataBasePath + '/pipeline/';
+    }
 }

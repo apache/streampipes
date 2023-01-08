@@ -21,7 +21,7 @@ import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 public class LimitClause extends SiddhiStatement {
 
-  private Integer limit;
+  private final Integer limit;
 
   public static LimitClause create(Integer limit) {
     return new LimitClause(limit);

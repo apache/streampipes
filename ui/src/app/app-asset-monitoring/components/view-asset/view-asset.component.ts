@@ -16,12 +16,24 @@
  *
  */
 
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    Output,
+} from '@angular/core';
 
 import Konva from 'konva';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { RestService } from '../../services/rest.service';
-import { DatalakeQueryParameterBuilder, DatalakeRestService, SpQueryResult, DashboardService } from '@streampipes/platform-services';
+import {
+    DatalakeQueryParameterBuilder,
+    DatalakeRestService,
+    SpQueryResult,
+    DashboardService,
+} from '@streampipes/platform-services';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -34,10 +46,9 @@ declare const window: Window;
 @Component({
     selector: 'sp-view-asset',
     templateUrl: './view-asset.component.html',
-    styleUrls: ['./view-asset.component.css']
+    styleUrls: ['./view-asset.component.css'],
 })
-export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
-
+export class ViewAssetComponent implements AfterViewInit, OnDestroy {
     @Input() dashboardConfig: DashboardConfiguration;
     @Output() dashboardClosed = new EventEmitter<boolean>();
     @Output() editDashboardEmitter = new EventEmitter<DashboardConfiguration>();
@@ -48,17 +59,17 @@ export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
 
     subscriptions: Subscription[] = [];
 
-    constructor(private restService: RestService,
-                private dashboardService: DashboardService,
-                private dataLakeRestService: DatalakeRestService) {
-
-    }
-
-    ngOnInit() {
-    }
+    constructor(
+        private restService: RestService,
+        private dashboardService: DashboardService,
+        private dataLakeRestService: DatalakeRestService,
+    ) {}
 
     ngAfterViewInit() {
-        this.mainCanvasStage = Konva.Node.create(this.dashboardConfig, 'container');
+        this.mainCanvasStage = Konva.Node.create(
+            this.dashboardConfig,
+            'container',
+        );
         this.mainCanvasStage.draw();
 
         this.backgroundImageLayer = new Konva.Layer();
@@ -66,9 +77,9 @@ export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
         this.mainCanvasStage.add(this.backgroundImageLayer);
         const labels = this.mainCanvasStage.find('Label');
         labels.each(label => {
-           label.on('mouseenter', () => this.onMouseEnter(label));
+            label.on('mouseenter', () => this.onMouseEnter(label));
             label.on('mouseleave', () => this.onMouseLeave(label));
-           label.on('click', () => this.onLinkClicked(label));
+            label.on('click', () => this.onLinkClicked(label));
         });
 
         this.backgroundImageLayer.moveToBottom();
@@ -89,7 +100,9 @@ export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
     onLinkClicked(label) {
         const href = label.children[0].attrs.hyperlink;
         const newWindow = label.children[0].attrs.newWindow;
-        newWindow ? (window as any).open(href) : (window as any).location.href = href;
+        newWindow
+            ? (window as any).open(href)
+            : ((window as any).location.href = href);
     }
 
     updateMeasurements() {
@@ -97,18 +110,27 @@ export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
         dynamicShapes.forEach(ds => {
             const monitoredField = ds.text();
             const measurement = ds.attrs.dataLakeMeasure;
-            const subscription = timer(0, 2000).pipe(
-              switchMap(() => this.dataLakeRestService.getData(measurement, this.buildQuery())))
-              .subscribe(queryResult => {
-                  this.handleResponse(ds, monitoredField, queryResult);
-              });
+            const subscription = timer(0, 2000)
+                .pipe(
+                    switchMap(() =>
+                        this.dataLakeRestService.getData(
+                            measurement,
+                            this.buildQuery(),
+                        ),
+                    ),
+                )
+                .subscribe(queryResult => {
+                    this.handleResponse(ds, monitoredField, queryResult);
+                });
             this.subscriptions.push(subscription);
         });
     }
 
-    handleResponse(ds: any,
-                   monitoredField: string,
-                   queryResult: SpQueryResult): void {
+    handleResponse(
+        ds: any,
+        monitoredField: string,
+        queryResult: SpQueryResult,
+    ): void {
         if (queryResult.total > 0) {
             if (queryResult.allDataSeries.length === 1) {
                 const series = queryResult.allDataSeries[0];
@@ -132,7 +154,9 @@ export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showImage() {
         const image = new window.Image();
-        image.src = this.restService.getImageUrl(this.dashboardConfig.imageInfo.imageName);
+        image.src = this.restService.getImageUrl(
+            this.dashboardConfig.imageInfo.imageName,
+        );
         this.dashboardConfig.imageInfo.image = image;
         image.onload = () => {
             const imageCanvas = new Konva.Image(this.dashboardConfig.imageInfo);
@@ -152,5 +176,4 @@ export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscriptions.forEach(s => s.unsubscribe());
     }
-
 }

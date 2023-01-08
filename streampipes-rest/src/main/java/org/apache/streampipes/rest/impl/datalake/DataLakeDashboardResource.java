@@ -25,7 +25,7 @@ import org.apache.streampipes.rest.impl.dashboard.AbstractDashboardResource;
 
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 @Path("/v3/datalake/dashboard")
 @Component

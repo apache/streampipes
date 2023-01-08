@@ -17,37 +17,37 @@
  */
 
 .pipeline-element-box {
-  height: 100%;
-  box-shadow: 1px 1px 2px #555;
-  border: 1px solid gray;
-  cursor: pointer;
-  padding: 10px;
+    height: 100%;
+    box-shadow: 1px 1px 2px #555;
+    border: 1px solid gray;
+    cursor: pointer;
+    padding: 10px;
 }
 
 .small-icon {
-  font-size:12px;
+    font-size: 12px;
 }
 
 .ml-5 {
-  margin-left:5px;
+    margin-left: 5px;
 }
 
 .no-min-width {
-  min-width: 0;
+    min-width: 0;
 }
 
 .icon {
-  height: 50px;
-  margin-top: -5px;
-  width: 50px;
+    height: 50px;
+    margin-top: -5px;
+    width: 50px;
 }
 
 .endpoint-icon-available {
-  cursor: default;
-  color: #4CAF50;
+    cursor: default;
+    color: #4caf50;
 }
 
 .endpoint-icon-critical {
-  cursor: default;
-  color: #F44336;
+    cursor: default;
+    color: #f44336;
 }

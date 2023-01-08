@@ -18,19 +18,15 @@
 
 import { Injectable } from '@angular/core';
 
-
 import Konva from 'konva';
 import {
     HyperlinkConfig,
-    SelectedVisualizationData
+    SelectedVisualizationData,
 } from '../model/selected-visualization-data.model';
 
 @Injectable()
 export class ShapeService {
-
-    constructor() {
-
-    }
+    constructor() {}
 
     makeNewHyperlinkGroup(hyperlinkConfig: HyperlinkConfig) {
         const group = this.makeGroup(true);
@@ -56,12 +52,14 @@ export class ShapeService {
             newWindow: hyperlinkConfig.newWindow,
             textDecoration: 'underline',
             fill: '#62e497',
-            fontSize: hyperlinkConfig.labelFontSize
+            fontSize: hyperlinkConfig.labelFontSize,
         };
         return new Konva.Text(settings);
     }
 
-    makeNewMeasurementShape(visualizationConfig: SelectedVisualizationData): Konva.Group {
+    makeNewMeasurementShape(
+        visualizationConfig: SelectedVisualizationData,
+    ): Konva.Group {
         const visualizationGroup = this.makeGroup(true);
         visualizationGroup.add(this.makeLabelGroup(visualizationConfig));
         visualizationGroup.add(this.makeMeasurementGroup(visualizationConfig));
@@ -70,15 +68,41 @@ export class ShapeService {
 
     makeLabelGroup(config: SelectedVisualizationData): Konva.Group {
         const labelGroup = this.makeGroup(false);
-        labelGroup.add(this.makeRect(config.labelBackgroundColor, 120, 40, 140, 20));
-        labelGroup.add(this.makeText(config, config.label, config.labelTextColor, 120, 45, 140, 20, false));
+        labelGroup.add(
+            this.makeRect(config.labelBackgroundColor, 120, 40, 140, 20),
+        );
+        labelGroup.add(
+            this.makeText(
+                config,
+                config.label,
+                config.labelTextColor,
+                120,
+                45,
+                140,
+                20,
+                false,
+            ),
+        );
         return labelGroup;
     }
 
     makeMeasurementGroup(config: SelectedVisualizationData): Konva.Group {
         const measurementGroup = this.makeGroup(false);
-        measurementGroup.add(this.makeRect(config.measurementBackgroundColor, 120, 60, 140, 40));
-        measurementGroup.add(this.makeText(config, config.measurement, config.measurementTextColor, 120, 65, 140, 40, true));
+        measurementGroup.add(
+            this.makeRect(config.measurementBackgroundColor, 120, 60, 140, 40),
+        );
+        measurementGroup.add(
+            this.makeText(
+                config,
+                config.measurement,
+                config.measurementTextColor,
+                120,
+                65,
+                140,
+                40,
+                true,
+            ),
+        );
         return measurementGroup;
     }
 
@@ -86,15 +110,17 @@ export class ShapeService {
         return new Konva.Group({
             x: 120,
             y: 40,
-            draggable
+            draggable,
         });
     }
 
-    makeRect(fillColor: string,
-             x: number,
-             y: number,
-             width: number,
-             height: number): Konva.Rect {
+    makeRect(
+        fillColor: string,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    ): Konva.Rect {
         return new Konva.Rect({
             x,
             y,
@@ -104,14 +130,16 @@ export class ShapeService {
         });
     }
 
-    makeText(config: SelectedVisualizationData,
-             text: string,
-             textColor: string,
-             x: number,
-             y: number,
-             width: number | string,
-             height: number | string,
-             dynamicContent: boolean): Konva.Text {
+    makeText(
+        config: SelectedVisualizationData,
+        text: string,
+        textColor: string,
+        x: number,
+        y: number,
+        width: number | string,
+        height: number | string,
+        dynamicContent: boolean,
+    ): Konva.Text {
         const textSettings: any = {
             text,
             x,
@@ -120,7 +148,7 @@ export class ShapeService {
             height,
             fill: textColor,
             align: 'center',
-            fontSize: '15'
+            fontSize: '15',
         };
 
         if (dynamicContent) {

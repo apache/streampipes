@@ -24,7 +24,7 @@ public enum MathOperator {
   MULTIPLY("*"),
   DIVIDE("/");
 
-  private String operator;
+  private final String operator;
 
   MathOperator(String operator) {
     this.operator = operator;

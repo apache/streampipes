@@ -21,13 +21,15 @@ package org.apache.streampipes.manager.matching.v2;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.grounding.TransportFormat;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestFormatMatch extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class TestFormatMatch {
 
   @Test
   public void testPositiveFormatMatch() {

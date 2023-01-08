@@ -17,23 +17,28 @@
   -->
 
 <div fxLayout="column" fxFlex="100" class="error-panel error">
-  <div fxLayout="row">
-    <div fxFlex="100" fxLayoutAlign="start center">
-      <div fxLayout="row" fxLayoutAlign="start center" class="p-5" fxFlex="100">
-        <div fxLayoutAlign="start center">
-          <i class="material-icons color-warn mr-15">warning</i>
-          <h5 *ngIf="messageTimestamp" class="mr-15">{{messageTimestamp | date : 'short'}}</h5>
-          <h5 fxFlex class="color-warn">{{message.title}}</h5>
+    <div fxLayout="row">
+        <div fxFlex="100" fxLayoutAlign="start center">
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="p-5"
+                fxFlex="100"
+            >
+                <div fxLayoutAlign="start center">
+                    <i class="material-icons color-warn mr-15">warning</i>
+                    <h5 *ngIf="messageTimestamp" class="mr-15">
+                        {{ messageTimestamp | date : 'short' }}
+                    </h5>
+                    <h5 fxFlex class="color-warn">{{ message.title }}</h5>
+                </div>
+                <span fxFlex></span>
+                <div fxLayoutAlign="end center" *ngIf="showDetails">
+                    <button mat-button (click)="openDetailsDialog()">
+                        <i class="material-icons">visibility</i>&nbsp;Details
+                    </button>
+                </div>
+            </div>
         </div>
-        <span fxFlex></span>
-        <div fxLayoutAlign="end center" *ngIf="showDetails">
-          <button mat-button (click)="openDetailsDialog()">
-            <i class="material-icons">visibility</i>&nbsp;Details
-          </button>
-        </div>
-      </div>
-
     </div>
-  </div>
-
 </div>

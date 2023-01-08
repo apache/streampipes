@@ -23,10 +23,7 @@
             "anchorFill": "yellow",
             "anchorSize": 20,
             "borderStroke": "green",
-            "borderDash": [
-              3,
-              3
-            ]
+            "borderDash": [3, 3]
           },
           "className": "Transformer"
         }
@@ -119,10 +116,7 @@
             "anchorStroke": "red",
             "anchorFill": "yellow",
             "borderStroke": "green",
-            "borderDash": [
-              3,
-              3
-            ]
+            "borderDash": [3, 3]
           },
           "className": "Transformer"
         }

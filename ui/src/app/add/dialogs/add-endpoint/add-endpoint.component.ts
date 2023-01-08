@@ -23,18 +23,19 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-add-endpoint-dialog',
     templateUrl: './add-endpoint.component.html',
-    styleUrls: ['./add-endpoint.component.scss']
+    styleUrls: ['./add-endpoint.component.scss'],
 })
 export class AddEndpointComponent implements OnInit {
-
     rdfEndpoints: any;
     addSelected: any;
     newEndpoint: any;
 
     endpointsChanged = false;
 
-    constructor(private addService: AddService,
-                private dialogRef: DialogRef<AddEndpointComponent>) {
+    constructor(
+        private addService: AddService,
+        private dialogRef: DialogRef<AddEndpointComponent>,
+    ) {
         this.rdfEndpoints = [];
         this.addSelected = false;
         this.newEndpoint = {};
@@ -49,27 +50,24 @@ export class AddEndpointComponent implements OnInit {
     }
 
     loadRdfEndpoints() {
-        this.addService.getRdfEndpoints()
-            .subscribe(rdfEndpoints => {
-                this.rdfEndpoints = rdfEndpoints;
-            });
+        this.addService.getRdfEndpoints().subscribe(rdfEndpoints => {
+            this.rdfEndpoints = rdfEndpoints;
+        });
     }
 
     addRdfEndpoint(rdfEndpoint) {
         console.log(rdfEndpoint);
-        this.addService.addRdfEndpoint(rdfEndpoint)
-            .subscribe(() => {
-                this.loadRdfEndpoints();
-                this.endpointsChanged = true;
-            });
+        this.addService.addRdfEndpoint(rdfEndpoint).subscribe(() => {
+            this.loadRdfEndpoints();
+            this.endpointsChanged = true;
+        });
     }
 
     removeRdfEndpoint(rdfEndpointId) {
-        this.addService.removeRdfEndpoint(rdfEndpointId)
-            .subscribe(() => {
-                this.loadRdfEndpoints();
-                this.endpointsChanged = true;
-            });
+        this.addService.removeRdfEndpoint(rdfEndpointId).subscribe(() => {
+            this.loadRdfEndpoints();
+            this.endpointsChanged = true;
+        });
     }
 
     close() {

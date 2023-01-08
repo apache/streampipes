@@ -17,15 +17,16 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression.orderby;
 
-import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.PropertyExpression;
 
+import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
+
 public class OrderByExpression extends Expression {
 
-  private PropertyExpression property;
-  private OrderByAttribute.Order order;
+  private final PropertyExpression property;
+  private final OrderByAttribute.Order order;
 
   public OrderByExpression(PropertyExpression property, OrderByAttribute.Order order) {
     this.property = property;

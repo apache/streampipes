@@ -19,32 +19,45 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
-            <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                style="margin: 5px; width: 100%"
+            >
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Asset Name</mat-label>
-                    <input matInput
-                           data-cy="asset-name"
-                           [(ngModel)]="assetModel.assetName">
+                    <input
+                        matInput
+                        data-cy="asset-name"
+                        [(ngModel)]="assetModel.assetName"
+                    />
                 </mat-form-field>
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Description</mat-label>
-                    <input matInput [(ngModel)]="assetModel.assetDescription">
+                    <input matInput [(ngModel)]="assetModel.assetDescription" />
                 </mat-form-field>
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic mr-10"
-                (click)="onCancel()" style="margin-right: 10px;">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="onCancel()"
+            style="margin-right: 10px"
+        >
             Close
         </button>
-        <button mat-button mat-raised-button color="accent"
-                data-cy="save-data-view"
-                (click)="onSave()">
-            {{createMode ? 'Create' : 'Save'}}
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            data-cy="save-data-view"
+            (click)="onSave()"
+        >
+            {{ createMode ? 'Create' : 'Save' }}
         </button>
     </div>
 </div>
-
-

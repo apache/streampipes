@@ -19,27 +19,20 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import SwaggerUI from 'swagger-ui';
 
-
 @Component({
-  selector: 'sp-apidocs',
-  templateUrl: './apidocs.component.html',
-  styleUrls: ['./apidocs.component.scss']
+    selector: 'sp-apidocs',
+    templateUrl: './apidocs.component.html',
+    styleUrls: ['./apidocs.component.scss'],
 })
 export class ApidocsComponent implements OnInit {
+    constructor(private el: ElementRef) {}
 
-  constructor(private el: ElementRef) {
-
-  }
-
-  ngOnInit(): void {
-    SwaggerUI({
-      url: '/streampipes-backend/api/openapi.json',
-      domNode: this.el.nativeElement.querySelector('.swagger-ui'),
-      deepLinking: false,
-      presets: [
-        SwaggerUI.presets.apis
-      ],
-    });
-  }
-
+    ngOnInit(): void {
+        SwaggerUI({
+            url: '/streampipes-backend/api/openapi.json',
+            domNode: this.el.nativeElement.querySelector('.swagger-ui'),
+            deepLinking: false,
+            presets: [SwaggerUI.presets.apis],
+        });
+    }
 }

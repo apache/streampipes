@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.connect.adapters.generic;
 
-import org.apache.streampipes.connect.adapter.preprocessing.Util;
+import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.Util;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;

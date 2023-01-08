@@ -16,45 +16,46 @@
  *
  */
 
-import { EventEmitter, Input, Output, ViewChild, Directive } from '@angular/core';
+import {
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+    Directive,
+} from '@angular/core';
 import { CdkPortalOutlet, ComponentPortal, Portal } from '@angular/cdk/portal';
 import { DialogRef } from './dialog-ref';
 
 @Directive()
 export abstract class BaseDialogComponent<T> {
+    @Input()
+    dialogTitle = '';
 
-  @Input()
-  dialogTitle = '';
+    @Input()
+    comp: ComponentPortal<T>;
 
-  @Input()
-  comp: ComponentPortal<T>;
+    @Output()
+    containerEvent = new EventEmitter<{ key: 'CLOSE' }>();
 
-  @Output()
-  containerEvent = new EventEmitter<{ key: 'CLOSE' }>();
+    @ViewChild('portal', { read: CdkPortalOutlet, static: true })
+    portal: CdkPortalOutlet;
 
-  @ViewChild('portal', {read: CdkPortalOutlet, static: true})
-  portal: CdkPortalOutlet;
+    @Input()
+    selectedPortal: Portal<T>;
 
-  @Input()
-  selectedPortal: Portal<T>;
+    @Input()
+    dialogRef: DialogRef<T>;
 
-  @Input()
-  dialogRef: DialogRef<T>;
+    protected constructor() {}
 
+    attach(): any {
+        const c = this.portal.attach(this.selectedPortal);
+        return c.instance;
+    }
 
-  protected constructor() {
+    close() {
+        this.dialogRef.close();
+    }
 
-  }
-
-  attach(): any {
-    const c = this.portal.attach(this.selectedPortal);
-    return c.instance;
-  }
-
-  close() {
-    this.dialogRef.close();
-  }
-
-  abstract closeDialog();
+    abstract closeDialog();
 }
-

@@ -19,80 +19,138 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
-            <div fxFlex="100" style="margin:5px;width:100%">
-                <div *ngIf="page == 'select-pipeline'">
-                    <div *ngIf="page == 'select-pipeline'">
-                        <h4>{{pages[0].description}}</h4>
+            <div fxFlex="100" style="margin: 5px; width: 100%">
+                <div *ngIf="page === 'select-pipeline'">
+                    <div *ngIf="page === 'select-pipeline'">
+                        <h4>{{ pages[0].description }}</h4>
                         <mat-list>
-                            <mat-list-item *ngFor="let pipeline of visualizablePipelines"
-                                           (click)="selectPipeline(pipeline)" class="list-item">
-                                <div mat-list-avatar
-                                     class="pipeline-avatar sp-accent-bg">{{iconText(pipeline.pipelineName)}}
+                            <mat-list-item
+                                *ngFor="let pipeline of visualizablePipelines"
+                                (click)="selectPipeline(pipeline)"
+                                class="list-item"
+                            >
+                                <div
+                                    mat-list-avatar
+                                    class="pipeline-avatar sp-accent-bg"
+                                >
+                                    {{ iconText(pipeline.pipelineName) }}
                                 </div>
-                                <h4 mat-line>{{pipeline.pipelineName}}</h4>
-                                <p mat-line>{{pipeline.measureName}} </p>
+                                <h4 mat-line>{{ pipeline.pipelineName }}</h4>
+                                <p mat-line>{{ pipeline.measureName }}</p>
                             </mat-list-item>
                         </mat-list>
                     </div>
                 </div>
 
                 <!-- Select Type -->
-                <div *ngIf="page == 'select-measurement'" fxLayout="column">
-                    <h4>{{pages[1].description}}</h4>
+                <div *ngIf="page === 'select-measurement'" fxLayout="column">
+                    <h4>{{ pages[1].description }}</h4>
                     <div fxFlex="100" fxLayout="column">
-                        <mat-radio-group fxLayout="column" class="example-radio-group"
-                                         [(ngModel)]="selectedMeasurement">
-                            <mat-radio-button class="example-radio-button"
-                                              *ngFor="let prop of selectedVisualization.eventSchema.eventProperties"
-                                              [value]="prop.runtimeName">
-                                {{prop.runtimeName}}
+                        <mat-radio-group
+                            fxLayout="column"
+                            class="example-radio-group"
+                            [(ngModel)]="selectedMeasurement"
+                        >
+                            <mat-radio-button
+                                class="example-radio-button"
+                                *ngFor="
+                                    let prop of selectedVisualization
+                                        .eventSchema.eventProperties
+                                "
+                                [value]="prop.runtimeName"
+                            >
+                                {{ prop.runtimeName }}
                             </mat-radio-button>
                         </mat-radio-group>
                     </div>
                 </div>
 
                 <!-- Select Scheme -->
-                <div *ngIf="page == 'select-label'" fxLayout="column">
-                    <b><h4>{{pages[2].description}}</h4></b>
+                <div *ngIf="page === 'select-label'" fxLayout="column">
+                    <b
+                        ><h4>{{ pages[2].description }}</h4></b
+                    >
                     <div fxFlex="100" fxLayout="column">
-                        <mat-form-field style="margin-bottom: 10px;" color="accent">
+                        <mat-form-field
+                            style="margin-bottom: 10px"
+                            color="accent"
+                        >
                             <mat-label>Label</mat-label>
-                            <input matInput placeholder="Label" [(ngModel)]="selectedLabel" value="Label">
-                            <mat-hint>Enter the label that will identify the measurement</mat-hint>
+                            <input
+                                matInput
+                                placeholder="Label"
+                                [(ngModel)]="selectedLabel"
+                                value="Label"
+                            />
+                            <mat-hint
+                                >Enter the label that will identify the
+                                measurement</mat-hint
+                            >
                         </mat-form-field>
                         <div fxLayout="row" class="element-margin">
-                            <mat-label fxFlex="50">Label Background Color</mat-label>
-                            <input [(colorPicker)]="selectedLabelBackgroundColor"
-                                   [style.background]="selectedLabelBackgroundColor"/>
+                            <mat-label fxFlex="50"
+                                >Label Background Color</mat-label
+                            >
+                            <input
+                                [(colorPicker)]="selectedLabelBackgroundColor"
+                                [style.background]="
+                                    selectedLabelBackgroundColor
+                                "
+                            />
                         </div>
                         <div fxLayout="row" class="element-margin">
                             <mat-label fxFlex="50">Label Text Color</mat-label>
-                            <input [(colorPicker)]="selectedLabelTextColor"
-                                   [style.background]="selectedLabelTextColor"/>
+                            <input
+                                [(colorPicker)]="selectedLabelTextColor"
+                                [style.background]="selectedLabelTextColor"
+                            />
                         </div>
                         <div fxLayout="row" class="element-margin">
-                            <mat-label fxFlex="50">Measurement Value Background Color</mat-label>
-                            <input [(colorPicker)]="selectedMeasurementBackgroundColor"
-                                   [style.background]="selectedMeasurementBackgroundColor"/>
+                            <mat-label fxFlex="50"
+                                >Measurement Value Background Color</mat-label
+                            >
+                            <input
+                                [(colorPicker)]="
+                                    selectedMeasurementBackgroundColor
+                                "
+                                [style.background]="
+                                    selectedMeasurementBackgroundColor
+                                "
+                            />
                         </div>
                         <div fxLayout="row" class="element-margin">
-                            <mat-label fxFlex="50">Measurement Value Text Color</mat-label>
-                            <input [(colorPicker)]="selectedMeasurementTextColor"
-                                   [style.background]="selectedMeasurementTextColor"/>
+                            <mat-label fxFlex="50"
+                                >Measurement Value Text Color</mat-label
+                            >
+                            <input
+                                [(colorPicker)]="selectedMeasurementTextColor"
+                                [style.background]="
+                                    selectedMeasurementTextColor
+                                "
+                            />
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button class="mat-basic mr-10" (click)="onCancel()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="onCancel()"
+        >
             Cancel
         </button>
-        <button mat-button mat-raised-button class="mat-basic mr-10" (click)="back()" *ngIf="!('select-pipeline'===page)">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="back()"
+            *ngIf="!('select-pipeline' === page)"
+        >
             Back
         </button>
         <button mat-button mat-raised-button color="accent" (click)="next()">
@@ -100,6 +158,3 @@
         </button>
     </div>
 </div>
-
-
-

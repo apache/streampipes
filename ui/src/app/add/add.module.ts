@@ -33,56 +33,50 @@ import { OrderByPipe } from './filter/order-by.pipe';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
 import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
-import { RouterModule } from "@angular/router";
+import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '../../../projects/streampipes/shared-ui/src/lib/shared-ui.module';
 
-
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatTabsModule,
-    FlexLayoutModule,
-    CoreUiModule,
-    CustomMaterialModule,
-    MatProgressSpinnerModule,
-    RouterModule.forChild([
-      {
-        path: 'add',
-        children: [
-          {
-            path: '',
-            component: AddComponent
-          }
-        ]
-      }
-    ]),
-    SharedUiModule
-  ],
-  declarations: [
-    AddComponent,
-    AddEndpointComponent,
-    EndpointInstallationComponent,
-    EndpointItemComponent,
-    OrderByPipe,
-    PipelineElementNameFilter,
-    PipelineElementInstallationStatusFilter,
-    PipelineElementTypeFilter
-  ],
-  providers: [
-    AddService,
-    OrderByPipe,
-    PipelineElementInstallationStatusFilter,
-    PipelineElementNameFilter,
-    PipelineElementTypeFilter
-  ],
-  exports: [
-    AddComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatTabsModule,
+        FlexLayoutModule,
+        CoreUiModule,
+        CustomMaterialModule,
+        MatProgressSpinnerModule,
+        RouterModule.forChild([
+            {
+                path: 'add',
+                children: [
+                    {
+                        path: '',
+                        component: AddComponent,
+                    },
+                ],
+            },
+        ]),
+        SharedUiModule,
+    ],
+    declarations: [
+        AddComponent,
+        AddEndpointComponent,
+        EndpointInstallationComponent,
+        EndpointItemComponent,
+        OrderByPipe,
+        PipelineElementNameFilter,
+        PipelineElementInstallationStatusFilter,
+        PipelineElementTypeFilter,
+    ],
+    providers: [
+        AddService,
+        OrderByPipe,
+        PipelineElementInstallationStatusFilter,
+        PipelineElementNameFilter,
+        PipelineElementTypeFilter,
+    ],
+    exports: [AddComponent],
 })
 export class AddModule {
-
-  constructor() {
-  }
-
+    constructor() {}
 }

@@ -19,24 +19,23 @@
 import { MissingValueBehaviour } from './data-lake-query-config.model';
 
 export class DatalakeQueryParameters {
-  public columns: string;
-  public startDate: number;
-  public endDate: number;
-  public page: number;
-  public limit: number;
-  public offset: number;
-  public groupBy: string;
-  public order: string;
-  public aggregationFunction: string;
-  public timeInterval: string;
-  public countOnly: boolean;
-  public autoAggregate: boolean;
-  public filter: string;
-  public missingValueBehaviour: MissingValueBehaviour;
-  public maximumAmountOfEvents: number;
+    public columns: string;
+    public startDate: number;
+    public endDate: number;
+    public page: number;
+    public limit: number;
+    public offset: number;
+    public groupBy: string;
+    public order: string;
+    public aggregationFunction: string;
+    public timeInterval: string;
+    public countOnly: boolean;
+    public autoAggregate: boolean;
+    public filter: string;
+    public missingValueBehaviour: MissingValueBehaviour;
+    public maximumAmountOfEvents: number;
 
-  // should be only used for multi-query requests
-  public measureName: string;
-  public forId: string;
+    // should be only used for multi-query requests
+    public measureName: string;
+    public forId: string;
 }
-

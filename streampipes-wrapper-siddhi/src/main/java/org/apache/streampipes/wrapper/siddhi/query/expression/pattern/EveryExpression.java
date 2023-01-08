@@ -22,7 +22,7 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.StreamExpression;
 
 public class EveryExpression extends StreamExpression {
 
-  private StreamExpression streamExpression;
+  private final StreamExpression streamExpression;
 
   public EveryExpression(StreamExpression streamExpression) {
     this.streamExpression = streamExpression;

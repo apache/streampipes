@@ -16,40 +16,104 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="pipeline-element-box"
-     style="padding:5px;margin-bottom:10px;background:{{getSelectedBackground()}}" [ngStyle]="item.editable ? {opacity: 1} : {opacity: 0.5}">
+<div
+    fxFlex="100"
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    class="pipeline-element-box"
+    style="padding:5px;margin-bottom:10px;background:{{
+        getSelectedBackground()
+    }}"
+    [ngStyle]="item.editable ? { opacity: 1 } : { opacity: 0.5 }"
+>
     <div fxLayout="row" class="w-100">
-        <i class="material-icons" [ngClass]="item.available ? 'endpoint-icon-available' : 'endpoint-icon-critical'">lens</i>
+        <i
+            class="material-icons"
+            [ngClass]="
+                item.available
+                    ? 'endpoint-icon-available'
+                    : 'endpoint-icon-critical'
+            "
+            >lens</i
+        >
         <span fxFlex></span>
-        <span class="{{itemTypeStyle}}" matTooltip="Endpoint {{item.available ? 'available' : 'not available'}}">{{itemTypeTitle}}</span>
+        <span
+            class="{{ itemTypeStyle }}"
+            matTooltip="Endpoint {{
+                item.available ? 'available' : 'not available'
+            }}"
+            >{{ itemTypeTitle }}</span
+        >
     </div>
-    <div fxFlex fxLayout="row" style="width:100%;">
-        <div style="margin-right:10px;margin-left:10px;margin-top:10px;">
-            <div *ngIf="!item.includesIcon || iconError" class="draggable-icon {{item.type}}">{{iconText(item.name)}}</div>
-            <div *ngIf="item.includesIcon && iconReady" class="draggable-icon {{item.type}}">
-                <img class="icon" [src]="image"></div>
+    <div fxFlex fxLayout="row" style="width: 100%">
+        <div style="margin-right: 10px; margin-left: 10px; margin-top: 10px">
+            <div
+                *ngIf="!item.includesIcon || iconError"
+                class="draggable-icon {{ item.type }}"
+            >
+                {{ iconText(item.name) }}
+            </div>
+            <div
+                *ngIf="item.includesIcon && iconReady"
+                class="draggable-icon {{ item.type }}"
+            >
+                <img class="icon" [src]="image" />
+            </div>
         </div>
         <div fxFlex fxLayout="column">
-
-            <div class="ml-5"><small *ngIf="!(item.editable)">Internally managed by {{appConstants.APP_NAME}}</small></div>
+            <div class="ml-5">
+                <small *ngIf="!item.editable"
+                    >Internally managed by {{ appConstants.APP_NAME }}</small
+                >
+            </div>
             <div fxFlex fxLayoutAlign="start end" class="ml-5">
-                <button class="small-button-add" mat-button mat-raised-button color="accent" [disabled]="!(item.editable)"
-                        (click)="installSingleElement($event, item)" *ngIf="!item.installed">
+                <button
+                    class="small-button-add"
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    [disabled]="!item.editable"
+                    (click)="installSingleElement($event, item)"
+                    *ngIf="!item.installed"
+                >
                     <span>&nbsp;Install</span>
                 </button>
-                <button class="small-button-add-inverted" mat-button mat-raised-button [disabled]="!(item.editable)"
-                        (click)="uninstallSingleElement($event, item)" *ngIf="item.installed">
+                <button
+                    class="small-button-add-inverted"
+                    mat-button
+                    mat-raised-button
+                    [disabled]="!item.editable"
+                    (click)="uninstallSingleElement($event, item)"
+                    *ngIf="item.installed"
+                >
                     <span>&nbsp;Uninstall</span>
                 </button>
-                <div *ngIf="item.installed" style="margin-left:5px;">
-                    <button class="small-button-add mat-basic no-min-width" [disabled]="!(item.editable)"
-                            mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
+                <div *ngIf="item.installed" style="margin-left: 5px">
+                    <button
+                        class="small-button-add mat-basic no-min-width"
+                        [disabled]="!item.editable"
+                        mat-raised-button
+                        mat-button
+                        [matMenuTriggerFor]="menu"
+                    >
+                        <span style="font-size: 12px">...</span>
+                    </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="refresh(item.elementId)" [disabled]="!item.available">
+                        <button
+                            mat-menu-item
+                            (click)="refresh(item.elementId)"
+                            [disabled]="!item.available"
+                        >
                             <mat-icon>refresh</mat-icon>
                             <span>&nbsp;Update</span>
                         </button>
-                        <button mat-menu-item (click)="showPermissionsDialog(item.elementId, item.name)" [disabled]="!item.available">
+                        <button
+                            mat-menu-item
+                            (click)="
+                                showPermissionsDialog(item.elementId, item.name)
+                            "
+                            [disabled]="!item.available"
+                        >
                             <mat-icon>share</mat-icon>
                             <span>&nbsp;Manage permissions</span>
                         </button>
@@ -58,11 +122,17 @@
             </div>
         </div>
     </div>
-    <div fxFlex="100" fxLayout="column" style="padding-left:10px;margin-top:10px;">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        style="padding-left: 10px; margin-top: 10px"
+    >
         <div fxLayout="column">
             <div fxFlex fxLayout="column">
-                <h3><b>{{item.name}}</b></h3>
-                <p>{{item.description}}</p>
+                <h3>
+                    <b>{{ item.name }}</b>
+                </h3>
+                <p>{{ item.description }}</p>
             </div>
         </div>
     </div>

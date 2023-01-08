@@ -22,7 +22,7 @@ import { UserRole } from '../_enums/user-role.enum';
 export type RoleModel = Privilege | Role;
 
 export interface RoleDescription {
-  role: UserRole;
-  roleTitle: string;
-  roleDescription: string;
+    role: UserRole;
+    roleTitle: string;
+    roleDescription: string;
 }

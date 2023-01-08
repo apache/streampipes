@@ -28,23 +28,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class SiddhiInvocationConfigGenerator<B extends EventProcessorBindingParams> {
+public class SiddhiInvocationConfigGenerator<T extends EventProcessorBindingParams> {
 
   private final String siddhiAppString;
   private final SiddhiAppConfig siddhiAppConfig;
 
-  private final SiddhiProcessorParams<B> siddhiProcessorParams;
+  private final SiddhiProcessorParams<T> siddhiProcessorParams;
 
-  public SiddhiInvocationConfigGenerator(B params,
-                                         BiFunction<SiddhiProcessorParams<B>, String, SiddhiAppConfig> statementFunction) {
+  public SiddhiInvocationConfigGenerator(T params,
+                                         BiFunction<SiddhiProcessorParams<T>,
+                                             String, SiddhiAppConfig> statementFunction) {
     List<String> inputStreamNames = new InputStreamNameGenerator<>(params).generateInputStreamNames();
     Map<String, List<EventPropertyDef>> eventTypeInfo = new EventTypeGenerator<>(params).generateInEventTypes();
     List<EventPropertyDef> outTypeInfo = new EventTypeGenerator<>(params).generateOutEventTypes();
     List<String> outputEventKeys = new ArrayList<>(params.getOutEventType().keySet());
-    this.siddhiProcessorParams = new SiddhiProcessorParams<>(params, inputStreamNames, eventTypeInfo, outputEventKeys, outTypeInfo);
+    this.siddhiProcessorParams =
+        new SiddhiProcessorParams<>(params, inputStreamNames, eventTypeInfo, outputEventKeys, outTypeInfo);
     this.siddhiAppConfig = statementFunction.apply(siddhiProcessorParams, getOutputStreamName());
     this.siddhiAppString = new SiddhiAppGenerator<>(siddhiProcessorParams, siddhiAppConfig)
-            .generateSiddhiApp();
+        .generateSiddhiApp();
   }
 
   private String getOutputStreamName() {
@@ -55,7 +57,7 @@ public class SiddhiInvocationConfigGenerator<B extends EventProcessorBindingPara
     return siddhiAppString;
   }
 
-  public SiddhiProcessorParams<B> getSiddhiProcessorParams() {
+  public SiddhiProcessorParams<T> getSiddhiProcessorParams() {
     return siddhiProcessorParams;
   }
 

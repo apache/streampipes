@@ -16,43 +16,40 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { ShapeService } from '../../services/shape.service';
 import { HyperlinkConfig } from '../../model/selected-visualization-data.model';
 
 @Component({
-  selector: 'sp-add-link-dialog-component',
-  templateUrl: 'add-link-dialog.component.html',
-  styleUrls: ['./add-link-dialog.component.scss'],
+    selector: 'sp-add-link-dialog-component',
+    templateUrl: 'add-link-dialog.component.html',
+    styleUrls: ['./add-link-dialog.component.scss'],
 })
-export class AddLinkDialogComponent implements OnInit {
+export class AddLinkDialogComponent {
+    linkLabel: string;
+    linkHref: string;
+    labelFontSize = 12;
+    newWindow = false;
 
-  linkLabel: string;
-  linkHref: string;
-  labelFontSize = 12;
-  newWindow = false;
+    constructor(
+        private dialogRef: DialogRef<AddLinkDialogComponent>,
+        private shapeService: ShapeService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<AddLinkDialogComponent>,
-              private shapeService: ShapeService) {}
+    cancel() {
+        this.dialogRef.close();
+    }
 
-  ngOnInit(): void {
-  }
+    add() {
+        const hyperlinkConfig: HyperlinkConfig = {
+            linkLabel: this.linkLabel,
+            linkHref: this.linkHref,
+            labelFontSize: this.labelFontSize,
+            newWindow: this.newWindow,
+        };
 
-  cancel() {
-    this.dialogRef.close();
-  }
-
-  add() {
-    const hyperlinkConfig: HyperlinkConfig = {
-      linkLabel: this.linkLabel,
-      linkHref: this.linkHref,
-      labelFontSize: this.labelFontSize,
-      newWindow: this.newWindow
-    };
-
-    const group = this.shapeService.makeNewHyperlinkGroup(hyperlinkConfig);
-    this.dialogRef.close(group);
-  }
-
+        const group = this.shapeService.makeNewHyperlinkGroup(hyperlinkConfig);
+        this.dialogRef.close(group);
+    }
 }

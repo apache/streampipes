@@ -24,26 +24,27 @@ import { PlatformServicesCommons } from './commons.service';
 import { GeneralConfigModel } from '../model/general-config.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class GeneralConfigService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    getGeneralConfig(): Observable<GeneralConfigModel> {
+        return this.http
+            .get(this.generalConfigPath)
+            .pipe(map(response => response as GeneralConfigModel));
+    }
 
-  getGeneralConfig(): Observable<GeneralConfigModel> {
-    return this.http
-        .get(this.generalConfigPath)
-        .pipe(map(response => response as GeneralConfigModel));
-  }
+    updateGeneralConfig(config: GeneralConfigModel): Observable<any> {
+        return this.http.put(this.generalConfigPath, config);
+    }
 
-  updateGeneralConfig(config: GeneralConfigModel): Observable<any> {
-    return this.http.put(this.generalConfigPath, config);
-  }
-
-  private get generalConfigPath() {
-    return this.platformServicesCommons.apiBasePath + '/admin/general-config';
-  }
-
+    private get generalConfigPath() {
+        return (
+            this.platformServicesCommons.apiBasePath + '/admin/general-config'
+        );
+    }
 }
