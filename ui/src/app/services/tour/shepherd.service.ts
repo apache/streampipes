@@ -25,13 +25,14 @@ import StepOptions = Step.StepOptions;
 
 @Injectable()
 export class ShepherdService {
-
     currentTour: any;
     currentTourSettings: any;
     timeWaitMillis: number;
 
-    constructor(private router: Router,
-                private tourProviderService: TourProviderService) {
+    constructor(
+        private router: Router,
+        private tourProviderService: TourProviderService,
+    ) {
         this.timeWaitMillis = tourProviderService.getTime();
     }
 
@@ -41,9 +42,9 @@ export class ShepherdService {
             confirmCancelMessage: 'Do you really want to cancel the tour?',
             defaultStepOptions: {
                 classes: 'shadow-md bg-purple-dark',
-                scrollTo: true
+                scrollTo: true,
                 // showCancelLink: true
-            }
+            },
         });
 
         currentTourSettings.steps.forEach(step => {
@@ -59,7 +60,7 @@ export class ShepherdService {
             text: step.text,
             classes: step.classes,
             id: step.stepId,
-            buttons: this.generateButtons(tour, step.buttons)
+            buttons: this.generateButtons(tour, step.buttons),
         };
 
         if (step.attachToElement) {
@@ -67,7 +68,7 @@ export class ShepherdService {
                 attachTo: {
                     element: step.attachToElement,
                     on: step.attachPosition,
-                }
+                },
             });
         }
 
@@ -100,19 +101,18 @@ export class ShepherdService {
         this.currentTour.start();
     }
 
-
     makeCancelButton(tour) {
         return {
             action: tour.cancel,
             classes: 'shepherd-button-secondary',
-            text: 'Exit Tour'
+            text: 'Exit Tour',
         };
     }
 
     makeNextButton(tour) {
         return {
             action: tour.next,
-            text: 'Next'
+            text: 'Next',
         };
     }
 
@@ -120,28 +120,36 @@ export class ShepherdService {
         return {
             action: tour.back,
             classes: 'shepherd-button-secondary',
-            text: 'Back'
+            text: 'Back',
         };
     }
 
     makeStartDashboardTutorialButton() {
         return {
             action: this.switchAndStartDashboardTour(),
-            text: 'Dashboard Tutorial'
+            text: 'Dashboard Tutorial',
         };
     }
 
     trigger(actionId) {
         if (Shepherd.activeTour) {
-            if (this.shouldTrigger(actionId, this.currentTour.getCurrentStep().id)) {
-                 setTimeout(() => this.currentTour.next(), this.tourProviderService.getTime());
+            if (
+                this.shouldTrigger(
+                    actionId,
+                    this.currentTour.getCurrentStep().id,
+                )
+            ) {
+                setTimeout(
+                    () => this.currentTour.next(),
+                    this.tourProviderService.getTime(),
+                );
             }
         }
     }
 
     shouldTrigger(actionId, currentStep) {
         return this.currentTourSettings.matchingSteps.some(el => {
-            return (el.actionId === actionId) && (el.currentStep === currentStep);
+            return el.actionId === actionId && el.currentStep === currentStep;
         });
     }
 
@@ -182,6 +190,6 @@ export class ShepherdService {
     }
 
     getTimeWaitMillies() {
-       return this.tourProviderService.getTime();
+        return this.tourProviderService.getTime();
     }
 }

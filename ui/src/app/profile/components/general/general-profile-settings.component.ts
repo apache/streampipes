@@ -28,84 +28,94 @@ import { ChangePasswordDialogComponent } from '../../dialog/change-password/chan
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'general-profile-settings',
-  templateUrl: './general-profile-settings.component.html',
-  styleUrls: ['./general-profile-settings.component.scss']
+    selector: 'sp-general-profile-settings',
+    templateUrl: './general-profile-settings.component.html',
+    styleUrls: ['./general-profile-settings.component.scss'],
 })
-export class GeneralProfileSettingsComponent extends BasicProfileSettings implements OnInit, OnDestroy {
+export class GeneralProfileSettingsComponent
+    extends BasicProfileSettings
+    implements OnInit, OnDestroy
+{
+    darkMode = false;
+    originalDarkMode = false;
+    darkModeChanged = false;
 
-  darkMode = false;
-  originalDarkMode = false;
-  darkModeChanged = false;
-
-  constructor(authService: AuthService,
-              profileService: ProfileService,
-              appConstants: AppConstants,
-              tokenService: JwtTokenStorageService,
-              private dialogService: DialogService,
-              private router: Router) {
-    super(profileService, appConstants, tokenService, authService);
-  }
-
-  ngOnInit(): void {
-    this.authService.darkMode$.subscribe(darkMode => this.darkMode = darkMode);
-    this.receiveUserData();
-  }
-
-  ngOnDestroy(): void {
-    if (!this.darkModeChanged) {
-      this.authService.darkMode$.next(this.originalDarkMode);
+    constructor(
+        authService: AuthService,
+        profileService: ProfileService,
+        appConstants: AppConstants,
+        tokenService: JwtTokenStorageService,
+        private dialogService: DialogService,
+        private router: Router,
+    ) {
+        super(profileService, appConstants, tokenService, authService);
     }
-  }
 
-  changeModePreview(value: boolean) {
-    this.authService.darkMode$.next(value);
-  }
+    ngOnInit(): void {
+        this.authService.darkMode$.subscribe(
+            darkMode => (this.darkMode = darkMode),
+        );
+        this.receiveUserData();
+    }
 
-  onUserDataReceived() {
-    this.originalDarkMode = this.userData.darkMode;
-    this.authService.darkMode$.next(this.userData.darkMode);
-  }
+    ngOnDestroy(): void {
+        if (!this.darkModeChanged) {
+            this.authService.darkMode$.next(this.originalDarkMode);
+        }
+    }
 
-  updateAppearanceMode() {
-    this.profileService.updateAppearanceMode(this.userData.username, this.darkMode).subscribe(response => {
-      this.darkModeChanged = true;
-    });
-  }
+    changeModePreview(value: boolean) {
+        this.authService.darkMode$.next(value);
+    }
 
-  openChangeEmailDialog() {
-    const dialogRef = this.dialogService.open(ChangeEmailDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Change email',
-      width: '50vw',
-      data: {
-        'user': this.userData,
-      }
-    });
+    onUserDataReceived() {
+        this.originalDarkMode = this.userData.darkMode;
+        this.authService.darkMode$.next(this.userData.darkMode);
+    }
 
-    this.afterClose(dialogRef);
-  }
+    updateAppearanceMode() {
+        this.profileService
+            .updateAppearanceMode(this.userData.username, this.darkMode)
+            .subscribe(response => {
+                this.darkModeChanged = true;
+            });
+    }
 
-  openChangePasswordDialog() {
-    const dialogRef = this.dialogService.open(ChangePasswordDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Change password',
-      width: '50vw',
-      data: {
-        'user': this.userData,
-      }
-    });
+    openChangeEmailDialog() {
+        const dialogRef = this.dialogService.open(ChangeEmailDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Change email',
+            width: '50vw',
+            data: {
+                user: this.userData,
+            },
+        });
 
-    this.afterClose(dialogRef);
-  }
+        this.afterClose(dialogRef);
+    }
 
-  afterClose(dialogRef: DialogRef<any>) {
-    dialogRef.afterClosed().subscribe(refresh => {
-      if (refresh) {
-        this.authService.logout();
-        this.router.navigate(['login']);
-      }
-    });
-  }
+    openChangePasswordDialog() {
+        const dialogRef = this.dialogService.open(
+            ChangePasswordDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Change password',
+                width: '50vw',
+                data: {
+                    user: this.userData,
+                },
+            },
+        );
 
+        this.afterClose(dialogRef);
+    }
+
+    afterClose(dialogRef: DialogRef<any>) {
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.authService.logout();
+                this.router.navigate(['login']);
+            }
+        });
+    }
 }
