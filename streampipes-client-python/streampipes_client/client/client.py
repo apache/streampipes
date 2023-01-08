@@ -42,7 +42,8 @@ class StreamPipesClient:
 
     The client provides so-called "endpoints" each of which refers to
     an endpoint of the StreamPipes API, e.g. `.dataLakeMeasureApi`.
-    An endpoint provides the actual methods to interact with StreamPipes API (see endpoint.endpoint.APIEndpoint).
+    An endpoint provides the actual methods to interact with StreamPipes 
+    API (see endpoint.endpoint.APIEndpoint).
 
     Parameters
     ----------
@@ -67,25 +68,25 @@ class StreamPipesClient:
     ...     https_disabled=True
     ... )
 
+    The following way of instantiating a client instance is 
+    intended to be consistent with the StreamPipes Java client.
     >>> client = StreamPipesClient.create(client_config=client_config)
-
-    # The above way of instantiating a client instance is intended
-    # to be consistent with the StreamPipes Java client.
-    # If you prefer a more pythonic way, you can simply write:
+    
+    If you prefer a more pythonic way, you can simply write:
     >>> client = StreamPipesClient(client_config=client_config)
-
-    # Interact with an endpoint
+    
+    To interact with an endpoint:
     >>> data_lake_measures = client.dataLakeMeasureApi.all()
-
-    # Inspect returned data as a pandas dataframe
+    
+    To inspect returned data as a pandas dataframe:
     >>> data_lake_measures.to_pandas()
-
-        measure_name timestamp_field  ... pipeline_is_running num_event_properties
-    0           test   s0::timestamp  ...               False                    2
-    [1 rows x 6 columns]
+    # 
+    #     measure_name timestamp_field  ... pipeline_is_running num_event_properties
+    # 0           test   s0::timestamp  ...               False                    2
+    # [1 rows x 6 columns]
 
     """
-
+    # note: use python -m mkdocs if building on windows (remove later)
     def __init__(
         self,
         client_config: StreamPipesClientConfig,
