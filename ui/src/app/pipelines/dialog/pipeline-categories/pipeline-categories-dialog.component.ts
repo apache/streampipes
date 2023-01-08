@@ -17,16 +17,19 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Pipeline, PipelineCategory, PipelineService } from '@streampipes/platform-services';
+import {
+    Pipeline,
+    PipelineCategory,
+    PipelineService,
+} from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-pipeline-categories-dialog',
     templateUrl: './pipeline-categories-dialog.component.html',
-    styleUrls: ['./pipeline-categories-dialog.component.scss']
+    styleUrls: ['./pipeline-categories-dialog.component.scss'],
 })
 export class PipelineCategoriesDialogComponent implements OnInit {
-
     addSelected: any;
 
     addPipelineToCategorySelected: any;
@@ -44,8 +47,10 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     @Input()
     systemPipelines: Pipeline[];
 
-    constructor(private pipelineService: PipelineService,
-                private dialogRef: DialogRef<PipelineCategoriesDialogComponent>) {
+    constructor(
+        private pipelineService: PipelineService,
+        private dialogRef: DialogRef<PipelineCategoriesDialogComponent>,
+    ) {
         this.addSelected = false;
         this.addPipelineToCategorySelected = [];
         this.categoryDetailsVisible = [];
@@ -58,14 +63,16 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     }
 
     toggleCategoryDetailsVisibility(categoryId) {
-        this.categoryDetailsVisible[categoryId] = !this.categoryDetailsVisible[categoryId];
+        this.categoryDetailsVisible[categoryId] =
+            !this.categoryDetailsVisible[categoryId];
     }
-
 
     addPipelineToCategory(pipelineCategory) {
         console.log(pipelineCategory);
         const pipeline = this.findPipeline(this.selectedPipelineId);
-        if (pipeline['pipelineCategories'] === undefined) { pipeline['pipelineCategories'] = []; }
+        if (pipeline['pipelineCategories'] === undefined) {
+            pipeline['pipelineCategories'] = [];
+        }
         pipeline['pipelineCategories'].push(pipelineCategory._id);
         this.storeUpdatedPipeline(pipeline);
     }
@@ -77,12 +84,11 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     }
 
     storeUpdatedPipeline(pipeline) {
-        this.pipelineService.updatePipeline(pipeline)
-            .subscribe(msg => {
-                // this.refreshPipelines();
-                // this.getPipelineCategories();
-                this.fetchPipelineCategories();
-            });
+        this.pipelineService.updatePipeline(pipeline).subscribe(msg => {
+            // this.refreshPipelines();
+            // this.getPipelineCategories();
+            this.fetchPipelineCategories();
+        });
     }
 
     findPipeline(pipelineId) {
@@ -99,7 +105,8 @@ export class PipelineCategoriesDialogComponent implements OnInit {
         const newCategory: any = {};
         newCategory.categoryName = this.newCategoryName;
         newCategory.categoryDescription = this.newCategoryDescription;
-        this.pipelineService.storePipelineCategory(newCategory)
+        this.pipelineService
+            .storePipelineCategory(newCategory)
             .subscribe(data => {
                 this.fetchPipelineCategories();
                 this.addSelected = false;
@@ -107,15 +114,14 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     }
 
     fetchPipelineCategories() {
-        this.pipelineService.getPipelineCategories()
+        this.pipelineService
+            .getPipelineCategories()
             .subscribe(pipelineCategories => {
                 this.pipelineCategories = pipelineCategories;
             });
     }
 
-    fetchPipelines() {
-
-    }
+    fetchPipelines() {}
 
     showAddToCategoryInput(categoryId, show) {
         this.addPipelineToCategorySelected[categoryId] = show;
@@ -124,7 +130,8 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     }
 
     deletePipelineCategory(pipelineId) {
-        this.pipelineService.deletePipelineCategory(pipelineId)
+        this.pipelineService
+            .deletePipelineCategory(pipelineId)
             .subscribe(data => {
                 this.fetchPipelineCategories();
             });

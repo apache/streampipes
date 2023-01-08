@@ -20,14 +20,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Pipeline } from '@streampipes/platform-services';
 
 @Pipe({
-	name: 'categoryAlreadyInPipelineFilter',
-	pure: false
+    name: 'categoryAlreadyInPipelineFilter',
+    pure: false,
 })
 export class CategoryAlreadyInPipelinePipe implements PipeTransform {
-
-	transform(pipelines: Pipeline[], categoryId: string): any {
-		return pipelines.filter(pipeline => {
-			return !pipeline.pipelineCategories || !(pipeline.pipelineCategories.some(pc => pc === categoryId));
-		});
-	}
+    transform(pipelines: Pipeline[], categoryId: string): any {
+        return pipelines.filter(pipeline => {
+            return (
+                !pipeline.pipelineCategories ||
+                !pipeline.pipelineCategories.some(pc => pc === categoryId)
+            );
+        });
+    }
 }

@@ -21,31 +21,34 @@ import { AbstractFunctionDetailsDirective } from '../abstract-function-details.d
 import { SpLogEntry } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-functions-logs',
-  templateUrl: './functions-logs.component.html',
-  styleUrls: []
+    selector: 'sp-functions-logs',
+    templateUrl: './functions-logs.component.html',
+    styleUrls: [],
 })
-export class SpFunctionsLogsComponent extends AbstractFunctionDetailsDirective implements OnInit {
+export class SpFunctionsLogsComponent
+    extends AbstractFunctionDetailsDirective
+    implements OnInit
+{
+    logs: SpLogEntry[] = [];
 
-  logs: SpLogEntry[] = [];
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    afterFunctionLoaded(): void {
+        this.loadLogs();
+    }
 
-  afterFunctionLoaded(): void {
-    this.loadLogs();
-  }
+    loadLogs(): void {
+        this.functionsService
+            .getFunctionLogs(this.activeFunction.functionId.id)
+            .subscribe(logs => {
+                this.logs = logs;
+                this.contentReady = true;
+            });
+    }
 
-  loadLogs(): void {
-    this.functionsService.getFunctionLogs(this.activeFunction.functionId.id).subscribe(logs => {
-      this.logs = logs;
-      this.contentReady = true;
-    });
-  }
-
-  getBreadcrumbLabel(): string {
-    return 'Logs';
-  }
-
+    getBreadcrumbLabel(): string {
+        return 'Logs';
+    }
 }

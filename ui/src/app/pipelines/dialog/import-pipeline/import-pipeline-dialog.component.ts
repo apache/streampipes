@@ -24,10 +24,9 @@ import { forkJoin } from 'rxjs';
 @Component({
     selector: 'sp-import-pipeline-dialog',
     templateUrl: './import-pipeline-dialog.component.html',
-    styleUrls: ['./import-pipeline-dialog.component.scss']
+    styleUrls: ['./import-pipeline-dialog.component.scss'],
 })
 export class ImportPipelineDialogComponent {
-
     currentStatus: any;
     page = 'upload-pipelines';
 
@@ -36,23 +35,29 @@ export class ImportPipelineDialogComponent {
 
     importing = false;
 
-    pages = [{
-        type: 'upload-pipelines',
-        title: 'Upload',
-        description: 'Upload a json file containing the pipelines to import'
-    }, {
-        type: 'select-pipelines',
-        title: 'Select pipelines',
-        description: 'Select the pipelines to import'
-    }, {
-        type: 'import-pipelines',
-        title: 'Import',
-        description: ''
-    }];
+    pages = [
+        {
+            type: 'upload-pipelines',
+            title: 'Upload',
+            description:
+                'Upload a json file containing the pipelines to import',
+        },
+        {
+            type: 'select-pipelines',
+            title: 'Select pipelines',
+            description: 'Select the pipelines to import',
+        },
+        {
+            type: 'import-pipelines',
+            title: 'Import',
+            description: '',
+        },
+    ];
 
-    constructor(private pipelineService: PipelineService,
-                private dialogRef: DialogRef<ImportPipelineDialogComponent>) {
-    }
+    constructor(
+        private pipelineService: PipelineService,
+        private dialogRef: DialogRef<ImportPipelineDialogComponent>,
+    ) {}
 
     handleFileInput(files: any) {
         const file = files[0];
@@ -79,24 +84,27 @@ export class ImportPipelineDialogComponent {
 
     toggleSelectedPipeline(pipeline: Pipeline) {
         if (this.selectedPipelines.some(p => p._id === pipeline._id)) {
-            this.selectedPipelines.splice(this.selectedPipelines.findIndex(sp => sp._id === pipeline._id), 1);
+            this.selectedPipelines.splice(
+                this.selectedPipelines.findIndex(sp => sp._id === pipeline._id),
+                1,
+            );
         } else {
             this.selectedPipelines.push(pipeline);
         }
     }
 
     storePipelines() {
-         const promises = [];
-         this.selectedPipelines.forEach(pipeline => {
-             pipeline._rev = undefined;
-             pipeline._id = undefined;
-             promises.push(this.pipelineService.storePipeline(pipeline));
-         });
+        const promises = [];
+        this.selectedPipelines.forEach(pipeline => {
+            pipeline._rev = undefined;
+            pipeline._id = undefined;
+            promises.push(this.pipelineService.storePipeline(pipeline));
+        });
 
-         forkJoin(promises).subscribe(results => {
-             this.importing = false;
-             this.close(true);
-         });
+        forkJoin(promises).subscribe(results => {
+            this.importing = false;
+            this.close(true);
+        });
     }
 
     startImport() {
@@ -104,5 +112,4 @@ export class ImportPipelineDialogComponent {
         this.importing = true;
         this.storePipelines();
     }
-
 }

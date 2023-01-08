@@ -20,23 +20,20 @@ import { Component, OnInit } from '@angular/core';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
-  selector: 'profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+    selector: 'sp-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+    selectedIndex = 0;
 
-  selectedIndex = 0;
+    constructor(private breadcrumbService: SpBreadcrumbService) {}
 
-  constructor(private breadcrumbService: SpBreadcrumbService) {
-  }
+    ngOnInit(): void {
+        this.breadcrumbService.updateBreadcrumb([{ label: 'Profile' }]);
+    }
 
-  ngOnInit(): void {
-    this.breadcrumbService.updateBreadcrumb([{label: 'Profile'}]);
-  }
-
-  selectedIndexChange(index: number) {
-    this.selectedIndex = index;
-  }
-
+    selectedIndexChange(index: number) {
+        this.selectedIndex = index;
+    }
 }

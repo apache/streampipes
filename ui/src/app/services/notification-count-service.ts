@@ -21,19 +21,16 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class NotificationCountService {
-
     public unreadNotificationCount$ = new BehaviorSubject(0);
     lockNotificationId: string;
     lockActive = false;
 
-    constructor(private restApi: RestApi) {
-    }
+    constructor(private restApi: RestApi) {}
 
     loadUnreadNotifications() {
-        this.restApi.getUnreadNotificationsCount()
-            .subscribe(response => {
-                this.unreadNotificationCount$.next(response.count);
-            });
+        this.restApi.getUnreadNotificationsCount().subscribe(response => {
+            this.unreadNotificationCount$.next(response.count);
+        });
     }
 
     decreaseNotificationCount() {

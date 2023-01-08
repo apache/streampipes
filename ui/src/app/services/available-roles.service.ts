@@ -22,24 +22,66 @@ import { UserRole } from '../_enums/user-role.enum';
 
 @Injectable()
 export class AvailableRolesService {
+    availableRoles: RoleDescription[] = [
+        { role: UserRole.ROLE_ADMIN, roleTitle: 'Admin', roleDescription: '' },
+        {
+            role: UserRole.ROLE_SERVICE_ADMIN,
+            roleTitle: 'Service Admin',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_APP_USER,
+            roleTitle: 'App User',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_DASHBOARD_USER,
+            roleTitle: 'Dashboard User',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_DASHBOARD_ADMIN,
+            roleTitle: 'Dashboard Admin',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_DATA_EXPLORER_USER,
+            roleTitle: 'Data Explorer User',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_DATA_EXPLORER_ADMIN,
+            roleTitle: 'Data Explorer Admin',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_CONNECT_ADMIN,
+            roleTitle: 'Connect Admin',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_PIPELINE_USER,
+            roleTitle: 'Pipeline User',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_PIPELINE_ADMIN,
+            roleTitle: 'Pipeline Admin',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_ASSET_USER,
+            roleTitle: 'Asset User',
+            roleDescription: '',
+        },
+        {
+            role: UserRole.ROLE_ASSET_ADMIN,
+            roleTitle: 'Asset Admin',
+            roleDescription: '',
+        },
+    ];
 
-  availableRoles: RoleDescription[] = [
-    {role: UserRole.ROLE_ADMIN, roleTitle: 'Admin', roleDescription: ''},
-    {role: UserRole.ROLE_SERVICE_ADMIN, roleTitle: 'Service Admin', roleDescription: ''},
-    {role: UserRole.ROLE_APP_USER, roleTitle: 'App User', roleDescription: ''},
-    {role: UserRole.ROLE_DASHBOARD_USER, roleTitle: 'Dashboard User', roleDescription: ''},
-    {role: UserRole.ROLE_DASHBOARD_ADMIN, roleTitle: 'Dashboard Admin', roleDescription: ''},
-    {role: UserRole.ROLE_DATA_EXPLORER_USER, roleTitle: 'Data Explorer User', roleDescription: ''},
-    {role: UserRole.ROLE_DATA_EXPLORER_ADMIN, roleTitle: 'Data Explorer Admin', roleDescription: ''},
-    {role: UserRole.ROLE_CONNECT_ADMIN, roleTitle: 'Connect Admin', roleDescription: ''},
-    {role: UserRole.ROLE_PIPELINE_USER, roleTitle: 'Pipeline User', roleDescription: ''},
-    {role: UserRole.ROLE_PIPELINE_ADMIN, roleTitle: 'Pipeline Admin', roleDescription: ''},
-    {role: UserRole.ROLE_ASSET_USER, roleTitle: 'Asset User', roleDescription: ''},
-    {role: UserRole.ROLE_ASSET_ADMIN, roleTitle: 'Asset Admin', roleDescription: ''},
-  ];
-
-
-  public getAvailableRoles(): RoleDescription[] {
-    return this.availableRoles;
-  }
+    public getAvailableRoles(): RoleDescription[] {
+        return this.availableRoles;
+    }
 }

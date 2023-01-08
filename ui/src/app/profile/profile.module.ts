@@ -33,7 +33,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ChangePasswordDialogComponent } from './dialog/change-password/change-password-dialog.component';
 import { ChangeEmailDialogComponent } from './dialog/change-email/change-email-dialog.component';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
     imports: [
@@ -48,25 +48,18 @@ import {RouterLink} from '@angular/router';
         ClipboardModule,
         CoreUiModule,
         PlatformServicesModule,
-        RouterLink
+        RouterLink,
     ],
     declarations: [
         ChangeEmailDialogComponent,
         ChangePasswordDialogComponent,
         GeneralProfileSettingsComponent,
         ProfileComponent,
-        TokenManagementSettingsComponent
+        TokenManagementSettingsComponent,
     ],
-    providers: [
-        ProfileService
-    ],
-    exports: [
-        ProfileComponent
-    ]
+    providers: [ProfileService],
+    exports: [ProfileComponent],
 })
 export class ProfileModule {
-
-  constructor() {
-  }
-
+    constructor() {}
 }
