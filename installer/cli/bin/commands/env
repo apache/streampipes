@@ -49,6 +49,11 @@ if [ "$#" -gt 3 ]; then
     fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
 fi
 
+if ! docker info > /dev/null 2>&1; then
+  echo "Streampipes environment uses docker, and it isn't running - please start docker and try again!"
+  exit 1
+fi
+
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -i|--inspect)

@@ -16,12 +16,11 @@
 dist
 .angular
 
-# Remove these in the future to format additional modules
-# Please also see .eslintignore
-
 # Ignore csv files required for e2e tests
 cypress/fixtures/**/*.csv
 
+# Remove these in the future to format additional modules
+# Please also see .eslintignore
 src/app/connect
 src/app/core
 src/app/core-model
@@ -38,5 +37,4 @@ src/app/notifications
 src/app/NS
 src/app/pipeline-details
 src/app/pipelines
-src/app/services
 src/scss

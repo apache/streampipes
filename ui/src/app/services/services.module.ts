@@ -27,7 +27,7 @@ import { ElementIconText } from './get-element-icon-text.service';
 import { AppConstants } from './app.constants';
 import { JwtTokenStorageService } from './jwt-token-storage.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { SecurePipe } from "./secure.pipe";
+import { SecurePipe } from './secure.pipe';
 
 @NgModule({
     imports: [],
@@ -45,7 +45,6 @@ import { SecurePipe } from "./secure.pipe";
         PlatformServicesModule,
         SecurePipe,
     ],
-    exports: [SecurePipe]
+    exports: [SecurePipe],
 })
-export class ServicesModule {
-}
+export class ServicesModule {}
