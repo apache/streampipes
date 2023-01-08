@@ -18,14 +18,14 @@
 
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  PipelineMonitoringInfo,
-  PipelineMonitoringService,
-  PipelineService,
-  SpDataSet,
-  SpDataStream,
-  SpMetricsEntry
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    PipelineMonitoringInfo,
+    PipelineMonitoringService,
+    PipelineService,
+    SpDataSet,
+    SpDataStream,
+    SpMetricsEntry,
 } from '@streampipes/platform-services';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { AuthService } from '../../../services/auth.service';
@@ -36,91 +36,111 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
-  selector: 'pipeline-monitoring',
-  templateUrl: './pipeline-monitoring.component.html',
-  styleUrls: ['./pipeline-monitoring.component.scss']
+    selector: 'sp-pipeline-monitoring',
+    templateUrl: './pipeline-monitoring.component.html',
+    styleUrls: ['./pipeline-monitoring.component.scss'],
 })
-export class PipelineMonitoringComponent extends SpPipelineDetailsDirective implements OnInit, OnDestroy {
+export class PipelineMonitoringComponent
+    extends SpPipelineDetailsDirective
+    implements OnInit, OnDestroy
+{
+    pipelineMonitoringInfo: PipelineMonitoringInfo;
+    pipelineMonitoringInfoAvailable = false;
 
-  pipelineMonitoringInfo: PipelineMonitoringInfo;
-  pipelineMonitoringInfoAvailable = false;
+    allElements: (
+        | SpDataSet
+        | SpDataStream
+        | DataProcessorInvocation
+        | DataSinkInvocation
+    )[] = [];
+    monitoredElements: (DataProcessorInvocation | DataSinkInvocation)[] = [];
 
-  allElements: (SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation)[] = [];
-  monitoredElements: (DataProcessorInvocation | DataSinkInvocation)[] = [];
+    autoRefresh = true;
 
-  autoRefresh = true;
+    metricsInfo: Record<string, SpMetricsEntry>;
 
-  metricsInfo: Record<string, SpMetricsEntry>;
+    reloadPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    reloadSubscription: Subscription;
 
-  reloadPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-  reloadSubscription: Subscription;
-
-  constructor(activatedRoute: ActivatedRoute,
-              pipelineService: PipelineService,
-              authService: AuthService,
-              private pipelineMonitoringService: PipelineMonitoringService,
-              private pipelineOperationsService: PipelineOperationsService,
-              breadcrumbService: SpBreadcrumbService) {
-    super(activatedRoute, pipelineService, authService, breadcrumbService);
-  }
-
-  ngOnInit(): void {
-    super.onInit();
-    this.reloadSubscription = this.reloadPipelinesEmitter.subscribe(reload => this.loadPipeline());
-  }
-
-  checkMonitoringInfoCollection() {
-    if (this.pipeline.running) {
-      this.refreshMonitoringInfo();
+    constructor(
+        activatedRoute: ActivatedRoute,
+        pipelineService: PipelineService,
+        authService: AuthService,
+        private pipelineMonitoringService: PipelineMonitoringService,
+        private pipelineOperationsService: PipelineOperationsService,
+        breadcrumbService: SpBreadcrumbService,
+    ) {
+        super(activatedRoute, pipelineService, authService, breadcrumbService);
     }
-  }
 
-  collectAllElements() {
-    this.monitoredElements = this.monitoredElements
-        .concat(this.pipeline.sepas)
-        .concat(this.pipeline.actions);
+    ngOnInit(): void {
+        super.onInit();
+        this.reloadSubscription = this.reloadPipelinesEmitter.subscribe(
+            reload => this.loadPipeline(),
+        );
+    }
 
-    this.allElements = this.allElements
-      .concat(this.monitoredElements)
-      .concat(this.pipeline.streams);
-  }
+    checkMonitoringInfoCollection() {
+        if (this.pipeline.running) {
+            this.refreshMonitoringInfo();
+        }
+    }
 
-  refreshMonitoringInfo(addTimeout = true) {
-    this.pipelineMonitoringService
-        .getMetricsInfoForPipeline(this.pipeline._id)
-        .subscribe(monitoringInfo => {
-          this.metricsInfo = monitoringInfo;
-          this.pipelineMonitoringInfoAvailable = true;
-          if (this.autoRefresh && addTimeout) {
-            setTimeout(() => {
-              this.refreshMonitoringInfo();
-            }, 5000);
-          }
-        });
-  }
+    collectAllElements() {
+        this.monitoredElements = this.monitoredElements
+            .concat(this.pipeline.sepas)
+            .concat(this.pipeline.actions);
 
-  selectElement(pipelineElement) {
-    document.getElementById(pipelineElement.elementId).scrollIntoView();
-  }
+        this.allElements = this.allElements
+            .concat(this.monitoredElements)
+            .concat(this.pipeline.streams);
+    }
 
-  ngOnDestroy(): void {
-    this.autoRefresh = false;
-    this.reloadSubscription.unsubscribe();
-  }
+    refreshMonitoringInfo(addTimeout = true) {
+        this.pipelineMonitoringService
+            .getMetricsInfoForPipeline(this.pipeline._id)
+            .subscribe(monitoringInfo => {
+                this.metricsInfo = monitoringInfo;
+                this.pipelineMonitoringInfoAvailable = true;
+                if (this.autoRefresh && addTimeout) {
+                    setTimeout(() => {
+                        this.refreshMonitoringInfo();
+                    }, 5000);
+                }
+            });
+    }
 
-  startPipeline() {
-    this.pipelineOperationsService.startPipeline(this.pipeline._id, this.reloadPipelinesEmitter);
-  }
+    selectElement(pipelineElement) {
+        document.getElementById(pipelineElement.elementId).scrollIntoView();
+    }
 
-  onPipelineAvailable(): void {
-    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Metrics'} ]);
-    this.collectAllElements();
-    this.refreshMonitoringInfo();
-  }
+    ngOnDestroy(): void {
+        this.autoRefresh = false;
+        this.reloadSubscription.unsubscribe();
+    }
 
-  triggerMetricsUpdate(): void {
-    this.pipelineMonitoringService.triggerMonitoringUpdate().subscribe(res => {
-      this.refreshMonitoringInfo(false);
-    });
-  }
+    startPipeline() {
+        this.pipelineOperationsService.startPipeline(
+            this.pipeline._id,
+            this.reloadPipelinesEmitter,
+        );
+    }
+
+    onPipelineAvailable(): void {
+        this.breadcrumbService.updateBreadcrumb([
+            SpPipelineRoutes.BASE,
+            { label: this.pipeline.name },
+            { label: 'Metrics' },
+        ]);
+        this.collectAllElements();
+        this.refreshMonitoringInfo();
+    }
+
+    triggerMetricsUpdate(): void {
+        this.pipelineMonitoringService
+            .triggerMonitoringUpdate()
+            .subscribe(res => {
+                this.refreshMonitoringInfo(false);
+            });
+    }
 }
