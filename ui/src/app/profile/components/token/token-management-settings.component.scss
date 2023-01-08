@@ -17,40 +17,38 @@
  */
 
 .title-section {
-  width: 300px;
+    width: 300px;
 }
 
-
 .subsection {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .mt-10 {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .divider {
-  margin-top: 5px;
-  margin-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .new-token {
-
-  margin-top: 10px;
-  margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .token-name {
-  margin-right: 10px;
-  font-weight: bold;
-  padding: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+    padding: 10px;
 }
 
 .displayed-token {
-  background: var(--color-bg-2);
-  border: 1px solid var(--color-bg-1);
-  padding: 10px;
-  color: var(--color-default-text);
-  margin-left: 10px;
-  margin-right: 10px;
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-bg-1);
+    padding: 10px;
+    color: var(--color-default-text);
+    margin-left: 10px;
+    margin-right: 10px;
 }
