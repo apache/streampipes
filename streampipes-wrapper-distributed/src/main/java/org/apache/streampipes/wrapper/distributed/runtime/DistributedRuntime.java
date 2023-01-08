@@ -18,9 +18,9 @@
 package org.apache.streampipes.wrapper.distributed.runtime;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
 import org.apache.streampipes.model.SpDataStream;

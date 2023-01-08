@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.wrapper.declarer;
 
-import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;

@@ -15,45 +15,60 @@
   ~ limitations under the License.
   ~
   -->
-<sp-basic-view [showBackLink]="true"
-               [backLinkTarget]="['assets']"
-               [padding]="false">
-
-    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
+<sp-basic-view
+    [showBackLink]="true"
+    [backLinkTarget]="['assets']"
+    [padding]="false"
+>
+    <div
+        nav
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        class="pl-10"
+    >
         <div fxLayout="row" fxLayoutAlign="start center" *ngIf="editMode">
-            <button mat-button mat-raised-button color="accent" (click)="saveAsset()">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="saveAsset()"
+            >
                 <i class="material-icons">save</i><span>&nbsp;Save</span>
             </button>
         </div>
-        <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-
-        </div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="end center"></div>
     </div>
     <div fxFlex="100" fxLayout="column" *ngIf="asset">
-        <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
-            <mat-drawer #designerDrawer
-                        [opened]="true"
-                        mode="side"
-                        position="start"
-                        class="designer-panel">
+        <mat-drawer-container
+            class="designer-panel-container h-100 dashboard-grid"
+        >
+            <mat-drawer
+                #designerDrawer
+                [opened]="true"
+                mode="side"
+                position="start"
+                class="designer-panel"
+            >
                 <div fxLayout="column" fxFlex="100">
                     <sp-asset-selection-panel-component
-                            [editMode]="editMode"
-                            [assetModel]="asset"
-                            [selectedAsset]="selectedAsset"
-                            (selectedAssetEmitter)="selectedAsset = $event">
+                        [editMode]="editMode"
+                        [assetModel]="asset"
+                        [selectedAsset]="selectedAsset"
+                        (selectedAssetEmitter)="selectedAsset = $event"
+                    >
                     </sp-asset-selection-panel-component>
                 </div>
             </mat-drawer>
             <mat-drawer-content class="h-100 dashboard-grid">
                 <sp-asset-details-panel-component
-                        *ngIf="selectedAsset"
-                        [asset]="selectedAsset"
-                        [editMode]="editMode"
-                        (updateAssetEmitter)="updateAsset()"
-                        fxFlex="100"
-                        fxLayout="row">
-
+                    *ngIf="selectedAsset"
+                    [asset]="selectedAsset"
+                    [editMode]="editMode"
+                    (updateAssetEmitter)="updateAsset()"
+                    fxFlex="100"
+                    fxLayout="row"
+                >
                 </sp-asset-details-panel-component>
             </mat-drawer-content>
         </mat-drawer-container>

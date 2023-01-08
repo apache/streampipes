@@ -16,8 +16,9 @@
   ~
   -->
 
-[![Github Actions](https://img.shields.io/github/workflow/status/apache/streampipes/build-and-deploy-docker-dev)](https://github.com/apache/streampipes/actions/)
+[![Github Actions](https://img.shields.io/github/actions/workflow/status/apache/streampipes/build.yml)](https://github.com/apache/streampipes/actions/)
 [![Docker pulls](https://img.shields.io/docker/pulls/apachestreampipes/backend.svg)](https://hub.docker.com/r/apachestreampipes/backend/)
+![](https://img.shields.io/badge/java--version-17-blue.svg)
 [![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)
 [![License](https://img.shields.io/github/license/apache/streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Last commit](https://img.shields.io/github/last-commit/apache/streampipes.svg)]()
@@ -25,6 +26,7 @@
 [![Apache StreamPipes](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/q1jdu2&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/q1jdu2/runs)
 [![Contributors](https://img.shields.io/github/contributors/apache/streampipes)](https://github.com/apache/streampipes/graphs/contributors)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/apache/streampipes)
+[![GitHub issues by-label](https://img.shields.io/github/issues/apache/streampipes/good%20first%20issue)](https://github.com/apache/streampipes/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 
 <h1 align="center">
   <br>
@@ -135,7 +137,7 @@ Quick Links:
 To properly build the StreamPipes core, the following tools should be installed:
 
 ### Prerequisites
-* Java 11 JDK (minimum)
+* Java 17 JDK (minimum)
 * Maven (tested with 3.8)
 * NodeJS + NPM (tested with v12+/ v6+)
 * Docker + Docker-Compose

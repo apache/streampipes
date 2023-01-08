@@ -36,17 +36,6 @@
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-connect-container-worker</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.graalvm.nativeimage</groupId>
-                    <artifactId>svm</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-shared</artifactId>
             <version>0.91.0-SNAPSHOT</version>
         </dependency>
@@ -57,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container-extensions</artifactId>
+            <artifactId>streampipes-service-extensions</artifactId>
             <version>0.91.0-SNAPSHOT</version>
         </dependency>
 
@@ -111,12 +100,8 @@
             <artifactId>mqtt-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>jakarta.websocket</groupId>
+            <artifactId>jakarta.websocket-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -229,6 +214,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
         </dependency>
     </dependencies>
 

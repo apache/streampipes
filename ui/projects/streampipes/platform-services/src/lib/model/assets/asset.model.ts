@@ -17,48 +17,47 @@
  */
 
 export interface AssetLinkType {
-  linkType: string;
-  linkLabel: string;
-  linkColor: string;
-  linkIcon?: string;
-  linkQueryHint?: string;
-  navPaths: string[];
-  navigationActive: boolean;
+    linkType: string;
+    linkLabel: string;
+    linkColor: string;
+    linkIcon?: string;
+    linkQueryHint?: string;
+    navPaths: string[];
+    navigationActive: boolean;
 }
 
 export interface AssetType {
-  assetIcon: string;
-  assetIconColor: string;
-  assetTypeCategory: string;
-  assetTypeLabel: string;
+    assetIcon: string;
+    assetIconColor: string;
+    assetTypeCategory: string;
+    assetTypeLabel: string;
 }
 
 export interface AssetLink {
-  resourceId: string;
-  linkType: 'data-view' | 'dashboard' | 'adapter' | 'source' | string;
-  linkLabel: string;
-  queryHint: string;
-  editingDisabled: boolean;
-  navigationActive: boolean;
+    resourceId: string;
+    linkType: 'data-view' | 'dashboard' | 'adapter' | 'source' | string;
+    linkLabel: string;
+    queryHint: string;
+    editingDisabled: boolean;
+    navigationActive: boolean;
 }
 
 export interface SpAsset {
-  assetId: string;
-  assetName: string;
-  assetDescription: string;
+    assetId: string;
+    assetName: string;
+    assetDescription: string;
 
-  assetType: AssetType;
-  assetLinks: AssetLink[];
+    assetType: AssetType;
+    assetLinks: AssetLink[];
 
-  assets: SpAsset[];
+    assets: SpAsset[];
 }
 
 export interface SpAssetModel extends SpAsset {
-  _id: string;
-  _rev: string;
+    _id: string;
+    _rev: string;
 
-  appDocType: string;
+    appDocType: string;
 
-  removable: boolean;
+    removable: boolean;
 }
-

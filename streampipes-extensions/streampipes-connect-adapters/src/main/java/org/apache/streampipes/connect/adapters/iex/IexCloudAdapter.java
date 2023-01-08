@@ -18,8 +18,8 @@
 package org.apache.streampipes.connect.adapters.iex;
 
 
-import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapters.PullAdapter;
+import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
 import com.google.gson.Gson;

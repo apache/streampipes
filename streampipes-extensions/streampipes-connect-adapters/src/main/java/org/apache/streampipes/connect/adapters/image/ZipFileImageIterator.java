@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.adapters.image;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;

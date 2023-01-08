@@ -23,25 +23,24 @@ import { DashboardConfiguration } from '../../model/dashboard-configuration.mode
 @Component({
     selector: 'sp-asset-dashboard-overview',
     templateUrl: './dashboard-overview.component.html',
-    styleUrls: ['./dashboard-overview.component.css']
+    styleUrls: ['./dashboard-overview.component.css'],
 })
 export class AssetDashboardOverviewComponent implements OnInit {
-
     @Output() selectedDashboard = new EventEmitter<DashboardConfiguration>();
     @Output() createDashboard = new EventEmitter<void>();
 
     dashboardConfigs: DashboardConfiguration[] = [];
 
-    constructor(private restService: RestService) {
-
-    }
+    constructor(private restService: RestService) {}
 
     ngOnInit() {
         this.getDashboards();
     }
 
     getImageUrl(dashboardConfig: DashboardConfiguration) {
-        return this.restService.getImageUrl(dashboardConfig.imageInfo.imageName);
+        return this.restService.getImageUrl(
+            dashboardConfig.imageInfo.imageName,
+        );
     }
 
     getDashboards() {

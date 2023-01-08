@@ -17,76 +17,148 @@
   -->
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'general'">
     <div fxLayout="column" class="page-container-padding">
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="formReady">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="start start"
+            *ngIf="formReady"
+        >
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                <div class="warning mb-10" *ngIf="!generalConfig.configured">These are default values - to use features
-                    such as email you need to store these values once.
+                <div class="warning mb-10" *ngIf="!generalConfig.configured">
+                    These are default values - to use features such as email you
+                    need to store these values once.
                 </div>
                 <sp-split-section title="Basic" subtitle="Basic settings">
                     <div class="subsection-title">App Name</div>
                     <mat-form-field color="accent" class="ml-10">
                         <mat-label>App Name</mat-label>
-                        <input formControlName="appName" fxFlex matInput required>
+                        <input
+                            formControlName="appName"
+                            fxFlex
+                            matInput
+                            required
+                        />
                     </mat-form-field>
                     <div class="subsection-title">Host and Port</div>
                     <div fxLayout="column" fxFlex="100">
                         <div fxLayout="row">
                             <div fxLayout="row" fxLayoutAlign="start center">
-                                <mat-button-toggle-group name="protocol" aria-label="Protocol"
-                                    formControlName="protocol">
-                                    <mat-button-toggle value="http">http</mat-button-toggle>
-                                    <mat-button-toggle value="https">https</mat-button-toggle>
+                                <mat-button-toggle-group
+                                    name="protocol"
+                                    aria-label="Protocol"
+                                    formControlName="protocol"
+                                >
+                                    <mat-button-toggle value="http"
+                                        >http</mat-button-toggle
+                                    >
+                                    <mat-button-toggle value="https"
+                                        >https</mat-button-toggle
+                                    >
                                 </mat-button-toggle-group>
                             </div>
                             <mat-form-field color="accent" class="ml-10">
                                 <mat-label>Host</mat-label>
-                                <input formControlName="hostname" fxFlex matInput required>
+                                <input
+                                    formControlName="hostname"
+                                    fxFlex
+                                    matInput
+                                    required
+                                />
                             </mat-form-field>
                             <mat-form-field color="accent" class="ml-10">
                                 <mat-label>Port</mat-label>
-                                <input formControlName="port" fxFlex matInput type="number" required>
+                                <input
+                                    formControlName="port"
+                                    fxFlex
+                                    matInput
+                                    type="number"
+                                    required
+                                />
                             </mat-form-field>
                         </div>
                     </div>
                     <div class="mt-10">
-                        <button mat-button mat-raised-button color="accent" (click)="updateConfig()"
-                            style="margin-right:10px;" [disabled]="!parentForm.valid"
-                            data-cy="sp-element-general-config-save">
-                            <i class="material-icons">save</i><span>&nbsp;Save</span>
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            (click)="updateConfig()"
+                            style="margin-right: 10px"
+                            [disabled]="!parentForm.valid"
+                            data-cy="sp-element-general-config-save"
+                        >
+                            <i class="material-icons">save</i
+                            ><span>&nbsp;Save</span>
                         </button>
                     </div>
                 </sp-split-section>
                 <mat-divider></mat-divider>
-                <sp-split-section title="Registration" subtitle="Registration process">
-                    <div class="warning mb-10" *ngIf="!generalConfig.configured || !mailConfig.emailConfigured">Requires
-                        valid
-                        mail server settings and basic host settings.
+                <sp-split-section
+                    title="Registration"
+                    subtitle="Registration process"
+                >
+                    <div
+                        class="warning mb-10"
+                        *ngIf="
+                            !generalConfig.configured ||
+                            !mailConfig.emailConfigured
+                        "
+                    >
+                        Requires valid mail server settings and basic host
+                        settings.
                     </div>
-                    <mat-checkbox [disabled]="!generalConfig.configured || !mailConfig.emailConfigured"
-                        formControlName="allowSelfRegistration">Allow self-registration
+                    <mat-checkbox
+                        [disabled]="
+                            !generalConfig.configured ||
+                            !mailConfig.emailConfigured
+                        "
+                        formControlName="allowSelfRegistration"
+                        >Allow self-registration
                     </mat-checkbox>
-                    <div *ngIf="generalConfig.allowSelfRegistration" class="mt-10 mb-10">
+                    <div
+                        *ngIf="generalConfig.allowSelfRegistration"
+                        class="mt-10 mb-10"
+                    >
                         <h5>Default roles for new users</h5>
-                        <mat-select formControlName="defaultUserRoles" [multiple]="true">
-                            <mat-option *ngFor="let role of availableRoles" [value]="role.role">{{role.roleTitle}}
+                        <mat-select
+                            formControlName="defaultUserRoles"
+                            [multiple]="true"
+                        >
+                            <mat-option
+                                *ngFor="let role of availableRoles"
+                                [value]="role.role"
+                                >{{ role.roleTitle }}
                             </mat-option>
                         </mat-select>
                     </div>
-                    <mat-checkbox [disabled]="!generalConfig.configured || !mailConfig.emailConfigured"
-                        formControlName="allowPasswordRecovery">Allow self-service password recovery
+                    <mat-checkbox
+                        [disabled]="
+                            !generalConfig.configured ||
+                            !mailConfig.emailConfigured
+                        "
+                        formControlName="allowPasswordRecovery"
+                        >Allow self-service password recovery
                     </mat-checkbox>
 
                     <div class="mt-10">
-                        <button mat-button mat-raised-button color="accent" (click)="updateConfig()"
-                            style="margin-right:10px;"
-                            [disabled]="!generalConfig.configured || !mailConfig.emailConfigured"
-                            data-cy="sp-element-general-registration-config-save">
-                            <i class="material-icons">save</i><span>&nbsp;Save</span>
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            (click)="updateConfig()"
+                            style="margin-right: 10px"
+                            [disabled]="
+                                !generalConfig.configured ||
+                                !mailConfig.emailConfigured
+                            "
+                            data-cy="sp-element-general-registration-config-save"
+                        >
+                            <i class="material-icons">save</i
+                            ><span>&nbsp;Save</span>
                         </button>
                     </div>
                 </sp-split-section>
             </form>
         </div>
-
     </div>
 </sp-basic-nav-tabs>

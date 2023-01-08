@@ -19,7 +19,7 @@
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.StreamPipesErrorMessage;

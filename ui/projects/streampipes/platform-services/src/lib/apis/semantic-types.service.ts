@@ -23,20 +23,25 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class SemanticTypesService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-
-  }
-
-  getSemanticTypes(text: string): Observable<string[]> {
-    return this.http.get(this.platformServicesCommons.apiBasePath +
-        '/autocomplete/semantic-type?text=' + text).pipe(map(response => {
-      return response as string[];
-    }));
-  }
-
+    getSemanticTypes(text: string): Observable<string[]> {
+        return this.http
+            .get(
+                this.platformServicesCommons.apiBasePath +
+                    '/autocomplete/semantic-type?text=' +
+                    text,
+            )
+            .pipe(
+                map(response => {
+                    return response as string[];
+                }),
+            );
+    }
 }

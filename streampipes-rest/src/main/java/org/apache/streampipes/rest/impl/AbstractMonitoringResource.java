@@ -21,8 +21,8 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.core.Response;
 
 public abstract class AbstractMonitoringResource extends AbstractAuthGuardedRestResource {
 

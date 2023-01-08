@@ -31,7 +31,9 @@ public class Permission {
   protected @SerializedName("_id") String permissionId;
   protected @SerializedName("_rev") String rev;
 
+  // document type should be persisted to CouchDB with Gson serialization, but not via Jackson to the UI
   @JsonIgnore
+  @SerializedName("$type")
   private String type = "permission";
 
   private String objectInstanceId;

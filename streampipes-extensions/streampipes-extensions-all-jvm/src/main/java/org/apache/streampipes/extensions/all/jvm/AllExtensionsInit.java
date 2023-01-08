@@ -18,18 +18,18 @@
 package org.apache.streampipes.extensions.all.jvm;
 
 import org.apache.streampipes.connect.iiot.ConnectAdapterIiotInit;
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 
 public class AllExtensionsInit extends ExtensionsModelSubmitter {

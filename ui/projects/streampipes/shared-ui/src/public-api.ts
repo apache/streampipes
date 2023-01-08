@@ -36,5 +36,3 @@ export * from './lib/components/sp-exception-message/exception-details-dialog/ex
 export * from './lib/models/sp-navigation.model';
 
 export * from './lib/services/breadcrumb.service';
-
-

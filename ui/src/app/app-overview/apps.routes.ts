@@ -16,10 +16,12 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpAppRoutes {
-
-  static APP_BASE_LINK = 'apps';
-  static BASE: SpBreadcrumbItem = {label: 'Apps', link: [SpAppRoutes.APP_BASE_LINK]};
+    static APP_BASE_LINK = 'apps';
+    static BASE: SpBreadcrumbItem = {
+        label: 'Apps',
+        link: [SpAppRoutes.APP_BASE_LINK],
+    };
 }

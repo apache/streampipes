@@ -20,76 +20,86 @@ import { Component, OnInit } from '@angular/core';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { AssetConstants } from '../../constants/asset.constants';
-import { GenericStorageService, SpAsset, SpAssetModel } from '@streampipes/platform-services';
+import {
+    GenericStorageService,
+    SpAsset,
+    SpAssetModel,
+} from '@streampipes/platform-services';
 import { SpAssetRoutes } from '../../assets.routes';
 
 @Component({
-  selector: 'sp-asset-details-component',
-  templateUrl: './asset-details.component.html',
-  styleUrls: ['./asset-details.component.scss']
+    selector: 'sp-asset-details-component',
+    templateUrl: './asset-details.component.html',
+    styleUrls: ['./asset-details.component.scss'],
 })
 export class SpAssetDetailsComponent implements OnInit {
+    asset: SpAssetModel;
 
-  asset: SpAssetModel;
+    selectedAsset: SpAsset;
 
-  selectedAsset: SpAsset;
+    editMode: boolean;
 
-  editMode: boolean;
+    assetModelId: string;
 
-  assetModelId: string;
+    constructor(
+        private breadcrumbService: SpBreadcrumbService,
+        private genericStorageService: GenericStorageService,
+        private route: ActivatedRoute,
+    ) {}
 
-  constructor(private breadcrumbService: SpBreadcrumbService,
-              private genericStorageService: GenericStorageService,
-              private route: ActivatedRoute) {
-
-  }
-
-  ngOnInit(): void {
-    this.assetModelId = this.route.snapshot.params.assetId;
-    this.editMode = this.route.snapshot.queryParams.editMode;
-    this.loadAsset();
-  }
-
-  loadAsset(): void {
-    this.genericStorageService.getDocument(AssetConstants.ASSET_APP_DOC_NAME, this.assetModelId).subscribe(asset => {
-      this.asset = asset;
-      if (!this.selectedAsset) {
-        this.selectedAsset = this.asset;
-      }
-      this.breadcrumbService.updateBreadcrumb([SpAssetRoutes.BASE, {label: this.asset.assetName}]);
-    });
-  }
-
-  updateAsset() {
-    this.updateSelected();
-  }
-
-  saveAsset() {
-    this.genericStorageService.updateDocument(AssetConstants.ASSET_APP_DOC_NAME, this.asset).subscribe(res => {
-      this.loadAsset();
-      this.editMode = false;
-    });
-  }
-
-  updateSelected() {
-    if (this.asset.assetId === this.selectedAsset.assetId) {
-      this.asset = this.selectedAsset as SpAssetModel;
-    } else {
-      this.asset.assets.forEach(a => {
-        this.walk(a, this.selectedAsset);
-      });
+    ngOnInit(): void {
+        this.assetModelId = this.route.snapshot.params.assetId;
+        this.editMode = this.route.snapshot.queryParams.editMode;
+        this.loadAsset();
     }
-  }
 
-  walk(asset: SpAsset, selectedAsset: SpAsset) {
-    if (asset.assetId === selectedAsset.assetId) {
-      asset = selectedAsset;
-    } else {
-      if (asset.assets) {
-        asset.assets.forEach(a => {
-          this.walk(a, selectedAsset);
-        });
-      }
+    loadAsset(): void {
+        this.genericStorageService
+            .getDocument(AssetConstants.ASSET_APP_DOC_NAME, this.assetModelId)
+            .subscribe(asset => {
+                this.asset = asset;
+                if (!this.selectedAsset) {
+                    this.selectedAsset = this.asset;
+                }
+                this.breadcrumbService.updateBreadcrumb([
+                    SpAssetRoutes.BASE,
+                    { label: this.asset.assetName },
+                ]);
+            });
     }
-  }
+
+    updateAsset() {
+        this.updateSelected();
+    }
+
+    saveAsset() {
+        this.genericStorageService
+            .updateDocument(AssetConstants.ASSET_APP_DOC_NAME, this.asset)
+            .subscribe(res => {
+                this.loadAsset();
+                this.editMode = false;
+            });
+    }
+
+    updateSelected() {
+        if (this.asset.assetId === this.selectedAsset.assetId) {
+            this.asset = this.selectedAsset as SpAssetModel;
+        } else {
+            this.asset.assets.forEach(a => {
+                this.walk(a, this.selectedAsset);
+            });
+        }
+    }
+
+    walk(asset: SpAsset, selectedAsset: SpAsset) {
+        if (asset.assetId === selectedAsset.assetId) {
+            asset = selectedAsset;
+        } else {
+            if (asset.assets) {
+                asset.assets.forEach(a => {
+                    this.walk(a, selectedAsset);
+                });
+            }
+        }
+    }
 }

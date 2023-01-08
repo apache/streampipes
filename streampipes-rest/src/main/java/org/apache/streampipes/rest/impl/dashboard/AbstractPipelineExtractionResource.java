@@ -22,7 +22,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;

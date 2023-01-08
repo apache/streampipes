@@ -17,12 +17,12 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
-import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.api.IAdapterPipeline;
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.IParser;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
+import org.apache.streampipes.extensions.api.connect.IFormat;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.management.connect.SendToPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;

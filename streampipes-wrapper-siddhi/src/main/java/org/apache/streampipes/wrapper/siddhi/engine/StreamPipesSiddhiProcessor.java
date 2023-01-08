@@ -26,9 +26,10 @@ import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationCo
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public abstract class StreamPipesSiddhiProcessor extends StreamPipesDataProcessor implements SiddhiStatementGenerator<ProcessorParams> {
+public abstract class StreamPipesSiddhiProcessor extends StreamPipesDataProcessor
+    implements SiddhiStatementGenerator<ProcessorParams> {
 
-  private SiddhiEngine siddhiEngine;
+  private final SiddhiEngine siddhiEngine;
 
   public StreamPipesSiddhiProcessor() {
     this.siddhiEngine = new SiddhiEngine();
@@ -39,8 +40,10 @@ public abstract class StreamPipesSiddhiProcessor extends StreamPipesDataProcesso
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    SiddhiInvocationConfigGenerator<ProcessorParams> siddhiConfigGenerator = new SiddhiInvocationConfigGenerator<>(parameters,
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    SiddhiInvocationConfigGenerator<ProcessorParams> siddhiConfigGenerator =
+        new SiddhiInvocationConfigGenerator<>(parameters,
             this::makeStatements);
     this.siddhiEngine.initializeEngine(siddhiConfigGenerator, spOutputCollector, runtimeContext);
   }

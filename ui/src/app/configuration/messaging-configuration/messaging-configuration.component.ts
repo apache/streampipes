@@ -25,24 +25,26 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
-    selector: 'messaging-configuration',
+    selector: 'sp-messaging-configuration',
     templateUrl: './messaging-configuration.component.html',
-    styleUrls: ['./messaging-configuration.component.css']
+    styleUrls: ['./messaging-configuration.component.css'],
 })
 export class MessagingConfigurationComponent implements OnInit {
-
     tabs = SpConfigurationTabs.getTabs();
 
     messagingSettings: MessagingSettings;
     loadingCompleted = false;
 
-    constructor(private configurationService: ConfigurationService,
-                private breadcrumbService: SpBreadcrumbService) {
-
-    }
+    constructor(
+        private configurationService: ConfigurationService,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
     ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[4].itemTitle}]);
+        this.breadcrumbService.updateBreadcrumb([
+            SpConfigurationRoutes.BASE,
+            { label: SpConfigurationTabs.getTabs()[4].itemTitle },
+        ]);
         this.getMessagingSettings();
     }
 
@@ -54,14 +56,24 @@ export class MessagingConfigurationComponent implements OnInit {
     }
 
     updateMessagingSettings() {
-        this.configurationService.updateMessagingSettings(this.messagingSettings).subscribe(response => this.getMessagingSettings());
+        this.configurationService
+            .updateMessagingSettings(this.messagingSettings)
+            .subscribe(response => this.getMessagingSettings());
     }
 
     drop(event: CdkDragDrop<string[]>) {
-        moveItemInArray(this.messagingSettings.prioritizedFormats, event.previousIndex, event.currentIndex);
+        moveItemInArray(
+            this.messagingSettings.prioritizedFormats,
+            event.previousIndex,
+            event.currentIndex,
+        );
     }
 
     dropProtocol(event: CdkDragDrop<string[]>) {
-        moveItemInArray(this.messagingSettings.prioritizedProtocols, event.previousIndex, event.currentIndex);
+        moveItemInArray(
+            this.messagingSettings.prioritizedProtocols,
+            event.previousIndex,
+            event.currentIndex,
+        );
     }
 }

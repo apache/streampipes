@@ -16,22 +16,43 @@
   ~
   -->
 
-<div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center">
-    <span *ngIf="consulService.meta.status === 'passing'" fxLayoutAlign="center center">
+<div
+    class="assemblyOptions sp-blue-bg"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+>
+    <span
+        *ngIf="consulService.meta.status === 'passing'"
+        fxLayoutAlign="center center"
+    >
         <mat-icon class="service-icon-passing">lens</mat-icon>
     </span>
-    <span *ngIf="consulService.meta.status === 'critical'" fxLayoutAlign="center center">
+    <span
+        *ngIf="consulService.meta.status === 'critical'"
+        fxLayoutAlign="center center"
+    >
         <mat-icon class="service-icon-critical">lens</mat-icon>
     </span>
-    <h4>{{consulService.name}}</h4>
-    <span *ngIf="showConfiguration" fxLayoutAlign="center center" class="show-configuration-icon">
+    <h4>{{ consulService.name }}</h4>
+    <span
+        *ngIf="showConfiguration"
+        fxLayoutAlign="center center"
+        class="show-configuration-icon"
+    >
         <mat-icon (click)="toggleConfiguration()">expand_less</mat-icon>
     </span>
-    <span *ngIf="!showConfiguration" fxLayoutAlign="center center" class="show-configuration-icon">
+    <span
+        *ngIf="!showConfiguration"
+        fxLayoutAlign="center center"
+        class="show-configuration-icon"
+    >
         <mat-icon (click)="toggleConfiguration()">expand_more</mat-icon>
     </span>
 </div>
 
-<div class="sp-blue-border" *ngIf="showConfiguration" style="padding:5px">
-    <consul-configs [consulService]="consulService" (updateConsulService)="updateConfiguration()" ></consul-configs>
+<div class="sp-blue-border" *ngIf="showConfiguration" style="padding: 5px">
+    <sp-consul-configs
+        [consulService]="consulService"
+        (updateConsulService)="updateConfiguration()"
+    ></sp-consul-configs>
 </div>

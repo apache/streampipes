@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.adapters;
 
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
 import com.google.gson.Gson;

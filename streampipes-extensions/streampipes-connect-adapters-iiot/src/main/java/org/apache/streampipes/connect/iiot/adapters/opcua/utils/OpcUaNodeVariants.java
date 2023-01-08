@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Enum that maintains different variants of OPC UA nodes. <br>

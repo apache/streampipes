@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.shared.util;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 public class SpMediaType {
 

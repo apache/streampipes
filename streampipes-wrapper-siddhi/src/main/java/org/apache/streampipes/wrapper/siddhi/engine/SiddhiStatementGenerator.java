@@ -21,8 +21,8 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 
-public interface SiddhiStatementGenerator<B extends EventProcessorBindingParams> {
+public interface SiddhiStatementGenerator<T extends EventProcessorBindingParams> {
 
-  SiddhiAppConfig makeStatements(SiddhiProcessorParams<B> siddhiParams, String finalInsertIntoStreamName);
+  SiddhiAppConfig makeStatements(SiddhiProcessorParams<T> siddhiParams, String finalInsertIntoStreamName);
 
 }

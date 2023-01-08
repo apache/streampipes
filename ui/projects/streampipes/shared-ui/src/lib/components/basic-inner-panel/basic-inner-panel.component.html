@@ -16,17 +16,30 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100" class="panel-outer" [ngStyle]="{margin: outerMargin}">
-    <div class="general-panel-header" fxLayout="row" fxFlex="100" fxLayoutAlign="start center" *ngIf="!hideToolbar">
+<div
+    fxLayout="column"
+    fxFlex="100"
+    class="panel-outer"
+    [ngStyle]="{ margin: outerMargin }"
+>
+    <div
+        class="general-panel-header"
+        fxLayout="row"
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        *ngIf="!hideToolbar"
+    >
         <div fxLayout="fill" fxFlex="100">
             <div fxLayoutAlign="start center" fxLayout="row">
-            <div class="content-box-title" *ngIf="showTitle">{{panelTitle}}</div>
+                <div class="content-box-title" *ngIf="showTitle">
+                    {{ panelTitle }}
+                </div>
             </div>
             <ng-content select="[header]" fxFlex class="pr-5"></ng-content>
         </div>
     </div>
 
-    <div class="general-panel" [ngStyle]="{padding: innerPadding}">
+    <div class="general-panel" [ngStyle]="{ padding: innerPadding }">
         <ng-content fxFlex="100"></ng-content>
     </div>
 </div>

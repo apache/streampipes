@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 
 public abstract class PatternExpression extends Expression {
 
-  private String pattern;
-  private List<StreamExpression> streamExpressions;
+  private final String pattern;
+  private final List<StreamExpression> streamExpressions;
   private WithinExpression withinExpression;
 
   public PatternExpression(String pattern, List<StreamExpression> streamExpressions) {

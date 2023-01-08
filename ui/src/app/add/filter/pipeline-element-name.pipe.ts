@@ -19,16 +19,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'pipelineElementNameFilter',
-  pure: false
+    name: 'pipelineElementNameFilter',
+    pure: false,
 })
 export class PipelineElementNameFilter implements PipeTransform {
-
-  transform(values: any[], filterTerm: string): any[] {
-    if (filterTerm === '') {
-      return values;
-    } else {
-      return values.filter(v => v.name.toLowerCase().includes(filterTerm.toLowerCase()));
+    transform(values: any[], filterTerm: string): any[] {
+        if (filterTerm === '') {
+            return values;
+        } else {
+            return values.filter(v =>
+                v.name.toLowerCase().includes(filterTerm.toLowerCase()),
+            );
+        }
     }
-  }
 }

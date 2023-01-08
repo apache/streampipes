@@ -23,7 +23,7 @@ public enum SiddhiTimeUnit {
   MINUTES("minute"),
   HOURS("hour");
 
-  String timeUnitString;
+  final String timeUnitString;
 
   SiddhiTimeUnit(String timeUnitString) {
     this.timeUnitString = timeUnitString;

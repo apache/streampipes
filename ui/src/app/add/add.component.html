@@ -17,55 +17,89 @@
   -->
 
 <sp-basic-view [showBackLink]="false" [padding]="true">
-    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
+    <div
+        nav
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        class="pl-10"
+    >
         <div fxFlex="100" fxLayout="row">
-            <button mat-button mat-raised-button color="accent" [disabled]="selectedEndpointItems.length === 0"
-                    (click)="installSelected()" class="mr-10">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                [disabled]="selectedEndpointItems.length === 0"
+                (click)="installSelected()"
+                class="mr-10"
+            >
                 <i class="material-icons">cloud_download</i>
                 &nbsp;Install selected
             </button>
-            <button mat-button mat-raised-button color="accent" [disabled]="selectedEndpointItems.length === 0"
-                    (click)="uninstallSelected()" class="mr-10">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                [disabled]="selectedEndpointItems.length === 0"
+                (click)="uninstallSelected()"
+                class="mr-10"
+            >
                 <i class="material-icons">delete</i>
                 &nbsp;Uninstall selected
             </button>
-            <button mat-button mat-icon-button color="accent" class="mr-10" (click)="selectAll(true)"
-                    matTooltip="Select all" matTooltipPosition="above">
+            <button
+                mat-button
+                mat-icon-button
+                color="accent"
+                class="mr-10"
+                (click)="selectAll(true)"
+                matTooltip="Select all"
+                matTooltipPosition="above"
+            >
                 <i class="material-icons">queue</i>
             </button>
-            <button mat-button mat-icon-button color="accent" class="mr-10" (click)="selectAll(false)"
-                    matTooltip="Select none" matTooltipPosition="above">
+            <button
+                mat-button
+                mat-icon-button
+                color="accent"
+                class="mr-10"
+                (click)="selectAll(false)"
+                matTooltip="Select none"
+                matTooltipPosition="above"
+            >
                 <i class="material-icons">filter_none</i>
             </button>
         </div>
         <span fxFlex></span>
         <div fxLayoutAlign="start center" fxLayout="row">
             <mat-form-field color="accent">
-                <mat-select [(value)]="selectedCategory"
-                            (selectionChange)="filterByCatergory($event)">
-                    <mat-option [value]="'all'">
-                        All
-                    </mat-option>
-                    <mat-option [value]="'set'">
-                        Sets
-                    </mat-option>
-                    <mat-option [value]="'stream'">
-                        Streams
-                    </mat-option>
-                    <mat-option [value]="'sepa'">
-                        Processors
-                    </mat-option>
-                    <mat-option [value]="'action'">
-                        Sinks
-                    </mat-option>
+                <mat-select
+                    [(value)]="selectedCategory"
+                    (selectionChange)="filterByCatergory($event)"
+                >
+                    <mat-option [value]="'all'"> All </mat-option>
+                    <mat-option [value]="'set'"> Sets </mat-option>
+                    <mat-option [value]="'stream'"> Streams </mat-option>
+                    <mat-option [value]="'sepa'"> Processors </mat-option>
+                    <mat-option [value]="'action'"> Sinks </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <div class="ml-10" fxLayoutAlign="start center" fxLayout="row">
             <mat-icon>search</mat-icon>
 
-            <mat-form-field class="form-style" color="accent" floatLabel="never">
-                <input matInput placeholder="Find Element" value="" [(ngModel)]="filterTerm" name="something">
+            <mat-form-field
+                class="form-style"
+                color="accent"
+                floatLabel="never"
+            >
+                <input
+                    matInput
+                    placeholder="Find Element"
+                    value=""
+                    [(ngModel)]="filterTerm"
+                    name="something"
+                />
             </mat-form-field>
         </div>
         <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
@@ -74,44 +108,79 @@
                     <mat-option [value]="'all'">
                         Available & Installed
                     </mat-option>
-                    <mat-option [value]="'installed'">
-                        Installed
-                    </mat-option>
-                    <mat-option [value]="'available'">
-                        Available
-                    </mat-option>
+                    <mat-option [value]="'installed'"> Installed </mat-option>
+                    <mat-option [value]="'available'"> Available </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
-            <button mat-button mat-icon-button color="accent" (click)="getEndpointItems()" matTooltip="Reload items"
-                    matTooltipPosition="above">
+            <button
+                mat-button
+                mat-icon-button
+                color="accent"
+                (click)="getEndpointItems()"
+                matTooltip="Reload items"
+                matTooltipPosition="above"
+            >
                 <mat-icon>refresh</mat-icon>
             </button>
         </div>
-        <button mat-button mat-icon-button color="accent" (click)="showManageRdfEndpointsDialog()"
-                matTooltip="Manage Endpoints">
+        <button
+            mat-button
+            mat-icon-button
+            color="accent"
+            (click)="showManageRdfEndpointsDialog()"
+            matTooltip="Manage Endpoints"
+        >
             <i class="material-icons">settings</i>
         </button>
     </div>
     <div fxLayout="column" fxFlex="100">
-
-
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start"
-             *ngIf="endpointItemsLoadingComplete">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="start start"
+            *ngIf="endpointItemsLoadingComplete"
+        >
             <div fxLayoutAlign="start start" fxLayout="column">
-                <sp-basic-header-title-component title="Available Pipeline Elements"></sp-basic-header-title-component>
+                <sp-basic-header-title-component
+                    title="Available Pipeline Elements"
+                ></sp-basic-header-title-component>
             </div>
             <div fxLayout="row wrap" class="w-100">
-                <sp-endpoint-item fxFlex="33" [itemSelected]="endpointItem.selected" [item]="endpointItem"
-                                  (triggerInstallation)="triggerInstallation($event)"
-                                  *ngFor="let endpointItem of endpointItems | pipelineElementTypeFilter: selectedTab | pipelineElementNameFilter: filterTerm | pipelineElementInstallationStatusFilter: selectedInstallationStatus | orderBy: 'asc':'name'"
-                                  class="p-15" (click)="toggleSelected(endpointItem)"></sp-endpoint-item>
+                <sp-endpoint-item
+                    fxFlex="33"
+                    [itemSelected]="endpointItem.selected"
+                    [item]="endpointItem"
+                    (triggerInstallation)="triggerInstallation($event)"
+                    *ngFor="
+                        let endpointItem of endpointItems
+                            | pipelineElementTypeFilter : selectedTab
+                            | pipelineElementNameFilter : filterTerm
+                            | pipelineElementInstallationStatusFilter
+                                : selectedInstallationStatus
+                            | orderBy : 'asc' : 'name'
+                    "
+                    class="p-15"
+                    (click)="toggleSelected(endpointItem)"
+                ></sp-endpoint-item>
             </div>
         </div>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center" *ngIf="!endpointItemsLoadingComplete">
-            <mat-spinner [mode]="'indeterminate'" [diameter]="20" color="accent"></mat-spinner>
-            <h4>&nbsp;&nbsp;Searching for available pipeline elements, please wait...</h4>
+        <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            *ngIf="!endpointItemsLoadingComplete"
+        >
+            <mat-spinner
+                [mode]="'indeterminate'"
+                [diameter]="20"
+                color="accent"
+            ></mat-spinner>
+            <h4>
+                &nbsp;&nbsp;Searching for available pipeline elements, please
+                wait...
+            </h4>
         </div>
     </div>
 </sp-basic-view>

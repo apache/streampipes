@@ -23,8 +23,8 @@ import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.preparePro
 
 public class PropertyRenameExpression extends Expression {
 
-  private PropertyExpressionBase propertyExpression;
-  private String newPropertyName;
+  private final PropertyExpressionBase propertyExpression;
+  private final String newPropertyName;
 
   public PropertyRenameExpression(PropertyExpressionBase property, String newPropertyName) {
     this.propertyExpression = property;
@@ -34,8 +34,8 @@ public class PropertyRenameExpression extends Expression {
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.WHITESPACE,
-            propertyExpression.toSiddhiEpl(),
-            SiddhiConstants.AS,
-            prepareProperty(newPropertyName));
+        propertyExpression.toSiddhiEpl(),
+        SiddhiConstants.AS,
+        prepareProperty(newPropertyName));
   }
 }

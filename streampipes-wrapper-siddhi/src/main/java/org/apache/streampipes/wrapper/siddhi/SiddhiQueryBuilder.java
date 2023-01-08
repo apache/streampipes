@@ -17,11 +17,19 @@
  */
 package org.apache.streampipes.wrapper.siddhi;
 
-import org.apache.streampipes.wrapper.siddhi.query.*;
+import org.apache.streampipes.wrapper.siddhi.query.FromClause;
+import org.apache.streampipes.wrapper.siddhi.query.GroupByClause;
+import org.apache.streampipes.wrapper.siddhi.query.HavingClause;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
+import org.apache.streampipes.wrapper.siddhi.query.LimitClause;
+import org.apache.streampipes.wrapper.siddhi.query.OffsetClause;
+import org.apache.streampipes.wrapper.siddhi.query.OrderByClause;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.siddhi.query.SiddhiQuery;
 
 public class SiddhiQueryBuilder {
 
-  private SiddhiQuery siddhiQuery;
+  private final SiddhiQuery siddhiQuery;
 
   public static SiddhiQueryBuilder create(FromClause fromClause, InsertIntoClause insertIntoClause) {
     return new SiddhiQueryBuilder(fromClause.toSiddhiEpl(), insertIntoClause.toSiddhiEpl());

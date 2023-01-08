@@ -23,7 +23,7 @@ import org.apache.streampipes.resource.management.AbstractDashboardResourceManag
 
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 
 @Path("/v2/dashboard/dashboards")
 @Component

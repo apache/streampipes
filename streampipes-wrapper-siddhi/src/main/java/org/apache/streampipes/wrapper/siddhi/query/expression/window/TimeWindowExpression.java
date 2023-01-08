@@ -22,7 +22,7 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.SiddhiTimeUnit;
 
 public class TimeWindowExpression extends WindowExpression {
 
-  private SiddhiTimeUnit timeUnit;
+  private final SiddhiTimeUnit timeUnit;
 
   public TimeWindowExpression(Integer timeWindowSize, SiddhiTimeUnit timeUnit) {
     super(timeWindowSize);

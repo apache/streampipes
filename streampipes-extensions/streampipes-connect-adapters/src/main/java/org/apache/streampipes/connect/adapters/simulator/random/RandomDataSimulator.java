@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.connect.adapters.simulator.random;
 
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 
 import java.util.HashMap;
 import java.util.Map;

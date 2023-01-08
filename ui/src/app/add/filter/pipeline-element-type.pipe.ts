@@ -19,16 +19,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'pipelineElementTypeFilter',
-  pure: false
+    name: 'pipelineElementTypeFilter',
+    pure: false,
 })
 export class PipelineElementTypeFilter implements PipeTransform {
-
-  transform(value: any[], type: string): any[] {
-    if (type === 'all') {
-      return value;
-    } else {
-      return value.filter(v => v.type === type);
+    transform(value: any[], type: string): any[] {
+        if (type === 'all') {
+            return value;
+        } else {
+            return value.filter(v => v.type === type);
+        }
     }
-  }
 }
