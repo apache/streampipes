@@ -18,62 +18,70 @@
 
 @import '../_variables';
 
-.mat-button.mat-accent, .mat-icon-button.mat-accent, .mat-stroked-button.mat-accent {
-  color: var(--color-accent);
+.mat-button.mat-accent,
+.mat-icon-button.mat-accent,
+.mat-stroked-button.mat-accent {
+    color: var(--color-accent);
 }
 
-.mat-button, .mat-raised-button, .mat-flat-button {
-  display: inline-block;
-  vertical-align: middle;
-  border: 0;
-  border-radius: 3px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 0.8em;
-  letter-spacing: 0.05em;
-  line-height: 0.8em;
-  padding: 0.75em 1.25em;
-  margin-right: 0.25em;
-  margin-left: 0.25em;
-  margin-top: 0;
-  box-shadow: none !important;
+.mat-button,
+.mat-raised-button,
+.mat-flat-button {
+    display: inline-block;
+    vertical-align: middle;
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    letter-spacing: 0.05em;
+    line-height: 0.8em;
+    padding: 0.75em 1.25em;
+    margin-right: 0.25em;
+    margin-left: 0.25em;
+    margin-top: 0;
+    box-shadow: none !important;
 }
 
-.mat-button > i, .mat-raised-button > i, .mat-flat-button > i {
-  vertical-align: middle;
-  line-height: inherit;
+.mat-button > i,
+.mat-raised-button > i,
+.mat-flat-button > i {
+    vertical-align: middle;
+    line-height: inherit;
 }
 
-.mat-button > span, .mat-raised-button > span, .mat-flat-button > span {
-  vertical-align: middle;
+.mat-button > span,
+.mat-raised-button > span,
+.mat-flat-button > span {
+    vertical-align: middle;
 }
 
 .mat-fab.mat-accent {
-  background: var(--color-accent);
-  color: rgba(255, 255, 255, 0.75);
+    background: var(--color-accent);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .mat-raised-button.mat-primary:enabled {
-  background: var(--color-primary);
-  color: rgba(255, 255, 255, 0.75);
+    background: var(--color-primary);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .mat-raised-button.mat-accent:hover:enabled {
-  background: $sp-color-accent-light-blue;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: $sp-color-accent-light-blue;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .mat-raised-button.mat-accent:disabled {
-  background: #ebebeb;
-  color: #cdcdcd;
+    background: #ebebeb;
+    color: #cdcdcd;
 }
 
 .mat-raised-button.mat-accent:enabled {
-  background: var(--color-accent);
-  color: rgba(255, 255, 255, 0.75);
+    background: var(--color-accent);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .mat-raised-button.small-button {
@@ -84,61 +92,61 @@
 }
 
 .mat-raised-button.small-button-add {
-  padding: 0.25em 0.75em;
-  font-size: 0.8em;
-  max-height: 75px;
-  line-height: 25px;
+    padding: 0.25em 0.75em;
+    font-size: 0.8em;
+    max-height: 75px;
+    line-height: 25px;
 }
 
 .mat-raised-button.small-button-add-inverted {
-  padding: 0.25em 0.75em;
-  font-size: 0.8em;
-  max-height: 75px;
-  line-height: 25px;
-  background: white;
-  border: 1.5px solid var(--color-accent);
-  color: $sp-color-accent
+    padding: 0.25em 0.75em;
+    font-size: 0.8em;
+    max-height: 75px;
+    line-height: 25px;
+    background: white;
+    border: 1.5px solid var(--color-accent);
+    color: $sp-color-accent;
 }
 
 .mat-raised-button.mat-accent:hover:enabled {
-  background: $sp-color-accent-light-blue;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: $sp-color-accent-light-blue;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .mat-raised-button.mat-accent:disabled {
-  background: #ebebeb;
-  color: #cdcdcd;
+    background: #ebebeb;
+    color: #cdcdcd;
 }
 
 .mat-raised-button.mat-basic:enabled {
-  background: #e5e5e5;
-  color: rgba(0, 0, 0, 0.67);
+    background: #e5e5e5;
+    color: rgba(0, 0, 0, 0.67);
 }
 
 .mat-raised-button.mat-basic:hover:enabled {
-  background: #cbcbcb;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: #cbcbcb;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .mat-raised-button.mat-basic:disabled {
-  background: #ebebeb;
-  color: #cdcdcd;
+    background: #ebebeb;
+    color: #cdcdcd;
 }
 
 .mat-flat-button.mat-accent:enabled {
-  color: var(--color-accent);
-  background: rgba(0, 0, 0, 0);
+    color: var(--color-accent);
+    background: rgba(0, 0, 0, 0);
 }
 
 .mat-flat-button.mat-accent:hover:enabled {
-  background: var(--color-bg-2);
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: var(--color-bg-2);
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .mat-flat-button.mat-accent:disabled {
-  color: #cdcdcd;
-  background: rgba(0, 0, 0, 0);
+    color: #cdcdcd;
+    background: rgba(0, 0, 0, 0);
 }

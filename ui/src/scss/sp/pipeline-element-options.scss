@@ -19,112 +19,111 @@
 @import '../_variables';
 
 .options-button {
-  cursor: pointer;
-  position: absolute;
-  height: 30%;
-  width: 30%;
-  border-radius: 20%;
-  box-shadow: 0 0 3px var(--color-accent);
-  text-align: center;
-  padding: 1px 1px;
-  background-color: var(--color-accent);
-  color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+    position: absolute;
+    height: 30%;
+    width: 30%;
+    border-radius: 20%;
+    box-shadow: 0 0 3px var(--color-accent);
+    text-align: center;
+    padding: 1px 1px;
+    background-color: var(--color-accent);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .mat-icon-button.options-icon-button {
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  border-radius: 0;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 0;
 }
 
 .options-icon-size {
-  font-size: 20px;
-  line-height: 20px;
+    font-size: 20px;
+    line-height: 20px;
 }
 
 .customize-button {
-  left: 2%;
-  top: -35%;
+    left: 2%;
+    top: -35%;
 }
 
 .delete-button {
-  left: 73%;
-  top: -35%;
-  background-color: darkred;
-  box-shadow: 0 0 3px darkred;
+    left: 73%;
+    top: -35%;
+    background-color: darkred;
+    box-shadow: 0 0 3px darkred;
 }
 
 .help-button {
-  left: 37.5%;
-  top: -35%;
+    left: 37.5%;
+    top: -35%;
 }
 
 .recommended-button {
-  left: 53%;
-  top: 85%;
+    left: 53%;
+    top: 85%;
 }
 
 .possible-button {
-  left: 18%;
-  top: 85%;
+    left: 18%;
+    top: 85%;
 }
 
 .help-button-icon-stand {
-  display: block;
-  cursor: pointer;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background-color: $sp-color-accent;
-  color: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 0 2px $sp-color-accent;
-  line-height: 1.2;
-  text-align: center;
-
+    display: block;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: $sp-color-accent;
+    color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 0 2px $sp-color-accent;
+    line-height: 1.2;
+    text-align: center;
 }
 
 .editor-pe-info {
-  position: absolute;
-  left: 0%;
-  top: 50%;
-  width: 104%;
-  padding: 65px 0px 10px;
-  font-size: smaller;
-  text-align: center;
-  box-shadow: 0 0 2px #555;
-  -webkit-animation: slidein 0.5s;
+    position: absolute;
+    left: 0%;
+    top: 50%;
+    width: 104%;
+    padding: 65px 0px 10px;
+    font-size: smaller;
+    text-align: center;
+    box-shadow: 0 0 2px #555;
+    -webkit-animation: slidein 0.5s;
 }
 
 @keyframes slidein {
-  0% {
-    top: 0;
-    border-top-left-radius: 50%;
-    border-top-right-radius: 50%;
-  }
-  100% {
-    top: 50%;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
+    0% {
+        top: 0;
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+    }
+    100% {
+        top: 50%;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
 
 .pe-info-action {
-  background: $sp-color-sink;
-  color: white;
+    background: $sp-color-sink;
+    color: white;
 }
 
 .pe-info-sepa {
-  background: $sp-color-processor;
-  color: white;
+    background: $sp-color-processor;
+    color: white;
 }
 
 .pe-info-stream {
-  background: $sp-color-stream;
-  color: #343434;
+    background: $sp-color-stream;
+    color: #343434;
 }
 
 .pe-info-set {
-  background: $sp-color-set;
-  color: white;
+    background: $sp-color-set;
+    color: white;
 }

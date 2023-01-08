@@ -19,13 +19,13 @@
 @import '../_variables';
 
 .pipeline-validation-summary {
-  background: var(--color-bg-0);
-  border-radius: 3px;
-  color: #5b5b5b;
-  padding: 2px 5px;
-  width:120px;
+    background: var(--color-bg-0);
+    border-radius: 3px;
+    color: #5b5b5b;
+    padding: 2px 5px;
+    width: 120px;
 }
 
 .pipeline-validation-summary-error {
-  color: var(--color-warn);
+    color: var(--color-warn);
 }
