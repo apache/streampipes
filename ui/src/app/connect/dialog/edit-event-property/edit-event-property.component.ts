@@ -165,13 +165,6 @@ export class EditEventPropertyComponent implements OnInit {
         this.property.runtimeName = this.cachedProperty.runtimeName;
         this.property.propertyScope = this.cachedProperty.propertyScope;
 
-        if (this.property instanceof EventPropertyList) {
-            // @ts-ignore
-            this.property.eventProperty.runtimeType = (
-                this.cachedProperty as EventPropertyList
-            ).eventProperty.runtimeType;
-        }
-
         if (this.property instanceof EventPropertyPrimitive) {
             this.property.runtimeType = (
                 this.cachedProperty as EventPropertyPrimitive

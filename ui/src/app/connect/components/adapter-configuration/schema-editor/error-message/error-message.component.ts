@@ -16,8 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { Notification } from '@streampipes/platform-services';
+import { Component, Input } from '@angular/core';
 import { StreamPipesErrorMessage } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
