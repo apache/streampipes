@@ -28,7 +28,7 @@
 
 <groupId>org.apache.streampipes</groupId>
 <artifactId>streampipes-parent</artifactId>
-<version>0.90.0</version>
+<version>0.90.1-SNAPSHOT</version>
 <packaging>pom</packaging>
 
 <properties>
@@ -1872,7 +1872,7 @@ IoT data streams.
 		<developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
 		<connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
 		<url>https://github.com/apache/streampipes</url>
-		<tag>release/0.90.0</tag>
+		<tag>rel/0.90.0</tag>
 	</scm>
 
 	<issueManagement>
