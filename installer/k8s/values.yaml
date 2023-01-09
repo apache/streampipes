@@ -21,7 +21,7 @@ persistentVolumeReclaimPolicy: "Delete"
 persistentVolumeAccessModes: "ReadWriteOnce"
 
 streampipes:
-  version: "0.90.0-SNAPSHOT"
+  version: "0.90.0"
   registry: "apachestreampipes"
 
 external:
