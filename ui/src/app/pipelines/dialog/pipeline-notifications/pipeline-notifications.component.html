@@ -18,17 +18,23 @@
 
 <div class="sp-dialog-container" fxLayout="column">
     <div class="sp-dialog-content p-15" fxFlex="100" fxLayout="column">
-        <div class="info-message">Pipeline health monitoring discovered the following issues:</div>
+        <div class="info-message">
+            Pipeline health monitoring discovered the following issues:
+        </div>
         <div class="log-message" fxFlex="100" fxLayout="column">
             <span *ngFor="let notification of pipeline.pipelineNotifications">
-                <p>{{notification}}</p>
+                <p>{{ notification }}</p>
             </span>
         </div>
-
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button color="accent" (click)="acknowledgeAndClose()">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="acknowledgeAndClose()"
+        >
             Acknowledge
         </button>
     </div>

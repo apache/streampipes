@@ -23,19 +23,19 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-delete-pipeline-dialog',
     templateUrl: './delete-pipeline-dialog.component.html',
-    styleUrls: ['./delete-pipeline-dialog.component.scss']
+    styleUrls: ['./delete-pipeline-dialog.component.scss'],
 })
 export class DeletePipelineDialogComponent {
-
     @Input()
     pipeline: Pipeline;
 
     isInProgress = false;
     currentStatus: any;
 
-    constructor(private dialogRef: DialogRef<DeletePipelineDialogComponent>,
-                private pipelineService: PipelineService) {
-    }
+    constructor(
+        private dialogRef: DialogRef<DeletePipelineDialogComponent>,
+        private pipelineService: PipelineService,
+    ) {}
 
     close(refreshPipelines: boolean) {
         this.dialogRef.close(refreshPipelines);
@@ -44,7 +44,8 @@ export class DeletePipelineDialogComponent {
     deletePipeline() {
         this.isInProgress = true;
         this.currentStatus = 'Deleting pipeline...';
-        this.pipelineService.deleteOwnPipeline(this.pipeline._id)
+        this.pipelineService
+            .deleteOwnPipeline(this.pipeline._id)
             .subscribe(data => {
                 this.close(true);
             });
@@ -53,11 +54,13 @@ export class DeletePipelineDialogComponent {
     stopAndDeletePipeline() {
         this.isInProgress = true;
         this.currentStatus = 'Stopping pipeline...';
-        this.pipelineService.stopPipeline(this.pipeline._id)
-            .subscribe(data => {
-               this.deletePipeline();
-            }, data => {
+        this.pipelineService.stopPipeline(this.pipeline._id).subscribe(
+            data => {
                 this.deletePipeline();
-            });
+            },
+            data => {
+                this.deletePipeline();
+            },
+        );
     }
 }

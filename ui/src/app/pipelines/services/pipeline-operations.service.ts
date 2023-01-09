@@ -29,131 +29,166 @@ import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission
 
 @Injectable()
 export class PipelineOperationsService {
+    starting: any;
+    stopping: any;
 
-  starting: any;
-  stopping: any;
+    constructor(
+        private shepherdService: ShepherdService,
+        private pipelineService: PipelineService,
+        private dialogService: DialogService,
+        private router: Router,
+    ) {}
 
-  constructor(
-      private shepherdService: ShepherdService,
-      private pipelineService: PipelineService,
-      private dialogService: DialogService,
-      private router: Router) {
-  }
-
-  startPipeline(pipelineId: string,
-                refreshPipelinesEmitter: EventEmitter<boolean>,
-                toggleRunningOperation?, ) {
-    if (toggleRunningOperation) {
-      toggleRunningOperation('starting');
-    }
-    const dialogRef = this.showPipelineOperationsDialog(pipelineId, PipelineAction.Start);
-    this.afterPipelineOperationsDialogClosed(dialogRef, refreshPipelinesEmitter, 'starting', toggleRunningOperation);
-  }
-
-  stopPipeline(pipelineId: string,
-               refreshPipelinesEmitter: EventEmitter<boolean>,
-               toggleRunningOperation?) {
-    if (toggleRunningOperation) {
-      toggleRunningOperation('stopping');
-    }
-    const dialogRef = this.showPipelineOperationsDialog(pipelineId, PipelineAction.Stop);
-    this.afterPipelineOperationsDialogClosed(dialogRef, refreshPipelinesEmitter, 'stopping', toggleRunningOperation);
-  }
-
-  afterPipelineOperationsDialogClosed(dialogRef: DialogRef<PipelineStatusDialogComponent>,
-                                      refreshPipelinesEmitter: EventEmitter<boolean>,
-                                      toggleAction: string,
-                                      toggleRunningOperation?) {
-    dialogRef.afterClosed().subscribe(msg => {
-      refreshPipelinesEmitter.emit(true);
-      if (toggleRunningOperation) {
-        toggleRunningOperation(toggleAction);
-      }
-    });
-  }
-
-  showDeleteDialog(pipeline: Pipeline,
-                   refreshPipelinesEmitter: EventEmitter<boolean>,
-                   switchToPipelineView?: any) {
-    const dialogRef: DialogRef<DeletePipelineDialogComponent> = this.dialogService.open(DeletePipelineDialogComponent, {
-      panelType: PanelType.STANDARD_PANEL,
-      title: 'Delete Pipeline',
-      width: '70vw',
-      data: {
-        'pipeline': pipeline,
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        if (!switchToPipelineView) {
-          refreshPipelinesEmitter.emit(true);
-        } else {
-          switchToPipelineView();
+    startPipeline(
+        pipelineId: string,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+        toggleRunningOperation?,
+    ) {
+        if (toggleRunningOperation) {
+            toggleRunningOperation('starting');
         }
-      }
-    });
-  }
+        const dialogRef = this.showPipelineOperationsDialog(
+            pipelineId,
+            PipelineAction.Start,
+        );
+        this.afterPipelineOperationsDialogClosed(
+            dialogRef,
+            refreshPipelinesEmitter,
+            'starting',
+            toggleRunningOperation,
+        );
+    }
 
-  showPipelineOperationsDialog(pipelineId: string,
-                               action: PipelineAction): DialogRef<PipelineStatusDialogComponent> {
-    return this.dialogService.open(PipelineStatusDialogComponent, {
-      panelType: PanelType.STANDARD_PANEL,
-      title: 'Pipeline Status',
-      width: '70vw',
-      data: {
-        'pipelineId': pipelineId,
-        'action': action
-      }
-    });
-  }
+    stopPipeline(
+        pipelineId: string,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+        toggleRunningOperation?,
+    ) {
+        if (toggleRunningOperation) {
+            toggleRunningOperation('stopping');
+        }
+        const dialogRef = this.showPipelineOperationsDialog(
+            pipelineId,
+            PipelineAction.Stop,
+        );
+        this.afterPipelineOperationsDialogClosed(
+            dialogRef,
+            refreshPipelinesEmitter,
+            'stopping',
+            toggleRunningOperation,
+        );
+    }
 
-  showPipelineNotificationsDialog(pipeline: Pipeline,
-                                  refreshPipelinesEmitter: EventEmitter<boolean>) {
-    const dialogRef: DialogRef<PipelineNotificationsComponent> = this.dialogService.open(PipelineNotificationsComponent, {
-      panelType: PanelType.STANDARD_PANEL,
-      title: 'Pipeline Notifications',
-      width: '70vw',
-      data: {
-        'pipeline': pipeline,
-      }
-    });
+    afterPipelineOperationsDialogClosed(
+        dialogRef: DialogRef<PipelineStatusDialogComponent>,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+        toggleAction: string,
+        toggleRunningOperation?,
+    ) {
+        dialogRef.afterClosed().subscribe(msg => {
+            refreshPipelinesEmitter.emit(true);
+            if (toggleRunningOperation) {
+                toggleRunningOperation(toggleAction);
+            }
+        });
+    }
 
-    dialogRef.afterClosed().subscribe(close => {
-      refreshPipelinesEmitter.emit(true);
-    });
-  }
+    showDeleteDialog(
+        pipeline: Pipeline,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+        switchToPipelineView?: any,
+    ) {
+        const dialogRef: DialogRef<DeletePipelineDialogComponent> =
+            this.dialogService.open(DeletePipelineDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Delete Pipeline',
+                width: '70vw',
+                data: {
+                    pipeline: pipeline,
+                },
+            });
 
-  showPermissionsDialog(pipeline: Pipeline,
-                        refreshPipelinesEmitter: EventEmitter<boolean>) {
-    const dialogRef = this.dialogService.open(ObjectPermissionDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Manage permissions',
-      width: '70vw',
-      data: {
-        'objectInstanceId': pipeline._id,
-        'headerTitle': 'Manage permissions for pipeline ' + pipeline.name
-      }
-    });
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                if (!switchToPipelineView) {
+                    refreshPipelinesEmitter.emit(true);
+                } else {
+                    switchToPipelineView();
+                }
+            }
+        });
+    }
 
-    dialogRef.afterClosed().subscribe(refresh => {
-      refreshPipelinesEmitter.emit(refresh);
-    });
-  }
+    showPipelineOperationsDialog(
+        pipelineId: string,
+        action: PipelineAction,
+    ): DialogRef<PipelineStatusDialogComponent> {
+        return this.dialogService.open(PipelineStatusDialogComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title: 'Pipeline Status',
+            width: '70vw',
+            data: {
+                pipelineId: pipelineId,
+                action: action,
+            },
+        });
+    }
 
-  showPipelineInEditor(id: string) {
-    this.router.navigate(['pipelines', 'modify', id]);
-  }
+    showPipelineNotificationsDialog(
+        pipeline: Pipeline,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+    ) {
+        const dialogRef: DialogRef<PipelineNotificationsComponent> =
+            this.dialogService.open(PipelineNotificationsComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Pipeline Notifications',
+                width: '70vw',
+                data: {
+                    pipeline: pipeline,
+                },
+            });
 
-  showPipelineDetails(id: string) {
-    this.router.navigate(['pipelines', 'details', id]);
-  }
+        dialogRef.afterClosed().subscribe(close => {
+            refreshPipelinesEmitter.emit(true);
+        });
+    }
 
-  modifyPipeline(pipeline) {
-    this.showPipelineInEditor(pipeline);
-  }
+    showPermissionsDialog(
+        pipeline: Pipeline,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+    ) {
+        const dialogRef = this.dialogService.open(
+            ObjectPermissionDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Manage permissions',
+                width: '70vw',
+                data: {
+                    objectInstanceId: pipeline._id,
+                    headerTitle:
+                        'Manage permissions for pipeline ' + pipeline.name,
+                },
+            },
+        );
 
-  showLogs(id) {
-    // this.$state.go("streampipes.pipelinelogs", {pipeline: id});
-  }
+        dialogRef.afterClosed().subscribe(refresh => {
+            refreshPipelinesEmitter.emit(refresh);
+        });
+    }
+
+    showPipelineInEditor(id: string) {
+        this.router.navigate(['pipelines', 'modify', id]);
+    }
+
+    showPipelineDetails(id: string) {
+        this.router.navigate(['pipelines', 'details', id]);
+    }
+
+    modifyPipeline(pipeline) {
+        this.showPipelineInEditor(pipeline);
+    }
+
+    showLogs(id) {
+        // this.$state.go("streampipes.pipelinelogs", {pipeline: id});
+    }
 }

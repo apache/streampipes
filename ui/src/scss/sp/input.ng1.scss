@@ -19,62 +19,70 @@
 @import '../_variables';
 
 md-input-container {
-  margin: 5px;
+    margin: 5px;
 }
 
 md-input-container.sp .md-input {
-  border: 2px solid $sp-color-accent;
-  border-radius: 3px;
-  background: #f6f6f6;
+    border: 2px solid $sp-color-accent;
+    border-radius: 3px;
+    background: #f6f6f6;
 }
 
 md-input-container.sp.md-input-invalid {
-  border-radius: 3px;
+    border-radius: 3px;
 }
 
 md-input-container.sp.md-input-invalid .md-input {
-  border: 2px solid $sp-color-error;
-  border-radius: 3px;
-  background: white;
+    border: 2px solid $sp-color-error;
+    border-radius: 3px;
+    background: white;
 }
 
 md-input-container.sp {
-  border-radius: 3px;
+    border-radius: 3px;
 }
 
 md-input-container.sp.md-input-focused.md-input-invalid {
-  background: $sp-color-error;
+    background: $sp-color-error;
 }
 
 md-input-container.sp.md-input-focused {
-  background: $sp-color-accent;
-  -webkit-transition: background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s, -webkit-transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
-  transition: background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s, -webkit-transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
-  transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s, background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
-  transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s, background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s, -webkit-transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
+    background: $sp-color-accent;
+    -webkit-transition: background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s,
+        -webkit-transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
+    transition: background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s,
+        -webkit-transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
+    transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s,
+        background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
+    transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s,
+        background cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s,
+        -webkit-transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s;
 }
 
 md-input-container.sp label:not(.md-no-float) {
-  //transform: translate3d(0, -28px, 0) scale(1);
+    //transform: translate3d(0, -28px, 0) scale(1);
 }
 
-md-input-container.sp.md-input-focused label:not(.md-no-float), md-input-container.sp.md-input-has-placeholder label:not(.md-no-float), md-input-container.sp.md-input-has-value label:not(.md-no-float) {
-  -webkit-transform: translate3d(0, 55px, 0) scale(0.75);
-  color:white;
- }
+md-input-container.sp.md-input-focused label:not(.md-no-float),
+md-input-container.sp.md-input-has-placeholder label:not(.md-no-float),
+md-input-container.sp.md-input-has-value label:not(.md-no-float) {
+    -webkit-transform: translate3d(0, 55px, 0) scale(0.75);
+    color: white;
+}
 
 md-input-container.sp label:not(.md-container-ignore).md-required:after {
-  color:white;
+    color: white;
 }
 
 md-input-container.sp.md-input-focused .md-input {
-  border-width: 2px;
+    border-width: 2px;
 }
 
-md-input-container.sp label:not(.md-no-float):not(.md-container-ignore), md-input-container.sp .md-placeholder {
-  padding-left:10px;
+md-input-container.sp label:not(.md-no-float):not(.md-container-ignore),
+md-input-container.sp .md-placeholder {
+    padding-left: 10px;
 }
 
 label {
-  margin-bottom: 0px;
+    margin-bottom: 0px;
 }

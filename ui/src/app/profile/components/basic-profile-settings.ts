@@ -25,40 +25,41 @@ import { AuthService } from '../../services/auth.service';
 
 @Directive()
 export abstract class BasicProfileSettings {
+    userData: UserAccount;
+    profileLoaded = false;
+    profileUpdating = false;
+    errorMessage: string;
 
-  userData: UserAccount;
-  profileLoaded = false;
-  profileUpdating = false;
-  errorMessage: string;
+    constructor(
+        protected profileService: ProfileService,
+        public appConstants: AppConstants,
+        private tokenService: JwtTokenStorageService,
+        protected authService: AuthService,
+    ) {}
 
-  constructor(protected profileService: ProfileService,
-              public appConstants: AppConstants,
-              private tokenService: JwtTokenStorageService,
-              protected authService: AuthService) {
+    receiveUserData() {
+        this.profileService
+            .getUserProfile(this.authService.user$.getValue().username)
+            .subscribe(userData => {
+                this.userData = userData;
+                this.onUserDataReceived();
+                this.profileLoaded = true;
+            });
+    }
 
-  }
+    saveProfileSettings() {
+        this.profileUpdating = true;
+        this.profileService
+            .updateUserProfile(this.userData)
+            .subscribe(response => {
+                this.profileUpdating = false;
+                if (response.success) {
+                    this.receiveUserData();
+                } else {
+                    this.errorMessage = response.notifications[0].title;
+                }
+            });
+    }
 
-  receiveUserData() {
-    this.profileService
-        .getUserProfile(this.authService.user$.getValue().username)
-        .subscribe(userData => {
-          this.userData = userData;
-          this.onUserDataReceived();
-          this.profileLoaded = true;
-        });
-  }
-
-  saveProfileSettings() {
-    this.profileUpdating = true;
-    this.profileService.updateUserProfile(this.userData).subscribe(response => {
-      this.profileUpdating = false;
-      if (response.success) {
-        this.receiveUserData();
-      } else {
-        this.errorMessage = response.notifications[0].title;
-      }
-    });
-  }
-
-  abstract onUserDataReceived();
+    abstract onUserDataReceived();
 }

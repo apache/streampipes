@@ -18,6 +18,7 @@
 
 @import '../_variables';
 
-.mat-progress-spinner circle, .mat-spinner circle {
-  stroke: $sp-color-accent;
+.mat-progress-spinner circle,
+.mat-spinner circle {
+    stroke: $sp-color-accent;
 }

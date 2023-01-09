@@ -22,49 +22,58 @@ import { RawUserApiToken, UserApiToken } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'token-management-settings',
-  templateUrl: './token-management-settings.component.html',
-  styleUrls: ['./token-management-settings.component.scss']
+    selector: 'sp-token-management-settings',
+    templateUrl: './token-management-settings.component.html',
+    styleUrls: ['./token-management-settings.component.scss'],
 })
-export class TokenManagementSettingsComponent extends BasicProfileSettings implements OnInit {
+export class TokenManagementSettingsComponent
+    extends BasicProfileSettings
+    implements OnInit
+{
+    newTokenName: string;
+    newTokenCreated = false;
+    newlyCreatedToken: RawUserApiToken;
 
-  newTokenName: string;
-  newTokenCreated = false;
-  newlyCreatedToken: RawUserApiToken;
+    displayedColumns: string[] = ['name', 'action'];
+    apiKeyDataSource: MatTableDataSource<UserApiToken>;
 
-  displayedColumns: string[] = ['name', 'action'];
-  apiKeyDataSource: MatTableDataSource<UserApiToken>;
+    ngOnInit(): void {
+        this.receiveUserData();
+    }
 
-  ngOnInit(): void {
-    this.receiveUserData();
-  }
+    requestNewKey() {
+        const baseToken: RawUserApiToken = this.makeBaseToken();
+        this.profileService
+            .requestNewApiToken(this.userData.username, baseToken)
+            .subscribe(result => {
+                this.newlyCreatedToken = result;
+                this.newTokenCreated = true;
+                this.newTokenName = '';
+                this.receiveUserData();
+            });
+    }
 
-  requestNewKey() {
-    const baseToken: RawUserApiToken = this.makeBaseToken();
-    this.profileService.requestNewApiToken(this.userData.username, baseToken).subscribe(result => {
-      this.newlyCreatedToken = result;
-      this.newTokenCreated = true;
-      this.newTokenName = '';
-      this.receiveUserData();
-    });
-  }
+    makeBaseToken(): RawUserApiToken {
+        const baseToken = new RawUserApiToken();
+        baseToken.tokenName = this.newTokenName;
+        return baseToken;
+    }
 
-  makeBaseToken(): RawUserApiToken {
-    const baseToken = new RawUserApiToken();
-    baseToken.tokenName = this.newTokenName;
-    return baseToken;
-  }
+    revokeApiKey(apiKey: UserApiToken) {
+        const removeIndex = this.userData.userApiTokens
+            .map(token => token.tokenId)
+            .indexOf(apiKey.tokenId);
+        this.userData.userApiTokens.splice(removeIndex, 1);
+        this.profileService
+            .updateUserProfile(this.userData)
+            .subscribe(response => {
+                this.receiveUserData();
+            });
+    }
 
-  revokeApiKey(apiKey: UserApiToken) {
-    const removeIndex = this.userData.userApiTokens.map(token => token.tokenId).indexOf(apiKey.tokenId);
-    this.userData.userApiTokens.splice(removeIndex, 1);
-    this.profileService.updateUserProfile(this.userData).subscribe(response => {
-      this.receiveUserData();
-    });
-  }
-
-  onUserDataReceived() {
-    this.apiKeyDataSource = new MatTableDataSource<UserApiToken>(this.userData.userApiTokens);
-  }
-
+    onUserDataReceived() {
+        this.apiKeyDataSource = new MatTableDataSource<UserApiToken>(
+            this.userData.userApiTokens,
+        );
+    }
 }

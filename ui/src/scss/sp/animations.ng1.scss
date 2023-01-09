@@ -17,102 +17,102 @@
  */
 
 @keyframes appear {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 @keyframes disappear {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
 
 @keyframes appear-opacity {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.8;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.8;
+    }
 }
 @keyframes disappear-opacity {
-  from {
-    opacity: 0.8;
-  }
-  to {
-    opacity: 0;
-  }
+    from {
+        opacity: 0.8;
+    }
+    to {
+        opacity: 0;
+    }
 }
 
 @keyframes move-top-enter {
-  from {
-    top:100vh;
-  }
-  to {
-    top:0vh;
-  }
+    from {
+        top: 100vh;
+    }
+    to {
+        top: 0vh;
+    }
 }
 @keyframes move-top-leave {
-  from {
-    top: 0vh;
-  }
-  to {
-    top: -100vh;
-  }
+    from {
+        top: 0vh;
+    }
+    to {
+        top: -100vh;
+    }
 }
 
 .sp-move-top.ng-enter {
-  position:absolute;
-  width:100%;
-  animation: 0.75s move-top-enter;
+    position: absolute;
+    width: 100%;
+    animation: 0.75s move-top-enter;
 }
 
 .sp-move-top.ng-leave {
-  position:absolute;
-  width:100%;
-  animation: 0.75s move-top-leave;
+    position: absolute;
+    width: 100%;
+    animation: 0.75s move-top-leave;
 }
 
 .sp-fade-opacity.ng-enter {
-  animation: 2s appear-opacity;
+    animation: 2s appear-opacity;
 }
 
 .sp-fade-opacity.ng-leave {
-  animation: 1s disappear-opacity;
+    animation: 1s disappear-opacity;
 }
 
 .sp-fade-options.ng-hide {
-  animation: 0.5s disappear;
+    animation: 0.5s disappear;
 }
 
 .sp-fade.ng-enter {
-  animation: 2s appear;
+    animation: 2s appear;
 }
 
 .sp-fade.ng-leave {
-  animation: 1s disappear;
+    animation: 1s disappear;
 }
 
 .sp-fade.ng-leave.ng-leave-active,
 .sp-fade.ng-move,
 .sp-fade.ng-enter {
-  opacity:0;
-  max-height:0;
+    opacity: 0;
+    max-height: 0;
 }
 
 .sp-fade.ng-leave,
 .sp-fade.ng-move.ng-move-active,
 .sp-fade.ng-enter.ng-enter-active {
-  opacity:1;
-  max-height:20px;
+    opacity: 1;
+    max-height: 20px;
 }
 
 .sp-fade-only-enter.ng-enter {
-  animation: 1s appear;
+    animation: 1s appear;
 }
