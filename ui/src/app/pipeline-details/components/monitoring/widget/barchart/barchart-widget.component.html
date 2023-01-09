@@ -16,17 +16,28 @@
   ~
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" [ngStyle]="{'background-color': backgroundColor, 'width':'265px', 'max-width': '265px', 'margin-left': '8px'}">
+<div
+    fxFlex="100"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    [ngStyle]="{
+        'background-color': backgroundColor,
+        'width': '265px',
+        'max-width': '265px',
+        'margin-left': '8px'
+    }"
+>
     <ngx-charts-bar-vertical
-            [view]="[265,150]"
-            [results]="data"
-            [scheme]="colorScheme"
-            [gradient]="false"
-            [xAxis]="false"
-            [yAxis]="true"
-            [legend]="false"
-            [showXAxisLabel]="false"
-            [showYAxisLabel]="false"
-            [ngStyle]="{'fill': backgroundColor}">
+        [view]="[265, 150]"
+        [results]="data"
+        [scheme]="colorScheme"
+        [gradient]="false"
+        [xAxis]="false"
+        [yAxis]="true"
+        [legend]="false"
+        [showXAxisLabel]="false"
+        [showYAxisLabel]="false"
+        [ngStyle]="{ fill: backgroundColor }"
+    >
     </ngx-charts-bar-vertical>
 </div>

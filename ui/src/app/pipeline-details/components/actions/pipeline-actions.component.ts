@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { Pipeline } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
@@ -24,11 +31,10 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
-    selector: 'pipeline-actions',
+    selector: 'sp-pipeline-actions',
     templateUrl: './pipeline-actions.component.html',
 })
 export class PipelineActionsComponent implements OnInit {
-
     starting = false;
     stopping = false;
 
@@ -40,14 +46,17 @@ export class PipelineActionsComponent implements OnInit {
 
     hasPipelineDeletePrivileges = false;
 
-    constructor(public pipelineOperationsService: PipelineOperationsService,
-                private router: Router,
-                private authService: AuthService) {
-    }
+    constructor(
+        public pipelineOperationsService: PipelineOperationsService,
+        private router: Router,
+        private authService: AuthService,
+    ) {}
 
     ngOnInit() {
         this.authService.user$.subscribe(user => {
-            this.hasPipelineDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_PIPELINE);
+            this.hasPipelineDeletePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_DELETE_PIPELINE,
+            );
         });
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
         this.switchToPipelineView = this.switchToPipelineView.bind(this);
@@ -55,9 +64,9 @@ export class PipelineActionsComponent implements OnInit {
 
     toggleRunningOperation(currentOperation) {
         if (currentOperation === 'starting') {
-            this.starting = !(this.starting);
+            this.starting = !this.starting;
         } else {
-            this.stopping = !(this.stopping);
+            this.stopping = !this.stopping;
         }
     }
 
@@ -66,11 +75,18 @@ export class PipelineActionsComponent implements OnInit {
     }
 
     startPipeline() {
-        this.pipelineOperationsService.startPipeline(this.pipeline._id, this.reloadPipelineEmitter, this.toggleRunningOperation);
+        this.pipelineOperationsService.startPipeline(
+            this.pipeline._id,
+            this.reloadPipelineEmitter,
+            this.toggleRunningOperation,
+        );
     }
 
     stopPipeline() {
-        this.pipelineOperationsService.stopPipeline(this.pipeline._id, this.reloadPipelineEmitter, this.toggleRunningOperation);
+        this.pipelineOperationsService.stopPipeline(
+            this.pipeline._id,
+            this.reloadPipelineEmitter,
+            this.toggleRunningOperation,
+        );
     }
-
 }

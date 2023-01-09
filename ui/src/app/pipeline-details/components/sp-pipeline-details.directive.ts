@@ -26,43 +26,47 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Directive()
 export abstract class SpPipelineDetailsDirective {
+    tabs = [];
+    hasPipelineWritePrivileges = false;
+    hasPipelineDeletePrivileges = false;
 
-  tabs = [];
-  hasPipelineWritePrivileges = false;
-  hasPipelineDeletePrivileges = false;
+    currentPipeline: string;
+    pipeline: Pipeline;
+    pipelineAvailable = false;
 
-  currentPipeline: string;
-  pipeline: Pipeline;
-  pipelineAvailable = false;
+    constructor(
+        protected activatedRoute: ActivatedRoute,
+        protected pipelineService: PipelineService,
+        protected authService: AuthService,
+        protected breadcrumbService: SpBreadcrumbService,
+    ) {}
 
-  constructor(protected activatedRoute: ActivatedRoute,
-              protected pipelineService: PipelineService,
-              protected authService: AuthService,
-              protected breadcrumbService: SpBreadcrumbService) {
-  }
+    onInit(): void {
+        this.authService.user$.subscribe(user => {
+            this.hasPipelineWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
+            );
+            this.hasPipelineDeletePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_DELETE_PIPELINE,
+            );
+            const pipelineId = this.activatedRoute.snapshot.params.pipelineId;
+            if (pipelineId) {
+                this.tabs = new SpPipelineDetailsTabs().getTabs(pipelineId);
+                this.currentPipeline = pipelineId;
+                this.loadPipeline();
+            }
+        });
+    }
 
-  onInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
-      this.hasPipelineDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_PIPELINE);
-      const pipelineId = this.activatedRoute.snapshot.params.pipelineId;
-      if (pipelineId) {
-        this.tabs = new SpPipelineDetailsTabs().getTabs(pipelineId);
-        this.currentPipeline = pipelineId;
-        this.loadPipeline();
-      }
-    });
-  }
+    loadPipeline(): void {
+        this.pipelineService
+            .getPipelineById(this.currentPipeline)
+            .subscribe(pipeline => {
+                this.pipeline = pipeline;
+                this.pipelineAvailable = true;
+                this.onPipelineAvailable();
+            });
+    }
 
-  loadPipeline(): void {
-    this.pipelineService.getPipelineById(this.currentPipeline)
-      .subscribe(pipeline => {
-        this.pipeline = pipeline;
-        this.pipelineAvailable = true;
-        this.onPipelineAvailable();
-      });
-  }
-
-  abstract onPipelineAvailable(): void;
-
+    abstract onPipelineAvailable(): void;
 }

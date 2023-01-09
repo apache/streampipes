@@ -42,42 +42,38 @@ import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineLogsComponent } from './components/pipeline-logs/pipeline-logs.component';
 
 @NgModule({
-  imports: [
-    CoreUiModule,
-    FlexLayoutModule,
-    FormsModule,
-    MatTabsModule,
-    MatButtonModule,
-    CustomMaterialModule,
-    CommonModule,
-    MatProgressSpinnerModule,
-    NgxChartsModule,
-    EditorModule,
-    FormsModule,
-    ReactiveFormsModule,
-    PlatformServicesModule,
-    SharedUiModule
-  ],
-  declarations: [
-    PipelineActionsComponent,
-    PipelineElementsComponent,
-    PipelineElementsRowComponent,
-    PipelineElementStatisticsComponent,
-    PipelineLogsComponent,
-    PipelineMonitoringComponent,
-    PipelineStatusComponent,
-    PipelinePreviewComponent,
-    QuickEditComponent,
-    BarchartWidgetComponent,
-    SpPipelineDetailsOverviewComponent,
-  ],
-  providers: [],
-  exports: [
-  ]
+    imports: [
+        CoreUiModule,
+        FlexLayoutModule,
+        FormsModule,
+        MatTabsModule,
+        MatButtonModule,
+        CustomMaterialModule,
+        CommonModule,
+        MatProgressSpinnerModule,
+        NgxChartsModule,
+        EditorModule,
+        FormsModule,
+        ReactiveFormsModule,
+        PlatformServicesModule,
+        SharedUiModule,
+    ],
+    declarations: [
+        PipelineActionsComponent,
+        PipelineElementsComponent,
+        PipelineElementsRowComponent,
+        PipelineElementStatisticsComponent,
+        PipelineLogsComponent,
+        PipelineMonitoringComponent,
+        PipelineStatusComponent,
+        PipelinePreviewComponent,
+        QuickEditComponent,
+        BarchartWidgetComponent,
+        SpPipelineDetailsOverviewComponent,
+    ],
+    providers: [],
+    exports: [],
 })
 export class PipelineDetailsModule {
-
-  constructor() {
-  }
-
+    constructor() {}
 }

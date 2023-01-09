@@ -19,34 +19,33 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'sp-barchart-widget',
-  templateUrl: './barchart-widget.component.html',
-  styleUrls: ['./barchart-widget.component.scss']
+    selector: 'sp-barchart-widget',
+    templateUrl: './barchart-widget.component.html',
+    styleUrls: ['./barchart-widget.component.scss'],
 })
 export class BarchartWidgetComponent implements OnInit {
+    _data = [];
 
-  _data = [];
+    @Input()
+    backgroundColor = '#cccccc';
 
-  @Input()
-  backgroundColor = '#cccccc';
+    @Input()
+    textColor = '#1b1464';
 
-  @Input()
-  textColor = '#1b1464';
+    colorScheme = {
+        domain: ['#1b1464'],
+    };
 
-  colorScheme = {
-    domain: ['#1b1464']
-  };
+    ngOnInit(): void {
+        this.colorScheme.domain = [this.textColor];
+    }
 
-  ngOnInit(): void {
-    this.colorScheme.domain = [this.textColor];
-  }
+    @Input()
+    set data(data) {
+        this._data = data;
+    }
 
-  @Input()
-  set data(data) {
-    this._data = data;
-  }
-
-  get data() {
-    return this._data;
-  }
+    get data() {
+        return this._data;
+    }
 }
