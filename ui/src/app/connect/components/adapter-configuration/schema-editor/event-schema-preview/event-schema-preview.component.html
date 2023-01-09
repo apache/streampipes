@@ -19,7 +19,11 @@
 <div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
     <div fxFlex="50" fxLayout="column">
         <sp-basic-inner-panel [showTitle]="true" panelTitle="Original (Parsed)">
-            <pre [innerHTML]="originalField | jsonpretty" class="preview-text"></pre>
+            <pre
+                [innerHTML]="originalField | jsonpretty"
+                class="preview-text"
+                data-cy="schema-preview-original-event"
+            ></pre>
         </sp-basic-inner-panel>
     </div>
 
