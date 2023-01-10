@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<events>
+    <event>
+        <timestamp>1667904471000</timestamp>
+        <v1>4.1</v1>
+        <v2>abc</v2>
+        <v3>true</v3>
+        <v4>1</v4>
+    </event>
+</events>

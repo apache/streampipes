@@ -164,7 +164,6 @@ public class GeoJsonParser extends Parser {
     eventProperties.forEach(eventProperty -> resultSchema.addEventProperty(eventProperty));
 
     return new AdapterGuessInfo(resultSchema, sampleValues);
-
   }
 
   private EventProperty getEventPropertyGeoJson(String name, Object value, String domain) {

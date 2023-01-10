@@ -27,6 +27,8 @@ describe('Test adapter formats', () => {
         cy.initStreamPipesTest();
     });
 
+    const baseDir = 'connect/format/';
+
     const expected = {
         timestamp: 1667904471000,
         v1: 4.1,
@@ -37,7 +39,7 @@ describe('Test adapter formats', () => {
 
     it('Test json object format', () => {
         // Set up test
-        FileManagementUtils.addFile('connect/formatTests/jsonObject.json');
+        FileManagementUtils.addFile(baseDir + 'jsonObject.json');
 
         navigateToFormatSelection();
 
@@ -51,7 +53,7 @@ describe('Test adapter formats', () => {
 
     it('Test array with json objects', () => {
         // Set up test
-        FileManagementUtils.addFile('connect/formatTests/jsonArray.json');
+        FileManagementUtils.addFile('connect/format/jsonArray.json');
         navigateToFormatSelection();
 
         // Set format configuration
@@ -64,7 +66,7 @@ describe('Test adapter formats', () => {
 
     it('Test json with a field of type array', () => {
         // Set up test
-        FileManagementUtils.addFile('connect/formatTests/jsonArrayField.json');
+        FileManagementUtils.addFile(baseDir + 'jsonArrayField.json');
         navigateToFormatSelection();
 
         // Set format configuration
@@ -87,7 +89,7 @@ describe('Test adapter formats', () => {
             timestamp: 1667904471000,
             v1: 4.1,
         };
-        FileManagementUtils.addFile('connect/formatTests/geoJson.json');
+        FileManagementUtils.addFile(baseDir + 'geoJson.json');
         navigateToFormatSelection();
 
         // Set format configuration
@@ -96,6 +98,22 @@ describe('Test adapter formats', () => {
 
         // Validate result
         validateResult(geoJsonResultEvent);
+    });
+
+    it('Test xml format', () => {
+        // Set up test
+        FileManagementUtils.addFile(baseDir + 'xmlObject.xml');
+        navigateToFormatSelection();
+
+        // Set format configuration
+        ConnectBtns.xml().click();
+        const tagInputField = UserInputBuilder.create()
+            .add('input', 'tag', 'event')
+            .build();
+        StaticPropertyUtils.input(tagInputField);
+
+        // Validate result
+        validateResult(expected);
     });
 });
 
