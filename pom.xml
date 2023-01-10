@@ -163,7 +163,7 @@
 	<iotdb.version>1.0.0</iotdb.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
-	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
+	<jaxb-runtime.version>4.0.1</jaxb-runtime.version>
 	<jsrosbridge.version>0.2.0</jsrosbridge.version>
 	<jedis.version>3.3.0</jedis.version>
 	<j2objc-annotations.version>1.3</j2objc-annotations.version>
