@@ -16,44 +16,92 @@
   ~
   -->
 
-<sp-basic-view showBackLink="true" [backLinkTarget]="['connect']" [padding]="true">
-
+<sp-basic-view
+    showBackLink="true"
+    [backLinkTarget]="['connect']"
+    [padding]="true"
+>
     <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row">
         <sp-connect-filter-toolbar
-                class="filter-bar-margin"
-                (filterChangedEmitter)="applyFilter($event)">
+            class="filter-bar-margin"
+            (filterChangedEmitter)="applyFilter($event)"
+        >
         </sp-connect-filter-toolbar>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"
-             style="padding-left:10px;padding-right:10px;font-size:14px;" class="page-container-nav">
-            <button mat-icon-button id="startAdapterTutorial3" (click)="startAdapterTutorial3()"
-                    matTooltip="Tutorial: Generic Adapter">
+        <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayoutAlign="end center"
+            style="padding-left: 10px; padding-right: 10px; font-size: 14px"
+            class="page-container-nav"
+        >
+            <button
+                mat-icon-button
+                id="startAdapterTutorial3"
+                (click)="startAdapterTutorial3()"
+                matTooltip="Tutorial: Generic Adapter"
+            >
                 <mat-icon color="accent">school</mat-icon>
             </button>
         </div>
     </div>
     <div fxLayout="column" fxFlex="100">
-        <sp-basic-header-title-component title="Select Adapter"></sp-basic-header-title-component>
+        <sp-basic-header-title-component
+            title="Select Adapter"
+        ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
-            <div class="container-fluid marketplace-container" *ngIf="adapterLoadingError" fxFlex="100"
-                 fxLayoutAlign="center center" fxLayout="row">
-                <h4>Available adapters could not be loaded. Did you start a Connect worker node?</h4>
+            <div
+                class="container-fluid marketplace-container"
+                *ngIf="adapterLoadingError"
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="row"
+            >
+                <h4>
+                    Available adapters could not be loaded. Did you start a
+                    Connect worker node?
+                </h4>
             </div>
-            <div class="container-fluid marketplace-container" *ngIf="adaptersLoading" fxFlex="100"
-                 fxLayoutAlign="center center" fxLayout="row">
-                <mat-spinner [mode]="'indeterminate'" [diameter]="20" color="accent"></mat-spinner>
-                <h4>&nbsp;&nbsp;Searching for available adapters, please wait...</h4>
+            <div
+                class="container-fluid marketplace-container"
+                *ngIf="adaptersLoading"
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="row"
+            >
+                <mat-spinner
+                    [mode]="'indeterminate'"
+                    [diameter]="20"
+                    color="accent"
+                ></mat-spinner>
+                <h4>
+                    &nbsp;&nbsp;Searching for available adapters, please wait...
+                </h4>
             </div>
-            <div class="container-fluid marketplace-container"
-                 *ngIf="!adaptersLoading && !adapterLoadingError && currentFilter">
-                <div fxLayout="row wrap" fxLayoutAlign="start stretch"
-                     class="adapter-description-container">
-                    <sp-adapter-description attr.id="{{adapterDescription.name.replaceAll(' ', '_')}}"
-                                            class="adapter-description"
-                                            fxFlex="33"
-                                            (updateAdapterEmitter)="getAdapterDescriptions()"
-                                            (click)="selectAdapter(adapterDescription.appId)"
-                                            *ngFor="let adapterDescription of adapterDescriptions | adapterFilter:currentFilter"
-                                            [adapter]="adapterDescription"></sp-adapter-description>
+            <div
+                class="container-fluid marketplace-container"
+                *ngIf="
+                    !adaptersLoading && !adapterLoadingError && currentFilter
+                "
+            >
+                <div
+                    fxLayout="row wrap"
+                    fxLayoutAlign="start stretch"
+                    class="adapter-description-container"
+                >
+                    <sp-adapter-description
+                        attr.id="{{
+                            adapterDescription.name.replaceAll(' ', '_')
+                        }}"
+                        class="adapter-description"
+                        fxFlex="33"
+                        (updateAdapterEmitter)="getAdapterDescriptions()"
+                        (click)="selectAdapter(adapterDescription.appId)"
+                        *ngFor="
+                            let adapterDescription of adapterDescriptions
+                                | adapterFilter : currentFilter
+                        "
+                        [adapter]="adapterDescription"
+                    ></sp-adapter-description>
                 </div>
             </div>
         </div>

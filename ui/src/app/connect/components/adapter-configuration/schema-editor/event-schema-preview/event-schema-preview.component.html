@@ -19,23 +19,35 @@
 <div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
     <div fxFlex="50" fxLayout="column">
         <sp-basic-inner-panel [showTitle]="true" panelTitle="Original (Parsed)">
-            <pre [innerHTML]="originalField | jsonpretty" class="preview-text"></pre>
+            <pre
+                [innerHTML]="originalField | jsonpretty"
+                class="preview-text"
+            ></pre>
         </sp-basic-inner-panel>
     </div>
 
     <div fxFlex="50" fxLayout="column">
-        <sp-basic-inner-panel [showTitle]="true" panelTitle="Result" fxFlex="100">
+        <sp-basic-inner-panel
+            [showTitle]="true"
+            panelTitle="Result"
+            fxFlex="100"
+        >
             <div header fxLayoutAlign="end center" fxFlex="100">
-                <button color="accent"
-                        mat-button
-                        data-cy="connect-schema-update-preview-btn"
-                        matTooltip="Update event preview"
-                        (click)="updateEventPreview()">
+                <button
+                    color="accent"
+                    mat-button
+                    data-cy="connect-schema-update-preview-btn"
+                    matTooltip="Update event preview"
+                    (click)="updateEventPreview()"
+                >
                     <mat-icon>refresh</mat-icon>
                     <span>&nbsp;Update result preview</span>
                 </button>
             </div>
-            <pre [innerHTML]="desiredField | jsonpretty" class="preview-text"></pre>
+            <pre
+                [innerHTML]="desiredField | jsonpretty"
+                class="preview-text"
+            ></pre>
         </sp-basic-inner-panel>
     </div>
 </div>

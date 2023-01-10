@@ -20,40 +20,59 @@ import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { AdapterService, AdapterMonitoringService, SpMetricsEntry } from '@streampipes/platform-services';
+import {
+    AdapterService,
+    AdapterMonitoringService,
+    SpMetricsEntry,
+} from '@streampipes/platform-services';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.routes';
 
 @Component({
-  selector: 'sp-adapter-details-metrics',
-  templateUrl: './adapter-details-metrics.component.html',
-  styleUrls: []
+    selector: 'sp-adapter-details-metrics',
+    templateUrl: './adapter-details-metrics.component.html',
+    styleUrls: [],
 })
-export class SpAdapterDetailsMetricsComponent extends SpAbstractAdapterDetailsDirective implements OnInit {
+export class SpAdapterDetailsMetricsComponent
+    extends SpAbstractAdapterDetailsDirective
+    implements OnInit
+{
+    adapterMetrics: SpMetricsEntry;
 
-  adapterMetrics: SpMetricsEntry;
+    constructor(
+        authService: AuthService,
+        activatedRoute: ActivatedRoute,
+        adapterService: AdapterService,
+        adapterMonitoringService: AdapterMonitoringService,
+        breadcrumbService: SpBreadcrumbService,
+    ) {
+        super(
+            authService,
+            activatedRoute,
+            adapterService,
+            adapterMonitoringService,
+            breadcrumbService,
+        );
+    }
 
-  constructor(authService: AuthService,
-              activatedRoute: ActivatedRoute,
-              adapterService: AdapterService,
-              adapterMonitoringService: AdapterMonitoringService,
-              breadcrumbService: SpBreadcrumbService) {
-    super(authService, activatedRoute, adapterService, adapterMonitoringService, breadcrumbService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    loadMetrics(): void {
+        this.adapterMonitoringService
+            .getMetricsInfoForAdapter(this.currentAdapterId)
+            .subscribe(res => {
+                this.adapterMetrics = res;
+            });
+    }
 
-  loadMetrics(): void {
-    this.adapterMonitoringService.getMetricsInfoForAdapter(this.currentAdapterId).subscribe(res => {
-      this.adapterMetrics = res;
-    });
-  }
-
-  onAdapterLoaded(): void {
-    this.breadcrumbService.updateBreadcrumb([SpConnectRoutes.BASE, {label: this.adapter.name}, {label: 'Metrics'}]);
-    this.loadMetrics();
-  }
-
+    onAdapterLoaded(): void {
+        this.breadcrumbService.updateBreadcrumb([
+            SpConnectRoutes.BASE,
+            { label: this.adapter.name },
+            { label: 'Metrics' },
+        ]);
+        this.loadMetrics();
+    }
 }

@@ -25,283 +25,311 @@ import {
     EventPropertyUnion,
     EventSchema,
     MoveRuleDescription,
-    RenameRuleDescription
+    RenameRuleDescription,
 } from '@streampipes/platform-services';
 
 describe('TransformationRuleService', () => {
+    const service = new TransformationRuleService();
 
-  const service = new TransformationRuleService();
+    it('Get complete key from schema nested', () => {
+        const eventProperties: EventPropertyUnion[] = [];
+        const eventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        eventPropertyPrimitive.elementId = 'id_1';
+        eventPropertyPrimitive.runtimeName = 'a';
+        const eventPropertyNested: EventPropertyNested =
+            new EventPropertyNested();
+        eventPropertyNested.elementId = 'id_2';
+        eventPropertyNested.runtimeName = 'b';
+        eventPropertyNested.eventProperties = [];
+        eventPropertyNested.eventProperties.push(eventPropertyPrimitive);
+        eventProperties.push(eventPropertyNested);
 
-  it('Get complete key from schema nested', () => {
+        const result: string = service.getCompleteRuntimeNameKey(
+            eventProperties,
+            'id_1',
+        );
 
-    const eventProperties: EventPropertyUnion[] = [];
-    const eventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    eventPropertyPrimitive.elementId = 'id_1';
-    eventPropertyPrimitive.runtimeName = 'a';
-    const eventPropertyNested: EventPropertyNested = new EventPropertyNested();
-    eventPropertyNested.elementId = 'id_2';
-    eventPropertyNested.runtimeName = 'b';
-    eventPropertyNested.eventProperties = [];
-    eventPropertyNested.eventProperties.push(eventPropertyPrimitive);
-    eventProperties.push(eventPropertyNested);
+        expect(result).toBe('b.a');
+    });
 
-    const result: string = service.getCompleteRuntimeNameKey(eventProperties, 'id_1');
+    it('Get complete key from schema primitve', () => {
+        const eventProperties: EventPropertyUnion[] = [];
+        const eventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        eventPropertyPrimitive.elementId = 'id_1';
+        eventPropertyPrimitive.runtimeName = 'a';
 
-    expect(result).toBe('b.a');
-  });
+        eventProperties.push(eventPropertyPrimitive);
 
-  it('Get complete key from schema primitve', () => {
+        const result: string = service.getCompleteRuntimeNameKey(
+            eventProperties,
+            'id_1',
+        );
 
-    const eventProperties: EventPropertyUnion[] = [];
-    const eventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    eventPropertyPrimitive.elementId = 'id_1';
-    eventPropertyPrimitive.runtimeName = 'a';
+        expect(result).toBe('a');
+    });
 
-    eventProperties.push(eventPropertyPrimitive);
+    it('check get all ids with one id', () => {
+        const eventProperties: EventPropertyUnion[] = [];
+        const eventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        eventPropertyPrimitive.elementId = 'id_1';
+        eventProperties.push(eventPropertyPrimitive);
 
-    const result: string = service.getCompleteRuntimeNameKey(eventProperties, 'id_1');
+        const result: string[] = service.getAllIds(eventProperties);
+        expect(result.length).toBe(1);
+        expect(result[0]).toBe('id_1');
+    });
 
-    expect(result).toBe('a');
-  });
+    it('check get all ids with multiple ids', () => {
+        const eventProperties: EventPropertyUnion[] = [];
+        const eventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        eventPropertyPrimitive.elementId = 'id_1';
+        const eventPropertyPrimitive1: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        eventPropertyPrimitive1.elementId = 'id_2';
+        const eventPropertyNested: EventPropertyNested =
+            new EventPropertyNested();
+        eventPropertyNested.elementId = 'id_3';
+        eventPropertyNested.eventProperties = [];
+        eventPropertyNested.eventProperties.push(eventPropertyPrimitive1);
 
-  it('check get all ids with one id', () => {
-    const eventProperties: EventPropertyUnion[] = [];
-    const eventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    eventPropertyPrimitive.elementId = 'id_1';
-    eventProperties.push(eventPropertyPrimitive);
+        eventProperties.push(eventPropertyPrimitive);
+        eventProperties.push(eventPropertyNested);
 
-    const result: string[] = service.getAllIds(eventProperties);
-    expect(result.length).toBe(1);
-    expect(result[0]).toBe('id_1');
+        const result: string[] = service.getAllIds(eventProperties);
+        expect(result.length).toBe(3);
+        expect(result[0]).toBe('id_1');
+        expect(result[2]).toBe('id_2');
+        expect(result[1]).toBe('id_3');
+    });
 
-  });
+    it('Create Nested Rules simple', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        oldEventSchema.eventProperties = [];
 
-  it('check get all ids with multiple ids', () => {
-    const eventProperties: EventPropertyUnion[] = [];
-    const eventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    eventPropertyPrimitive.elementId = 'id_1';
-    const eventPropertyPrimitive1: EventPropertyPrimitive = new EventPropertyPrimitive();
-    eventPropertyPrimitive1.elementId = 'id_2';
-    const eventPropertyNested: EventPropertyNested = new EventPropertyNested();
-    eventPropertyNested.elementId = 'id_3';
-    eventPropertyNested.eventProperties = [];
-    eventPropertyNested.eventProperties.push(eventPropertyPrimitive1);
+        const newEventSchema: EventSchema = new EventSchema();
+        const propertyNested: EventPropertyNested = new EventPropertyNested();
+        propertyNested.eventProperties = [];
+        propertyNested.elementId = 'id';
+        propertyNested.runtimeName = 'a';
+        newEventSchema.eventProperties = [];
+        newEventSchema.eventProperties.push(propertyNested);
 
-    eventProperties.push(eventPropertyPrimitive);
-    eventProperties.push(eventPropertyNested);
+        const result: CreateNestedRuleDescription[] =
+            service.getCreateNestedRules(
+                newEventSchema.eventProperties,
+                oldEventSchema,
+                newEventSchema,
+            );
 
-    const result: string[] = service.getAllIds(eventProperties);
-    expect(result.length).toBe(3);
-    expect(result[0]).toBe('id_1');
-    expect(result[2]).toBe('id_2');
-    expect(result[1]).toBe('id_3');
+        expect(result.length).toBe(1);
+        expect(result[0].runtimeKey).toBe('a');
+    });
 
-  });
+    it('Create Nested Rules nested', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        oldEventSchema.eventProperties = [];
 
-  it('Create Nested Rules simple', () => {
+        const newEventSchema: EventSchema = new EventSchema();
+        newEventSchema.eventProperties = [];
+        const nestedNested: EventPropertyNested = new EventPropertyNested();
+        nestedNested.runtimeName = 'a';
+        nestedNested.elementId = 'deepnested';
+        nestedNested.eventProperties = [];
 
-    const oldEventSchema: EventSchema = new EventSchema();
-    oldEventSchema.eventProperties = [];
+        const nestedProperty: EventPropertyNested = new EventPropertyNested();
+        nestedProperty.runtimeName = 'b';
+        nestedNested.elementId = 'nested';
+        nestedProperty.eventProperties = [];
+        nestedNested.eventProperties.push(nestedProperty);
+        newEventSchema.eventProperties.push(nestedNested);
 
-    const newEventSchema: EventSchema = new EventSchema();
-    const propertyNested: EventPropertyNested = new EventPropertyNested();
-    propertyNested.eventProperties = [];
-    propertyNested.elementId = 'id';
-    propertyNested.runtimeName = 'a';
-    newEventSchema.eventProperties = [];
-    newEventSchema.eventProperties.push(propertyNested);
+        const result: CreateNestedRuleDescription[] =
+            service.getCreateNestedRules(
+                newEventSchema.eventProperties,
+                oldEventSchema,
+                newEventSchema,
+            );
 
-    const result: CreateNestedRuleDescription[] = service.getCreateNestedRules(
-      newEventSchema.eventProperties,
-      oldEventSchema,
-      newEventSchema);
+        expect(result.length).toBe(2);
+        expect(result[0].runtimeKey).toBe('a');
+        expect(result[1].runtimeKey).toBe('a.b');
+    });
 
-    expect(result.length).toBe(1);
-    expect(result[0].runtimeKey).toBe('a');
-  });
+    it('Create Move Rules simple', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        const oldPropertyToMove: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        oldPropertyToMove.runtimeName = 'a';
+        oldPropertyToMove.elementId = 'a1';
+        const oldNestedProperty: EventPropertyNested =
+            new EventPropertyNested();
+        oldNestedProperty.runtimeName = 'b';
+        oldNestedProperty.elementId = 'b1';
+        oldNestedProperty.eventProperties = [];
+        oldEventSchema.eventProperties = [];
+        oldEventSchema.eventProperties.push(oldPropertyToMove);
+        oldEventSchema.eventProperties.push(oldNestedProperty);
 
-  it('Create Nested Rules nested', () => {
+        const newEventSchema: EventSchema = new EventSchema();
+        newEventSchema.eventProperties = [];
+        const newPropertyToMove: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        newPropertyToMove.runtimeName = 'a';
+        newPropertyToMove.elementId = 'a1';
+        const newNestedProperty: EventPropertyNested =
+            new EventPropertyNested();
+        newNestedProperty.runtimeName = 'b';
+        newNestedProperty.elementId = 'b1';
+        newNestedProperty.eventProperties = [];
+        newNestedProperty.eventProperties.push(newPropertyToMove);
+        newEventSchema.eventProperties.push(newNestedProperty);
 
-    const oldEventSchema: EventSchema = new EventSchema();
-    oldEventSchema.eventProperties = [];
+        const result: MoveRuleDescription[] = service.getMoveRules(
+            newEventSchema.eventProperties,
+            oldEventSchema,
+            newEventSchema,
+        );
 
-    const newEventSchema: EventSchema = new EventSchema();
-    newEventSchema.eventProperties = [];
-    const nestedNested: EventPropertyNested = new EventPropertyNested();
-    nestedNested.runtimeName = 'a';
-    nestedNested.elementId = 'deepnested';
-    nestedNested.eventProperties = [];
+        expect(result.length).toBe(1);
+        expect(result[0].oldRuntimeKey).toBe('a');
+        // expect(result[0].newRuntimeKey).toBe('b.a');
+    });
 
-    const nestedProperty: EventPropertyNested = new EventPropertyNested();
-    nestedProperty.runtimeName = 'b';
-    nestedNested.elementId = 'nested';
-    nestedProperty.eventProperties = [];
-    nestedNested.eventProperties.push(nestedProperty);
-    newEventSchema.eventProperties.push(nestedNested);
+    it('Delete simple', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        const eventProperty: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        eventProperty.runtimeName = 'a';
+        oldEventSchema.eventProperties = [];
+        oldEventSchema.eventProperties.push(eventProperty);
 
+        const newEventSchema: EventSchema = new EventSchema();
+        newEventSchema.eventProperties = [];
 
-    const result: CreateNestedRuleDescription[] = service.getCreateNestedRules(
-      newEventSchema.eventProperties,
-      oldEventSchema,
-      newEventSchema);
+        const result: DeleteRuleDescription[] = service.getDeleteRules(
+            newEventSchema.eventProperties,
+            oldEventSchema,
+            newEventSchema,
+        );
 
-    expect(result.length).toBe(2);
-    expect(result[0].runtimeKey).toBe('a');
-    expect(result[1].runtimeKey).toBe('a.b');
-  });
+        expect(result.length).toBe(1);
+        expect(result[0].runtimeKey).toBe('a');
+    });
 
+    it('Delete nested', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        const eventProperty: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        eventProperty.elementId = 'id_2';
+        eventProperty.runtimeName = 'a';
+        const eventPropertyNested: EventPropertyNested =
+            new EventPropertyNested();
+        eventPropertyNested.elementId = 'id_1';
+        eventPropertyNested.eventProperties = [];
+        eventPropertyNested.eventProperties.push(eventProperty);
+        eventPropertyNested.runtimeName = 'b';
+        oldEventSchema.eventProperties = [];
+        oldEventSchema.eventProperties.push(eventPropertyNested);
 
-  it('Create Move Rules simple', () => {
+        let newEventSchema: EventSchema = new EventSchema();
+        const newEventPropertyNested: EventPropertyNested =
+            new EventPropertyNested();
+        newEventPropertyNested.elementId = 'id_1';
+        newEventPropertyNested.runtimeName = 'b';
+        newEventPropertyNested.eventProperties = [];
+        newEventSchema.eventProperties = [];
+        newEventSchema.eventProperties.push(newEventPropertyNested);
 
-    const oldEventSchema: EventSchema = new EventSchema();
-    const oldPropertyToMove: EventPropertyPrimitive = new EventPropertyPrimitive();
-    oldPropertyToMove.runtimeName = 'a';
-    oldPropertyToMove.elementId = 'a1';
-    const oldNestedProperty: EventPropertyNested = new EventPropertyNested();
-    oldNestedProperty.runtimeName = 'b';
-    oldNestedProperty.elementId = 'b1';
-    oldNestedProperty.eventProperties = [];
-    oldEventSchema.eventProperties = [];
-    oldEventSchema.eventProperties.push(oldPropertyToMove);
-    oldEventSchema.eventProperties.push(oldNestedProperty);
+        let result: DeleteRuleDescription[] = service.getDeleteRules(
+            newEventSchema.eventProperties,
+            oldEventSchema,
+            newEventSchema,
+        );
 
-    const newEventSchema: EventSchema = new EventSchema();
-    newEventSchema.eventProperties = [];
-    const newPropertyToMove: EventPropertyPrimitive = new EventPropertyPrimitive();
-    newPropertyToMove.runtimeName = 'a';
-    newPropertyToMove.elementId = 'a1';
-    const newNestedProperty: EventPropertyNested = new EventPropertyNested();
-    newNestedProperty.runtimeName = 'b';
-    newNestedProperty.elementId = 'b1';
-    newNestedProperty.eventProperties = [];
-    newNestedProperty.eventProperties.push(newPropertyToMove);
-    newEventSchema.eventProperties.push(newNestedProperty);
+        expect(result.length).toBe(1);
+        expect(result[0].runtimeKey).toBe('b.a');
 
-    const result: MoveRuleDescription[] = service.getMoveRules(
-      newEventSchema.eventProperties,
-      oldEventSchema,
-      newEventSchema);
+        newEventSchema = new EventSchema();
+        newEventSchema.eventProperties = [];
+        result = service.getDeleteRules(
+            newEventSchema.eventProperties,
+            oldEventSchema,
+            newEventSchema,
+        );
 
-    expect(result.length).toBe(1);
-    expect(result[0].oldRuntimeKey).toBe('a');
-    // expect(result[0].newRuntimeKey).toBe('b.a');
+        expect(result.length).toBe(1);
+        expect(result[0].runtimeKey).toBe('b');
+    });
 
-  });
+    it('Rename simple', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        const oldEventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        oldEventPropertyPrimitive.elementId = 'id_1';
+        oldEventPropertyPrimitive.runtimeName = 'a';
+        oldEventSchema.eventProperties = [];
+        oldEventSchema.eventProperties.push(oldEventPropertyPrimitive);
 
-  it('Delete simple', () => {
-    const oldEventSchema: EventSchema = new EventSchema();
-    const eventProperty: EventPropertyPrimitive = new EventPropertyPrimitive();
-    eventProperty.runtimeName = 'a';
-    oldEventSchema.eventProperties = [];
-    oldEventSchema.eventProperties.push(eventProperty);
+        const newEventSchema: EventSchema = new EventSchema();
+        const newEventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        newEventPropertyPrimitive.elementId = 'id_1';
+        newEventPropertyPrimitive.runtimeName = 'b';
+        newEventSchema.eventProperties = [];
+        newEventSchema.eventProperties.push(newEventPropertyPrimitive);
 
-    const newEventSchema: EventSchema = new EventSchema();
-    newEventSchema.eventProperties = [];
+        const result: RenameRuleDescription[] = service.getRenameRules(
+            newEventSchema.eventProperties,
+            oldEventSchema,
+            newEventSchema,
+        );
 
-    const result: DeleteRuleDescription[] = service.getDeleteRules(newEventSchema.eventProperties,
-      oldEventSchema, newEventSchema);
+        expect(result.length).toBe(1);
+        expect(result[0].oldRuntimeKey).toBe('a');
+        expect(result[0].newRuntimeKey).toBe('b');
+    });
 
-    expect(result.length).toBe(1);
-    expect(result[0].runtimeKey).toBe('a');
-  });
+    it('Rename nested', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        const oldNestedEventProperty: EventPropertyNested =
+            new EventPropertyNested();
+        oldNestedEventProperty.elementId = 'id_2';
+        oldNestedEventProperty.runtimeName = 'b';
+        oldNestedEventProperty.eventProperties = [];
+        const oldEventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        oldEventPropertyPrimitive.elementId = 'id_1';
+        oldEventPropertyPrimitive.runtimeName = 'a';
+        oldNestedEventProperty.eventProperties.push(oldEventPropertyPrimitive);
+        oldEventSchema.eventProperties = [];
+        oldEventSchema.eventProperties.push(oldNestedEventProperty);
 
-  it('Delete nested', () => {
-    const oldEventSchema: EventSchema = new EventSchema();
-    const eventProperty: EventPropertyPrimitive = new EventPropertyPrimitive();
-    eventProperty.elementId = 'id_2';
-    eventProperty.runtimeName = 'a';
-    const eventPropertyNested: EventPropertyNested = new EventPropertyNested();
-    eventPropertyNested.elementId = 'id_1';
-    eventPropertyNested.eventProperties = [];
-    eventPropertyNested.eventProperties.push(eventProperty);
-    eventPropertyNested.runtimeName = 'b';
-    oldEventSchema.eventProperties = [];
-    oldEventSchema.eventProperties.push(eventPropertyNested);
+        const newEventSchema: EventSchema = new EventSchema();
+        const newNestedEventProperty: EventPropertyNested =
+            new EventPropertyNested();
+        newNestedEventProperty.elementId = 'id_2';
+        newNestedEventProperty.runtimeName = 'b';
+        const newEventPropertyPrimitive: EventPropertyPrimitive =
+            new EventPropertyPrimitive();
+        newEventPropertyPrimitive.elementId = 'id_1';
+        newEventPropertyPrimitive.runtimeName = 'b';
+        newNestedEventProperty.eventProperties = [];
+        newNestedEventProperty.eventProperties.push(newEventPropertyPrimitive);
+        newEventSchema.eventProperties = [];
+        newEventSchema.eventProperties.push(newNestedEventProperty);
 
-    let newEventSchema: EventSchema = new EventSchema();
-    const newEventPropertyNested: EventPropertyNested = new EventPropertyNested();
-    newEventPropertyNested.elementId = 'id_1';
-    newEventPropertyNested.runtimeName = 'b';
-    newEventPropertyNested.eventProperties = [];
-    newEventSchema.eventProperties = [];
-    newEventSchema.eventProperties.push(newEventPropertyNested);
+        const result: RenameRuleDescription[] = service.getRenameRules(
+            newEventSchema.eventProperties,
+            oldEventSchema,
+            newEventSchema,
+        );
 
-
-    let result: DeleteRuleDescription[] = service.getDeleteRules(
-      newEventSchema.eventProperties,
-      oldEventSchema,
-      newEventSchema);
-
-    expect(result.length).toBe(1);
-    expect(result[0].runtimeKey).toBe('b.a');
-
-    newEventSchema = new EventSchema();
-    newEventSchema.eventProperties = [];
-    result = service.getDeleteRules(newEventSchema.eventProperties,
-      oldEventSchema, newEventSchema);
-
-    expect(result.length).toBe(1);
-    expect(result[0].runtimeKey).toBe('b');
-  });
-
-  it('Rename simple', () => {
-
-    const oldEventSchema: EventSchema = new EventSchema();
-    const oldEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    oldEventPropertyPrimitive.elementId = 'id_1';
-    oldEventPropertyPrimitive.runtimeName = 'a';
-    oldEventSchema.eventProperties = [];
-    oldEventSchema.eventProperties.push(oldEventPropertyPrimitive);
-
-    const newEventSchema: EventSchema = new EventSchema();
-    const newEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    newEventPropertyPrimitive.elementId = 'id_1';
-    newEventPropertyPrimitive.runtimeName = 'b';
-    newEventSchema.eventProperties = [];
-    newEventSchema.eventProperties.push(newEventPropertyPrimitive);
-
-
-    const result: RenameRuleDescription[] = service.getRenameRules(newEventSchema.eventProperties, oldEventSchema, newEventSchema);
-
-    expect(result.length).toBe(1);
-    expect(result[0].oldRuntimeKey).toBe('a');
-    expect(result[0].newRuntimeKey).toBe('b');
-
-  });
-
-  it('Rename nested', () => {
-
-    const oldEventSchema: EventSchema = new EventSchema();
-    const oldNestedEventProperty: EventPropertyNested = new EventPropertyNested();
-    oldNestedEventProperty.elementId = 'id_2';
-    oldNestedEventProperty.runtimeName = 'b';
-    oldNestedEventProperty.eventProperties = [];
-    const oldEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    oldEventPropertyPrimitive.elementId = 'id_1';
-    oldEventPropertyPrimitive.runtimeName = 'a';
-    oldNestedEventProperty.eventProperties.push(oldEventPropertyPrimitive);
-    oldEventSchema.eventProperties = [];
-    oldEventSchema.eventProperties.push(oldNestedEventProperty);
-
-    const newEventSchema: EventSchema = new EventSchema();
-    const newNestedEventProperty: EventPropertyNested = new EventPropertyNested();
-    newNestedEventProperty.elementId = 'id_2';
-    newNestedEventProperty.runtimeName = 'b';
-    const newEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive();
-    newEventPropertyPrimitive.elementId = 'id_1';
-    newEventPropertyPrimitive.runtimeName = 'b';
-    newNestedEventProperty.eventProperties = [];
-    newNestedEventProperty.eventProperties.push(newEventPropertyPrimitive);
-    newEventSchema.eventProperties = [];
-    newEventSchema.eventProperties.push(newNestedEventProperty);
-
-
-    const result: RenameRuleDescription[] = service.getRenameRules(newEventSchema.eventProperties, oldEventSchema, newEventSchema);
-
-    expect(result.length).toBe(1);
-    expect(result[0].oldRuntimeKey).toBe('b.a');
-    expect(result[0].newRuntimeKey).toBe('b.b');
-
-  });
-
+        expect(result.length).toBe(1);
+        expect(result[0].oldRuntimeKey).toBe('b.a');
+        expect(result[0].newRuntimeKey).toBe('b.b');
+    });
 });

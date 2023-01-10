@@ -23,15 +23,14 @@ import { RestService } from '../../../../services/rest.service';
 @Component({
     selector: 'sp-format-list',
     templateUrl: './format-list.component.html',
-    styleUrls: ['./format-list.component.scss']
-  })
-
+    styleUrls: ['./format-list.component.scss'],
+})
 export class FormatListComponent implements OnInit {
-
     @Input() public selectedFormat: FormatDescription;
 
     @Output() validateEmitter = new EventEmitter();
-    @Output() public selectedFormatEmitter = new EventEmitter<FormatDescription>();
+    @Output() public selectedFormatEmitter =
+        new EventEmitter<FormatDescription>();
 
     /**
      * Contains all the available formats that a user can select from
@@ -61,15 +60,14 @@ export class FormatListComponent implements OnInit {
                 }
             });
         });
-
     }
 
     formatEditable(selectedFormat) {
-      this.allFormats.forEach(format => {
-        if (format !== selectedFormat) {
-          (format as any).edit = false;
-        }
-      });
+        this.allFormats.forEach(format => {
+            if (format !== selectedFormat) {
+                (format as any).edit = false;
+            }
+        });
     }
 
     formatSelected(selectedFormat: FormatDescription) {
@@ -80,7 +78,6 @@ export class FormatListComponent implements OnInit {
 
         this.selectedFormat = selectedFormat;
         this.selectedFormatEmitter.emit(this.selectedFormat);
-
     }
 
     selectJsonFormat() {
@@ -89,10 +86,9 @@ export class FormatListComponent implements OnInit {
 
         this.selectedFormat = this.allJsonFormats[2];
         this.selectedFormatEmitter.emit(this.selectedFormat);
-
     }
 
     validateAll(allValid) {
-      this.validateEmitter.emit(allValid);
+        this.validateEmitter.emit(allValid);
     }
 }

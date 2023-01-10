@@ -16,16 +16,22 @@
   ~
   -->
 <div fxLayout="column" fxFlex="100">
-    <div fxLayout="row" fxFlex="100" class="ep-settings-section ep-settings-section-border">
-        <div fxFlex="30" style="margin-right: 10px;">
+    <div
+        fxLayout="row"
+        fxFlex="100"
+        class="ep-settings-section ep-settings-section-border"
+    >
+        <div fxFlex="30" style="margin-right: 10px">
             <div fxLayout="column" fxFlex="100">
-                <b>{{sectionTitle}}</b>
-                <mat-hint class="description">{{sectionDescription}}</mat-hint>
+                <b>{{ sectionTitle }}</b>
+                <mat-hint class="description">{{
+                    sectionDescription
+                }}</mat-hint>
             </div>
         </div>
         <div fxFlex fxLayout="column">
             <ng-content fxLayout="column" fxFlex="100"></ng-content>
         </div>
     </div>
-<!--    <mat-divider></mat-divider>-->
+    <!--    <mat-divider></mat-divider>-->
 </div>

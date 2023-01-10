@@ -21,7 +21,6 @@ cypress/fixtures/**/*.csv
 
 # Remove these in the future to lint additional modules
 # Please also see .prettierignore
-src/app/connect
 src/app/core
 src/app/core-model
 src/app/core-services

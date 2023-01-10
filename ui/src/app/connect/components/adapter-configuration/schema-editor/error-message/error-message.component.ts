@@ -16,24 +16,18 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { Notification } from '@streampipes/platform-services';
+import { Component, Input } from '@angular/core';
 import { StreamPipesErrorMessage } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
-  selector: 'sp-error-message',
-  templateUrl: './error-message.component.html',
-  styleUrls: ['./error-message.component.scss']
+    selector: 'sp-error-message',
+    templateUrl: './error-message.component.html',
+    styleUrls: ['./error-message.component.scss'],
 })
-export class ErrorMessageComponent implements OnInit {
+export class ErrorMessageComponent {
+    @Input() errorMessage: StreamPipesErrorMessage;
 
-  @Input() errorMessage: StreamPipesErrorMessage;
+    showErrorMessage = false;
 
-  showErrorMessage = false;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+    constructor() {}
 }

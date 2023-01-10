@@ -16,45 +16,42 @@
  *
  */
 
-
 .mat-table {
-
 }
 
 .mat-paginator {
-  border-top: 1px solid rgba(0,0,0,.12);
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .mat-row:nth-child(even) {
-  background-color: var(--color-bg-1);
+    background-color: var(--color-bg-1);
 }
 .mat-row:nth-child(odd) {
-  background-color: var(--color-bg-2);
+    background-color: var(--color-bg-2);
 }
 
 .adapter-icon {
-  max-height:50px;
+    max-height: 50px;
 }
 
 .historic {
-  cursor: pointer;
-  color: #ffa23b;
+    cursor: pointer;
+    color: #ffa23b;
 }
 .real-time {
-  cursor: pointer;
-  color: #FFEB3B;
+    cursor: pointer;
+    color: #ffeb3b;
 }
 
 .filter-bar-margin {
-  margin-left: 10px;
-  padding-left: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
 }
 
 .monitoring-info {
-  color: var(--color-default-text);
-  background: var(--color-bg-3);
-  border-radius: 5px;
-  padding: 5px;
-  text-align: center;
+    color: var(--color-default-text);
+    background: var(--color-bg-3);
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
 }
-

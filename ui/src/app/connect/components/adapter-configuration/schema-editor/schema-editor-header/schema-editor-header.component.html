@@ -18,49 +18,59 @@
 
 <div fxLayout="row" fxFlex="100">
     <div fxFlex fxLayoutAlign="start center" fxLayout="row">
-        <button color="accent"
-                mat-button
-                data-cy="connect-add-nested-property"
-                matTooltip="Add a Nested Property"
-                (click)=addNestedProperty()>
+        <button
+            color="accent"
+            mat-button
+            data-cy="connect-add-nested-property"
+            matTooltip="Add a Nested Property"
+            (click)="addNestedProperty()"
+        >
             <mat-icon>queue</mat-icon>
             <span>&nbsp;Add nested</span>
         </button>
-        <button color="accent"
-                mat-button
-                data-cy="connect-add-static-property"
-                matTooltip="Add a static value to event"
-                (click)="addStaticValueProperty()">
+        <button
+            color="accent"
+            mat-button
+            data-cy="connect-add-static-property"
+            matTooltip="Add a static value to event"
+            (click)="addStaticValueProperty()"
+        >
             <mat-icon>add</mat-icon>
             <span>&nbsp;Add static value</span>
         </button>
-        <button color="accent"
-                mat-button
-                data-cy="connect-schema-add-timestamp-btn"
-                matTooltip="Add timestamp to event schema"
-                (click)="addTimestampProperty()">
+        <button
+            color="accent"
+            mat-button
+            data-cy="connect-schema-add-timestamp-btn"
+            matTooltip="Add timestamp to event schema"
+            (click)="addTimestampProperty()"
+        >
             <mat-icon>access_time</mat-icon>
             <span>&nbsp;Add timestamp</span>
         </button>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center">
-        <button color="accent"
-                mat-button
-                mat-icon-button
-                matTooltip="Refresh Schema"
-                data-cy="refresh-schema"
-                (click)="guessSchema()">
+        <button
+            color="accent"
+            mat-button
+            mat-icon-button
+            matTooltip="Refresh Schema"
+            data-cy="refresh-schema"
+            (click)="guessSchema()"
+        >
             <mat-icon>refresh</mat-icon>
         </button>
 
-        <button style="padding-right:0"
-                color="accent"
-                mat-button
-                mat-icon-button
-                matTooltip="Remove selected Properties"
-                [disabled]="countSelected == 0"
-                (click)="removeSelectedProperties()"
-                data-cy="connect-schema-delete-properties-btn">
+        <button
+            style="padding-right: 0"
+            color="accent"
+            mat-button
+            mat-icon-button
+            matTooltip="Remove selected Properties"
+            [disabled]="countSelected === 0"
+            (click)="removeSelectedProperties()"
+            data-cy="connect-schema-delete-properties-btn"
+        >
             <mat-icon>delete</mat-icon>
         </button>
     </div>

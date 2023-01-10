@@ -20,70 +20,71 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DataTypesService {
-  private dataTypes: { label: string, url: string }[] = [
-    {
-      label: 'String - A textual datatype, e.g., \'machine1\'',
-      url: 'http://www.w3.org/2001/XMLSchema#string'
-    },
-    {
-      label: 'Boolean - A true/false value',
-      url: 'http://www.w3.org/2001/XMLSchema#boolean'
-    },
-    {
-      label: 'Double - A number, e.g., \'1.25\'',
-      url: 'http://www.w3.org/2001/XMLSchema#double'
-    },
-    {
-      label: 'Float - A number, e.g., \'1.25\'',
-      url: 'http://www.w3.org/2001/XMLSchema#float'
-    }, {
-      label: 'Integer - A number, e.g., \'2\'',
-      url: 'http://www.w3.org/2001/XMLSchema#integer'
-    }, {
-      label: 'Long - A number, e.g., \'1623871455232\'',
-      url: 'http://www.w3.org/2001/XMLSchema#long'
+    private dataTypes: { label: string; url: string }[] = [
+        {
+            label: "String - A textual datatype, e.g., 'machine1'",
+            url: 'http://www.w3.org/2001/XMLSchema#string',
+        },
+        {
+            label: 'Boolean - A true/false value',
+            url: 'http://www.w3.org/2001/XMLSchema#boolean',
+        },
+        {
+            label: "Double - A number, e.g., '1.25'",
+            url: 'http://www.w3.org/2001/XMLSchema#double',
+        },
+        {
+            label: "Float - A number, e.g., '1.25'",
+            url: 'http://www.w3.org/2001/XMLSchema#float',
+        },
+        {
+            label: "Integer - A number, e.g., '2'",
+            url: 'http://www.w3.org/2001/XMLSchema#integer',
+        },
+        {
+            label: "Long - A number, e.g., '1623871455232'",
+            url: 'http://www.w3.org/2001/XMLSchema#long',
+        },
+    ];
+
+    constructor() {}
+
+    getLabel(url: string): string {
+        for (const dataType of this.dataTypes) {
+            if (dataType.url === url) {
+                return dataType.label;
+            }
+        }
+        return 'Invalid data type';
     }
-  ];
 
-  constructor() {
-  }
-
-  getLabel(url: string): string {
-    for (const dataType of this.dataTypes) {
-      if (dataType.url === url) {
-        return dataType.label;
-      }
+    getUrl(id: number): string {
+        return this.dataTypes[id].url;
     }
-    return 'Invalid data type';
-  }
 
-  getUrl(id: number): string {
-    return this.dataTypes[id].url;
-  }
+    getDataTypes() {
+        return this.dataTypes;
+    }
 
-  getDataTypes() {
-    return this.dataTypes;
-  }
+    getNumberTypeUrl(): string {
+        return String(this.dataTypes[2].url);
+    }
 
-  getNumberTypeUrl(): string {
-    return String(this.dataTypes[2].url);
-  }
+    getStringTypeUrl(): string {
+        return String(this.dataTypes[0].url);
+    }
 
-  getStringTypeUrl(): string {
-    return String(this.dataTypes[0].url);
-  }
+    getBooleanTypeUrl(): string {
+        return String(this.dataTypes[1].url);
+    }
 
-  getBooleanTypeUrl(): string {
-    return String(this.dataTypes[1].url);
-  }
-
-  isNumeric(uri: string) {
-    const numericDataTypes = [
-        'http://www.w3.org/2001/XMLSchema#float',
-        'http://www.w3.org/2001/XMLSchema#double',
-        'http://www.w3.org/2001/XMLSchema#integer',
-        'http://www.w3.org/2001/XMLSchema#long'];
-    return numericDataTypes.includes(uri);
-  }
-
+    isNumeric(uri: string) {
+        const numericDataTypes = [
+            'http://www.w3.org/2001/XMLSchema#float',
+            'http://www.w3.org/2001/XMLSchema#double',
+            'http://www.w3.org/2001/XMLSchema#integer',
+            'http://www.w3.org/2001/XMLSchema#long',
+        ];
+        return numericDataTypes.includes(uri);
+    }
 }

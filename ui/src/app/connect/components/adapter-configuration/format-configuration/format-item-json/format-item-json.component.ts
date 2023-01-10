@@ -16,21 +16,16 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-format-item-json',
-  templateUrl: './format-item-json.component.html',
-  styleUrls: ['./format-item-json.component.scss']
+    selector: 'sp-format-item-json',
+    templateUrl: './format-item-json.component.html',
+    styleUrls: ['./format-item-json.component.scss'],
 })
-export class FormatItemJsonComponent implements OnInit {
+export class FormatItemJsonComponent {
+    @Input()
+    isSelected: boolean;
 
-  @Input()
-  isSelected: boolean;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+    constructor() {}
 }

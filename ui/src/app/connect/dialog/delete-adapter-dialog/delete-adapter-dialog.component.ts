@@ -17,16 +17,18 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { AdapterDescriptionUnion, AdapterService } from '@streampipes/platform-services';
+import {
+    AdapterDescriptionUnion,
+    AdapterService,
+} from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-delete-adapter-dialog',
     templateUrl: './delete-adapter-dialog.component.html',
-    styleUrls: ['./delete-adapter-dialog.component.scss']
+    styleUrls: ['./delete-adapter-dialog.component.scss'],
 })
 export class DeleteAdapterDialogComponent {
-
     @Input()
     adapter: AdapterDescriptionUnion;
 
@@ -35,9 +37,10 @@ export class DeleteAdapterDialogComponent {
     adapterUsedByPipeline = false;
     numberOfPipelinesWithAdapter = 0;
 
-    constructor(private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
-                private dataMarketplaceService: AdapterService) {
-    }
+    constructor(
+        private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
+        private dataMarketplaceService: AdapterService,
+    ) {}
 
     close(refreshAdapters: boolean) {
         this.dialogRef.close(refreshAdapters);
@@ -47,15 +50,17 @@ export class DeleteAdapterDialogComponent {
         this.isInProgress = true;
         this.currentStatus = 'Deleting adapter...';
 
-        this.dataMarketplaceService.deleteAdapter(this.adapter).subscribe(data => {
-            this.close(true);
-        }, error => {
-            if (error.status === 409) {
-                this.numberOfPipelinesWithAdapter = error.error.length;
-                this.adapterUsedByPipeline = true;
-                this.isInProgress = false;
-            }
-        });
+        this.dataMarketplaceService.deleteAdapter(this.adapter).subscribe(
+            data => {
+                this.close(true);
+            },
+            error => {
+                if (error.status === 409) {
+                    this.numberOfPipelinesWithAdapter = error.error.length;
+                    this.adapterUsedByPipeline = true;
+                    this.isInProgress = false;
+                }
+            },
+        );
     }
-
 }

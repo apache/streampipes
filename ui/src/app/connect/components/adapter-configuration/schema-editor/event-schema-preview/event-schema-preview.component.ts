@@ -20,47 +20,45 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EventSchema, GuessTypeInfo } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-event-schema-preview',
-  templateUrl: './event-schema-preview.component.html',
-  styleUrls: ['./event-schema-preview.component.scss']
+    selector: 'sp-event-schema-preview',
+    templateUrl: './event-schema-preview.component.html',
+    styleUrls: ['./event-schema-preview.component.scss'],
 })
 export class EventSchemaPreviewComponent implements OnInit {
+    @Input() originalEventSchema: EventSchema;
+    @Input() desiredEventSchema: EventSchema;
 
-  @Input() originalEventSchema: EventSchema;
-  @Input() desiredEventSchema: EventSchema;
+    @Input() originalPreview: Record<string, GuessTypeInfo>;
+    @Input() desiredPreview: Record<string, GuessTypeInfo>;
 
-  @Input() originalPreview: Record<string, GuessTypeInfo>;
-  @Input() desiredPreview: Record<string, GuessTypeInfo>;
+    @Output() updatePreviewEmitter = new EventEmitter();
 
-  @Output() updatePreviewEmitter = new EventEmitter();
+    originalField: Record<string, any>;
+    desiredField: Record<string, any>;
 
-  originalField: Record<string, any>;
-  desiredField: Record<string, any>;
-
-  ngOnInit(): void {
-    this.originalField = this.toSimpleMap(this.originalPreview);
-    this.desiredField = this.toSimpleMap(this.desiredPreview);
-  }
-
-  toSimpleMap(event: Record<string, GuessTypeInfo>): Record<string, any> {
-    let result: Record<string, any> = {};
-
-    for (const key in event) {
-      result[key] = event[key].value;
+    ngOnInit(): void {
+        this.originalField = this.toSimpleMap(this.originalPreview);
+        this.desiredField = this.toSimpleMap(this.desiredPreview);
     }
 
-   result = Object.keys(result).sort().reduce(
-      (obj, key) => {
-        obj[key] = result[key];
-        return obj;
-      },
-      {}
-    );
+    toSimpleMap(event: Record<string, GuessTypeInfo>): Record<string, any> {
+        let result: Record<string, any> = {};
 
-    return result;
-  }
+        for (const key in event) {
+            result[key] = event[key].value;
+        }
 
-  public updateEventPreview() {
-    this.updatePreviewEmitter.emit();
-  }
+        result = Object.keys(result)
+            .sort()
+            .reduce((obj, key) => {
+                obj[key] = result[key];
+                return obj;
+            }, {});
+
+        return result;
+    }
+
+    public updateEventPreview() {
+        this.updatePreviewEmitter.emit();
+    }
 }

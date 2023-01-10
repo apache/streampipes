@@ -18,77 +18,85 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxFlex="100"
-             fxLayout="column">
-            <form #propertyForm="ngForm"
-                  fxLayout="column">
-                <div fxLayout="column"
-                     fxLayoutAlign="start"
-                     fxFlex="100">
-                    <div class="general-options-panel"
-                         fxLayout="column"
-                         fxFlex="100">
+        <div fxFlex="100" fxLayout="column">
+            <form #propertyForm="ngForm" fxLayout="column">
+                <div fxLayout="column" fxLayoutAlign="start" fxFlex="100">
+                    <div
+                        class="general-options-panel"
+                        fxLayout="column"
+                        fxFlex="100"
+                    >
                         <span class="general-options-header">Basics</span>
-                        <sp-ep-settings-section sectionTitle="Field label"
-                                                sectionDescription="A label for better readability">
-                            <mat-form-field class="w-100"
-                                            color="accent">
-                                <input matInput
-                                       placeholder="Label"
-                                       name="label"
-                                       id="label"
-                                       [(ngModel)]="cachedProperty.label">
+                        <sp-ep-settings-section
+                            sectionTitle="Field label"
+                            sectionDescription="A label for better readability"
+                        >
+                            <mat-form-field class="w-100" color="accent">
+                                <input
+                                    matInput
+                                    placeholder="Label"
+                                    name="label"
+                                    id="label"
+                                    [(ngModel)]="cachedProperty.label"
+                                />
                             </mat-form-field>
                         </sp-ep-settings-section>
-                        <sp-ep-settings-section sectionTitle="Field description"
-                                                sectionDescription="A description for better readability">
-                            <mat-form-field class="full-width"
-                                            color="accent">
-                                <textarea matInput
-                                          name="description"
-                                          placeholder="Description"
-                                          id="description"
-                                          [(ngModel)]="cachedProperty.description" cols="20" rows="2">
+                        <sp-ep-settings-section
+                            sectionTitle="Field description"
+                            sectionDescription="A description for better readability"
+                        >
+                            <mat-form-field class="full-width" color="accent">
+                                <textarea
+                                    matInput
+                                    name="description"
+                                    placeholder="Description"
+                                    id="description"
+                                    [(ngModel)]="cachedProperty.description"
+                                    cols="20"
+                                    rows="2"
+                                >
                                 </textarea>
                             </mat-form-field>
                         </sp-ep-settings-section>
                     </div>
 
-
-                    <sp-edit-schema-transformation [cachedProperty]="cachedProperty"
-                                                   [isTimestampProperty]="isTimestampProperty"
-                                                   [isNestedProperty]="isEventPropertyNested"
-                                                   [isListProperty]="isEventPropertyList"
-                                                   [isPrimitiveProperty]="isEventPropertyPrimitive"
-                                                   *ngIf="!isEventPropertyNested"
-                                                   (dataTypeChanged)="handleDataTypeChange($event)"
-                                                   (timestampSemanticsChanged)="handleTimestampChange($event)"
-                                                   #schemaTransformationComponent>
-
+                    <sp-edit-schema-transformation
+                        [cachedProperty]="cachedProperty"
+                        [isTimestampProperty]="isTimestampProperty"
+                        [isNestedProperty]="isEventPropertyNested"
+                        [isListProperty]="isEventPropertyList"
+                        [isPrimitiveProperty]="isEventPropertyPrimitive"
+                        *ngIf="!isEventPropertyNested"
+                        (dataTypeChanged)="handleDataTypeChange($event)"
+                        (timestampSemanticsChanged)="
+                            handleTimestampChange($event)
+                        "
+                        #schemaTransformationComponent
+                    >
                     </sp-edit-schema-transformation>
 
-                    <sp-edit-value-transformation [cachedProperty]="cachedProperty"
-                                                  *ngIf="isEventPropertyPrimitive"
-                                                  [isTimestampProperty]="isTimestampProperty"
-                                                  [isNumericProperty]="isNumericProperty"
-                                                  [isNestedProperty]="isEventPropertyNested"
-                                                  [isListProperty]="isEventPropertyList"
-                                                  [isPrimitiveProperty]="isEventPropertyPrimitive"
-                                                  #valueTransformationComponent>
+                    <sp-edit-value-transformation
+                        [cachedProperty]="cachedProperty"
+                        *ngIf="isEventPropertyPrimitive"
+                        [isTimestampProperty]="isTimestampProperty"
+                        [isNumericProperty]="isNumericProperty"
+                        [isNestedProperty]="isEventPropertyNested"
+                        [isListProperty]="isEventPropertyList"
+                        [isPrimitiveProperty]="isEventPropertyPrimitive"
+                        #valueTransformationComponent
+                    >
                     </sp-edit-value-transformation>
 
-                    <sp-edit-unit-transformation *ngIf="!isTimestampProperty && isEventPropertyPrimitive"
-                                                 [cachedProperty]="cachedProperty"
-                                                 [isTimestampProperty]="isTimestampProperty"
-                                                 [isNumericProperty]="isNumericProperty"
-                                                 [isPrimitiveProperty]="isEventPropertyPrimitive"
-                                                 #unitTransformationComponent>
+                    <sp-edit-unit-transformation
+                        *ngIf="!isTimestampProperty && isEventPropertyPrimitive"
+                        [cachedProperty]="cachedProperty"
+                        [isTimestampProperty]="isTimestampProperty"
+                        [isNumericProperty]="isNumericProperty"
+                        [isPrimitiveProperty]="isEventPropertyPrimitive"
+                        #unitTransformationComponent
+                    >
                     </sp-edit-unit-transformation>
-
-
                 </div>
-
-
             </form>
 
             <!--            <sp-edit-event-property-primitive-->
@@ -105,14 +113,24 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="accent"
-                [disabled]="isSaveBtnEnabled"
-                (click)="save();
-          isSaveBtnEnabled = false"
-                style="margin-right: 10px;"
-                data-cy="sp-save-edit-property">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            [disabled]="isSaveBtnEnabled"
+            (click)="save(); isSaveBtnEnabled = false"
+            style="margin-right: 10px"
+            data-cy="sp-save-edit-property"
+        >
             Save
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="dialogRef.close()">Close</button>
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="dialogRef.close()"
+        >
+            Close
+        </button>
     </div>
 </div>

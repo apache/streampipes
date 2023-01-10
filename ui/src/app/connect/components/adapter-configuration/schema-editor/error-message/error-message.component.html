@@ -18,7 +18,10 @@
 
 <div fxLayout="column" fxFlex="100">
     <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
-        <div fxLayoutAlign="start center" class="error-text">&nbsp;There was an error while guessing the schema of your configured data source:</div>
+        <div fxLayoutAlign="start center" class="error-text">
+            &nbsp;There was an error while guessing the schema of your
+            configured data source:
+        </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" class="mt-10">
         <sp-exception-message [message]="errorMessage"></sp-exception-message>

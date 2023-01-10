@@ -17,29 +17,29 @@
  */
 
 .options-panel {
-  border-left: 4px solid var(--color-accent);
-  border-bottom: 1px solid var(--color-bg-2);
-  border-top: 1px solid var(--color-bg-2);
-  border-right: 1px solid var(--color-bg-2);
-  padding: 8px;
-  background: var(--color-bg-1);
-  margin-top: 6px;
-  margin-bottom: 6px;
+    border-left: 4px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-bg-2);
+    border-top: 1px solid var(--color-bg-2);
+    border-right: 1px solid var(--color-bg-2);
+    padding: 8px;
+    background: var(--color-bg-1);
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .title {
-  color: var(--color-default-text);
-  font-weight: 600;
-  font-size: 13pt;
-  margin-bottom: 10px;
+    color: var(--color-default-text);
+    font-weight: 600;
+    font-size: 13pt;
+    margin-bottom: 10px;
 }
 
 .description {
-  font-size: 10pt;
+    font-size: 10pt;
 }
 
 .icon {
-  margin-right: 10px;
-  color: var(--color-accent);
-  font-size: 22pt;
+    margin-right: 10px;
+    color: var(--color-accent);
+    font-size: 22pt;
 }
