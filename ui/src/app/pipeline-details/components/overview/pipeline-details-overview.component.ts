@@ -26,33 +26,39 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
-  selector: 'sp-pipeline-details-overview-component',
-  templateUrl: './pipeline-details-overview.component.html',
-  styleUrls: ['./pipeline-details-overview.component.scss']
+    selector: 'sp-pipeline-details-overview-component',
+    templateUrl: './pipeline-details-overview.component.html',
+    styleUrls: ['./pipeline-details-overview.component.scss'],
 })
-export class SpPipelineDetailsOverviewComponent extends SpPipelineDetailsDirective implements OnInit {
+export class SpPipelineDetailsOverviewComponent
+    extends SpPipelineDetailsDirective
+    implements OnInit
+{
+    tabs = [];
+    selectedElement: PipelineElementUnion;
 
-  tabs = [];
-  selectedElement: PipelineElementUnion;
+    constructor(
+        activatedRoute: ActivatedRoute,
+        pipelineService: PipelineService,
+        authService: AuthService,
+        breadcrumbService: SpBreadcrumbService,
+    ) {
+        super(activatedRoute, pipelineService, authService, breadcrumbService);
+    }
 
-  constructor(activatedRoute: ActivatedRoute,
-              pipelineService: PipelineService,
-              authService: AuthService,
-              breadcrumbService: SpBreadcrumbService) {
-    super(activatedRoute, pipelineService, authService, breadcrumbService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    selectElement(element: PipelineElementUnion) {
+        this.selectedElement = element;
+    }
 
-  selectElement(element: PipelineElementUnion) {
-    this.selectedElement = element;
-  }
-
-  onPipelineAvailable(): void {
-    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Overview'} ]);
-  }
-
-
+    onPipelineAvailable(): void {
+        this.breadcrumbService.updateBreadcrumb([
+            SpPipelineRoutes.BASE,
+            { label: this.pipeline.name },
+            { label: 'Overview' },
+        ]);
+    }
 }

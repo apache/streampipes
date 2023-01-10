@@ -17,14 +17,17 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Pipeline, PipelineStatusMessage, PipelineService } from '@streampipes/platform-services';
+import {
+    Pipeline,
+    PipelineStatusMessage,
+    PipelineService,
+} from '@streampipes/platform-services';
 
 @Component({
-    selector: 'pipeline-status',
+    selector: 'sp-pipeline-status',
     templateUrl: './pipeline-status.component.html',
 })
 export class PipelineStatusComponent implements OnInit {
-
     pipelineStatus: PipelineStatusMessage[];
 
     @Input()
@@ -39,12 +42,12 @@ export class PipelineStatusComponent implements OnInit {
     }
 
     getPipelineStatus() {
-        this.pipelineService.getPipelineStatusById(this.pipeline._id)
+        this.pipelineService
+            .getPipelineStatusById(this.pipeline._id)
             .subscribe(msg => {
                 this.pipelineStatus = msg.sort((a, b) => {
                     return a.timestamp - b.timestamp;
                 });
             });
     }
-
 }

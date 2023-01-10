@@ -17,18 +17,23 @@
   -->
 
 <sp-basic-inner-panel panelTitle="Element Details">
-
-    <div style="max-height: 800px;overflow:auto;">
+    <div style="max-height: 800px; overflow: auto">
         <div *ngIf="selectedElement">
-            <div fxLayout="column" style="padding:5px;padding-left:10px;">
-                <pipeline-elements-row [pipeline]="pipeline" [element]="selectedElement"></pipeline-elements-row>
+            <div fxLayout="column" style="padding: 5px; padding-left: 10px">
+                <sp-pipeline-elements-row
+                    [pipeline]="pipeline"
+                    [element]="selectedElement"
+                ></sp-pipeline-elements-row>
 
                 <mat-divider></mat-divider>
-                <div style="margin-bottom:15px;"></div>
-
+                <div style="margin-bottom: 15px"></div>
             </div>
         </div>
-        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!selectedElement">
+        <div
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            *ngIf="!selectedElement"
+        >
             (select an element in the preview window to see details)
         </div>
     </div>

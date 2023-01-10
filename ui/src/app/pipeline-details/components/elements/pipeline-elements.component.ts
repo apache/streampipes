@@ -21,18 +21,15 @@ import { PipelineElementUnion } from '../../../editor/model/editor.model';
 import { Pipeline } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'pipeline-elements',
-  templateUrl: './pipeline-elements.component.html',
+    selector: 'sp-pipeline-elements',
+    templateUrl: './pipeline-elements.component.html',
 })
 export class PipelineElementsComponent {
+    @Input()
+    pipeline: Pipeline;
 
-  @Input()
-  pipeline: Pipeline;
+    @Input()
+    selectedElement: PipelineElementUnion;
 
-  @Input()
-  selectedElement: PipelineElementUnion;
-
-  constructor() {
-
-  }
+    constructor() {}
 }
