@@ -22,27 +22,25 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'sp-functions-overview',
-  templateUrl: './functions-overview.component.html',
-  styleUrls: ['./functions-overview.component.scss']
+    selector: 'sp-functions-overview',
+    templateUrl: './functions-overview.component.html',
+    styleUrls: ['./functions-overview.component.scss'],
 })
 export class FunctionsOverviewComponent implements OnInit {
+    @Input()
+    functions: FunctionId[] = [];
 
-  @Input()
-  functions: FunctionId[] = [];
+    dataSource: MatTableDataSource<FunctionId>;
 
-  dataSource: MatTableDataSource<FunctionId>;
+    displayedColumns: string[] = ['name', 'action'];
 
-  displayedColumns: string[] = ['name', 'action'];
+    constructor(private router: Router) {}
 
-  constructor(private router: Router) {}
+    ngOnInit(): void {
+        this.dataSource = new MatTableDataSource<FunctionId>(this.functions);
+    }
 
-  ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<FunctionId>(this.functions);
-  }
-
-  showFunctionDetails(functionId: string): void {
-    this.router.navigate(['pipelines', 'functions', functionId, 'metrics']);
-  }
-
+    showFunctionDetails(functionId: string): void {
+        this.router.navigate(['pipelines', 'functions', functionId, 'metrics']);
+    }
 }

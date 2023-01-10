@@ -17,51 +17,89 @@
   -->
 
 <div fxLayout="row" class="page-container-padding">
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="profileLoaded">
-        <sp-split-section title="Main Settings" subtitle="Manage your basic profile settings here.">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        fxLayoutAlign="start start"
+        *ngIf="profileLoaded"
+    >
+        <sp-split-section
+            title="Main Settings"
+            subtitle="Manage your basic profile settings here."
+        >
             <div fxLayout="row" fxLayoutAlign="start center">
-                <span>{{userData.username}}</span>
-                <button mat-button
-                        mat-raised-button
-                        color="accent"
-                        class="ml-15"
-                        (click)="openChangeEmailDialog()">Change email
+                <span>{{ userData.username }}</span>
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    class="ml-15"
+                    (click)="openChangeEmailDialog()"
+                >
+                    Change email
                 </button>
             </div>
             <mat-form-field fxFlex color="accent">
                 <mat-label>Full Name</mat-label>
-                <input [(ngModel)]="userData.fullName" matInput/>
+                <input [(ngModel)]="userData.fullName" matInput />
             </mat-form-field>
             <div fxLayout="row" fxLayoutAlign="start center">
-                <button mat-button mat-raised-button color="accent"
-                        (click)="saveProfileSettings()">
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    (click)="saveProfileSettings()"
+                >
                     Update profile
                 </button>
-                <button mat-button mat-raised-button color="accent" class="ml-15"
-                        (click)="openChangePasswordDialog()">
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    class="ml-15"
+                    (click)="openChangePasswordDialog()"
+                >
                     Change password
                 </button>
             </div>
         </sp-split-section>
         <mat-divider></mat-divider>
         <div fxLayout="row" fxFlex="100" class="mt-30">
-            <sp-split-section title="Appearance"
-                              subtitle="Change the appearance of your {{appConstants.APP_NAME}} installation">
+            <sp-split-section
+                title="Appearance"
+                subtitle="Change the appearance of your {{
+                    appConstants.APP_NAME
+                }} installation"
+            >
                 <label id="radio-group-label">Color Scheme</label>
-                <mat-radio-group [(ngModel)]="darkMode"
-                                 aria-labelledby="radio-group-label"
-                                 class="appearance-radio-group" (ngModelChange)="changeModePreview($event)">
-                    <mat-radio-button [value]="false" class="appearance-radio-button">Light Mode</mat-radio-button>
-                    <mat-radio-button [value]="true" class="appearance-radio-button">Dark Mode</mat-radio-button>
+                <mat-radio-group
+                    [(ngModel)]="darkMode"
+                    aria-labelledby="radio-group-label"
+                    class="appearance-radio-group"
+                    (ngModelChange)="changeModePreview($event)"
+                >
+                    <mat-radio-button
+                        [value]="false"
+                        class="appearance-radio-button"
+                        >Light Mode</mat-radio-button
+                    >
+                    <mat-radio-button
+                        [value]="true"
+                        class="appearance-radio-button"
+                        >Dark Mode</mat-radio-button
+                    >
                 </mat-radio-group>
                 <div>
-                    <button mat-button mat-raised-button color="accent"
-                            (click)="updateAppearanceMode()">
+                    <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        (click)="updateAppearanceMode()"
+                    >
                         Save color scheme
                     </button>
                 </div>
             </sp-split-section>
         </div>
     </div>
-
 </div>

@@ -21,6 +21,85 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+# [0.90.0]
+
+## What's Changed
+### New Features 🚀
+
+* [[#821](https://github.com/apache/streampipes/issues/821)]: Mark data views and dashboards as private elements
+* [[#818](https://github.com/apache/streampipes/issues/818)]: Add Nats-based version to installation options
+* [[#817](https://github.com/apache/streampipes/issues/817)]: Sort data explorer fields by name
+* [[#813](https://github.com/apache/streampipes/issues/813)]: Add "Asset Managment" role to user roles
+* [[#805](https://github.com/apache/streampipes/issues/805)]: Create release notes with GitHub issues
+* [[#801](https://github.com/apache/streampipes/issues/801)]: Update REST API for data streams
+* [[#751](https://github.com/apache/streampipes/issues/751)]: Standalone Functions
+* [[#737](https://github.com/apache/streampipes/issues/737)]: Refactor the Pulsar Protocol Adapter
+* [[#736](https://github.com/apache/streampipes/issues/736)]: Volume for NGINX configuration
+* [[#735](https://github.com/apache/streampipes/issues/735)]: Technical information of data sources in the UI
+* [[#732](https://github.com/apache/streampipes/issues/732)]: Display error messages in StreamPipes Connect
+* [[#729](https://github.com/apache/streampipes/issues/729)]: Add data model and API to organize StreamPipes views
+* [[#694](https://github.com/apache/streampipes/issues/694)]: Refactor the Pulsar sink element
+* [[#630](https://github.com/apache/streampipes/issues/630)]: Element Monitoring
+* [[#768](https://github.com/apache/streampipes/issues/768)]: Create a framework to perform integration tests
+* [[#767](https://github.com/apache/streampipes/issues/767)]: Create and receive storage measure objects in StreamPipes client
+* [[#763](https://github.com/apache/streampipes/issues/763)]: Add Nats adapter
+* [[#762](https://github.com/apache/streampipes/issues/762)]: Add Nats as supported messaging protocol
+* [[#749](https://github.com/apache/streampipes/issues/749)]: Collect and display logs and errors of extensions services
+* [[#784](https://github.com/apache/streampipes/issues/784)]: Provide RocketMQ 5.0.0 Dockerfile and docker-compose.yml files
+* [[#779](https://github.com/apache/streampipes/issues/779)]: RocketMQ Support
+* [[#776](https://github.com/apache/streampipes/issues/776)]: refactor streampipes-processors-change-detection-jvm
+* [[#772](https://github.com/apache/streampipes/issues/772)]: Update REST API for pipelines
+
+### Bug fixes 🧰
+
+* [[#1063](https://github.com/apache/streampipes/pull/1063)]: [hotfix] fix header style in release.yaml
+* [[#822](https://github.com/apache/streampipes/issues/822)]: Ignore case when logging in with email address
+* [[#759](https://github.com/apache/streampipes/issues/759)]: Update GitHub README file
+* [[#758](https://github.com/apache/streampipes/issues/758)]: For data export the name of timestamp field is lost
+* [[#757](https://github.com/apache/streampipes/issues/757)]: Broken links on homepage's versions overview
+* [[#755](https://github.com/apache/streampipes/issues/755)]: Events with missing properties are not displayed in data explorer
+* [[#754](https://github.com/apache/streampipes/issues/754)]: Data Explorer does not properly cleanup widget subscriptions
+* [[#753](https://github.com/apache/streampipes/issues/753)]: Data Explorer: Unexpected edit mode behaviour
+* [[#752](https://github.com/apache/streampipes/issues/752)]: Data Explorer time selector changes upon refresh
+* [[#750](https://github.com/apache/streampipes/issues/750)]: Stopped adapters are started on container restart
+* [[#740](https://github.com/apache/streampipes/issues/740)]: StreamPipes can not be build with Java 18
+* [[#739](https://github.com/apache/streampipes/issues/739)]: Check license file for wrong MIT classifications
+* [[#738](https://github.com/apache/streampipes/issues/738)]: Replace current year in NOTICE file with year range
+* [[#734](https://github.com/apache/streampipes/issues/734)]: Download data (configured query)
+* [[#745](https://github.com/apache/streampipes/issues/745)]: Data Lake download ignores rows with missing values
+
+### Deprecation ⚠
+
+* [[#906](https://github.com/apache/streampipes/pull/906)]: add section about dependency updates to release notes
+* [[#805](https://github.com/apache/streampipes/issues/805)]: Create release notes with GitHub issues
+* [[#800](https://github.com/apache/streampipes/issues/800)]: unclear missleading  example code writing own processor on website
+* [[#769](https://github.com/apache/streampipes/issues/769)]: Improve tutorials
+* [[#757](https://github.com/apache/streampipes/issues/757)]: Broken links on homepage's versions overview
+* [[#756](https://github.com/apache/streampipes/issues/756)]: Make API Docs available within StreamPipes
+* [[#790](https://github.com/apache/streampipes/issues/790)]: Check website and documentation for incubating references
+
+
+### Dependency Updates 📦
+
+* [[#748](https://github.com/apache/streampipes/issues/748)]: Bump Angular version
+
+
+### Other changes
+
+* [[#838](https://github.com/apache/streampipes/issues/838)]: streampipes-container-extensions
+* [[#834](https://github.com/apache/streampipes/issues/834)]: streampipes-commons
+* [[#833](https://github.com/apache/streampipes/issues/833)]: streampipes-archetype-pe-processors-flink
+* [[#832](https://github.com/apache/streampipes/issues/832)]: streampipes-archetype-pe-sinks-flink
+* [[#830](https://github.com/apache/streampipes/issues/830)]: streampipes-archetype-extensions-jvm
+* [[#802](https://github.com/apache/streampipes/issues/802)]: Migrate Jira issues to Github
+* [[#791](https://github.com/apache/streampipes/issues/791)]: Update incubator status file
+* [[#789](https://github.com/apache/streampipes/issues/789)]: Activate Github discussions
+* [[#788](https://github.com/apache/streampipes/issues/788)]: Remove incubating references from source code
+* [[#786](https://github.com/apache/streampipes/issues/786)]: Post-graduation tasks
+* [[#770](https://github.com/apache/streampipes/issues/770)]: Migrate from Jira to Github
+* [[#741](https://github.com/apache/streampipes/issues/741)]: Add Apache header to "strings.en" files in resources
+* [[#798](https://github.com/apache/streampipes/issues/798)]: Add license header check to checkstyle configuration
+
 # [0.70.0]
 
 ## Sub-task

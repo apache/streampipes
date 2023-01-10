@@ -16,21 +16,30 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { Pipeline } from '@streampipes/platform-services';
-import { PipelineElementConfig, PipelineElementUnion } from '../../../editor/model/editor.model';
+import {
+    PipelineElementConfig,
+    PipelineElementUnion,
+} from '../../../editor/model/editor.model';
 import { PipelinePositioningService } from '../../../editor/services/pipeline-positioning.service';
 import { JsplumbService } from '../../../editor/services/jsplumb.service';
 import { ObjectProvider } from '../../../editor/services/object-provider.service';
 import { JsplumbFactoryService } from '../../../editor/services/jsplumb-factory.service';
 
 @Component({
-    selector: 'pipeline-preview',
+    selector: 'sp-pipeline-preview',
     templateUrl: './pipeline-preview.component.html',
-    styleUrls: ['./pipeline-preview.component.scss']
+    styleUrls: ['./pipeline-preview.component.scss'],
 })
 export class PipelinePreviewComponent implements OnInit {
-
     @Input()
     jspcanvas: string;
 
@@ -40,31 +49,52 @@ export class PipelinePreviewComponent implements OnInit {
     pipeline: Pipeline;
 
     @Output()
-    selectedElementEmitter: EventEmitter<PipelineElementUnion> = new EventEmitter<PipelineElementUnion>();
+    selectedElementEmitter: EventEmitter<PipelineElementUnion> =
+        new EventEmitter<PipelineElementUnion>();
 
-    constructor(private pipelinePositioningService: PipelinePositioningService,
-                private jsplumbService: JsplumbService,
-                private jsplumbFactoryService: JsplumbFactoryService,
-                private objectProvider: ObjectProvider) {
-    }
+    constructor(
+        private pipelinePositioningService: PipelinePositioningService,
+        private jsplumbService: JsplumbService,
+        private jsplumbFactoryService: JsplumbFactoryService,
+        private objectProvider: ObjectProvider,
+    ) {}
 
     ngOnInit() {
         setTimeout(() => {
             const elid = '#' + this.jspcanvas;
-            this.rawPipelineModel = this.jsplumbService.makeRawPipeline(this.pipeline, true);
+            this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+                this.pipeline,
+                true,
+            );
             setTimeout(() => {
-                this.pipelinePositioningService.displayPipeline(this.rawPipelineModel, elid, true, true);
+                this.pipelinePositioningService.displayPipeline(
+                    this.rawPipelineModel,
+                    elid,
+                    true,
+                    true,
+                );
                 const existingEndpointIds = [];
                 setTimeout(() => {
-                    this.jsplumbFactoryService.getJsplumbBridge(true).selectEndpoints().each(endpoint => {
-                        if (existingEndpointIds.indexOf(endpoint.element.id) === -1) {
-                            $(endpoint.element).click(() => {
-                                const payload = this.objectProvider.findElement(endpoint.element.id, this.rawPipelineModel).payload;
-                                this.selectedElementEmitter.emit(payload);
-                            });
-                            existingEndpointIds.push(endpoint.element.id);
-                        }
-                    });
+                    this.jsplumbFactoryService
+                        .getJsplumbBridge(true)
+                        .selectEndpoints()
+                        .each(endpoint => {
+                            if (
+                                existingEndpointIds.indexOf(
+                                    endpoint.element.id,
+                                ) === -1
+                            ) {
+                                $(endpoint.element).click(() => {
+                                    const payload =
+                                        this.objectProvider.findElement(
+                                            endpoint.element.id,
+                                            this.rawPipelineModel,
+                                        ).payload;
+                                    this.selectedElementEmitter.emit(payload);
+                                });
+                                existingEndpointIds.push(endpoint.element.id);
+                            }
+                        });
                 });
             });
         });

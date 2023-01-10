@@ -53,102 +53,97 @@ import { SpFunctionsMetricsComponent } from './components/functions-overview/fun
 import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
 
 @NgModule({
-  imports: [
-    FlexLayoutModule,
-    FormsModule,
-    MatTabsModule,
-    MatButtonModule,
-    CustomMaterialModule,
-    CommonModule,
-    MatProgressSpinnerModule,
-    MatSortModule,
-    MatTableModule,
-    CoreUiModule,
-    PlatformServicesModule,
-    EditorModule,
-    PipelineDetailsModule,
-    SharedUiModule,
-    RouterModule.forChild([
-      {
-        path: 'pipelines',
-        children: [
-          {
-            path: '',
-            component: PipelinesComponent
-          },
-          {
-            path: 'functions/:functionId/metrics',
-            component: SpFunctionsMetricsComponent
-          },
-          {
-            path: 'functions/:functionId/logs',
-            component: SpFunctionsLogsComponent
-          },
-          {
-            path: 'details/:pipelineId',
-            children: [
-              {
-                path: '',
-                redirectTo: 'overview',
-                pathMatch: 'full'
-              },
-              {
-                path: 'overview',
-                component: SpPipelineDetailsOverviewComponent,
-              },
-              {
-                path: 'metrics',
-                component: PipelineMonitoringComponent,
-              },
-              {
-                path: 'logs',
-                component: PipelineLogsComponent,
-              },
-              {
-                path: 'quick-edit',
-                component: QuickEditComponent,
-              }
-            ]
-          },
-          {
-            path: 'create',
-            component: EditorComponent
-          },
-          {
-            path: 'modify/:pipelineId',
-            component: EditorComponent
-          }
-        ]
-      }
-    ]),
-  ],
-  declarations: [
-    DeletePipelineDialogComponent,
-    FunctionsOverviewComponent,
-    ImportPipelineDialogComponent,
-    PipelinesComponent,
-    PipelineCategoriesDialogComponent,
-    PipelineNotificationsComponent,
-    PipelineOverviewComponent,
-    PipelineStatusDialogComponent,
-    StartAllPipelinesDialogComponent,
-    PipelineInCategoryPipe,
-    CategoryAlreadyInPipelinePipe,
-    SpFunctionsMetricsComponent,
-    SpFunctionsLogsComponent
-  ],
-  providers: [
-    PipelineOperationsService,
-    CategoryAlreadyInPipelinePipe,
-    PipelineInCategoryPipe
-  ],
-  exports: [
-    PipelinesComponent
-  ]
+    imports: [
+        FlexLayoutModule,
+        FormsModule,
+        MatTabsModule,
+        MatButtonModule,
+        CustomMaterialModule,
+        CommonModule,
+        MatProgressSpinnerModule,
+        MatSortModule,
+        MatTableModule,
+        CoreUiModule,
+        PlatformServicesModule,
+        EditorModule,
+        PipelineDetailsModule,
+        SharedUiModule,
+        RouterModule.forChild([
+            {
+                path: 'pipelines',
+                children: [
+                    {
+                        path: '',
+                        component: PipelinesComponent,
+                    },
+                    {
+                        path: 'functions/:functionId/metrics',
+                        component: SpFunctionsMetricsComponent,
+                    },
+                    {
+                        path: 'functions/:functionId/logs',
+                        component: SpFunctionsLogsComponent,
+                    },
+                    {
+                        path: 'details/:pipelineId',
+                        children: [
+                            {
+                                path: '',
+                                redirectTo: 'overview',
+                                pathMatch: 'full',
+                            },
+                            {
+                                path: 'overview',
+                                component: SpPipelineDetailsOverviewComponent,
+                            },
+                            {
+                                path: 'metrics',
+                                component: PipelineMonitoringComponent,
+                            },
+                            {
+                                path: 'logs',
+                                component: PipelineLogsComponent,
+                            },
+                            {
+                                path: 'quick-edit',
+                                component: QuickEditComponent,
+                            },
+                        ],
+                    },
+                    {
+                        path: 'create',
+                        component: EditorComponent,
+                    },
+                    {
+                        path: 'modify/:pipelineId',
+                        component: EditorComponent,
+                    },
+                ],
+            },
+        ]),
+    ],
+    declarations: [
+        DeletePipelineDialogComponent,
+        FunctionsOverviewComponent,
+        ImportPipelineDialogComponent,
+        PipelinesComponent,
+        PipelineCategoriesDialogComponent,
+        PipelineNotificationsComponent,
+        PipelineOverviewComponent,
+        PipelineStatusDialogComponent,
+        StartAllPipelinesDialogComponent,
+        PipelineInCategoryPipe,
+        CategoryAlreadyInPipelinePipe,
+        SpFunctionsMetricsComponent,
+        SpFunctionsLogsComponent,
+    ],
+    providers: [
+        PipelineOperationsService,
+        CategoryAlreadyInPipelinePipe,
+        PipelineInCategoryPipe,
+    ],
+    exports: [PipelinesComponent],
 })
 export class PipelinesModule {
-
-  constructor() {
-  }
-
+    constructor() {}
 }

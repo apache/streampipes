@@ -17,28 +17,28 @@
  */
 
 .pipeline-element-loading-container {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:98%;
-  height:98%;
-  background: var(--color-pe);
-  opacity:0.8;
-  z-index:6;
-  border-radius:50%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 98%;
+    height: 98%;
+    background: var(--color-pe);
+    opacity: 0.8;
+    z-index: 6;
+    border-radius: 50%;
 }
 
 .pipeline-element-progress-container {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:100%;
-  height:100%;
-  z-index:7;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 7;
 }
 
 .pipeline-element-progress {
-  margin-left:auto;
-  margin-right:auto;
-  top:36px;
+    margin-left: auto;
+    margin-right: auto;
+    top: 36px;
 }

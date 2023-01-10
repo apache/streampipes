@@ -17,6 +17,6 @@
  */
 
 export enum PipelineAction {
-  Start,
-  Stop
+    Start,
+    Stop,
 }

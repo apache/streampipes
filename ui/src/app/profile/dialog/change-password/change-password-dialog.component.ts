@@ -19,80 +19,99 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
+    AbstractControl,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators,
 } from '@angular/forms';
-import { UserAccount, ChangePasswordRequest, UserService } from '@streampipes/platform-services';
+import {
+    UserAccount,
+    ChangePasswordRequest,
+    UserService,
+} from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-change-password-dialog',
-  templateUrl: './change-password-dialog.component.html',
-  styleUrls: ['./change-password-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'sp-change-password-dialog',
+    templateUrl: './change-password-dialog.component.html',
+    styleUrls: ['./change-password-dialog.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class ChangePasswordDialogComponent implements OnInit {
+    @Input()
+    user: UserAccount;
 
-  @Input()
-  user: UserAccount;
+    parentForm: UntypedFormGroup;
 
-  parentForm: UntypedFormGroup;
+    existingPw = '';
+    newPw = '';
+    newPwConfirm = '';
 
-  existingPw = '';
-  newPw = '';
-  newPwConfirm = '';
+    operationApplied = false;
+    error = false;
+    errorMessage = '';
 
-  operationApplied = false;
-  error = false;
-  errorMessage = '';
+    constructor(
+        private dialogRef: DialogRef<ChangePasswordDialogComponent>,
+        private fb: UntypedFormBuilder,
+        private userService: UserService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<ChangePasswordDialogComponent>,
-              private fb: UntypedFormBuilder,
-              private userService: UserService) {
+    ngOnInit(): void {
+        this.parentForm = this.fb.group({});
+        this.parentForm.addControl(
+            'currentPassword',
+            new UntypedFormControl(this.existingPw, [Validators.required]),
+        );
+        this.parentForm.addControl(
+            'newPassword',
+            new UntypedFormControl(this.newPw, [Validators.required]),
+        );
+        this.parentForm.addControl(
+            'newPasswordConfirm',
+            new UntypedFormControl(this.newPw, [Validators.required]),
+        );
+        this.parentForm.setValidators(this.checkPasswords);
 
-  }
-
-  ngOnInit(): void {
-    this.parentForm = this.fb.group({});
-    this.parentForm.addControl('currentPassword', new UntypedFormControl(this.existingPw, [Validators.required]));
-    this.parentForm.addControl('newPassword', new UntypedFormControl(this.newPw, [Validators.required]));
-    this.parentForm.addControl('newPasswordConfirm', new UntypedFormControl(this.newPw, [Validators.required]));
-    this.parentForm.setValidators(this.checkPasswords);
-
-    this.parentForm.valueChanges.subscribe(v => {
-      this.existingPw = v.currentPassword;
-      this.newPw = v.newPassword;
-      this.newPwConfirm = v.newPasswordConfirm;
-    });
-  }
-
-  close(refresh?: boolean) {
-    this.dialogRef.close(refresh);
-  }
-
-  update() {
-    const req: ChangePasswordRequest = {newPassword: this.newPw, existingPassword: this.existingPw};
-    this.userService.updatePassword(this.user, req).subscribe(response => {
-      this.close(true);
-    }, error => {
-      this.operationApplied = true;
-      this.error = true;
-      this.errorMessage = error.error.notifications[0].title;
-    });
-  }
-
-  checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {
-    const pass = group.get('newPassword');
-    const confirmPass = group.get('newPasswordConfirm');
-
-    if (!pass || !confirmPass) {
-      return null;
+        this.parentForm.valueChanges.subscribe(v => {
+            this.existingPw = v.currentPassword;
+            this.newPw = v.newPassword;
+            this.newPwConfirm = v.newPasswordConfirm;
+        });
     }
-    return pass.value === confirmPass.value ? null : { notMatching: true };
-  }
 
+    close(refresh?: boolean) {
+        this.dialogRef.close(refresh);
+    }
+
+    update() {
+        const req: ChangePasswordRequest = {
+            newPassword: this.newPw,
+            existingPassword: this.existingPw,
+        };
+        this.userService.updatePassword(this.user, req).subscribe(
+            response => {
+                this.close(true);
+            },
+            error => {
+                this.operationApplied = true;
+                this.error = true;
+                this.errorMessage = error.error.notifications[0].title;
+            },
+        );
+    }
+
+    checkPasswords: ValidatorFn = (
+        group: AbstractControl,
+    ): ValidationErrors | null => {
+        const pass = group.get('newPassword');
+        const confirmPass = group.get('newPasswordConfirm');
+
+        if (!pass || !confirmPass) {
+            return null;
+        }
+        return pass.value === confirmPass.value ? null : { notMatching: true };
+    };
 }

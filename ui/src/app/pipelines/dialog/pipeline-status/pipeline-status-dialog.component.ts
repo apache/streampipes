@@ -17,99 +17,107 @@
  */
 
 import { DialogRef } from '@streampipes/shared-ui';
-import { PipelineOperationStatus, PipelineService } from '@streampipes/platform-services';
+import {
+    PipelineOperationStatus,
+    PipelineService,
+} from '@streampipes/platform-services';
 import { Component, Input, OnInit } from '@angular/core';
 import { PipelineAction } from '../../model/pipeline-model';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 
-
 @Component({
-  selector: 'sp-pipeline-status-dialog',
-  templateUrl: './pipeline-status-dialog.component.html',
-  styleUrls: ['./pipeline-status-dialog.component.scss']
+    selector: 'sp-pipeline-status-dialog',
+    templateUrl: './pipeline-status-dialog.component.html',
+    styleUrls: ['./pipeline-status-dialog.component.scss'],
 })
 export class PipelineStatusDialogComponent implements OnInit {
+    operationInProgress = true;
+    forceStopActive = false;
+    pipelineOperationStatus: PipelineOperationStatus;
 
-  operationInProgress = true;
-  forceStopActive = false;
-  pipelineOperationStatus: PipelineOperationStatus;
+    @Input()
+    pipelineId: string;
 
-  @Input()
-  pipelineId: string;
+    @Input()
+    action: PipelineAction;
 
-  @Input()
-  action: PipelineAction;
+    constructor(
+        private dialogRef: DialogRef<PipelineStatusDialogComponent>,
+        private pipelineService: PipelineService,
+        private shepherdService: ShepherdService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<PipelineStatusDialogComponent>,
-              private pipelineService: PipelineService,
-              private shepherdService: ShepherdService) {
-  }
-
-  ngOnInit(): void {
-    if (this.action === PipelineAction.Start) {
-      this.startPipeline();
-    } else {
-      this.stopPipeline();
+    ngOnInit(): void {
+        if (this.action === PipelineAction.Start) {
+            this.startPipeline();
+        } else {
+            this.stopPipeline();
+        }
     }
-  }
 
-  close() {
-    this.dialogRef.close();
-  }
+    close() {
+        this.dialogRef.close();
+    }
 
+    startPipeline() {
+        this.pipelineService.startPipeline(this.pipelineId).subscribe(
+            msg => {
+                this.pipelineOperationStatus = msg;
+                this.operationInProgress = false;
+                if (this.shepherdService.isTourActive()) {
+                    this.shepherdService.trigger('pipeline-started');
+                }
+            },
+            error => {
+                this.operationInProgress = false;
+                this.pipelineOperationStatus = {
+                    title: 'Network Error',
+                    success: false,
+                    pipelineId: undefined,
+                    pipelineName: undefined,
+                    elementStatus: [],
+                };
+            },
+        );
+    }
 
-  startPipeline() {
-    this.pipelineService.startPipeline(this.pipelineId).subscribe(msg => {
-      this.pipelineOperationStatus = msg;
-      this.operationInProgress = false;
-      if (this.shepherdService.isTourActive()) {
-        this.shepherdService.trigger('pipeline-started');
-      }
-    }, error => {
-      this.operationInProgress = false;
-      this.pipelineOperationStatus = {
-        title: 'Network Error',
-        success: false,
-        pipelineId: undefined,
-        pipelineName: undefined,
-        elementStatus: []
-      };
-    });
-  }
+    stopPipeline() {
+        this.pipelineService.stopPipeline(this.pipelineId).subscribe(
+            msg => {
+                this.pipelineOperationStatus = msg;
+                this.operationInProgress = false;
+            },
+            error => {
+                this.operationInProgress = false;
+                this.pipelineOperationStatus = {
+                    title: 'Network Error',
+                    success: false,
+                    pipelineId: undefined,
+                    pipelineName: undefined,
+                    elementStatus: [],
+                };
+            },
+        );
+    }
 
-  stopPipeline() {
-    this.pipelineService.stopPipeline(this.pipelineId).subscribe(msg => {
-      this.pipelineOperationStatus = msg;
-      this.operationInProgress = false;
-    }, error => {
-      this.operationInProgress = false;
-      this.pipelineOperationStatus = {
-        title: 'Network Error',
-        success: false,
-        pipelineId: undefined,
-        pipelineName: undefined,
-        elementStatus: []
-      };
-    });
-  }
-
-  forceStopPipeline() {
-    this.operationInProgress = true;
-    this.forceStopActive = true;
-    this.pipelineService.stopPipeline(this.pipelineId, true).subscribe(msg => {
-      this.pipelineOperationStatus = msg;
-      this.operationInProgress = false;
-    }, error => {
-      this.operationInProgress = false;
-      this.pipelineOperationStatus = {
-        title: 'Network Error',
-        success: false,
-        pipelineId: undefined,
-        pipelineName: undefined,
-        elementStatus: []
-      };
-    });
-  }
-
-
+    forceStopPipeline() {
+        this.operationInProgress = true;
+        this.forceStopActive = true;
+        this.pipelineService.stopPipeline(this.pipelineId, true).subscribe(
+            msg => {
+                this.pipelineOperationStatus = msg;
+                this.operationInProgress = false;
+            },
+            error => {
+                this.operationInProgress = false;
+                this.pipelineOperationStatus = {
+                    title: 'Network Error',
+                    success: false,
+                    pipelineId: undefined,
+                    pipelineName: undefined,
+                    elementStatus: [],
+                };
+            },
+        );
+    }
 }

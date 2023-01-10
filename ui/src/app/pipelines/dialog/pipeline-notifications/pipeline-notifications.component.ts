@@ -18,33 +18,29 @@
 
 import { DialogRef } from '@streampipes/shared-ui';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
-import { Component, Input, OnInit } from '@angular/core';
-
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-pipeline-notifications',
-  templateUrl: './pipeline-notifications.component.html',
-  styleUrls: ['./pipeline-notifications.component.scss']
+    selector: 'sp-pipeline-notifications',
+    templateUrl: './pipeline-notifications.component.html',
+    styleUrls: ['./pipeline-notifications.component.scss'],
 })
-export class PipelineNotificationsComponent implements OnInit {
+export class PipelineNotificationsComponent {
+    @Input()
+    pipeline: Pipeline;
 
-  @Input()
-  pipeline: Pipeline;
+    constructor(
+        private dialogRef: DialogRef<PipelineNotificationsComponent>,
+        private pipelineService: PipelineService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<PipelineNotificationsComponent>,
-              private pipelineService: PipelineService) {
-  }
-
-  ngOnInit(): void {
-  }
-
-  acknowledgeAndClose() {
-    this.pipeline.pipelineNotifications = [];
-    if (this.pipeline.healthStatus === 'REQUIRES_ATTENTION') {
-      this.pipeline.healthStatus = 'OK';
+    acknowledgeAndClose() {
+        this.pipeline.pipelineNotifications = [];
+        if (this.pipeline.healthStatus === 'REQUIRES_ATTENTION') {
+            this.pipeline.healthStatus = 'OK';
+        }
+        this.pipelineService.updatePipeline(this.pipeline).subscribe(msg => {
+            this.dialogRef.close();
+        });
     }
-    this.pipelineService.updatePipeline(this.pipeline).subscribe(msg => {
-      this.dialogRef.close();
-    });
-  }
 }

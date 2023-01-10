@@ -19,56 +19,58 @@
 @import '../variables';
 
 .sp-no-padding-dialog .mat-dialog-container {
-  box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
-  display: block;
-  padding: 0px;
-  border-radius: 2px;
-  box-sizing: border-box;
-  overflow: auto;
-  outline: 0;
-  width: 100%;
-  height: 100%;
+    box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2),
+        0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12);
+    display: block;
+    padding: 0px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    overflow: auto;
+    outline: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .sp.no-padding-dialog .mat-dialog-container .md-dialog {
-  box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
-  display: block;
-  padding: 0px;
-  border-radius: 2px;
-  box-sizing: border-box;
-  overflow: auto;
-  outline: 0;
-  width: 100%;
-  height: 100%;
+    box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2),
+        0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12);
+    display: block;
+    padding: 0px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    overflow: auto;
+    outline: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-toolbar {
-  background: var(--color-primary);
-  color: white;
+    background: var(--color-primary);
+    color: white;
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-dialog-content {
-  padding: 24px;
+    padding: 24px;
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-dialog-actions {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-ordinal-group: 3;
-  -webkit-order: 2;
-  order: 2;
-  box-sizing: border-box;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-  margin-bottom: 0;
-  padding-right: 8px;
-  padding-left: 16px;
-  min-height: 52px;
-  overflow: hidden;
-  border-top: 1px solid #cccccc;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-ordinal-group: 3;
+    -webkit-order: 2;
+    order: 2;
+    box-sizing: border-box;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+    margin-bottom: 0;
+    padding-right: 8px;
+    padding-left: 16px;
+    min-height: 52px;
+    overflow: hidden;
+    border-top: 1px solid #cccccc;
 }

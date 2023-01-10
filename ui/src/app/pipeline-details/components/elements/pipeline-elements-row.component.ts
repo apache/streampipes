@@ -22,11 +22,10 @@ import { Pipeline } from '@streampipes/platform-services';
 import { PipelineElementTypeUtils } from '../../../editor/utils/editor.utils';
 
 @Component({
-    selector: 'pipeline-elements-row',
+    selector: 'sp-pipeline-elements-row',
     templateUrl: './pipeline-elements-row.component.html',
 })
 export class PipelineElementsRowComponent implements OnInit {
-
     elementType: string;
 
     @Input()
@@ -37,9 +36,7 @@ export class PipelineElementsRowComponent implements OnInit {
 
     _element: PipelineElementUnion;
 
-    constructor() {
-
-    }
+    constructor() {}
 
     ngOnInit() {
         this.updateType();
@@ -56,7 +53,8 @@ export class PipelineElementsRowComponent implements OnInit {
     }
 
     updateType() {
-        this.elementType = PipelineElementTypeUtils.toCssShortHand(PipelineElementTypeUtils.fromType(this._element));
+        this.elementType = PipelineElementTypeUtils.toCssShortHand(
+            PipelineElementTypeUtils.fromType(this._element),
+        );
     }
-
 }

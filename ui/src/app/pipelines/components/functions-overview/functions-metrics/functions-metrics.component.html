@@ -16,30 +16,34 @@
   ~
   -->
 
-<sp-basic-nav-tabs [spNavigationItems]="tabs"
-                   [activeLink]="'metrics'"
-                   [showBackLink]="true"
-                   [backLinkTarget]="['pipelines']">
-  <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-    <button mat-button
+<sp-basic-nav-tabs
+    [spNavigationItems]="tabs"
+    [activeLink]="'metrics'"
+    [showBackLink]="true"
+    [backLinkTarget]="['pipelines']"
+>
+    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+        <button
+            mat-button
             mat-icon-button
             color="accent"
             class="mr-10"
             matTooltip="Refresh"
-            (click)="triggerUpdate()">
-      <i class="material-icons">refresh</i>
-    </button>
-  </div>
-  <div fxFlex="100" fxLayout="column" *ngIf="activeFunction && contentReady">
-    <div *ngFor="let messagesIn of metrics.messagesIn | keyvalue">
-      <sp-simple-metrics [elementName]="streamNames[messagesIn.key]"
-                         lastPublishedLabel="Last consumed message"
-                         statusValueLabel="Consumed messages"
-                         [lastTimestamp]="messagesIn.value.lastTimestamp"
-                         [statusValue]="messagesIn.value.counter">
-      </sp-simple-metrics>
+            (click)="triggerUpdate()"
+        >
+            <i class="material-icons">refresh</i>
+        </button>
     </div>
-  </div>
-
-
+    <div fxFlex="100" fxLayout="column" *ngIf="activeFunction && contentReady">
+        <div *ngFor="let messagesIn of metrics.messagesIn | keyvalue">
+            <sp-simple-metrics
+                [elementName]="streamNames[messagesIn.key]"
+                lastPublishedLabel="Last consumed message"
+                statusValueLabel="Consumed messages"
+                [lastTimestamp]="messagesIn.value.lastTimestamp"
+                [statusValue]="messagesIn.value.counter"
+            >
+            </sp-simple-metrics>
+        </div>
+    </div>
 </sp-basic-nav-tabs>

@@ -117,7 +117,7 @@
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<retrofit.version>2.5.0</retrofit.version>
 	<roaster.version>2.28.0.Final</roaster.version>
-	<siddhi.version>5.1.26</siddhi.version>
+	<siddhi.version>5.1.27</siddhi.version>
 	<simple-java-mail.version>7.5.2</simple-java-mail.version>
 	<slf4j.version>2.0.6</slf4j.version>
 	<snakeyaml.version>1.32</snakeyaml.version>
@@ -193,7 +193,7 @@
 
 	<!-- Connect Dependencies-->
 	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
-	<antlr4-runtime.version>4.9</antlr4-runtime.version>
+	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
 	<bcprov.version>1.68</bcprov.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
@@ -204,7 +204,7 @@
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
 	<opencsv.version>5.5.2</opencsv.version>
-	<plc4x.version>0.9.1</plc4x.version>
+	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.16.3</protobuf.version>
 	<proton-j.version>0.30.0</proton-j.version>
 
