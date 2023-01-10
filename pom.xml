@@ -35,7 +35,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
-        <maven.version>3.8.1</maven.version>
+        <maven.version>3.8.7</maven.version>
         <owasp.check.skip>false</owasp.check.skip>
 
 	<!-- project dependencies -->
@@ -102,7 +102,6 @@
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
 	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
-	<maven-plugin-testing-harness.version>3.3.0</maven-plugin-testing-harness.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
 	<objenesis.version>3.3</objenesis.version>
@@ -1022,11 +1021,6 @@
 					<groupId>org.apache.maven.plugin-tools</groupId>
 					<artifactId>maven-plugin-annotations</artifactId>
 					<version>${maven-plugin-annotations.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.maven.plugin-testing</groupId>
-					<artifactId>maven-plugin-testing-harness</artifactId>
-					<version>${maven-plugin-testing-harness.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven.shared</groupId>
