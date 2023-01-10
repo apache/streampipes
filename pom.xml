@@ -127,7 +127,6 @@
 	<spring-security.version>6.0.1</spring-security.version>
 	<swagger.version>2.2.7</swagger.version>
 	<type-parser.version>0.7.0</type-parser.version>
-	<underscore.version>1.47</underscore.version>
 	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
@@ -372,11 +371,6 @@
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
 					<version>${commons-logging.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.github.javadev</groupId>
-					<artifactId>underscore</artifactId>
-					<version>${underscore.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>com.squareup</groupId>
