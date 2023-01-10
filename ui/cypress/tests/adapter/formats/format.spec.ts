@@ -115,6 +115,70 @@ describe('Test adapter formats', () => {
         // Validate result
         validateResult(expected);
     });
+
+    it('Test csv format with header', () => {
+        // Set up test
+        FileManagementUtils.addFile(baseDir + 'csvWithHeader.csv');
+        navigateToFormatSelection();
+
+        // Set format configuration
+        ConnectBtns.csv().click();
+        const delimiterInputField = UserInputBuilder.create()
+            .add('input', 'delimiter', ';')
+            .build();
+        StaticPropertyUtils.input(delimiterInputField);
+        const headerInputField = UserInputBuilder.create()
+            .add('checkbox', 'header', 'check')
+            .build();
+        StaticPropertyUtils.input(headerInputField);
+
+        // Validate result
+        validateResult(expected);
+    });
+
+    it('Test csv format without header', () => {
+        // Set up test
+        FileManagementUtils.addFile(baseDir + 'csvWithoutHeader.csv');
+        navigateToFormatSelection();
+
+        // Set format configuration
+        ConnectBtns.csv().click();
+        const delimiterInputField = UserInputBuilder.create()
+            .add('input', 'delimiter', ';')
+            .build();
+        StaticPropertyUtils.input(delimiterInputField);
+
+        const expectedNoHeader = {
+            key_0: 1667904471000,
+            key_1: 4.1,
+            key_2: 'abc',
+            key_3: true,
+            key_4: 1,
+        };
+
+        // Validate result
+        validateResult(expectedNoHeader);
+    });
+
+    it('Test csv format with comma', () => {
+        // Set up test
+        FileManagementUtils.addFile(baseDir + 'csvWithComma.csv');
+        navigateToFormatSelection();
+
+        // Set format configuration
+        ConnectBtns.csv().click();
+        const delimiterInputField = UserInputBuilder.create()
+            .add('input', 'delimiter', ',')
+            .build();
+        StaticPropertyUtils.input(delimiterInputField);
+        const headerInputField = UserInputBuilder.create()
+            .add('checkbox', 'header', 'check')
+            .build();
+        StaticPropertyUtils.input(headerInputField);
+
+        // Validate result
+        validateResult(expected);
+    });
 });
 
 const navigateToFormatSelection = () => {
