@@ -42,9 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class HttpProtocol extends Protocol {
 
@@ -122,27 +120,6 @@ public class HttpProtocol extends Protocol {
     return result;
   }
 
-  @Override
-  public List<Map<String, Object>> getNElements(int n) throws ParseException {
-
-    List<Map<String, Object>> result = new ArrayList<>();
-
-    InputStream dataInputStream = getDataFromEndpoint();
-
-    List<byte[]> dataByteArray = parser.parseNEvents(dataInputStream, n);
-
-    // Check that result size is n. Currently just an error is logged. Maybe change to an exception
-    if (dataByteArray.size() < n) {
-      logger.error("Error in HttpProtocol! User required: " + n + " elements but the resource just had: "
-          + dataByteArray.size());
-    }
-
-    for (byte[] b : dataByteArray) {
-      result.add(format.parse(b));
-    }
-
-    return result;
-  }
 
   public InputStream getDataFromEndpoint() throws ParseException {
     InputStream result = null;
@@ -152,12 +129,6 @@ public class HttpProtocol extends Protocol {
           .connectTimeout(1000)
           .socketTimeout(100000)
           .execute().returnContent().asStream();
-
-//            if (s.startsWith("ï")) {
-//                s = s.substring(3);
-//            }
-
-//            result = IOUtils.toInputStream(s, "UTF-8");
 
     } catch (IOException e) {
       throw new ParseException("Could not receive Data from: " + url);
