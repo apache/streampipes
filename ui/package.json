@@ -62,7 +62,7 @@
     "angular-gridster2": "^14.1.2",
     "angular-plotly.js": "^4.0.4",
     "angular2-uuid": "1.1.1",
-    "codemirror": "^5.65.11",
+    "codemirror": "^6.0.1",
     "console-browserify": "^1.2.0",
     "dagre": "0.8.5",
     "datatables.net": "^1.13.1",
