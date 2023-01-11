@@ -24,9 +24,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.guess.Schema
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BrokerProtocol extends Protocol {
 
@@ -53,17 +51,6 @@ public abstract class BrokerProtocol extends Protocol {
     } else {
       return SchemaGuesser.guessSchema(parser.getEventSchema(eventByte));
     }
-  }
-
-  @Override
-  public List<Map<String, Object>> getNElements(int n) throws ParseException {
-    List<byte[]> resultEventsByte = getNByteElements(n);
-    List<Map<String, Object>> result = new ArrayList<>();
-    for (byte[] event : resultEventsByte) {
-      result.add(format.parse(event));
-    }
-
-    return result;
   }
 
   protected abstract List<byte[]> getNByteElements(int n) throws ParseException;

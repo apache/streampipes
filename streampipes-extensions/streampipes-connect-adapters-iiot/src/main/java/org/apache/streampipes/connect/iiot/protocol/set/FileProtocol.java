@@ -45,9 +45,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FileProtocol extends Protocol {
 
@@ -131,32 +129,6 @@ public class FileProtocol extends Protocol {
     } catch (FileNotFoundException e) {
       throw new ParseException("Could not read local file");
     }
-  }
-
-
-  @Override
-  public List<Map<String, Object>> getNElements(int n) throws ParseException {
-    List<Map<String, Object>> result = new ArrayList<>();
-
-    List<byte[]> dataByteArray = new ArrayList<>();
-    try {
-      InputStream dataInputStream = FileProtocolUtils.getFileInputStream(this.selectedFilename);
-      dataByteArray = parser.parseNEvents(dataInputStream, n);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    // Check that result size is n. Currently just an error is logged. Maybe change to an exception
-    if (dataByteArray.size() < n) {
-      logger.error("Error in File Protocol! User required: " + n + " elements but the resource just had: "
-          + dataByteArray.size());
-    }
-
-    for (byte[] b : dataByteArray) {
-      result.add(format.parse(b));
-    }
-
-    return result;
   }
 
 

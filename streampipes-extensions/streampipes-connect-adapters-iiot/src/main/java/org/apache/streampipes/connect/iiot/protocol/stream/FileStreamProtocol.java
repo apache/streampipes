@@ -55,7 +55,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class FileStreamProtocol extends Protocol {
 
@@ -63,9 +62,7 @@ public class FileStreamProtocol extends Protocol {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.file";
 
-  //private String filePath;
   private String selectedFileName;
-  // private String timestampKey;
   private boolean replaceTimestamp;
   private float speedUp;
   private int timeBetweenReplay;
@@ -165,7 +162,6 @@ public class FileStreamProtocol extends Protocol {
         StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
     List<String> replaceTimestampStringList = extractor.selectedMultiValues("replaceTimestamp", String.class);
-//    String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
     boolean replaceTimestamp = replaceTimestampStringList.size() != 0;
 
     float speedUp = extractor.singleValueParameter("speed", Float.class);
@@ -209,8 +205,6 @@ public class FileStreamProtocol extends Protocol {
         .sourceType(AdapterSourceType.STREAM)
         .category(AdapterType.Generic)
         .requiredFile(Labels.withId("filePath"), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
-//            .requiredSingleValueSelection(Labels.withId("replaceTimestamp"),
-//                Options.from("True", "False"))
         .requiredMultiValueSelection(Labels.withId("replaceTimestamp"),
             Options.from(""))
         .requiredFloatParameter(Labels.withId("speed"))
@@ -229,27 +223,6 @@ public class FileStreamProtocol extends Protocol {
       EventSchema eventSchema = parser.getEventSchema(dataByte);
       return SchemaGuesser.guessSchema(eventSchema);
     }
-  }
-
-  @Override
-  public List<Map<String, Object>> getNElements(int n) throws ParseException {
-    List<Map<String, Object>> result = new ArrayList<>();
-
-    InputStream dataInputStream = getDataFromEndpoint();
-
-    List<byte[]> dataByteArray = parser.parseNEvents(dataInputStream, n);
-
-    // Check that result size is n. Currently, just an error is logged. Maybe change to an exception
-    if (dataByteArray.size() < n) {
-      logger.error("Error in File Protocol! User required: " + n + " elements but the resource just had: "
-          + dataByteArray.size());
-    }
-
-    for (byte[] b : dataByteArray) {
-      result.add(format.parse(b));
-    }
-
-    return result;
   }
 
 
