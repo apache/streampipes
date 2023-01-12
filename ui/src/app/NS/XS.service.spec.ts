@@ -19,16 +19,16 @@
 import { XsService } from './xs.service';
 
 describe('XSService', () => {
-  const service: XsService = new XsService();
+    const service: XsService = new XsService();
 
-  it('should get string XS String', () => {
-    expect(service.XS_STRING).toBe('xs:string');
-  });
+    it('should get string XS String', () => {
+        expect(service.XS_STRING).toBe('xs:string');
+    });
 
-  it('should check for numbers', () => {
-    expect(service.isNumber(service.XS_DOUBLE)).toBeTrue();
-    expect(service.isNumber(service.XS_INTEGER)).toBeTrue();
-    expect(service.isNumber(service.XS_NUMBER)).toBeTrue();
-    expect(service.isNumber(service.XS_STRING)).toBeFalse();
-  });
+    it('should check for numbers', () => {
+        expect(service.isNumber(service.XS_DOUBLE)).toBeTrue();
+        expect(service.isNumber(service.XS_INTEGER)).toBeTrue();
+        expect(service.isNumber(service.XS_NUMBER)).toBeTrue();
+        expect(service.isNumber(service.XS_STRING)).toBeFalse();
+    });
 });

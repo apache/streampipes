@@ -20,19 +20,19 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class XsService {
+    XS_STRING = 'xs:string';
+    XS_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
+    XS_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
+    XS_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean';
+    XS_NUMBER = 'http://www.w3.org/2001/XMLSchema#number';
+    XS_STRING1 = 'http://www.w3.org/2001/XMLSchema#string';
+    SO_URL = 'https://schema.org/URL';
 
-  XS_STRING = 'xs:string';
-  XS_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
-  XS_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
-  XS_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean';
-  XS_NUMBER = 'http://www.w3.org/2001/XMLSchema#number';
-  XS_STRING1 = 'http://www.w3.org/2001/XMLSchema#string';
-  SO_URL = 'https://schema.org/URL';
-
-  isNumber(datatype: string): boolean {
-    return datatype === this.XS_DOUBLE ||
-      datatype === this.XS_INTEGER ||
-      datatype === this.XS_NUMBER;
-  }
-
+    isNumber(datatype: string): boolean {
+        return (
+            datatype === this.XS_DOUBLE ||
+            datatype === this.XS_INTEGER ||
+            datatype === this.XS_NUMBER
+        );
+    }
 }
