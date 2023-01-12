@@ -16,6 +16,7 @@
  *
  */
 
+import '@angular/compiler';
 import { UserUtils } from '../utils/UserUtils';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { User } from '../model/User';
