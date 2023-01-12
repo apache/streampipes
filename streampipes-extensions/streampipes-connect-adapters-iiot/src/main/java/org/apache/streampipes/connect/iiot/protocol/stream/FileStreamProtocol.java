@@ -85,7 +85,7 @@ public class FileStreamProtocol extends Protocol {
 
   @Override
   public void run(IAdapterPipeline adapterPipeline) {
-    String timestampKey = getTimestampKey(eventSchema.getEventProperties(), "");
+    String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema().getEventProperties(), "");
 
     // exchange adapter pipeline sink with special purpose replay sink for file replay
     if (adapterPipeline.getPipelineSink() instanceof SendToKafkaAdapterSink) {

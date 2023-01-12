@@ -21,15 +21,11 @@ package org.apache.streampipes.extensions.management.connect.adapter.model.gener
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.model.schema.EventSchema;
 
 public abstract class Protocol implements IProtocol {
 
   protected IParser parser;
   protected IFormat format;
-
-  //TODO remove
-  protected EventSchema eventSchema;
 
   public Protocol() {
 
@@ -38,11 +34,5 @@ public abstract class Protocol implements IProtocol {
   public Protocol(IParser parser, IFormat format) {
     this.parser = parser;
     this.format = format;
-  }
-
-  //TODO remove
-  @Override
-  public void setEventSchema(EventSchema eventSchema) {
-    this.eventSchema = eventSchema;
   }
 }

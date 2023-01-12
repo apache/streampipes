@@ -30,8 +30,6 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
 
   public static final String ID = ElementIdGenerator.makeFixedElementId(GenericAdapterSetDescription.class);
 
-//    private String sourceType = "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
-
   private FormatDescription formatDescription;
 
   private ProtocolDescription protocolDescription;
@@ -66,14 +64,6 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
     this.formatDescription = formatDescription;
   }
 
-  @Override
-  public EventSchema getEventSchema() {
-    if (this.getDataSet() != null) {
-      return this.getDataSet().getEventSchema();
-    }
-    return null;
-  }
-
   public ProtocolDescription getProtocolDescription() {
     return protocolDescription;
   }
@@ -82,11 +72,8 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
     this.protocolDescription = protocolDescription;
   }
 
-//    public String getSourceType() {
-//        return sourceType;
-//    }
-//
-//    public void setSourceType(String sourceType) {
-//        this.sourceType = sourceType;
-//    }
+  public EventSchema getEventSchema() {
+    return this.getDataSet().getEventSchema();
+  }
+
 }

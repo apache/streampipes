@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.connect.adapter.model.pipel
 
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.List;
 import java.util.Map;
@@ -29,9 +30,11 @@ public class AdapterPipeline implements IAdapterPipeline {
   private List<IAdapterPipelineElement> pipelineElements;
   private IAdapterPipelineElement pipelineSink;
 
+  private EventSchema resultingEventSchema;
 
-  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements) {
+  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, EventSchema resultingEventSchema) {
     this.pipelineElements = pipelineElements;
+    this.resultingEventSchema = resultingEventSchema;
   }
 
   public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink) {
@@ -41,12 +44,6 @@ public class AdapterPipeline implements IAdapterPipeline {
 
   @Override
   public void process(Map<String, Object> event) {
-
-    // TODO remove, just for performance tests
-    if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
-      event.put("internal_t1", System.currentTimeMillis());
-    }
-
 
     for (IAdapterPipelineElement pipelineElement : pipelineElements) {
       event = pipelineElement.process(event);
@@ -75,5 +72,10 @@ public class AdapterPipeline implements IAdapterPipeline {
   @Override
   public IAdapterPipelineElement getPipelineSink() {
     return pipelineSink;
+  }
+
+  @Override
+  public EventSchema getResultingEventSchema() {
+    return resultingEventSchema;
   }
 }

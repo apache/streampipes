@@ -71,8 +71,6 @@ public class AdapterPipelineGenerator {
     }
     pipelineElements.add(transformStreamAdapterElement);
 
-    // TODO decide what was meant with this comment
-    // Needed when adapter is (
     if (adapterDescription.getEventGrounding() != null
         && adapterDescription.getEventGrounding().getTransportProtocol() != null
         && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
@@ -84,7 +82,7 @@ public class AdapterPipelineGenerator {
       return new AdapterPipeline(pipelineElements, new DebugAdapterSink());
     }
 
-    return new AdapterPipeline(pipelineElements);
+    return new AdapterPipeline(pipelineElements, adapterDescription.getEventSchema());
   }
 
   public List<IAdapterPipelineElement> makeAdapterPipelineElements(List<TransformationRuleDescription> rules) {

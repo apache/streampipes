@@ -15,8 +15,26 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.test.generator;
 
-public class EventSchemaGenerator {
+import org.apache.streampipes.model.schema.EventProperty;
+
+public abstract  class EventPropertyTestBuilder<T extends EventProperty, K extends EventPropertyTestBuilder> {
+
+  protected T eventProperty;
+
+  protected abstract K me();
+
+  protected EventPropertyTestBuilder(T eventProperty) {
+    this.eventProperty = eventProperty;
+  }
+
+  public K withRuntimeName(String runtimeName) {
+    this.eventProperty.setRuntimeName(runtimeName);
+    return me();
+  }
+
+  public abstract T build();
 
 }

@@ -17,6 +17,33 @@
  */
 package org.apache.streampipes.test.generator;
 
-public class EventPropertyGenerator {
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
+import java.net.URI;
+import java.util.List;
+
+public class EventPropertyPrimitiveTestBuilder
+    extends EventPropertyTestBuilder<EventPropertyPrimitive, EventPropertyPrimitiveTestBuilder> {
+
+  protected EventPropertyPrimitiveTestBuilder() {
+    super(new EventPropertyPrimitive());
+  }
+
+  public EventPropertyPrimitiveTestBuilder withSemanticType(String semanticType) {
+    this.eventProperty.setDomainProperties(List.of(URI.create(semanticType)));
+    return this;
+  }
+
+  public static EventPropertyPrimitiveTestBuilder create() {
+    return new EventPropertyPrimitiveTestBuilder();
+  }
+
+  @Override
+  public EventPropertyPrimitive build() {
+    return eventProperty;
+  }
+
+  protected EventPropertyPrimitiveTestBuilder me() {
+    return this;
+  }
 }
