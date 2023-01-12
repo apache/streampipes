@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="column" class="page-container page-container-max-height">
-    <div fxLayout="row" style="padding:0px;" class="sp-tab-bg">
+    <div fxLayout="row" style="padding: 0px" class="sp-tab-bg">
         <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center">
@@ -25,51 +25,108 @@
                         <mat-tab label="My Notifications"></mat-tab>
                     </mat-tab-group>
                 </div>
-                <div fxFlex fxLayoutAlign="end center" class="mr-20">
-
-                </div>
+                <div fxFlex fxLayoutAlign="end center" class="mr-20"></div>
             </div>
         </div>
     </div>
-    <div class="container-fluid marketplace-container" *ngIf="notificationsLoading" fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+    <div
+        class="container-fluid marketplace-container"
+        *ngIf="notificationsLoading"
+        fxFlex="100"
+        fxLayoutAlign="center center"
+        fxLayout="column"
+    >
         <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
         <h4>Loading notifications...</h4>
     </div>
-    <div class="fixed-height page-container-padding-inner" *ngIf="!notificationsLoading && !pipelinesWithNotificationsPresent" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
-        <h4>No notifications available. Create a new pipeline using the Notification Sink to create your first notification!</h4>
+    <div
+        class="fixed-height page-container-padding-inner"
+        *ngIf="!notificationsLoading && !pipelinesWithNotificationsPresent"
+        fxFlex="100"
+        fxLayoutAlign="center center"
+        fxLayout="row"
+    >
+        <h4>
+            No notifications available. Create a new pipeline using the
+            Notification Sink to create your first notification!
+        </h4>
     </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="row" fxFlex="100" *ngIf="!notificationsLoading && pipelinesWithNotificationsPresent">
+    <div
+        class="fixed-height page-container-padding-inner"
+        fxLayout="row"
+        fxFlex="100"
+        *ngIf="!notificationsLoading && pipelinesWithNotificationsPresent"
+    >
         <div fxFlex="30" class="notifications-overview scrolling-auto">
             <mat-list>
-                <mat-list-item *ngFor="let existingNotification of existingNotifications"
-                               (click)="selectNotification(existingNotification)" class="list-item"
-                               [ngClass]="{'selected-notification':
-                               existingNotification.notificationId === currentlySelectedNotificationId}">
-                    <div mat-list-avatar
-                         class="notification-avatar sp-accent-bg">{{elementIconText.getElementIconText(existingNotification.pipelineName)}}
+                <mat-list-item
+                    *ngFor="let existingNotification of existingNotifications"
+                    (click)="selectNotification(existingNotification)"
+                    class="list-item"
+                    [ngClass]="{
+                        'selected-notification':
+                            existingNotification.notificationId ===
+                            currentlySelectedNotificationId
+                    }"
+                >
+                    <div
+                        mat-list-avatar
+                        class="notification-avatar sp-accent-bg"
+                    >
+                        {{
+                            elementIconText.getElementIconText(
+                                existingNotification.pipelineName
+                            )
+                        }}
                     </div>
-                    <h4 mat-line>{{existingNotification.pipelineName}}</h4>
-                    <p mat-line>{{existingNotification.notificationTitle}} </p>
+                    <h4 mat-line>{{ existingNotification.pipelineName }}</h4>
+                    <p mat-line>{{ existingNotification.notificationTitle }}</p>
                     <div class="new-notification-info-panel">
-                        <div class="new-notification-info"
-                             *ngIf="currentlySelectedNotificationId != existingNotification.notificationId &&
-                             newNotificationInfo[existingNotification.notificationId]"></div>
+                        <div
+                            class="new-notification-info"
+                            *ngIf="
+                                currentlySelectedNotificationId !==
+                                    existingNotification.notificationId &&
+                                newNotificationInfo[
+                                    existingNotification.notificationId
+                                ]
+                            "
+                        ></div>
                     </div>
                 </mat-list-item>
             </mat-list>
         </div>
         <div fxFlex="70" class="notifications-details">
             <div class="notification-details-wrapper">
-                <div class="notification-header" fxLayout="column" fxLayoutAlign="center start">
-                    <div class="notification-header-pipeline-name">{{currentlySelectedNotification.pipelineName}}</div>
-                    <div class="notification-header-notification-name">{{currentlySelectedNotification.notificationTitle}}</div>
-                    <hr class="header-divider"/>
+                <div
+                    class="notification-header"
+                    fxLayout="column"
+                    fxLayoutAlign="center start"
+                >
+                    <div class="notification-header-pipeline-name">
+                        {{ currentlySelectedNotification.pipelineName }}
+                    </div>
+                    <div class="notification-header-notification-name">
+                        {{ currentlySelectedNotification.notificationTitle }}
+                    </div>
+                    <hr class="header-divider" />
                 </div>
-                <div #notificationPane class="notification-pane" (scroll)="onScroll()" *ngIf="currentlySelectedNotificationId">
-                    <notification-item [notification]="notification" *ngFor="let notification of allNotifications.get(currentlySelectedNotificationId)"></notification-item>
+                <div
+                    #notificationPane
+                    class="notification-pane"
+                    (scroll)="onScroll()"
+                    *ngIf="currentlySelectedNotificationId"
+                >
+                    <sp-notification-item
+                        [notification]="notification"
+                        *ngFor="
+                            let notification of allNotifications.get(
+                                currentlySelectedNotificationId
+                            )
+                        "
+                    ></sp-notification-item>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

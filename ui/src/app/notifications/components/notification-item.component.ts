@@ -20,20 +20,19 @@ import { NotificationItem } from '../model/notifications.model';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-    selector: 'notification-item',
+    selector: 'sp-notification-item',
     templateUrl: './notification-item.component.html',
-    styleUrls: ['./notification-item.component.scss']
+    styleUrls: ['./notification-item.component.scss'],
 })
 export class NotificationItemComponent implements OnInit {
-
     @Input() notification: NotificationItem;
     sanitizedMessage;
 
-    constructor(private domSanitizer: DomSanitizer) {
-
-    }
+    constructor(private domSanitizer: DomSanitizer) {}
 
     ngOnInit(): void {
-        this.sanitizedMessage = this.domSanitizer.bypassSecurityTrustHtml(this.notification.message);
+        this.sanitizedMessage = this.domSanitizer.bypassSecurityTrustHtml(
+            this.notification.message,
+        );
     }
 }

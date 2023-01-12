@@ -32,7 +32,7 @@
 }
 
 .mr-20 {
-    margin-right:20px;
+    margin-right: 20px;
 }
 
 .notifications-overview {
@@ -60,11 +60,11 @@
 }
 
 .header-divider {
-    display:flex;
+    display: flex;
     align-self: center;
     margin: 10px 20px;
     width: 100%;
-    border-top: 2px solid $sp-color-accent
+    border-top: 2px solid $sp-color-accent;
 }
 
 .notification-header-pipeline-name {
@@ -83,17 +83,17 @@
 }
 
 .list-item:hover {
-    background: #E0E0E0;
+    background: #e0e0e0;
     cursor: pointer;
 }
 
 .selected-notification {
-    background: #E0E0E0;
+    background: #e0e0e0;
     cursor: pointer;
 }
 
 .list-item {
-    border-bottom: 1px solid #BDBDBD;
+    border-bottom: 1px solid #bdbdbd;
 }
 
 .notification-pane {
@@ -111,7 +111,7 @@
 
 .scrolling-auto {
     overflow: auto;
-    width:100%;
+    width: 100%;
 }
 
 .new-notification-info {
@@ -120,4 +120,3 @@
     height: 10px;
     border-radius: 50%;
 }
-
