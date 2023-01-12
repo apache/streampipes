@@ -40,33 +40,32 @@ import { SpBreadcrumbComponent } from './components/breadcrumb/breadcrumb.compon
 import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    MatGridListModule,
-    MatDividerModule,
-    MatListModule,
-    MatIconModule,
-    MatMenuModule,
-    MatBadgeModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-    MatInputModule,
-    MatToolbarModule,
-    FormsModule,
-    RouterModule,
-    MatSlideToggleModule,
-    ReactiveFormsModule,
-    SharedUiModule
-  ],
-  declarations: [
-    SpBreadcrumbComponent,
-    StreampipesComponent,
-    IconbarComponent,
-    ToolbarComponent
-  ],
-  providers: []
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+        MatGridListModule,
+        MatDividerModule,
+        MatListModule,
+        MatIconModule,
+        MatMenuModule,
+        MatBadgeModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        MatInputModule,
+        MatToolbarModule,
+        FormsModule,
+        RouterModule,
+        MatSlideToggleModule,
+        ReactiveFormsModule,
+        SharedUiModule,
+    ],
+    declarations: [
+        SpBreadcrumbComponent,
+        StreampipesComponent,
+        IconbarComponent,
+        ToolbarComponent,
+    ],
+    providers: [],
 })
-export class CoreModule {
-}
+export class CoreModule {}

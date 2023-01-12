@@ -17,20 +17,20 @@
  */
 
 .breadcrumb-outer {
-  margin: 10px 10px 0 10px;
-  max-height: 20px;
-  height: 20px;
-  font-size: 10pt;
-  color: var(--color-accent);
+    margin: 10px 10px 0 10px;
+    max-height: 20px;
+    height: 20px;
+    font-size: 10pt;
+    color: var(--color-accent);
 }
 
 .divider {
-  font-size: 10pt;
-  width: 10pt;
-  height: 10pt;
+    font-size: 10pt;
+    width: 10pt;
+    height: 10pt;
 }
 
 .bc-item:hover {
-  color: var(--color-primary);
-  cursor: pointer;
+    color: var(--color-primary);
+    cursor: pointer;
 }
