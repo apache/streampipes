@@ -16,27 +16,63 @@
   ~
   -->
 
-<div class="md-padding full-background sp-fade light-mode" fxLayout="row" fxLayoutAlign="center center"
-     style="min-height:100vh !important;">
+<div
+    class="md-padding full-background sp-fade light-mode"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    style="min-height: 100vh !important"
+>
     <div fxFlex="40" fxLayout="column" fxLayoutAlign="center center">
-        <mat-card class="card-100-center box-shadow-login" style="padding:20px;position:relative;top:-25px;">
+        <mat-card
+            class="card-100-center box-shadow-login"
+            style="padding: 20px; position: relative; top: -25px"
+        >
             <div fxFlex="100" fxLayout="column">
-                <div fxLayout="row" fxFlex="60" fxLayoutAlign="center center"
-                     style="margin-left:auto;margin-right:auto;">
-                    <div fxFlex="60" fxLayoutAlign="center center" fxLayout="row"
-                         style="color:white;width:100%;"><img
-                            alt="icon" src="../../../../assets/img/sp/logo.png" style="width:100%;">
+                <div
+                    fxLayout="row"
+                    fxFlex="60"
+                    fxLayoutAlign="center center"
+                    style="margin-left: auto; margin-right: auto"
+                >
+                    <div
+                        fxFlex="60"
+                        fxLayoutAlign="center center"
+                        fxLayout="row"
+                        style="color: white; width: 100%"
+                    >
+                        <img
+                            alt="icon"
+                            src="../../../../assets/img/sp/logo.png"
+                            style="width: 100%"
+                        />
                     </div>
                 </div>
                 <ng-content></ng-content>
             </div>
         </mat-card>
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
-            <button mat-button mat-raised-button color="accent" (click)="openDocumentation()"
-                    style="min-width:0px;padding-left:20px;padding-right:20px;font-size:18px;">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="openDocumentation()"
+                style="
+                    min-width: 0px;
+                    padding-left: 20px;
+                    padding-right: 20px;
+                    font-size: 18px;
+                "
+            >
                 View Docs
             </button>
-            <span style="margin-top:10px;"><a routerLink="/apidocs" routerLinkActive="active">View API docs</a></span>
+            <span style="margin-top: 10px"
+                ><a
+                    data-cy="view-api-docs-link"
+                    routerLink="/apidocs"
+                    routerLinkActive="active"
+                    >View API docs</a
+                ></span
+            >
         </div>
     </div>
 </div>
