@@ -16,8 +16,18 @@
  *
  */
 
-package org.apache.streampipes.manager.verification.runtime;
+package org.apache.streampipes.extensions.management.connect.adapter.format.geojson;
 
-public class RuntimeVerifier {
+public class GeoJsonConstants {
+  public static final String LATITUDE = "latitude";
+  public static final String LONGITUDE = "longitude";
+  public static final String ALTITUDE = "altitude";
+
+  public static final String COORDINATES = "coordinates";
+  public static final String COORDINATES_LINE_STRING = "coordinatesLineString";
+  public static final String COORDINATES_POLYGON = "coordinatesPolygon";
+  public static final String COORDINATES_MULTI_POINT = "coordinatesMultiPoint";
+  public static final String COORDINATES_MULTI_STRING = "coordinatesMultiString";
+  public static final String COORDINATES_MULTI_POLYGON = "coordinatesMultiPolygon";
 
 }

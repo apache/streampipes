@@ -18,28 +18,41 @@
 package org.apache.streampipes.model.staticproperty;
 
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 public class StaticPropertyAlternative extends StaticProperty {
 
+  private String elementId;
   private boolean selected;
 
   private StaticProperty staticProperty;
 
   public StaticPropertyAlternative() {
     super(StaticPropertyType.StaticPropertyAlternative);
+    this.elementId = ElementIdGenerator.makeElementId(StaticPropertyAlternative.class);
   }
 
   public StaticPropertyAlternative(String internalName,
                                    String label, String description) {
     super(StaticPropertyType.StaticPropertyAlternative, internalName, label, description);
+    this.elementId = ElementIdGenerator.makeElementId(StaticPropertyAlternative.class);
   }
 
   public StaticPropertyAlternative(StaticPropertyAlternative other) {
     super(other);
+    this.elementId = other.getElementId();
     this.selected = other.getSelected();
     if (other.getStaticProperty() != null) {
       this.staticProperty = new Cloner().staticProperty(other.getStaticProperty());
     }
+  }
+
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
   }
 
   public Boolean getSelected() {

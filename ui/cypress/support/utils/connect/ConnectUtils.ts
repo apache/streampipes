@@ -25,6 +25,7 @@ import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
 import { GenericAdapterBuilder } from '../../builder/GenericAdapterBuilder';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
+import { ConnectBtns } from './ConnectBtns';
 
 export class ConnectUtils {
     public static testSpecificStreamAdapter(
@@ -163,11 +164,11 @@ export class ConnectUtils {
     public static configureFormat(adapterConfiguration: GenericAdapterInput) {
         // Select format
         if (adapterConfiguration.format.indexOf('json') !== -1) {
-            cy.dataCy('connect-select-json-formats').click();
+            ConnectBtns.json().click();
             if (adapterConfiguration.format.indexOf('object') !== -1) {
-                cy.dataCy('single_object').click();
+                ConnectBtns.jsonObject().click();
             } else {
-                cy.dataCy('array').click();
+                ConnectBtns.jsonArray().click();
             }
         } else {
             cy.dataCy(adapterConfiguration.format).click();
@@ -176,10 +177,7 @@ export class ConnectUtils {
         StaticPropertyUtils.input(adapterConfiguration.formatConfiguration);
 
         // Click next
-        cy.dataCy('sp-format-selection-next-button')
-            .contains('Next')
-            .parent()
-            .click();
+        ConnectBtns.formatSelectionNextBtn().click();
     }
 
     public static finishEventSchemaConfiguration() {

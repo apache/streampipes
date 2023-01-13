@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,7 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class EventGrounding extends UnnamedStreamPipesEntity {
+public class EventGrounding {
 
   private static final long serialVersionUID = 3149070517282698799L;
 
@@ -49,7 +48,6 @@ public class EventGrounding extends UnnamedStreamPipesEntity {
   }
 
   public EventGrounding(EventGrounding other) {
-    super(other);
     this.transportProtocols = new Cloner().protocols(other.getTransportProtocols());
     this.transportFormats = new Cloner().transportFormats(other.getTransportFormats());
   }

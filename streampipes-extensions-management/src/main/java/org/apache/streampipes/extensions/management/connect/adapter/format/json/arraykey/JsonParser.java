@@ -18,17 +18,14 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.arraykey;
 
-
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
+import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonParser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JsonParser extends Parser {
+public class JsonParser extends AbstractJsonParser {
 
   Logger logger = LoggerFactory.getLogger(JsonParser.class);
   private boolean isArray;
@@ -119,31 +116,6 @@ public class JsonParser extends Parser {
       }
 
     }
-  }
-
-  @Override
-  public EventSchema getEventSchema(List<byte[]> oneEvent) {
-    EventSchema resultSchema = new EventSchema();
-
-    JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
-
-    Map<String, Object> exampleEvent = null;
-
-    try {
-      exampleEvent = jsonDefinition.toMap(oneEvent.get(0));
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
-    }
-
-    for (Map.Entry<String, Object> entry : exampleEvent.entrySet()) {
-//            System.out.println(entry.getKey() + "/" + entry.getValue());
-      EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
-
-      resultSchema.addEventProperty(p);
-
-    }
-
-    return resultSchema;
   }
 
   public Map<String, Object> parseObject(jakarta.json.stream.JsonParser jsonParser, boolean root, int start) {

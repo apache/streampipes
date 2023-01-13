@@ -18,9 +18,7 @@
 
 package org.apache.streampipes.model.monitoring;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-
-public class ElementStatusInfoSettings extends UnnamedStreamPipesEntity {
+public class ElementStatusInfoSettings {
 
   private String elementIdentifier;
 
@@ -37,7 +35,6 @@ public class ElementStatusInfoSettings extends UnnamedStreamPipesEntity {
   }
 
   public ElementStatusInfoSettings(ElementStatusInfoSettings other) {
-    super(other);
     this.kafkaHost = other.getKafkaHost();
     this.kafkaPort = other.getKafkaPort();
     this.errorTopic = other.getErrorTopic();

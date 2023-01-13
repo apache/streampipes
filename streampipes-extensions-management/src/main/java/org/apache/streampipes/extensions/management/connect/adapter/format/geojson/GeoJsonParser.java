@@ -24,9 +24,12 @@ import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +37,6 @@ import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import org.geojson.Feature;
-import org.geojson.FeatureCollection;
 import org.geojson.LineString;
 import org.geojson.MultiLineString;
 import org.geojson.MultiPoint;
@@ -66,7 +68,6 @@ public class GeoJsonParser extends Parser {
 
   @Override
   public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
-    FeatureCollection geoFeature;
     Gson gson = new Gson();
 
     try {
@@ -85,66 +86,106 @@ public class GeoJsonParser extends Parser {
 
   @Override
   public EventSchema getEventSchema(List<byte[]> oneEvent) {
-    EventSchema resultSchema = new EventSchema();
+    return this.getSchemaAndSample(oneEvent).getEventSchema();
+  }
+
+  @Override
+  public boolean supportsPreview() {
+    return true;
+  }
+
+  @Override
+  public AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
 
     Feature geoFeature = null;
     try {
-      geoFeature = new ObjectMapper().readValue(oneEvent.get(0), Feature.class);
+      geoFeature = new ObjectMapper().readValue(eventSample.get(0), Feature.class);
 
     } catch (IOException e) {
       logger.error(e.toString());
     }
 
-    for (Map.Entry<String, Object> entry : geoFeature.getProperties().entrySet()) {
-      EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
-      resultSchema.addEventProperty(p);
-    }
-
-    List<EventProperty> eventProperties = parseGeometryField(geoFeature);
-    eventProperties.forEach(eventProperty -> resultSchema.addEventProperty(eventProperty));
-
-    return resultSchema;
+    return this.parseGeometryField(geoFeature);
   }
 
-  private List<EventProperty> parseGeometryField(Feature geoFeature) {
+  private AdapterGuessInfo parseGeometryField(Feature geoFeature) {
+
+    EventSchema resultSchema = new EventSchema();
     List<EventProperty> eventProperties = new LinkedList<>();
+    var sampleValues = new HashMap<String, GuessTypeInfo>();
 
     if (geoFeature.getGeometry() instanceof Point) {
       Point point = (Point) geoFeature.getGeometry();
-      eventProperties.add(getEventPropertyGeoJson("longitude", point.getCoordinates().getLongitude(),
-          "http://www.w3.org/2003/01/geo/wgs84_pos#long"));
-      eventProperties.add(getEventPropertyGeoJson("latitude", point.getCoordinates().getLatitude(),
-          "http://www.w3.org/2003/01/geo/wgs84_pos#lat"));
+      eventProperties.add(
+          getEventPropertyGeoJson(
+              GeoJsonConstants.LONGITUDE,
+              point.getCoordinates().getLongitude(),
+              Geo.LNG));
+      eventProperties.add(
+          getEventPropertyGeoJson(
+              GeoJsonConstants.LATITUDE,
+              point.getCoordinates().getLatitude(),
+              Geo.LAT));
+
+      sampleValues.put(GeoJsonConstants.LONGITUDE,
+          new GuessTypeInfo(Double.class.getName(),
+              point.getCoordinates().getLongitude()));
+      sampleValues.put(GeoJsonConstants.LATITUDE,
+          new GuessTypeInfo(Double.class.getName(),
+              point.getCoordinates().getLatitude()));
       if (point.getCoordinates().hasAltitude()) {
-        eventProperties.add(getEventPropertyGeoJson("altitude", point.getCoordinates().getAltitude(), SO.ALTITUDE));
+        eventProperties.add(
+            getEventPropertyGeoJson(GeoJsonConstants.ALTITUDE, point.getCoordinates().getAltitude(), SO.ALTITUDE));
+        sampleValues.put(GeoJsonConstants.ALTITUDE,
+            new GuessTypeInfo(Double.class.getName(), point.getCoordinates().getAltitude()));
       }
 
     } else if (geoFeature.getGeometry() instanceof LineString) {
       LineString lineString = (LineString) geoFeature.getGeometry();
-      eventProperties.add(JsonEventProperty.getEventProperty("coorindatesLineString", lineString.getCoordinates()));
-
+      eventProperties.add(
+          JsonEventProperty.getEventProperty(GeoJsonConstants.COORDINATES_LINE_STRING, lineString.getCoordinates()));
+      sampleValues.put(GeoJsonConstants.COORDINATES_LINE_STRING,
+          new GuessTypeInfo(Double.class.getName(), lineString.getCoordinates()));
     } else if (geoFeature.getGeometry() instanceof Polygon) {
       Polygon polygon = (Polygon) geoFeature.getGeometry();
-      eventProperties.add(JsonEventProperty.getEventProperty("coorindatesPolygon", polygon.getCoordinates()));
-
+      eventProperties.add(
+          JsonEventProperty.getEventProperty(GeoJsonConstants.COORDINATES_POLYGON, polygon.getCoordinates()));
+      sampleValues.put(GeoJsonConstants.COORDINATES_POLYGON,
+          new GuessTypeInfo(Double.class.getName(), polygon.getCoordinates()));
     } else if (geoFeature.getGeometry() instanceof MultiPoint) {
       MultiPoint multiPoint = (MultiPoint) geoFeature.getGeometry();
-      eventProperties.add(JsonEventProperty.getEventProperty("coorindatesMultiPoint", multiPoint.getCoordinates()));
-
+      eventProperties.add(
+          JsonEventProperty.getEventProperty(GeoJsonConstants.COORDINATES_MULTI_POINT, multiPoint.getCoordinates()));
+      sampleValues.put(GeoJsonConstants.COORDINATES_MULTI_POINT,
+          new GuessTypeInfo(Double.class.getName(), multiPoint.getCoordinates()));
     } else if (geoFeature.getGeometry() instanceof MultiLineString) {
       MultiLineString multiLineString = (MultiLineString) geoFeature.getGeometry();
       eventProperties.add(
-          JsonEventProperty.getEventProperty("coorindatesMultiLineString", multiLineString.getCoordinates()));
-
+          JsonEventProperty.getEventProperty(GeoJsonConstants.COORDINATES_LINE_STRING,
+              multiLineString.getCoordinates()));
+      sampleValues.put(GeoJsonConstants.COORDINATES_LINE_STRING,
+          new GuessTypeInfo(Double.class.getName(), multiLineString.getCoordinates()));
     } else if (geoFeature.getGeometry() instanceof MultiPolygon) {
       MultiPolygon multiPolygon = (MultiPolygon) geoFeature.getGeometry();
-      eventProperties.add(JsonEventProperty.getEventProperty("coorindatesMultiPolygon", multiPolygon.getCoordinates()));
+      eventProperties.add(JsonEventProperty.getEventProperty(GeoJsonConstants.COORDINATES_MULTI_POLYGON,
+          multiPolygon.getCoordinates()));
+      sampleValues.put(GeoJsonConstants.COORDINATES_MULTI_POLYGON,
+          new GuessTypeInfo(Double.class.getName(), multiPolygon.getCoordinates()));
     } else {
       logger.error("No geometry field found in geofeature: " + geoFeature.toString());
     }
 
-    return eventProperties;
 
+    for (Map.Entry<String, Object> entry : geoFeature.getProperties().entrySet()) {
+      EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
+      resultSchema.addEventProperty(p);
+      sampleValues.put(p.getRuntimeName(),
+          new GuessTypeInfo(entry.getValue().getClass().getCanonicalName(), entry.getValue()));
+    }
+
+    eventProperties.forEach(eventProperty -> resultSchema.addEventProperty(eventProperty));
+
+    return new AdapterGuessInfo(resultSchema, sampleValues);
   }
 
   private EventProperty getEventPropertyGeoJson(String name, Object value, String domain) {

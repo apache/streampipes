@@ -16,15 +16,38 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100" class="breadcrumb-outer" fxLayoutAlign="center start">
+<div
+    fxLayout="column"
+    fxFlex="100"
+    class="breadcrumb-outer"
+    fxLayoutAlign="center start"
+>
     <div fxLayout="row" fxLayoutAlign="start center">
-        <div [ngClass]="currentNavItems.length > 0 ? 'bc-item' : 'mat-hint'" fxLayout="row" fxLayoutAlign="start center" (click)="navigateTo([''])">
-            <mat-icon fxLayoutAlign="start center" class="divider">home</mat-icon>
+        <div
+            [ngClass]="currentNavItems.length > 0 ? 'bc-item' : 'mat-hint'"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            (click)="navigateTo([''])"
+        >
+            <mat-icon fxLayoutAlign="start center" class="divider"
+                >home</mat-icon
+            >
             <div>&nbsp;Home</div>
         </div>
-        <div *ngFor="let bcItem of currentNavItems" fxLayout="row" fxLayoutAlign="start center">
-            <mat-icon fxLayoutAlign="start center" class="divider mat-hint">arrow_right</mat-icon>
-            <div [ngClass]="bcItem.link ? 'bc-item' : 'mat-hint'" (click)="navigateTo(bcItem.link)">{{bcItem.label}}</div>
+        <div
+            *ngFor="let bcItem of currentNavItems"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+        >
+            <mat-icon fxLayoutAlign="start center" class="divider mat-hint"
+                >arrow_right</mat-icon
+            >
+            <div
+                [ngClass]="bcItem.link ? 'bc-item' : 'mat-hint'"
+                (click)="navigateTo(bcItem.link)"
+            >
+                {{ bcItem.label }}
+            </div>
         </div>
     </div>
 </div>

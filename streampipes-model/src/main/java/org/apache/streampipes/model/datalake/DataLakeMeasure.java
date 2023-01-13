@@ -18,21 +18,24 @@
 
 package org.apache.streampipes.model.datalake;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-public class DataLakeMeasure extends UnnamedStreamPipesEntity {
+public class DataLakeMeasure {
 
   public static final String CURRENT_SCHEMA_VERSION = "1.1";
   public static final String ASSERTION_ERROR_MESSAGE = "timestamp field requires a stream prefix (e.g. s0::timestamp)";
   private static final String STREAM_PREFIX_DELIMITER = "::";
+
+  protected @SerializedName("_id") String elementId;
   @JsonProperty("_rev")
   private @SerializedName("_rev") String rev;
 
@@ -51,7 +54,6 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
   }
 
   public DataLakeMeasure(DataLakeMeasure other) {
-    super(other);
     this.measureName = other.getMeasureName();
     this.eventSchema = new EventSchema(other.getEventSchema());
 
@@ -142,5 +144,13 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
   }
 }

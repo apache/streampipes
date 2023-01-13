@@ -16,17 +16,17 @@
  *
  */
 
-@import "../../../../scss/variables";
+@import '../../../../scss/variables';
 
 .iconbar {
-  background: var(--color-navigation-bg);
+    background: var(--color-navigation-bg);
 }
 
 .base {
-  color: var(--color-default-text);
-  background: var(--color-bg-0);
+    color: var(--color-default-text);
+    background: var(--color-bg-0);
 }
 
 .sp-toolbar-outer {
-  height: 40px;
+    height: 40px;
 }
