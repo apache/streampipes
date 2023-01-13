@@ -26,11 +26,12 @@ import org.apache.streampipes.extensions.management.connect.adapter.format.util.
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.underscore.lodash.U;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
@@ -42,6 +43,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class XmlParser extends Parser {
 
@@ -49,10 +51,11 @@ public class XmlParser extends Parser {
   private static final String ENCODING = "#encoding";
 
   private String tag;
-  private ObjectMapper objectMapper;
+
+  private XmlMapper xmlMapper;
 
   public XmlParser() {
-    this.objectMapper = new ObjectMapper();
+    this.xmlMapper = new XmlMapper();
   }
 
   public XmlParser(String tag) {
@@ -75,8 +78,8 @@ public class XmlParser extends Parser {
     try {
       String dataString = CharStreams.toString(new InputStreamReader(data, Charsets.UTF_8));
 
-      Map<String, Object> map =
-          (Map<String, Object>) U.fromXmlWithoutNamespaces(dataString);
+      Map<String, Object> map = xmlMapper.readValue(dataString, Map.class);
+
       map.remove(ENCODING);
       Map<String, Object> convertedMap = new XmlMapConverter(map).convert();
       searchAndEmitEvents(convertedMap, tag, emitBinaryEvent);
@@ -89,6 +92,17 @@ public class XmlParser extends Parser {
 
   @Override
   public EventSchema getEventSchema(List<byte[]> oneEvent) {
+    return this.getSchemaAndSample(oneEvent).getEventSchema();
+  }
+
+
+  @Override
+  public boolean supportsPreview() {
+    return true;
+  }
+
+
+  public AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
     EventSchema resultSchema = new EventSchema();
 
     JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
@@ -96,7 +110,7 @@ public class XmlParser extends Parser {
     Map<String, Object> exampleEvent = null;
 
     try {
-      exampleEvent = jsonDefinition.toMap(oneEvent.get(0));
+      exampleEvent = jsonDefinition.toMap(eventSample.get(0));
     } catch (SpRuntimeException e) {
       logger.error(e.toString());
     }
@@ -106,8 +120,15 @@ public class XmlParser extends Parser {
       resultSchema.addEventProperty(p);
     }
 
-    return resultSchema;
+    var sample = exampleEvent
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(Map.Entry::getKey, e ->
+            new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
+
+    return new AdapterGuessInfo(resultSchema, sample);
   }
+
 
   private void searchAndEmitEvents(Map<String, Object> map, String key, EmitBinaryEvent emitBinaryEvent) {
     Gson gson = new Gson();

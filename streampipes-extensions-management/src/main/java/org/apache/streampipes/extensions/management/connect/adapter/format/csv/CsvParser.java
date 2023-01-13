@@ -108,11 +108,11 @@ public class CsvParser extends Parser {
     EventSchema resultSchema = new EventSchema();
     for (int i = 0; i < keys.length; i++) {
       EventPropertyPrimitive p = new EventPropertyPrimitive();
-      var runtimeType = DatatypeUtils.getXsdDatatype(data[i], true);
+      var runtimeType = DatatypeUtils.getXsdDatatype(data[i], false);
       var convertedValue = DatatypeUtils.convertValue(data[i], runtimeType);
       p.setRuntimeName(keys[i]);
       p.setRuntimeType(runtimeType);
-      sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i], true), convertedValue));
+      sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i], false), convertedValue));
       resultSchema.addEventProperty(p);
     }
 

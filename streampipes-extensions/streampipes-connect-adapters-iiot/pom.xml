@@ -127,6 +127,12 @@
             <groupId>org.apache.plc4x</groupId>
             <artifactId>plc4j-driver-s7</artifactId>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.woodstox</groupId>
+                    <artifactId>woodstox-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.plc4x</groupId>
