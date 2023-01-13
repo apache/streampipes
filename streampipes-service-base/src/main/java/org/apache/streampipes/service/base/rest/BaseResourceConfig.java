@@ -18,19 +18,25 @@
 package org.apache.streampipes.service.base.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.servlet.ServletProperties;
+import org.glassfish.jersey.server.ServerProperties;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class BaseResourceConfig extends ResourceConfig {
 
   public BaseResourceConfig() {
-    property(ServletProperties.FILTER_FORWARD_ON_404, true);
-    getClassesToRegister()
-        .forEach(set -> set.forEach(this::register));
-    register(ServiceHealthResource.class);
+    var customConfigs = new HashMap<String, Object>();
+    addAdditionalConfigs(customConfigs);
+    property(ServerProperties.WADL_FEATURE_DISABLE, true);
+    addProperties(customConfigs);
+    getClassesToRegister().forEach(this::register);
+
   }
 
-  public abstract List<List<Class<?>>> getClassesToRegister();
+  public abstract Set<Class<?>> getClassesToRegister();
+
+  public abstract void addAdditionalConfigs(Map<String, Object> configs);
 
 }

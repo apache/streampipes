@@ -47,7 +47,6 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @Path("/")
   public Response addDataLake(DataLakeMeasure dataLakeMeasure) {
     DataLakeMeasure result = this.dataLakeManagement.addDataLake(dataLakeMeasure);
     return ok(result);

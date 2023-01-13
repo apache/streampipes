@@ -75,7 +75,6 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("/")
   @JacksonSerialized
   @Operation(summary = "Get all pipelines of the current user",
       tags = {"Pipeline"},
