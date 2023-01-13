@@ -31,46 +31,42 @@ import org.apache.streampipes.rest.extensions.pe.DataStreamPipelineElementResour
 import org.apache.streampipes.rest.extensions.pe.PipelineTemplateResource;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.apache.streampipes.service.base.rest.BaseResourceConfig;
+import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ExtensionsResourceConfig extends BaseResourceConfig {
 
   @Override
-  public List<List<Class<?>>> getClassesToRegister() {
-    return List.of(
-        getAdapterResourceClasses(),
-        getBaseResourceClasses(),
-        getPipelineElementResourceClasses()
-    );
-  }
-
-  private List<Class<?>> getAdapterResourceClasses() {
-    return List.of(
+  public Set<Class<?>> getClassesToRegister() {
+    return Set.of(
         GuessResource.class,
         RuntimeResolvableResource.class,
         AdapterWorkerResource.class,
         MultiPartFeature.class,
         AdapterAssetResource.class,
-        HttpServerAdapterResource.class);
-  }
+        HttpServerAdapterResource.class,
 
-  private List<Class<?>> getBaseResourceClasses() {
-    return List.of(
-        JacksonSerializationProvider.class,
-        MonitoringResource.class);
-  }
-
-  private List<Class<?>> getPipelineElementResourceClasses() {
-    return List.of(
         DataSinkPipelineElementResource.class,
         DataProcessorPipelineElementResource.class,
         DataStreamPipelineElementResource.class,
         WelcomePage.class,
-        PipelineTemplateResource.class);
+        PipelineTemplateResource.class,
+
+        ServiceHealthResource.class,
+        JacksonSerializationProvider.class,
+        MonitoringResource.class
+    );
+  }
+
+  @Override
+  public void addAdditionalConfigs(Map<String, Object> configs) {
+    configs.put(ServletProperties.FILTER_FORWARD_ON_404, true);
   }
 }

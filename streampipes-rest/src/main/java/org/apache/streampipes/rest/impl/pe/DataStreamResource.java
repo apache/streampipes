@@ -55,7 +55,6 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   }
 
   @GET
-  @Path("/")
   @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
