@@ -18,38 +18,46 @@
 
 <div class="general-options-panel" fxLayout="column">
     <span class="general-options-header">Value Transformation</span>
-    <sp-ep-settings-section sectionTitle="Timestamp conversion"
-                            sectionDescription="Formula to convert the field value to a UNIX timestamp in milliseconds"
-                            fxLayout="column"
-                            fxFlex="100"
-                            *ngIf="isTimestampProperty">
+    <sp-ep-settings-section
+        sectionTitle="Timestamp conversion"
+        sectionDescription="Formula to convert the field value to a UNIX timestamp in milliseconds"
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="isTimestampProperty"
+    >
         <sp-edit-timestamp-property
-                [cachedProperty]="cachedProperty"
-                showEditTimestampProperty="!isTimestampProperty">
+            [cachedProperty]="cachedProperty"
+            showEditTimestampProperty="!isTimestampProperty"
+        >
         </sp-edit-timestamp-property>
     </sp-ep-settings-section>
-    <sp-ep-settings-section sectionTitle="Value conversion"
-                            sectionDescription="Converts the original field values using the provided formula"
-                            fxLayout="column"
-                            fxFlex="100"
-                            *ngIf="isNumericProperty && !isTimestampProperty">
-        <sp-edit-correction-value
-                [cachedProperty]="cachedProperty">
+    <sp-ep-settings-section
+        sectionTitle="Value conversion"
+        sectionDescription="Converts the original field values using the provided formula"
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="isNumericProperty && !isTimestampProperty"
+    >
+        <sp-edit-correction-value [cachedProperty]="cachedProperty">
             <!--(correctionValueChanged)="enableSaveBtn($event)"-->
         </sp-edit-correction-value>
     </sp-ep-settings-section>
-    <sp-ep-settings-section sectionTitle="Static value assignment"
-                            sectionDescription="Assigns a static value to each incoming event"
-                            fxLayout="column"
-                            fxFlex="100"
-                            *ngIf="addedByUser">
+    <sp-ep-settings-section
+        sectionTitle="Static value assignment"
+        sectionDescription="Assigns a static value to each incoming event"
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="addedByUser"
+    >
         <mat-form-field class="w-100" fxFlex="100">
-            <input matInput
-                   placeholder="Static Value"
-                   name="static_value"
-                   id="static_value"
-                   data-cy="connect-edit-field-static-value"
-                   [(ngModel)]="cachedProperty.staticValue">
+            <input
+                matInput
+                placeholder="Static Value"
+                name="static_value"
+                id="static_value"
+                data-cy="connect-edit-field-static-value"
+                [(ngModel)]="cachedProperty.staticValue"
+            />
         </mat-form-field>
     </sp-ep-settings-section>
 </div>

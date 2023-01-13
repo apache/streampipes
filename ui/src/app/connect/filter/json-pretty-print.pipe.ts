@@ -19,15 +19,13 @@
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'jsonpretty'
+    name: 'jsonpretty',
 })
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class JsonPrettyPrintPipe implements PipeTransform {
-
-  transform(json) {
-    return JSON.stringify(json, undefined, 4)
-      .replace(/ /g, '&nbsp;')
-      .replace(/\n/g, '<br/>');
-  }
-
+    transform(json) {
+        return JSON.stringify(json, undefined, 4)
+            .replace(/ /g, '&nbsp;')
+            .replace(/\n/g, '<br/>');
+    }
 }

@@ -16,48 +16,42 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'sp-schema-editor-header',
-  templateUrl: './schema-editor-header.component.html',
-  styleUrls: ['./schema-editor-header.component.scss']
+    selector: 'sp-schema-editor-header',
+    templateUrl: './schema-editor-header.component.html',
+    styleUrls: ['./schema-editor-header.component.scss'],
 })
-export class SchemaEditorHeaderComponent implements OnInit {
+export class SchemaEditorHeaderComponent {
+    @Input() countSelected: number;
 
+    @Output() addNestedPropertyEmitter = new EventEmitter();
+    @Output() addStaticValuePropertyEmitter = new EventEmitter();
+    @Output() addTimestampPropertyEmitter = new EventEmitter();
+    @Output() guessSchemaEmitter = new EventEmitter();
+    @Output() updatePreviewEmitter = new EventEmitter();
+    @Output() removeSelectedPropertiesEmitter = new EventEmitter();
 
-  @Input() countSelected: number;
+    constructor() {}
 
-  @Output() addNestedPropertyEmitter = new EventEmitter();
-  @Output() addStaticValuePropertyEmitter = new EventEmitter();
-  @Output() addTimestampPropertyEmitter = new EventEmitter();
-  @Output() guessSchemaEmitter = new EventEmitter();
-  @Output() updatePreviewEmitter = new EventEmitter();
-  @Output() removeSelectedPropertiesEmitter = new EventEmitter();
+    public addNestedProperty() {
+        this.addNestedPropertyEmitter.emit();
+    }
 
-  constructor() { }
+    public addStaticValueProperty() {
+        this.addStaticValuePropertyEmitter.emit();
+    }
 
-  ngOnInit(): void {
-  }
+    public addTimestampProperty() {
+        this.addTimestampPropertyEmitter.emit();
+    }
 
-  public addNestedProperty() {
-    this.addNestedPropertyEmitter.emit();
-  }
+    public guessSchema() {
+        this.guessSchemaEmitter.emit();
+    }
 
-  public addStaticValueProperty() {
-    this.addStaticValuePropertyEmitter.emit();
-  }
-
-  public addTimestampProperty() {
-    this.addTimestampPropertyEmitter.emit();
-  }
-
-  public guessSchema() {
-    this.guessSchemaEmitter.emit();
-  }
-
-  public removeSelectedProperties() {
-    this.removeSelectedPropertiesEmitter.emit();
-  }
+    public removeSelectedProperties() {
+        this.removeSelectedPropertiesEmitter.emit();
+    }
 }

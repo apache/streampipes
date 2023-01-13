@@ -19,23 +19,26 @@
 <div fxLayout="row" fxLayoutAlign="start">
     <div fxFlex="70" fxLayoutAlign="start center">
         <mat-form-field class="w-100" style="margin-right: 10px" color="accent">
-            <input matInput
-                   name="correction"
-                   placeholder="Correction Value"
-                   [(ngModel)]="cachedProperty.correctionValue"
-                   (change)="valueChanged()"
-                   data-cy="connect-schema-correction-value">
+            <input
+                matInput
+                name="correction"
+                placeholder="Correction Value"
+                [(ngModel)]="cachedProperty.correctionValue"
+                (change)="valueChanged()"
+                data-cy="connect-schema-correction-value"
+            />
         </mat-form-field>
     </div>
     <div fxFlex="30" fxLayoutAlign="start center">
         <mat-form-field class="w-100" color="accent">
             <mat-select
-                    required
-                    placeholder="Math Operator"
-                    [(ngModel)]="cachedProperty.operator"
-                    (selectionChange)="valueChanged()"
-                    [disabled]="!cachedProperty.correctionValue"
-                    data-cy="connect-schema-correction-operator">
+                required
+                placeholder="Math Operator"
+                [(ngModel)]="cachedProperty.operator"
+                (selectionChange)="valueChanged()"
+                [disabled]="!cachedProperty.correctionValue"
+                data-cy="connect-schema-correction-operator"
+            >
                 <mat-option [value]="op.value" *ngFor="let op of operators">
                     {{ op.viewValue }}
                 </mat-option>

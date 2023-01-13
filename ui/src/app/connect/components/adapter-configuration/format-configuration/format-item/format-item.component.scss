@@ -17,30 +17,30 @@
  */
 
 .format-label {
-  line-height:50px;
-  margin: auto;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.3em;
+    line-height: 50px;
+    margin: auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3em;
 }
 
 .format-box {
-  min-height: 50px;
-  box-shadow: 1px 1px 2px #555;
-  border: 1px solid gray;
-  cursor: pointer;
-  padding: 10px;
-  opacity: 0.7;
-  margin: 10px;
-  background: #ffffff;
+    min-height: 50px;
+    box-shadow: 1px 1px 2px #555;
+    border: 1px solid gray;
+    cursor: pointer;
+    padding: 10px;
+    opacity: 0.7;
+    margin: 10px;
+    background: #ffffff;
 }
 
 .format-box:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
 .selectedItem {
-  opacity: 1;
-  background-color: var(--color-accent);
-  color: var(--color-bg-2);
+    opacity: 1;
+    background-color: var(--color-accent);
+    color: var(--color-bg-2);
 }

@@ -18,6 +18,7 @@
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.output.TransformOperation;
@@ -79,7 +80,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
 
           if (eventPropertyOpt.isPresent()) {
             EventProperty eventProperty = eventPropertyOpt.get();
-            modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(cloneEp(eventProperty), to,
+            modifiedEventProperties.put(eventProperty.getRuntimeName(), modifyEventProperty(cloneEp(eventProperty), to,
                 staticProperties));
           }
         }
@@ -88,7 +89,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
 
     List<EventProperty> newProperties = inSchema.getEventProperties()
         .stream()
-        .map(ep -> modifiedEventProperties.getOrDefault(ep.getElementId(), ep))
+        .map(ep -> modifiedEventProperties.getOrDefault(ep.getRuntimeName(), ep))
         .collect(Collectors.toList());
 
     outSchema.setEventProperties(newProperties);
@@ -176,7 +177,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
   }
 
   private String removePrefix(String propertySelector) {
-    return propertySelector.split("::")[1];
+    return propertySelector.split(PropertySelectorConstants.PROPERTY_DELIMITER)[1];
   }
 
   private EventProperty cloneEp(EventProperty ep) {

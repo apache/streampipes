@@ -23,8 +23,6 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.client.matching.MatchingResultType;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
-import org.apache.streampipes.model.quality.EventStreamQualityRequirement;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.List;
@@ -39,18 +37,13 @@ public class StreamMatch extends AbstractMatcher<SpDataStream, SpDataStream> {
   public boolean match(SpDataStream offer, SpDataStream requirement, List<MatchingResultMessage> errorLog) {
     return MatchingUtils.nullCheck(offer, requirement)
         || (checkSchemaMatch(offer.getEventSchema(), requirement.getEventSchema(), errorLog)
-        && checkGroundingMatch(offer.getEventGrounding(), requirement.getEventGrounding(), errorLog)
-        && checkStreamQualityMatch(offer.getHasEventStreamQualities(), requirement.getRequiresEventStreamQualities(),
-        errorLog));
+        && checkGroundingMatch(offer.getEventGrounding(), requirement.getEventGrounding(), errorLog));
   }
 
   public boolean matchIgnoreGrounding(SpDataStream offer, SpDataStream requirement,
                                       List<MatchingResultMessage> errorLog) {
     boolean match = /*MatchingUtils.nullCheckReqAllowed(offer, requirement) ||*/
-        (checkSchemaMatch(offer.getEventSchema(), requirement.getEventSchema(), errorLog)
-            &&
-            checkStreamQualityMatch(offer.getHasEventStreamQualities(), requirement.getRequiresEventStreamQualities(),
-                errorLog));
+        (checkSchemaMatch(offer.getEventSchema(), requirement.getEventSchema(), errorLog));
     return match;
   }
 
@@ -59,25 +52,9 @@ public class StreamMatch extends AbstractMatcher<SpDataStream, SpDataStream> {
     return new GroundingMatch().match(offer, requirement, errorLog);
   }
 
-  private boolean checkStreamQualityMatch(
-      List<EventStreamQualityDefinition> offer,
-      List<EventStreamQualityRequirement> requirement, List<MatchingResultMessage> errorLog) {
-    boolean match = MatchingUtils.nullCheck(offer, requirement) || requirement
-        .stream()
-        .allMatch(req -> offer
-            .stream()
-            .anyMatch(of -> new StreamQualityMatch().match(of, req, errorLog)));
-
-    if (!match) {
-      buildErrorMessage(errorLog, MatchingResultType.STREAM_QUALITY, "quality");
-    }
-    return match;
-  }
-
   private boolean checkSchemaMatch(EventSchema offer,
                                    EventSchema requirement, List<MatchingResultMessage> errorLog) {
-    boolean match = new SchemaMatch().match(offer, requirement, errorLog);
-    return match;
+    return new SchemaMatch().match(offer, requirement, errorLog);
   }
 
 }

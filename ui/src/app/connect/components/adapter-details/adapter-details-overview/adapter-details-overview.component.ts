@@ -20,31 +20,47 @@ import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { AdapterService, AdapterMonitoringService } from '@streampipes/platform-services';
+import {
+    AdapterService,
+    AdapterMonitoringService,
+} from '@streampipes/platform-services';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.routes';
 
 @Component({
-  selector: 'sp-adapter-details-overview',
-  templateUrl: './adapter-details-overview.component.html',
-  styleUrls: ['./adapter-details-overview.component.scss']
+    selector: 'sp-adapter-details-overview',
+    templateUrl: './adapter-details-overview.component.html',
+    styleUrls: ['./adapter-details-overview.component.scss'],
 })
-export class SpAdapterDetailsOverviewComponent extends SpAbstractAdapterDetailsDirective implements OnInit {
+export class SpAdapterDetailsOverviewComponent
+    extends SpAbstractAdapterDetailsDirective
+    implements OnInit
+{
+    constructor(
+        authService: AuthService,
+        activatedRoute: ActivatedRoute,
+        adapterService: AdapterService,
+        adapterMonitoringService: AdapterMonitoringService,
+        breadcrumbService: SpBreadcrumbService,
+    ) {
+        super(
+            authService,
+            activatedRoute,
+            adapterService,
+            adapterMonitoringService,
+            breadcrumbService,
+        );
+    }
 
-  constructor(authService: AuthService,
-              activatedRoute: ActivatedRoute,
-              adapterService: AdapterService,
-              adapterMonitoringService: AdapterMonitoringService,
-              breadcrumbService: SpBreadcrumbService) {
-    super(authService, activatedRoute, adapterService, adapterMonitoringService, breadcrumbService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
-
-  onAdapterLoaded(): void {
-    this.breadcrumbService.updateBreadcrumb([SpConnectRoutes.BASE, {label: this.adapter.name}, {label: 'Overview'}]);
-  }
-
+    onAdapterLoaded(): void {
+        this.breadcrumbService.updateBreadcrumb([
+            SpConnectRoutes.BASE,
+            { label: this.adapter.name },
+            { label: 'Overview' },
+        ]);
+    }
 }

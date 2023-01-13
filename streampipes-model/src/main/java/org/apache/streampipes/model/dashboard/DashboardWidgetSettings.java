@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.dashboard;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -26,7 +25,7 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import java.util.List;
 
 @TsModel
-public class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
+public class DashboardWidgetSettings {
 
   private String widgetLabel;
 

@@ -16,8 +16,14 @@
  *
  */
 
-package org.apache.streampipes.manager.verification.runtime;
-
-public class RuntimeVerifier {
-
-}
+describe('Open API Documentation from Login Page', () => {
+    it('Perform Test', () => {
+        cy.visit('#/login');
+        cy.dataCy('view-api-docs-link').click();
+        cy.get('h2').contains('Apache StreamPipes API');
+        cy.get('.servers')
+            .find('select')
+            .find(':selected')
+            .contains('/streampipes-backend');
+    });
+});

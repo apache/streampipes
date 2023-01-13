@@ -20,21 +20,16 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'streampipes',
-  templateUrl: './streampipes.component.html',
-  styleUrls: ['./streampipes.component.scss']
+    selector: 'sp-streampipes',
+    templateUrl: './streampipes.component.html',
+    styleUrls: ['./streampipes.component.scss'],
 })
 export class StreampipesComponent implements OnInit {
+    darkMode: boolean;
 
-  darkMode: boolean;
+    constructor(public authService: AuthService) {}
 
-  constructor(public authService: AuthService) {
-
-  }
-
-  ngOnInit(): void {
-    this.authService.darkMode$.subscribe(dm => this.darkMode = dm);
-  }
-
-
+    ngOnInit(): void {
+        this.authService.darkMode$.subscribe(dm => (this.darkMode = dm));
+    }
 }

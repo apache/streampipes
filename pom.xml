@@ -35,7 +35,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
-        <maven.version>3.8.1</maven.version>
+        <maven.version>3.8.7</maven.version>
         <owasp.check.skip>false</owasp.check.skip>
 
 	<!-- project dependencies -->
@@ -88,21 +88,20 @@
 	<jersey.version>3.1.0</jersey.version>
 	<jetbrains-annotations.version>16.0.2</jetbrains-annotations.version>
 	<jetty.version>10.0.10</jetty.version>
-	<jgrapht.version>1.3.1</jgrapht.version>
+	<jgrapht.version>1.5.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
 	<jna.version>5.8.0</jna.version>
 	<json-path.version>5.3.0</json-path.version>
 	<json-smart.version>2.4.8</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
 	<kafka.version>3.3.1</kafka.version>
-	<kotlin-stdlib.version>1.4.30</kotlin-stdlib.version>
+	<kotlin-stdlib.version>1.8.0</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
 	<log4j.version>2.19.0</log4j.version>
 	<lz4.version>1.7.1</lz4.version>
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
 	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
-	<maven-plugin-testing-harness.version>3.3.0</maven-plugin-testing-harness.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
 	<objenesis.version>3.3</objenesis.version>
@@ -118,7 +117,7 @@
 	<retrofit.version>2.5.0</retrofit.version>
 	<roaster.version>2.28.0.Final</roaster.version>
 	<siddhi.version>5.1.27</siddhi.version>
-	<simple-java-mail.version>7.5.2</simple-java-mail.version>
+	<simple-java-mail.version>7.6.0</simple-java-mail.version>
 	<slf4j.version>2.0.6</slf4j.version>
 	<snakeyaml.version>1.32</snakeyaml.version>
 	<snappy-java.version>1.1.7.7</snappy-java.version>
@@ -142,7 +141,7 @@
 	<maven.compiler.source>17</maven.compiler.source>
 	<maven.compiler.target>17</maven.compiler.target>
 
-	<amqp-client.version>4.8.0</amqp-client.version>
+	<amqp-client.version>5.16.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
 	<boofcv.version>0.33</boofcv.version>
 	<bcprov.version>1.66</bcprov.version>
@@ -204,7 +203,7 @@
 	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
 	<opencsv.version>5.5.2</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
-	<protobuf.version>3.16.3</protobuf.version>
+	<protobuf.version>3.21.12</protobuf.version>
 	<proton-j.version>0.30.0</proton-j.version>
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
@@ -1016,11 +1015,6 @@
 					<groupId>org.apache.maven.plugin-tools</groupId>
 					<artifactId>maven-plugin-annotations</artifactId>
 					<version>${maven-plugin-annotations.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.maven.plugin-testing</groupId>
-					<artifactId>maven-plugin-testing-harness</artifactId>
-					<version>${maven-plugin-testing-harness.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven.shared</groupId>

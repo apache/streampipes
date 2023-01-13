@@ -18,9 +18,7 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-
-public class PropertyValueSpecification extends UnnamedStreamPipesEntity {
+public class PropertyValueSpecification {
 
   private static final long serialVersionUID = 1L;
 

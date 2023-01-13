@@ -18,54 +18,54 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  PipelineElementTemplate,
-  PipelineElementTemplateConfig,
-  PipelineElementTemplateService,
-  StaticPropertyUnion
+    PipelineElementTemplate,
+    PipelineElementTemplateConfig,
+    PipelineElementTemplateService,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
-  selector: 'sp-adapter-template-dialog',
-  templateUrl: './adapter-template-dialog.component.html',
-  styleUrls: ['./adapter-template-dialog.component.scss']
+    selector: 'sp-adapter-template-dialog',
+    templateUrl: './adapter-template-dialog.component.html',
+    styleUrls: ['./adapter-template-dialog.component.scss'],
 })
 export class SpAdapterTemplateDialogComponent implements OnInit {
+    @Input()
+    configs: StaticPropertyUnion[];
 
-  @Input()
-  configs: StaticPropertyUnion[];
+    @Input()
+    appId: string;
 
-  @Input()
-  appId: string;
+    template: PipelineElementTemplate;
+    templateConfigs: Map<string, any> = new Map();
 
-  template: PipelineElementTemplate;
-  templateConfigs: Map<string, any> = new Map();
+    constructor(
+        public dialogRef: DialogRef<SpAdapterTemplateDialogComponent>,
+        private pipelineElementTemplateService: PipelineElementTemplateService,
+    ) {}
 
-  constructor(public dialogRef: DialogRef<SpAdapterTemplateDialogComponent>,
-              private pipelineElementTemplateService: PipelineElementTemplateService) {
+    ngOnInit(): void {
+        this.template = new PipelineElementTemplate();
+    }
 
-  }
+    saveTemplate() {
+        this.template.templateConfigs = this.convert(this.templateConfigs);
+        this.pipelineElementTemplateService
+            .storePipelineElementTemplate(this.template)
+            .subscribe(result => {
+                this.dialogRef.close(true);
+            });
+    }
 
-  ngOnInit(): void {
-    this.template = new PipelineElementTemplate();
-  }
-
-  saveTemplate() {
-    this.template.templateConfigs = this.convert(this.templateConfigs);
-    this.pipelineElementTemplateService.storePipelineElementTemplate(this.template).subscribe(result => {
-      this.dialogRef.close(true);
-    });
-  }
-
-  convert(templateConfigs: Map<string, any>): any {
-    const configs: { [index: string]: PipelineElementTemplateConfig } = {};
-    templateConfigs.forEach((value, key) => {
-      configs[key] = new PipelineElementTemplateConfig();
-      configs[key].editable = value.editable;
-      configs[key].displayed = value.displayed;
-      configs[key].value = value.value;
-    });
-    return configs;
-  }
-
+    convert(templateConfigs: Map<string, any>): any {
+        const configs: { [index: string]: PipelineElementTemplateConfig } = {};
+        templateConfigs.forEach((value, key) => {
+            configs[key] = new PipelineElementTemplateConfig();
+            configs[key].editable = value.editable;
+            configs[key].displayed = value.displayed;
+            configs[key].value = value.value;
+        });
+        return configs;
+    }
 }

@@ -17,9 +17,7 @@
  */
 package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-
-public class WildcardTopicMapping extends UnnamedStreamPipesEntity {
+public class WildcardTopicMapping {
 
   private String topicParameterType;
 

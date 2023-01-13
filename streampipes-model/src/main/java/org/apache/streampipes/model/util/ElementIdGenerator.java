@@ -21,7 +21,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class ElementIdGenerator {
 
-  private static final String prefix = "urn:streampipes.apache.org:spi:";
+  private static final String prefix = "sp:";
 
   public static String makeElementId(Object obj) {
     return makeElementId(obj.getClass());

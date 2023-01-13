@@ -19,28 +19,25 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-adapter-configuration-header',
-  templateUrl: './adapter-configuration-header.component.html',
-  styleUrls: ['./adapter-configuration-header.component.scss']
+    selector: 'sp-adapter-configuration-header',
+    templateUrl: './adapter-configuration-header.component.html',
+    styleUrls: ['./adapter-configuration-header.component.scss'],
 })
 export class AdapterConfigurationHeaderComponent {
+    /**
+     * Used to display the type of the configured adapter
+     */
+    @Input() displayName = '';
 
-  /**
-   * Used to display the type of the configured adapter
-   */
-  @Input() displayName = '';
+    /**
+     * Indicates whether the adapter is a data set or data stream adapter
+     */
+    @Input() isDataStreamDescription = true;
 
-  /**
-   * Indicates whether the adapter is a data set or data stream adapter
-   */
-  @Input() isDataStreamDescription = true;
+    /**
+     * Use different title when in edit mode
+     */
+    @Input() isEditMode;
 
-  /**
-   * Use different title when in edit mode
-   */
-  @Input() isEditMode;
-
-  constructor() {
-  }
-
+    constructor() {}
 }

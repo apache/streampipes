@@ -16,53 +16,52 @@
  *
  */
 
-
-::ng-deep .cdk-overlay-pane .feedback-menu-content{
-  min-width:500px;
+::ng-deep .cdk-overlay-pane .feedback-menu-content {
+    min-width: 500px;
 }
 
 .current-user {
-  color: var(--color-default-text);
-  display: block;
-  line-height: 48px;
-  height: 48px;
-  padding: 0 16px;
-  text-align: left;
-  text-decoration: none;
-  max-width: 100%;
-  position: relative;
+    color: var(--color-default-text);
+    display: block;
+    line-height: 48px;
+    height: 48px;
+    padding: 0 16px;
+    text-align: left;
+    text-decoration: none;
+    max-width: 100%;
+    position: relative;
 }
 
 .toolbar-bg {
-  background: var(--color-navigation-bg);
-  border-bottom: 2px solid var(--color-navigation-divider);
-  color: var(--color-navigation-text);
+    background: var(--color-navigation-bg);
+    border-bottom: 2px solid var(--color-navigation-divider);
+    color: var(--color-navigation-text);
 }
 
 .sp-toolbar {
-  height:40px;
-  max-height:40px;
-  width:100%;
+    height: 40px;
+    max-height: 40px;
+    width: 100%;
 }
 
 .version-info-text {
-  color: var(--color-navigation-text);
-  font-size: small;
-  display: block;
-  margin-top: 3px;
-  margin-right: 15px;
-  white-space: nowrap;
+    color: var(--color-navigation-text);
+    font-size: small;
+    display: block;
+    margin-top: 3px;
+    margin-right: 15px;
+    white-space: nowrap;
 }
 
 .active-page {
-  font-size: small;
-  background: var(--color-navigation-bg-selected);
-  color: var(--color-navigation-selected);
-  font-weight:bold;
-  padding: 5px;
-  border-radius: 2px;
+    font-size: small;
+    background: var(--color-navigation-bg-selected);
+    color: var(--color-navigation-selected);
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 2px;
 }
 
 .user-email {
-  font-size: 11pt;
+    font-size: 11pt;
 }

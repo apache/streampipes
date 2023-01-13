@@ -187,7 +187,7 @@ export class EventSchemaComponent implements OnChanges {
 
     public refreshTree(refreshPreview = true): void {
         this.nodes = new Array<EventProperty>();
-        this.nodes.push((this.eventSchema as unknown) as EventProperty);
+        this.nodes.push(this.eventSchema as unknown as EventProperty);
         this.validEventSchema = this.checkIfValid(this.eventSchema);
         if (refreshPreview) {
             this.updatePreview();
@@ -264,7 +264,8 @@ export class EventSchemaComponent implements OnChanges {
         this.isPreviewEnabled = false;
         this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
         this.transformationRuleService.setNewEventSchema(this.eventSchema);
-        const ruleDescriptions = this.transformationRuleService.getTransformationRuleDescriptions();
+        const ruleDescriptions =
+            this.transformationRuleService.getTransformationRuleDescriptions();
         if (this.eventPreview && this.eventPreview.length > 0) {
             this.restService
                 .getAdapterEventPreview({

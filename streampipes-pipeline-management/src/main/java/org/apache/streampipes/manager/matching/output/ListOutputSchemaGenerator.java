@@ -58,7 +58,6 @@ public class ListOutputSchemaGenerator extends OutputSchemaGenerator<ListOutputS
     EventPropertyList list = new EventPropertyList();
     //list.setEventProperties(schemaProperties);
     list.setRuntimeName(propertyName);
-    list.setElementId(schemaProperties.get(0).getElementId() + "-list");
     EventSchema schema = new EventSchema();
     schema.setEventProperties(Utils.createList(list));
     return schema;

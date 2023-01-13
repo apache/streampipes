@@ -16,38 +16,56 @@
   ~
   -->
 <div>
-  <div fxLayout="column"
-       fxFlex="100"
-       fxLayoutAlign="start center"
-       data-cy="schema-validation-ok"
-       *ngIf="!isLoading && !isError && schemaErrorHints.length === 0"
-       class="schema-validation schema-validation-ok">
-    <div fxFlex="100"
-         fxLayout="row"
-         fxLayoutAlign="start center"
-         class="schema-validation-text-ok">
-      <i class="material-icons">check_circle</i>&nbsp;<b>Schema ok</b>
+    <div
+        fxLayout="column"
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        data-cy="schema-validation-ok"
+        *ngIf="!isLoading && !isError && schemaErrorHints.length === 0"
+        class="schema-validation schema-validation-ok"
+    >
+        <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="schema-validation-text-ok"
+        >
+            <i class="material-icons">check_circle</i>&nbsp;<b>Schema ok</b>
+        </div>
     </div>
-  </div>
-  <div fxLayout="column"
-       fxFlex="100"
-       *ngIf="!isLoading && !isError && schemaErrorHints.length > 0">
-    <div fxFlex="100"
-         fxLayout="column"
-         [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation schema-validation-error' : 'schema-validation schema-validation-warning'"
-         fxLayoutAlign="start center"
-         data-cy="schema-validation-error"
-         *ngFor="let schemaErrorHint of schemaErrorHints">
-      <div fxFlex="100"
-           fxLayout="row"
-           fxLayoutAlign="center start"
-           [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation-text-error' : 'schema-validation-text-warning'">
-        <i class="material-icons">warning</i>&nbsp;
-        <b>{{schemaErrorHint.title}}</b>
-      </div>
-      <div data-cy="schema-validation-error-content">
-        <span>{{schemaErrorHint.content}}</span>
-      </div>
+    <div
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="!isLoading && !isError && schemaErrorHints.length > 0"
+    >
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            [ngClass]="
+                schemaErrorHint.level === 'error'
+                    ? 'schema-validation schema-validation-error'
+                    : 'schema-validation schema-validation-warning'
+            "
+            fxLayoutAlign="start center"
+            data-cy="schema-validation-error"
+            *ngFor="let schemaErrorHint of schemaErrorHints"
+        >
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="center start"
+                [ngClass]="
+                    schemaErrorHint.level === 'error'
+                        ? 'schema-validation-text-error'
+                        : 'schema-validation-text-warning'
+                "
+            >
+                <i class="material-icons">warning</i>&nbsp;
+                <b>{{ schemaErrorHint.title }}</b>
+            </div>
+            <div data-cy="schema-validation-error-content">
+                <span>{{ schemaErrorHint.content }}</span>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

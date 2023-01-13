@@ -16,13 +16,15 @@
   ~
   -->
 
-<div fxFlex="100"
-     fxLayout="column"
-     matTooltip="{{format.description}}"
-     [attr.data-cy]="format.name.split(' ').join('_').toLowerCase()"
-     *ngIf="!$any(format).edit || !hasConfig"
-     class="format-box"
-     (click)="formatEditable()"
-     [ngClass]="{selectedItem: isSelected()}" >
-    <div class="format-label"> {{format.name}} </div>
+<div
+    fxFlex="100"
+    fxLayout="column"
+    matTooltip="{{ format.description }}"
+    [attr.data-cy]="format.name.split(' ').join('_').toLowerCase()"
+    *ngIf="!$any(format).edit || !hasConfig"
+    class="format-box"
+    (click)="formatEditable()"
+    [ngClass]="{ selectedItem: isSelected() }"
+>
+    <div class="format-label">{{ format.name }}</div>
 </div>

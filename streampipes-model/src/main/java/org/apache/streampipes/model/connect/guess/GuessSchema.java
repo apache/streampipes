@@ -18,17 +18,19 @@
 
 package org.apache.streampipes.model.connect.guess;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-public class GuessSchema extends UnnamedStreamPipesEntity {
+public class GuessSchema {
 
   public EventSchema eventSchema;
 
@@ -43,7 +45,6 @@ public class GuessSchema extends UnnamedStreamPipesEntity {
   }
 
   public GuessSchema(GuessSchema other) {
-    super(other);
     this.eventSchema = other.getEventSchema() != null ? new EventSchema(other.getEventSchema()) : null;
     this.eventPreview = other.getEventPreview();
     this.fieldStatusInfo = other.getFieldStatusInfo();

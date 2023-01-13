@@ -42,7 +42,6 @@ public class Enumeration extends ValueSpecification {
   }
 
   public Enumeration(Enumeration other) {
-    super(other);
     this.label = other.getLabel();
     this.description = other.getDescription();
     this.runtimeValues = other.getRuntimeValues();

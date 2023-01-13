@@ -23,9 +23,6 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import java.util.List;
-import java.util.Map;
-
 public interface IProtocol extends Connector {
 
   IProtocol getInstance(ProtocolDescription protocolDescription,
@@ -35,8 +32,6 @@ public interface IProtocol extends Connector {
   ProtocolDescription declareModel();
 
   GuessSchema getGuessSchema() throws ParseException;
-
-  List<Map<String, Object>> getNElements(int n) throws ParseException;
 
   void run(IAdapterPipeline adapterPipeline) throws AdapterException;
 

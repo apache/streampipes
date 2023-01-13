@@ -33,12 +33,12 @@ x-logging:
 
 services:
 
-  #### apache/incubator-streampipes
+  #### apache/streampipes
   backend:
     build:
       context: ./streampipes-service-core
       dockerfile: Dockerfile
-    image: incubator-streampipes_backend:release-validation
+    image: streampipes_backend:release-validation
     depends_on:
       - consul
       - couchdb
@@ -53,7 +53,7 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
-    image: incubator-streampipes_ui:release-validation
+    image: streampipes_ui:release-validation
     ports:
       - "80:80"
     depends_on:
@@ -68,7 +68,7 @@ services:
     build:
       context: ./streampipes-extensions/streampipes-extensions-all-jvm
       dockerfile: Dockerfile
-    image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
+    image: streampipes_pipeline-elements-all-jvm:release-validation
     volumes:
       - files:/spImages
     logging: *default-logging

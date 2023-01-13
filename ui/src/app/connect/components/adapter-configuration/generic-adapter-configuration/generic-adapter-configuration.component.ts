@@ -18,10 +18,10 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-  GenericAdapterSetDescription,
-  GenericAdapterStreamDescription,
-  ProtocolDescription,
-  PipelineElementTemplateService
+    GenericAdapterSetDescription,
+    GenericAdapterStreamDescription,
+    ProtocolDescription,
+    PipelineElementTemplateService,
 } from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
@@ -29,54 +29,74 @@ import { AdapterTemplateService } from '../../../services/adapter-template.servi
 import { DialogService } from '@streampipes/shared-ui';
 
 @Component({
-  selector: 'sp-generic-adapter-configuration',
-  templateUrl: './generic-adapter-configuration.component.html',
-  styleUrls: ['./generic-adapter-configuration.component.scss']
+    selector: 'sp-generic-adapter-configuration',
+    templateUrl: './generic-adapter-configuration.component.html',
+    styleUrls: ['./generic-adapter-configuration.component.scss'],
 })
-export class GenericAdapterConfigurationComponent extends AdapterTemplateConfigurationDirective implements OnInit {
+export class GenericAdapterConfigurationComponent
+    extends AdapterTemplateConfigurationDirective
+    implements OnInit
+{
+    genericAdapterSettingsFormValid: boolean;
 
-  genericAdapterSettingsFormValid: boolean;
+    genericAdapterForm: UntypedFormGroup;
 
-  genericAdapterForm: UntypedFormGroup;
+    protocolDescription: ProtocolDescription;
 
-  protocolDescription: ProtocolDescription;
-
-  constructor(_formBuilder: UntypedFormBuilder,
-              dialogService: DialogService,
-              pipelineElementTemplateService: PipelineElementTemplateService,
-              adapterTemplateService: AdapterTemplateService) {
-    super(_formBuilder, dialogService, pipelineElementTemplateService, adapterTemplateService);
-  }
-
-  ngOnInit(): void {
-    super.onInit();
-    if (this.adapterDescription instanceof GenericAdapterSetDescription ||
-      this.adapterDescription instanceof GenericAdapterStreamDescription) {
-      this.protocolDescription = this.adapterDescription.protocolDescription;
+    constructor(
+        _formBuilder: UntypedFormBuilder,
+        dialogService: DialogService,
+        pipelineElementTemplateService: PipelineElementTemplateService,
+        adapterTemplateService: AdapterTemplateService,
+    ) {
+        super(
+            _formBuilder,
+            dialogService,
+            pipelineElementTemplateService,
+            adapterTemplateService,
+        );
     }
 
-    // initialize form for validation
-    this.genericAdapterForm = this._formBuilder.group({});
-    this.genericAdapterForm.statusChanges.subscribe((_) => {
-      this.genericAdapterSettingsFormValid = this.genericAdapterForm.valid;
-    });
-  }
+    ngOnInit(): void {
+        super.onInit();
+        if (
+            this.adapterDescription instanceof GenericAdapterSetDescription ||
+            this.adapterDescription instanceof GenericAdapterStreamDescription
+        ) {
+            this.protocolDescription =
+                this.adapterDescription.protocolDescription;
+        }
 
-  openTemplateDialog(): void {
-    const dialogRef = this.adapterTemplateService.getDialog(this.protocolDescription.config, this.protocolDescription.appId);
-
-    dialogRef.afterClosed().subscribe(_ => {
-      this.loadPipelineElementTemplates();
-    });
-  }
-
-  afterTemplateReceived(adapterDescription: any) {
-    this.protocolDescription = ProtocolDescription.fromData(adapterDescription.protocolDescription);
-    if (this.adapterDescription instanceof GenericAdapterSetDescription ||
-      this.adapterDescription instanceof GenericAdapterStreamDescription) {
-      this.adapterDescription.protocolDescription = this.protocolDescription;
-      this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
+        // initialize form for validation
+        this.genericAdapterForm = this._formBuilder.group({});
+        this.genericAdapterForm.statusChanges.subscribe(_ => {
+            this.genericAdapterSettingsFormValid =
+                this.genericAdapterForm.valid;
+        });
     }
-  }
 
+    openTemplateDialog(): void {
+        const dialogRef = this.adapterTemplateService.getDialog(
+            this.protocolDescription.config,
+            this.protocolDescription.appId,
+        );
+
+        dialogRef.afterClosed().subscribe(_ => {
+            this.loadPipelineElementTemplates();
+        });
+    }
+
+    afterTemplateReceived(adapterDescription: any) {
+        this.protocolDescription = ProtocolDescription.fromData(
+            adapterDescription.protocolDescription,
+        );
+        if (
+            this.adapterDescription instanceof GenericAdapterSetDescription ||
+            this.adapterDescription instanceof GenericAdapterStreamDescription
+        ) {
+            this.adapterDescription.protocolDescription =
+                this.protocolDescription;
+            this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
+        }
+    }
 }

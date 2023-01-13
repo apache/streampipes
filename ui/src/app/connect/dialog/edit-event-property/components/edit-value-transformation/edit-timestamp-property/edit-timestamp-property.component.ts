@@ -19,20 +19,18 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-edit-timestamp-property',
-  templateUrl: './edit-timestamp-property.component.html',
-  styleUrls: ['./edit-timestamp-property.component.scss']
+    selector: 'sp-edit-timestamp-property',
+    templateUrl: './edit-timestamp-property.component.html',
+    styleUrls: ['./edit-timestamp-property.component.scss'],
 })
 export class EditTimestampPropertyComponent {
+    @Input() cachedProperty: any;
+    @Input() showEditTimestampProperty: boolean;
 
-  @Input() cachedProperty: any;
-  @Input() showEditTimestampProperty: boolean;
+    private selectedTimeMultiplier;
 
-  private selectedTimeMultiplier;
-
-  constructor() {
-    // Set preselected value
-    this.selectedTimeMultiplier = 'second';
-  }
-
+    constructor() {
+        // Set preselected value
+        this.selectedTimeMultiplier = 'second';
+    }
 }

@@ -19,24 +19,32 @@
 package org.apache.streampipes.model.base;
 
 
-import org.apache.streampipes.model.ApplicationLink;
-import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * named pipeline element, can be accessed via the URI provided in @RdfId
  */
-public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
+@TsModel
+public abstract class NamedStreamPipesEntity implements Serializable {
 
   private static final long serialVersionUID = -98951691820519795L;
 
+  protected @SerializedName("_id") String elementId;
+
   @JsonProperty("_rev")
   protected @SerializedName("_rev") String rev;
+
   protected String dom;
   protected List<String> connectedTo;
   private String name;
@@ -47,13 +55,11 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   private boolean includesLocales;
   private List<String> includedAssets;
   private List<String> includedLocales;
-  private List<ApplicationLink> applicationLinks;
   private boolean internallyManaged;
 
 
   public NamedStreamPipesEntity() {
     super();
-    this.applicationLinks = new ArrayList<>();
     this.includedAssets = new ArrayList<>();
     this.includedLocales = new ArrayList<>();
   }
@@ -73,13 +79,12 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.elementId = elementId;
     this.name = name;
     this.description = description;
-    this.applicationLinks = new ArrayList<>();
     this.includedAssets = new ArrayList<>();
     this.includedLocales = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(NamedStreamPipesEntity other) {
-    super(other);
+    this.elementId = other.getElementId();
     this.rev = other.getRev();
     this.description = other.getDescription();
     this.name = other.getName();
@@ -88,9 +93,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.dom = other.getDom();
     this.internallyManaged = other.isInternallyManaged();
     this.connectedTo = other.getConnectedTo();
-    if (other.getApplicationLinks() != null) {
-      this.applicationLinks = new Cloner().al(other.getApplicationLinks());
-    }
     this.appId = other.getAppId();
     this.includesAssets = other.isIncludesAssets();
     this.includesLocales = other.isIncludesLocales();
@@ -152,14 +154,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.connectedTo = connectedTo;
   }
 
-  public List<ApplicationLink> getApplicationLinks() {
-    return applicationLinks;
-  }
-
-  public void setApplicationLinks(List<ApplicationLink> applicationLinks) {
-    this.applicationLinks = applicationLinks;
-  }
-
   public String getAppId() {
     return appId;
   }
@@ -214,5 +208,25 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    NamedStreamPipesEntity that = (NamedStreamPipesEntity) o;
+    return Objects.equals(elementId, that.elementId);
   }
 }

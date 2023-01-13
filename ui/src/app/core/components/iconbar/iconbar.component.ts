@@ -16,34 +16,34 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
 import { Router } from '@angular/router';
 import { NotificationCountService } from '../../../services/notification-count-service';
 import { AuthService } from '../../../services/auth.service';
-import { Subscription, timer } from 'rxjs';
-import { exhaustMap } from 'rxjs/operators';
 import { RestApi } from '../../../services/rest-api.service';
 import { AppConstants } from '../../../services/app.constants';
 
 @Component({
-  selector: 'iconbar',
-  templateUrl: './iconbar.component.html',
-  styleUrls: ['./iconbar.component.scss']
+    selector: 'sp-iconbar',
+    templateUrl: './iconbar.component.html',
+    styleUrls: ['./iconbar.component.scss'],
 })
-export class IconbarComponent extends BaseNavigationComponent implements OnInit {
+export class IconbarComponent
+    extends BaseNavigationComponent
+    implements OnInit
+{
+    constructor(
+        router: Router,
+        authService: AuthService,
+        public notificationCountService: NotificationCountService,
+        private restApi: RestApi,
+        appConstants: AppConstants,
+    ) {
+        super(authService, router, appConstants);
+    }
 
-
-  constructor(router: Router,
-              authService: AuthService,
-              public notificationCountService: NotificationCountService,
-              private restApi: RestApi,
-              appConstants: AppConstants) {
-    super(authService, router, appConstants);
-  }
-
-  ngOnInit(): void {
-    super.onInit();
-
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 }

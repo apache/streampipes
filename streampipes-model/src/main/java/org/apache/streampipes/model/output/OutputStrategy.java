@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.model.output;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,8 @@ import java.util.List;
     @JsonSubTypes.Type(TransformOutputStrategy.class),
     @JsonSubTypes.Type(UserDefinedOutputStrategy.class),
 })
-public abstract class OutputStrategy extends UnnamedStreamPipesEntity {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
+public abstract class OutputStrategy {
 
   private static final long serialVersionUID = 1953204905003864143L;
 
@@ -50,7 +51,6 @@ public abstract class OutputStrategy extends UnnamedStreamPipesEntity {
   }
 
   public OutputStrategy(OutputStrategy other) {
-    super(other);
     this.name = other.getName();
     this.renameRules = new Cloner().renameRules(other.getRenameRules());
   }
