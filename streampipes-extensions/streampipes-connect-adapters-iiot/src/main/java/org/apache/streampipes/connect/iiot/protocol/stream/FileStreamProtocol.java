@@ -30,13 +30,10 @@ import org.apache.streampipes.extensions.management.connect.adapter.preprocessin
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
+import org.apache.streampipes.extensions.management.util.EventSchemaUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyList;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
@@ -53,7 +50,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FileStreamProtocol extends Protocol {
@@ -85,7 +81,7 @@ public class FileStreamProtocol extends Protocol {
 
   @Override
   public void run(IAdapterPipeline adapterPipeline) {
-    String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema().getEventProperties(), "");
+    String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema());
 
     // exchange adapter pipeline sink with special purpose replay sink for file replay
     if (adapterPipeline.getPipelineSink() instanceof SendToKafkaAdapterSink) {
@@ -172,29 +168,9 @@ public class FileStreamProtocol extends Protocol {
     return new FileStreamProtocol(parser, format, fileName, replaceTimestamp, speedUp, timeBetweenReplay);
   }
 
-  private String getTimestampKey(List<EventProperty> eventProperties, String prefixKey) {
-    String result = null;
-    for (EventProperty eventProperty : eventProperties) {
-      if (eventProperty instanceof EventPropertyPrimitive && eventProperty.getDomainProperties() != null) {
-        for (int i = eventProperty.getDomainProperties().size() - 1; i >= 0; i--) {
-          if (eventProperty.getDomainProperties().get(0).toString().equals("http://schema.org/DateTime")) {
-            result = prefixKey + eventProperty.getRuntimeName();
-          }
-        }
-      } else if (eventProperty instanceof EventPropertyNested
-          && ((EventPropertyNested) eventProperty).getEventProperties() != null) {
-        result = getTimestampKey(((EventPropertyNested) eventProperty).getEventProperties(),
-            prefixKey + eventProperty.getRuntimeName() + ".");
-      } else if (eventProperty instanceof EventPropertyList
-          && ((EventPropertyList) eventProperty).getEventProperty() != null) {
-        result = getTimestampKey(Arrays.asList(((EventPropertyList) eventProperty).getEventProperty()),
-            prefixKey + eventProperty.getRuntimeName() + ".");
-      }
-      if (result != null) {
-        return result;
-      }
-    }
-    return result;
+  private String getTimestampKey(EventSchema eventSchema) {
+    var timestampProperty = EventSchemaUtils.getTimestampProperty(eventSchema);
+    return timestampProperty.get().getRuntimeName();
   }
 
   @Override

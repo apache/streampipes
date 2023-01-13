@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterPipelineGenerator;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
+import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.List;
 import java.util.Map;
@@ -78,5 +79,10 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
         .stream()
         .collect(Collectors.toMap(Map.Entry::getKey,
             e -> new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
+  }
+
+  @Override
+  public EventSchema getResultingEventSchema() {
+    return null;
   }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.util;
+package org.apache.streampipes.extensions.management.util;
 
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.test.generator.EventPropertyNestedTestBuilder;
@@ -30,8 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
-public class SchemaUtilsTest {
+public class EventSchemaUtilsTest {
 
   EventProperty timestampProperty = EventPropertyPrimitiveTestBuilder.create()
       .withSemanticType(SO.DATE_TIME)
@@ -46,7 +45,7 @@ public class SchemaUtilsTest {
             EventPropertyPrimitiveTestBuilder.create().build())
         .build();
 
-    var result = SchemaUtils.getTimestampProperty(eventSchema);
+    var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
     assertFalse(result.isPresent());
   }
@@ -57,12 +56,7 @@ public class SchemaUtilsTest {
         .withEventProperty(timestampProperty)
         .build();
 
-//    var timestampProperty = new EventPropertyPrimitive();
-//    timestampProperty.setDomainProperties(List.of(URI.create(SO.DATE_TIME)));
-//    timestampProperty.setRuntimeName("timestamp");
-//    eventSchema.addEventProperty(timestampProperty);
-
-    var result = SchemaUtils.getTimestampProperty(eventSchema);
+    var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
     assertTrue(result.isPresent());
     assertEquals(result.get(), timestampProperty);
@@ -78,11 +72,9 @@ public class SchemaUtilsTest {
                 .build())
         .build();
 
-    var result = SchemaUtils.getTimestampProperty(eventSchema);
+    var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
     assertTrue(result.isPresent());
     assertEquals(result.get(), timestampProperty);
   }
-
-
 }

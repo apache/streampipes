@@ -32,14 +32,18 @@ public class AdapterPipeline implements IAdapterPipeline {
 
   private EventSchema resultingEventSchema;
 
-  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, EventSchema resultingEventSchema) {
+  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
+                         EventSchema resultingEventSchema) {
     this.pipelineElements = pipelineElements;
     this.resultingEventSchema = resultingEventSchema;
   }
 
-  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink) {
+  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
+                         IAdapterPipelineElement pipelineSink,
+                         EventSchema resultingEventSchema) {
     this.pipelineElements = pipelineElements;
     this.pipelineSink = pipelineSink;
+    this.resultingEventSchema = resultingEventSchema;
   }
 
   @Override
