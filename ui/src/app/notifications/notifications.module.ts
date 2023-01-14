@@ -38,23 +38,12 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         FlexLayoutModule,
         CustomMaterialModule,
         FormsModule,
-        PlatformServicesModule
+        PlatformServicesModule,
     ],
-    declarations: [
-        NotificationsComponent,
-        NotificationItemComponent
-    ],
-    providers: [
-        NotificationsService
-    ],
-    exports: [
-        NotificationsComponent
-    ]
+    declarations: [NotificationsComponent, NotificationItemComponent],
+    providers: [NotificationsService],
+    exports: [NotificationsComponent],
 })
 export class NotificationModule {
-
-  constructor() {
-  }
-
+    constructor() {}
 }
-
