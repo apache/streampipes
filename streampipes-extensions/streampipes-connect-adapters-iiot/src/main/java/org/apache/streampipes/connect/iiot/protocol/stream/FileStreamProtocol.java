@@ -19,18 +19,14 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
+import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.SendToPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToBrokerReplayAdapterSink;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
 import org.apache.streampipes.extensions.management.util.EventSchemaUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
@@ -52,8 +48,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class FileStreamProtocol extends Protocol {
 
@@ -66,7 +63,7 @@ public class FileStreamProtocol extends Protocol {
   private float speedUp;
   private int timeBetweenReplay;
 
-  private ExecutorService executor;
+  private ScheduledExecutorService executor;
 
   public FileStreamProtocol() {
   }
@@ -88,53 +85,73 @@ public class FileStreamProtocol extends Protocol {
   public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
     String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema());
 
-    // exchange adapter pipeline sink with special purpose replay sink for file replay
-    if (adapterPipeline.getPipelineSink() instanceof SendToKafkaAdapterSink) {
-      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-          (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink(),
-          timestampKey,
-          replaceTimestamp,
-          speedUp));
 
-    } else if (adapterPipeline.getPipelineSink() instanceof SendToMqttAdapterSink) {
-      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-          (SendToMqttAdapterSink) adapterPipeline.getPipelineSink(),
-          timestampKey,
-          replaceTimestamp,
-          speedUp));
+    executor = Executors.newScheduledThreadPool(1);
+    var eventProcessor = new LocalEventProcessor(adapterPipeline, timestampKey);
 
-    } else if (adapterPipeline.getPipelineSink() instanceof SendToJmsAdapterSink) {
-      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-          (SendToJmsAdapterSink) adapterPipeline.getPipelineSink(),
-          timestampKey,
-          replaceTimestamp,
-          speedUp));
-    }
-
-    executor = Executors.newSingleThreadExecutor();
-
-    executor.execute(() -> {
-      format.reset();
-      SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-      InputStream dataInputStream = getDataFromEndpoint();
-      try {
-        parser.parse(dataInputStream, stk);
-      } catch (ParseException e) {
+    executor.scheduleAtFixedRate(() -> {
+      try (InputStream dataInputStream = getDataFromEndpoint()) {
+        format.reset();
+        parser.parse(dataInputStream, eventProcessor);
+      } catch (ParseException | IOException e) {
         logger.error("Error while parsing: " + e.getMessage());
       }
-
-      try {
-        Thread.sleep(timeBetweenReplay * 1000L);
-      } catch (InterruptedException e) {
-        logger.error("Error while waiting for next replay round" + e.getMessage());
-      }
-    });
+    }, 0, timeBetweenReplay, TimeUnit.SECONDS);
   }
 
+  private class LocalEventProcessor implements EmitBinaryEvent {
+
+    private final IAdapterPipeline adapterPipeline;
+    private final String timestampKey;
+
+    private long lastEventTimestamp = -1;
+
+    /**
+     * This local class is responsible to parse the events and set the timestamp accordign to the selected replay
+     * configurations
+     * @param adapterPipeline that transforms the events and send them to the message broker in the end
+     * @param timestampKey the runtimeName of the timestamp field
+     */
+    public LocalEventProcessor(IAdapterPipeline adapterPipeline,
+                               String timestampKey) {
+      this.adapterPipeline = adapterPipeline;
+      this.timestampKey = timestampKey;
+      format.reset();
+    }
+
+    @Override
+    public Boolean emit(byte[] event) {
+
+      var eventMap = format.parse(event);
+      if (eventMap != null) {
+        long actualEventTimestamp = (long) eventMap.get(timestampKey);
+
+        if (lastEventTimestamp != -1) {
+          long sleepTime = (long) ((actualEventTimestamp - lastEventTimestamp) / speedUp);
+          if (sleepTime > 0) {
+            try {
+              Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+
+        if (replaceTimestamp) {
+          eventMap.put(timestampKey, System.currentTimeMillis());
+        }
+        lastEventTimestamp = actualEventTimestamp;
+
+        adapterPipeline.process(eventMap);
+
+      }
+      return true;
+    }
+  }
 
   @Override
   public void stop() {
-    executor.shutdown();
+    executor.shutdownNow();
     logger.info("Stopped file stream adapter for file " + selectedFileName);
   }
 
