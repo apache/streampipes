@@ -28,13 +28,14 @@ public class PipelineStatusMessage {
   private String messageType;
   private String message;
 
-  public PipelineStatusMessage(String pipelineId, long timestamp,
-                               String messageType, String message) {
+  public PipelineStatusMessage(String pipelineId,
+                               long timestamp,
+                               PipelineStatusMessageType message) {
     super();
     this.pipelineId = pipelineId;
     this.timestamp = timestamp;
-    this.messageType = messageType;
-    this.message = message;
+    this.messageType = message.title();
+    this.message = message.description();
   }
 
   public String getPipelineId() {

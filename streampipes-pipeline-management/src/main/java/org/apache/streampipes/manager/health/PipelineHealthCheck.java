@@ -22,8 +22,8 @@ import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.execution.http.HttpRequestBuilder;
-import org.apache.streampipes.manager.util.TemporaryGraphStorage;
+import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
+import org.apache.streampipes.manager.storage.RunningPipelineElementStorage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
@@ -67,7 +67,7 @@ public class PipelineHealthCheck implements Runnable {
         List<String> failedInstances = new ArrayList<>();
         List<String> recoveredInstances = new ArrayList<>();
         List<String> pipelineNotifications = new ArrayList<>();
-        List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
+        List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage.runningProcessorsAndSinks.get(pipeline.getPipelineId());
         graphs.forEach(graph -> {
           String instanceId = extractInstanceId(graph);
           if (allRunningInstances.stream().noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
@@ -77,7 +77,7 @@ public class PipelineHealthCheck implements Runnable {
               boolean success;
               try {
                 endpointUrl = findEndpointUrl(graph);
-                success = new HttpRequestBuilder(graph, endpointUrl, pipeline.getPipelineId()).invoke().isSuccess();
+                success = new InvokeHttpRequest().execute(graph, endpointUrl, pipeline.getPipelineId()).isSuccess();
               } catch (NoServiceEndpointsAvailableException e) {
                 success = false;
               }
@@ -182,7 +182,7 @@ public class PipelineHealthCheck implements Runnable {
 
   private Map<String, List<InvocableStreamPipesEntity>> generateEndpointMap() {
     Map<String, List<InvocableStreamPipesEntity>> endpointMap = new HashMap<>();
-    TemporaryGraphStorage.graphStorage.forEach((pipelineId, graphs) ->
+    RunningPipelineElementStorage.runningProcessorsAndSinks.forEach((pipelineId, graphs) ->
         graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
 
     return endpointMap;

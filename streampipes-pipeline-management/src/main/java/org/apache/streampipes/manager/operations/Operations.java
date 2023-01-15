@@ -22,8 +22,8 @@ import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableExcepti
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.endpoint.EndpointItemFetcher;
-import org.apache.streampipes.manager.execution.http.PipelineExecutor;
-import org.apache.streampipes.manager.execution.http.PipelineStorageService;
+import org.apache.streampipes.manager.execution.PipelineExecutor;
+import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
@@ -96,19 +96,8 @@ public class Operations {
     new PipelineStorageService(pipeline).updatePipeline();
   }
 
-  public static PipelineOperationStatus startPipeline(
-      Pipeline pipeline) {
-    return startPipeline(pipeline, true);
-  }
-
-  public static PipelineOperationStatus startPipeline(
-      Pipeline pipeline, boolean storeStatus) {
-    return new PipelineExecutor(pipeline, storeStatus, false).startPipeline();
-  }
-
-  public static PipelineOperationStatus stopPipeline(
-      Pipeline pipeline, boolean forceStop) {
-    return stopPipeline(pipeline, true, forceStop);
+  public static PipelineOperationStatus startPipeline(Pipeline pipeline) {
+    return new PipelineExecutor(pipeline, false).startPipeline();
   }
 
   public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
@@ -125,9 +114,8 @@ public class Operations {
   }
 
   public static PipelineOperationStatus stopPipeline(Pipeline pipeline,
-                                                     boolean storeStatus,
                                                      boolean forceStop) {
-    return new PipelineExecutor(pipeline, storeStatus, forceStop).stopPipeline();
+    return new PipelineExecutor(pipeline, forceStop).stopPipeline();
   }
 
   public static List<ExtensionsServiceEndpointItem> getEndpointUriContents(List<ExtensionsServiceEndpoint> endpoints) {

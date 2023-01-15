@@ -33,7 +33,9 @@ public class PipelineOperationStatus {
 
   private List<PipelineElementStatus> elementStatus;
 
-  public PipelineOperationStatus(String pipelineId, String pipelineName, String title,
+  public PipelineOperationStatus(String pipelineId,
+                                 String pipelineName,
+                                 String title,
                                  List<PipelineElementStatus> elementStatus) {
     super();
     this.title = title;
@@ -44,6 +46,12 @@ public class PipelineOperationStatus {
 
   public PipelineOperationStatus() {
     this.elementStatus = new ArrayList<>();
+  }
+
+  public PipelineOperationStatus(String pipelineId, String pipelineName) {
+    this();
+    this.pipelineId = pipelineId;
+    this.pipelineName = pipelineName;
   }
 
   public String getPipelineId() {
