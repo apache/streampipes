@@ -23,7 +23,7 @@ copyright: "Apache License 2.0"
 
 theme:
   name: material
-  logo: https://github.com/apache/streampipes/blob/dev/ui/deployment/dev/img/logo-navigation.png
+  logo: https://raw.githubusercontent.com/apache/streampipes/dev/ui/deployment/dev/img/logo-navigation.png
   favicon: https://streampipes.apache.org/img/favicon/favicon.png
   custom_dir: docs/overrides
   features:
