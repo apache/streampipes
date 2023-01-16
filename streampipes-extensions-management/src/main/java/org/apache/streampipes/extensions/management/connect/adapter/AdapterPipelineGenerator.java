@@ -71,20 +71,21 @@ public class AdapterPipelineGenerator {
     }
     pipelineElements.add(transformStreamAdapterElement);
 
-    // TODO decide what was meant with this comment
-    // Needed when adapter is (
     if (adapterDescription.getEventGrounding() != null
         && adapterDescription.getEventGrounding().getTransportProtocol() != null
         && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
-      return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
+      return new AdapterPipeline(
+          pipelineElements,
+          getAdapterSink(adapterDescription),
+          adapterDescription.getEventSchema());
     }
 
     DebugSinkRuleDescription debugSinkRuleDescription = getDebugRule(adapterDescription.getRules());
     if (debugSinkRuleDescription != null) {
-      return new AdapterPipeline(pipelineElements, new DebugAdapterSink());
+      return new AdapterPipeline(pipelineElements, new DebugAdapterSink(), adapterDescription.getEventSchema());
     }
 
-    return new AdapterPipeline(pipelineElements);
+    return new AdapterPipeline(pipelineElements, adapterDescription.getEventSchema());
   }
 
   public List<IAdapterPipelineElement> makeAdapterPipelineElements(List<TransformationRuleDescription> rules) {
@@ -178,7 +179,7 @@ public class AdapterPipelineGenerator {
   }
 
   private boolean isPrioritized(SpProtocol prioritizedProtocol,
-                                      Class<?> protocolClass) {
+                                Class<?> protocolClass) {
     return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
   }
 }

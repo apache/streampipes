@@ -15,23 +15,40 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.test.generator;
 
-package org.apache.streampipes.model.connect.adapter;
-
+import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
-@TsModel
-public class SpecificAdapterStreamDescription extends AdapterStreamDescription {
+import java.util.ArrayList;
+import java.util.List;
 
-  public SpecificAdapterStreamDescription() {
+public class EventSchemaTestBuilder {
+
+  private List<EventProperty> eventProperties;
+
+  private EventSchemaTestBuilder() {
+    eventProperties = new ArrayList<>();
   }
 
-  public SpecificAdapterStreamDescription(AdapterStreamDescription other) {
-    super(other);
+  public static EventSchemaTestBuilder create() {
+    return new EventSchemaTestBuilder();
   }
 
-  public EventSchema getEventSchema() {
-    return this.getDataStream().getEventSchema();
+  public EventSchemaTestBuilder withEventProperties(List<EventProperty> eventProperties) {
+    this.eventProperties.addAll(eventProperties);
+    return this;
   }
+
+  public EventSchemaTestBuilder withEventProperty(EventProperty eventProperty) {
+    eventProperties.add(eventProperty);
+    return this;
+  }
+
+  public EventSchema build() {
+    EventSchema eventSchema = new EventSchema();
+    eventSchema.setEventProperties(eventProperties);
+    return eventSchema;
+  }
+
 }

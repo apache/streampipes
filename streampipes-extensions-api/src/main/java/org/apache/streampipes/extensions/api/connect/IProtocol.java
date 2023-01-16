@@ -21,7 +21,6 @@ import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventSchema;
 
 public interface IProtocol extends Connector {
 
@@ -42,6 +41,4 @@ public interface IProtocol extends Connector {
 
   String getId();
 
-  //TODO remove
-  void setEventSchema(EventSchema eventSchema);
 }

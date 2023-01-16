@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.extensions.api.connect;
 
+import org.apache.streampipes.model.schema.EventSchema;
+
 import java.util.List;
 import java.util.Map;
 
@@ -31,4 +33,6 @@ public interface IAdapterPipeline {
   void changePipelineSink(IAdapterPipelineElement pipelineSink);
 
   IAdapterPipelineElement getPipelineSink();
+
+  EventSchema getResultingEventSchema();
 }
