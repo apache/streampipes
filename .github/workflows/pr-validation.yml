@@ -131,11 +131,9 @@ jobs:
       - name: Run style & code checks
         run: |
           cd ./streampipes-client-python
-          pre-commit run --files streampipes_client/*
-          pre-commit run --files tests/*
+          pre-commit run -a
           make mypy
           make lint
-
 
   python-unit-tests:
     runs-on: ${{ matrix.os }}
@@ -172,3 +170,33 @@ jobs:
         run: |
           cd ./streampipes-client-python
           make unit-tests
+
+  python-doc-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: |
+          cd ./streampipes-client-python
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install -e ".[docs]"
+
+      - name: Build MkDocs
+        run: |
+          cd ./streampipes-client-python
+          make doc
