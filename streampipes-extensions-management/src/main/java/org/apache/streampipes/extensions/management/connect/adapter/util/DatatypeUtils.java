@@ -81,17 +81,29 @@ public class DatatypeUtils {
   }
 
   public static Class<?> getTypeClass(String value,
-                                      boolean preferFloat) {
+                                      boolean preferFloatingPointNumber) {
+    var targetClass = String.class;
     if (NumberUtils.isParsable(value)) {
+      Class<?> numberClass;
       try {
-        Integer.parseInt(value);
-        return preferFloat ? Float.class : Integer.class;
+        long longValue = Long.parseLong(value);
+        numberClass = longValue > Integer.MAX_VALUE ? Long.class : Integer.class;
+        if (preferFloatingPointNumber) {
+          return numberClass == Long.class ? Double.class : Float.class;
+        } else {
+          return numberClass;
+        }
       } catch (NumberFormatException ignored) {
       }
 
       try {
-        Long.parseLong(value);
-        return preferFloat ? Float.class : Long.class;
+        double doubleValue = Double.parseDouble(value);
+        numberClass = doubleValue > Float.MAX_VALUE ? Double.class : Float.class;
+        if (preferFloatingPointNumber) {
+          return numberClass == Double.class ? Double.class : Float.class;
+        } else {
+          return numberClass;
+        }
       } catch (NumberFormatException ignored) {
       }
 
@@ -107,13 +119,7 @@ public class DatatypeUtils {
       return Boolean.class;
     }
 
-    return String.class;
+    return targetClass;
   }
 
-  public static void main(String[] args) {
-    long max = Long.MAX_VALUE;
-    String className = getCanonicalTypeClassName(String.valueOf(max), true);
-    System.out.println(className);
-    System.out.println(convertValue(max, className));
-  }
 }
