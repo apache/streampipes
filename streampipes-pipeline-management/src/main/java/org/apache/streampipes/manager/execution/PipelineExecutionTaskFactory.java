@@ -24,10 +24,10 @@ import org.apache.streampipes.manager.execution.provider.CurrentPipelineElementP
 import org.apache.streampipes.manager.execution.provider.StoredPipelineElementProvider;
 import org.apache.streampipes.manager.execution.task.AfterInvocationTask;
 import org.apache.streampipes.manager.execution.task.DiscoverEndpointsTask;
-import org.apache.streampipes.manager.execution.task.SubmitRequestTask;
 import org.apache.streampipes.manager.execution.task.PipelineExecutionTask;
 import org.apache.streampipes.manager.execution.task.SecretEncryptionTask;
 import org.apache.streampipes.manager.execution.task.StorePipelineStatusTask;
+import org.apache.streampipes.manager.execution.task.SubmitRequestTask;
 import org.apache.streampipes.manager.execution.task.UpdateGroupIdTask;
 import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
