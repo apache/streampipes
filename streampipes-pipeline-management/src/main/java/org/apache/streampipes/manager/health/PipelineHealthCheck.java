@@ -67,7 +67,10 @@ public class PipelineHealthCheck implements Runnable {
         List<String> failedInstances = new ArrayList<>();
         List<String> recoveredInstances = new ArrayList<>();
         List<String> pipelineNotifications = new ArrayList<>();
-        List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage.runningProcessorsAndSinks.get(pipeline.getPipelineId());
+        List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage
+            .runningProcessorsAndSinks
+            .get(pipeline.getPipelineId());
+        
         graphs.forEach(graph -> {
           String instanceId = extractInstanceId(graph);
           if (allRunningInstances.stream().noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
