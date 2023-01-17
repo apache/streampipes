@@ -82,8 +82,12 @@ export class AdapterService {
     }
 
     startAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
+        return this.startAdapterByElementId(adapter.elementId);
+    }
+
+    startAdapterByElementId(elementId: string): Observable<Message> {
         return this.http
-            .post(this.adapterMasterUrl + adapter.elementId + '/start', {})
+            .post(this.adapterMasterUrl + elementId + '/start', {})
             .pipe(map(response => Message.fromData(response as any)));
     }
 
@@ -119,7 +123,7 @@ export class AdapterService {
         return `${this.connectPath}/master/description/${appId}/assets`;
     }
 
-    private get baseUrl() {
+    private static get baseUrl() {
         return '/streampipes-backend';
     }
 }

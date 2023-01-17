@@ -67,6 +67,11 @@ export class AdapterStartedDialog implements OnInit {
      */
     @Input() editMode = false;
 
+    /**
+     * This option will immediately start the adapter, when false it the adapter is only created and not started
+     */
+    @Input() startAdapterNow = true;
+
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
         private adapterService: AdapterService,
@@ -91,27 +96,44 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     startAdapter() {
-        // const newAdapter = this.adapter;
         this.adapterService.addAdapter(this.adapter).subscribe(status => {
             this.adapterStatus = status;
             if (status.success) {
-                // Start preview on streams and message for sets
-                if (
-                    this.adapter instanceof GenericAdapterSetDescription ||
-                    this.adapter instanceof SpecificAdapterSetDescription
-                ) {
-                    this.isSetAdapter = true;
+                const adapterElementId = status.notifications[0].title;
+                if (this.startAdapterNow) {
+                    this.adapterService
+                        .startAdapterByElementId(adapterElementId)
+                        .subscribe(startStatus => {
+                            this.showAdapterPreview(
+                                startStatus,
+                                adapterElementId,
+                            );
+                        });
                 } else {
-                    this.getLiveViewPreview(status);
-                }
-
-                if (this.saveInDataLake) {
-                    this.startSaveInDataLakePipeline(status);
-                } else {
-                    this.adapterInstalled = true;
+                    this.showAdapterPreview(status, adapterElementId);
                 }
             }
         });
+    }
+
+    showAdapterPreview(status: Message, adapterElementId: string) {
+        // Start preview on streams and message for sets
+        if (status.success) {
+            if (
+                this.adapter instanceof GenericAdapterSetDescription ||
+                this.adapter instanceof SpecificAdapterSetDescription
+            ) {
+                this.isSetAdapter = true;
+            } else {
+                this.getLiveViewPreview(adapterElementId);
+            }
+
+            if (this.saveInDataLake) {
+                this.startSaveInDataLakePipeline(adapterElementId);
+            } else {
+                this.adapterInstalled = true;
+            }
+        }
     }
 
     onCloseConfirm() {
@@ -120,44 +142,51 @@ export class AdapterStartedDialog implements OnInit {
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
-    private getLiveViewPreview(status: Message) {
-        this.restService
-            .getSourceDetails(status.notifications[0].title)
-            .subscribe(st => {
-                this.streamDescription = st;
-                this.pollingActive = true;
-            });
+    private getLiveViewPreview(adapterElementId: string) {
+        this.adapterService.getAdapter(adapterElementId).subscribe(adapter => {
+            this.restService
+                .getSourceDetails(adapter.correspondingDataStreamElementId)
+                .subscribe(st => {
+                    this.streamDescription = st;
+                    this.pollingActive = true;
+                });
+        });
     }
 
-    private startSaveInDataLakePipeline(status: Message) {
-        const pipelineId =
-            'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
-        this.pipelineTemplateService
-            .getPipelineTemplateInvocation(
-                status.notifications[0].title,
-                pipelineId,
-            )
-            .subscribe(res => {
-                const pipelineName = 'Persist ' + this.adapter.name;
+    private startSaveInDataLakePipeline(adapterElementId: string) {
+        this.adapterService.getAdapter(adapterElementId).subscribe(adapter => {
+            const pipelineId =
+                'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
+            this.pipelineTemplateService
+                .getPipelineTemplateInvocation(
+                    adapter.correspondingDataStreamElementId,
+                    pipelineId,
+                )
+                .subscribe(res => {
+                    const pipelineName = 'Persist ' + this.adapter.name;
 
-                const indexName = this.adapter.name;
+                    const indexName = this.adapter.name;
 
-                const pipelineInvocation = PipelineInvocationBuilder.create(res)
-                    .setName(pipelineName)
-                    .setTemplateId(pipelineId)
-                    .setFreeTextStaticProperty('db_measurement', indexName)
-                    .setMappingPropertyUnary(
-                        'timestamp_mapping',
-                        's0::' + this.dataLakeTimestampField,
+                    const pipelineInvocation = PipelineInvocationBuilder.create(
+                        res,
                     )
-                    .build();
+                        .setName(pipelineName)
+                        .setTemplateId(pipelineId)
+                        .setFreeTextStaticProperty('db_measurement', indexName)
+                        .setMappingPropertyUnary(
+                            'timestamp_mapping',
+                            's0::' + this.dataLakeTimestampField,
+                        )
+                        .build();
 
-                this.pipelineTemplateService
-                    .createPipelineTemplateInvocation(pipelineInvocation)
-                    .subscribe(pipelineOperationStatus => {
-                        this.pipelineOperationStatus = pipelineOperationStatus;
-                        this.adapterInstalled = true;
-                    });
-            });
+                    this.pipelineTemplateService
+                        .createPipelineTemplateInvocation(pipelineInvocation)
+                        .subscribe(pipelineOperationStatus => {
+                            this.pipelineOperationStatus =
+                                pipelineOperationStatus;
+                            this.adapterInstalled = true;
+                        });
+                });
+        });
     }
 }
