@@ -123,7 +123,7 @@ export class AdapterService {
         return `${this.connectPath}/master/description/${appId}/assets`;
     }
 
-    private static get baseUrl() {
+    private get baseUrl() {
         return '/streampipes-backend';
     }
 }
