@@ -15,54 +15,62 @@
  * limitations under the License.
  *
  */
-import { FreeTextStaticProperty, MappingPropertyUnary, PipelineTemplateInvocation } from '@streampipes/platform-services';
+import {
+    FreeTextStaticProperty,
+    MappingPropertyUnary,
+    PipelineTemplateInvocation,
+} from '@streampipes/platform-services';
 
 export class PipelineInvocationBuilder {
+    private pipelineTemplateInvocation: PipelineTemplateInvocation;
 
-  private pipelineTemplateInvocation: PipelineTemplateInvocation;
+    constructor(pipelineTemplateInvocation: PipelineTemplateInvocation) {
+        this.pipelineTemplateInvocation = pipelineTemplateInvocation;
+    }
 
-  constructor(pipelineTemplateInvocation: PipelineTemplateInvocation) {
-    this.pipelineTemplateInvocation = pipelineTemplateInvocation;
-  }
+    public static create(
+        pipelineTemplateInvocation: PipelineTemplateInvocation,
+    ) {
+        return new PipelineInvocationBuilder(pipelineTemplateInvocation);
+    }
 
-  public static create(pipelineTemplateInvocation: PipelineTemplateInvocation) {
-    return new PipelineInvocationBuilder(pipelineTemplateInvocation);
-  }
+    public setTemplateId(id: string) {
+        this.pipelineTemplateInvocation.pipelineTemplateId = id;
+        return this;
+    }
 
-  public setTemplateId(id: string) {
-    this.pipelineTemplateInvocation.pipelineTemplateId = id;
-    return this;
-  }
+    public setName(name: string) {
+        this.pipelineTemplateInvocation.kviName = name;
+        return this;
+    }
 
-  public setName(name: string) {
-    this.pipelineTemplateInvocation.kviName = name;
-    return this;
-  }
+    public setFreeTextStaticProperty(name: string, value: string) {
+        this.pipelineTemplateInvocation.staticProperties.forEach(property => {
+            if (
+                property instanceof FreeTextStaticProperty &&
+                'jsplumb_domId2' + name === property.internalName
+            ) {
+                property.value = value;
+            }
+        });
 
-  public setFreeTextStaticProperty(name: string, value: string) {
-    this.pipelineTemplateInvocation.staticProperties.forEach(property => {
-      if (property instanceof FreeTextStaticProperty && 'jsplumb_domId2' + name === property.internalName) {
-        property.value = value;
-      }
-    });
+        return this;
+    }
 
-    return this;
-  }
+    public setMappingPropertyUnary(name: string, value: string) {
+        this.pipelineTemplateInvocation.staticProperties.forEach(property => {
+            if (
+                property instanceof MappingPropertyUnary &&
+                'jsplumb_domId2' + name === property.internalName
+            ) {
+                property.selectedProperty = value;
+            }
+        });
 
-  public setMappingPropertyUnary(name: string, value: string) {
-    this.pipelineTemplateInvocation.staticProperties.forEach(property => {
-      if (property instanceof MappingPropertyUnary && 'jsplumb_domId2' + name === property.internalName) {
-        property.selectedProperty = value;
-      }
-    });
+        return this;
+    }
 
-    return this;
-  }
-
-  public build() {
-    return this.pipelineTemplateInvocation;
-  }
-
-
+    public build() {
+        return this.pipelineTemplateInvocation;
+    }
 }
-
