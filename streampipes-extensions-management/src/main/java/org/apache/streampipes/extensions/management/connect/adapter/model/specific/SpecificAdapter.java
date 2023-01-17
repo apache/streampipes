@@ -31,7 +31,4 @@ public abstract class SpecificAdapter<T extends AdapterDescription> extends Adap
     super(adapterDescription);
   }
 
-  public SpecificAdapter(T adapterDescription, boolean debug) {
-    super(adapterDescription, debug);
-  }
 }

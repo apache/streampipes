@@ -30,7 +30,4 @@ public abstract class SpecificDataSetAdapter extends SpecificAdapter<SpecificAda
     super(adapterDescription);
   }
 
-  public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription, boolean debug) {
-    super(adapterDescription, debug);
-  }
 }
