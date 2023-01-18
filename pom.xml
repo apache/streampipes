@@ -1436,7 +1436,6 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-performance-tests</module>
         <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>
