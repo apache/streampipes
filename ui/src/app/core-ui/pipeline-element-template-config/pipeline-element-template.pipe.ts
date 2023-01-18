@@ -18,20 +18,23 @@
 
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import {
-  RuntimeResolvableAnyStaticProperty, RuntimeResolvableOneOfStaticProperty, RuntimeResolvableTreeInputStaticProperty,
-  StaticPropertyUnion
+    RuntimeResolvableAnyStaticProperty,
+    RuntimeResolvableOneOfStaticProperty,
+    RuntimeResolvableTreeInputStaticProperty,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 
-@Pipe({name: 'pipelineElementTemplatePipe'})
-@Injectable({providedIn: 'root'})
+@Pipe({ name: 'pipelineElementTemplatePipe' })
+@Injectable({ providedIn: 'root' })
 export class PipelineElementTemplatePipe implements PipeTransform {
-
-  transform(properties: StaticPropertyUnion[]): StaticPropertyUnion[] {
-
-    return properties.filter(p => (
-      !(p instanceof RuntimeResolvableAnyStaticProperty) &&
-      !(p instanceof RuntimeResolvableOneOfStaticProperty &&
-        !(p instanceof RuntimeResolvableTreeInputStaticProperty))));
-  }
-
+    transform(properties: StaticPropertyUnion[]): StaticPropertyUnion[] {
+        return properties.filter(
+            p =>
+                !(p instanceof RuntimeResolvableAnyStaticProperty) &&
+                !(
+                    p instanceof RuntimeResolvableOneOfStaticProperty &&
+                    !(p instanceof RuntimeResolvableTreeInputStaticProperty)
+                ),
+        );
+    }
 }

@@ -16,7 +16,11 @@
  *
  */
 
-import { EventSchema, StaticProperty, StaticPropertyUnion } from '@streampipes/platform-services';
+import {
+    EventSchema,
+    StaticProperty,
+    StaticPropertyUnion,
+} from '@streampipes/platform-services';
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
@@ -25,40 +29,38 @@ import { InvocablePipelineElementUnion } from '../../../editor/model/editor.mode
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
+    @Input()
+    staticProperty: T;
 
-  @Input()
-  staticProperty: T;
+    @Input()
+    staticProperties: StaticPropertyUnion[];
 
-  @Input()
-  staticProperties: StaticPropertyUnion[];
+    @Input()
+    eventSchemas: EventSchema[];
 
-  @Input()
-  eventSchemas: EventSchema[];
+    @Input()
+    adapterId: string;
 
-  @Input()
-  adapterId: string;
+    @Input()
+    pipelineElement: InvocablePipelineElementUnion;
 
-  @Input()
-  pipelineElement: InvocablePipelineElementUnion;
+    @Input()
+    parentForm: UntypedFormGroup;
 
-  @Input()
-  parentForm: UntypedFormGroup;
+    @Input()
+    fieldName: string;
 
-  @Input()
-  fieldName: string;
+    @Input()
+    displayRecommended: boolean;
 
-  @Input()
-  displayRecommended: boolean;
+    @Output() updateEmitter: EventEmitter<ConfigurationInfo> =
+        new EventEmitter();
 
-  @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
+    constructor() {}
 
-
-  constructor() {
-
-  }
-
-  emitUpdate(valid?: boolean) {
-    this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
-  }
-
+    emitUpdate(valid?: boolean) {
+        this.updateEmitter.emit(
+            new ConfigurationInfo(this.staticProperty.internalName, valid),
+        );
+    }
 }

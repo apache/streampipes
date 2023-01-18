@@ -15,38 +15,33 @@
  * limitations under the License.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'sp-image-viewer',
-  templateUrl: './image-viewer.component.html',
-  styleUrls: ['./image-viewer.component.css']
+    selector: 'sp-image-viewer',
+    templateUrl: './image-viewer.component.html',
+    styleUrls: ['./image-viewer.component.css'],
 })
-export class ImageViewerComponent implements OnInit {
+export class ImageViewerComponent {
+    @Input()
+    public imagesRoutes: Observable<SafeUrl>[];
 
-  @Input()
-  public imagesRoutes: Observable<SafeUrl>[];
+    @Input()
+    public canvasHeight = 500;
 
-  @Input()
-  public canvasHeight = 500;
+    @Input()
+    public canvasWidth = 800;
 
-  @Input()
-  public canvasWidth = 800;
+    @Input()
+    public imagePreviewHeight = 65;
 
-  @Input()
-  public imagePreviewHeight = 65;
+    public imagesIndex = 0;
 
+    constructor() {}
 
-  public imagesIndex = 0;
-
-  constructor() {}
-
-  handleImageIndexChange(index) {
-    this.imagesIndex = index;
-  }
-
-  ngOnInit(): void {
-  }
+    handleImageIndexChange(index) {
+        this.imagesIndex = index;
+    }
 }

@@ -16,66 +16,73 @@
  *
  */
 
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { ColorService } from '../../../image/services/color.service';
 import { Category, Label } from '@streampipes/platform-services';
 import { LabelService } from '../../services/label.service';
 
 @Component({
-  selector: 'sp-select-label',
-  templateUrl: './select-label.component.html',
-  styleUrls: ['./select-label.component.css']
+    selector: 'sp-select-label',
+    templateUrl: './select-label.component.html',
+    styleUrls: ['./select-label.component.css'],
 })
 export class SelectLabelComponent implements OnInit {
+    public categories: Category[];
+    public selectedCategory: Category;
 
-  public categories: Category[];
-  public selectedCategory: Category;
+    @Input() enableShortCuts: boolean;
+    @Output() labelChange: EventEmitter<Label> = new EventEmitter<Label>();
 
-  @Input() enableShortCuts: boolean;
-  @Output() labelChange: EventEmitter<Label> = new EventEmitter<Label>();
+    public labels: Label[];
+    public selectedLabel: Label;
 
-  public labels: Label[];
-  public selectedLabel: Label;
+    public noCategories = true;
 
-  public noCategories = true;
+    constructor(
+        public labelService: LabelService,
+        public colorService: ColorService,
+    ) {}
 
-  constructor(public labelService: LabelService, public colorService: ColorService) { }
-
-  ngOnInit(): void {
-    this.labelService.getCategories().subscribe(res => {
-
-      this.categories = res;
-      if (this.categories.length > 0) {
-        this.noCategories = false;
-        this.selectedCategory = res[0];
-        this.changeCategory(this.selectedCategory);
-      }
-    });
-  }
-
-  changeCategory(c) {
-    this.labelService.getLabelsOfCategory(c).subscribe(res => {
-      this.labels = res;
-      this.selectLabel(this.labels[0]);
-    });
-  }
-
-  selectLabel(e: Label) {
-    this.selectedLabel = e;
-    this.labelChange.emit(this.selectedLabel);
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleShortCuts(event: KeyboardEvent) {
-    if (this.enableShortCuts) {
-      if (event.code.toLowerCase().includes('digit')) {
-        // Number
-        const value = Number(event.key);
-        if (value !== 0 && value <= this.labels.length) {
-          this.selectLabel(this.labels[value - 1]);
-        }
-      }
+    ngOnInit(): void {
+        this.labelService.getCategories().subscribe(res => {
+            this.categories = res;
+            if (this.categories.length > 0) {
+                this.noCategories = false;
+                this.selectedCategory = res[0];
+                this.changeCategory(this.selectedCategory);
+            }
+        });
     }
-  }
 
+    changeCategory(c) {
+        this.labelService.getLabelsOfCategory(c).subscribe(res => {
+            this.labels = res;
+            this.selectLabel(this.labels[0]);
+        });
+    }
+
+    selectLabel(e: Label) {
+        this.selectedLabel = e;
+        this.labelChange.emit(this.selectedLabel);
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    handleShortCuts(event: KeyboardEvent) {
+        if (this.enableShortCuts) {
+            if (event.code.toLowerCase().includes('digit')) {
+                // Number
+                const value = Number(event.key);
+                if (value !== 0 && value <= this.labels.length) {
+                    this.selectLabel(this.labels[value - 1]);
+                }
+            }
+        }
+    }
 }

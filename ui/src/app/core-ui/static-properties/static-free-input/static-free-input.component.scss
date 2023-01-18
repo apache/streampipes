@@ -25,13 +25,14 @@
 p {
     width: 100px;
     float: left;
-    margin: 20px  15px 0 0;
+    margin: 20px 15px 0 0;
 }
 form {
     float: left;
 }
 
-::ng-deep.mat-accent ::ng-deep.mat-slider-track-fill, .mat-accent ::ng-deep.mat-slider-thumb, .mat-accent ::ng-deep.mat-slider-thumb-label {
+::ng-deep.mat-accent ::ng-deep.mat-slider-track-fill,
+.mat-accent ::ng-deep.mat-slider-thumb,
+.mat-accent ::ng-deep.mat-slider-thumb-label {
     background-color: $sp-color-accent;
 }
-

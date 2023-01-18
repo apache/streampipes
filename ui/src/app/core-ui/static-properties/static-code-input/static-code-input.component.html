@@ -18,28 +18,35 @@
 
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-        <button mat-button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                (click)="resetCode()"
-                style="margin-right:10px;margin-bottom:10px;">Reset code template
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="resetCode()"
+            style="margin-right: 10px; margin-bottom: 10px"
+        >
+            Reset code template
         </button>
-        <button mat-button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                (click)="cleanCode()"
-                [attr.data-cy]="'reset-code-' + fieldName"
-                style="margin-right:10px;margin-bottom:10px;">Clean code
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="cleanCode()"
+            [attr.data-cy]="'reset-code-' + fieldName"
+            style="margin-right: 10px; margin-bottom: 10px"
+        >
+            Clean code
         </button>
     </div>
     <div fxFlex="100" fxLayout="row">
-        <ngx-codemirror style="width:100%;"
-                [(ngModel)]="staticProperty.value"
-                [options]="editorOptions"
-                [attr.data-cy]="'code-editor-' + fieldName">
+        <ngx-codemirror
+            style="width: 100%"
+            [(ngModel)]="staticProperty.value"
+            [options]="editorOptions"
+            [attr.data-cy]="'code-editor-' + fieldName"
+        >
         </ngx-codemirror>
-
     </div>
 </div>

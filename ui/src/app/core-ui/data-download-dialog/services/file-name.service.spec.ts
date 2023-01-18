@@ -21,78 +21,98 @@ import { DateRange } from '@streampipes/platform-services';
 import { FileNameService } from './file-name.service';
 
 describe('FileNameService', () => {
+    const service = new FileNameService();
 
-  const service = new FileNameService();
+    // Testing data
+    const defaultExportDate = new Date(2022, 11, 11, 3);
+    const defaultStartDate = new Date(2022, 11, 2, 3);
+    const defaultEndDate = new Date(2022, 11, 6, 3);
+    const defaultDateRange = new DateRange(defaultStartDate, defaultEndDate);
+    let defaultExportConfig: ExportConfig;
 
-  // Testing data
-  const defaultExportDate = new Date(2022, 11, 11, 3);
-  const defaultStartDate = new Date(2022, 11, 2, 3);
-  const defaultEndDate = new Date(2022, 11, 6, 3);
-  const defaultDateRange = new DateRange(defaultStartDate, defaultEndDate);
-  let defaultExportConfig: ExportConfig;
+    const expectedBaseName = '2022-12-11_measurement_';
 
-  const expectedBaseName = '2022-12-11_measurement_';
+    beforeEach(() => {
+        defaultExportConfig = {
+            dataExportConfig: {
+                dataRangeConfiguration: 'all',
+                missingValueBehaviour: 'ignore',
+                measurement: 'measurement',
+            },
+            formatExportConfig: {
+                exportFormat: 'csv',
+                delimiter: 'comma',
+            },
+        };
+    });
 
-  beforeEach(() => {
-    defaultExportConfig = {
-      dataExportConfig: {
-        dataRangeConfiguration: 'all',
-        missingValueBehaviour: 'ignore',
-        measurement: 'measurement'
-      },
-      formatExportConfig: {
-        exportFormat: 'csv',
-        delimiter: 'comma'
-      }
-    };
-  });
+    it('Name for all data csv', () => {
+        const result = service.generateName(
+            defaultExportConfig,
+            defaultExportDate,
+        );
+        expect(result).toBe(`${expectedBaseName}all.csv`);
+    });
 
-  it('Name for all data csv', () => {
-    const result = service.generateName(defaultExportConfig, defaultExportDate);
-    expect(result).toBe(`${expectedBaseName}all.csv`);
-  });
+    it('Name for all data json', () => {
+        defaultExportConfig.formatExportConfig.exportFormat = 'json';
+        const result = service.generateName(
+            defaultExportConfig,
+            defaultExportDate,
+        );
+        expect(result).toBe(`${expectedBaseName}all.json`);
+    });
 
-  it('Name for all data json', () => {
-    defaultExportConfig.formatExportConfig.exportFormat = 'json';
-    const result = service.generateName(defaultExportConfig, defaultExportDate);
-    expect(result).toBe(`${expectedBaseName}all.json`);
-  });
+    it('Name for custom interval csv', () => {
+        defaultExportConfig.dataExportConfig.dataRangeConfiguration =
+            'customInterval';
+        defaultExportConfig.dataExportConfig.dateRange = defaultDateRange;
 
-  it('Name for custom interval csv', () => {
-    defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'customInterval';
-    defaultExportConfig.dataExportConfig.dateRange = defaultDateRange;
+        const result = service.generateName(
+            defaultExportConfig,
+            defaultExportDate,
+        );
+        expect(result).toBe(
+            `${expectedBaseName}customInterval_2022-12-02_2022-12-06.csv`,
+        );
+    });
 
-    const result = service.generateName(defaultExportConfig, defaultExportDate);
-    expect(result).toBe(`${expectedBaseName}customInterval_2022-12-02_2022-12-06.csv`);
-  });
+    it('Name for custom visible json', () => {
+        defaultExportConfig.formatExportConfig.exportFormat = 'json';
+        defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
+        defaultExportConfig.dataExportConfig.dateRange = defaultDateRange;
 
-  it('Name for custom visible json', () => {
-    defaultExportConfig.formatExportConfig.exportFormat = 'json';
-    defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
-    defaultExportConfig.dataExportConfig.dateRange = defaultDateRange;
+        const result = service.generateName(
+            defaultExportConfig,
+            defaultExportDate,
+        );
+        expect(result).toBe(
+            `${expectedBaseName}visible_2022-12-02_2022-12-06.json`,
+        );
+    });
 
-    const result = service.generateName(defaultExportConfig, defaultExportDate);
-    expect(result).toBe(`${expectedBaseName}visible_2022-12-02_2022-12-06.json`);
-  });
+    it('Name when missing start date range', () => {
+        defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
+        defaultExportConfig.dataExportConfig.dateRange = new DateRange();
+        defaultExportConfig.dataExportConfig.dateRange.endDate = defaultEndDate;
 
-  it('Name when missing start date range', () => {
-    defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
-    defaultExportConfig.dataExportConfig.dateRange = new DateRange();
-    defaultExportConfig.dataExportConfig.dateRange.endDate = defaultEndDate;
+        const result = service.generateName(
+            defaultExportConfig,
+            defaultExportDate,
+        );
+        expect(result).toBe(`${expectedBaseName}visible_2022-12-06.csv`);
+    });
 
-    const result = service.generateName(defaultExportConfig, defaultExportDate);
-    expect(result).toBe(`${expectedBaseName}visible_2022-12-06.csv`);
-  });
+    it('Name when missing end date range', () => {
+        defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
+        defaultExportConfig.dataExportConfig.dateRange = new DateRange();
+        defaultExportConfig.dataExportConfig.dateRange.startDate =
+            defaultStartDate;
 
-  it('Name when missing end date range', () => {
-    defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
-    defaultExportConfig.dataExportConfig.dateRange = new DateRange();
-    defaultExportConfig.dataExportConfig.dateRange.startDate = defaultStartDate;
-
-    const result = service.generateName(defaultExportConfig, defaultExportDate);
-    expect(result).toBe(`${expectedBaseName}visible_2022-12-02.csv`);
-  });
-
-})
-;
-
+        const result = service.generateName(
+            defaultExportConfig,
+            defaultExportDate,
+        );
+        expect(result).toBe(`${expectedBaseName}visible_2022-12-02.csv`);
+    });
+});

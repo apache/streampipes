@@ -18,19 +18,24 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { FilesService, FileStaticProperty, FileMetadata } from '@streampipes/platform-services';
+import {
+    FilesService,
+    FileStaticProperty,
+    FileMetadata,
+} from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
 
-
 @Component({
     selector: 'sp-static-file-input',
     templateUrl: './static-file-input.component.html',
-    styleUrls: ['./static-file-input.component.css']
+    styleUrls: ['./static-file-input.component.css'],
 })
-export class StaticFileInputComponent extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty> implements OnInit {
-
+export class StaticFileInputComponent
+    extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty>
+    implements OnInit
+{
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public chooseExistingFileControl = new UntypedFormControl();
@@ -52,12 +57,14 @@ export class StaticFileInputComponent extends AbstractValidatedStaticPropertyRen
 
     constructor(private filesService: FilesService) {
         super();
-
     }
 
     ngOnInit() {
         this.fetchFileMetadata();
-        this.addValidator(this.staticProperty.locationPath, this.collectValidators());
+        this.addValidator(
+            this.staticProperty.locationPath,
+            this.collectValidators(),
+        );
         this.enableValidators();
 
         this.chooseExistingFileControl.setValue(true);
@@ -71,33 +78,43 @@ export class StaticFileInputComponent extends AbstractValidatedStaticPropertyRen
     }
 
     fetchFileMetadata(internalFilenameToSelect?: any) {
-        this.filesService.getFileMetadata(this.staticProperty.requiredFiletypes).subscribe(fm => {
-            this.fileMetadata = fm;
-            if (internalFilenameToSelect) {
-                this.selectedFile =
-                    this.fileMetadata.find(fmi => fmi.internalFilename === internalFilenameToSelect);
-                this.selectOption(this.selectedFile);
-                this.emitUpdate(true);
-                this.parentForm.controls[this.fieldName].setValue(this.selectedFile);
-
-                this.chooseExistingFileControl.setValue(true);
-            } else if (this.staticProperty.locationPath) {
-                this.selectedFile =
-                    this.fileMetadata.find(fmi => fmi.internalFilename === this.staticProperty.locationPath);
-            } else {
-                if (this.fileMetadata.length > 0) {
-                    this.selectedFile = this.fileMetadata[0];
-                    // this.staticProperty.locationPath = this.selectedFile.internalFilename;
+        this.filesService
+            .getFileMetadata(this.staticProperty.requiredFiletypes)
+            .subscribe(fm => {
+                this.fileMetadata = fm;
+                if (internalFilenameToSelect) {
+                    this.selectedFile = this.fileMetadata.find(
+                        fmi =>
+                            fmi.internalFilename === internalFilenameToSelect,
+                    );
                     this.selectOption(this.selectedFile);
                     this.emitUpdate(true);
-                    this.parentForm.controls[this.fieldName].setValue(this.selectedFile);
-                } else {
+                    this.parentForm.controls[this.fieldName].setValue(
+                        this.selectedFile,
+                    );
 
-                    this.chooseExistingFileControl.setValue(false);
+                    this.chooseExistingFileControl.setValue(true);
+                } else if (this.staticProperty.locationPath) {
+                    this.selectedFile = this.fileMetadata.find(
+                        fmi =>
+                            fmi.internalFilename ===
+                            this.staticProperty.locationPath,
+                    );
+                } else {
+                    if (this.fileMetadata.length > 0) {
+                        this.selectedFile = this.fileMetadata[0];
+                        // this.staticProperty.locationPath = this.selectedFile.internalFilename;
+                        this.selectOption(this.selectedFile);
+                        this.emitUpdate(true);
+                        this.parentForm.controls[this.fieldName].setValue(
+                            this.selectedFile,
+                        );
+                    } else {
+                        this.chooseExistingFileControl.setValue(false);
+                    }
                 }
-            }
-            this.filesLoaded = true;
-        });
+                this.filesLoaded = true;
+            });
     }
 
     handleFileInput(files: any) {
@@ -112,36 +129,41 @@ export class StaticFileInputComponent extends AbstractValidatedStaticPropertyRen
             this.filesService.uploadFile(this.selectedUploadFile).subscribe(
                 event => {
                     if (event.type === HttpEventType.UploadProgress) {
-                        this.uploadStatus = Math.round(100 * event.loaded / event.total);
+                        this.uploadStatus = Math.round(
+                            (100 * event.loaded) / event.total,
+                        );
                     } else if (event instanceof HttpResponse) {
                         const internalFilename = event.body.internalFilename;
-                        this.parentForm.controls[this.fieldName].setValue(internalFilename);
+                        this.parentForm.controls[this.fieldName].setValue(
+                            internalFilename,
+                        );
                         // this.fieldName = internalFilename;
                         this.fetchFileMetadata(internalFilename);
                     }
                 },
-                error => {
-                },
+                error => {},
             );
         }
     }
 
     selectOption(fileMetadata: FileMetadata) {
         this.staticProperty.locationPath = fileMetadata.internalFilename;
-        const valid: boolean = (fileMetadata.internalFilename !== '' || fileMetadata.internalFilename !== undefined);
-        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
+        const valid: boolean =
+            fileMetadata.internalFilename !== '' ||
+            fileMetadata.internalFilename !== undefined;
+        this.updateEmitter.emit(
+            new ConfigurationInfo(this.staticProperty.internalName, valid),
+        );
     }
 
     displayFn(fileMetadata: FileMetadata) {
         return fileMetadata ? fileMetadata.originalFilename : '';
     }
 
-    onStatusChange(status: any) {
-    }
+    onStatusChange(status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.locationPath = value.internalFilename;
         this.parentForm.updateValueAndValidity();
     }
-
 }

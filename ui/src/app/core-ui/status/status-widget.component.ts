@@ -16,15 +16,14 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'sp-status-widget',
     templateUrl: './status-widget.component.html',
-    styleUrls: ['./status-widget.component.css']
+    styleUrls: ['./status-widget.component.css'],
 })
-export class StatusWidgetComponent implements OnInit {
-
+export class StatusWidgetComponent {
     @Input() color = 'rgb(156, 156, 156)';
     @Input() bandColor = 'rgb(27, 20, 100)';
     @Input() textColor = 'rgb(96,96,96)';
@@ -37,13 +36,7 @@ export class StatusWidgetComponent implements OnInit {
 
     chartData: any;
 
-    constructor() {
-
-    }
-
-    ngOnInit() {
-
-    }
+    constructor() {}
 
     @Input()
     set statusValue(statusValue: string | number) {
@@ -59,12 +52,10 @@ export class StatusWidgetComponent implements OnInit {
 
     updateChartData() {
         this.chartData = [];
-        this.chartData = [{'name': this._label, 'value': this._statusValue}];
+        this.chartData = [{ name: this._label, value: this._statusValue }];
     }
 
     getBackground() {
-        return {'background': this.color};
+        return { background: this.color };
     }
-
-
 }

@@ -17,13 +17,12 @@
  */
 
 #formWrapper {
-
 }
 
 p {
     width: 100px;
     float: left;
-    margin: 20px  15px 0 0;
+    margin: 20px 15px 0 0;
 }
 
 form {
@@ -49,7 +48,9 @@ form {
     margin-bottom: 10px;
 }
 
-::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+::ng-deep
+    .mat-radio-button.mat-accent.mat-radio-checked
+    .mat-radio-outer-circle {
     border-color: rgb(27, 20, 100);
 }
 
@@ -57,10 +58,14 @@ form {
     background-color: rgb(27, 20, 100);
 }
 
-::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
     background-color: rgb(27, 20, 100) !important;
 }
 
-::ng-deep .mat-checkbox:not(.mat-checkbox-disabled).mat-accent .mat-checkbox-ripple .mat-ripple-element {
+::ng-deep
+    .mat-checkbox:not(.mat-checkbox-disabled).mat-accent
+    .mat-checkbox-ripple
+    .mat-ripple-element {
     background-color: rgb(27, 20, 100) !important;
 }

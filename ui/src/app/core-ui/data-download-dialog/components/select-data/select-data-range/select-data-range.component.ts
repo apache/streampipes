@@ -17,39 +17,48 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataExplorerDataConfig, DateRange } from '@streampipes/platform-services';
+import {
+    DataExplorerDataConfig,
+    DateRange,
+} from '@streampipes/platform-services';
 import { DataExportConfig } from '../../../model/data-export-config.model';
 
 @Component({
-  selector: 'sp-select-data-range',
-  templateUrl: './select-data-range.component.html',
-  styleUrls: ['./select-data-range.component.scss',
-    '../select-data.component.scss']
+    selector: 'sp-select-data-range',
+    templateUrl: './select-data-range.component.html',
+    styleUrls: [
+        './select-data-range.component.scss',
+        '../select-data.component.scss',
+    ],
 })
 export class SelectDataRangeComponent implements OnInit {
+    @Input() dataExplorerDataConfig: DataExplorerDataConfig;
+    @Input() dataExportConfig: DataExportConfig;
 
-  @Input() dataExplorerDataConfig: DataExplorerDataConfig;
-  @Input() dataExportConfig: DataExportConfig;
+    datePickerSelection: Date[] = [];
 
-  datePickerSelection: Date[] = [];
-
-  ngOnInit(): void {
-    if (!this.dataExportConfig.dateRange) {
-      this.initDateSelection();
+    ngOnInit(): void {
+        if (!this.dataExportConfig.dateRange) {
+            this.initDateSelection();
+        }
     }
-  }
 
-  initDateSelection() {
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() - 5);
-    this.datePickerSelection[0] = new Date();
-    this.datePickerSelection[1] = endDate;
-    this.dataExportConfig.dateRange = new DateRange(this.datePickerSelection[0], this.datePickerSelection[1]);
-    this.setDateRangeFromSelection();
-  }
+    initDateSelection() {
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() - 5);
+        this.datePickerSelection[0] = new Date();
+        this.datePickerSelection[1] = endDate;
+        this.dataExportConfig.dateRange = new DateRange(
+            this.datePickerSelection[0],
+            this.datePickerSelection[1],
+        );
+        this.setDateRangeFromSelection();
+    }
 
-  private setDateRangeFromSelection() {
-    this.dataExportConfig.dateRange = new DateRange(this.datePickerSelection[0], this.datePickerSelection[1]);
-  }
-
+    private setDateRangeFromSelection() {
+        this.dataExportConfig.dateRange = new DateRange(
+            this.datePickerSelection[0],
+            this.datePickerSelection[1],
+        );
+    }
 }
