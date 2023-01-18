@@ -54,6 +54,12 @@ import java.util.concurrent.TimeUnit;
 
 public class FileStreamProtocol extends Protocol {
 
+  private static final String REPLACE_TIMESTAMP = "replaceTimestamp";
+  private static final String SPEED = "speed";
+  private static final String FILE_PATH = "filePath";
+  private static final String REPLAY_ONCE = "replayOnce";
+
+
   private static final Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.file";
@@ -61,6 +67,8 @@ public class FileStreamProtocol extends Protocol {
   private String selectedFileName;
   private boolean replaceTimestamp;
   private float speedUp;
+
+  private boolean replayOnce;
   private int timeBetweenReplay;
 
   private ScheduledExecutorService executor;
@@ -73,31 +81,44 @@ public class FileStreamProtocol extends Protocol {
                             String selectedFileName,
                             boolean replaceTimestamp,
                             float speedUp,
-                            int timeBetweenReplay) {
+                            int timeBetweenReplay,
+                            boolean replayOnce) {
     super(parser, format);
     this.selectedFileName = selectedFileName;
     this.replaceTimestamp = replaceTimestamp;
     this.speedUp = speedUp;
     this.timeBetweenReplay = timeBetweenReplay;
+    this.replayOnce = replayOnce;
   }
 
   @Override
   public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
     String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema());
 
-
     executor = Executors.newScheduledThreadPool(1);
     var eventProcessor = new LocalEventProcessor(adapterPipeline, timestampKey);
 
-    executor.scheduleAtFixedRate(() -> {
-      try (InputStream dataInputStream = getDataFromEndpoint()) {
-        format.reset();
-        parser.parse(dataInputStream, eventProcessor);
-      } catch (ParseException | IOException e) {
-        logger.error("Error while parsing: " + e.getMessage());
-      }
-    }, 0, timeBetweenReplay, TimeUnit.SECONDS);
+    if (replayOnce) {
+      executor.schedule(() -> processFileInput(eventProcessor),
+          0,
+          TimeUnit.SECONDS);
+    } else {
+      executor.scheduleAtFixedRate(() -> processFileInput(eventProcessor),
+          0,
+          timeBetweenReplay,
+          TimeUnit.SECONDS);
+    }
   }
+
+  private void processFileInput(LocalEventProcessor eventProcessor) {
+    try (InputStream dataInputStream = getDataFromEndpoint()) {
+      format.reset();
+      parser.parse(dataInputStream, eventProcessor);
+    } catch (ParseException | IOException e) {
+      logger.error("Error while parsing: " + e.getMessage());
+    }
+  }
+
 
   private class LocalEventProcessor implements EmitBinaryEvent {
 
@@ -167,18 +188,17 @@ public class FileStreamProtocol extends Protocol {
 
   @Override
   public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-    StaticPropertyExtractor extractor =
+    var extractor =
         StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
-    List<String> replaceTimestampStringList = extractor.selectedMultiValues("replaceTimestamp", String.class);
-    boolean replaceTimestamp = replaceTimestampStringList.size() != 0;
+    var replaceTimestampStringList = extractor.selectedMultiValues(REPLACE_TIMESTAMP, String.class);
+    var replaceTimestamp = replaceTimestampStringList.size() != 0;
+    var speedUp = extractor.singleValueParameter(SPEED, Float.class);
+    var timeBetweenReplay = 1;
+    var fileName = extractor.selectedFilename(FILE_PATH);
+    var replayOnce = extractor.selectedSingleValue(REPLAY_ONCE, String.class).equals("yes");
 
-    float speedUp = extractor.singleValueParameter("speed", Float.class);
-
-    int timeBetweenReplay = 1;
-
-    String fileName = extractor.selectedFilename("filePath");
-    return new FileStreamProtocol(parser, format, fileName, replaceTimestamp, speedUp, timeBetweenReplay);
+    return new FileStreamProtocol(parser, format, fileName, replaceTimestamp, speedUp, timeBetweenReplay, replayOnce);
   }
 
   private String getTimestampKey(EventSchema eventSchema) throws AdapterException {
@@ -198,10 +218,11 @@ public class FileStreamProtocol extends Protocol {
         .withLocales(Locales.EN)
         .sourceType(AdapterSourceType.STREAM)
         .category(AdapterType.Generic)
-        .requiredFile(Labels.withId("filePath"), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
-        .requiredMultiValueSelection(Labels.withId("replaceTimestamp"),
+        .requiredFile(Labels.withId(FILE_PATH), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
+        .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP),
             Options.from(""))
-        .requiredFloatParameter(Labels.withId("speed"))
+        .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
+        .requiredFloatParameter(Labels.withId(SPEED))
         .build();
   }
 

@@ -28,3 +28,6 @@ replaceTimestamp.description=Replace Event Time with Current Timestamp
 speed.title=Replay Speed
 speed.description=original = 1; speedup 2x = 2; half speed  =  0.5
 
+replayOnce.title=Replay Once
+replayOnce.description='yes' file is only replayed once, 'no' the file is replayed till adapter is stopped
+
