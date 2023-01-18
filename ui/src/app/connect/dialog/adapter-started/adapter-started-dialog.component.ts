@@ -31,6 +31,10 @@ import {
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 import { AdapterService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/adapter.service';
+import {
+    GenericAdapterStreamDescription,
+    SpecificAdapterStreamDescription,
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -98,9 +102,12 @@ export class AdapterStartedDialog implements OnInit {
     startAdapter() {
         this.adapterService.addAdapter(this.adapter).subscribe(status => {
             this.adapterStatus = status;
+            const isStreamAdapter =
+                this.adapter instanceof GenericAdapterStreamDescription ||
+                this.adapter instanceof SpecificAdapterStreamDescription;
             if (status.success) {
                 const adapterElementId = status.notifications[0].title;
-                if (this.startAdapterNow) {
+                if (this.startAdapterNow && isStreamAdapter) {
                     this.adapterService
                         .startAdapterByElementId(adapterElementId)
                         .subscribe(startStatus => {
