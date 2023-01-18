@@ -24,6 +24,10 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.List;
 
+/**
+ * Provides pipeline elements from the pipeline of interest (for start actions)
+ */
+
 public class CurrentPipelineElementProvider implements PipelineElementProvider {
   @Override
   public List<InvocableStreamPipesEntity> getProcessorsAndSinks(PipelineExecutionInfo executionInfo) {
