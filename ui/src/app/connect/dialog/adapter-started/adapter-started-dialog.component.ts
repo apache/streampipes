@@ -26,15 +26,13 @@ import {
     PipelineOperationStatus,
     PipelineTemplateService,
     SpDataStream,
+    GenericAdapterStreamDescription,
+    SpecificAdapterStreamDescription,
     SpecificAdapterSetDescription,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 import { AdapterService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/adapter.service';
-import {
-    GenericAdapterStreamDescription,
-    SpecificAdapterStreamDescription,
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
