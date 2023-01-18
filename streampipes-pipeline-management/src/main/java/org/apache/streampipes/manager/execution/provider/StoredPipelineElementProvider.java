@@ -25,6 +25,10 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.List;
 
+/**
+ * Provides pipeline elements from the cache (for stop actions)
+ */
+
 public class StoredPipelineElementProvider implements PipelineElementProvider {
   @Override
   public List<InvocableStreamPipesEntity> getProcessorsAndSinks(PipelineExecutionInfo executionInfo) {

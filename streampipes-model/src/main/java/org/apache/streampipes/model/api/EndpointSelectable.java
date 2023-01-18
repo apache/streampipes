@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.api;
 
+/**
+ * Interface for pipeline elements which are invoked upon pipeline start (processors, sinks, sets)
+ */
 public interface EndpointSelectable {
 
   String getName();
