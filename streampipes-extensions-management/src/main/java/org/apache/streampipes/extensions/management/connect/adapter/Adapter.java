@@ -35,29 +35,16 @@ import com.google.common.annotations.VisibleForTesting;
 
 public abstract class Adapter<T extends AdapterDescription> implements IAdapter<T> {
 
-  private boolean debug;
-
   protected AdapterPipeline adapterPipeline;
 
   protected T adapterDescription;
 
-  public Adapter(T adapterDescription, boolean debug) {
+  public Adapter(T adapterDescription) {
     this.adapterDescription = adapterDescription;
-    this.debug = debug;
     this.adapterPipeline = getAdapterPipeline(adapterDescription);
   }
 
-  public Adapter(T adapterDescription) {
-    this(adapterDescription, false);
-  }
-
-  public Adapter(boolean debug) {
-    this.debug = debug;
-  }
-
-  public Adapter() {
-    this(false);
-  }
+  public Adapter() { }
 
   @Override
   public void changeEventGrounding(TransportProtocol transportProtocol) {
@@ -94,11 +81,6 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
 
   private AdapterPipeline getAdapterPipeline(T adapterDescription) {
     return new AdapterPipelineGenerator().generatePipeline(adapterDescription);
-  }
-
-  @Override
-  public boolean isDebug() {
-    return debug;
   }
 
   @VisibleForTesting

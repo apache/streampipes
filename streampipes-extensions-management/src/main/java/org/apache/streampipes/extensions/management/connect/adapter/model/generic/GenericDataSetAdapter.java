@@ -23,22 +23,12 @@ import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescription> {
 
   public static final String ID = GenericAdapterSetDescription.ID;
 
-  Logger logger = LoggerFactory.getLogger(Adapter.class);
-
   public GenericDataSetAdapter() {
     super();
-  }
-
-
-  public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription, boolean debug) {
-    super(adapterDescription, debug);
   }
 
   public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription) {
@@ -48,8 +38,6 @@ public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescr
   @Override
   public GenericAdapterSetDescription declareModel() {
     GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
-//        adapterDescription.setAdapterId(GenericAdapterSetDescription.ID);
-//        adapterDescription.setUri(GenericAdapterSetDescription.ID);
     adapterDescription.setAppId(GenericAdapterSetDescription.ID);
     return adapterDescription;
   }

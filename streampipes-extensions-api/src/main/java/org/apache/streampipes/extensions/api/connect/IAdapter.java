@@ -32,11 +32,10 @@ public interface IAdapter<T extends AdapterDescription> extends Connector {
 
   void stopAdapter() throws AdapterException;
 
-  IAdapter getInstance(T adapterDescription);
+  IAdapter<T> getInstance(T adapterDescription);
 
   GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException;
 
   void changeEventGrounding(TransportProtocol transportProtocol);
 
-  boolean isDebug();
 }
