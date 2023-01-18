@@ -70,7 +70,7 @@ public class PipelineHealthCheck implements Runnable {
         List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage
             .runningProcessorsAndSinks
             .get(pipeline.getPipelineId());
-        
+
         graphs.forEach(graph -> {
           String instanceId = extractInstanceId(graph);
           if (allRunningInstances.stream().noneMatch(runningInstanceId -> runningInstanceId.equals(instanceId))) {
