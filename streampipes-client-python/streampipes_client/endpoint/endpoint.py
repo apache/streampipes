@@ -24,15 +24,18 @@ An endpoint is provides all options to communicate with a central endpoint of th
 import logging
 from abc import ABC, abstractmethod
 from http import HTTPStatus
-from typing import Callable, Tuple, Type
+from typing import Callable, Tuple, Type, final
 
 from requests import Response
 from requests.exceptions import HTTPError
 
 __all__ = [
     "APIEndpoint",
+    "MessagingEndpoint",
 ]
 
+from streampipes_client.endpoint.exceptions import MessagingEndpointNotConfiguredError
+from streampipes_client.functions.broker.broker import Broker
 from streampipes_client.model.container.resource_container import ResourceContainer
 from streampipes_client.model.resource.resource import Resource
 
@@ -209,3 +212,76 @@ class APIEndpoint(Endpoint):
         )
 
         return self._container_cls._resource_cls()(**response.json())
+
+
+class MessagingEndpoint(Endpoint):
+    """Abstract implementation of an StreamPipes messaging endpoint.
+    Serves as template for all endpoints used for interacting with the StreamPipes messaging layer directly.
+    Therefore, they need to provide the functionality to talk with the broker system running in StreamPipes.
+    By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
+
+    Parameters
+    ----------
+    parent_client: StreamPipesClient
+        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
+
+    """
+
+    @property
+    def _broker(self) -> Broker:
+        """Defines the broker instance that is used to connect to StreamPipes' messaging layer.
+
+        This instance enables the client to authenticate to the broker used in the target StreamPipes instance,
+        to consume messages from and to write messages to the broker.
+
+        Raises
+        ------
+        MessagingEndpointNotConfiguredError
+            If the endpoint is used before the broker instance is set via `configure()`
+
+        Returns
+        -------
+        The broker instance to be used to communicate with
+        StreamPipes' messaging layer.
+        """
+
+        if hasattr(self, "__broker"):
+            return self.__broker
+        raise MessagingEndpointNotConfiguredError(
+            endpoint_name=f"{self=}".split("=")[0],
+        )
+
+    @_broker.setter
+    def _broker(self, broker: Broker) -> None:
+        """Setter method for internal property `broker`"""
+        self.__broker = broker
+
+    @property
+    @abstractmethod
+    def _container_cls(self) -> Type[ResourceContainer]:
+        """Defines the model container class the endpoint refers to.
+
+        This model container class corresponds to the Python data model,
+        which handles multiple resources returned from the endpoint.
+
+        Returns
+        -------
+        The corresponding container class from the data model,
+        needs to a subclass of `model.container.ResourceContainer`.
+        """
+        raise NotImplementedError  # pragma: no cover
+
+    @final
+    def configure(self, broker: Broker) -> None:
+        """Configures the message endpoint by setting the broker instance to be used.
+
+        This configuration step is required before the endpoint can be actually used.
+        The based `broker` instance is passed to an internal property
+
+        Returns
+        _______
+        None
+
+        """
+
+        self._broker = broker

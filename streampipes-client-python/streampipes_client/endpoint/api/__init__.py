@@ -15,10 +15,10 @@
 # limitations under the License.
 #
 
-
-from .endpoint import APIEndpoint, MessagingEndpoint
+from .data_lake_measure import DataLakeMeasureEndpoint
+from .data_stream import DataStreamEndpoint
 
 __all__ = [
-    "APIEndpoint",
-    "MessagingEndpoint",
+    "DataLakeMeasureEndpoint",
+    "DataStreamEndpoint",
 ]
