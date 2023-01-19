@@ -147,7 +147,6 @@
 	<bcprov.version>1.66</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
-	<checker-qual.version>3.29.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
 	<commons-compress.version>1.21</commons-compress.version>
 	<commons-text.version>1.10.0</commons-text.version>
@@ -193,7 +192,6 @@
 	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
 	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
 	<bcprov.version>1.68</bcprov.version>
-	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<commons-text.version>1.8</commons-text.version>
 	<guice.version>5.1.0</guice.version>
@@ -1114,11 +1112,6 @@
 					<groupId>org.bouncycastle</groupId>
 					<artifactId>bcpkix-jdk15on</artifactId>
 					<version>${bcpkix.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.checkerframework</groupId>
-					<artifactId>checker-qual</artifactId>
-					<version>${checker-qual.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.codehaus.mojo</groupId>
