@@ -23,14 +23,47 @@ package org.apache.streampipes.model.api;
  */
 public interface EndpointSelectable {
 
+  /**
+   * Gets the name of this selectable endpoint.
+   *
+   * @return The name of this object.
+   */
   String getName();
 
+  /**
+   * Gets the URL of the currently selected endpoint.
+   *
+   * @return endpoint URL.
+   */
   String getSelectedEndpointUrl();
+
+  /**
+   * Sets the URL of the currently selected endpoint.
+   *
+   * @param selectedEndpointUrl new URL.
+   */
   void setSelectedEndpointUrl(String selectedEndpointUrl);
 
+  /**
+   * Gets the corresponding pipeline ID for the endpoint.
+   *
+   * @return corresponding pipeline ID.
+   */
   String getCorrespondingPipeline();
 
+
+  /**
+   * Sets the ID of the corresponding pipeline.
+   *
+   * @param pipelineId The ID of the pipeline to set as corresponding to the currently selected endpoint.
+   */
   void setCorrespondingPipeline(String pipelineId);
 
+  /**
+   * Gets the path detach that can be called to detatch the endpoint.
+   * When an endpoint is detached it usally is also sopped
+   *
+   * @return detach path.
+   */
   String getDetachPath();
 }
