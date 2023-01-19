@@ -48,6 +48,16 @@
 
     <div fxFlex="100" fxLayout="column">
         <sp-adapter-options-panel
+            optionTitle="Run adapter"
+            optionDescription="Start adapter now"
+            optionIcon="play_arrow"
+            dataCy="start-adapter-now-checkbox"
+            [isChecked]="startAdapterNow"
+            (optionSelectedEmitter)="startAdapterNow = $event"
+        >
+        </sp-adapter-options-panel>
+
+        <sp-adapter-options-panel
             optionTitle="Remove Duplicates"
             optionDescription="Avoid duplicated events within a certain time interval"
             optionIcon="cleaning_services"
@@ -150,7 +160,7 @@
             *ngIf="!isEditMode"
             [disabled]="!startAdapterSettingsFormValid"
             mat-raised-button
-            id="button-startAdapter"
+            data-cy="adapter-settings-start-adapter-btn"
             color="accent"
             (click)="startAdapter()"
             mat-button

@@ -86,8 +86,8 @@ public class FileStreamProtocol extends Protocol {
     String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema());
 
 
-    executor = Executors.newScheduledThreadPool(1);
     var eventProcessor = new LocalEventProcessor(adapterPipeline, timestampKey);
+    executor = Executors.newScheduledThreadPool(1);
 
     executor.scheduleAtFixedRate(() -> {
       try (InputStream dataInputStream = getDataFromEndpoint()) {
@@ -132,7 +132,8 @@ public class FileStreamProtocol extends Protocol {
             try {
               Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
-              e.printStackTrace();
+              logger.info("File stream adapter was stopped, the current replay is interuppted", e);
+              return false;
             }
           }
         }
