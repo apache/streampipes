@@ -86,7 +86,7 @@ export class AdapterStartedDialog implements OnInit {
         if (this.editMode) {
             this.editAdapter();
         } else {
-            this.startAdapter();
+            this.addAdapter();
         }
     }
 
@@ -97,28 +97,35 @@ export class AdapterStartedDialog implements OnInit {
         });
     }
 
-    startAdapter() {
+    addAdapter() {
         this.adapterService.addAdapter(this.adapter).subscribe(status => {
             this.adapterStatus = status;
-            const isStreamAdapter =
-                this.adapter instanceof GenericAdapterStreamDescription ||
-                this.adapter instanceof SpecificAdapterStreamDescription;
+
             if (status.success) {
                 const adapterElementId = status.notifications[0].title;
-                if (this.startAdapterNow && isStreamAdapter) {
-                    this.adapterService
-                        .startAdapterByElementId(adapterElementId)
-                        .subscribe(startStatus => {
-                            this.showAdapterPreview(
-                                startStatus,
-                                adapterElementId,
-                            );
-                        });
+
+                if (this.saveInDataLake) {
+                    this.startSaveInDataLakePipeline(adapterElementId, status);
                 } else {
-                    this.showAdapterPreview(status, adapterElementId);
+                    this.startAdapter(status, adapterElementId);
                 }
             }
         });
+    }
+
+    startAdapter(status: Message, adapterElementId: string) {
+        const isStreamAdapter =
+            this.adapter instanceof GenericAdapterStreamDescription ||
+            this.adapter instanceof SpecificAdapterStreamDescription;
+        if (this.startAdapterNow && isStreamAdapter) {
+            this.adapterService
+                .startAdapterByElementId(adapterElementId)
+                .subscribe(startStatus => {
+                    this.showAdapterPreview(startStatus, adapterElementId);
+                });
+        } else {
+            this.showAdapterPreview(status, adapterElementId);
+        }
     }
 
     showAdapterPreview(status: Message, adapterElementId: string) {
@@ -133,11 +140,7 @@ export class AdapterStartedDialog implements OnInit {
                 this.getLiveViewPreview(adapterElementId);
             }
 
-            if (this.saveInDataLake) {
-                this.startSaveInDataLakePipeline(adapterElementId);
-            } else {
-                this.adapterInstalled = true;
-            }
+            this.adapterInstalled = true;
         }
     }
 
@@ -158,7 +161,10 @@ export class AdapterStartedDialog implements OnInit {
         });
     }
 
-    private startSaveInDataLakePipeline(adapterElementId: string) {
+    private startSaveInDataLakePipeline(
+        adapterElementId: string,
+        message: Message,
+    ) {
         this.adapterService.getAdapter(adapterElementId).subscribe(adapter => {
             const pipelineId =
                 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
@@ -189,7 +195,7 @@ export class AdapterStartedDialog implements OnInit {
                         .subscribe(pipelineOperationStatus => {
                             this.pipelineOperationStatus =
                                 pipelineOperationStatus;
-                            this.adapterInstalled = true;
+                            this.startAdapter(message, adapterElementId);
                         });
                 });
         });
