@@ -47,8 +47,7 @@ export class ConnectBtns {
             .parent();
     }
 
-    // =================================================================
-    // Format button options
+    // =====================  Format button options  ==========================
     public static json() {
         return cy.dataCy('connect-select-json-formats');
     }
@@ -82,4 +81,15 @@ export class ConnectBtns {
     }
 
     // =================================================================
+
+    // =====================  Adapter settings btns  ==========================
+    public static adapterSettingsStartAdapter() {
+        return cy.dataCy('adapter-settings-start-adapter-btn');
+    }
+
+    public static startAdapterNowCheckbox() {
+        return cy.dataCy('start-adapter-now-checkbox');
+    }
+
+    // ========================================================================
 }

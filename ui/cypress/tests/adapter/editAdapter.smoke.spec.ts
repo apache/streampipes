@@ -68,23 +68,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.closeAdapterPreview();
 
-        // Start Adapter
-        ConnectBtns.startAdapter().should('not.be.disabled');
-        ConnectBtns.startAdapter().click();
-
-        // View data
-        ConnectBtns.infoAdapter().click();
-        cy.get('div').contains('Values').parent().click();
-
-        // Validate resulting event
-        cy.dataCy('sp-connect-adapter-live-preview', { timeout: 10000 }).should(
-            'be.visible',
-        );
-
-        // validate that three event properties
-        cy.get('.preview-row', { timeout: 10000 })
-            .its('length')
-            .should('eq', 3);
+        ConnectUtils.startAndValidateAdapter(3);
 
         // Validate that name of adapter and data source
         cy.dataCy('adapter-name').contains(newAdapterName);

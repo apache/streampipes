@@ -30,6 +30,8 @@ import { ConnectBtns } from './ConnectBtns';
 export class ConnectUtils {
     public static testSpecificStreamAdapter(
         adapterConfiguration: SpecificAdapterInput,
+        starting = true,
+        successElement = 'sp-connect-adapter-live-preview',
     ) {
         ConnectUtils.goToConnect();
 
@@ -53,7 +55,11 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration);
+        ConnectUtils.startStreamAdapter(
+            adapterConfiguration,
+            starting,
+            successElement,
+        );
     }
 
     public static testGenericStreamAdapter(
@@ -188,21 +194,27 @@ export class ConnectUtils {
         cy.get('#event-schema-next-button').click();
     }
 
-    public static startStreamAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(
-            adapterInput,
-            'sp-connect-adapter-live-preview',
-        );
+    public static startStreamAdapter(
+        adapterInput: AdapterInput,
+        starting = true,
+        successElement = 'sp-connect-adapter-live-preview',
+    ) {
+        ConnectUtils.startAdapter(adapterInput, successElement, starting);
     }
 
     public static startSetAdapter(adapterInput: AdapterInput) {
         ConnectUtils.startAdapter(
             adapterInput,
             'sp-connect-adapter-set-success',
+            true,
         );
     }
 
-    public static startAdapter(adapterInput: AdapterInput, successElement) {
+    public static startAdapter(
+        adapterInput: AdapterInput,
+        successElement: string,
+        starting: boolean,
+    ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
@@ -215,8 +227,13 @@ export class ConnectUtils {
                 .click();
         }
 
-        // Start adapter
-        cy.get('#button-startAdapter').click();
+        // Deselect auto start of adapter
+        if (!starting) {
+            ConnectBtns.startAdapterNowCheckbox().parent().click();
+        }
+
+        ConnectBtns.adapterSettingsStartAdapter().click();
+
         cy.dataCy(successElement, { timeout: 60000 }).should('be.visible');
 
         this.closeAdapterPreview();
@@ -267,6 +284,26 @@ export class ConnectUtils {
         );
 
         return adapterConfiguration;
+    }
+
+    public static startAndValidateAdapter(amountOfProperties: number) {
+        ConnectBtns.startAdapter().should('not.be.disabled');
+
+        ConnectBtns.startAdapter().click();
+
+        // View data
+        ConnectBtns.infoAdapter().click();
+        cy.get('div').contains('Values').parent().click();
+
+        // Validate resulting event
+        cy.dataCy('sp-connect-adapter-live-preview', { timeout: 10000 }).should(
+            'be.visible',
+        );
+
+        // validate that three event properties
+        cy.get('.preview-row', { timeout: 10000 })
+            .its('length')
+            .should('eq', amountOfProperties);
     }
 
     public static tearDownPreprocessingRuleTest(

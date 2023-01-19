@@ -29,19 +29,18 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * This class is responsible for managing all the adapter instances which are executed on worker nodes
@@ -74,10 +73,8 @@ public class AdapterMasterManagement {
       throws AdapterException {
 
     // Create elementId for adapter
-    // TODO centralized provisioning of element id
-    String dataStreamElementId = "urn:streampipes.apache.org:eventstream:" + RandomStringUtils.randomAlphabetic(6);
-    String uuid = UUID.randomUUID().toString();
-    ad.setElementId(ad.getElementId() + ":" + uuid);
+    String dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
+    ad.setElementId(ElementIdGenerator.makeElementId(ad));
     ad.setCreatedAt(System.currentTimeMillis());
     ad.setCorrespondingDataStreamElementId(dataStreamElementId);
 
@@ -87,18 +84,13 @@ public class AdapterMasterManagement {
 
     String elementId = this.adapterResourceManager.encryptAndCreate(ad);
 
-    // start when stream adapter
-    if (ad instanceof AdapterStreamDescription) {
-      startStreamAdapter(elementId);
-    }
-
     // Create stream
     SpDataStream storedDescription = new SourcesManagement().createAdapterDataStream(ad, dataStreamElementId);
     storedDescription.setCorrespondingAdapterId(elementId);
     installDataSource(storedDescription, principalSid, true);
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
 
-    return storedDescription.getElementId();
+    return ad.getElementId();
   }
 
   public void updateAdapter(AdapterDescription ad,
@@ -164,17 +156,6 @@ public class AdapterMasterManagement {
     return allAdapters;
   }
 
-  public List<AdapterDescription> getAllAdapterDescriptions() throws AdapterException {
-
-    List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
-
-    if (allAdapters == null) {
-      throw new AdapterException("Could not get all adapters");
-    }
-
-    return allAdapters;
-  }
-
   public void stopStreamAdapter(String elementId) throws AdapterException {
     AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
 
@@ -212,11 +193,11 @@ public class AdapterMasterManagement {
     }
   }
 
-  private void updateDataSource(AdapterDescription ad) throws AdapterException {
+  private void updateDataSource(AdapterDescription ad) {
     // get data source
     SpDataStream dataStream = this.dataStreamResourceManager.find(ad.getCorrespondingDataStreamElementId());
 
-    dataStream = SourcesManagement.updateDataStream(ad, dataStream);
+    SourcesManagement.updateDataStream(ad, dataStream);
 
     // Update data source in database
     this.dataStreamResourceManager.update(dataStream);
