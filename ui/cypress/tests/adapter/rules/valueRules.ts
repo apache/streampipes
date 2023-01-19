@@ -29,12 +29,6 @@ describe('Connect value rule transformations', () => {
     it('Perform Test', () => {
         const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
 
-        // Edit timestamp property
-        ConnectEventSchemaUtils.editTimestampProperty(
-            'timestamp',
-            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-        );
-
         // Number transformation
         ConnectEventSchemaUtils.numberTransformation('value', '10');
 
@@ -44,6 +38,8 @@ describe('Connect value rule transformations', () => {
             'Degree Celsius',
             'Degree Fahrenheit',
         );
+
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 

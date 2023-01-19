@@ -56,6 +56,11 @@ export class GenericAdapterBuilder {
         return this;
     }
 
+    public setStartAdapter(startAdapter: boolean) {
+        this.genericAdapterInput.startAdapter = startAdapter;
+        return this;
+    }
+
     public addProtocolInput(
         type: UserInputType,
         selector: string,

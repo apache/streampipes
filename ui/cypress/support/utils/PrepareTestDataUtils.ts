@@ -19,6 +19,7 @@
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
+import { UserInputBuilder } from '../builder/UserInputBuilder';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -31,27 +32,29 @@ export class PrepareTestDataUtils {
         // Create adapter with dataset
         FileManagementUtils.addFile(dataSet);
 
-        const adapter = this.getDataLakeTestSetAdapter(
+        const adapter = this.getDataLakeTestAdapter(
             PrepareTestDataUtils.dataName,
             format,
             storeInDataLake,
         );
-        ConnectUtils.addGenericSetAdapter(adapter);
+        // ConnectUtils.addGenericStreamAdapter(adapter, 'sp-connect-adapter-gathering-live-preview');
+        ConnectUtils.addGenericStreamAdapter(adapter);
 
         // Wait till data is stored
-        if (storeInDataLake) {
-            cy.wait(10000);
-        }
+        // if (storeInDataLake) {
+        //     cy.wait(10000);
+        // }
     }
 
-    private static getDataLakeTestSetAdapter(
+    private static getDataLakeTestAdapter(
         name: string,
         format: 'csv' | 'json_array',
         storeInDataLake: boolean = true,
     ) {
-        const adapterBuilder = GenericAdapterBuilder.create('File_Set')
+        const adapterBuilder = GenericAdapterBuilder.create('File_Stream')
             .setName(name)
-            .setTimestampProperty('timestamp');
+            .setTimestampProperty('timestamp')
+            .addProtocolInput('input', 'speed', '1');
 
         if (format === 'csv') {
             adapterBuilder
@@ -62,9 +65,13 @@ export class PrepareTestDataUtils {
             adapterBuilder.setFormat('json_array');
         }
 
+        adapterBuilder.setStartAdapter(true);
+
         if (storeInDataLake) {
             adapterBuilder.setStoreInDataLake();
+            adapterBuilder.setStartAdapter(false);
         }
+
         return adapterBuilder.build();
     }
 }

@@ -30,7 +30,6 @@ import { ConnectBtns } from './ConnectBtns';
 export class ConnectUtils {
     public static testSpecificStreamAdapter(
         adapterConfiguration: SpecificAdapterInput,
-        starting = true,
         successElement = 'sp-connect-adapter-live-preview',
     ) {
         ConnectUtils.goToConnect();
@@ -55,11 +54,7 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(
-            adapterConfiguration,
-            starting,
-            successElement,
-        );
+        ConnectUtils.startStreamAdapter(adapterConfiguration, successElement);
     }
 
     public static testGenericStreamAdapter(
@@ -70,23 +65,22 @@ export class ConnectUtils {
 
     public static addGenericStreamAdapter(
         adapterConfiguration: GenericAdapterInput,
+        successElement = 'sp-connect-adapter-live-preview',
     ) {
         ConnectUtils.addGenericAdapter(adapterConfiguration);
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration);
+        ConnectUtils.startStreamAdapter(adapterConfiguration, successElement);
     }
 
-    public static addGenericSetAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
-        ConnectUtils.addGenericAdapter(adapterConfiguration);
+    // public static addGenericSetAdapter(
+    //   adapterConfiguration: GenericAdapterInput,
+    // ) {
+    //   ConnectUtils.addGenericAdapter(adapterConfiguration);
+    //
+    //   ConnectUtils.startSetAdapter(adapterConfiguration);
+    // }
 
-        ConnectUtils.startSetAdapter(adapterConfiguration);
-    }
-
-    private static addGenericAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
+    public static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -196,24 +190,21 @@ export class ConnectUtils {
 
     public static startStreamAdapter(
         adapterInput: AdapterInput,
-        starting = true,
         successElement = 'sp-connect-adapter-live-preview',
     ) {
-        ConnectUtils.startAdapter(adapterInput, successElement, starting);
+        ConnectUtils.startAdapter(adapterInput, successElement);
     }
 
-    public static startSetAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(
-            adapterInput,
-            'sp-connect-adapter-set-success',
-            true,
-        );
-    }
+    // public static startSetAdapter(adapterInput: AdapterInput) {
+    //   ConnectUtils.startAdapter(
+    //     adapterInput,
+    //     'sp-connect-adapter-set-success',
+    //   );
+    // }
 
     public static startAdapter(
         adapterInput: AdapterInput,
         successElement: string,
-        starting: boolean,
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -228,7 +219,7 @@ export class ConnectUtils {
         }
 
         // Deselect auto start of adapter
-        if (!starting) {
+        if (!adapterInput.startAdapter) {
             ConnectBtns.startAdapterNowCheckbox().parent().click();
         }
 
@@ -261,9 +252,10 @@ export class ConnectUtils {
     }
 
     public static setUpPreprocessingRuleTest(): AdapterInput {
-        const adapterConfiguration = GenericAdapterBuilder.create('File_Set')
+        const adapterConfiguration = GenericAdapterBuilder.create('File_Stream')
             .setStoreInDataLake()
             .setTimestampProperty('timestamp')
+            .addProtocolInput('input', 'speed', '1')
             .setName('Adapter to test rules')
             .setFormat('csv')
             .addFormatInput('input', 'delimiter', ';')
@@ -310,11 +302,15 @@ export class ConnectUtils {
         adapterConfiguration: AdapterInput,
         expectedFile: string,
         ignoreTime: boolean,
+        waitTime = 0,
     ) {
-        ConnectUtils.startSetAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(
+            adapterConfiguration,
+            'sp-connect-adapter-gathering-live-preview',
+        );
 
         // Wait till data is stored
-        cy.wait(10000);
+        cy.wait(waitTime);
 
         DataLakeUtils.checkResults(
             'Adapter to test rules',

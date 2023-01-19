@@ -48,6 +48,11 @@ export class SpecificAdapterBuilder {
         return this;
     }
 
+    public setStartAdapter(startAdapter: boolean) {
+        this.specificAdapterInput.startAdapter = startAdapter;
+        return this;
+    }
+
     public withAutoAddedTimestamp() {
         this.specificAdapterInput.autoAddTimestamp = true;
         return this;

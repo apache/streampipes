@@ -30,11 +30,11 @@ describe('Creates a new adapter without starting it', () => {
         )
             .setName('Machine Data Simulator Test')
             .addInput('input', 'wait-time-ms', '1000')
+            .setStartAdapter(false)
             .build();
 
         ConnectUtils.testSpecificStreamAdapter(
             adapterInput,
-            false,
             'sp-connect-adapter-not-started-success',
         );
 

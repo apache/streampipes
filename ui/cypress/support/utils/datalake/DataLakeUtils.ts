@@ -67,7 +67,7 @@ export class DataLakeUtils {
             true,
             format,
         );
-        ConnectUtils.addGenericSetAdapter(adapter);
+        ConnectUtils.addGenericAdapter(adapter);
 
         // Wait till data is stored
         if (wait) {
