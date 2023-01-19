@@ -50,8 +50,8 @@ dev_packages = base_packages + [
     "pytest==7.2.1",
     "pytest-cov==4.0.0",
     "pyupgrade==3.3.1",
+    "types-Jinja2==2.11.9",
     "types-requests==2.28.11.7",
-    "types-Jinja2==2.11.9"
 ]
 
 docs_packages = [
