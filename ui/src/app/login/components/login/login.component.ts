@@ -22,15 +22,19 @@ import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { LoginModel } from './login.model';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+} from '@angular/forms';
 
 @Component({
-    selector: 'login',
+    selector: 'sp-login',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
     parentForm: UntypedFormGroup;
     configReady = false;
     loading: boolean;
@@ -39,46 +43,55 @@ export class LoginComponent implements OnInit {
 
     loginSettings: LoginModel;
 
-    constructor(private loginService: LoginService,
-                private router: Router,
-                private shepherdService: ShepherdService,
-                private authService: AuthService,
-                private fb: UntypedFormBuilder) {
+    constructor(
+        private loginService: LoginService,
+        private router: Router,
+        private shepherdService: ShepherdService,
+        private authService: AuthService,
+        private fb: UntypedFormBuilder,
+    ) {
         this.loading = false;
         this.authenticationFailed = false;
         this.credentials = {};
     }
 
     ngOnInit() {
-      this.loginService.fetchLoginSettings().subscribe(result => {
-        this.loginSettings = result;
-        this.configReady = true;
-        this.parentForm = this.fb.group({});
-        this.parentForm.addControl('username', new UntypedFormControl('', Validators.required));
-        this.parentForm.addControl('password', new UntypedFormControl('', Validators.required));
+        this.loginService.fetchLoginSettings().subscribe(result => {
+            this.loginSettings = result;
+            this.configReady = true;
+            this.parentForm = this.fb.group({});
+            this.parentForm.addControl(
+                'username',
+                new UntypedFormControl('', Validators.required),
+            );
+            this.parentForm.addControl(
+                'password',
+                new UntypedFormControl('', Validators.required),
+            );
 
-        this.parentForm.valueChanges.subscribe(v => {
-          this.credentials.username = v.username;
-          this.credentials.password = v.password;
+            this.parentForm.valueChanges.subscribe(v => {
+                this.credentials.username = v.username;
+                this.credentials.password = v.password;
+            });
         });
-      });
     }
-
-
 
     logIn() {
         this.authenticationFailed = false;
         this.loading = true;
-        this.loginService.login(this.credentials)
-            .subscribe(response => { // success
-                    this.authService.login(response);
-                    this.loading = false;
-                    this.router.navigate(['']);
-                }, response => { // error
-                    this.loading = false;
-                    this.authenticationFailed = true;
-                }
-            );
+        this.loginService.login(this.credentials).subscribe(
+            response => {
+                // success
+                this.authService.login(response);
+                this.loading = false;
+                this.router.navigate(['']);
+            },
+            response => {
+                // error
+                this.loading = false;
+                this.authenticationFailed = true;
+            },
+        );
     }
 
     setSheperdServiceDelay() {

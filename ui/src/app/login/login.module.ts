@@ -61,7 +61,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         MatFormFieldModule,
         ReactiveFormsModule,
         MatProgressBarModule,
-        PlatformServicesModule
+        PlatformServicesModule,
     ],
     declarations: [
         ActivateAccountComponent,
@@ -73,11 +73,6 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         SetupComponent,
         StartupComponent,
     ],
-    providers: [
-        AccountActivationService,
-        LoginService,
-        RestorePasswordService
-    ]
+    providers: [AccountActivationService, LoginService, RestorePasswordService],
 })
-export class LoginModule {
-}
+export class LoginModule {}
