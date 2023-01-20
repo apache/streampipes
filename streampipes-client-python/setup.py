@@ -56,7 +56,7 @@ docs_packages = [
     "mkdocs==1.4.2",
     "mkdocs-awesome-pages-plugin==2.8.0",
     "mkdocs-material==8.5.11",  # < 9.x.y is required by mkdocs-jupyter
-    "mkdocstrings[python]==0.19.1",
+    "mkdocstrings[python]==0.20.0",
     "pytkdocs[numpy-style]>=0.16.1",
     "mkdocs-gen-files==0.4.0",
     "mkdocs-literate-nav==0.6.0",
