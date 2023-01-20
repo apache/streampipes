@@ -32,9 +32,11 @@ import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -58,6 +60,11 @@ public class FileStreamProtocol extends Protocol {
   private static final String SPEED = "speed";
   private static final String FILE_PATH = "filePath";
   private static final String REPLAY_ONCE = "replayOnce";
+
+  private static final String SPEED_UP = "speedUp";
+  private static final String KEEP_ORIGINAL_TIME = "keepOriginalTime";
+  private static final String SPEED_UP_FACTOR = "speedUpFactor";
+  private static final String FASTEST = "fastest";
 
 
   private static final Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
@@ -150,7 +157,8 @@ public class FileStreamProtocol extends Protocol {
 
         if (lastEventTimestamp != -1) {
           long sleepTime = (long) ((actualEventTimestamp - lastEventTimestamp) / speedUp);
-          if (sleepTime > 0) {
+          // speed up is set to Float.MAX_VALUE when user selected fastest option
+          if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
             try {
               Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
@@ -195,7 +203,16 @@ public class FileStreamProtocol extends Protocol {
 
     var replaceTimestampStringList = extractor.selectedMultiValues(REPLACE_TIMESTAMP, String.class);
     var replaceTimestamp = replaceTimestampStringList.size() != 0;
-    var speedUp = extractor.singleValueParameter(SPEED, Float.class);
+
+
+    var speedUpAlternative = extractor.selectedAlternativeInternalId(SPEED);
+
+    var speedUp = switch (speedUpAlternative) {
+      case FASTEST -> Float.MAX_VALUE;
+      case SPEED_UP_FACTOR -> extractor.singleValueParameter(SPEED_UP, Float.class);
+      default -> 1.0f;
+    };
+
     var timeBetweenReplay = 1;
     var fileName = extractor.selectedFilename(FILE_PATH);
     var replayOnce = extractor.selectedSingleValue(REPLAY_ONCE, String.class).equals("yes");
@@ -224,7 +241,12 @@ public class FileStreamProtocol extends Protocol {
         .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP),
             Options.from(""))
         .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
-        .requiredFloatParameter(Labels.withId(SPEED))
+        .requiredAlternatives(Labels.withId(SPEED),
+            Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
+            Alternatives.from(Labels.withId(FASTEST)),
+            Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
+                StaticProperties.group(Labels.withId("speed-up-factor-group"),
+                    StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP)))))
         .build();
   }
 
