@@ -108,6 +108,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   }
 
   @POST
+  @Path("/")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
