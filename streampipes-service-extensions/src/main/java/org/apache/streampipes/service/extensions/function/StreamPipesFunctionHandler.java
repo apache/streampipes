@@ -77,6 +77,8 @@ public enum StreamPipesFunctionHandler {
             return false;
           }
         });
+
+        client.streams().create(ds);
       });
     });
   }
