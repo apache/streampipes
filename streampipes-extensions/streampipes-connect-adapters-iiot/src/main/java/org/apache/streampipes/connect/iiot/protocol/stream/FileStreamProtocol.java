@@ -19,24 +19,18 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
+import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.SendToPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToBrokerReplayAdapterSink;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
+import org.apache.streampipes.extensions.management.util.EventSchemaUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyList;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
@@ -53,12 +47,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class FileStreamProtocol extends Protocol {
 
-  private static Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
+  private static final Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.file";
 
@@ -67,15 +63,17 @@ public class FileStreamProtocol extends Protocol {
   private float speedUp;
   private int timeBetweenReplay;
 
-  private Thread task;
-  private boolean running;
-
+  private ScheduledExecutorService executor;
 
   public FileStreamProtocol() {
   }
 
-  public FileStreamProtocol(IParser parser, IFormat format, String selectedFileName,
-                            boolean replaceTimestamp, float speedUp, int timeBetweenReplay) {
+  public FileStreamProtocol(IParser parser,
+                            IFormat format,
+                            String selectedFileName,
+                            boolean replaceTimestamp,
+                            float speedUp,
+                            int timeBetweenReplay) {
     super(parser, format);
     this.selectedFileName = selectedFileName;
     this.replaceTimestamp = replaceTimestamp;
@@ -84,66 +82,78 @@ public class FileStreamProtocol extends Protocol {
   }
 
   @Override
-  public void run(IAdapterPipeline adapterPipeline) {
-    String timestampKey = getTimestampKey(eventSchema.getEventProperties(), "");
+  public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
+    String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema());
 
-    // exchange adapter pipeline sink with special purpose replay sink for file replay
-    if (adapterPipeline.getPipelineSink() instanceof SendToKafkaAdapterSink) {
-      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-          (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink(),
-          timestampKey,
-          replaceTimestamp,
-          speedUp));
 
-    } else if (adapterPipeline.getPipelineSink() instanceof SendToMqttAdapterSink) {
-      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-          (SendToMqttAdapterSink) adapterPipeline.getPipelineSink(),
-          timestampKey,
-          replaceTimestamp,
-          speedUp));
+    var eventProcessor = new LocalEventProcessor(adapterPipeline, timestampKey);
+    executor = Executors.newScheduledThreadPool(1);
 
-    } else if (adapterPipeline.getPipelineSink() instanceof SendToJmsAdapterSink) {
-      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-          (SendToJmsAdapterSink) adapterPipeline.getPipelineSink(),
-          timestampKey,
-          replaceTimestamp,
-          speedUp));
-    }
-
-    running = true;
-    task = new Thread() {
-      @Override
-      public void run() {
-        while (running) {
-
-          format.reset();
-          SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-          InputStream dataInputStream = getDataFromEndpoint();
-          try {
-            if (dataInputStream != null) {
-              parser.parse(dataInputStream, stk);
-            } else {
-              logger.warn("Could not read data from file.");
-            }
-          } catch (ParseException e) {
-            logger.error("Error while parsing: " + e.getMessage());
-          }
-
-          try {
-            Thread.sleep(timeBetweenReplay * 1000);
-          } catch (InterruptedException e) {
-            logger.error("Error while waiting for next replay round" + e.getMessage());
-          }
-        }
+    executor.scheduleAtFixedRate(() -> {
+      try (InputStream dataInputStream = getDataFromEndpoint()) {
+        format.reset();
+        parser.parse(dataInputStream, eventProcessor);
+      } catch (ParseException | IOException e) {
+        logger.error("Error while parsing: " + e.getMessage());
       }
-    };
-    task.start();
+    }, 0, timeBetweenReplay, TimeUnit.SECONDS);
   }
 
+  private class LocalEventProcessor implements EmitBinaryEvent {
+
+    private final IAdapterPipeline adapterPipeline;
+    private final String timestampKey;
+
+    private long lastEventTimestamp = -1;
+
+    /**
+     * This local class is responsible to parse the events and set the timestamp accordign to the selected replay
+     * configurations
+     * @param adapterPipeline that transforms the events and send them to the message broker in the end
+     * @param timestampKey the runtimeName of the timestamp field
+     */
+    public LocalEventProcessor(IAdapterPipeline adapterPipeline,
+                               String timestampKey) {
+      this.adapterPipeline = adapterPipeline;
+      this.timestampKey = timestampKey;
+      format.reset();
+    }
+
+    @Override
+    public Boolean emit(byte[] event) {
+
+      var eventMap = format.parse(event);
+      if (eventMap != null) {
+        long actualEventTimestamp = (long) eventMap.get(timestampKey);
+
+        if (lastEventTimestamp != -1) {
+          long sleepTime = (long) ((actualEventTimestamp - lastEventTimestamp) / speedUp);
+          if (sleepTime > 0) {
+            try {
+              Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+              logger.info("File stream adapter was stopped, the current replay is interuppted", e);
+              return false;
+            }
+          }
+        }
+
+        if (replaceTimestamp) {
+          eventMap.put(timestampKey, System.currentTimeMillis());
+        }
+        lastEventTimestamp = actualEventTimestamp;
+
+        adapterPipeline.process(eventMap);
+
+      }
+      return true;
+    }
+  }
 
   @Override
   public void stop() {
-    running = false;
+    executor.shutdownNow();
+    logger.info("Stopped file stream adapter for file " + selectedFileName);
   }
 
   private InputStream getDataFromEndpoint() throws ParseException {
@@ -172,29 +182,14 @@ public class FileStreamProtocol extends Protocol {
     return new FileStreamProtocol(parser, format, fileName, replaceTimestamp, speedUp, timeBetweenReplay);
   }
 
-  private String getTimestampKey(List<EventProperty> eventProperties, String prefixKey) {
-    String result = null;
-    for (EventProperty eventProperty : eventProperties) {
-      if (eventProperty instanceof EventPropertyPrimitive && eventProperty.getDomainProperties() != null) {
-        for (int i = eventProperty.getDomainProperties().size() - 1; i >= 0; i--) {
-          if (eventProperty.getDomainProperties().get(0).toString().equals("http://schema.org/DateTime")) {
-            result = prefixKey + eventProperty.getRuntimeName();
-          }
-        }
-      } else if (eventProperty instanceof EventPropertyNested
-          && ((EventPropertyNested) eventProperty).getEventProperties() != null) {
-        result = getTimestampKey(((EventPropertyNested) eventProperty).getEventProperties(),
-            prefixKey + eventProperty.getRuntimeName() + ".");
-      } else if (eventProperty instanceof EventPropertyList
-          && ((EventPropertyList) eventProperty).getEventProperty() != null) {
-        result = getTimestampKey(Arrays.asList(((EventPropertyList) eventProperty).getEventProperty()),
-            prefixKey + eventProperty.getRuntimeName() + ".");
-      }
-      if (result != null) {
-        return result;
-      }
+  private String getTimestampKey(EventSchema eventSchema) throws AdapterException {
+    var timestampProperty = EventSchemaUtils.getTimestampProperty(eventSchema);
+    if (timestampProperty.isPresent()) {
+      return timestampProperty.get().getRuntimeName();
+    } else {
+      throw new AdapterException("No timestamp present in event schema");
     }
-    return result;
+
   }
 
   @Override

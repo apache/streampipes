@@ -108,11 +108,11 @@ public class CsvParser extends Parser {
     EventSchema resultSchema = new EventSchema();
     for (int i = 0; i < keys.length; i++) {
       EventPropertyPrimitive p = new EventPropertyPrimitive();
-      var runtimeType = DatatypeUtils.getXsdDatatype(data[i], false);
+      var runtimeType = DatatypeUtils.getXsdDatatype(data[i], true);
       var convertedValue = DatatypeUtils.convertValue(data[i], runtimeType);
       p.setRuntimeName(keys[i]);
       p.setRuntimeType(runtimeType);
-      sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i], false), convertedValue));
+      sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i], true), convertedValue));
       resultSchema.addEventProperty(p);
     }
 
@@ -164,11 +164,6 @@ public class CsvParser extends Parser {
         if (ch == customQuote) {
 
           inQuotes = true;
-
-          //Fixed : allow "" in empty quote enclosed
-//                    if (chars[0] != '"' && customQuote == '\"') {
-//                        curVal.append('"');
-//                    }
 
           //double quotes in column will hit this!
           if (startCollectChar) {

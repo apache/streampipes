@@ -17,16 +17,20 @@
  */
 
 export class Category {
+    constructor(
+        id: number,
+        name: string,
+        supercategory: string,
+        label_name: string,
+    ) {
+        this.id = id;
+        this.name = name;
+        this.supercategory = supercategory;
+        this.label_name = label_name;
+    }
 
-  constructor(id: number, name: string, supercategory: string, label_name: string) {
-    this.id = id;
-    this.name = name;
-    this.supercategory = supercategory;
-    this.label_name = label_name;
-  }
-
-  id: number;
-  name: string;
-  supercategory: string;
-  label_name: string;
+    id: number;
+    name: string;
+    supercategory: string;
+    label_name: string;
 }

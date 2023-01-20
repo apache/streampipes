@@ -16,11 +16,30 @@
  *
  */
 
-package org.apache.streampipes.performance.dataprovider;
+package org.apache.streampipes.extensions.management.connect.adapter.format.csv;
 
-import org.apache.streampipes.model.SpDataStream;
 
-public interface StreamProvider {
+import org.junit.Test;
 
-  SpDataStream getStreamDescription();
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
+public class CsvParserTest {
+
+  @Test
+  public void getSchemaAndSampleTimestamp() {
+    var csvValue = List.of(
+        "timestamp,value".getBytes(StandardCharsets.UTF_8),
+        "1667904471000,1".getBytes(StandardCharsets.UTF_8)
+    );
+
+    var csvParser = new CsvParser(",", true);
+    var result = csvParser.getSchemaAndSample(csvValue);
+
+    assertEquals(result.getEventPreview().size(), 1);
+    assertEquals(1667904471000.0, result.getEventPreview().get(0).get("timestamp").getValue());
+  }
+
 }

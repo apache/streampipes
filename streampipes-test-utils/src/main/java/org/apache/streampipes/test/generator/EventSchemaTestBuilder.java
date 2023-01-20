@@ -15,39 +15,40 @@
  * limitations under the License.
  *
  */
-
-package org.apache.streampipes.performance.dataprovider;
+package org.apache.streampipes.test.generator;
 
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleSchemaProvider {
+public class EventSchemaTestBuilder {
 
-//  private static final List<String> runtimeTypes = Arrays.asList(XSD.INTEGER, XSD.LONG, XSD.STRING, XSD.FLOAT, XSD
-//          .DOUBLE);
+  private List<EventProperty> eventProperties;
 
-  public EventSchema getSchema() {
-    EventSchema schema = new EventSchema();
-    List<EventProperty> properties = new ArrayList<>();
-    for (int i = 0; i < 5; i++) {
-      properties.add(makeRandomProperty());
-    }
-
-    schema.setEventProperties(properties);
-    return schema;
+  private EventSchemaTestBuilder() {
+    eventProperties = new ArrayList<>();
   }
 
-  private EventProperty makeRandomProperty() {
-    EventPropertyPrimitive property = new EventPropertyPrimitive();
-    property.setRuntimeName(RandomStringUtils.randomAlphabetic(5));
-    //property.setRuntimeType(runtimeTypes.get(new Random().nextInt(5)));
-
-    return property;
+  public static EventSchemaTestBuilder create() {
+    return new EventSchemaTestBuilder();
   }
+
+  public EventSchemaTestBuilder withEventProperties(List<EventProperty> eventProperties) {
+    this.eventProperties.addAll(eventProperties);
+    return this;
+  }
+
+  public EventSchemaTestBuilder withEventProperty(EventProperty eventProperty) {
+    eventProperties.add(eventProperty);
+    return this;
+  }
+
+  public EventSchema build() {
+    EventSchema eventSchema = new EventSchema();
+    eventSchema.setEventProperties(eventProperties);
+    return eventSchema;
+  }
+
 }

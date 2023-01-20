@@ -21,8 +21,6 @@ cypress/fixtures/**/*.csv
 
 # Remove these in the future to format additional modules
 # Please also see .eslintignore
-src/app/core-model
-src/app/core-services
 src/app/core-ui
 src/app/CustomMaterial
 src/app/dashboard

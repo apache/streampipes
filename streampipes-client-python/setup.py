@@ -38,30 +38,30 @@ base_packages = [
 ]
 
 dev_packages = base_packages + [
-    "autoflake>=1.7.7",
-    "black>=22.10.0",
-    "flake8>=5.0.4",
-    "interrogate>=1.5.0",
-    "isort>=5.10.1",
-    "mypy>=0.990",
-    "pandas-stubs>=1.2.0.62",
-    "pre-commit>=2.20.0",
-    "pytest>=7.2.0",
-    "pytest-cov>=4.0.0",
-    "pyupgrade>=3.2.2",
-    "types-requests>=2.28.11.4",
+    "autoflake==2.0.0",
+    "black==22.12.0",
+    "flake8==6.0.0",
+    "interrogate==1.5.0",
+    "isort==5.11.4",
+    "mypy==0.991",
+    "pandas-stubs==1.5.2.230105",
+    "pre-commit==2.21.0",
+    "pytest==7.2.1",
+    "pytest-cov==4.0.0",
+    "pyupgrade==3.3.1",
+    "types-requests==2.28.11.7",
 ]
 
 docs_packages = [
-    "mkdocs>=1.2.3",
-    "mkdocs-awesome-pages-plugin>=2.7.0",
-    "mkdocs-material>=8.1.11",
-    "mkdocstrings[python]>=0.19.0",
-    "pytkdocs[numpy-style]>=0.5.0",
-    "mkdocs-gen-files>=0.3.5",
-    "mkdocs-literate-nav>=0.4.1",
-    "numpydoc>=1.2",
-    "mkdocs-jupyter>=0.22.0 "
+    "mkdocs==1.4.2",
+    "mkdocs-awesome-pages-plugin==2.8.0",
+    "mkdocs-material==8.5.11",  # < 9.x.y is required by mkdocs-jupyter
+    "mkdocstrings[python]==0.20.0",
+    "pytkdocs[numpy-style]>=0.16.1",
+    "mkdocs-gen-files==0.4.0",
+    "mkdocs-literate-nav==0.6.0",
+    "numpydoc==1.5.0",
+    "mkdocs-jupyter==0.22.0 "
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -111,7 +111,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
         "Topic :: Scientific/Engineering"
     ],
     ext_modules=[],

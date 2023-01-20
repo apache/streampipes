@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache</groupId>
         <artifactId>apache</artifactId>
-        <version>25</version>
+        <version>29</version>
     </parent>
 
     <groupId>org.apache.streampipes</groupId>
@@ -151,13 +151,13 @@
 	<commons-math3.version>3.6.1</commons-math3.version>
 	<commons-compress.version>1.21</commons-compress.version>
 	<commons-text.version>1.10.0</commons-text.version>
-	<commons-pool2.version>2.9.0</commons-pool2.version>
+	<commons-pool2.version>2.11.1</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
 	<ddogleg.version>0.16</ddogleg.version>
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
 	<google-maps-services.version>0.10.0</google-maps-services.version>
-	<graalvm.js.version>21.3.0</graalvm.js.version>
+	<graalvm.js.version>22.3.1</graalvm.js.version>
 	<iotdb.version>1.0.0</iotdb.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
@@ -197,7 +197,6 @@
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<commons-text.version>1.8</commons-text.version>
 	<guice.version>5.1.0</guice.version>
-	<jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
@@ -1152,11 +1151,6 @@
                 <version>${lombok.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>${jcl-over-slf4j.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
                 <version>${netty.version}</version>
@@ -1436,7 +1430,6 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-performance-tests</module>
         <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>

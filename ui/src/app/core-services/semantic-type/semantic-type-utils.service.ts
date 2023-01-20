@@ -21,24 +21,22 @@ import { EventProperty } from '@streampipes/platform-services';
 
 @Injectable()
 export class SemanticTypeUtilsService {
-
     public TIMESTAMP = 'http://schema.org/DateTime';
     public IMAGE = 'https://image.com';
     public NUMBER = 'http://schema.org/Number';
 
-    constructor() {
-    }
+    constructor() {}
 
     public getValue(inputValue, semanticType) {
         if (semanticType === this.TIMESTAMP) {
-            return new Date(inputValue).toLocaleString() ;
+            return new Date(inputValue).toLocaleString();
         } else {
             return inputValue;
         }
     }
 
     public isTimestamp(property: EventProperty): boolean {
-       return property.domainProperties.includes(this.TIMESTAMP);
+        return property.domainProperties.includes(this.TIMESTAMP);
     }
 
     public is(property: EventProperty, uri: string): boolean {

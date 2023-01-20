@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
@@ -28,5 +29,9 @@ public class SpecificAdapterStreamDescription extends AdapterStreamDescription {
 
   public SpecificAdapterStreamDescription(AdapterStreamDescription other) {
     super(other);
+  }
+
+  public EventSchema getEventSchema() {
+    return this.getDataStream().getEventSchema();
   }
 }

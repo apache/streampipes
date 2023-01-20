@@ -30,6 +30,7 @@ import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
@@ -252,4 +253,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
   public void setCorrespondingDataStreamElementId(String correspondingDataStreamElementId) {
     this.correspondingDataStreamElementId = correspondingDataStreamElementId;
   }
+
+  public abstract EventSchema getEventSchema();
 }

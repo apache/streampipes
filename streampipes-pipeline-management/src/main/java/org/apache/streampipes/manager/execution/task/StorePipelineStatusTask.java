@@ -25,10 +25,14 @@ import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.lightcouch.DocumentConflictException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
 public class StorePipelineStatusTask implements PipelineExecutionTask {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StorePipelineStatusTask.class);
 
   private final boolean start;
   private final boolean forceStop;
@@ -61,7 +65,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
     try {
       getPipelineStorageApi().updatePipeline(pipeline);
     } catch (DocumentConflictException dce) {
-      //dce.printStackTrace();
+      LOG.error("Could not update pipeline {}", pipeline.getPipelineId(), dce);
     }
   }
 

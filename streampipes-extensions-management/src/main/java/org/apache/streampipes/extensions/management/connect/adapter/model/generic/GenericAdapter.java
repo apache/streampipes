@@ -29,7 +29,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventSchema;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +40,6 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
   public GenericAdapter(T adapterDescription) {
     super(adapterDescription);
-  }
-
-  public GenericAdapter(T adapterDescription, boolean debug) {
-    super(adapterDescription, debug);
   }
 
   public GenericAdapter() {
@@ -63,14 +58,10 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
     IParser parser = getParser(adapterDescription);
     IFormat format = getFormat(adapterDescription);
 
-    ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
+    ProtocolDescription protocolDescription = (adapterDescription).getProtocolDescription();
 
     IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
     this.protocol = protocolInstance;
-
-    //TODO remove
-    EventSchema eventSchema = adapterDescription.getEventSchema();
-    this.protocol.setEventSchema(eventSchema);
 
     logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
