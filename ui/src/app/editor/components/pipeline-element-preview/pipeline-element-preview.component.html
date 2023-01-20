@@ -17,16 +17,23 @@
   -->
 
 <div class="data-preview">
-    <div *ngIf="!runtimeData" fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+    <div
+        *ngIf="!runtimeData"
+        fxFlex="100"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+    >
         <mat-spinner [diameter]="20" color="accent"></mat-spinner>
         <span class="preview-table mt-10">Waiting for live data...</span>
     </div>
     <table class="row-border hover preview-table" *ngIf="runtimeData">
         <tbody id="preview-data-rows-id">
-        <tr *ngFor="let item of runtimeData | keyvalue" class="preview-row">
-            <td><b>{{item.key}}</b></td>
-            <td>{{item.value}}</td>
-        </tr>
+            <tr *ngFor="let item of runtimeData | keyvalue" class="preview-row">
+                <td>
+                    <b>{{ item.key }}</b>
+                </td>
+                <td>{{ item.value }}</td>
+            </tr>
         </tbody>
     </table>
 </div>

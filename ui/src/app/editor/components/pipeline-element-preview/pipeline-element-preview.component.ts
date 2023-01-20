@@ -16,53 +16,53 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EditorService } from '../../services/editor.service';
 
 @Component({
-  selector: 'pipeline-element-preview',
-  templateUrl: './pipeline-element-preview.component.html',
-  styleUrls: ['./pipeline-element-preview.component.scss']
+    selector: 'sp-pipeline-element-preview',
+    templateUrl: './pipeline-element-preview.component.html',
+    styleUrls: ['./pipeline-element-preview.component.scss'],
 })
-export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
+export class PipelineElementPreviewComponent implements OnInit {
+    @Input()
+    previewId: string;
 
-  @Input()
-  previewId: string;
+    @Input()
+    pipelineElementDomId: string;
 
-  @Input()
-  pipelineElementDomId: string;
+    runtimeData: ReadonlyMap<string, unknown>;
 
-  runtimeData: ReadonlyMap<string, unknown>;
+    runtimeDataError = false;
+    timer: any;
 
-  runtimeDataError = false;
-  timer: any;
+    constructor(private editorService: EditorService) {}
 
-  constructor(private editorService: EditorService) {
+    ngOnInit(): void {
+        this.getLatestRuntimeInfo();
+    }
 
-  }
+    getLatestRuntimeInfo() {
+        this.editorService
+            .getPipelinePreviewResult(this.previewId, this.pipelineElementDomId)
+            .subscribe(data => {
+                if (data) {
+                    this.runtimeDataError = false;
+                    if (
+                        !(
+                            Object.keys(data).length === 0 &&
+                            data.constructor === Object
+                        )
+                    ) {
+                        this.runtimeData = data;
+                    }
 
-  ngOnInit(): void {
-    this.getLatestRuntimeInfo();
-  }
-
-  ngOnDestroy(): void {
-  }
-
-  getLatestRuntimeInfo() {
-    this.editorService.getPipelinePreviewResult(this.previewId, this.pipelineElementDomId).subscribe(data => {
-      if (data) {
-        this.runtimeDataError = false;
-        if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-          this.runtimeData = data;
-        }
-
-        this.timer = setTimeout(() => {
-          this.getLatestRuntimeInfo();
-        }, 1000);
-      } else {
-        this.runtimeDataError = true;
-      }
-    });
-  }
-
+                    this.timer = setTimeout(() => {
+                        this.getLatestRuntimeInfo();
+                    }, 1000);
+                } else {
+                    this.runtimeDataError = true;
+                }
+            });
+    }
 }

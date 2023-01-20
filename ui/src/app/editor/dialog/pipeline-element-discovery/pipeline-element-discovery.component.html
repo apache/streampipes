@@ -19,18 +19,38 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayout="column">
-            <div *ngFor="let currentElement of currentElements; index as i" (click)="create(currentElement)">
-                <div fxLayout="row" class="m-10" fxLayoutAlign="start center"
-                     [style]="styles[i]"
-                     (mouseenter)="changeStyle(i, true)"
-                     (mouseleave)="changeStyle(i, false)"
-                     [attr.data-cy]="currentElement.name.toLowerCase().replaceAll(' ', '_')">
-                    <div class="draggable-icon-preview {{currentElementStyle(currentElement)}}">
-                        <pipeline-element [pipelineElement]="currentElement" [iconSize]="true"></pipeline-element>
+            <div
+                *ngFor="let currentElement of currentElements; index as i"
+                (click)="create(currentElement)"
+            >
+                <div
+                    fxLayout="row"
+                    class="m-10"
+                    fxLayoutAlign="start center"
+                    [style]="styles[i]"
+                    (mouseenter)="changeStyle(i, true)"
+                    (mouseleave)="changeStyle(i, false)"
+                    [attr.data-cy]="
+                        currentElement.name.toLowerCase().replaceAll(' ', '_')
+                    "
+                >
+                    <div
+                        class="draggable-icon-preview {{
+                            currentElementStyle(currentElement)
+                        }}"
+                    >
+                        <sp-pipeline-element
+                            [pipelineElement]="currentElement"
+                            [iconSize]="true"
+                        ></sp-pipeline-element>
                     </div>
                     <div fxLayout="column" fxLayoutAlign="center start">
-                        <div class="element-name">{{ currentElement.name }}</div>
-                        <div class="element-description">{{ currentElement.description }}</div>
+                        <div class="element-name">
+                            {{ currentElement.name }}
+                        </div>
+                        <div class="element-description">
+                            {{ currentElement.description }}
+                        </div>
                     </div>
                 </div>
                 <mat-divider></mat-divider>
@@ -39,7 +59,6 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-
         <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
             Cancel
         </button>

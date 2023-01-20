@@ -20,25 +20,54 @@
     <div class="sp-dialog-content p-15" fxLayout="column">
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
             <b><h2 class="welcome-animation">Hello!</h2></b>
-            <b><h3>Thank you for using {{appConstants.APP_NAME}}.</h3></b>
+            <b
+                ><h3>Thank you for using {{ appConstants.APP_NAME }}.</h3></b
+            >
         </div>
-        <div><img src="assets/img/sp-pipeline-white-small.png"
-                  style="margin-left:auto;margin-right:auto;display:block;">
+        <div>
+            <img
+                src="assets/img/sp-pipeline-white-small.png"
+                style="margin-left: auto; margin-right: auto; display: block"
+            />
         </div>
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b>{{appConstants.APP_NAME}} is your self-service toolbox for real-time analytics.</b>
-                <p>If you are using {{appConstants.APP_NAME}} for the first time, we recommend taking the interactive tour!</p>
+                <b
+                    >{{ appConstants.APP_NAME }} is your self-service toolbox
+                    for real-time analytics.</b
+                >
+                <p>
+                    If you are using {{ appConstants.APP_NAME }} for the first
+                    time, we recommend taking the interactive tour!
+                </p>
             </div>
-            <button mat-button mat-raised-button color="accent" (click)="startCreatePipelineTour()">Start Tour</button>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="startCreatePipelineTour()"
+            >
+                Start Tour
+            </button>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right" fxLayout="row">
-        <button mat-button mat-raised-button class="mat-basic" (click)="hideTourForever()" style="margin-right:10px;">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="hideTourForever()"
+            style="margin-right: 10px"
+        >
             Do not show again
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
             Close
         </button>
     </div>

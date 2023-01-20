@@ -16,79 +16,87 @@
  *
  */
 
-import { DataProcessorInvocation, DataSinkInvocation, SpDataSet, SpDataStream } from '@streampipes/platform-services';
+import {
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataSet,
+    SpDataStream,
+} from '@streampipes/platform-services';
 import { InjectionToken } from '@angular/core';
 
 export interface PipelineElementHolder {
-  [key: string]: PipelineElementUnion[];
+    [key: string]: PipelineElementUnion[];
 }
 
 export interface PipelineElementPosition {
-  x: number;
-  y: number;
+    x: number;
+    y: number;
 }
 
 export enum PipelineElementConfigurationStatus {
-  OK = 1,
-  MODIFIED,
-  INCOMPLETE,
+    OK = 1,
+    MODIFIED,
+    INCOMPLETE,
 }
 
 export interface PipelineElementConfig {
-  type: string;
-  settings: {
-    openCustomize: boolean,
-    preview: boolean,
-    displaySettings: string,
-    connectable: string,
-    disabled: boolean,
-    loadingStatus: boolean,
-    completed: PipelineElementConfigurationStatus
-    position: {
-      x: number,
-      y: number
-    }
-  };
-  payload: PipelineElementUnion;
+    type: string;
+    settings: {
+        openCustomize: boolean;
+        preview: boolean;
+        displaySettings: string;
+        connectable: string;
+        disabled: boolean;
+        loadingStatus: boolean;
+        completed: PipelineElementConfigurationStatus;
+        position: {
+            x: number;
+            y: number;
+        };
+    };
+    payload: PipelineElementUnion;
 }
 
 export interface PipelineElementRecommendationLayout {
-  skewStyle: any;
-  unskewStyle: any;
-  unskewStyleLabel: any;
-  type: string;
+    skewStyle: any;
+    unskewStyle: any;
+    unskewStyleLabel: any;
+    type: string;
 }
 
 export enum PipelineElementType {
-  DataSet,
-  DataStream,
-  DataProcessor,
-  DataSink
+    DataSet,
+    DataStream,
+    DataProcessor,
+    DataSink,
 }
 
 export interface TabsModel {
-  title: string;
-  type: PipelineElementIdentifier;
-  shorthand: string;
+    title: string;
+    type: PipelineElementIdentifier;
+    shorthand: string;
 }
 
 export type PipelineElementUnion =
-    SpDataSet
+    | SpDataSet
     | SpDataStream
     | DataProcessorInvocation
     | DataSinkInvocation;
 
-export type InvocablePipelineElementUnion = DataProcessorInvocation | DataSinkInvocation;
+export type InvocablePipelineElementUnion =
+    | DataProcessorInvocation
+    | DataSinkInvocation;
 
 export const PIPELINE_ELEMENT_TOKEN = new InjectionToken<{}>('pipelineElement');
 
-export type PipelineElementIdentifier = 'org.apache.streampipes.model.SpDataStream'
+export type PipelineElementIdentifier =
+    | 'org.apache.streampipes.model.SpDataStream'
     | 'org.apache.streampipes.model.SpDataSet'
     | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
     | 'org.apache.streampipes.model.graph.DataSinkInvocation';
 
 export interface PeCategory {
-  code: string;
-  label: string;
-  description: string;
+    code: string;
+    label: string;
+    description: string;
 }
