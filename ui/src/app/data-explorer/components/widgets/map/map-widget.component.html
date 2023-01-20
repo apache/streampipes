@@ -16,25 +16,34 @@
   ~
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel">
-
+<div
+    fxFlex="100"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    class="main-panel"
+>
     <sp-no-data-in-date-range
         *ngIf="showNoDataInDateRange"
-        [viewDateRange]="timeSettings" class="h-100">
+        [viewDateRange]="timeSettings"
+        class="h-100"
+    >
     </sp-no-data-in-date-range>
 
     <sp-too-much-data
-            [amountOfEvents]="amountOfTooMuchEvents"
-            (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
-            *ngIf="showTooMuchData" class="h-100"></sp-too-much-data>
+        [amountOfEvents]="amountOfTooMuchEvents"
+        (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
+        *ngIf="showTooMuchData"
+        class="h-100"
+    ></sp-too-much-data>
 
     <div *ngIf="showData">
-        <div [ngStyle]="{'width': mapWidth + 'px', 'height': mapHeight + 'px'}"
-             leaflet
-             [leafletOptions]="options"
-             (leafletMapReady)="onMapReady($event)">
+        <div
+            [ngStyle]="{ width: mapWidth + 'px', height: mapHeight + 'px' }"
+            leaflet
+            [leafletOptions]="options"
+            (leafletMapReady)="onMapReady($event)"
+        >
             <div *ngFor="let layer of layers" [leafletLayer]="layer"></div>
         </div>
     </div>
 </div>
-

@@ -17,27 +17,32 @@
   -->
 
 <div *ngIf="dashboard.displayHeader" class="text-center">
-    <h2>{{dashboard.name}}</h2>
-    <h3>{{dashboard.description}}</h3>
+    <h2>{{ dashboard.name }}</h2>
+    <h3>{{ dashboard.description }}</h3>
 </div>
-<gridster [options]="options" [ngClass]="editMode ? 'edit' : ''" class="custom-gridster-style">
-    <ng-container *ngFor="let item of dashboard.widgets;let i=index">
+<gridster
+    [options]="options"
+    [ngClass]="editMode ? 'edit' : ''"
+    class="custom-gridster-style"
+>
+    <ng-container *ngFor="let item of dashboard.widgets; let i = index">
         <gridster-item [item]="item" #gridsterItemComponent class="shadow">
             <sp-data-explorer-dashboard-widget
-                    [ngStyle]="{height: gridsterItemComponent.height -13 + 'px'}"
-                    [timeSettings]="timeSettings"
-                    (updateCallback)="propagateItemUpdate($event)"
-                    (deleteCallback)="propagateItemRemoval($event)"
-                    (configureWidgetCallback)="propagateWidgetSelection($event)"
-                    (startEditModeEmitter)="startEditMode($event)"
-                    [dashboardItem]="item"
-                    [configuredWidget]="configuredWidgets.get(item.id)"
-                    [dataLakeMeasure]="dataLakeMeasures.get(item.id)"
-                    [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
-                    [editMode]="editMode"
-                    [gridMode]="true"
-                    [gridsterItemComponent]="gridsterItemComponent"
-                    *ngIf="widgetsAvailable && configuredWidgets.has(item.id)"></sp-data-explorer-dashboard-widget>
+                [ngStyle]="{ height: gridsterItemComponent.height - 13 + 'px' }"
+                [timeSettings]="timeSettings"
+                (updateCallback)="propagateItemUpdate($event)"
+                (deleteCallback)="propagateItemRemoval($event)"
+                (configureWidgetCallback)="propagateWidgetSelection($event)"
+                (startEditModeEmitter)="startEditMode($event)"
+                [dashboardItem]="item"
+                [configuredWidget]="configuredWidgets.get(item.id)"
+                [dataLakeMeasure]="dataLakeMeasures.get(item.id)"
+                [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
+                [editMode]="editMode"
+                [gridMode]="true"
+                [gridsterItemComponent]="gridsterItemComponent"
+                *ngIf="widgetsAvailable && configuredWidgets.has(item.id)"
+            ></sp-data-explorer-dashboard-widget>
         </gridster-item>
     </ng-container>
 </gridster>

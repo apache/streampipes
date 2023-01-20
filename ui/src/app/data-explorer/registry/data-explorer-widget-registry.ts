@@ -20,7 +20,6 @@ import { IWidget } from '../models/dataview-dashboard.model';
 import { WidgetTypeMap } from './data-explorer-widgets';
 
 export class DataExplorerWidgetRegistry {
-
     static getAvailableWidgetTemplates(): IWidget[] {
         return Array.from(WidgetTypeMap.values());
     }

@@ -16,74 +16,87 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '@streampipes/platform-services';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+} from '@angular/core';
+import {
+    DataExplorerWidgetModel,
+    DataLakeMeasure,
+} from '@streampipes/platform-services';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { DataExplorerWidgetDataSettingsComponent } from './data-settings/data-explorer-widget-data-settings.component';
 
 @Component({
-  selector: 'sp-data-explorer-designer-panel',
-  templateUrl: './data-explorer-designer-panel.component.html',
-  styleUrls: ['./data-explorer-designer-panel.component.scss']
+    selector: 'sp-data-explorer-designer-panel',
+    templateUrl: './data-explorer-designer-panel.component.html',
+    styleUrls: ['./data-explorer-designer-panel.component.scss'],
 })
-export class DataExplorerDesignerPanelComponent implements OnInit {
+export class DataExplorerDesignerPanelComponent {
+    @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
+    @Input() dataLakeMeasure: DataLakeMeasure;
+    @Input() newWidgetMode = false;
 
-  @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
-  @Input() dataLakeMeasure: DataLakeMeasure;
-  @Input() newWidgetMode = false;
+    @Output() addWidgetEmitter: EventEmitter<
+        Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
+    > = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
 
-  @Output() addWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
-    new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+    @Output() closeDesignerPanelEmitter = new EventEmitter();
 
-  @Output() closeDesignerPanelEmitter = new EventEmitter();
+    selectedIndex = 0;
 
-  selectedIndex = 0;
+    dataSettingsPanel: DataExplorerWidgetDataSettingsComponent;
 
-  dataSettingsPanel: DataExplorerWidgetDataSettingsComponent;
-
-  ngOnInit(): void {
-  }
-
-  selectOptionsPanel(index: number) {
-    this.selectedIndex = index;
-  }
-
-  createNewWidget() {
-    this.newWidgetMode = false;
-
-    // Set default name to the measure name
-    if (this.currentlyConfiguredWidget.dataConfig.sourceConfigs.length > 0) {
-      this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle =
-        this.currentlyConfiguredWidget.dataConfig.sourceConfigs[0].measureName
-        + ' - '
-        + this.currentlyConfiguredWidget.widgetType;
+    selectOptionsPanel(index: number) {
+        this.selectedIndex = index;
     }
 
-    this.addWidgetEmitter.emit({ a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget });
-  }
+    createNewWidget() {
+        this.newWidgetMode = false;
 
-  modifyWidgetMode(widget: DataExplorerWidgetModel,
-                   newWidgetMode: boolean) {
-    this.currentlyConfiguredWidget = widget;
-    this.newWidgetMode = newWidgetMode;
-    if (this.dataSettingsPanel) {
-      setTimeout(() => {
-        this.dataSettingsPanel.checkSourceTypes();
-      });
+        // Set default name to the measure name
+        if (
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs.length > 0
+        ) {
+            this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle =
+                this.currentlyConfiguredWidget.dataConfig.sourceConfigs[0]
+                    .measureName +
+                ' - ' +
+                this.currentlyConfiguredWidget.widgetType;
+        }
+
+        this.addWidgetEmitter.emit({
+            a: this.dataLakeMeasure,
+            b: this.currentlyConfiguredWidget,
+        });
     }
-  }
 
-  closeDesignerPanel() {
-    this.closeDesignerPanelEmitter.emit();
-  }
+    modifyWidgetMode(widget: DataExplorerWidgetModel, newWidgetMode: boolean) {
+        this.currentlyConfiguredWidget = widget;
+        this.newWidgetMode = newWidgetMode;
+        if (this.dataSettingsPanel) {
+            setTimeout(() => {
+                this.dataSettingsPanel.checkSourceTypes();
+            });
+        }
+    }
 
-  resetIndex() {
-    this.selectedIndex = 0;
-    this.newWidgetMode = true;
-  }
+    closeDesignerPanel() {
+        this.closeDesignerPanelEmitter.emit();
+    }
 
-  @ViewChild('dataSettingsPanel')
-  public set content(dataSettingsPanel: DataExplorerWidgetDataSettingsComponent) {
-    this.dataSettingsPanel = dataSettingsPanel;
-  }
+    resetIndex() {
+        this.selectedIndex = 0;
+        this.newWidgetMode = true;
+    }
+
+    @ViewChild('dataSettingsPanel')
+    public set content(
+        dataSettingsPanel: DataExplorerWidgetDataSettingsComponent,
+    ) {
+        this.dataSettingsPanel = dataSettingsPanel;
+    }
 }

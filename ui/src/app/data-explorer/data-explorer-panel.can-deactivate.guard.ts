@@ -18,18 +18,22 @@
 
 import { Injectable } from '@angular/core';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
+import {
+    ActivatedRouteSnapshot,
+    CanDeactivate,
+    RouterStateSnapshot,
+} from '@angular/router';
 import { Observable } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
-export class DataExplorerPanelCanDeactivateGuard implements CanDeactivate<DataExplorerDashboardPanelComponent> {
-
-  canDeactivate(
-    component: DataExplorerDashboardPanelComponent,
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> | boolean {
-
-    return component.confirmLeaveDashboard(route, state);
-  }
+@Injectable({ providedIn: 'root' })
+export class DataExplorerPanelCanDeactivateGuard
+    implements CanDeactivate<DataExplorerDashboardPanelComponent>
+{
+    canDeactivate(
+        component: DataExplorerDashboardPanelComponent,
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ): Observable<boolean> | boolean {
+        return component.confirmLeaveDashboard(route, state);
+    }
 }
