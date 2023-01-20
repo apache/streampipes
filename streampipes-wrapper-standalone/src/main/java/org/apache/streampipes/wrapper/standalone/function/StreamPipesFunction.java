@@ -65,12 +65,15 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   @Override
   public void invokeRuntime(String serviceGroup) {
     var functionId = this.getFunctionConfig().getFunctionId();
-    this.outputCollectors = this.getOutputCollectors();
-    this.outputCollectors.forEach((key, value) -> value.connect());
 
-    FunctionContext context = new FunctionContextGenerator(
-        functionId.getId(), serviceGroup, this.requiredStreamIds(), this.outputCollectors)
-        .generate();
+    this.initializeProducers();
+
+    var context = new FunctionContextGenerator(
+        functionId.getId(),
+        serviceGroup,
+        this.requiredStreamIds(),
+        this.outputCollectors
+    ).generate();
 
     // Creates a source info for each incoming SpDataStream
     // The index is used to create the selector prefix for the SourceInfo
@@ -87,6 +90,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     this.inputCollectors = getInputCollectors(context.getStreams());
 
     LOG.info("Invoking function {}:{}", functionId.getId(), functionId.getVersion());
+
     onServiceStarted(context);
     registerConsumers();
   }
@@ -132,6 +136,11 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     SpMonitoringManager.INSTANCE.addErrorMessage(
         functionId.getId(),
         SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+  }
+
+  private void initializeProducers() {
+    this.outputCollectors = this.getOutputCollectors();
+    this.outputCollectors.forEach((key, value) -> value.connect());
   }
 
   private Map<String, SpOutputCollector> getOutputCollectors() {
