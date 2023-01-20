@@ -76,7 +76,6 @@ export class LabelService {
     }
 
     getBufferedLabel(labelId: string) {
-        // this.bufferedLabels
         const result = new ReplaySubject(1);
 
         if (this.bufferedLabels[labelId] !== undefined) {

@@ -109,8 +109,6 @@ export class StaticPropertyUtilService {
 
             clone.elementId = id;
             clone.dependsOn = val.dependsOn;
-            // clone.value = val.value;
-            // clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));
             clone.horizontalRendering = val.horizontalRendering;
         } else if (
@@ -122,8 +120,6 @@ export class StaticPropertyUtilService {
                 : (clone = new OneOfStaticProperty());
 
             clone.elementId = id;
-            // clone.value = val.value;
-            // clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));
             clone.horizontalRendering = val.horizontalRendering;
         }
@@ -137,7 +133,6 @@ export class StaticPropertyUtilService {
         dst: StaticProperty,
     ): StaticProperty {
         dst.label = src.label;
-        // dst.elementName = src.elementName;
         dst.description = src.description;
         dst.internalName = src.internalName;
         dst.index = src.index;
@@ -148,7 +143,6 @@ export class StaticPropertyUtilService {
         const clone = new Option();
         clone['@class'] = 'org.apache.streampipes.model.staticproperty.Option';
         clone.elementId = 'urn:streampipes.org:spi::' + this.generateID(6);
-        // clone.elementName = val.elementName;
         clone.name = val.name;
         clone.internalName = val.internalName;
         clone.selected = val.selected;

@@ -37,7 +37,6 @@ export class StaticMappingNaryComponent
 
     ngOnInit() {
         this.extractPossibleSelections();
-        // this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
         if (!this.staticProperty.selectedProperties) {
             this.selectNone();
         } else {

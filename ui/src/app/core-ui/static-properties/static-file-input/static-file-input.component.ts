@@ -40,7 +40,6 @@ export class StaticFileInputComponent
 
     public chooseExistingFileControl = new UntypedFormControl();
 
-    // inputValue: string;
     fileName: string;
 
     selectedUploadFile: File;
@@ -103,7 +102,6 @@ export class StaticFileInputComponent
                 } else {
                     if (this.fileMetadata.length > 0) {
                         this.selectedFile = this.fileMetadata[0];
-                        // this.staticProperty.locationPath = this.selectedFile.internalFilename;
                         this.selectOption(this.selectedFile);
                         this.emitUpdate(true);
                         this.parentForm.controls[this.fieldName].setValue(
@@ -137,7 +135,6 @@ export class StaticFileInputComponent
                         this.parentForm.controls[this.fieldName].setValue(
                             internalFilename,
                         );
-                        // this.fieldName = internalFilename;
                         this.fetchFileMetadata(internalFilename);
                     }
                 },

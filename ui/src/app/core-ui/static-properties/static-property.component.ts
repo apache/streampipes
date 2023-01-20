@@ -161,7 +161,6 @@ export class StaticPropertyComponent implements OnInit {
     }
 
     valueChange(hasInput) {
-        // this.staticProperty.isValid = hasInput;
         this.validateEmitter.emit();
     }
 

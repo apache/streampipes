@@ -76,7 +76,6 @@ export class ImageLabelingComponent implements OnInit {
         this.labelService.getAllLabels().subscribe(res => {
             this.labels = res;
         });
-        // this.labels = this.restService.getLabels();
     }
 
     handleImageIndexChange(index) {
@@ -84,21 +83,7 @@ export class ImageLabelingComponent implements OnInit {
         this.getCocoFile(this._imagesRoutes, index);
     }
 
-    getCocoFile(routes, index) {
-        // This is relevant for coco
-        // this.restService.getCocoFileForImage(routes[index]).subscribe(
-        //   coco => {
-        //     if (coco === null) {
-        //       const cocoFile = new CocoFormat();
-        //       this.cocoFormatService.addImage(cocoFile, (routes[index]));
-        //       this.cocoFile = cocoFile;
-        //     } else {
-        //       this.cocoFile = coco as CocoFormat;
-        //     }
-        //     this.imagesIndex = index;
-        //   }
-        // );
-    }
+    getCocoFile(routes, index) {}
 
     /* sp-image-view handler */
     handleMouseDownLeft(
@@ -342,7 +327,6 @@ export class ImageLabelingComponent implements OnInit {
             );
             change[0].category_id = categoryId;
             change[0].category_name = change[1].categoryId;
-            //this.imageView.redrawAll();
         }
     }
 
@@ -351,7 +335,6 @@ export class ImageLabelingComponent implements OnInit {
             if (annotation !== undefined) {
                 const coco = this.cocoFile;
                 this.cocoFormatService.removeAnnotation(coco, annotation.id);
-                //this.imageView.redrawAll();
             }
         }
     }
@@ -374,9 +357,6 @@ export class ImageLabelingComponent implements OnInit {
         const coco = this.cocoFile;
         if (coco !== undefined) {
             const imageRoute = this._imagesRoutes[imageIndex];
-            // this.restService.saveCocoFileForImage(imageRoute, JSON.stringify(coco)).subscribe(
-            //   res =>    this.openSnackBar('Saved')
-            // );
         }
     }
 

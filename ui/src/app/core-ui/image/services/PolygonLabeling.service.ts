@@ -81,14 +81,6 @@ export class PolygonLabelingService {
             annotation.isHovered = false;
         });
 
-        /*    let offset: ICoordinates;
-
-    anchor.on('dragstart', function() {
-      const position = imageView.getImagePointerPosition();
-      offset = {x: annotation.segmentation[0][index] - position.x,
-                y: annotation.segmentation[0][index + 1] - position.y};
-    });*/
-
         anchor.on('dragmove', function () {
             const position = imageView.getImagePointerPosition();
             const _shift: ICoordinates = imageView.getShift();
