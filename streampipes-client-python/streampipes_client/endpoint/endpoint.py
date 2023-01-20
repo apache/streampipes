@@ -215,7 +215,7 @@ class APIEndpoint(Endpoint):
 
 
 class MessagingEndpoint(Endpoint):
-    """Abstract implementation of an StreamPipes messaging endpoint.
+    """Abstract implementation of a StreamPipes messaging endpoint.
     Serves as template for all endpoints used for interacting with the StreamPipes messaging layer directly.
     Therefore, they need to provide the functionality to talk with the broker system running in StreamPipes.
     By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
@@ -255,21 +255,6 @@ class MessagingEndpoint(Endpoint):
     def _broker(self, broker: Broker) -> None:
         """Setter method for internal property `broker`"""
         self.__broker = broker
-
-    @property
-    @abstractmethod
-    def _container_cls(self) -> Type[ResourceContainer]:
-        """Defines the model container class the endpoint refers to.
-
-        This model container class corresponds to the Python data model,
-        which handles multiple resources returned from the endpoint.
-
-        Returns
-        -------
-        The corresponding container class from the data model,
-        needs to a subclass of `model.container.ResourceContainer`.
-        """
-        raise NotImplementedError  # pragma: no cover
 
     @final
     def configure(self, broker: Broker) -> None:
