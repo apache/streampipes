@@ -15,19 +15,28 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.config;
 
-package org.apache.streampipes.extensions.api.declarer;
+public enum SpProtocol {
 
-import java.util.List;
+  KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
+  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
+  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
+  NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol");
 
-public interface IStreamPipesFunctionDeclarer {
+  private final String name;
+  private final String protocolClass;
 
-  IFunctionConfig getFunctionConfig();
+  SpProtocol(String name, String protocolClass) {
+    this.name = name;
+    this.protocolClass = protocolClass;
+  }
 
-  List<String> requiredStreamIds();
+  public String getName() {
+    return name;
+  }
 
-  void invokeRuntime(String serviceGroup);
-
-  void discardRuntime();
-
+  public String getProtocolClass() {
+    return protocolClass;
+  }
 }

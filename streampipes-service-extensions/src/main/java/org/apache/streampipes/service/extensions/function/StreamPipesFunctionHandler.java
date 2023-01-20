@@ -18,8 +18,11 @@
 
 package org.apache.streampipes.service.extensions.function;
 
+import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.function.FunctionDefinition;
 
 import java.util.Collection;
@@ -44,13 +47,38 @@ public enum StreamPipesFunctionHandler {
 
   public void initializeFunctions(Collection<IStreamPipesFunctionDeclarer> functions,
                                   String serviceGroup) {
+    registerDataStreams(functions);
     functions.forEach(function -> {
       function.invokeRuntime(serviceGroup);
-      runningInstances.put(function.getFunctionId().getId(), function);
+      runningInstances.put(function.getFunctionConfig().getFunctionId().getId(), function);
     });
     if (!(runningInstances.isEmpty())) {
       new Thread(new FunctionRegistrationHandler(getFunctionDefinitions())).start();
     }
+  }
+
+  public void registerDataStreams(Collection<IStreamPipesFunctionDeclarer> functions) {
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    functions.forEach(function -> {
+      function.getFunctionConfig().getOutputDataStreams().values().forEach(ds -> {
+        DeclarersSingleton.getInstance().add(new DataStreamDeclarer() {
+          @Override
+          public SpDataStream declareModel() {
+            return ds;
+          }
+
+          @Override
+          public void executeStream() {
+
+          }
+
+          @Override
+          public boolean isExecutable() {
+            return false;
+          }
+        });
+      });
+    });
   }
 
   public void cleanupFunctions() {
@@ -64,7 +92,9 @@ public enum StreamPipesFunctionHandler {
     return this.runningInstances
         .values()
         .stream()
-        .map(function -> new FunctionDefinition(function.getFunctionId(), function.requiredStreamIds()))
+        .map(function -> new FunctionDefinition(
+            function.getFunctionConfig().getFunctionId(),
+            function.requiredStreamIds()))
         .collect(Collectors.toList());
   }
 
