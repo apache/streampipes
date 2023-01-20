@@ -21,12 +21,15 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
+import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.transform.value.TimestampTranformationRule;
 import org.apache.streampipes.extensions.management.util.EventSchemaUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
@@ -50,6 +53,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -78,6 +82,9 @@ public class FileStreamProtocol extends Protocol {
   private boolean replayOnce;
   private int timeBetweenReplay;
 
+  private Optional<IAdapterPipelineElement> addTimestampRule;
+  private Optional<IAdapterPipelineElement> transformationTimestampRule;
+
   private ScheduledExecutorService executor;
 
   public FileStreamProtocol() {
@@ -98,9 +105,30 @@ public class FileStreamProtocol extends Protocol {
     this.replayOnce = replayOnce;
   }
 
+  private Optional<IAdapterPipelineElement> checkAndRemovePipelineElement(
+      List<IAdapterPipelineElement> pipelineElements,
+      Class elementType) {
+
+    var pipelineElement = pipelineElements.stream()
+        .filter(o -> o.getClass() == elementType)
+        .findFirst();
+
+    pipelineElement.ifPresent(pipelineElements::remove);
+
+    return pipelineElement;
+  }
+
   @Override
   public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
     String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema());
+
+    addTimestampRule = checkAndRemovePipelineElement(
+        adapterPipeline.getPipelineElements(),
+        AddTimestampPipelineElement.class);
+
+    transformationTimestampRule = checkAndRemovePipelineElement(
+        adapterPipeline.getPipelineElements(),
+        TimestampTranformationRule.class);
 
 
     var eventProcessor = new LocalEventProcessor(adapterPipeline, timestampKey);
@@ -153,6 +181,15 @@ public class FileStreamProtocol extends Protocol {
 
       var eventMap = format.parse(event);
       if (eventMap != null) {
+        // The following two statemants are required when the timestamp is added via a rule and is not within the file
+        if (addTimestampRule.isPresent()) {
+          eventMap = addTimestampRule.get().process(eventMap);
+        }
+
+        if (transformationTimestampRule.isPresent()) {
+          eventMap = transformationTimestampRule.get().process(eventMap);
+        }
+
         long actualEventTimestamp = (long) eventMap.get(timestampKey);
 
         if (lastEventTimestamp != -1) {
