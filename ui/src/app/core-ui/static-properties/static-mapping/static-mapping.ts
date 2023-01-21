@@ -17,21 +17,20 @@
  */
 
 import {
-  EventProperty,
-  EventPropertyList,
-  EventPropertyNested,
-  EventPropertyPrimitive,
-  EventPropertyUnion,
-  MappingProperty
+    EventProperty,
+    EventPropertyList,
+    EventPropertyNested,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
+    MappingProperty,
 } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { Directive } from '@angular/core';
 
-
 @Directive()
-export abstract class StaticMappingComponent<T extends MappingProperty>
-    extends AbstractValidatedStaticPropertyRenderer<T> {
-
+export abstract class StaticMappingComponent<
+    T extends MappingProperty,
+> extends AbstractValidatedStaticPropertyRenderer<T> {
     protected firstStreamPropertySelector = 's0::';
     protected secondStreamPropertySelector = 's1::';
 
@@ -49,24 +48,35 @@ export abstract class StaticMappingComponent<T extends MappingProperty>
 
     extractPossibleSelections(): void {
         this.eventSchemas.forEach((schema, index) => {
-            const streamIdentifier = index === 0 ? this.firstStreamPropertySelector : this.secondStreamPropertySelector;
-            const streamProperties = schema
-                .eventProperties
+            const streamIdentifier =
+                index === 0
+                    ? this.firstStreamPropertySelector
+                    : this.secondStreamPropertySelector;
+            const streamProperties = schema.eventProperties
                 .filter(ep => this.isInSelection(ep, streamIdentifier))
                 .map(ep => this.cloneEp(ep));
-            streamProperties.forEach(ep => (ep as any).propertySelector = streamIdentifier + ep.runtimeName);
-            this.availableProperties = this.availableProperties.concat(streamProperties);
+            streamProperties.forEach(
+                ep =>
+                    ((ep as any).propertySelector =
+                        streamIdentifier + ep.runtimeName),
+            );
+            this.availableProperties =
+                this.availableProperties.concat(streamProperties);
         });
     }
 
     isInSelection(ep: EventProperty, streamIdentifier: string): boolean {
-        return this.staticProperty.mapsFromOptions
-            .some(maps => (maps === streamIdentifier + ep.runtimeName));
+        return this.staticProperty.mapsFromOptions.some(
+            maps => maps === streamIdentifier + ep.runtimeName,
+        );
     }
 
     cloneEp(ep: EventPropertyUnion) {
         if (ep instanceof EventPropertyPrimitive) {
-            return EventPropertyPrimitive.fromData(ep, new EventPropertyPrimitive());
+            return EventPropertyPrimitive.fromData(
+                ep,
+                new EventPropertyPrimitive(),
+            );
         } else if (ep instanceof EventPropertyList) {
             return EventPropertyList.fromData(ep, new EventPropertyList());
         } else {

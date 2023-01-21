@@ -23,59 +23,69 @@ import { ExportConfig } from './model/export-config.model';
 import { DataDownloadDialogModel } from './model/data-download-dialog.model';
 import { DataExportService } from './services/data-export.service';
 
-
 @Component({
-  selector: 'sp-data-download-dialog',
-  templateUrl: 'data-download-dialog.component.html',
-  styleUrls: ['./data-download-dialog.component.scss']
+    selector: 'sp-data-download-dialog',
+    templateUrl: 'data-download-dialog.component.html',
+    styleUrls: ['./data-download-dialog.component.scss'],
 })
 export class DataDownloadDialogComponent implements OnInit {
+    @Input() dataDownloadDialogModel: DataDownloadDialogModel;
 
-  @Input() dataDownloadDialogModel: DataDownloadDialogModel;
+    @ViewChild('downloadDialogStepper', { static: true })
+    downloadDialogStepper: MatStepper;
 
-  @ViewChild('downloadDialogStepper', {static: true}) downloadDialogStepper: MatStepper;
+    exportConfig: ExportConfig;
 
-  exportConfig: ExportConfig;
+    constructor(
+        public dialogRef: DialogRef<DataDownloadDialogComponent>,
+        public dataExportService: DataExportService,
+    ) {}
 
-  constructor(public dialogRef: DialogRef<DataDownloadDialogComponent>,
-              public dataExportService: DataExportService) {
-  }
+    ngOnInit() {
+        const measurementName =
+            this.dataDownloadDialogModel.measureName !== undefined
+                ? this.dataDownloadDialogModel.measureName
+                : this.dataDownloadDialogModel.dataExplorerDataConfig
+                      .sourceConfigs[0].measureName;
 
-  ngOnInit() {
-    const measurementName = this.dataDownloadDialogModel.measureName !== undefined ?
-      this.dataDownloadDialogModel.measureName : this.dataDownloadDialogModel.dataExplorerDataConfig.sourceConfigs[0].measureName;
-
-    this.exportConfig = {
-      dataExportConfig: {
-        dataRangeConfiguration: 'all',
-        missingValueBehaviour: 'ignore',
-        measurement: measurementName
-      },
-      formatExportConfig: {
-        exportFormat: 'csv',
-        delimiter: 'comma'
-      }
-    };
-  }
-
-  exitDialog() {
-    this.dialogRef.close();
-  }
-
-  nextStep() {
-    this.downloadDialogStepper.next();
-  }
-
-  previousStep() {
-    this.downloadDialogStepper.previous();
-  }
-
-  downloadData() {
-    if (this.exportConfig.dataExportConfig.dataRangeConfiguration === 'visible') {
-     this.exportConfig.dataExportConfig.dateRange = this.dataDownloadDialogModel.dataExplorerDateRange;
+        this.exportConfig = {
+            dataExportConfig: {
+                dataRangeConfiguration: 'all',
+                missingValueBehaviour: 'ignore',
+                measurement: measurementName,
+            },
+            formatExportConfig: {
+                exportFormat: 'csv',
+                delimiter: 'comma',
+            },
+        };
     }
 
-    this.dataExportService.downloadData(this.exportConfig, this.dataDownloadDialogModel);
-    this.downloadDialogStepper.next();
-  }
+    exitDialog() {
+        this.dialogRef.close();
+    }
+
+    nextStep() {
+        this.downloadDialogStepper.next();
+    }
+
+    previousStep() {
+        this.downloadDialogStepper.previous();
+    }
+
+    downloadData() {
+        if (
+            this.exportConfig.dataExportConfig.dataRangeConfiguration ===
+            'visible'
+        ) {
+            this.exportConfig.dataExportConfig.dateRange =
+                this.dataDownloadDialogModel.dataExplorerDateRange;
+        }
+
+        this.dataExportService.downloadData(
+            this.exportConfig,
+            this.dataDownloadDialogModel,
+        );
+        this.downloadDialogStepper.next();
+    }
 }

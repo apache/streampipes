@@ -21,53 +21,80 @@
         <h4>Basics</h4>
         <mat-form-field fxFlex color="accent">
             <mat-label>Template name</mat-label>
-            <input [(ngModel)]="template.templateName" matInput name="templateName" class="sp" required/>
+            <input
+                [(ngModel)]="template.templateName"
+                matInput
+                name="templateName"
+                class="sp"
+                required
+            />
         </mat-form-field>
         <mat-form-field fxFlex color="accent">
             <mat-label>Template description</mat-label>
-            <input [(ngModel)]="template.templateDescription" matInput name="templateDescription" class="sp"
-                   required/>
+            <input
+                [(ngModel)]="template.templateDescription"
+                matInput
+                name="templateDescription"
+                class="sp"
+                required
+            />
         </mat-form-field>
-        <!--        <mat-checkbox class="sp" color="accent">Make available as pipeline element</mat-checkbox>-->
         <mat-divider class="divider"></mat-divider>
         <h4>Configuration</h4>
-        <mat-hint style="margin-bottom: 10px;">(dynamic options cannot be saved and are hidden)</mat-hint>
-        <div fxLayout="column" *ngFor="let config of staticProperties | pipelineElementTemplatePipe"
-             class="static-property-panel static-property-panel-border">
+        <mat-hint style="margin-bottom: 10px"
+            >(dynamic options cannot be saved and are hidden)</mat-hint
+        >
+        <div
+            fxLayout="column"
+            *ngFor="
+                let config of staticProperties | pipelineElementTemplatePipe
+            "
+            class="static-property-panel static-property-panel-border"
+        >
             <div fxLayout="row">
                 <div fxFlex="50">
-                    {{config.label}}
+                    {{ config.label }}
                 </div>
                 <div fxFlex="50">
                     <div fxLayout="column">
-                        <mat-checkbox [checked]="templateConfigs.has(config.internalName)"
-                                      (change)="handleSelection(config)" name="store" class="sp" color="accent">Store
-                            as template
+                        <mat-checkbox
+                            [checked]="templateConfigs.has(config.internalName)"
+                            (change)="handleSelection(config)"
+                            name="store"
+                            class="sp"
+                            color="accent"
+                            >Store as template
                         </mat-checkbox>
-                        <!--                        <mat-checkbox *ngIf="templateConfigs.has(config.internalName)"-->
-                        <!--                                      (click)="toggleViewPermission(config)" name="displayed"-->
-                        <!--                                      class="sp" color="primary">Users can view-->
-                        <!--                        </mat-checkbox>-->
-                        <!--                        <mat-checkbox *ngIf="templateConfigs.has(config.internalName)"-->
-                        <!--                                      (click)="toggleEditPermission(config)" name="editable"-->
-                        <!--                                      class="sp" color="primary">Users can modify-->
-                        <!--                        </mat-checkbox>-->
                     </div>
                 </div>
             </div>
-
         </div>
         <mat-divider class="divider"></mat-divider>
         <h4>Existing templates</h4>
-        <div fxLayout="column" *ngFor="let template of existingTemplates" class="static-property-panel static-property-panel-border">
+        <div
+            fxLayout="column"
+            *ngFor="let template of existingTemplates"
+            class="static-property-panel static-property-panel-border"
+        >
             <div fxFlex="100" fxLayout="row">
-                <div fxFlex fxLayoutAlign="start center">{{template.templateName}}</div>
+                <div fxFlex fxLayoutAlign="start center">
+                    {{ template.templateName }}
+                </div>
                 <div fxLayoutAlign="end center">
-                    <button mat-icon-button color="accent" (click)="deleteTemplate(template._id)"><mat-icon>delete</mat-icon></button>
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        (click)="deleteTemplate(template._id)"
+                    >
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </div>
             </div>
         </div>
-        <mat-hint style="margin-bottom: 10px;" *ngIf="existingTemplates.length === 0">(no templates available)</mat-hint>
-
+        <mat-hint
+            style="margin-bottom: 10px"
+            *ngIf="existingTemplates.length === 0"
+            >(no templates available)</mat-hint
+        >
     </div>
 </div>

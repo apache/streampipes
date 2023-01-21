@@ -18,12 +18,24 @@
 
 <div [formGroup]="parentForm" id="formWrapper">
     <div fxFlex="100" fxLayout="row">
-            <mat-form-field class="example-full-width" color="accent">
-                <mat-select formControlName="{{fieldName}}" [placeholder]="staticProperty.label" [attr.data-cy]="fieldName">
-                    <mat-option *ngFor="let property of availableProperties | displayRecommendedPipe: staticProperty.propertyScope: displayRecommended" [value]="property.propertySelector">
-                        {{property.runtimeName}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <mat-form-field class="example-full-width" color="accent">
+            <mat-select
+                formControlName="{{ fieldName }}"
+                [placeholder]="staticProperty.label"
+                [attr.data-cy]="fieldName"
+            >
+                <mat-option
+                    *ngFor="
+                        let property of availableProperties
+                            | displayRecommendedPipe
+                                : staticProperty.propertyScope
+                                : displayRecommended
+                    "
+                    [value]="property.propertySelector"
+                >
+                    {{ property.runtimeName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>

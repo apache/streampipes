@@ -49,7 +49,7 @@
                     <div fxLayout="column" *ngIf="!templateMode">
                         <div fxFlex="100" fxLayout="column" class="customize-section p-15">
                             <form [formGroup]="parentForm" fxFlex="100">
-                                <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
+                                <sp-app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
                                                      [staticProperty]="config"
                                                      [pipelineElement]="cachedPipelineElement"
                                                      [displayRecommended]="displayRecommended"
@@ -60,7 +60,7 @@
                                                      [completedStaticProperty]="completedStaticProperty"
                                                      (updateEmitter)="triggerUpdate($event)"
                                                      (validateEmitter)="validConfiguration($event)">
-                                </app-static-property>
+                                </sp-app-static-property>
                                 <div *ngIf="isDataProcessor">
                                     <output-strategy
                                             *ngFor="let outputStrategy of cachedPipelineElement.outputStrategies"
@@ -73,9 +73,9 @@
                         </div>
                     </div>
                     <div fxLayout="column" *ngIf="templateMode">
-                        <pipeline-element-template-config [staticProperties]="cachedPipelineElement.staticProperties"
+                        <sp-pipeline-element-template-config [staticProperties]="cachedPipelineElement.staticProperties"
                         [template]="template" [templateConfigs]="templateConfigs" [appId]="cachedPipelineElement.appId">
-                        </pipeline-element-template-config>
+                        </sp-pipeline-element-template-config>
                     </div>
                 </div>
                 <div fxFlex="50" *ngIf="showDocumentation"

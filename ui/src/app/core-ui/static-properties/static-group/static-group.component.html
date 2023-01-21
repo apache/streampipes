@@ -17,34 +17,41 @@
   -->
 
 <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
-    <app-static-property *ngFor="let property of staticProperty.staticProperties; let i = index"
-                         [adapterId]="adapterId"
-                         [parentForm]="parentForm"
-                         [staticProperties]="staticProperties"
-                         [fieldName]="fieldName + '-'  + property.internalName + '-' + i"
-                         [showBorder]="false"
-                         [eventSchemas]="eventSchemas"
-                         [staticProperty]="property"
-                         [displayRecommended]="displayRecommended" class="test fullWidth">
-    </app-static-property>
+    <sp-app-static-property
+        *ngFor="let property of staticProperty.staticProperties; let i = index"
+        [adapterId]="adapterId"
+        [parentForm]="parentForm"
+        [staticProperties]="staticProperties"
+        [fieldName]="fieldName + '-' + property.internalName + '-' + i"
+        [showBorder]="false"
+        [eventSchemas]="eventSchemas"
+        [staticProperty]="property"
+        [displayRecommended]="displayRecommended"
+        class="test fullWidth"
+    >
+    </sp-app-static-property>
 </div>
 
-
-<div *ngIf="staticProperty.horizontalRendering" fxLayout="row" fxLayoutAlign="space-between center">
-    <ng-container *ngFor="let property of staticProperty.staticProperties; let i = index">
-        <span *ngIf="i > 0" style="margin-left: 10px;"></span>
-        <app-static-property
-                [adapterId]="adapterId"
-                [parentForm]="parentForm"
-                [staticProperties]="staticProperties"
-                [showBorder]="false"
-                [fieldName]="fieldName + '-' + property.internalName + '-' + i"
-                [eventSchemas]="eventSchemas"
-                [staticProperty]="property"
-                [displayRecommended]="displayRecommended" class="test fullWidth">
-        </app-static-property>
+<div
+    *ngIf="staticProperty.horizontalRendering"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+>
+    <ng-container
+        *ngFor="let property of staticProperty.staticProperties; let i = index"
+    >
+        <span *ngIf="i > 0" style="margin-left: 10px"></span>
+        <sp-app-static-property
+            [adapterId]="adapterId"
+            [parentForm]="parentForm"
+            [staticProperties]="staticProperties"
+            [showBorder]="false"
+            [fieldName]="fieldName + '-' + property.internalName + '-' + i"
+            [eventSchemas]="eventSchemas"
+            [staticProperty]="property"
+            [displayRecommended]="displayRecommended"
+            class="test fullWidth"
+        >
+        </sp-app-static-property>
     </ng-container>
-
 </div>
-
-

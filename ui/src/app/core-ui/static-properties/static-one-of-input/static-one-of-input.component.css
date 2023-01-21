@@ -21,7 +21,9 @@
     margin-bottom: 10px;
 }
 
-::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+::ng-deep
+    .mat-radio-button.mat-accent.mat-radio-checked
+    .mat-radio-outer-circle {
     border-color: rgb(27, 20, 100);
 }
 
