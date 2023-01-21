@@ -23,30 +23,28 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
 import { Validators } from '@angular/forms';
 
 @Component({
-  selector: 'sp-static-slide-toggle',
-  templateUrl: './static-slide-toggle.component.html'
+    selector: 'sp-static-slide-toggle',
+    templateUrl: './static-slide-toggle.component.html',
 })
 export class StaticSlideToggleComponent
-  extends AbstractValidatedStaticPropertyRenderer<SlideToggleStaticProperty> implements OnInit {
+    extends AbstractValidatedStaticPropertyRenderer<SlideToggleStaticProperty>
+    implements OnInit
+{
+    ngOnInit(): void {
+        this.addValidator(this.staticProperty.selected, Validators.required);
+        this.enableValidators();
+    }
 
+    emitUpdate() {
+        this.updateEmitter.emit(
+            new ConfigurationInfo(this.staticProperty.internalName, true),
+        );
+    }
 
-  ngOnInit(): void {
-    this.addValidator(this.staticProperty.selected, Validators.required);
-    this.enableValidators();
-  }
+    onStatusChange(status: any) {}
 
-  emitUpdate() {
-    this.updateEmitter.emit(new ConfigurationInfo(
-      this.staticProperty.internalName, true));
-  }
-
-  onStatusChange(status: any) {
-  }
-
-  onValueChange(value: any) {
-    this.staticProperty.selected = value;
-    this.emitUpdate();
-  }
-
-
+    onValueChange(value: any) {
+        this.staticProperty.selected = value;
+        this.emitUpdate();
+    }
 }

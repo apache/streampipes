@@ -17,32 +17,42 @@
  */
 
 import { Component, OnChanges, OnInit } from '@angular/core';
-import { RuntimeResolvableOneOfStaticProperty, StaticPropertyUnion } from '@streampipes/platform-services';
+import {
+    RuntimeResolvableOneOfStaticProperty,
+    StaticPropertyUnion,
+} from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-    selector: 'app-static-runtime-resolvable-oneof-input',
+    selector: 'sp-app-static-runtime-resolvable-oneof-input',
     templateUrl: './static-runtime-resolvable-oneof-input.component.html',
-    styleUrls: ['./static-runtime-resolvable-oneof-input.component.css']
+    styleUrls: ['./static-runtime-resolvable-oneof-input.component.css'],
 })
 export class StaticRuntimeResolvableOneOfInputComponent
-    extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty> implements OnInit, OnChanges {
-
+    extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty>
+    implements OnInit, OnChanges
+{
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);
     }
 
     ngOnInit() {
         super.onInit();
-        this.parentForm.addControl(this.staticProperty.internalName, new UntypedFormControl(this.staticProperty.options, []));
+        this.parentForm.addControl(
+            this.staticProperty.internalName,
+            new UntypedFormControl(this.staticProperty.options, []),
+        );
         this.performValidation();
     }
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableOneOfStaticProperty) {
         this.staticProperty.options = staticProperty.options;
-        if (this.staticProperty.options && this.staticProperty.options.length > 0) {
+        if (
+            this.staticProperty.options &&
+            this.staticProperty.options.length > 0
+        ) {
             this.staticProperty.options[0].selected = true;
         }
     }
@@ -51,11 +61,15 @@ export class StaticRuntimeResolvableOneOfInputComponent
         for (const option of this.staticProperty.options) {
             option.selected = false;
         }
-        this.staticProperty.options.find(option => option.elementId === id).selected = true;
+        this.staticProperty.options.find(
+            option => option.elementId === id,
+        ).selected = true;
         this.performValidation();
     }
 
-    parse(staticProperty: StaticPropertyUnion): RuntimeResolvableOneOfStaticProperty {
+    parse(
+        staticProperty: StaticPropertyUnion,
+    ): RuntimeResolvableOneOfStaticProperty {
         return staticProperty as RuntimeResolvableOneOfStaticProperty;
     }
 
@@ -65,11 +79,16 @@ export class StaticRuntimeResolvableOneOfInputComponent
     }
 
     performValidation() {
-        let error = {error: true};
-        if (this.staticProperty.options && this.staticProperty.options.find(o => o.selected) !== undefined) {
+        let error = { error: true };
+        if (
+            this.staticProperty.options &&
+            this.staticProperty.options.find(o => o.selected) !== undefined
+        ) {
             error = undefined;
         }
         console.log(error);
-        this.parentForm.controls[this.staticProperty.internalName].setErrors(error);
+        this.parentForm.controls[this.staticProperty.internalName].setErrors(
+            error,
+        );
     }
 }

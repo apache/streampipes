@@ -16,66 +16,137 @@
   ~
   -->
 
-<div (mouseover)="isHoverComponent = true" (mouseout)="isHoverComponent = false">
-
-    <div fxLayout="column" fxLayoutAlign="space-between " >
-        <div  fxLayout="row" fxLayoutAlign="space-around start">
-
-            <sp-select-label style="width: 270px"
-                    [enableShortCuts]="isHoverComponent"
-                    (labelChange)="handleLabelChange($event)">
+<div
+    (mouseover)="isHoverComponent = true"
+    (mouseout)="isHoverComponent = false"
+>
+    <div fxLayout="column" fxLayoutAlign="space-between ">
+        <div fxLayout="row" fxLayoutAlign="space-around start">
+            <sp-select-label
+                style="width: 270px"
+                [enableShortCuts]="isHoverComponent"
+                (labelChange)="handleLabelChange($event)"
+            >
             </sp-select-label>
 
-            <div fxLayout="column" fxLayoutAlign="space-between " >
+            <div fxLayout="column" fxLayoutAlign="space-between ">
                 <div style="display: flex; position: relative">
-                    <button mat-button matTooltip="Edit Annotations"
-                            (click)="labelingMode.setNoneMode()" [style.background-color]="labelingMode.isNoneMode() ? 'lightgrey' : 'white'"> <mat-icon>create</mat-icon></button>
-                    <button mat-button matTooltip="Create React Annotation"
-                            (click)="labelingMode.setReactMode()" [style.background-color]="labelingMode.isReactMode() ? 'lightgrey' : 'white'"> <mat-icon>crop_3_2</mat-icon></button>
-                    <button mat-button matTooltip="Create Polygon Annotation"
-                            (click)="labelingMode.setPolygonMode()" [style.background-color]="labelingMode.isPolygonMode() ? 'lightgrey' : 'white'"> <mat-icon>details</mat-icon></button>
-                    <button mat-button matTooltip="Create Brush Annotation"
-                            (click)="labelingMode.setBrushMode()" [style.background-color]="labelingMode.isBrushMode() ? 'lightgrey' : 'white'"> <mat-icon>blur_circular</mat-icon></button>
-                    <mat-slider [min]="1"  [max]="50" [step]="1" [thumbLabel]="true" [(ngModel)]="brushSize"></mat-slider>
-                    <button mat-button (click)="save(this.imagesIndex)" style="position: absolute; right: 0px;"> <mat-icon>save</mat-icon></button>
-                    <button mat-button matTooltip="Description" [matMenuTriggerFor]="aboveMenu">
-                            <span class="material-icons">
-                        info
-                    </span></button>
-                        <mat-menu #aboveMenu="matMenu" yPosition="above">
-                                <p><em>The Description of the selected image</em></p>
-                        </mat-menu>
-
+                    <button
+                        mat-button
+                        matTooltip="Edit Annotations"
+                        (click)="labelingMode.setNoneMode()"
+                        [style.background-color]="
+                            labelingMode.isNoneMode() ? 'lightgrey' : 'white'
+                        "
+                    >
+                        <mat-icon>create</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        matTooltip="Create React Annotation"
+                        (click)="labelingMode.setReactMode()"
+                        [style.background-color]="
+                            labelingMode.isReactMode() ? 'lightgrey' : 'white'
+                        "
+                    >
+                        <mat-icon>crop_3_2</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        matTooltip="Create Polygon Annotation"
+                        (click)="labelingMode.setPolygonMode()"
+                        [style.background-color]="
+                            labelingMode.isPolygonMode() ? 'lightgrey' : 'white'
+                        "
+                    >
+                        <mat-icon>details</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        matTooltip="Create Brush Annotation"
+                        (click)="labelingMode.setBrushMode()"
+                        [style.background-color]="
+                            labelingMode.isBrushMode() ? 'lightgrey' : 'white'
+                        "
+                    >
+                        <mat-icon>blur_circular</mat-icon>
+                    </button>
+                    <mat-slider
+                        [min]="1"
+                        [max]="50"
+                        [step]="1"
+                        [thumbLabel]="true"
+                        [(ngModel)]="brushSize"
+                    ></mat-slider>
+                    <button
+                        mat-button
+                        (click)="save(this.imagesIndex)"
+                        style="position: absolute; right: 0px"
+                    >
+                        <mat-icon>save</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        matTooltip="Description"
+                        [matMenuTriggerFor]="aboveMenu"
+                    >
+                        <span class="material-icons"> info </span>
+                    </button>
+                    <mat-menu #aboveMenu="matMenu" yPosition="above">
+                        <p><em>The Description of the selected image</em></p>
+                    </mat-menu>
                 </div>
 
                 <sp-image-container
-                        [imageSrc]="_imagesRoutes[imagesIndex]"
-                        (childRedraw)="handleChildRedraw($event[0], $event[1])"
-                        (mouseDownLeft)="handleMouseDownLeft($event[0], $event[1], $event[2])"
-                        (mouseMove)="handleMouseMove($event[0], $event[1], $event[2])"
-                        (mouseMoveLeft)="handleMouseMoveLeft($event[0], $event[1], $event[2])"
-                        (mouseUpLeft)="handleMouseUpLeft($event[0], $event[1], $event[2], $event[3])"
-                        (shortCut)="handleImageViewShortCuts($event)"
-                        (dbclick)="handleImageViewDBClick($event[0], $event[1], $event[2])"
-                        (mouseDownRight)="handleMouseDownRight($event[0], $event[1], $event[2])"
-                        (isDrawing)="handleIsDrawing($event)">
+                    [imageSrc]="_imagesRoutes[imagesIndex]"
+                    (childRedraw)="handleChildRedraw($event[0], $event[1])"
+                    (mouseDownLeft)="
+                        handleMouseDownLeft($event[0], $event[1], $event[2])
+                    "
+                    (mouseMove)="
+                        handleMouseMove($event[0], $event[1], $event[2])
+                    "
+                    (mouseMoveLeft)="
+                        handleMouseMoveLeft($event[0], $event[1], $event[2])
+                    "
+                    (mouseUpLeft)="
+                        handleMouseUpLeft(
+                            $event[0],
+                            $event[1],
+                            $event[2],
+                            $event[3]
+                        )
+                    "
+                    (shortCut)="handleImageViewShortCuts($event)"
+                    (dbclick)="
+                        handleImageViewDBClick($event[0], $event[1], $event[2])
+                    "
+                    (mouseDownRight)="
+                        handleMouseDownRight($event[0], $event[1], $event[2])
+                    "
+                    (isDrawing)="handleIsDrawing($event)"
+                >
                 </sp-image-container>
             </div>
 
-            <sp-image-annotations style="width: 270px"
-                    [annotations]="this.cocoFile?.annotations"
-                    [labels]="labels"
-                    (changeAnnotationLabel)="handleChangeAnnotationLabel($event)"
-                    (deleteAnnotation)="handleDeleteAnnotation($event)">
+            <sp-image-annotations
+                style="width: 270px"
+                [annotations]="this.cocoFile?.annotations"
+                [labels]="labels"
+                (changeAnnotationLabel)="handleChangeAnnotationLabel($event)"
+                (deleteAnnotation)="handleDeleteAnnotation($event)"
+            >
             </sp-image-annotations>
         </div>
         <br />
 
-            <sp-image-bar style="width: 100%"
-                          [imagesRoutes]="_imagesRoutes"
-                          [selectedIndex]="imagesIndex"
-                          [enableShortCuts]="true"
-                          (indexChange)="handleImageIndexChange($event)">
-            </sp-image-bar>
+        <sp-image-bar
+            style="width: 100%"
+            [imagesRoutes]="_imagesRoutes"
+            [selectedIndex]="imagesIndex"
+            [enableShortCuts]="true"
+            (indexChange)="handleImageIndexChange($event)"
+        >
+        </sp-image-bar>
     </div>
 </div>

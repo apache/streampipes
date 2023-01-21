@@ -19,16 +19,14 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-split-section',
-  templateUrl: './split-section.component.html',
-  styleUrls: ['./split-section.component.scss']
+    selector: 'sp-split-section',
+    templateUrl: './split-section.component.html',
+    styleUrls: ['./split-section.component.scss'],
 })
 export class SplitSectionComponent {
+    @Input()
+    title: string;
 
-  @Input()
-  title: string;
-
-  @Input()
-  subtitle: string;
-
+    @Input()
+    subtitle: string;
 }

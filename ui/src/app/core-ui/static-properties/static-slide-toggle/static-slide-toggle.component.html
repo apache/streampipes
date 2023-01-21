@@ -19,12 +19,13 @@
 <div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row">
         <mat-slide-toggle
-                fxFlex
-                formControlName="{{fieldName}}"
-                color="accent"
-                required
-                [attr.data-cy]="fieldName">
-            {{staticProperty.description}}
+            fxFlex
+            formControlName="{{ fieldName }}"
+            color="accent"
+            required
+            [attr.data-cy]="fieldName"
+        >
+            {{ staticProperty.description }}
         </mat-slide-toggle>
     </div>
 </div>

@@ -16,49 +16,43 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { CollectionStaticProperty, StaticPropertyUnion } from '@streampipes/platform-services';
+import { Component } from '@angular/core';
+import {
+    CollectionStaticProperty,
+    StaticPropertyUnion,
+} from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 
-
 @Component({
-  selector: 'sp-static-collection',
-  templateUrl: './static-collection.component.html',
-  styleUrls: ['./static-collection.component.css']
+    selector: 'sp-static-collection',
+    templateUrl: './static-collection.component.html',
+    styleUrls: ['./static-collection.component.css'],
 })
-export class StaticCollectionComponent
-  extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> implements OnInit {
-
-  constructor() {
-    super();
-  }
-
-  ngOnInit() {
-  }
-
-  add(property: StaticPropertyUnion) {
-    if (!this.staticProperty.members) {
-      this.staticProperty.members = [];
+export class StaticCollectionComponent extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> {
+    constructor() {
+        super();
     }
-    this.staticProperty.members.push(property);
-    this.updateIndex();
-  }
 
-  remove(i) {
-    this.staticProperty.members.splice(i, 1).slice(0);
-    this.updateIndex();
-  }
+    add(property: StaticPropertyUnion) {
+        if (!this.staticProperty.members) {
+            this.staticProperty.members = [];
+        }
+        this.staticProperty.members.push(property);
+        this.updateIndex();
+    }
 
-  updateIndex() {
-    this.staticProperty.members.forEach((property, index) => {
-      property.index = index;
-    });
-  }
+    remove(i) {
+        this.staticProperty.members.splice(i, 1).slice(0);
+        this.updateIndex();
+    }
 
-  onStatusChange(status: any) {
-  }
+    updateIndex() {
+        this.staticProperty.members.forEach((property, index) => {
+            property.index = index;
+        });
+    }
 
-  onValueChange(value: any) {
-  }
+    onStatusChange(status: any) {}
 
+    onValueChange(value: any) {}
 }

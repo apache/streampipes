@@ -16,31 +16,48 @@
   ~
   -->
 <div class="error-hint-position">
-    <div *ngIf="displayMessages"
-         class="pipeline-validation-summary {{errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}"
-         (click)="toggleErrorMessagesDisplayed()">
+    <div
+        *ngIf="displayMessages"
+        class="pipeline-validation-summary {{
+            errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''
+        }}"
+        (click)="toggleErrorMessagesDisplayed()"
+    >
         <div fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="row" fxLayoutAlign="start center">
-                <i class="material-icons" *ngIf="errorMessages.length > 0">notifications</i>
-                <i class="material-icons"
-                   *ngIf="errorMessages.length === 0">done</i>
+                <i class="material-icons" *ngIf="errorMessages.length > 0"
+                    >notifications</i
+                >
+                <i class="material-icons" *ngIf="errorMessages.length === 0"
+                    >done</i
+                >
             </div>
             <div>
-                <span *ngIf="errorMessages.length === 0">{{validationString}} ok</span>
-                <span *ngIf="errorMessages.length > 0">{{errorMessages.length}} {{errorMessages.length > 1 ? 'hints' : 'hint'}}</span>
+                <span *ngIf="errorMessages.length === 0"
+                    >{{ validationString }} ok</span
+                >
+                <span *ngIf="errorMessages.length > 0"
+                    >{{ errorMessages.length }}
+                    {{ errorMessages.length > 1 ? 'hints' : 'hint' }}</span
+                >
             </div>
         </div>
     </div>
-    <div class="editor-error-notifications"
-         *ngIf="errorMessages.length > 0 && errorMessagesDisplayed">
+    <div
+        class="editor-error-notifications"
+        *ngIf="errorMessages.length > 0 && errorMessagesDisplayed"
+    >
         <h5 class="error-hint-color">
-            <b>{{errorMessages.length}} {{errorMessages.length == 1 ? "error" : "errors"}}
-                found.</b></h5>
-        <hr/>
+            <b
+                >{{ errorMessages.length }}
+                {{ errorMessages.length === 1 ? 'error' : 'errors' }} found.</b
+            >
+        </h5>
+        <hr />
         <div *ngFor="let errorMessage of errorMessages">
-            <b>{{errorMessage.title}}</b>
-            <div>{{errorMessage.content}}</div>
-            <hr/>
+            <b>{{ errorMessage.title }}</b>
+            <div>{{ errorMessage.content }}</div>
+            <hr />
         </div>
     </div>
 </div>

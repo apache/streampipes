@@ -16,6 +16,16 @@
   ~
   -->
 <div class="canvas-container">
-    <mat-spinner *ngIf="isDrawingVar" [diameter]="40" style="position: fixed"></mat-spinner>
-    <img [src]="imagePath" #mainImg *ngIf="showImage" [width]="canvasWidth" (load)="onImageLoaded()"/>
+    <mat-spinner
+        *ngIf="isDrawingVar"
+        [diameter]="40"
+        style="position: fixed"
+    ></mat-spinner>
+    <img
+        [src]="imagePath"
+        #mainImg
+        *ngIf="showImage"
+        [width]="canvasWidth"
+        (load)="onImageLoaded()"
+    />
 </div>
