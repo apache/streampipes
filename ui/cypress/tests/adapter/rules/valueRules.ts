@@ -29,6 +29,12 @@ describe('Connect value rule transformations', () => {
     it('Perform Test', () => {
         const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
 
+        // Edit timestamp property
+        ConnectEventSchemaUtils.editTimestampProperty(
+            'timestamp',
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        );
+
         // Number transformation
         ConnectEventSchemaUtils.numberTransformation('value', '10');
 
@@ -39,14 +45,13 @@ describe('Connect value rule transformations', () => {
             'Degree Fahrenheit',
         );
 
-        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
-
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
         ConnectUtils.tearDownPreprocessingRuleTest(
             adapterConfiguration,
             'cypress/fixtures/connect/valueRules/expected.csv',
             false,
+            2000,
         );
     });
 });

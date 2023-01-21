@@ -255,7 +255,11 @@ export class ConnectUtils {
         const adapterConfiguration = GenericAdapterBuilder.create('File_Stream')
             .setStoreInDataLake()
             .setTimestampProperty('timestamp')
-            .addProtocolInput('input', 'speed', '1')
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            )
             .setName('Adapter to test rules')
             .setFormat('csv')
             .addFormatInput('input', 'delimiter', ';')

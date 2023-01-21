@@ -29,6 +29,7 @@ import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
+import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.TransformValueAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.transform.value.TimestampTranformationRule;
 import org.apache.streampipes.extensions.management.util.EventSchemaUtils;
 import org.apache.streampipes.model.AdapterType;
@@ -83,7 +84,7 @@ public class FileStreamProtocol extends Protocol {
   private int timeBetweenReplay;
 
   private Optional<IAdapterPipelineElement> addTimestampRule;
-  private Optional<IAdapterPipelineElement> transformationTimestampRule;
+  private Optional<List<TimestampTranformationRule>> transformationTimestampRule;
 
   private ScheduledExecutorService executor;
 
@@ -105,12 +106,11 @@ public class FileStreamProtocol extends Protocol {
     this.replayOnce = replayOnce;
   }
 
-  private Optional<IAdapterPipelineElement> checkAndRemovePipelineElement(
-      List<IAdapterPipelineElement> pipelineElements,
-      Class elementType) {
+  private Optional<IAdapterPipelineElement> checkAndRemoveAddTimestampPipelineElement(
+      List<IAdapterPipelineElement> pipelineElements) {
 
     var pipelineElement = pipelineElements.stream()
-        .filter(o -> o.getClass() == elementType)
+        .filter(o -> o.getClass() == AddTimestampPipelineElement.class)
         .findFirst();
 
     pipelineElement.ifPresent(pipelineElements::remove);
@@ -118,17 +118,33 @@ public class FileStreamProtocol extends Protocol {
     return pipelineElement;
   }
 
+  private Optional<List<TimestampTranformationRule>> checkAndRemoveChangeTimestampPipelineElement(
+      List<IAdapterPipelineElement> pipelineElements) {
+
+    var pipelineElement = pipelineElements.stream()
+        .filter(o -> o.getClass() == TransformValueAdapterPipelineElement.class)
+        .map(pe -> (TransformValueAdapterPipelineElement) pe)
+        .findFirst();
+
+    if (pipelineElement.isPresent()) {
+      var eventTransformer = pipelineElement.get().getEventTransformer();
+      var result = eventTransformer.getTimestampTransformationRules();
+      eventTransformer.setTimestampTransformationRules(List.of());
+
+      return Optional.of(result);
+    }
+    return Optional.empty();
+  }
+
   @Override
   public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
     String timestampKey = getTimestampKey(adapterPipeline.getResultingEventSchema());
 
-    addTimestampRule = checkAndRemovePipelineElement(
-        adapterPipeline.getPipelineElements(),
-        AddTimestampPipelineElement.class);
+    addTimestampRule = checkAndRemoveAddTimestampPipelineElement(
+        adapterPipeline.getPipelineElements());
 
-    transformationTimestampRule = checkAndRemovePipelineElement(
-        adapterPipeline.getPipelineElements(),
-        TimestampTranformationRule.class);
+    transformationTimestampRule = checkAndRemoveChangeTimestampPipelineElement(
+        adapterPipeline.getPipelineElements());
 
 
     var eventProcessor = new LocalEventProcessor(adapterPipeline, timestampKey);
@@ -187,7 +203,9 @@ public class FileStreamProtocol extends Protocol {
         }
 
         if (transformationTimestampRule.isPresent()) {
-          eventMap = transformationTimestampRule.get().process(eventMap);
+          for (var rule : transformationTimestampRule.get()) {
+            rule.transform(eventMap);
+          }
         }
 
         long actualEventTimestamp = (long) eventMap.get(timestampKey);

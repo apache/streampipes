@@ -41,8 +41,8 @@ describe('Connect schema rule transformations', () => {
             'Integer',
         );
 
-        // Mark property as timestamp
-        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        // Add a timestamp property
+        ConnectEventSchemaUtils.addTimestampProperty();
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 

@@ -38,7 +38,7 @@ describe('Connect aggregation rule transformations', () => {
             adapterConfiguration,
             'cypress/fixtures/connect/aggregationRules/expected.csv',
             false,
-            5000,
+            2000,
         );
     });
 });
@@ -62,7 +62,7 @@ describe('Remove duplicates rule transformations', () => {
             adapterConfiguration,
             'cypress/fixtures/connect/removeDuplicateRules/expected.csv',
             false,
-            4000,
+            2000,
         );
     });
 });
