@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     DataExplorerField,
     SpQueryResult,
@@ -35,7 +35,7 @@ import { ECharts } from 'echarts/core';
 })
 export class HeatmapWidgetComponent
     extends BaseDataExplorerWidgetDirective<HeatmapWidgetModel>
-    implements OnInit, OnDestroy
+    implements OnInit
 {
     eChartsInstance: ECharts;
     currentWidth: number;
@@ -53,10 +53,6 @@ export class HeatmapWidgetComponent
             this.gridsterItemComponent.height,
         );
         this.initOptions();
-    }
-
-    ngOnDestroy(): void {
-        super.ngOnDestroy();
     }
 
     public refreshView() {}

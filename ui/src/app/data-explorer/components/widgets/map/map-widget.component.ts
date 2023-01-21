@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     Content,
     icon,
@@ -45,7 +45,7 @@ import {
 })
 export class MapWidgetComponent
     extends BaseDataExplorerWidgetDirective<MapWidgetModel>
-    implements OnInit, OnDestroy
+    implements OnInit
 {
     item: any;
 
@@ -88,10 +88,6 @@ export class MapWidgetComponent
         this.layers = [];
         this.markerIds = [];
         this.showMarkers = true;
-    }
-
-    ngOnDestroy(): void {
-        super.ngOnDestroy();
     }
 
     markerImage(selectedMarker: string): string {
