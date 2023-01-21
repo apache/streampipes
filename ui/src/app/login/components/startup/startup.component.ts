@@ -22,37 +22,41 @@ import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
 
 @Component({
-    selector: 'startup',
+    selector: 'sp-startup',
     templateUrl: './startup.component.html',
-    styleUrls: ['./startup.component.scss']
+    styleUrls: ['./startup.component.scss'],
 })
 export class StartupComponent implements OnInit {
-
     progress = 0;
     currentStep = 0;
     maxLoadingTimeInSeconds = 100;
     loadingIntervalInSeconds = 1;
 
-    constructor(private authService: AuthService,
-                private router: Router,
-                public appConstants: AppConstants) {
-    }
+    constructor(
+        private authService: AuthService,
+        private router: Router,
+        public appConstants: AppConstants,
+    ) {}
 
     ngOnInit() {
         this.checkStatus();
     }
 
     checkStatus() {
-        this.authService.checkConfiguration().subscribe((configured) => {
-            this.progress = 100;
-            const target: string = configured ? 'login' : 'setup';
-            this.router.navigate([target]);
-        }, () => {
-            this.currentStep += this.loadingIntervalInSeconds;
-            this.progress = (this.currentStep / this.maxLoadingTimeInSeconds) * 100;
-            setTimeout(() => {
-                this.checkStatus();
-            }, this.loadingIntervalInSeconds * 1000);
-        });
+        this.authService.checkConfiguration().subscribe(
+            configured => {
+                this.progress = 100;
+                const target: string = configured ? 'login' : 'setup';
+                this.router.navigate([target]);
+            },
+            () => {
+                this.currentStep += this.loadingIntervalInSeconds;
+                this.progress =
+                    (this.currentStep / this.maxLoadingTimeInSeconds) * 100;
+                setTimeout(() => {
+                    this.checkStatus();
+                }, this.loadingIntervalInSeconds * 1000);
+            },
+        );
     }
 }
