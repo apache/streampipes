@@ -1,6 +1,3 @@
-# Add repo label to any change in any file
-repo:
-- '*'
 
 # Add '@domain/core' label to any change within the 'core' package
 '@domain/core':
