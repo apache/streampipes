@@ -32,6 +32,7 @@ import pandas as pd
 from pydantic import ValidationError
 
 __all__ = [
+    "PandasCompatibleResourceContainer",
     "ResourceContainer",
 ]
 
@@ -198,26 +199,49 @@ class ResourceContainer(ABC):
 
         Returns
         -------
-        List[Dict]]
+        dictionary_list: List[Dict[str, Any]]
+            List of resources in dictionary representation.
+            If `use_source_names` equals `True` the keys are named as in the StreamPipes backend.
         """
-        return [resource.dict(by_alias=use_source_names) for resource in self._resources]
+        return [resource.to_dict(use_source_names=use_source_names) for resource in self._resources]
 
     def to_json(self) -> str:
         """Returns the resource container in the StreamPipes JSON representation.
 
         Returns
         -------
-        JSON string
+        JSON string: str
+            JSON representation of the resource container where key names are equal to
+            keys used in the StreamPipes backend
         """
 
         return json.dumps(self.to_dicts(use_source_names=True))
+
+
+class PandasCompatibleResourceContainer(ResourceContainer, ABC):
+    """Resource Container that can be converted to a pandas data frame.
+
+    This type of resource containers provides a `to_pandas()` method that
+    returns the resource container as a pandas data frame.
+    """
+
+    @classmethod
+    @abstractmethod
+    def _resource_cls(cls) -> Type[Resource]:
+        """Returns the class of the resource that are bundled.
+
+        Returns
+        -------
+        model.resource.Resource
+        """
+        raise NotImplementedError  # pragma: no cover
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the resource container in representation of a Pandas Dataframe.
 
         Returns
         -------
-        pd.DataFrame
+        resource_container_df: pd.DataFrame
         """
         return pd.DataFrame.from_records(
             # ResourceContainer is iterable itself via __get_item__

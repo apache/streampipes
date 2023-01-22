@@ -22,14 +22,14 @@ A resource defines the data model that is used by a resource container (`model.c
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from streampipes_client.model.common import BaseElement
+from streampipes_client.model.common import BasicModel
 
 __all__ = [
     "Resource",
 ]
 
 
-class Resource(ABC, BaseElement):
+class Resource(ABC, BasicModel):
     """General and abstract implementation for a resource.
     A resource defines the data model used by a resource container (`model.container.resourceContainer`).
     It inherits from Pydantic's BaseModel to get all its superpowers,

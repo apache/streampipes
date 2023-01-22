@@ -20,5 +20,5 @@ from .nats_broker import NatsBroker
 __all__ = [
     "Broker",
     "NatsBroker",
-    "SupportedBroker"
+    "SupportedBroker",
 ]

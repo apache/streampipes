@@ -71,6 +71,7 @@ class DataStream(Resource):
             "num_included_locales": len(self.included_locales) if self.included_locales is not None else 0,
         }
 
+    element_id: Optional[StrictStr]
     name: Optional[StrictStr]
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]
