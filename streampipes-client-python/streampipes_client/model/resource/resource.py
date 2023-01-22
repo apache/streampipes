@@ -31,6 +31,7 @@ __all__ = [
 
 class Resource(ABC, BasicModel):
     """General and abstract implementation for a resource.
+
     A resource defines the data model used by a resource container (`model.container.resourceContainer`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
     which are used to parse, validate the API response and to easily switch between
@@ -41,3 +42,20 @@ class Resource(ABC, BasicModel):
     def convert_to_pandas_representation(self) -> Dict:
         """Returns a dictionary representation to be used when creating a pandas Dataframe."""
         raise NotImplementedError  # pragma: no cover
+
+    def to_dict(self, use_source_names=True):
+        """Returns the resource in dictionary representation.
+
+        Parameters
+        ----------
+        use_source_names: bool
+            Indicates if the dictionary keys are in python representation or
+            equally named to the StreamPipes backend
+
+        Returns
+        ------
+        resource: Dict[str, Any]
+            The resource as dictionary representation
+
+        """
+        return self.dict(by_alias=use_source_names)
