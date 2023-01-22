@@ -61,6 +61,7 @@ _error_code_to_message = {
 
 class Endpoint(ABC):
     """Abstract implementation of an StreamPipes endpoint.
+
     Serves as template for all endpoints used for interaction with a StreamPipes instance.
     By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
 
@@ -73,6 +74,19 @@ class Endpoint(ABC):
 
     def __init__(self, parent_client: "StreamPipesClient"):  # type: ignore # noqa: F821
         self._parent_client = parent_client
+
+
+class APIEndpoint(Endpoint):
+    """Abstract implementation of an API endpoint.
+
+    Serves as template for all endpoints for the StreamPipes API.
+    By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
+
+    Parameters
+    ----------
+    parent_client: StreamPipesClient
+        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
+    """
 
     @property
     @abstractmethod
@@ -87,18 +101,6 @@ class Endpoint(ABC):
         needs to a subclass of `model.container.ResourceContainer`.
         """
         raise NotImplementedError  # pragma: no cover
-
-
-class APIEndpoint(Endpoint):
-    """Abstract implementation of an API endpoint.
-    Serves as template for all endpoints for the StreamPipes API.
-    By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
-
-    Parameters
-    ----------
-    parent_client: StreamPipesClient
-        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
-    """
 
     @property
     @abstractmethod
