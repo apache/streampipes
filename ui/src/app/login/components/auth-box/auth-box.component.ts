@@ -16,22 +16,15 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'sp-auth-box',
-  templateUrl: './auth-box.component.html',
-  styleUrls: ['./auth-box.component.scss']
+    selector: 'sp-auth-box',
+    templateUrl: './auth-box.component.html',
+    styleUrls: ['./auth-box.component.scss'],
 })
-export class AuthBoxComponent implements OnInit {
-
-
-  ngOnInit(): void {
-  }
-
-  openDocumentation() {
-    window.open('https://streampipes.apache.org/docs', '_blank');
-  }
-
-
+export class AuthBoxComponent {
+    openDocumentation() {
+        window.open('https://streampipes.apache.org/docs', '_blank');
+    }
 }

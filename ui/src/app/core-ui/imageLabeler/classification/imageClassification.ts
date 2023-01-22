@@ -19,33 +19,32 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ImageClassification {
+    private classes: string[];
+    public saved = true;
+    private src;
 
-  private classes: string[];
-  public saved = true;
-  private src;
+    newImage(src) {
+        this.saved = true;
+        this.src = src;
+        this.classes = [];
+    }
 
-  newImage(src) {
-    this.saved = true;
-    this.src = src;
-    this.classes = [];
-  }
+    addClass(clazz) {
+        this.saved = false;
+        this.classes.push(clazz);
+    }
 
-  addClass(clazz) {
-    this.saved = false;
-    this.classes.push(clazz);
-  }
+    getClasses() {
+        return this.classes;
+    }
 
-  getClasses() {
-    return this.classes;
-  }
+    removeClass(clazz) {
+        this.saved = false;
+        this.classes = this.classes.filter(c => c !== clazz);
+    }
 
-  removeClass(clazz) {
-    this.saved = false;
-    this.classes = this.classes.filter(c => c !== clazz);
-  }
-
-  save(): boolean {
-    this.saved = true;
-    return true;
-  }
+    save(): boolean {
+        this.saved = true;
+        return true;
+    }
 }

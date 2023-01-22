@@ -17,19 +17,22 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { RuntimeResolvableAnyStaticProperty, StaticPropertyUnion } from '@streampipes/platform-services';
+import {
+    RuntimeResolvableAnyStaticProperty,
+    StaticPropertyUnion,
+} from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 
 @Component({
-    selector: 'app-static-runtime-resolvable-any-input',
+    selector: 'sp-app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
-    styleUrls: ['./static-runtime-resolvable-any-input.component.css']
+    styleUrls: ['./static-runtime-resolvable-any-input.component.css'],
 })
 export class StaticRuntimeResolvableAnyInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableAnyStaticProperty>
-    implements OnInit {
-
+    implements OnInit
+{
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);
     }
@@ -42,18 +45,20 @@ export class StaticRuntimeResolvableAnyInputComponent
         for (const option of this.staticProperty.options) {
             option.selected = false;
         }
-        this.staticProperty.options.find(option => option.elementId === id).selected = true;
+        this.staticProperty.options.find(
+            option => option.elementId === id,
+        ).selected = true;
     }
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableAnyStaticProperty) {
         this.staticProperty.options = staticProperty.options;
     }
 
-    parse(staticProperty: StaticPropertyUnion): RuntimeResolvableAnyStaticProperty {
+    parse(
+        staticProperty: StaticPropertyUnion,
+    ): RuntimeResolvableAnyStaticProperty {
         return staticProperty as RuntimeResolvableAnyStaticProperty;
     }
 
-    afterErrorReceived() {
-    }
-
+    afterErrorReceived() {}
 }

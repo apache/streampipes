@@ -21,22 +21,23 @@ import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property
 import { AnyStaticProperty } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'app-static-any-input',
-  templateUrl: './static-any-input.component.html',
-  styleUrls: ['./static-any-input.component.css'],
+    selector: 'sp-app-static-any-input',
+    templateUrl: './static-any-input.component.html',
+    styleUrls: ['./static-any-input.component.css'],
 })
-export class StaticAnyInput extends AbstractStaticPropertyRenderer<AnyStaticProperty> implements OnInit {
+export class StaticAnyInputComponent
+    extends AbstractStaticPropertyRenderer<AnyStaticProperty>
+    implements OnInit
+{
+    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    ngOnInit() {
+        this.inputEmitter.emit(true);
+    }
 
-
-  ngOnInit() {
-    this.inputEmitter.emit(true);
-  }
-
-  select(elementId: string) {
-    this.staticProperty.options
-        .filter(option => option.elementId === elementId)
-        .forEach(option => option.selected = !(option.selected));
-  }
+    select(elementId: string) {
+        this.staticProperty.options
+            .filter(option => option.elementId === elementId)
+            .forEach(option => (option.selected = !option.selected));
+    }
 }

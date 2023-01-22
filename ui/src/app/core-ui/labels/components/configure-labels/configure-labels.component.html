@@ -17,15 +17,23 @@
   -->
 
 <div fxLayout="column" fxLayoutAlign="space-around center">
-
     <div *ngIf="!editCategory">
         <h2>Categories</h2>
-        <mat-form-field *ngIf="!noCategoriesAvailable" style="margin-top: -15px; margin-bottom: -10px">
+        <mat-form-field
+            *ngIf="!noCategoriesAvailable"
+            style="margin-top: -15px; margin-bottom: -10px"
+        >
             <mat-label>Select Label Category</mat-label>
-            <mat-select [(value)]="selectedCategory" (selectionChange)="startEditCategory($event)">
+            <mat-select
+                [(value)]="selectedCategory"
+                (selectionChange)="startEditCategory($event)"
+            >
                 <mat-option value="internal_placeholder"></mat-option>
-                <mat-option *ngFor="let category of categories" [value]="category">
-                    {{category.name}}
+                <mat-option
+                    *ngFor="let category of categories"
+                    [value]="category"
+                >
+                    {{ category.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -37,30 +45,45 @@
     <div *ngIf="editCategory" fxLayout="column">
         <div fxLayout="row">
             <h2>Edit Category</h2>
-
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
                 <mat-label>Category Name</mat-label>
-                <input matInput (ngModelChange)="updateCategory($event)" type="text" [(ngModel)]="selectedCategory.name">
+                <input
+                    matInput
+                    (ngModelChange)="updateCategory($event)"
+                    type="text"
+                    [(ngModel)]="selectedCategory.name"
+                />
             </mat-form-field>
-            <mat-icon  style="cursor: pointer;" matTooltip="Delete label category" (click)="deleteCategory()" class="icon">delete</mat-icon>
+            <mat-icon
+                style="cursor: pointer"
+                matTooltip="Delete label category"
+                (click)="deleteCategory()"
+                class="icon"
+                >delete</mat-icon
+            >
         </div>
         <div fxLayout="column" fxLayoutAlign="center stretch">
             <sp-label-list-item
-                    *ngFor="let label of categoryLabels;"
-                    (removeLabel)="removeLabel($event)"
-                    [label]="label">
+                *ngFor="let label of categoryLabels"
+                (removeLabel)="removeLabel($event)"
+                [label]="label"
+            >
             </sp-label-list-item>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <button mat-button mat-flat-button (click)="addLabel()">
                 <mat-icon class="icon">add</mat-icon><span>Add new Label</span>
             </button>
-            <button mat-button mat-raised-button color="primary" (click)="endEditCategory()">
+            <button
+                mat-button
+                mat-raised-button
+                color="primary"
+                (click)="endEditCategory()"
+            >
                 <span>Done</span>
             </button>
         </div>
     </div>
-
 </div>

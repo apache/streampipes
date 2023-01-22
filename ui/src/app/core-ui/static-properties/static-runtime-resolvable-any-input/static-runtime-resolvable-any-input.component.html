@@ -16,40 +16,57 @@
   ~
   -->
 
-
 <div id="formWrapper" fxFlex="100" fxLayout="column">
     <div>
-        <button mat-button mat-raised-button color="accent" class="small-button"
-                (click)="loadOptionsFromRestApi()"
-                style="margin-right:10px;margin-left:10px;" [disabled]="!showOptions">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="loadOptionsFromRestApi()"
+            style="margin-right: 10px; margin-left: 10px"
+            [disabled]="!showOptions"
+        >
             <span>Reload</span>
         </button>
     </div>
-    <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column" style="margin-top:10px;">
-        <mat-checkbox style="padding-left: 10px;"
-                      color="accent"
-                      *ngFor="let option of staticProperty.options" [(ngModel)]="option.selected">
-            {{option.name}}
+    <div
+        *ngIf="!staticProperty.horizontalRendering"
+        fxLayout="column"
+        style="margin-top: 10px"
+    >
+        <mat-checkbox
+            style="padding-left: 10px"
+            color="accent"
+            *ngFor="let option of staticProperty.options"
+            [(ngModel)]="option.selected"
+        >
+            {{ option.name }}
         </mat-checkbox>
     </div>
     <div fxLayout="column" *ngIf="!showOptions && !loading" class="mt-10">
         <span>(waiting for input)</span>
     </div>
     <div fxLayout="column" *ngIf="loading">
-        <mat-spinner color="accent"
-                     [mode]="'indeterminate'"
-                     [diameter]="20"></mat-spinner>
+        <mat-spinner
+            color="accent"
+            [mode]="'indeterminate'"
+            [diameter]="20"
+        ></mat-spinner>
     </div>
 
     <div *ngIf="staticProperty.horizontalRendering">
         <mat-form-field style="width: 100%" color="accent">
-            <mat-label>{{staticProperty.label}}</mat-label>
+            <mat-label>{{ staticProperty.label }}</mat-label>
             <mat-select multiple [(ngModel)]="option.selected">
-                <mat-option *ngFor="let option of staticProperty.options" [value]="option">
-                    {{option.name}}
+                <mat-option
+                    *ngFor="let option of staticProperty.options"
+                    [value]="option"
+                >
+                    {{ option.name }}
                 </mat-option>
             </mat-select>
-            <mat-hint>{{staticProperty.description}}</mat-hint>
+            <mat-hint>{{ staticProperty.description }}</mat-hint>
         </mat-form-field>
     </div>
 </div>

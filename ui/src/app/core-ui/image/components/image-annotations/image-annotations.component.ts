@@ -16,45 +16,41 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Annotation } from '../../../../core-model/coco/Annotation';
 import { Label } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-image-annotations',
-  templateUrl: './image-annotations.component.html',
-  styleUrls: ['./image-annotations.component.css']
+    selector: 'sp-image-annotations',
+    templateUrl: './image-annotations.component.html',
+    styleUrls: ['./image-annotations.component.css'],
 })
-export class ImageAnnotationsComponent implements OnInit {
+export class ImageAnnotationsComponent {
+    @Input() annotations: Annotation[];
 
-  @Input() annotations: Annotation[];
+    @Input()
+    public labels: Label[];
 
-  @Input()
-  public labels: Label[];
+    @Output() changeAnnotationLabel: EventEmitter<[Annotation, Label]> =
+        new EventEmitter<[Annotation, Label]>();
+    @Output() deleteAnnotation: EventEmitter<Annotation> =
+        new EventEmitter<Annotation>();
 
-  @Output() changeAnnotationLabel: EventEmitter<[Annotation, Label]> = new EventEmitter<[Annotation, Label]>();
-  @Output() deleteAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
+    constructor() {}
 
- constructor() {}
+    changeLabel(change: [Annotation, Label]) {
+        this.changeAnnotationLabel.emit([change[0], change[1]]);
+    }
 
-  ngOnInit(): void {
-  }
+    delete(annotation) {
+        this.deleteAnnotation.emit(annotation);
+    }
 
-  changeLabel(change: [Annotation, Label]) {
-    this.changeAnnotationLabel.emit([change[0], change[1]]);
-  }
+    enterAnnotation(annotation) {
+        annotation.isHovered = true;
+    }
 
-  delete(annotation) {
-    this.deleteAnnotation.emit(annotation);
-  }
-
-  enterAnnotation(annotation) {
-    annotation.isHovered = true;
-  }
-
-  leaveAnnotation(annotation) {
-    annotation.isHovered = false;
-  }
-
-
+    leaveAnnotation(annotation) {
+        annotation.isHovered = false;
+    }
 }

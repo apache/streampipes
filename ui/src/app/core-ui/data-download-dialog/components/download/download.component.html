@@ -16,15 +16,27 @@
   ~
   -->
 <div fxFlex="100">
-  <ng-template matStepLabel>Download</ng-template>
-  <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!downloadProgress.finished" class="mt-35">
-    <mat-spinner [diameter]="30" color="accent"></mat-spinner>
-    <label *ngIf="downloadProgress.downloadedMBs !== undefined">{{downloadProgress.downloadedMBs | number : '1.0-2' }}
-      Mb</label>
-    <button mat-button color="warn" (click)="cancelDownload()">Cancel</button>
-  </div>
-  <div fxLayout="column" fxLayoutAlign="center center" *ngIf="downloadProgress.finished">
-    <mat-icon class="icon-check">check</mat-icon>
-    <h5>Download successful</h5>
-  </div>
+    <ng-template matStepLabel>Download</ng-template>
+    <div
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        *ngIf="!downloadProgress.finished"
+        class="mt-35"
+    >
+        <mat-spinner [diameter]="30" color="accent"></mat-spinner>
+        <label *ngIf="downloadProgress.downloadedMBs !== undefined"
+            >{{ downloadProgress.downloadedMBs | number : '1.0-2' }} Mb</label
+        >
+        <button mat-button color="warn" (click)="cancelDownload()">
+            Cancel
+        </button>
+    </div>
+    <div
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        *ngIf="downloadProgress.finished"
+    >
+        <mat-icon class="icon-check">check</mat-icon>
+        <h5>Download successful</h5>
+    </div>
 </div>

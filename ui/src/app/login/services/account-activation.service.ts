@@ -23,14 +23,14 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AccountActivationService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-
-  }
-
-  activateAccount(activationToken: string): Observable<any> {
-    return this.http.get(`${this.platformServicesCommons.apiBasePath}/activate-account/${activationToken}`);
-  }
-
+    activateAccount(activationToken: string): Observable<any> {
+        return this.http.get(
+            `${this.platformServicesCommons.apiBasePath}/activate-account/${activationToken}`,
+        );
+    }
 }

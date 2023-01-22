@@ -18,75 +18,94 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RestorePasswordService } from '../../services/restore-password.service';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+} from '@angular/forms';
 import { checkPasswords } from '../../utils/check-password';
 import { RegistrationModel } from '../register/registration.model';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'sp-set-new-password',
-  templateUrl: './set-new-password.component.html',
-  styleUrls: ['../login/login.component.scss']
+    selector: 'sp-set-new-password',
+    templateUrl: './set-new-password.component.html',
+    styleUrls: ['../login/login.component.scss'],
 })
 export class SetNewPasswordComponent implements OnInit {
+    parentForm: UntypedFormGroup;
+    registrationModel: RegistrationModel;
+    recoveryCode: string;
 
-  parentForm: UntypedFormGroup;
-  registrationModel: RegistrationModel;
-  recoveryCode: string;
+    resetPerformed = false;
+    resetInProgress = false;
+    resetSuccess = false;
 
-  resetPerformed = false;
-  resetInProgress = false;
-  resetSuccess = false;
+    constructor(
+        private fb: UntypedFormBuilder,
+        private restorePasswordService: RestorePasswordService,
+        private route: ActivatedRoute,
+        private router: Router,
+    ) {}
 
-  constructor(private fb: UntypedFormBuilder,
-              private restorePasswordService: RestorePasswordService,
-              private route: ActivatedRoute,
-              private router: Router) {
-
-  }
-
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.recoveryCode = params['recoveryCode'];
-      if (this.recoveryCode) {
-        this.restorePasswordService.checkRecoveryCode(this.recoveryCode).subscribe(success => {
-        }, error => {
-          this.navigateToLoginPage();
+    ngOnInit(): void {
+        this.route.queryParams.subscribe(params => {
+            this.recoveryCode = params['recoveryCode'];
+            if (this.recoveryCode) {
+                this.restorePasswordService
+                    .checkRecoveryCode(this.recoveryCode)
+                    .subscribe(
+                        success => {},
+                        error => {
+                            this.navigateToLoginPage();
+                        },
+                    );
+            } else {
+                this.navigateToLoginPage();
+            }
         });
-      } else {
-        this.navigateToLoginPage();
-      }
-    });
-    this.parentForm = this.fb.group({});
-    this.parentForm.addControl('password', new UntypedFormControl('', Validators.required));
-    this.parentForm.addControl('repeatPassword', new UntypedFormControl('', Validators.required));
-    this.parentForm.setValidators(checkPasswords);
+        this.parentForm = this.fb.group({});
+        this.parentForm.addControl(
+            'password',
+            new UntypedFormControl('', Validators.required),
+        );
+        this.parentForm.addControl(
+            'repeatPassword',
+            new UntypedFormControl('', Validators.required),
+        );
+        this.parentForm.setValidators(checkPasswords);
 
-    this.parentForm.valueChanges.subscribe(v => {
-      this.registrationModel = {username: '', password: v.password};
-    });
-  }
+        this.parentForm.valueChanges.subscribe(v => {
+            this.registrationModel = { username: '', password: v.password };
+        });
+    }
 
-  navigateToLoginPage() {
-    this.router.navigate(['/login']);
-  }
+    navigateToLoginPage() {
+        this.router.navigate(['/login']);
+    }
 
-  setNewPassword() {
-    this.updateStatus(true, false, false);
-    this.restorePasswordService.restorePassword(this.recoveryCode, this.registrationModel).subscribe(result => {
-      this.updateStatus(false, true, true);
-    }, error => {
-      this.updateStatus(false, false, true);
-    });
-  }
+    setNewPassword() {
+        this.updateStatus(true, false, false);
+        this.restorePasswordService
+            .restorePassword(this.recoveryCode, this.registrationModel)
+            .subscribe(
+                result => {
+                    this.updateStatus(false, true, true);
+                },
+                error => {
+                    this.updateStatus(false, false, true);
+                },
+            );
+    }
 
-  updateStatus(resetInProgress: boolean,
-               resetSuccess: boolean,
-               resetPerformed: boolean) {
-    this.resetInProgress = resetInProgress;
-    this.resetSuccess = resetSuccess;
-    this.resetPerformed = resetPerformed;
-  }
-
-
+    updateStatus(
+        resetInProgress: boolean,
+        resetSuccess: boolean,
+        resetPerformed: boolean,
+    ) {
+        this.resetInProgress = resetInProgress;
+        this.resetSuccess = resetSuccess;
+        this.resetPerformed = resetPerformed;
+    }
 }

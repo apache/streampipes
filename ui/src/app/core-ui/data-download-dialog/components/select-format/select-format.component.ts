@@ -16,22 +16,19 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormatExportConfig } from '../../model/format-export-config.model';
 
 @Component({
-  selector: 'sp-select-format',
-  templateUrl: './select-format.component.html',
-  styleUrls: ['./select-format.component.scss', '../../data-download-dialog.component.scss']
+    selector: 'sp-select-format',
+    templateUrl: './select-format.component.html',
+    styleUrls: [
+        './select-format.component.scss',
+        '../../data-download-dialog.component.scss',
+    ],
 })
-export class SelectFormatComponent implements OnInit {
+export class SelectFormatComponent {
+    @Input() formatExportConfig: FormatExportConfig;
 
-  @Input() formatExportConfig: FormatExportConfig;
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+    constructor() {}
 }

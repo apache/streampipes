@@ -24,18 +24,24 @@ import { RegistrationModel } from '../components/register/registration.model';
 
 @Injectable()
 export class RestorePasswordService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
+    checkRecoveryCode(recoveryCode: string): Observable<any> {
+        return this.http.get(
+            `${this.platformServicesCommons.apiBasePath}/restore-password/${recoveryCode}`,
+        );
+    }
 
-  }
-
-  checkRecoveryCode(recoveryCode: string): Observable<any> {
-    return this.http.get(`${this.platformServicesCommons.apiBasePath}/restore-password/${recoveryCode}`);
-  }
-
-  restorePassword(recoveryCode: string,
-                  registrationModel: RegistrationModel): Observable<any> {
-    return this.http.post(`${this.platformServicesCommons.apiBasePath}/restore-password/${recoveryCode}`, registrationModel);
-  }
+    restorePassword(
+        recoveryCode: string,
+        registrationModel: RegistrationModel,
+    ): Observable<any> {
+        return this.http.post(
+            `${this.platformServicesCommons.apiBasePath}/restore-password/${recoveryCode}`,
+            registrationModel,
+        );
+    }
 }

@@ -37,9 +37,8 @@
 import { DateRange } from '@streampipes/platform-services';
 
 export interface DataExportConfig {
-  dataRangeConfiguration: 'all' | 'customInterval' | 'visible';
-  missingValueBehaviour: 'ignore' | 'empty';
-  dateRange?: DateRange;
-  measurement?: string;
+    dataRangeConfiguration: 'all' | 'customInterval' | 'visible';
+    missingValueBehaviour: 'ignore' | 'empty';
+    dateRange?: DateRange;
+    measurement?: string;
 }
-

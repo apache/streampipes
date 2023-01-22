@@ -18,32 +18,44 @@
 
 <ng-template matStepLabel>Select Format</ng-template>
 <div>
-  <h5>Download Format</h5>
-  <mat-radio-group class="sp-radio-group" [(ngModel)]="formatExportConfig.exportFormat">
-    <mat-radio-button
-        value="json"
-        class="sp-radio-button"
-        data-cy="download-configuration-json">
-      JSON
-    </mat-radio-button>
-    <mat-radio-button
-        value="csv"
-        class="sp-radio-button"
-        data-cy="download-configuration-csv">
-      CSV
-    </mat-radio-button>
-  </mat-radio-group>
+    <h5>Download Format</h5>
+    <mat-radio-group
+        class="sp-radio-group"
+        [(ngModel)]="formatExportConfig.exportFormat"
+    >
+        <mat-radio-button
+            value="json"
+            class="sp-radio-button"
+            data-cy="download-configuration-json"
+        >
+            JSON
+        </mat-radio-button>
+        <mat-radio-button
+            value="csv"
+            class="sp-radio-button"
+            data-cy="download-configuration-csv"
+        >
+            CSV
+        </mat-radio-button>
+    </mat-radio-group>
 </div>
 <div *ngIf="formatExportConfig.exportFormat === 'csv'" class="mt-10">
-  <h5>Delimiter</h5>
-  <mat-radio-group [(ngModel)]="formatExportConfig.delimiter" class="sp-radio-group">
-    <mat-radio-button
-        value="comma"
-        class="sp-radio-button"
-        data-cy="download-configuration-delimiter-comma">&nbsp;,</mat-radio-button>
-    <mat-radio-button
-        value="semicolon"
-        class="sp-radio-button"
-        data-cy="download-configuration-delimiter-semicolon">&nbsp;;</mat-radio-button>
-  </mat-radio-group>
+    <h5>Delimiter</h5>
+    <mat-radio-group
+        [(ngModel)]="formatExportConfig.delimiter"
+        class="sp-radio-group"
+    >
+        <mat-radio-button
+            value="comma"
+            class="sp-radio-button"
+            data-cy="download-configuration-delimiter-comma"
+            >&nbsp;,</mat-radio-button
+        >
+        <mat-radio-button
+            value="semicolon"
+            class="sp-radio-button"
+            data-cy="download-configuration-delimiter-semicolon"
+            >&nbsp;;</mat-radio-button
+        >
+    </mat-radio-group>
 </div>
