@@ -32,7 +32,6 @@ import pandas as pd
 from pydantic import ValidationError
 
 __all__ = [
-    "PandasCompatibleResourceContainer",
     "ResourceContainer",
 ]
 
@@ -216,25 +215,6 @@ class ResourceContainer(ABC):
         """
 
         return json.dumps(self.to_dicts(use_source_names=True))
-
-
-class PandasCompatibleResourceContainer(ResourceContainer, ABC):
-    """Resource Container that can be converted to a pandas data frame.
-
-    This type of resource containers provides a `to_pandas()` method that
-    returns the resource container as a pandas data frame.
-    """
-
-    @classmethod
-    @abstractmethod
-    def _resource_cls(cls) -> Type[Resource]:
-        """Returns the class of the resource that are bundled.
-
-        Returns
-        -------
-        model.resource.Resource
-        """
-        raise NotImplementedError  # pragma: no cover
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the resource container in representation of a Pandas Dataframe.

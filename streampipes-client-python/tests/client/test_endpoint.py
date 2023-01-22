@@ -117,7 +117,8 @@ class TestStreamPipesEndpoints(TestCase):
                             "brokerHostname": "nats",
                             "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
                             "topicDefinition": {
-                                "actualTopicName": "org.apache.streampipes.connect.fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                                "actualTopicName": "org.apache.streampipes.connect."
+                                "fc22b8f6-698a-4127-aa71-e11854dc57c5tr",
                                 "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
                             },
                             "port": 4222,
