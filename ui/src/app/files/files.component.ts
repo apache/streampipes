@@ -17,35 +17,41 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    DialogService,
+    PanelType,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
 import { SpFilesRoutes } from './files.routes';
 
 @Component({
-  templateUrl: './files.component.html',
-  styleUrls: ['./files.component.scss']
+    templateUrl: './files.component.html',
+    styleUrls: ['./files.component.scss'],
 })
 export class FilesComponent implements OnInit {
+    @ViewChild('fileOverviewComponent') fileOverviewComponent;
 
-  @ViewChild('fileOverviewComponent') fileOverviewComponent;
+    constructor(
+        private dialogService: DialogService,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
-  constructor(private dialogService: DialogService,
-              private breadcrumbService: SpBreadcrumbService) {
+    ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb(
+            this.breadcrumbService.getRootLink(SpFilesRoutes.BASE),
+        );
+    }
 
-  }
+    openFileUploadDialog() {
+        const dialogRef = this.dialogService.open(FileUploadDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Upload file',
+            width: '40vw',
+        });
 
-  ngOnInit() {
-    this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpFilesRoutes.BASE));
-  }
-
-  openFileUploadDialog() {
-    const dialogRef = this.dialogService.open(FileUploadDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Upload file',
-      width: '40vw',
-    });
-
-    dialogRef.afterClosed().subscribe(() => this.fileOverviewComponent.refreshFiles());
-  }
-
+        dialogRef
+            .afterClosed()
+            .subscribe(() => this.fileOverviewComponent.refreshFiles());
+    }
 }

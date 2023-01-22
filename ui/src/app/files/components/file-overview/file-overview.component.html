@@ -16,48 +16,70 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" style="margin:1px;">
+<div fxFlex="100" fxLayout="column" style="margin: 1px">
     <div fxLayout="column" fxFlex="100" *ngIf="filesAvailable">
-        <table fxFlex="100" mat-table [dataSource]="dataSource" style="width: 100%;">
+        <table
+            fxFlex="100"
+            mat-table
+            [dataSource]="dataSource"
+            style="width: 100%"
+        >
             <ng-container matColumnDef="filename">
-                <th mat-header-cell *matHeaderCellDef> Filename</th>
+                <th mat-header-cell *matHeaderCellDef>Filename</th>
                 <td mat-cell *matCellDef="let fileMetadata">
-                    <h4>{{fileMetadata.originalFilename}}</h4>
+                    <h4>{{ fileMetadata.originalFilename }}</h4>
                 </td>
             </ng-container>
             <ng-container matColumnDef="filetype">
-                <th mat-header-cell *matHeaderCellDef> Filetype</th>
+                <th mat-header-cell *matHeaderCellDef>Filetype</th>
                 <td mat-cell *matCellDef="let fileMetadata">
-                    <span class="filetype-container">{{fileMetadata.filetype}}</span>
+                    <span class="filetype-container">{{
+                        fileMetadata.filetype
+                    }}</span>
                 </td>
             </ng-container>
             <ng-container matColumnDef="uploaded">
-                <th mat-header-cell *matHeaderCellDef> Uploaded</th>
+                <th mat-header-cell *matHeaderCellDef>Uploaded</th>
                 <td mat-cell *matCellDef="let fileMetadata">
-                    <h5>{{fileMetadata.createdAt | date:'dd.MM.yyyy HH:mm'}}</h5>
+                    <h5>
+                        {{ fileMetadata.createdAt | date : 'dd.MM.yyyy HH:mm' }}
+                    </h5>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef> Action</th>
+                <th mat-header-cell *matHeaderCellDef>Action</th>
                 <td mat-cell *matCellDef="let fileMetadata">
-                    <button color="accent" mat-button mat-icon-button matTooltip="Delete file"
-                            matTooltipPosition="above"
-                            (click)="deleteFile(fileMetadata)" data-cy="delete">
+                    <button
+                        color="accent"
+                        mat-button
+                        mat-icon-button
+                        matTooltip="Delete file"
+                        matTooltipPosition="above"
+                        (click)="deleteFile(fileMetadata)"
+                        data-cy="delete"
+                    >
                         <i class="material-icons">delete</i>
                     </button>
                 </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
         <div fxFlex="100" fxLayoutAlign="end end">
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"></mat-paginator>
+            <mat-paginator
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                [pageSize]="10"
+            ></mat-paginator>
         </div>
     </div>
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!filesAvailable">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        *ngIf="!filesAvailable"
+    >
         <h5>(no files available)</h5>
     </div>
 </div>
