@@ -24,7 +24,7 @@ An endpoint is provides all options to communicate with a central endpoint of th
 import logging
 from abc import ABC, abstractmethod
 from http import HTTPStatus
-from typing import Callable, Tuple, Type, final
+from typing import Callable, Optional, Tuple, Type, final
 
 from requests import Response
 from requests.exceptions import HTTPError
@@ -229,8 +229,12 @@ class MessagingEndpoint(Endpoint):
 
     """
 
+    def __init__(self, parent_client: "StreamPipesClient"):  # type: ignore # noqa: F821
+        self._broker: Optional[Broker] = None
+        super().__init__(parent_client=parent_client)
+
     @property
-    def _broker(self) -> Broker:
+    def broker(self) -> Broker:
         """Defines the broker instance that is used to connect to StreamPipes' messaging layer.
 
         This instance enables the client to authenticate to the broker used in the target StreamPipes instance,
@@ -247,16 +251,16 @@ class MessagingEndpoint(Endpoint):
         StreamPipes' messaging layer.
         """
 
-        if hasattr(self, "__broker"):
-            return self.__broker
+        if self._broker is not None:
+            return self._broker
         raise MessagingEndpointNotConfiguredError(
             endpoint_name=f"{self=}".split("=")[0],
         )
 
-    @_broker.setter
-    def _broker(self, broker: Broker) -> None:
+    @broker.setter
+    def broker(self, broker: Broker) -> None:
         """Setter method for internal property `broker`"""
-        self.__broker = broker
+        self._broker = broker
 
     @final
     def configure(self, broker: Broker) -> None:
@@ -271,4 +275,4 @@ class MessagingEndpoint(Endpoint):
 
         """
 
-        self._broker = broker
+        self.broker = broker
