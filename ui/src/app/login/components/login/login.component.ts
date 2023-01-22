@@ -19,7 +19,7 @@
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { LoginModel } from './login.model';
 import {
@@ -42,10 +42,12 @@ export class LoginComponent implements OnInit {
     credentials: any;
 
     loginSettings: LoginModel;
+    returnUrl: string;
 
     constructor(
         private loginService: LoginService,
         private router: Router,
+        private route: ActivatedRoute,
         private shepherdService: ShepherdService,
         private authService: AuthService,
         private fb: UntypedFormBuilder,
@@ -73,6 +75,7 @@ export class LoginComponent implements OnInit {
                 this.credentials.username = v.username;
                 this.credentials.password = v.password;
             });
+            this.returnUrl = this.route.snapshot.queryParams.returnUrl || '';
         });
     }
 
@@ -84,7 +87,7 @@ export class LoginComponent implements OnInit {
                 // success
                 this.authService.login(response);
                 this.loading = false;
-                this.router.navigate(['']);
+                this.router.navigateByUrl(this.returnUrl);
             },
             response => {
                 // error
@@ -92,9 +95,5 @@ export class LoginComponent implements OnInit {
                 this.authenticationFailed = true;
             },
         );
-    }
-
-    setSheperdServiceDelay() {
-        // this.ShepherdService.setTimeWaitMillies(100);
     }
 }
