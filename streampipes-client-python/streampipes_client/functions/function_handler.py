@@ -20,8 +20,7 @@ import logging
 from typing import AsyncIterator, Dict, List
 
 from streampipes_client.client.client import StreamPipesClient
-from streampipes_client.functions.broker.broker import Broker, SupportedBroker
-from streampipes_client.functions.broker.nats_broker import NatsBroker
+from streampipes_client.functions.broker import Broker, NatsBroker, SupportedBroker
 from streampipes_client.functions.registration import Registration
 from streampipes_client.functions.utils.async_iter_handler import AsyncIterHandler
 from streampipes_client.functions.utils.data_stream_context import DataStreamContext
