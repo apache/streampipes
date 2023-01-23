@@ -55,7 +55,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.iotdb</groupId>
-            <artifactId>iotdb-jdbc</artifactId>
+            <artifactId>iotdb-session</artifactId>
+            <!-- 0.13.3 is the only recommended production ready version for edge side (standalone) deployment -->
+            <!-- Should be worked for IoTDB version >= 0.13.0. -->
+            <version>0.13.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.milo</groupId>

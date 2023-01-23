@@ -34,12 +34,16 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDec
 
 public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters> {
 
-  private static final String DATABASE_HOST_KEY = "db_host";
-  private static final String DATABASE_PORT_KEY = "db_port";
-  private static final String STORAGE_GROUP_KEY = "db_storage_group";
-  private static final String DATABASE_USER_KEY = "db_user";
-  private static final String DATABASE_PASSWORD_KEY = "db_password";
-  private static final String TIMESTAMPE_MAPPING_KEY = "timestamp_mapping";
+  private static final String HOST_KEY = "db_host";
+  private static final String PORT_KEY = "db_port";
+
+  private static final String DATABASE_KEY = "db_database";
+  private static final String DEVICE_KEY = "db_device";
+
+  private static final String USER_KEY = "db_user";
+  private static final String PASSWORD_KEY = "db_password";
+
+  private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
 
   @Override
   public DataSinkDescription declareModel() {
@@ -50,14 +54,15 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredPropertyWithUnaryMapping(
                 EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMPE_MAPPING_KEY),
+                Labels.withId(TIMESTAMP_MAPPING_KEY),
                 PropertyScope.NONE)
             .build())
-        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 6667)
-        .requiredTextParameter(Labels.withId(STORAGE_GROUP_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-        .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
+        .requiredTextParameter(Labels.withId(HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(PORT_KEY), 6667)
+        .requiredTextParameter(Labels.withId(USER_KEY), "root")
+        .requiredSecret(Labels.withId(PASSWORD_KEY))
+        .requiredTextParameter(Labels.withId(DATABASE_KEY))
+        .requiredTextParameter(Labels.withId(DEVICE_KEY))
         .build();
   }
 
@@ -65,20 +70,24 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
   public ConfiguredEventSink<IotDbParameters> onInvocation(DataSinkInvocation graph,
                                                            DataSinkParameterExtractor extractor) {
 
-    String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
-    Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
-    String dbStorageGroup = extractor.singleValueParameter(STORAGE_GROUP_KEY, String.class);
-    String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
-    String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
-    String timestampField = extractor.mappingPropertyValue(TIMESTAMPE_MAPPING_KEY);
+    final String host = extractor.singleValueParameter(HOST_KEY, String.class);
+    final Integer port = extractor.singleValueParameter(PORT_KEY, Integer.class);
 
-    IotDbParameters params = new IotDbParameters(graph,
-        hostname,
+    final String database = extractor.singleValueParameter(DATABASE_KEY, String.class);
+    final String device = extractor.singleValueParameter(DEVICE_KEY, String.class);
+
+    final String user = extractor.singleValueParameter(USER_KEY, String.class);
+    final String password = extractor.secretValue(PASSWORD_KEY);
+
+    final String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+
+    final IotDbParameters params = new IotDbParameters(graph,
+        host,
         port,
-        dbStorageGroup,
+        database,
+        device,
         user,
         password,
-        false, // SSL connection not yet implemented for IoT DB
         timestampField);
 
     return new ConfiguredEventSink<>(params, IotDb::new);
