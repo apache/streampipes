@@ -18,22 +18,19 @@
 import { AddToCollectionComponent } from './add-to-collection.component';
 
 describe('AddToCollectionComponent', () => {
-  const component: AddToCollectionComponent = new AddToCollectionComponent(undefined);
+    const component: AddToCollectionComponent = new AddToCollectionComponent(
+        undefined,
+    );
 
-  it('parse csv string', () => {
-    const csvString = [
-      'a,b',
-      'a1,b1',
-      'a2,b2'
-    ].join('\n');
+    it('parse csv string', () => {
+        const csvString = ['a,b', 'a1,b1', 'a2,b2'].join('\n');
 
-    const result = component.parseCsv(csvString);
+        const result = component.parseCsv(csvString);
 
-    result.subscribe(res => {
-      expect(res.length).toBe(2);
-      expect(res[0]).toEqual({ 'a': 'a1', 'b': 'b1' });
-      expect(res[1]).toEqual({ 'a': 'a2', 'b': 'b2' });
+        result.subscribe(res => {
+            expect(res.length).toBe(2);
+            expect(res[0]).toEqual({ a: 'a1', b: 'b1' });
+            expect(res[1]).toEqual({ a: 'a2', b: 'b2' });
+        });
     });
-  });
 });
-

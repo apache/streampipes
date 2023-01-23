@@ -20,26 +20,24 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 
 @Component({
-  selector: 'sp-error-hint',
-  templateUrl: './error-hint.component.html',
-  styleUrls: ['./error-hint.component.scss']
+    selector: 'sp-error-hint',
+    templateUrl: './error-hint.component.html',
+    styleUrls: ['./error-hint.component.scss'],
 })
 export class ErrorHintComponent implements OnInit {
+    @Input() errorMessages: UserErrorMessage[];
+    @Input() displayMessages = true;
+    @Input() validationString: string;
 
-  @Input() errorMessages: UserErrorMessage[];
-  @Input() displayMessages = true;
-  @Input() validationString: string;
+    errorMessagesDisplayed: boolean;
 
-  errorMessagesDisplayed: boolean;
+    constructor() {}
 
-  constructor() { }
+    ngOnInit(): void {
+        this.errorMessagesDisplayed = false;
+    }
 
-  ngOnInit(): void {
-    this.errorMessagesDisplayed = false;
-  }
-
-  public toggleErrorMessagesDisplayed() {
-    this.errorMessagesDisplayed = !(this.errorMessagesDisplayed);
-  }
-
+    public toggleErrorMessagesDisplayed() {
+        this.errorMessagesDisplayed = !this.errorMessagesDisplayed;
+    }
 }

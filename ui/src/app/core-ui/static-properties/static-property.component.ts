@@ -21,151 +21,150 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { XsService } from '../../NS/xs.service';
 import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 import {
-  AnyStaticProperty,
-  CodeInputStaticProperty,
-  CollectionStaticProperty,
-  ColorPickerStaticProperty,
-  EventSchema,
-  FileStaticProperty,
-  FreeTextStaticProperty,
-  MappingPropertyNary,
-  MappingPropertyUnary,
-  OneOfStaticProperty,
-  RuntimeResolvableAnyStaticProperty,
-  RuntimeResolvableOneOfStaticProperty, RuntimeResolvableTreeInputStaticProperty,
-  SecretStaticProperty, SlideToggleStaticProperty,
-  StaticProperty,
-  StaticPropertyAlternatives,
-  StaticPropertyGroup
+    AnyStaticProperty,
+    CodeInputStaticProperty,
+    CollectionStaticProperty,
+    ColorPickerStaticProperty,
+    EventSchema,
+    FileStaticProperty,
+    FreeTextStaticProperty,
+    MappingPropertyNary,
+    MappingPropertyUnary,
+    OneOfStaticProperty,
+    RuntimeResolvableAnyStaticProperty,
+    RuntimeResolvableOneOfStaticProperty,
+    RuntimeResolvableTreeInputStaticProperty,
+    SecretStaticProperty,
+    SlideToggleStaticProperty,
+    StaticProperty,
+    StaticPropertyAlternatives,
+    StaticPropertyGroup,
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
 
 @Component({
-  selector: 'app-static-property',
-  templateUrl: './static-property.component.html',
-  styleUrls: ['./static-property.component.css'],
-  providers: [XsService]
+    selector: 'sp-app-static-property',
+    templateUrl: './static-property.component.html',
+    styleUrls: ['./static-property.component.css'],
+    providers: [XsService],
 })
 export class StaticPropertyComponent implements OnInit {
+    @Input()
+    staticProperty: StaticProperty;
 
-  @Input()
-  staticProperty: StaticProperty;
+    @Input()
+    staticProperties: StaticProperty[];
 
-  @Input()
-  staticProperties: StaticProperty[];
+    @Input()
+    adapterId: string;
 
-  @Input()
-  adapterId: string;
+    @Output()
+    validateEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-  @Output()
-  validateEmitter: EventEmitter<any> = new EventEmitter<any>();
+    @Output()
+    updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
-  @Output()
-  updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
+    @Input()
+    eventSchemas: EventSchema[];
 
-  @Input()
-  eventSchemas: EventSchema[];
+    @Input()
+    completedStaticProperty: ConfigurationInfo;
 
-  @Input()
-  completedStaticProperty: ConfigurationInfo;
+    @Input()
+    parentForm: UntypedFormGroup;
 
-  @Input()
-  parentForm: UntypedFormGroup;
+    @Input()
+    fieldName: string;
 
-  @Input()
-  fieldName: string;
+    @Input()
+    displayRecommended: boolean;
 
-  @Input()
-  displayRecommended: boolean;
+    @Input()
+    pipelineElement: InvocablePipelineElementUnion;
 
-  @Input()
-  pipelineElement: InvocablePipelineElementUnion;
+    showLabel = true;
 
-  showLabel = true;
+    @Input()
+    showBorder = true;
 
-  @Input()
-  showBorder = true;
+    constructor() {}
 
-  constructor() {
-  }
+    ngOnInit() {
+        this.showLabel =
+            !(this.staticProperty instanceof StaticPropertyGroup) ||
+            (this.staticProperty as StaticPropertyGroup).showLabel;
+    }
 
-  ngOnInit() {
-    this.showLabel = !(this.staticProperty instanceof StaticPropertyGroup) ||
-      (this.staticProperty as StaticPropertyGroup).showLabel;
-  }
+    isCodeInputStaticProperty(val) {
+        return val instanceof CodeInputStaticProperty;
+    }
 
-  isCodeInputStaticProperty(val) {
-    return val instanceof CodeInputStaticProperty;
-  }
+    isFreeTextStaticProperty(val) {
+        return val instanceof FreeTextStaticProperty;
+    }
 
-  isFreeTextStaticProperty(val) {
-    return val instanceof FreeTextStaticProperty;
-  }
+    isFileStaticProperty(val) {
+        return val instanceof FileStaticProperty;
+    }
 
-  isFileStaticProperty(val) {
-    return val instanceof FileStaticProperty;
-  }
+    isAnyStaticProperty(val) {
+        return val instanceof AnyStaticProperty;
+    }
 
+    isMappingPropertyUnary(val) {
+        return val instanceof MappingPropertyUnary;
+    }
 
-  isAnyStaticProperty(val) {
-    return val instanceof AnyStaticProperty;
-  }
+    isOneOfStaticProperty(val) {
+        return val instanceof OneOfStaticProperty;
+    }
 
-  isMappingPropertyUnary(val) {
-    return val instanceof MappingPropertyUnary;
-  }
+    isMappingNaryProperty(val) {
+        return val instanceof MappingPropertyNary;
+    }
 
-  isOneOfStaticProperty(val) {
-    return val instanceof OneOfStaticProperty;
-  }
+    isRuntimeResolvableOneOfStaticProperty(val) {
+        return val instanceof RuntimeResolvableOneOfStaticProperty;
+    }
 
-  isMappingNaryProperty(val) {
-    return val instanceof MappingPropertyNary;
-  }
+    isSecretStaticProperty(val) {
+        return val instanceof SecretStaticProperty;
+    }
 
-  isRuntimeResolvableOneOfStaticProperty(val) {
-    return val instanceof RuntimeResolvableOneOfStaticProperty;
-  }
+    isColorPickerStaticProperty(val) {
+        return val instanceof ColorPickerStaticProperty;
+    }
 
-  isSecretStaticProperty(val) {
-    return val instanceof SecretStaticProperty;
-  }
+    isRuntimeResolvableAnyStaticProperty(val) {
+        return val instanceof RuntimeResolvableAnyStaticProperty;
+    }
 
-  isColorPickerStaticProperty(val) {
-    return val instanceof ColorPickerStaticProperty;
-  }
+    isGroupStaticProperty(val) {
+        return val instanceof StaticPropertyGroup;
+    }
 
-  isRuntimeResolvableAnyStaticProperty(val) {
-    return val instanceof RuntimeResolvableAnyStaticProperty;
-  }
+    isAlternativesStaticProperty(val) {
+        return val instanceof StaticPropertyAlternatives;
+    }
 
-  isGroupStaticProperty(val) {
-    return val instanceof StaticPropertyGroup;
-  }
+    isCollectionStaticProperty(val) {
+        return val instanceof CollectionStaticProperty;
+    }
 
-  isAlternativesStaticProperty(val) {
-    return val instanceof StaticPropertyAlternatives;
-  }
+    isSlideToggleStaticProperty(val) {
+        return val instanceof SlideToggleStaticProperty;
+    }
 
-  isCollectionStaticProperty(val) {
-    return val instanceof CollectionStaticProperty;
-  }
+    isTreeInputStaticProperty(val) {
+        return val instanceof RuntimeResolvableTreeInputStaticProperty;
+    }
 
-  isSlideToggleStaticProperty(val) {
-    return val instanceof SlideToggleStaticProperty;
-  }
+    valueChange(hasInput) {
+        this.validateEmitter.emit();
+    }
 
-  isTreeInputStaticProperty(val) {
-    return val instanceof RuntimeResolvableTreeInputStaticProperty;
-  }
-
-  valueChange(hasInput) {
-    // this.staticProperty.isValid = hasInput;
-    this.validateEmitter.emit();
-  }
-
-  emitUpdate(configurationInfo: ConfigurationInfo) {
-    this.updateEmitter.emit(configurationInfo);
-  }
+    emitUpdate(configurationInfo: ConfigurationInfo) {
+        this.updateEmitter.emit(configurationInfo);
+    }
 }

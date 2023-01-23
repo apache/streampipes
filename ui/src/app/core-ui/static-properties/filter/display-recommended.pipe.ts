@@ -19,27 +19,30 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 
-@Pipe({name: 'displayRecommendedPipe'})
+@Pipe({ name: 'displayRecommendedPipe' })
 export class DisplayRecommendedPipe implements PipeTransform {
-  transform(properties: EventPropertyUnion[],
-            propertyScope: string,
-            displayRecommended: boolean): any {
-    const result = [];
-    if (!displayRecommended) {
-      return properties;
-    } else {
-      if (propertyScope === undefined || propertyScope === 'NONE') {
-        return properties;
-      } else {
-        properties.forEach(property => {
-          if (!(property.propertyScope) || property.propertyScope === propertyScope) {
-            result.push(property);
-          }
-        });
-      }
-      return result.length > 0 ? result : properties;
+    transform(
+        properties: EventPropertyUnion[],
+        propertyScope: string,
+        displayRecommended: boolean,
+    ): any {
+        const result = [];
+        if (!displayRecommended) {
+            return properties;
+        } else {
+            if (propertyScope === undefined || propertyScope === 'NONE') {
+                return properties;
+            } else {
+                properties.forEach(property => {
+                    if (
+                        !property.propertyScope ||
+                        property.propertyScope === propertyScope
+                    ) {
+                        result.push(property);
+                    }
+                });
+            }
+            return result.length > 0 ? result : properties;
+        }
     }
-  }
-
-
 }

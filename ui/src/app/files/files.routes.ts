@@ -16,10 +16,12 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpFilesRoutes {
-
-  static FILES_BASE_LINK = 'files';
-  static BASE: SpBreadcrumbItem = {label: 'File Management', link: [SpFilesRoutes.FILES_BASE_LINK]};
+    static FILES_BASE_LINK = 'files';
+    static BASE: SpBreadcrumbItem = {
+        label: 'File Management',
+        link: [SpFilesRoutes.FILES_BASE_LINK],
+    };
 }

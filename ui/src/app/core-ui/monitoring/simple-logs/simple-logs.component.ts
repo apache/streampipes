@@ -20,15 +20,14 @@ import { Component, Input } from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-simple-logs',
-  templateUrl: './simple-logs.component.html',
-  styleUrls: []
+    selector: 'sp-simple-logs',
+    templateUrl: './simple-logs.component.html',
+    styleUrls: [],
 })
 export class SpSimpleLogsComponent {
+    @Input()
+    logs: SpLogEntry[] = [];
 
-  @Input()
-  logs: SpLogEntry[] = [];
-
-  @Input()
-  elementName: string;
+    @Input()
+    elementName: string;
 }

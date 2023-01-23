@@ -25,37 +25,61 @@
             <div fxLayout="column">
                 <mat-form-field color="accent">
                     <mat-label>Email</mat-label>
-                    <input formControlName="username" fxFlex
-                           matInput>
-                    <mat-error *ngIf="parentForm.controls.username.errors">Must be an email address.</mat-error>
+                    <input formControlName="username" fxFlex matInput />
+                    <mat-error *ngIf="parentForm.controls.username.errors"
+                        >Must be an email address.</mat-error
+                    >
                 </mat-form-field>
                 <mat-form-field color="accent">
                     <mat-label>Initial password</mat-label>
-                    <input formControlName="password" fxFlex
-                           type="password"
-                           matInput
-                           required>
+                    <input
+                        formControlName="password"
+                        fxFlex
+                        type="password"
+                        matInput
+                        required
+                    />
                 </mat-form-field>
                 <mat-form-field color="accent">
                     <mat-label>Repeat password</mat-label>
-                    <input formControlName="repeatPassword" fxFlex
-                           type="password"
-                           matInput
-                           required>
+                    <input
+                        formControlName="repeatPassword"
+                        fxFlex
+                        type="password"
+                        matInput
+                        required
+                    />
                 </mat-form-field>
-                <mat-error *ngIf="parentForm.hasError('notMatching')">Passwords do not match.</mat-error>
-                <div class="form-actions" style="margin-top:20px;">
-                    <button mat-button mat-raised-button color="accent" (click)="registerUser()"
-                            [disabled]="!parentForm.valid" *ngIf="!registrationSuccess">
+                <mat-error *ngIf="parentForm.hasError('notMatching')"
+                    >Passwords do not match.</mat-error
+                >
+                <div class="form-actions" style="margin-top: 20px">
+                    <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        (click)="registerUser()"
+                        [disabled]="!parentForm.valid"
+                        *ngIf="!registrationSuccess"
+                    >
                         <span>Register</span>
                     </button>
-                    <mat-spinner [mode]="'indeterminate'" color="accent" [diameter]="20"
-                                 *ngIf="registrationInProcess" style="margin-top:10px;"></mat-spinner>
+                    <mat-spinner
+                        [mode]="'indeterminate'"
+                        color="accent"
+                        [diameter]="20"
+                        *ngIf="registrationInProcess"
+                        style="margin-top: 10px"
+                    ></mat-spinner>
                     <div class="md-warn" *ngIf="registrationError">
-                        <h5 class="info-box register-error">{{registrationError}}</h5>
+                        <h5 class="info-box register-error">
+                            {{ registrationError }}
+                        </h5>
                     </div>
                     <div class="md-success" *ngIf="registrationSuccess">
-                        <h5 class="info-box register-success">We've sent out a confirmation mail to this address.</h5>
+                        <h5 class="info-box register-success">
+                            We've sent out a confirmation mail to this address.
+                        </h5>
                     </div>
                     <div class="mt-10">
                         <a [routerLink]="['/login']">Go to login page</a>

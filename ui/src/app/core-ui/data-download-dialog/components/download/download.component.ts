@@ -22,34 +22,35 @@ import { DownloadProgress } from '../../model/download-progress.model';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'sp-download',
-  templateUrl: './download.component.html',
-  styleUrls: ['./download.component.scss']
+    selector: 'sp-download',
+    templateUrl: './download.component.html',
+    styleUrls: ['./download.component.scss'],
 })
 export class DownloadComponent implements OnInit, OnDestroy {
+    downloadProgress: DownloadProgress;
+    downloadProgressSubscription: Subscription;
 
-  downloadProgress: DownloadProgress;
-  downloadProgressSubscription: Subscription;
+    constructor(public dataExportService: DataExportService) {}
 
-  constructor(public dataExportService: DataExportService) {
-  }
+    ngOnInit(): void {
+        this.downloadProgress = {
+            downloadedMBs: 0,
+            finished: false,
+        };
 
-  ngOnInit(): void {
-    this.downloadProgress = {
-      downloadedMBs: 0,
-      finished: false,
-    };
+        this.downloadProgressSubscription =
+            this.dataExportService.updateDownloadProgress.subscribe(
+                progress => {
+                    this.downloadProgress = progress;
+                },
+            );
+    }
 
-    this.downloadProgressSubscription = this.dataExportService.updateDownloadProgress.subscribe(progress => {
-      this.downloadProgress = progress;
-    });
-  }
+    ngOnDestroy(): void {
+        this.downloadProgressSubscription.unsubscribe();
+    }
 
-  ngOnDestroy(): void {
-    this.downloadProgressSubscription.unsubscribe();
-  }
-
-  cancelDownload() {
-    // TODO implement
-  }
+    cancelDownload() {
+        // TODO implement
+    }
 }

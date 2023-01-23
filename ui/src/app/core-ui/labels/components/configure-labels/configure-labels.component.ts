@@ -22,95 +22,105 @@ import { LabelService } from '../../services/label.service';
 import { Category, Label } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-configure-labels',
-  templateUrl: './configure-labels.component.html',
-  styleUrls: ['./configure-labels.component.css']
+    selector: 'sp-configure-labels',
+    templateUrl: './configure-labels.component.html',
+    styleUrls: ['./configure-labels.component.css'],
 })
 export class ConfigureLabelsComponent implements OnInit {
+    constructor(
+        public colorService: ColorService,
+        public labelService: LabelService,
+    ) {}
 
-  constructor(public colorService: ColorService, public labelService: LabelService) { }
+    public categories: Category[];
+    public selectedCategory: Category;
+    public categoryLabels: Label[];
 
-  public categories: Category[];
-  public selectedCategory: Category;
-  public categoryLabels: Label[];
+    public editCategory: boolean;
 
-  public editCategory: boolean;
+    public noCategoriesAvailable = true;
 
-  public noCategoriesAvailable = true;
-
-  ngOnInit(): void {
-    this.editCategory = false;
-    this.labelService.getCategories().subscribe(res => {
-      this.categories = res;
-      this.setCategoryAvailable();
-    });
-  }
-
-
-  startEditCategory(value) {
-    if ('internal_placeholder' !== value.value) {
-      this.editCategory = true;
+    ngOnInit(): void {
+        this.editCategory = false;
+        this.labelService.getCategories().subscribe(res => {
+            this.categories = res;
+            this.setCategoryAvailable();
+        });
     }
 
-    this.labelService.getLabelsOfCategory(this.selectedCategory).subscribe((res: Label[]) => {
-      this.categoryLabels = res;
-    });
-  }
+    startEditCategory(value) {
+        if ('internal_placeholder' !== value.value) {
+            this.editCategory = true;
+        }
 
-  endEditCategory() {
-    this.selectedCategory = null;
-    this.editCategory = false;
-  }
+        this.labelService
+            .getLabelsOfCategory(this.selectedCategory)
+            .subscribe((res: Label[]) => {
+                this.categoryLabels = res;
+            });
+    }
 
-  addCategory() {
-    const c1 = new Category();
-    c1.name = '';
+    endEditCategory() {
+        this.selectedCategory = null;
+        this.editCategory = false;
+    }
 
-    this.labelService.addCategory(c1).subscribe((res: Category) => {
-      this.selectedCategory = res;
-      this.editCategory = true;
-      this.categories.push(res);
-      this.setCategoryAvailable();
-    });
+    addCategory() {
+        const c1 = new Category();
+        c1.name = '';
 
-    this.categoryLabels = [];
-  }
+        this.labelService.addCategory(c1).subscribe((res: Category) => {
+            this.selectedCategory = res;
+            this.editCategory = true;
+            this.categories.push(res);
+            this.setCategoryAvailable();
+        });
 
-  setCategoryAvailable() {
-    this.noCategoriesAvailable = this.categories.length <= 0;
-  }
+        this.categoryLabels = [];
+    }
 
-  updateCategory(newCategoryName) {
-    this.selectedCategory.name = newCategoryName;
+    setCategoryAvailable() {
+        this.noCategoriesAvailable = this.categories.length <= 0;
+    }
 
-    this.labelService.updateCategory(this.selectedCategory)
-      .subscribe((res: Category) => {
-      this.categories = this.categories.filter(obj => obj !== this.selectedCategory);
-      this.categories.push(res);
-      this.selectedCategory = res;
-    });
-  }
+    updateCategory(newCategoryName) {
+        this.selectedCategory.name = newCategoryName;
 
-  deleteCategory() {
-    this.labelService.deleteCategory(this.selectedCategory).subscribe();
-    this.categories = this.categories.filter(obj => obj !== this.selectedCategory);
-    this.endEditCategory();
-  }
+        this.labelService
+            .updateCategory(this.selectedCategory)
+            .subscribe((res: Category) => {
+                this.categories = this.categories.filter(
+                    obj => obj !== this.selectedCategory,
+                );
+                this.categories.push(res);
+                this.selectedCategory = res;
+            });
+    }
 
-  addLabel() {
-    const label = new Label();
-    label.name = '';
-    // eslint-disable-next-line no-bitwise
-    label.color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
-    label.categoryId = this.selectedCategory._id;
+    deleteCategory() {
+        this.labelService.deleteCategory(this.selectedCategory).subscribe();
+        this.categories = this.categories.filter(
+            obj => obj !== this.selectedCategory,
+        );
+        this.endEditCategory();
+    }
 
-    this.labelService.addLabel(label).subscribe((res: Label) => {
-      this.categoryLabels.push(res);
-    });
-  }
+    addLabel() {
+        const label = new Label();
+        label.name = '';
+        // eslint-disable-next-line no-bitwise
+        label.color =
+            '#' +
+            ((Math.random() * 0xffffff) << 0).toString(16).padStart(6, '0');
+        label.categoryId = this.selectedCategory._id;
 
-  removeLabel(label) {
-    this.labelService.deleteLabel(label).subscribe();
-    this.categoryLabels = this.categoryLabels.filter(obj => obj !== label);
-  }
+        this.labelService.addLabel(label).subscribe((res: Label) => {
+            this.categoryLabels.push(res);
+        });
+    }
+
+    removeLabel(label) {
+        this.labelService.deleteLabel(label).subscribe();
+        this.categoryLabels = this.categoryLabels.filter(obj => obj !== label);
+    }
 }

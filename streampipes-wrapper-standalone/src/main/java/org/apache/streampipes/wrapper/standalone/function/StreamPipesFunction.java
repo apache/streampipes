@@ -20,6 +20,7 @@ package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.declarer.IFunctionConfig;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
@@ -34,6 +35,7 @@ import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.wrapper.routing.RawDataProcessor;
 import org.apache.streampipes.wrapper.routing.SpInputCollector;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 import org.slf4j.Logger;
@@ -52,15 +54,25 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   private final Map<String, SchemaInfo> schemaInfoMapper;
   private Map<String, SpInputCollector> inputCollectors;
 
+  private Map<String, SpOutputCollector> outputCollectors;
+
   public StreamPipesFunction() {
     this.sourceInfoMapper = new HashMap<>();
     this.schemaInfoMapper = new HashMap<>();
+    this.outputCollectors = new HashMap<>();
   }
 
   @Override
   public void invokeRuntime(String serviceGroup) {
-    FunctionContext context = new FunctionContextGenerator(
-        this.getFunctionId().getId(), serviceGroup, this.requiredStreamIds()
+    var functionId = this.getFunctionConfig().getFunctionId();
+
+    this.initializeProducers();
+
+    var context = new FunctionContextGenerator(
+        functionId.getId(),
+        serviceGroup,
+        this.requiredStreamIds(),
+        this.outputCollectors
     ).generate();
 
     // Creates a source info for each incoming SpDataStream
@@ -76,15 +88,19 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
         });
 
     this.inputCollectors = getInputCollectors(context.getStreams());
-    LOG.info("Invoking function {}:{}", this.getFunctionId().getId(), this.getFunctionId().getVersion());
+
+    LOG.info("Invoking function {}:{}", functionId.getId(), functionId.getVersion());
+
     onServiceStarted(context);
     registerConsumers();
   }
 
   public void discardRuntime() {
-    LOG.info("Discarding function {}:{}", this.getFunctionId().getId(), this.getFunctionId().getVersion());
+    var functionId = this.getFunctionConfig().getFunctionId();
+    LOG.info("Discarding function {}:{}", functionId.getId(), functionId.getVersion());
     onServiceStopped();
     unregisterConsumers();
+    this.outputCollectors.forEach((key, value) -> value.disconnect());
   }
 
   @Override
@@ -107,17 +123,37 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   }
 
   private void increaseCounter(String sourceInfo) {
+    var functionId = this.getFunctionConfig().getFunctionId();
     SpMonitoringManager.INSTANCE.increaseInCounter(
-        this.getFunctionId().getId(),
+        functionId.getId(),
         sourceInfo,
         System.currentTimeMillis()
     );
   }
 
   private void addError(RuntimeException e) {
+    var functionId = this.getFunctionConfig().getFunctionId();
     SpMonitoringManager.INSTANCE.addErrorMessage(
-        this.getFunctionId().getId(),
+        functionId.getId(),
         SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+  }
+
+  private void initializeProducers() {
+    this.outputCollectors = this.getOutputCollectors();
+    this.outputCollectors.forEach((key, value) -> value.connect());
+  }
+
+  private Map<String, SpOutputCollector> getOutputCollectors() {
+    this.getFunctionConfig().getOutputDataStreams().forEach((key, value) -> {
+      this.outputCollectors.put(
+          key,
+          ProtocolManager.makeOutputCollector(
+              value.getEventGrounding().getTransportProtocol(),
+              value.getEventGrounding().getTransportFormats().get(0),
+              key));
+    });
+
+    return this.outputCollectors;
   }
 
   private Map<String, SpInputCollector> getInputCollectors(Collection<SpDataStream> streams) throws SpRuntimeException {
@@ -146,13 +182,6 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     });
   }
 
-  public abstract void onServiceStarted(FunctionContext context);
-
-  public abstract void onEvent(Event event,
-                               String streamId);
-
-  public abstract void onServiceStopped();
-
   private SourceInfo createSourceInfo(SpDataStream stream, int streamIndex) {
     return new SourceInfo(
         stream.getElementId(),
@@ -163,5 +192,14 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   private SchemaInfo createSchemaInfo(EventSchema eventSchema) {
     return new SchemaInfo(eventSchema, new ArrayList<>());
   }
+
+  public abstract IFunctionConfig getFunctionConfig();
+
+  public abstract void onServiceStarted(FunctionContext context);
+
+  public abstract void onEvent(Event event,
+                               String streamId);
+
+  public abstract void onServiceStopped();
 
 }

@@ -38,7 +38,6 @@ import { DataExportConfig } from './data-export-config.model';
 import { FormatExportConfig } from './format-export-config.model';
 
 export interface ExportConfig {
-  dataExportConfig: DataExportConfig;
-  formatExportConfig: FormatExportConfig;
+    dataExportConfig: DataExportConfig;
+    formatExportConfig: FormatExportConfig;
 }
-

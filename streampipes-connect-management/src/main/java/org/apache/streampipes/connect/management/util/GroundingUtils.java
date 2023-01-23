@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.management.util;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.extensions.management.connect.adapter.util.TransportFormatGenerator;
+import org.apache.streampipes.model.config.SpProtocol;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;

@@ -24,39 +24,44 @@ import { SecretStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 
 @Component({
-    selector: 'app-static-secret-input',
+    selector: 'sp-app-static-secret-input',
     templateUrl: './static-secret-input.component.html',
-    styleUrls: ['./static-secret-input.component.css']
+    styleUrls: ['./static-secret-input.component.css'],
 })
 export class StaticSecretInputComponent
-    extends AbstractValidatedStaticPropertyRenderer<SecretStaticProperty> implements OnInit {
-
+    extends AbstractValidatedStaticPropertyRenderer<SecretStaticProperty>
+    implements OnInit
+{
     constructor(public staticPropertyUtil: StaticPropertyUtilService) {
         super();
     }
 
-    @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
+    @Output() updateEmitter: EventEmitter<ConfigurationInfo> =
+        new EventEmitter();
 
     ngOnInit() {
         this.addValidator(this.staticProperty.value, Validators.required);
         this.enableValidators();
     }
 
-
     emitUpdate() {
         this.updateEmitter.emit(
             new ConfigurationInfo(
                 this.staticProperty.internalName,
-                this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value &&
-                            this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== ''));
+                this.staticPropertyUtil.asFreeTextStaticProperty(
+                    this.staticProperty,
+                ).value &&
+                    this.staticPropertyUtil.asFreeTextStaticProperty(
+                        this.staticProperty,
+                    ).value !== '',
+            ),
+        );
     }
 
-    onStatusChange(status: any) {
-    }
+    onStatusChange(status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.value = value;
         this.staticProperty.encrypted = false;
     }
-
 }

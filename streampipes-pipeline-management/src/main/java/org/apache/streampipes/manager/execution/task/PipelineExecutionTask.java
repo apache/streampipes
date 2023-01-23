@@ -16,19 +16,17 @@
  *
  */
 
-package org.apache.streampipes.manager.util;
+package org.apache.streampipes.manager.execution.task;
 
-import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
+import org.apache.streampipes.model.pipeline.Pipeline;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public interface PipelineExecutionTask {
 
-public class TemporaryGraphStorage {
+  default boolean shouldExecute(PipelineExecutionInfo executionInfo) {
+    return true;
+  }
 
-  public static Map<String, List<InvocableStreamPipesEntity>> graphStorage = new HashMap<>();
-
-  public static Map<String, List<SpDataSet>> datasetStorage = new HashMap<>();
-
+  void executeTask(Pipeline pipeline,
+                   PipelineExecutionInfo executionInfo);
 }

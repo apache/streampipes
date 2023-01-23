@@ -19,18 +19,17 @@
 @import '../../../../../scss/sp/sp-dialog';
 
 .sp-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
 }
 
 .sp-radio-button {
-  margin: 5px;
-  width: 100%;
+    margin: 5px;
+    width: 100%;
 }
 
 .form-field-date {
     top: -10px;
     width: 300px;
 }
-

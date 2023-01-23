@@ -47,15 +47,14 @@ import { VersionsComponent } from './versions/versions.component';
         MatTooltipModule,
         FormsModule,
         CustomMaterialModule,
-        MatDividerModule
+        MatDividerModule,
     ],
     declarations: [
         InfoComponent,
         LicenseComponent,
         VersionsComponent,
-        AboutComponent
+        AboutComponent,
     ],
-    providers: []
+    providers: [],
 })
-export class InfoModule {
-}
+export class InfoModule {}

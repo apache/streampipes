@@ -24,10 +24,9 @@ import { RestApi } from '../../services/rest-api.service';
 @Component({
     selector: 'sp-versions',
     templateUrl: './versions.component.html',
-    styleUrls: ['./versions.component.css']
+    styleUrls: ['./versions.component.css'],
 })
-export class VersionsComponent  {
-
+export class VersionsComponent {
     versionInfo: VersionInfo;
     systemInfo: SystemInfo;
 
@@ -37,21 +36,24 @@ export class VersionsComponent  {
     }
 
     getVersionInfo(): void {
-        this.restApi.getVersionInfo()
-            .subscribe(response => {
+        this.restApi.getVersionInfo().subscribe(
+            response => {
                 this.versionInfo = response as VersionInfo;
-            }, error => {
+            },
+            error => {
                 console.error(error);
-            });
+            },
+        );
     }
 
     getSystemInfo(): void {
-        this.restApi.getSystemInfo()
-            .subscribe(response => {
+        this.restApi.getSystemInfo().subscribe(
+            response => {
                 this.systemInfo = response as SystemInfo;
-            }, error => {
+            },
+            error => {
                 console.error(error);
-            });
+            },
+        );
     }
-
 }

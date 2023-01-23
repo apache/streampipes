@@ -36,18 +36,9 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
+**:bulb: The current version of this Python client is still a beta version.**
 <br>
-<br>
-**The current version of this Python client is still in alpha phase at best.**
-<br>
-**This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
-<br>
-**Please consider it only as a sneak preview.**
-<br>
-<br>
-**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
-
+**This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
 <br>
 
 ## ⚡️ Quickstart

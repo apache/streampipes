@@ -51,9 +51,14 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
     return getAll(getBaseResourcePath());
   }
 
+  /**
+   * Directly install a new data stream
+   *
+   * @param stream   The data stream to add
+   */
   @Override
-  public void create(SpDataStream element) {
-
+  public void create(SpDataStream stream) {
+    post(StreamPipesApiPath.fromBaseApiPath().addToPath("streams"), stream);
   }
 
   /**
