@@ -26,14 +26,14 @@ logger = logging.getLogger(__name__)
 class NatsBroker(Broker):
     """Implementation of the NatsBroker"""
 
-    async def _makeConnection(self, host_address: str, port: int) -> None:
+    async def _makeConnection(self, hostname: str, port: int) -> None:
         """Helper function to connect to a server.
 
         Parameters
         ----------
 
-        host_address: str
-            The host address of the server, which the broker connects to.
+        hostname: str
+            The hostname of the of the server, which the broker connects to.
 
         port: int
             The port number of the connection.
@@ -42,7 +42,7 @@ class NatsBroker(Broker):
         -------
         None
         """
-        self.nats_client = await connect(f"nats://{host_address}:{port}")
+        self.nats_client = await connect(f"nats://{hostname}:{port}")
         if self.nats_client.connected_url is not None:
             logger.info(f"Connected to NATS at {self.nats_client.connected_url.netloc}")
 

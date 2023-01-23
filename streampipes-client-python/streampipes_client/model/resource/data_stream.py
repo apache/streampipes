@@ -16,7 +16,7 @@
 #
 from typing import List, Optional
 
-from pydantic import StrictBool, StrictInt, StrictStr
+from pydantic import Field, StrictBool, StrictInt, StrictStr
 from streampipes_client.model.common import (
     ApplicationLink,
     EventGrounding,
@@ -91,3 +91,4 @@ class DataStream(Resource):
     category: Optional[List[Optional[StrictStr]]]
     uri: Optional[StrictStr]
     dom: Optional[StrictStr]
+    rev: Optional[StrictStr] = Field(alias="_rev")

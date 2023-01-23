@@ -52,8 +52,6 @@ class TestStreamPipesEndpoints(TestCase):
                             "runtimeName": "density",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 5,
                             "runtimeId": None,
@@ -68,8 +66,6 @@ class TestStreamPipesEndpoints(TestCase):
                             "runtimeName": "temperature",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 4,
                             "runtimeId": None,
@@ -110,6 +106,7 @@ class TestStreamPipesEndpoints(TestCase):
                     "transportProtocols": [
                         {
                             "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
+                            "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
                             "brokerHostname": "nats",
                             "topicDefinition": {
                                 "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
@@ -136,8 +133,6 @@ class TestStreamPipesEndpoints(TestCase):
                             "runtimeName": "density",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 5,
                             "runtimeId": None,
@@ -152,8 +147,6 @@ class TestStreamPipesEndpoints(TestCase):
                             "runtimeName": "temperature",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 4,
                             "runtimeId": None,
@@ -176,6 +169,7 @@ class TestStreamPipesEndpoints(TestCase):
                 "category": None,
                 "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "dom": None,
+                "_rev": "1-c01cd6db1ebf6a3e23564951b836ea2b",
             }
         ]
 
@@ -241,7 +235,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
         self.assertEqual(
             self.data_stream_all_json,
-            result.to_json(),
+            result.to_json().replace("broker_name", "@class"),
         )
         self.assertEqual(
             self.data_stream_all,
@@ -266,6 +260,7 @@ class TestStreamPipesEndpoints(TestCase):
                 "corresponding_adapter_id",
                 "uri",
                 "dom",
+                "rev",
                 "num_transport_protocols",
                 "num_measurement_capability",
                 "num_application_links",

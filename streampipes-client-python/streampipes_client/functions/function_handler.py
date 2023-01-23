@@ -71,7 +71,7 @@ class FunctionHandler:
                 # Get the data stream schema from the API
                 data_stream: DataStream = self.client.dataStreamApi.get(stream_id)  # type: ignore
                 # Get the broker
-                broker = self._get_broker(data_stream.event_grounding.transport_protocols[0].broker_hostname)
+                broker = self._get_broker(data_stream.event_grounding.transport_protocols[0].broker_name)
                 # Assign the functions, broker and schema to every stream
                 if stream_id in self.stream_contexts.keys():
                     self.stream_contexts[stream_id].add_function(streampipes_function)
@@ -101,7 +101,7 @@ class FunctionHandler:
         -------
         The broker which belongs to the name.
         """
-        if broker_name == SupportedBroker.NATS.value:
+        if SupportedBroker.NATS.value in broker_name:
             return NatsBroker()
         else:
             raise UnsupportedBroker(f'The python client doesn\'t include the broker: "{broker_name}" yet')
@@ -120,7 +120,7 @@ class FunctionHandler:
             data_stream = self.stream_contexts[stream_id].schema
             broker = self.stream_contexts[stream_id].broker
             # Connect the broker
-            await broker.connect(data_stream, self.client.client_config.host_address)
+            await broker.connect(data_stream)
             self.brokers.append(broker)
             # Get the messages
             messages[stream_id] = broker.get_message()

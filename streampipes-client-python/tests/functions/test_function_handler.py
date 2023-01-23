@@ -109,6 +109,7 @@ class TestFunctionHandler(TestCase):
                 "elementId": "urn:streampipes.apache.org:spi:eventgrounding:TwGIQA",
                 "transportProtocols": [
                     {
+                        "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
                         "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
                         "brokerHostname": "nats",
                         "topicDefinition": {

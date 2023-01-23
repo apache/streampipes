@@ -55,15 +55,6 @@ class BaseElement(BasicModel):
     element_id: Optional[StrictStr]
 
 
-class EventPropertyQualityRequirement(BaseElement):
-    """
-    Data model of an `EventPropertyQualityRequirement` in compliance to the StreamPipes Backend.
-    """
-
-    minimum_property_quality: Optional[BaseElement] = Field(alias="eventPropertyQualityDefinition")
-    maximum_property_quality: Optional[BaseElement] = Field(alias="eventPropertyQualityDefinition")
-
-
 class ValueSpecification(BaseElement):
     """
     Data model of an `ValueSpecification` in compliance to the StreamPipes Backend.
@@ -84,8 +75,6 @@ class EventProperty(BaseElement):
     runtime_name: StrictStr
     required: StrictBool
     domain_properties: List[StrictStr]
-    event_property_qualities: List[BaseElement] = Field(alias="eventPropertyQualities")
-    requires_event_property_qualities: List[EventPropertyQualityRequirement]
     property_scope: Optional[StrictStr]
     index: StrictInt
     runtime_id: Optional[StrictStr]
@@ -127,6 +116,7 @@ class TransportProtocol(BaseElement):
     Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
     """
 
+    broker_name: StrictStr = Field(alias="@class")
     broker_hostname: StrictStr
     topic_definition: TopicDefinition
     port: StrictInt
