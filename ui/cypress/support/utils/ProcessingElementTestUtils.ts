@@ -24,6 +24,7 @@ import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';
 import { ProcessorTest } from '../model/ProcessorTest';
+import { ConnectBtns } from './connect/ConnectBtns';
 
 export class ProcessingElementTestUtils {
     public static testElement(pipelineElementTest: ProcessorTest) {
@@ -47,10 +48,16 @@ export class ProcessingElementTestUtils {
         const adapterName = pipelineElementTest.name.toLowerCase();
 
         // Build adapter
-        const adapterInputBuilder = GenericAdapterBuilder.create('File_Set')
+        const adapterInputBuilder = GenericAdapterBuilder.create('File_Stream')
             .setName(adapterName)
             .setTimestampProperty('timestamp')
-            .setFormat(formatType);
+            .setFormat(formatType)
+            .setStartAdapter(false)
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            );
 
         if (formatType === 'csv') {
             adapterInputBuilder
@@ -60,7 +67,7 @@ export class ProcessingElementTestUtils {
 
         const adapterInput = adapterInputBuilder.build();
 
-        ConnectUtils.addGenericSetAdapter(adapterInput);
+        ConnectUtils.addGenericStreamAdapter(adapterInput);
 
         // Build Pipeline
         const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)
@@ -76,8 +83,8 @@ export class ProcessingElementTestUtils {
 
         PipelineUtils.addPipeline(pipelineInput);
 
-        // Wait till data is stored
-        cy.wait(10000);
+        ConnectUtils.goToConnect();
+        ConnectBtns.startAdapter().click();
 
         DataLakeUtils.checkResults(
             dataLakeIndex,

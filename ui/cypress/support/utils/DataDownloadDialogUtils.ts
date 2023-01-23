@@ -50,12 +50,10 @@ export class DataDownloadDialogUtils {
         cy.dataCy('download-configuration-next-btn').click();
 
         // Format
-        // cy.dataCy('download-configuration-json').click();
         cy.dataCy(
             `download-configuration-${exportConfig.formatExportConfig.exportFormat}`,
         ).click();
         if ('delimiter' in exportConfig.formatExportConfig) {
-            // if ((exportConfig.formatExportConfig as CsvFormatExportConfig).delimiter !== undefined) {
             cy.dataCy(
                 `download-configuration-delimiter-${
                     (exportConfig.formatExportConfig as CsvFormatExportConfig)

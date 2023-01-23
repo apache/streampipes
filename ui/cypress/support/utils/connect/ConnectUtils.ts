@@ -30,7 +30,6 @@ import { ConnectBtns } from './ConnectBtns';
 export class ConnectUtils {
     public static testSpecificStreamAdapter(
         adapterConfiguration: SpecificAdapterInput,
-        successElement = 'sp-connect-adapter-live-preview',
     ) {
         ConnectUtils.goToConnect();
 
@@ -54,7 +53,7 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration, successElement);
+        ConnectUtils.startStreamAdapter(adapterConfiguration);
     }
 
     public static testGenericStreamAdapter(
@@ -65,20 +64,11 @@ export class ConnectUtils {
 
     public static addGenericStreamAdapter(
         adapterConfiguration: GenericAdapterInput,
-        successElement = 'sp-connect-adapter-live-preview',
     ) {
         ConnectUtils.addGenericAdapter(adapterConfiguration);
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration, successElement);
+        ConnectUtils.startStreamAdapter(adapterConfiguration);
     }
-
-    // public static addGenericSetAdapter(
-    //   adapterConfiguration: GenericAdapterInput,
-    // ) {
-    //   ConnectUtils.addGenericAdapter(adapterConfiguration);
-    //
-    //   ConnectUtils.startSetAdapter(adapterConfiguration);
-    // }
 
     public static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
         ConnectUtils.goToConnect();
@@ -188,24 +178,11 @@ export class ConnectUtils {
         cy.get('#event-schema-next-button').click();
     }
 
-    public static startStreamAdapter(
-        adapterInput: AdapterInput,
-        successElement = 'sp-connect-adapter-live-preview',
-    ) {
-        ConnectUtils.startAdapter(adapterInput, successElement);
+    public static startStreamAdapter(adapterInput: AdapterInput) {
+        ConnectUtils.startAdapter(adapterInput);
     }
 
-    // public static startSetAdapter(adapterInput: AdapterInput) {
-    //   ConnectUtils.startAdapter(
-    //     adapterInput,
-    //     'sp-connect-adapter-set-success',
-    //   );
-    // }
-
-    public static startAdapter(
-        adapterInput: AdapterInput,
-        successElement: string,
-    ) {
+    public static startAdapter(adapterInput: AdapterInput) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
@@ -225,7 +202,15 @@ export class ConnectUtils {
 
         ConnectBtns.adapterSettingsStartAdapter().click();
 
-        cy.dataCy(successElement, { timeout: 60000 }).should('be.visible');
+        if (adapterInput.startAdapter) {
+            cy.dataCy('sp-connect-adapter-success-live-preview', {
+                timeout: 60000,
+            }).should('be.visible');
+        } else {
+            cy.dataCy('sp-connect-adapter-success-added', {
+                timeout: 60000,
+            }).should('be.visible');
+        }
 
         this.closeAdapterPreview();
     }
@@ -260,6 +245,7 @@ export class ConnectUtils {
                 'speed',
                 'fastest_\\(ignore_original_time\\)',
             )
+            .addProtocolInput('radio', 'replayonce', 'yes')
             .setName('Adapter to test rules')
             .setFormat('csv')
             .addFormatInput('input', 'delimiter', ';')
@@ -292,9 +278,9 @@ export class ConnectUtils {
         cy.get('div').contains('Values').parent().click();
 
         // Validate resulting event
-        cy.dataCy('sp-connect-adapter-live-preview', { timeout: 10000 }).should(
-            'be.visible',
-        );
+        cy.dataCy('sp-connect-adapter-success-live-preview', {
+            timeout: 10000,
+        }).should('be.visible');
 
         // validate that three event properties
         cy.get('.preview-row', { timeout: 10000 })
@@ -308,10 +294,7 @@ export class ConnectUtils {
         ignoreTime: boolean,
         waitTime = 0,
     ) {
-        ConnectUtils.startAdapter(
-            adapterConfiguration,
-            'sp-connect-adapter-gathering-live-preview',
-        );
+        ConnectUtils.startAdapter(adapterConfiguration);
 
         // Wait till data is stored
         cy.wait(waitTime);

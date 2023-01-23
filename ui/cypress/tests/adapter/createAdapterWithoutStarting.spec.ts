@@ -33,10 +33,7 @@ describe('Creates a new adapter without starting it', () => {
             .setStartAdapter(false)
             .build();
 
-        ConnectUtils.testSpecificStreamAdapter(
-            adapterInput,
-            'sp-connect-adapter-not-started-success',
-        );
+        ConnectUtils.testSpecificStreamAdapter(adapterInput);
 
         ConnectUtils.startAndValidateAdapter(7);
 
