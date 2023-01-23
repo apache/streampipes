@@ -14,8 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#
 
-VERSION = (0, 90, 0)  # pragma: no cover
+from .data_lake_measure import DataLakeMeasureEndpoint
+from .data_stream import DataStreamEndpoint
 
-__version__ = ".".join(map(str, VERSION))  # noqa: F401 # pragma: no cover
+__all__ = [
+    "DataLakeMeasureEndpoint",
+    "DataStreamEndpoint",
+]
