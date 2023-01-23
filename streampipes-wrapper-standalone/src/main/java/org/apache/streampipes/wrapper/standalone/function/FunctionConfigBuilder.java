@@ -15,31 +15,32 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.config.backend;
 
+package org.apache.streampipes.wrapper.standalone.function;
 
-import org.apache.streampipes.vocabulary.MessageFormat;
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.function.FunctionId;
 
-public enum SpDataFormat {
+public class FunctionConfigBuilder {
 
-  CBOR("Cbor", MessageFormat.CBOR),
-  JSON("JSON", MessageFormat.JSON),
-  FST("Fast-Serializer", MessageFormat.FST),
-  SMILE("Smile", MessageFormat.SMILE);
+  private final FunctionConfig functionConfig;
 
-  private String name;
-  private String messageFormat;
-
-  SpDataFormat(String name, String messageFormat) {
-    this.name = name;
-    this.messageFormat = messageFormat;
+  public static FunctionConfigBuilder create(FunctionId functionId) {
+    return new FunctionConfigBuilder(functionId);
   }
 
-  public String getName() {
-    return name;
+  private FunctionConfigBuilder(FunctionId functionId) {
+    this.functionConfig = new FunctionConfig(functionId);
   }
 
-  public String getMessageFormat() {
-    return messageFormat;
+  public FunctionConfigBuilder withOutputStream(SpDataStream stream) {
+    this.functionConfig.addOutputDataStream(stream.getAppId(), stream);
+    return this;
   }
+
+  public FunctionConfig build() {
+    return functionConfig;
+  }
+
+
 }

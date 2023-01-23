@@ -46,7 +46,7 @@ import { CocoFormatService } from './image/services/CocoFormat.service';
 import { LabelingModeService } from './image/services/LabelingMode.service';
 import { PortalModule } from '@angular/cdk/portal';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
+import { StaticAnyInputComponent } from './static-properties/static-any-input/static-any-input.component';
 import { StaticPropertyComponent } from './static-properties/static-property.component';
 import { StaticFreeInputComponent } from './static-properties/static-free-input/static-free-input.component';
 import { StaticSecretInputComponent } from './static-properties/static-secret-input/static-secret-input.component';
@@ -59,12 +59,8 @@ import { StaticCollectionComponent } from './static-properties/static-collection
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
 import { StaticCodeInputComponent } from './static-properties/static-code-input/static-code-input.component';
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
-import {
-  StaticRuntimeResolvableAnyInputComponent
-} from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
-import {
-  StaticRuntimeResolvableOneOfInputComponent
-} from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
+import { StaticRuntimeResolvableAnyInputComponent } from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
+import { StaticRuntimeResolvableOneOfInputComponent } from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
 import { RuntimeResolvableService } from './static-properties/static-runtime-resolvable-input/runtime-resolvable.service';
 import { DisplayRecommendedPipe } from './static-properties/filter/display-recommended.pipe';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -81,9 +77,7 @@ import { SplitSectionComponent } from './split-section/split-section.component';
 import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {
-  StaticRuntimeResolvableTreeInputComponent
-} from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
+import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar-preview/image-bar-preview.component';
@@ -91,7 +85,10 @@ import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
 import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import {
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+} from '@danielmoncada/angular-datetime-picker';
 import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
 import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
 import { DownloadComponent } from './data-download-dialog/components/download/download.component';
@@ -102,123 +99,122 @@ import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-met
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ColorPickerModule,
-    FlexLayoutModule,
-    CodemirrorModule,
-    CustomMaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
-    CdkTableModule,
-    MatAutocompleteModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    NgxChartsModule,
-    PlotlyViaWindowModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatChipsModule,
-    MatTreeModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    PlatformServicesModule,
-    PortalModule,
-    SharedUiModule,
-    OverlayModule,
-    QuillModule.forRoot(),
-    MatTreeModule
-  ],
-  declarations: [
-    ConfigureLabelsComponent,
-    DataDownloadDialogComponent,
-    DisplayRecommendedPipe,
-    ImageBarPreviewComponent,
-    ImageComponent,
-    ImageContainerComponent,
-    ImageLabelingComponent,
-    SelectLabelComponent,
-    ImageBarComponent,
-    ImageAnnotationsComponent,
-    ImageViewerComponent,
-    ObjectPermissionDialogComponent,
-    PipelineElementTemplateConfigComponent,
-    PipelineElementTemplatePipe,
-    SplitSectionComponent,
-    StaticAnyInput,
-    StaticPropertyComponent,
-    StaticFreeInputComponent,
-    StaticSecretInputComponent,
-    StaticFileInputComponent,
-    StaticMappingNaryComponent,
-    StaticMappingUnaryComponent,
-    StaticGroupComponent,
-    StaticAlternativesComponent,
-    StaticCollectionComponent,
-    StaticColorPickerComponent,
-    StaticCodeInputComponent,
-    StaticOneOfInputComponent,
-    StaticRuntimeResolvableAnyInputComponent,
-    StaticRuntimeResolvableOneOfInputComponent,
-    StaticRuntimeResolvableTreeInputComponent,
-    StaticSlideToggleComponent,
-    LabelListItemComponent,
-    ErrorHintComponent,
-    AddToCollectionComponent,
-    PipelineStartedStatusComponent,
-    SelectDataComponent,
-    SelectFormatComponent,
-    DownloadComponent,
-    SelectDataRangeComponent,
-    SelectDataMissingValuesComponent,
-    SpSimpleLogsComponent,
-    SpSimpleMetricsComponent,
-    StatusWidgetComponent
-  ],
-  providers: [
-    MatDatepickerModule,
-    ColorService,
-    DisplayRecommendedPipe,
-    ReactLabelingService,
-    PolygonLabelingService,
-    BrushLabelingService,
-    CocoFormatService,
-    LabelingModeService,
-    RuntimeResolvableService
-  ],
-  exports: [
-    ConfigureLabelsComponent,
-    DataDownloadDialogComponent,
-    ImageComponent,
-    ImageLabelingComponent,
-    PipelineElementTemplateConfigComponent,
-    SelectLabelComponent,
-    StaticAnyInput,
-    StaticPropertyComponent,
-    StaticFreeInputComponent,
-    StaticSecretInputComponent,
-    StaticFileInputComponent,
-    StaticMappingNaryComponent,
-    StaticMappingUnaryComponent,
-    StaticGroupComponent,
-    StaticAlternativesComponent,
-    StaticCollectionComponent,
-    StaticColorPickerComponent,
-    StaticCodeInputComponent,
-    StaticOneOfInputComponent,
-    StaticRuntimeResolvableAnyInputComponent,
-    StaticRuntimeResolvableOneOfInputComponent,
-    StaticSlideToggleComponent,
-    ImageViewerComponent,
-    ErrorHintComponent,
-    PipelineStartedStatusComponent,
-    SplitSectionComponent,
-    SpSimpleLogsComponent,
-    SpSimpleMetricsComponent,
-    StatusWidgetComponent
-  ]
+    imports: [
+        CommonModule,
+        ColorPickerModule,
+        FlexLayoutModule,
+        CodemirrorModule,
+        CustomMaterialModule,
+        ReactiveFormsModule,
+        FormsModule,
+        CdkTableModule,
+        MatAutocompleteModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        NgxChartsModule,
+        PlotlyViaWindowModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatChipsModule,
+        MatTreeModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
+        PlatformServicesModule,
+        PortalModule,
+        SharedUiModule,
+        OverlayModule,
+        QuillModule.forRoot(),
+        MatTreeModule,
+    ],
+    declarations: [
+        ConfigureLabelsComponent,
+        DataDownloadDialogComponent,
+        DisplayRecommendedPipe,
+        ImageBarPreviewComponent,
+        ImageComponent,
+        ImageContainerComponent,
+        ImageLabelingComponent,
+        SelectLabelComponent,
+        ImageBarComponent,
+        ImageAnnotationsComponent,
+        ImageViewerComponent,
+        ObjectPermissionDialogComponent,
+        PipelineElementTemplateConfigComponent,
+        PipelineElementTemplatePipe,
+        SplitSectionComponent,
+        StaticAnyInputComponent,
+        StaticPropertyComponent,
+        StaticFreeInputComponent,
+        StaticSecretInputComponent,
+        StaticFileInputComponent,
+        StaticMappingNaryComponent,
+        StaticMappingUnaryComponent,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
+        StaticCollectionComponent,
+        StaticColorPickerComponent,
+        StaticCodeInputComponent,
+        StaticOneOfInputComponent,
+        StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableOneOfInputComponent,
+        StaticRuntimeResolvableTreeInputComponent,
+        StaticSlideToggleComponent,
+        LabelListItemComponent,
+        ErrorHintComponent,
+        AddToCollectionComponent,
+        PipelineStartedStatusComponent,
+        SelectDataComponent,
+        SelectFormatComponent,
+        DownloadComponent,
+        SelectDataRangeComponent,
+        SelectDataMissingValuesComponent,
+        SpSimpleLogsComponent,
+        SpSimpleMetricsComponent,
+        StatusWidgetComponent,
+    ],
+    providers: [
+        MatDatepickerModule,
+        ColorService,
+        DisplayRecommendedPipe,
+        ReactLabelingService,
+        PolygonLabelingService,
+        BrushLabelingService,
+        CocoFormatService,
+        LabelingModeService,
+        RuntimeResolvableService,
+    ],
+    exports: [
+        ConfigureLabelsComponent,
+        DataDownloadDialogComponent,
+        ImageComponent,
+        ImageLabelingComponent,
+        PipelineElementTemplateConfigComponent,
+        SelectLabelComponent,
+        StaticAnyInputComponent,
+        StaticPropertyComponent,
+        StaticFreeInputComponent,
+        StaticSecretInputComponent,
+        StaticFileInputComponent,
+        StaticMappingNaryComponent,
+        StaticMappingUnaryComponent,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
+        StaticCollectionComponent,
+        StaticColorPickerComponent,
+        StaticCodeInputComponent,
+        StaticOneOfInputComponent,
+        StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableOneOfInputComponent,
+        StaticSlideToggleComponent,
+        ImageViewerComponent,
+        ErrorHintComponent,
+        PipelineStartedStatusComponent,
+        SplitSectionComponent,
+        SpSimpleLogsComponent,
+        SpSimpleMetricsComponent,
+        StatusWidgetComponent,
+    ],
 })
-export class CoreUiModule {
-}
+export class CoreUiModule {}

@@ -16,148 +16,174 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StaticPropertyUtilService } from '../../static-property-util.service';
-import { FreeTextStaticProperty, OneOfStaticProperty, StaticProperty } from '@streampipes/platform-services';
+import {
+    FreeTextStaticProperty,
+    OneOfStaticProperty,
+    StaticProperty,
+} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'sp-add-to-collection',
-  templateUrl: './add-to-collection.component.html',
-  styleUrls: ['./add-to-collection.component.css']
+    selector: 'sp-add-to-collection',
+    templateUrl: './add-to-collection.component.html',
+    styleUrls: ['./add-to-collection.component.css'],
 })
-export class AddToCollectionComponent implements OnInit {
+export class AddToCollectionComponent {
+    @Input()
+    public staticPropertyTemplate: StaticProperty;
 
-  @Input()
-  public staticPropertyTemplate: StaticProperty;
+    @Output()
+    addPropertyEmitter: EventEmitter<StaticProperty> =
+        new EventEmitter<StaticProperty>();
 
-  @Output()
-  addPropertyEmitter: EventEmitter<StaticProperty> = new EventEmitter<StaticProperty>();
+    public showFileSelecion = false;
 
-  public showFileSelecion = false;
+    public processingFile = false;
 
-  public processingFile = false;
+    public fileName: string;
 
-  public fileName: string;
+    public hasError = false;
+    public errorMessage = 'This is a test';
 
-  public hasError = false;
-  public errorMessage = 'This is a test';
+    constructor(private staticPropertyUtil: StaticPropertyUtilService) {}
 
-  constructor(private staticPropertyUtil: StaticPropertyUtilService) {
-  }
+    add() {
+        const clone = this.staticPropertyUtil.clone(
+            this.staticPropertyTemplate,
+        );
+        this.addPropertyEmitter.emit(clone);
+    }
 
-  ngOnInit(): void {
-  }
+    selectFileSelection() {
+        this.showFileSelecion = true;
+    }
 
-  add() {
-    const clone = this.staticPropertyUtil.clone(this.staticPropertyTemplate);
-    this.addPropertyEmitter.emit(clone);
-  }
+    closeFileSelection() {
+        this.showFileSelecion = false;
+        this.processingFile = false;
+        this.hasError = false;
+        this.fileName = '';
+        this.errorMessage = '';
+    }
 
-  selectFileSelection() {
-    this.showFileSelecion = true;
-  }
+    handleFileInput(target: any) {
+        this.processingFile = true;
 
-  closeFileSelection() {
-    this.showFileSelecion = false;
-    this.processingFile = false;
-    this.hasError = false;
-    this.fileName = '';
-    this.errorMessage = '';
-  }
+        const fileReader = new FileReader();
+        this.fileName = target.files[0].name;
 
-  handleFileInput(target: any) {
+        fileReader.onload = e => {
+            this.parseCsv(fileReader.result).subscribe(res => {
+                res.pop();
+                res.forEach((row, i) => {
+                    const property: StaticProperty = this.getStaticProperty(
+                        row,
+                        i,
+                    );
+                    finalProperties.push(property);
+                });
 
-    this.processingFile = true;
+                if (!this.hasError) {
+                    finalProperties.forEach(p => {
+                        this.addPropertyEmitter.emit(p);
+                    });
+                    this.closeFileSelection();
+                    this.fileName = '';
+                }
+            });
+        };
 
-    const fileReader = new FileReader();
-    this.fileName = target.files[0].name;
+        fileReader.readAsText(target.files[0]);
 
-    fileReader.onload = (e) => {
-      this.parseCsv(fileReader.result).subscribe(res => {
-        res.pop();
-        res.forEach((row, i) => {
-          const property: StaticProperty = this.getStaticProperty(row, i);
-          finalProperties.push(property);
+        // Parse file and return properties
+        const finalProperties: StaticProperty[] = [];
+    }
+
+    private setError(errorMessage: string) {
+        if (!this.hasError) {
+            this.errorMessage = errorMessage;
+            this.hasError = true;
+        }
+    }
+
+    public parseCsv(str): Observable<any[]> {
+        str = str.replace(/\r?\n|\r/g, '\n');
+        const parseResult = new Observable<any[]>(observer => {
+            const delimiter = ',';
+            const headers = str.slice(0, str.indexOf('\n')).split(delimiter);
+
+            const rows = str.slice(str.indexOf('\n') + 1).split('\n');
+
+            const result = rows.map(row => {
+                const values = row.split(delimiter);
+                const el = headers.reduce((object, header, index) => {
+                    object[header] = values[index];
+                    return object;
+                }, {});
+                return el;
+            });
+
+            observer.next(result);
         });
 
-        if (!this.hasError) {
-          finalProperties.forEach(p => {
-            this.addPropertyEmitter.emit(p);
-          });
-          this.closeFileSelection();
-          this.fileName = '';
+        return parseResult;
+    }
+
+    public getStaticProperty(row: any, rowNumber: number): StaticProperty {
+        const clone = this.staticPropertyUtil.clone(
+            this.staticPropertyTemplate,
+        );
+
+        // Check that all values are within csv row
+        clone.staticProperties.forEach(p => {
+            if (p instanceof OneOfStaticProperty) {
+                this.setOneOfStaticProperty(row, p, rowNumber);
+            } else {
+                this.setStaticProperty(row, p, rowNumber);
+            }
+        });
+
+        return clone;
+    }
+
+    private setOneOfStaticProperty(
+        row: any,
+        property: OneOfStaticProperty,
+        rowNumber: number,
+    ) {
+        const option = property.options.find(
+            o => o.name === row[property.label],
+        );
+        if (option !== undefined) {
+            option.selected = true;
+        } else {
+            this.setError(
+                'Error in line ' +
+                    rowNumber +
+                    '. Value for "' +
+                    property.label +
+                    '" is not supported',
+            );
         }
-      });
-    };
-
-    fileReader.readAsText(target.files[0]);
-
-    // Parse file and return properties
-    const finalProperties: StaticProperty[] = [];
-  }
-
-  private setError(errorMessage: string) {
-    if (!this.hasError) {
-      this.errorMessage = errorMessage;
-      this.hasError = true;
     }
-  }
 
-  public parseCsv(str): Observable<any[]> {
-
-    str = str.replace(/\r?\n|\r/g, '\n');
-    const parseResult = new Observable<any[]>((observer) => {
-      const delimiter = ',';
-      const headers = str.slice(0, str.indexOf('\n')).split(delimiter);
-
-      const rows = str.slice(str.indexOf('\n') + 1).split('\n');
-
-      const result = rows.map(row => {
-        const values = row.split(delimiter);
-        const el = headers.reduce((object, header, index) => {
-          object[header] = values[index];
-          return object;
-        }, {});
-        return el;
-      });
-
-      observer.next(result);
-
-    });
-
-    return parseResult;
-  }
-
-  public getStaticProperty(row: any, rowNumber: number): StaticProperty {
-    const clone = this.staticPropertyUtil.clone(this.staticPropertyTemplate);
-
-    // Check that all values are within csv row
-    clone.staticProperties.forEach(p => {
-      if (p instanceof OneOfStaticProperty) {
-        this.setOneOfStaticProperty(row, p, rowNumber);
-      } else {
-        this.setStaticProperty(row, p, rowNumber);
-      }
-    });
-
-    return clone;
-  }
-
-  private setOneOfStaticProperty(row: any, property: OneOfStaticProperty, rowNumber: number) {
-    const option = property.options.find(o => o.name === row[property.label]);
-    if (option !== undefined) {
-      option.selected = true;
-    } else {
-      this.setError('Error in line ' + rowNumber + '. Value for "' + property.label + '" is not supported');
+    private setStaticProperty(
+        row: any,
+        property: FreeTextStaticProperty,
+        rowNumber: number,
+    ) {
+        if (row[property.label] === undefined || row[property.label] === '') {
+            this.setError(
+                'Error in line ' +
+                    rowNumber +
+                    '. Value for "' +
+                    property.label +
+                    '" is not set',
+            );
+        } else {
+            property.value = row[property.label];
+        }
     }
-  }
-
-  private setStaticProperty(row: any, property: FreeTextStaticProperty, rowNumber: number) {
-    if (row[property.label] === undefined || row[property.label] === '') {
-      this.setError('Error in line ' + rowNumber + '. Value for "' + property.label + '" is not set');
-    } else {
-      property.value = row[property.label];
-    }
-  }
 }

@@ -26,36 +26,53 @@ import { RegistrationModel } from '../components/register/registration.model';
 
 @Injectable()
 export class LoginService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    fetchLoginSettings(): Observable<LoginModel> {
+        return this.http
+            .get(`${this.platformServicesCommons.apiBasePath}/auth/settings`)
+            .pipe(map(res => res as LoginModel));
+    }
 
-  fetchLoginSettings(): Observable<LoginModel> {
-    return this.http.get(`${this.platformServicesCommons.apiBasePath}/auth/settings`).pipe(map(res => res as LoginModel));
-  }
+    login(credentials): Observable<any> {
+        return this.http.post(
+            this.platformServicesCommons.apiBasePath + '/auth/login',
+            credentials,
+        );
+    }
 
-  login(credentials): Observable<any> {
-    return this.http.post(this.platformServicesCommons.apiBasePath + '/auth/login', credentials);
-  }
+    renewToken(): Observable<any> {
+        return this.http.get(
+            this.platformServicesCommons.apiBasePath + '/auth/token/renew',
+            {
+                headers: { ignoreLoadingBar: '' },
+            },
+        );
+    }
 
-  renewToken(): Observable<any> {
-    return this.http.get(this.platformServicesCommons.apiBasePath + '/auth/token/renew', {
-      headers: { ignoreLoadingBar: '' }
-    });
-  }
+    setupInstall(setup, installationStep): Observable<any> {
+        return this.http.post(
+            this.platformServicesCommons.apiBasePath +
+                '/setup/install/' +
+                installationStep,
+            setup,
+        );
+    }
 
-  setupInstall(setup, installationStep): Observable<any> {
-    return this.http.post(this.platformServicesCommons.apiBasePath + '/setup/install/' + installationStep, setup);
-  }
+    registerUser(registrationData: RegistrationModel) {
+        return this.http.post(
+            this.platformServicesCommons.apiBasePath + '/auth/register',
+            registrationData,
+        );
+    }
 
-  registerUser(registrationData: RegistrationModel) {
-    return this.http.post(this.platformServicesCommons.apiBasePath + '/auth/register', registrationData);
-  }
-
-  sendRestorePasswordLink(email: string): Observable<any> {
-    return this.http.post(`${this.platformServicesCommons.apiBasePath}/auth/restore/${email}`, {});
-  }
-
-
+    sendRestorePasswordLink(email: string): Observable<any> {
+        return this.http.post(
+            `${this.platformServicesCommons.apiBasePath}/auth/restore/${email}`,
+            {},
+        );
+    }
 }

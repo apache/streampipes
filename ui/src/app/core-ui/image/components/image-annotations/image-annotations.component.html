@@ -19,14 +19,33 @@
 <div fxLayout="column" fxLayoutAlign="space-between center">
     <h2>Annotations</h2>
     <mat-list>
-        <mat-list-item *ngFor="let annotation of annotations" (mouseover)="enterAnnotation(annotation)" (mouseout)="leaveAnnotation(annotation)"
-                       style="height: 40px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
-                       [style.background-color]="annotation.isHovered || annotation.isSelected ? 'lightgrey' : 'white'">
+        <mat-list-item
+            *ngFor="let annotation of annotations"
+            (mouseover)="enterAnnotation(annotation)"
+            (mouseout)="leaveAnnotation(annotation)"
+            style="
+                height: 40px;
+                padding-top: 5px;
+                padding-buttom: 5px;
+                border-radius: 50px;
+                margin-bottom: 5px;
+            "
+            [style.background-color]="
+                annotation.isHovered || annotation.isSelected
+                    ? 'lightgrey'
+                    : 'white'
+            "
+        >
+            <mat-icon [style.color]="annotation.color">color_lens</mat-icon>
+            {{ annotation.label_name }}
 
-                        <mat-icon [style.color]="annotation.color">color_lens</mat-icon>
-                        {{annotation.label_name}}
-
-            <button mat-icon-button (click)="delete(annotation)" style="margin-top: -10px; margin-left: -5px"> <mat-icon>delete_forever</mat-icon></button>
+            <button
+                mat-icon-button
+                (click)="delete(annotation)"
+                style="margin-top: -10px; margin-left: -5px"
+            >
+                <mat-icon>delete_forever</mat-icon>
+            </button>
         </mat-list-item>
     </mat-list>
 </div>

@@ -17,27 +17,30 @@
  */
 
 import {
-  RuntimeResolvableAnyStaticProperty,
-  RuntimeResolvableOneOfStaticProperty
+    RuntimeResolvableAnyStaticProperty,
+    RuntimeResolvableOneOfStaticProperty,
 } from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { BaseRuntimeResolvableInput } from './base-runtime-resolvable-input';
 
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export abstract class BaseRuntimeResolvableSelectionInput<T
-    extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty>
-  extends BaseRuntimeResolvableInput<T> {
+export abstract class BaseRuntimeResolvableSelectionInput<
+    T extends
+        | RuntimeResolvableAnyStaticProperty
+        | RuntimeResolvableOneOfStaticProperty,
+> extends BaseRuntimeResolvableInput<T> {
+    onInit() {
+        if (
+            this.staticProperty.options.length === 0 &&
+            (!this.staticProperty.dependsOn ||
+                this.staticProperty.dependsOn.length == 0)
+        ) {
+            this.loadOptionsFromRestApi();
+        } else if (this.staticProperty.options.length > 0) {
+            this.showOptions = true;
+        }
 
-
-  onInit() {
-    if (this.staticProperty.options.length === 0 && (!this.staticProperty.dependsOn || this.staticProperty.dependsOn.length == 0)) {
-      this.loadOptionsFromRestApi();
-    } else if (this.staticProperty.options.length > 0) {
-      this.showOptions = true;
+        super.onInit();
     }
-
-    super.onInit();
-  }
-
-  }
+}

@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.config.backend;
+package org.apache.streampipes.model.config;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MessagingSettings {
@@ -30,34 +29,7 @@ public class MessagingSettings {
   private List<SpDataFormat> prioritizedFormats;
   private List<SpProtocol> prioritizedProtocols;
 
-  public static MessagingSettings fromDefault() {
-    List<SpProtocol> protocolList;
-    if (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL) != null) {
-      switch (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL).toLowerCase()) {
-        case "mqtt":
-          protocolList = Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS, SpProtocol.NATS);
-          break;
-        case "kafka":
-          protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS);
-          break;
-        case "jms":
-          protocolList = Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.NATS);
-          break;
-        case "nats":
-          protocolList = Arrays.asList(SpProtocol.NATS, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
-          break;
-        default:
-          protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS);
-      }
-    } else {
-      protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS);
-    }
 
-    return new MessagingSettings(
-        1638400, 5000012, 20, 2,
-        Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.FST, SpDataFormat.SMILE),
-        protocolList);
-  }
 
   public MessagingSettings(Integer batchSize,
                            Integer messageMaxBytes,

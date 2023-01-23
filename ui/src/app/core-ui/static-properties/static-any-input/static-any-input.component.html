@@ -18,22 +18,26 @@
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
-        <mat-checkbox color="accent"
-                      *ngFor="let option of staticProperty.options"
-                      [(ngModel)]="option.selected"
-                      style="margin-left: 10px;"
-                      [attr.data-cy]="fieldName">
-            {{option.name}}
+        <mat-checkbox
+            color="accent"
+            *ngFor="let option of staticProperty.options"
+            [(ngModel)]="option.selected"
+            style="margin-left: 10px"
+            [attr.data-cy]="fieldName"
+        >
+            {{ option.name }}
         </mat-checkbox>
-
     </div>
     <div *ngIf="staticProperty.horizontalRendering">
         <mat-form-field style="width: 100%" color="accent">
             <mat-select multiple>
-                <mat-option *ngFor="let option of staticProperty.options" [value]="option.elementId"
-                            (click)="select(option.elementId)">
+                <mat-option
+                    *ngFor="let option of staticProperty.options"
+                    [value]="option.elementId"
+                    (click)="select(option.elementId)"
+                >
                     <label style="font-weight: normal">
-                        {{option.name}}
+                        {{ option.name }}
                     </label>
                 </mat-option>
             </mat-select>

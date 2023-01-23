@@ -18,13 +18,13 @@
 
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
-  RuntimeOptionsRequest,
-  RuntimeOptionsResponse,
-  RuntimeResolvableAnyStaticProperty,
-  RuntimeResolvableOneOfStaticProperty,
-  RuntimeResolvableTreeInputStaticProperty,
-  StaticProperty,
-  StaticPropertyUnion
+    RuntimeOptionsRequest,
+    RuntimeOptionsResponse,
+    RuntimeResolvableAnyStaticProperty,
+    RuntimeResolvableOneOfStaticProperty,
+    RuntimeResolvableTreeInputStaticProperty,
+    StaticProperty,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
@@ -34,90 +34,118 @@ import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/pla
 
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export abstract class BaseRuntimeResolvableInput<T
-    extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty | RuntimeResolvableTreeInputStaticProperty>
-  extends AbstractStaticPropertyRenderer<T>
-  implements OnChanges {
+export abstract class BaseRuntimeResolvableInput<
+        T extends
+            | RuntimeResolvableAnyStaticProperty
+            | RuntimeResolvableOneOfStaticProperty
+            | RuntimeResolvableTreeInputStaticProperty,
+    >
+    extends AbstractStaticPropertyRenderer<T>
+    implements OnChanges
+{
+    @Input()
+    completedStaticProperty: ConfigurationInfo;
 
-  @Input()
-  completedStaticProperty: ConfigurationInfo;
+    showOptions = false;
+    loading = false;
+    error = false;
+    errorMessage: StreamPipesErrorMessage;
+    dependentStaticProperties: any = new Map();
 
-  showOptions = false;
-  loading = false;
-  error = false;
-  errorMessage: StreamPipesErrorMessage;
-  dependentStaticProperties: any = new Map();
-
-  constructor(private runtimeResolvableService: RuntimeResolvableService) {
-    super();
-  }
-
-  onInit() {
-    if (this.staticProperty.dependsOn && this.staticProperty.dependsOn.length > 0) {
-      this.staticProperty.dependsOn.forEach(dp => {
-        this.dependentStaticProperties.set(dp, false);
-      });
-    }
-  }
-
-  loadOptionsFromRestApi() {
-    const resolvableOptionsParameterRequest = new RuntimeOptionsRequest();
-    resolvableOptionsParameterRequest.staticProperties = this.staticProperties;
-    resolvableOptionsParameterRequest.requestId = this.staticProperty.internalName;
-
-    if (this.pipelineElement) {
-      resolvableOptionsParameterRequest.inputStreams = this.pipelineElement.inputStreams;
-      resolvableOptionsParameterRequest.appId = this.pipelineElement.appId;
-      resolvableOptionsParameterRequest.belongsTo = this.pipelineElement.belongsTo;
+    constructor(private runtimeResolvableService: RuntimeResolvableService) {
+        super();
     }
 
-    this.showOptions = false;
-    this.loading = true;
-    this.error = false;
-    this.errorMessage = undefined;
-    const observable: Observable<RuntimeOptionsResponse> = this.adapterId ?
-      this.runtimeResolvableService.fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest, this.adapterId) :
-      this.runtimeResolvableService.fetchRemoteOptionsForPipelineElement(resolvableOptionsParameterRequest);
-    observable.subscribe(msg => {
-      const property = StaticProperty.fromDataUnion(msg.staticProperty);
-      if (this.isRuntimeResolvableProperty(property)) {
-        this.afterOptionsLoaded(this.parse(property));
-      }
-      this.loading = false;
-      this.showOptions = true;
-    }, errorMessage => {
-      this.loading = false;
-      this.showOptions = true;
-      this.error = true;
-      this.errorMessage = errorMessage.error as StreamPipesErrorMessage;
-      this.afterErrorReceived();
-    });
-  }
-
-  isRuntimeResolvableProperty(property: StaticPropertyUnion) {
-    return property instanceof RuntimeResolvableAnyStaticProperty ||
-      property instanceof RuntimeResolvableOneOfStaticProperty ||
-      property instanceof RuntimeResolvableTreeInputStaticProperty;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['completedStaticProperty']) {
-      if (this.completedStaticProperty !== undefined) {
-        this.dependentStaticProperties.set(
-          this.completedStaticProperty.staticPropertyInternalName,
-          this.completedStaticProperty.configured
-        );
-        if (Array.from(this.dependentStaticProperties.values()).every(v => v === true)) {
-          this.loadOptionsFromRestApi();
+    onInit() {
+        if (
+            this.staticProperty.dependsOn &&
+            this.staticProperty.dependsOn.length > 0
+        ) {
+            this.staticProperty.dependsOn.forEach(dp => {
+                this.dependentStaticProperties.set(dp, false);
+            });
         }
-      }
     }
-  }
 
-  abstract parse(staticProperty: StaticPropertyUnion): T;
+    loadOptionsFromRestApi() {
+        const resolvableOptionsParameterRequest = new RuntimeOptionsRequest();
+        resolvableOptionsParameterRequest.staticProperties =
+            this.staticProperties;
+        resolvableOptionsParameterRequest.requestId =
+            this.staticProperty.internalName;
 
-  abstract afterOptionsLoaded(staticProperty: T);
+        if (this.pipelineElement) {
+            resolvableOptionsParameterRequest.inputStreams =
+                this.pipelineElement.inputStreams;
+            resolvableOptionsParameterRequest.appId =
+                this.pipelineElement.appId;
+            resolvableOptionsParameterRequest.belongsTo =
+                this.pipelineElement.belongsTo;
+        }
 
-  abstract afterErrorReceived();
+        this.showOptions = false;
+        this.loading = true;
+        this.error = false;
+        this.errorMessage = undefined;
+        const observable: Observable<RuntimeOptionsResponse> = this.adapterId
+            ? this.runtimeResolvableService.fetchRemoteOptionsForAdapter(
+                  resolvableOptionsParameterRequest,
+                  this.adapterId,
+              )
+            : this.runtimeResolvableService.fetchRemoteOptionsForPipelineElement(
+                  resolvableOptionsParameterRequest,
+              );
+        observable.subscribe(
+            msg => {
+                const property = StaticProperty.fromDataUnion(
+                    msg.staticProperty,
+                );
+                if (this.isRuntimeResolvableProperty(property)) {
+                    this.afterOptionsLoaded(this.parse(property));
+                }
+                this.loading = false;
+                this.showOptions = true;
+            },
+            errorMessage => {
+                this.loading = false;
+                this.showOptions = true;
+                this.error = true;
+                this.errorMessage =
+                    errorMessage.error as StreamPipesErrorMessage;
+                this.afterErrorReceived();
+            },
+        );
+    }
 
+    isRuntimeResolvableProperty(property: StaticPropertyUnion) {
+        return (
+            property instanceof RuntimeResolvableAnyStaticProperty ||
+            property instanceof RuntimeResolvableOneOfStaticProperty ||
+            property instanceof RuntimeResolvableTreeInputStaticProperty
+        );
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['completedStaticProperty']) {
+            if (this.completedStaticProperty !== undefined) {
+                this.dependentStaticProperties.set(
+                    this.completedStaticProperty.staticPropertyInternalName,
+                    this.completedStaticProperty.configured,
+                );
+                if (
+                    Array.from(this.dependentStaticProperties.values()).every(
+                        v => v === true,
+                    )
+                ) {
+                    this.loadOptionsFromRestApi();
+                }
+            }
+        }
+    }
+
+    abstract parse(staticProperty: StaticPropertyUnion): T;
+
+    abstract afterOptionsLoaded(staticProperty: T);
+
+    abstract afterErrorReceived();
 }

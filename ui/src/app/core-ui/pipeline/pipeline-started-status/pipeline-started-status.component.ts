@@ -21,36 +21,33 @@ import { PipelineOperationStatus } from '@streampipes/platform-services';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
 
 @Component({
-  selector: 'sp-pipeline-started-status',
-  templateUrl: './pipeline-started-status.component.html',
-  styleUrls: ['./pipeline-started-status.component.scss']
+    selector: 'sp-pipeline-started-status',
+    templateUrl: './pipeline-started-status.component.html',
+    styleUrls: ['./pipeline-started-status.component.scss'],
 })
 export class PipelineStartedStatusComponent implements OnInit {
+    @Input()
+    pipelineOperationStatus: PipelineOperationStatus;
 
-  @Input()
-  pipelineOperationStatus: PipelineOperationStatus;
+    @Input()
+    action: PipelineAction;
 
-  @Input()
-  action: PipelineAction;
+    @Output()
+    forceStopPipelineEmitter = new EventEmitter();
 
-  @Output()
-  forceStopPipelineEmitter = new EventEmitter();
+    statusDetailsVisible: boolean;
 
-  statusDetailsVisible: boolean;
+    constructor() {}
 
-  constructor() {
-  }
+    ngOnInit(): void {
+        this.statusDetailsVisible = false;
+    }
 
-  ngOnInit(): void {
-    this.statusDetailsVisible = false;
-  }
+    forceStopPipeline() {
+        this.forceStopPipelineEmitter.emit();
+    }
 
-  forceStopPipeline() {
-    this.forceStopPipelineEmitter.emit();
-  }
-
-  toggleStatusDetailsVisible() {
-    this.statusDetailsVisible = !(this.statusDetailsVisible);
-  }
-
+    toggleStatusDetailsVisible() {
+        this.statusDetailsVisible = !this.statusDetailsVisible;
+    }
 }

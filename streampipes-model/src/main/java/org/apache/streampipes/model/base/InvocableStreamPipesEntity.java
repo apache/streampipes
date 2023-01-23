@@ -18,19 +18,21 @@
 
 package org.apache.streampipes.model.base;
 
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.logging.LoggerFactory;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
-public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
-
-  private static final long serialVersionUID = 2727573914765473470L;
+public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity implements EndpointSelectable {
 
   protected List<SpDataStream> inputStreams;
 
@@ -120,10 +122,12 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.supportedGrounding = supportedGrounding;
   }
 
+  @Override
   public String getCorrespondingPipeline() {
     return correspondingPipeline;
   }
 
+  @Override
   public void setCorrespondingPipeline(String correspondingPipeline) {
     this.correspondingPipeline = correspondingPipeline;
   }
@@ -168,12 +172,20 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.uncompleted = uncompleted;
   }
 
+  @Override
   public String getSelectedEndpointUrl() {
     return selectedEndpointUrl;
   }
 
+  @Override
   public void setSelectedEndpointUrl(String selectedEndpointUrl) {
     this.selectedEndpointUrl = selectedEndpointUrl;
+  }
+
+  @Override
+  @JsonIgnore
+  public String getDetachPath() {
+    return "/" + InstanceIdExtractor.extractId(getElementId());
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {

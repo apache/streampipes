@@ -17,24 +17,22 @@
  */
 
 .mat-table {
-  //background: #FAFAFA;
 }
 
 .mat-paginator {
-  border-top: 1px solid rgba(0,0,0,.12);
-  //background: #FAFAFA;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .mat-row:nth-child(even) {
-  background-color: var(--color-bg-1);
+    background-color: var(--color-bg-1);
 }
 .mat-row:nth-child(odd) {
-  background-color: var(--color-bg-2);
+    background-color: var(--color-bg-2);
 }
 
 .filetype-container {
-  background: #00aeff;
-  color: white;
-  padding: 5px 15px;
-  border-radius: 5px;
+    background: #00aeff;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
 }

@@ -16,4 +16,9 @@
   ~
   -->
 
-<img [ngClass]="focus ? 'imagePreview imageFocus' : 'imagePreview'" [style.height.px]="imagePreviewHeight" *ngIf="showImage" [src]="imagePath">
+<img
+    [ngClass]="focus ? 'imagePreview imageFocus' : 'imagePreview'"
+    [style.height.px]="imagePreviewHeight"
+    *ngIf="showImage"
+    [src]="imagePath"
+/>

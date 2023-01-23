@@ -19,7 +19,6 @@
 package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
@@ -34,6 +33,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.preprocessin
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.TransformStreamAdapterElement;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.TransformValueAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
+import org.apache.streampipes.model.config.SpProtocol;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;

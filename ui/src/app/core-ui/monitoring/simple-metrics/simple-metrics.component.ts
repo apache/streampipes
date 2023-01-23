@@ -19,24 +19,23 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-simple-metrics',
-  templateUrl: './simple-metrics.component.html',
-  styleUrls: []
+    selector: 'sp-simple-metrics',
+    templateUrl: './simple-metrics.component.html',
+    styleUrls: [],
 })
 export class SpSimpleMetricsComponent {
+    @Input()
+    elementName: string;
 
-  @Input()
-  elementName: string;
+    @Input()
+    lastTimestamp: number;
 
-  @Input()
-  lastTimestamp: number;
+    @Input()
+    statusValue: string | number;
 
-  @Input()
-  statusValue: string | number;
+    @Input()
+    lastPublishedLabel: string;
 
-  @Input()
-  lastPublishedLabel: string;
-
-  @Input()
-  statusValueLabel: string;
+    @Input()
+    statusValueLabel: string;
 }
