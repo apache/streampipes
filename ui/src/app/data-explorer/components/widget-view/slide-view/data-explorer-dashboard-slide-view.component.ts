@@ -97,6 +97,8 @@ export class DataExplorerDashboardSlideViewComponent
         obs.observe(document.getElementById('slideViewOuter'));
     }
 
+    onOptionsChanged() {}
+
     onWidgetsAvailable(): void {
         this.selectWidget(0, this.dashboard.widgets[0].id);
     }
