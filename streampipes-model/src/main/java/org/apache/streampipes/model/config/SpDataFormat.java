@@ -15,19 +15,31 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.config;
 
-package org.apache.streampipes.extensions.api.declarer;
 
-import java.util.List;
+import org.apache.streampipes.vocabulary.MessageFormat;
 
-public interface IStreamPipesFunctionDeclarer {
+public enum SpDataFormat {
 
-  IFunctionConfig getFunctionConfig();
+  CBOR("Cbor", MessageFormat.CBOR),
+  JSON("JSON", MessageFormat.JSON),
+  FST("Fast-Serializer", MessageFormat.FST),
+  SMILE("Smile", MessageFormat.SMILE);
 
-  List<String> requiredStreamIds();
+  private String name;
+  private String messageFormat;
 
-  void invokeRuntime(String serviceGroup);
+  SpDataFormat(String name, String messageFormat) {
+    this.name = name;
+    this.messageFormat = messageFormat;
+  }
 
-  void discardRuntime();
+  public String getName() {
+    return name;
+  }
 
+  public String getMessageFormat() {
+    return messageFormat;
+  }
 }
