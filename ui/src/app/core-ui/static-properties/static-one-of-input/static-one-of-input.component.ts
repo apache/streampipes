@@ -21,44 +21,51 @@ import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property
 import { OneOfStaticProperty } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-static-one-of-input',
-  templateUrl: './static-one-of-input.component.html',
-  styleUrls: ['./static-one-of-input.component.css']
+    selector: 'sp-static-one-of-input',
+    templateUrl: './static-one-of-input.component.html',
+    styleUrls: ['./static-one-of-input.component.css'],
 })
-export class StaticOneOfInputComponent extends AbstractStaticPropertyRenderer<OneOfStaticProperty> implements OnInit {
+export class StaticOneOfInputComponent
+    extends AbstractStaticPropertyRenderer<OneOfStaticProperty>
+    implements OnInit
+{
+    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    selectedOption: string;
 
-  @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  selectedOption: string;
-
-  constructor() {
-    super();
-  }
-
-  ngOnInit() {
-    if (this.noneSelected()) {
-      if (this.staticProperty.options.length > 0) {
-        this.staticProperty.options[0].selected = true;
-        this.selectedOption = this.staticProperty.options[0].elementId;
-      }
-    } else {
-      this.selectedOption = this.staticProperty.options.find(option => option.selected).elementId;
+    constructor() {
+        super();
     }
-    this.inputEmitter.emit(true);
-    this.parentForm.updateValueAndValidity();
-  }
 
-  noneSelected(): boolean {
-    return this.staticProperty.options.every(o => !(o.selected));
-  }
-
-  select(id) {
-    this.selectedOption = this.staticProperty.options.find(option => option.elementId === id).elementId;
-    for (const option of this.staticProperty.options) {
-      option.selected = false;
+    ngOnInit() {
+        if (this.noneSelected()) {
+            if (this.staticProperty.options.length > 0) {
+                this.staticProperty.options[0].selected = true;
+                this.selectedOption = this.staticProperty.options[0].elementId;
+            }
+        } else {
+            this.selectedOption = this.staticProperty.options.find(
+                option => option.selected,
+            ).elementId;
+        }
+        this.inputEmitter.emit(true);
+        this.parentForm.updateValueAndValidity();
     }
-    this.staticProperty.options.find(option => option.elementId === id).selected = true;
-    this.inputEmitter.emit(true);
-  }
+
+    noneSelected(): boolean {
+        return this.staticProperty.options.every(o => !o.selected);
+    }
+
+    select(id) {
+        this.selectedOption = this.staticProperty.options.find(
+            option => option.elementId === id,
+        ).elementId;
+        for (const option of this.staticProperty.options) {
+            option.selected = false;
+        }
+        this.staticProperty.options.find(
+            option => option.elementId === id,
+        ).selected = true;
+        this.inputEmitter.emit(true);
+    }
 }

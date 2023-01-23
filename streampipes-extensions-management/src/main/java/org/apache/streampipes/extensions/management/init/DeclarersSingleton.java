@@ -111,7 +111,7 @@ public class DeclarersSingleton {
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.allAdapters = serviceDef.getSpecificAdapters();
     this.allProtocols = serviceDef.getAdapterProtocols();
-    serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionId().getId(), f));
+    serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
 
   }
 

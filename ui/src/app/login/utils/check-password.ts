@@ -18,12 +18,14 @@
 
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export let checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {
-  const pass = group.get('password');
-  const confirmPass = group.get('repeatPassword');
+export let checkPasswords: ValidatorFn = (
+    group: AbstractControl,
+): ValidationErrors | null => {
+    const pass = group.get('password');
+    const confirmPass = group.get('repeatPassword');
 
-  if (!pass || !confirmPass) {
-    return null;
-  }
-  return pass.value === confirmPass.value ? null : { notMatching: true };
+    if (!pass || !confirmPass) {
+        return null;
+    }
+    return pass.value === confirmPass.value ? null : { notMatching: true };
 };

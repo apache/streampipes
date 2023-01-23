@@ -17,59 +17,73 @@
   -->
 
 <div class="sp-dialog-container">
-  <div class="sp-dialog-content p-15">
-    <div fxFlex="100">
-      <mat-horizontal-stepper #downloadDialogStepper>
+    <div class="sp-dialog-content p-15">
+        <div fxFlex="100">
+            <mat-horizontal-stepper #downloadDialogStepper>
+                <mat-step>
+                    <sp-select-data
+                        [dataExplorerDataConfig]="
+                            dataDownloadDialogModel.dataExplorerDataConfig
+                        "
+                        [dataExportConfig]="exportConfig.dataExportConfig"
+                    >
+                    </sp-select-data>
+                    <ng-template matStepLabel>Select Data</ng-template>
+                </mat-step>
 
-        <mat-step>
-          <sp-select-data
-              [dataExplorerDataConfig]="dataDownloadDialogModel.dataExplorerDataConfig"
-              [dataExportConfig]="exportConfig.dataExportConfig">
-          </sp-select-data>
-          <ng-template matStepLabel>Select Data</ng-template>
-        </mat-step>
+                <mat-step>
+                    <sp-select-format
+                        [formatExportConfig]="exportConfig.formatExportConfig"
+                    ></sp-select-format>
+                </mat-step>
 
-        <mat-step>
-          <sp-select-format
-            [formatExportConfig]="exportConfig.formatExportConfig"></sp-select-format>
-        </mat-step>
-
-        <mat-step>
-          <sp-download></sp-download>
-        </mat-step>
-      </mat-horizontal-stepper>
-
+                <mat-step>
+                    <sp-download></sp-download>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div>
     </div>
-  </div>
 
-  <mat-divider></mat-divider>
-  <div class="sp-dialog-actions actions-align-right">
-    <button mat-button mat-raised-button class="mat-basic" style="margin-right: 10px;" (click)="exitDialog()">Close
-    </button>
-    <button
-        mat-button
-        mat-raised-button
-        class="mat-basic"
-        style="margin-right: 10px;"
-        *ngIf="downloadDialogStepper.selectedIndex == 1"
-        (click)="previousStep()">
-      Previous
-    </button>
-    <button
-        mat-button
-        mat-raised-button
-        *ngIf="downloadDialogStepper.selectedIndex < 1" color="accent"
-        (click)="nextStep()"
-        data-cy="download-configuration-next-btn">
-      Next
-    </button>
-    <button
-        mat-button
-        mat-raised-button
-        *ngIf="downloadDialogStepper.selectedIndex == 1" color="accent"
-        (click)="downloadData()"
-        data-cy="download-configuration-download-btn">
-      Download
-    </button>
-  </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions actions-align-right">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            style="margin-right: 10px"
+            (click)="exitDialog()"
+        >
+            Close
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            style="margin-right: 10px"
+            *ngIf="downloadDialogStepper.selectedIndex === 1"
+            (click)="previousStep()"
+        >
+            Previous
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            *ngIf="downloadDialogStepper.selectedIndex < 1"
+            color="accent"
+            (click)="nextStep()"
+            data-cy="download-configuration-next-btn"
+        >
+            Next
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            *ngIf="downloadDialogStepper.selectedIndex === 1"
+            color="accent"
+            (click)="downloadData()"
+            data-cy="download-configuration-download-btn"
+        >
+            Download
+        </button>
+    </div>
 </div>

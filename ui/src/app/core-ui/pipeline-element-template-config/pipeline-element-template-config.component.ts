@@ -18,83 +18,91 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  PipelineElementTemplateService,
-  PipelineElementTemplate,
-  StaticPropertyUnion,
+    PipelineElementTemplateService,
+    PipelineElementTemplate,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { PipelineElementTemplateGenerator } from './pipeline-element-template-generator';
 
 @Component({
-  selector: 'pipeline-element-template-config',
-  templateUrl: './pipeline-element-template-config.component.html',
-  styleUrls: ['./pipeline-element-template-config.component.scss']
+    selector: 'sp-pipeline-element-template-config',
+    templateUrl: './pipeline-element-template-config.component.html',
+    styleUrls: ['./pipeline-element-template-config.component.scss'],
 })
 export class PipelineElementTemplateConfigComponent implements OnInit {
+    @Input()
+    template: PipelineElementTemplate;
 
-  @Input()
-  template: PipelineElementTemplate;
+    @Input()
+    templateConfigs: Map<string, any>;
 
-  @Input()
-  templateConfigs: Map<string, any>;
+    @Input()
+    appId: string;
 
-  @Input()
-  appId: string;
+    @Input()
+    staticProperties: StaticPropertyUnion[];
 
-  @Input()
-  staticProperties: StaticPropertyUnion[];
+    existingTemplates: PipelineElementTemplate[];
 
-  existingTemplates: PipelineElementTemplate[];
+    constructor(
+        private pipelineElementTemplateService: PipelineElementTemplateService,
+    ) {}
 
-  constructor(private pipelineElementTemplateService: PipelineElementTemplateService) {
-
-  }
-
-
-  ngOnInit(): void {
-    this.loadTemplates();
-    this.template.basePipelineElementAppId = this.appId;
-    this.staticProperties.forEach(sp => {
-      this.templateConfigs.set(sp.internalName, this.makeTemplateValue(sp));
-    });
-  }
-
-  loadTemplates() {
-    this.pipelineElementTemplateService.getPipelineElementTemplates(this.appId).subscribe(templates => {
-      this.existingTemplates = templates;
-    });
-  }
-
-  handleSelection(sp: StaticPropertyUnion) {
-    if (this.templateConfigs.has(sp.internalName)) {
-      this.templateConfigs.delete(sp.internalName);
-    } else {
-      this.templateConfigs.set(sp.internalName, this.makeTemplateValue(sp));
+    ngOnInit(): void {
+        this.loadTemplates();
+        this.template.basePipelineElementAppId = this.appId;
+        this.staticProperties.forEach(sp => {
+            this.templateConfigs.set(
+                sp.internalName,
+                this.makeTemplateValue(sp),
+            );
+        });
     }
-  }
 
-  makeTemplateValue(sp: StaticPropertyUnion) {
-    const config: any = {};
-    config.displayed = false;
-    config.editable = false;
-    config.value = new PipelineElementTemplateGenerator(sp).toTemplateValue();
-    return config;
-  }
+    loadTemplates() {
+        this.pipelineElementTemplateService
+            .getPipelineElementTemplates(this.appId)
+            .subscribe(templates => {
+                this.existingTemplates = templates;
+            });
+    }
 
-  toggleViewPermission(sp: StaticPropertyUnion) {
-    const config: any = this.templateConfigs.get(sp.internalName);
-    config.displayed = ! config.displayed;
-    this.templateConfigs.set(sp.internalName, config);
-  }
+    handleSelection(sp: StaticPropertyUnion) {
+        if (this.templateConfigs.has(sp.internalName)) {
+            this.templateConfigs.delete(sp.internalName);
+        } else {
+            this.templateConfigs.set(
+                sp.internalName,
+                this.makeTemplateValue(sp),
+            );
+        }
+    }
 
-  toggleEditPermission(sp: StaticPropertyUnion) {
-    const config: any = this.templateConfigs.get(sp.internalName);
-    config.editable = ! config.editable;
-    this.templateConfigs.set(sp.internalName, config);
-  }
+    makeTemplateValue(sp: StaticPropertyUnion) {
+        const config: any = {};
+        config.displayed = false;
+        config.editable = false;
+        config.value = new PipelineElementTemplateGenerator(
+            sp,
+        ).toTemplateValue();
+        return config;
+    }
 
-  deleteTemplate(templateId: string) {
-    this.pipelineElementTemplateService
-      .deletePipelineElementTemplate(templateId).subscribe(result => this.loadTemplates());
-  }
+    toggleViewPermission(sp: StaticPropertyUnion) {
+        const config: any = this.templateConfigs.get(sp.internalName);
+        config.displayed = !config.displayed;
+        this.templateConfigs.set(sp.internalName, config);
+    }
 
+    toggleEditPermission(sp: StaticPropertyUnion) {
+        const config: any = this.templateConfigs.get(sp.internalName);
+        config.editable = !config.editable;
+        this.templateConfigs.set(sp.internalName, config);
+    }
+
+    deleteTemplate(templateId: string) {
+        this.pipelineElementTemplateService
+            .deletePipelineElementTemplate(templateId)
+            .subscribe(result => this.loadTemplates());
+    }
 }

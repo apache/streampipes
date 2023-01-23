@@ -18,20 +18,30 @@
 
 <div fxLayout="row" fxLayoutAlign="start center">
     <div>
-        <input matInput
-               style="margin-right: 10px; width: 20px;"
-               autocomplete="off"
-               [(colorPicker)]="label.color"
-               (colorPickerChange)="updateLabelColor($event)"
-               [cpPosition]="'bottom'"
-               [style.background]="label.color" required
+        <input
+            matInput
+            style="margin-right: 10px; width: 20px"
+            autocomplete="off"
+            [(colorPicker)]="label.color"
+            (colorPickerChange)="updateLabelColor($event)"
+            [cpPosition]="'bottom'"
+            [style.background]="label.color"
+            required
         />
     </div>
-        <mat-form-field>
-            <input matInput type="text" [(ngModel)]="label.name"
-            (ngModelChange)="updateLabelName($event)">
-        </mat-form-field>
+    <mat-form-field>
+        <input
+            matInput
+            type="text"
+            [(ngModel)]="label.name"
+            (ngModelChange)="updateLabelName($event)"
+        />
+    </mat-form-field>
     <div>
-        <mat-icon style="margin-left: 20px; margin-top: 5px; cursor: pointer;" (click)="clickRemoveLabel()">remove</mat-icon>
+        <mat-icon
+            style="margin-left: 20px; margin-top: 5px; cursor: pointer"
+            (click)="clickRemoveLabel()"
+            >remove</mat-icon
+        >
     </div>
 </div>

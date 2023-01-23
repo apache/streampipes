@@ -22,39 +22,48 @@ import { UntypedFormControl, ValidatorFn } from '@angular/forms';
 import { Directive, OnDestroy } from '@angular/core';
 
 @Directive()
-export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticProperty>
-    extends AbstractStaticPropertyRenderer<T> implements OnDestroy {
+export abstract class AbstractValidatedStaticPropertyRenderer<
+        T extends StaticProperty,
+    >
+    extends AbstractStaticPropertyRenderer<T>
+    implements OnDestroy
+{
+    errorMessage = 'Please enter a value';
+    fieldValid: boolean;
 
-  errorMessage = 'Please enter a value';
-  fieldValid: boolean;
-
-  constructor() {
-    super();
-  }
-
-  enableValidators() {
-    this.parentForm.controls[this.fieldName].valueChanges.subscribe(value => {
-     this.onValueChange(value);
-    });
-    this.parentForm.controls[this.fieldName].statusChanges.subscribe(status => {
-      this.fieldValid = status === 'VALID';
-      this.onStatusChange(status);
-    });
-  }
-
-  addValidator(defaultValue: any, validators: ValidatorFn | ValidatorFn[]) {
-    this.parentForm.addControl(this.fieldName, new UntypedFormControl(defaultValue, validators));
-    this.parentForm.updateValueAndValidity();
-  }
-
-
-  abstract onValueChange(value: any);
-
-  abstract onStatusChange(status: any);
-
-  ngOnDestroy(): void {
-    if (this.parentForm) {
-      this.parentForm.removeControl(this.fieldName);
+    constructor() {
+        super();
     }
-  }
+
+    enableValidators() {
+        this.parentForm.controls[this.fieldName].valueChanges.subscribe(
+            value => {
+                this.onValueChange(value);
+            },
+        );
+        this.parentForm.controls[this.fieldName].statusChanges.subscribe(
+            status => {
+                this.fieldValid = status === 'VALID';
+                this.onStatusChange(status);
+            },
+        );
+    }
+
+    addValidator(defaultValue: any, validators: ValidatorFn | ValidatorFn[]) {
+        this.parentForm.addControl(
+            this.fieldName,
+            new UntypedFormControl(defaultValue, validators),
+        );
+        this.parentForm.updateValueAndValidity();
+    }
+
+    abstract onValueChange(value: any);
+
+    abstract onStatusChange(status: any);
+
+    ngOnDestroy(): void {
+        if (this.parentForm) {
+            this.parentForm.removeControl(this.fieldName);
+        }
+    }
 }

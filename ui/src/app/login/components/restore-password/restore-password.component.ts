@@ -17,46 +17,54 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+} from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 
 @Component({
-  selector: 'sp-restore-password',
-  templateUrl: './restore-password.component.html',
-  styleUrls: ['../login/login.component.scss']
+    selector: 'sp-restore-password',
+    templateUrl: './restore-password.component.html',
+    styleUrls: ['../login/login.component.scss'],
 })
 export class RestorePasswordComponent implements OnInit {
+    parentForm: UntypedFormGroup;
+    restoreSuccess = false;
+    restoreCompleted = false;
 
-  parentForm: UntypedFormGroup;
-  restoreSuccess = false;
-  restoreCompleted = false;
+    username: string;
 
-  username: string;
+    constructor(
+        private fb: UntypedFormBuilder,
+        private loginService: LoginService,
+    ) {}
 
-  constructor(private fb: UntypedFormBuilder,
-              private loginService: LoginService) {
-  }
+    ngOnInit(): void {
+        this.parentForm = this.fb.group({});
+        this.parentForm.addControl(
+            'username',
+            new UntypedFormControl('', Validators.required),
+        );
 
-  ngOnInit(): void {
-    this.parentForm = this.fb.group({});
-    this.parentForm.addControl('username', new UntypedFormControl('', Validators.required));
+        this.parentForm.valueChanges.subscribe(result => {
+            this.username = result.username;
+        });
+    }
 
-    this.parentForm.valueChanges.subscribe(result => {
-      this.username = result.username;
-    });
-  }
-
-  sendRestorePasswordLink() {
-    this.restoreCompleted = false;
-    this.loginService.sendRestorePasswordLink(this.username).subscribe(response => {
-      this.restoreSuccess = true;
-      this.restoreCompleted = true;
-    }, error => {
-      this.restoreSuccess = false;
-      this.restoreCompleted = true;
-    });
-  }
-
-
+    sendRestorePasswordLink() {
+        this.restoreCompleted = false;
+        this.loginService.sendRestorePasswordLink(this.username).subscribe(
+            response => {
+                this.restoreSuccess = true;
+                this.restoreCompleted = true;
+            },
+            error => {
+                this.restoreSuccess = false;
+                this.restoreCompleted = true;
+            },
+        );
+    }
 }
-

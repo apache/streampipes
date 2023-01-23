@@ -33,6 +33,7 @@ import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVI
 import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE;
 import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE;
 import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE;
 import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE;
 import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_ADMIN_VALUE;
 import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_DASHBOARD_ADMIN_VALUE;
@@ -69,6 +70,9 @@ public class AuthConstants {
 
   public static final String HAS_READ_PIPELINE_ELEMENT_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE + Q + BE2;
+
+  public static final String HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE + Q + BE2;
   public static final String HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE + Q + BE2;
 

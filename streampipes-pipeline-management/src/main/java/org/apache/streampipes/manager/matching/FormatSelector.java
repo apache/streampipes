@@ -19,10 +19,10 @@
 package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.SpDataFormat;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.config.SpDataFormat;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.vocabulary.MessageFormat;
 

@@ -59,12 +59,12 @@
                 <div *ngIf="page == 'configure-widget'" fxLayout="column">
                     <b><h4>{{pages[2].description}}</h4></b>
                     <div fxFlex="100" fxLayout="column">
-                        <app-static-property *ngFor="let config of selectedWidget.config" [staticProperty]="config"
+                        <sp-app-static-property *ngFor="let config of selectedWidget.config" [staticProperty]="config"
                                              [staticProperties]="selectedWidget.config"
                                              [eventSchemas]="[selectedPipeline.eventSchema]"
                                              [fieldName]="config.internalName"
                                              [parentForm]="parentForm">
-                        </app-static-property>
+                        </sp-app-static-property>
                     </div>
 
                 </div>

@@ -16,44 +16,40 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Label } from '@streampipes/platform-services';
 import { LabelService } from '../../services/label.service';
 
 @Component({
-  selector: 'sp-label-list-item',
-  templateUrl: './label-list-item.component.html',
-  styleUrls: ['./label-list-item.component.css']
+    selector: 'sp-label-list-item',
+    templateUrl: './label-list-item.component.html',
+    styleUrls: ['./label-list-item.component.css'],
 })
-export class LabelListItemComponent implements OnInit {
+export class LabelListItemComponent {
+    @Input()
+    label: Label;
 
-  @Input()
-  label: Label;
+    @Output() removeLabel = new EventEmitter<Label>();
 
-  @Output() removeLabel = new EventEmitter<Label>();
+    constructor(public labelService: LabelService) {}
 
-  constructor(public labelService: LabelService) { }
+    public clickRemoveLabel() {
+        this.removeLabel.emit(this.label);
+    }
 
-  ngOnInit(): void {
-  }
+    public updateLabelName(newLabelName) {
+        this.label.name = newLabelName;
+        this.updateLabel();
+    }
 
-  public clickRemoveLabel() {
-    this.removeLabel.emit(this.label);
-  }
+    public updateLabelColor(newLabelColor) {
+        this.label.color = newLabelColor;
+        this.updateLabel();
+    }
 
-  public updateLabelName(newLabelName) {
-    this.label.name = newLabelName;
-    this.updateLabel();
-  }
-
-  public updateLabelColor(newLabelColor) {
-    this.label.color = newLabelColor;
-    this.updateLabel();
-  }
-
-  private updateLabel() {
-    this.labelService.updateLabel(this.label).subscribe((res: Label) => {
-      this.label = res;
-    });
-  }
+    private updateLabel() {
+        this.labelService.updateLabel(this.label).subscribe((res: Label) => {
+            this.label = res;
+        });
+    }
 }

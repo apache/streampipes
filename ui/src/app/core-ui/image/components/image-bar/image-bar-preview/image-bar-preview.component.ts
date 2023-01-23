@@ -15,35 +15,30 @@
  * limitations under the License.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'sp-image-bar-preview',
-  templateUrl: './image-bar-preview.component.html',
-  styleUrls: ['./image-bar-preview.component.scss']
+    selector: 'sp-image-bar-preview',
+    templateUrl: './image-bar-preview.component.html',
+    styleUrls: ['./image-bar-preview.component.scss'],
 })
-export class ImageBarPreviewComponent implements OnInit {
+export class ImageBarPreviewComponent {
+    @Input()
+    imagePreviewHeight: number;
 
-  @Input()
-  imagePreviewHeight: number;
+    @Input()
+    focus = false;
 
-  @Input()
-  focus = false;
+    imagePath: SafeUrl;
+    showImage = false;
 
-  imagePath: SafeUrl;
-  showImage = false;
-
-  @Input()
-  set imageSrc(src: Observable<SafeUrl>) {
-    src.subscribe(url => {
-      this.imagePath = url;
-      this.showImage = true;
-    });
-  }
-
-  ngOnInit(): void {
-  }
-
+    @Input()
+    set imageSrc(src: Observable<SafeUrl>) {
+        src.subscribe(url => {
+            this.imagePath = url;
+            this.showImage = true;
+        });
+    }
 }

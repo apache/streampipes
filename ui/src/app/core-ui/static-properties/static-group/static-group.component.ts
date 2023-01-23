@@ -16,24 +16,17 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { StaticPropertyGroup } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'app-static-group',
+    selector: 'sp-app-static-group',
     templateUrl: './static-group.component.html',
-    styleUrls: ['./static-group.component.css']
+    styleUrls: ['./static-group.component.css'],
 })
-export class StaticGroupComponent
-    extends AbstractStaticPropertyRenderer<StaticPropertyGroup> implements OnInit {
-
+export class StaticGroupComponent extends AbstractStaticPropertyRenderer<StaticPropertyGroup> {
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     private hasInput: boolean;
-
-    ngOnInit() {
-        // console.log(this.staticProperty);
-    }
-
 }

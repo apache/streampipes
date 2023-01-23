@@ -18,7 +18,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.util;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.SpDataFormat;
+import org.apache.streampipes.model.config.SpDataFormat;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.sdk.helpers.SupportedFormats;
 import org.apache.streampipes.vocabulary.MessageFormat;
