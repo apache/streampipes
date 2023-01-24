@@ -21,7 +21,6 @@ describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
-        // cy.login();
     });
 
     it('Perform Test', () => {

@@ -28,6 +28,7 @@ describe('Test live data download dialog', () => {
             'dataDownloadDialog/input.json',
             'json_array',
         );
+
         DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
         DataLakeUtils.saveDataExplorerWidgetConfiguration();
     });
