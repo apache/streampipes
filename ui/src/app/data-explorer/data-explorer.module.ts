@@ -95,13 +95,13 @@ import { GroupSelectionPanelComponent } from './components/designer-panel/data-s
 import { WidgetDirective } from './components/widget/widget.directive';
 import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
 import { TimeSelectionService } from './services/time-selection.service';
-import { NgxEchartsModule } from 'ngx-echarts';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
 import { SpValueHeatmapComponent } from './components/widgets/distribution-chart/value-heatmap/value-heatmap.component';
 import { RouterModule } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from './components/widget-view/slide-view/data-explorer-dashboard-slide-view.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { DataExplorerPanelCanDeactivateGuard } from './data-explorer-panel.can-deactivate.guard';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 export const MY_NATIVE_FORMATS = {
     fullPickerInput: {
@@ -157,9 +157,7 @@ export const MY_NATIVE_FORMATS = {
         MatChipsModule,
         PlatformServicesModule,
         SharedUiModule,
-        NgxEchartsModule.forRoot({
-            echarts: () => import('echarts'),
-        }),
+        NgxEchartsModule.forChild(),
         RouterModule.forChild([
             {
                 path: 'dataexplorer',
