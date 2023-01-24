@@ -16,6 +16,29 @@
   ~
   -->
 
+<style>
+    /* .table {
+        margin: 20px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    } */
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table tbody tr:hover {
+        font-weight: bold;
+        background-color: #f1ecec;
+    }
+
+    
+</style>
+
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <h4>{{pipelineElement.name}}</h4>
@@ -35,7 +58,7 @@
                 <h5>Field Names</h5>
 
                 <div>
-                    <table class="dataTable row-border hover preview-table">
+                    <table class="table">
                         <thead>
                         <tr class="preview-row">
                             <th>Field Name</th>
