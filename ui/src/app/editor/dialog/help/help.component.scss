@@ -18,11 +18,19 @@
 
 @import '../../../../scss/sp/sp-dialog.scss';
 
-.preview-row, .preview-table {
-  background: var(--color-bg-dialog);
+// .preview-row, .preview-table {
+//   background: var(--color-bg-dialog);
+// }
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
-.dataTable tbody tr:hover {
-  background: var(--color-bg-1);
+.table tbody tr:hover {
+  font-weight: bold;
+  background-color: #f1ecec;
 }
+
 
