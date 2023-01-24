@@ -22,10 +22,7 @@ import {
     Input,
     OnInit,
     Output,
-    QueryList,
     ViewChild,
-    ViewChildren,
-    ViewContainerRef,
 } from '@angular/core';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import {
@@ -47,7 +44,6 @@ import { zip } from 'rxjs';
 import { GridsterItemComponent } from 'angular-gridster2';
 import { ResizeService } from '../../services/resize.service';
 import { GridsterInfo } from '../../models/gridster-info.model';
-import { BaseDataExplorerWidgetDirective } from '../../../data-explorer/components/widgets/base/base-data-explorer-widget.directive';
 import { BaseStreamPipesWidget } from '../widgets/base/base-widget';
 
 @Component({

@@ -24,8 +24,8 @@ import {
     DashboardWidgetSettings,
     FreeTextStaticProperty,
     OneOfStaticProperty,
-    StaticProperty,
     Option,
+    StaticProperty,
 } from '@streampipes/platform-services';
 
 export class WidgetConfigBuilder {

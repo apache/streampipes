@@ -25,13 +25,7 @@ import {
     SimpleChanges,
 } from '@angular/core';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
-import {
-    BehaviorSubject,
-    interval,
-    Observable,
-    Subscription,
-    timer,
-} from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 import { ResizeService } from '../../../services/resize.service';
 import {
@@ -47,7 +41,6 @@ import {
 } from '@streampipes/platform-services';
 import { exhaustMap, map, switchMap } from 'rxjs/operators';
 import { GridsterItemComponent } from 'angular-gridster2';
-import { query } from '@angular/animations';
 
 @Directive()
 export abstract class BaseStreamPipesWidget

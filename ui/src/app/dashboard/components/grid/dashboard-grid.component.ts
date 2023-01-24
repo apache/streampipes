@@ -43,7 +43,7 @@ import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../models/gridster-info.model';
 import { DashboardWidgetComponent } from '../widget/dashboard-widget.component';
 import { exhaustMap } from 'rxjs/operators';
-import { Observable, of, Subscription, timer } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 
 @Component({
     selector: 'sp-dashboard-grid',

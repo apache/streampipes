@@ -32,7 +32,6 @@ import {
     DashboardWidgetSettings,
     DataLakeMeasure,
     EventSchema,
-    VisualizablePipeline,
 } from '@streampipes/platform-services';
 import { WordCloudConfig } from '../components/widgets/wordcloud/wordcloud-config';
 import { StatusWidgetConfig } from '../components/widgets/status/status-config';
