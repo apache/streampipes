@@ -14,8 +14,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#
-
-VERSION = (0, 90, 0)  # pragma: no cover
-
-__version__ = ".".join(map(str, VERSION))  # noqa: F401 # pragma: no cover
