@@ -47,23 +47,14 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.iotdb")
-        .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(DataSinkType.DATABASE)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_MAPPING_KEY),
-                PropertyScope.NONE)
-            .build())
-        .requiredTextParameter(Labels.withId(HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(PORT_KEY), 6667)
-        .requiredTextParameter(Labels.withId(USER_KEY), "root")
-        .requiredSecret(Labels.withId(PASSWORD_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_KEY))
-        .requiredTextParameter(Labels.withId(DEVICE_KEY))
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.iotdb").withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON).category(DataSinkType.DATABASE).requiredStream(
+            StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
+                    PropertyScope.NONE).build()).requiredTextParameter(Labels.withId(HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(PORT_KEY), 6667).requiredTextParameter(Labels.withId(USER_KEY), "root")
+        .requiredSecret(Labels.withId(PASSWORD_KEY)).requiredTextParameter(Labels.withId(DATABASE_KEY))
+        .requiredTextParameter(Labels.withId(DEVICE_KEY)).build();
   }
 
   @Override
@@ -81,14 +72,8 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
 
     final String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
 
-    final IotDbParameters params = new IotDbParameters(graph,
-        host,
-        port,
-        database,
-        device,
-        user,
-        password,
-        timestampField);
+    final IotDbParameters params =
+        new IotDbParameters(graph, host, port, user, password, database, device, timestampField);
 
     return new ConfiguredEventSink<>(params, IotDb::new);
   }

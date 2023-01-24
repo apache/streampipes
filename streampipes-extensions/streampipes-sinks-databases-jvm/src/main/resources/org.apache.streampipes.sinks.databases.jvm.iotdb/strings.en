@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.sinks.databases.jvm.iotdb.title=IoTDB
+org.apache.streampipes.sinks.databases.jvm.iotdb.title=Apache IoTDB
 org.apache.streampipes.sinks.databases.jvm.iotdb.description=Stores events in a IoTDB database. Events will be stored in timeseries root.${Database Name}.${Device (Entity) Name}.${Event Key}.
 
 db_host.title=Hostname

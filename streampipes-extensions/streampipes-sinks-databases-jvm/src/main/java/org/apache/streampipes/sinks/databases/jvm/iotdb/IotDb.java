@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.databases.jvm.iotdb;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
@@ -39,7 +40,7 @@ public class IotDb implements EventSink<IotDbParameters> {
 
   private static Logger logger;
 
-  private String timestampField;
+  private String timestampFieldId;
   private String deviceId;
   private Session session;
 
@@ -48,7 +49,7 @@ public class IotDb implements EventSink<IotDbParameters> {
       throws SpRuntimeException {
     logger = parameters.getGraph().getLogger(IotDb.class);
     deviceId = "root." + parameters.getDatabase() + "." + parameters.getDevice();
-    timestampField = parameters.getTimestampField();
+    timestampFieldId = parameters.getTimestampField();
 
     session = new Session.Builder().host(parameters.getHost()).port(parameters.getPort()).username(parameters.getUser())
         .password(parameters.getPassword()).version(Version.V_0_13).build();
@@ -65,15 +66,29 @@ public class IotDb implements EventSink<IotDbParameters> {
       return;
     }
 
-    final Long timestamp = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
+    final AbstractField timestampAbstractField = event.getFieldBySelector(timestampFieldId);
+    final Long timestamp = timestampAbstractField.getAsPrimitive().getAsLong();
+    if (timestamp == null) {
+      return;
+    }
 
     final Map<String, Object> measurementValuePairs = event.getRaw();
-    final List<String> measurements = new ArrayList<>(measurementValuePairs.size());
-    final List<TSDataType> types = new ArrayList<>(measurementValuePairs.size());
-    final Object[] values = new Object[measurementValuePairs.size()];
+    // should be at least a timestamp field and a measurement field
+    if (measurementValuePairs.size() <= 1) {
+      return;
+    }
+
+    final int measurementFieldCount = measurementValuePairs.size() - 1;
+    final List<String> measurements = new ArrayList<>(measurementFieldCount);
+    final List<TSDataType> types = new ArrayList<>(measurementFieldCount);
+    final Object[] values = new Object[measurementFieldCount];
 
     int valueIndex = 0;
     for (Map.Entry<String, Object> measurementValuePair : measurementValuePairs.entrySet()) {
+      if (timestampAbstractField.getFieldNameIn().equals(measurementValuePair.getKey())) {
+        continue;
+      }
+
       measurements.add(measurementValuePair.getKey());
 
       final Object value = measurementValuePair.getValue();
