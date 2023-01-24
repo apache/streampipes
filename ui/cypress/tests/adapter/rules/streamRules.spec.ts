@@ -31,6 +31,7 @@ describe('Connect aggregation rule transformations', () => {
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
         cy.dataCy('connect-reduce-event-rate-box').children().click();
         cy.dataCy('connect-reduce-event-input').type('2000');
 
@@ -38,7 +39,6 @@ describe('Connect aggregation rule transformations', () => {
             adapterConfiguration,
             'cypress/fixtures/connect/aggregationRules/expected.csv',
             false,
-            2000,
         );
     });
 });

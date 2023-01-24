@@ -26,7 +26,12 @@ from requests import HTTPError
 from streampipes_client.client import StreamPipesClient
 from streampipes_client.client.client_config import StreamPipesClientConfig
 from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes_client.endpoint.endpoint import _error_code_to_message
+from streampipes_client.endpoint.endpoint import (
+    MessagingEndpoint,
+    _error_code_to_message,
+)
+from streampipes_client.endpoint.exceptions import MessagingEndpointNotConfiguredError
+from streampipes_client.functions.broker.nats_broker import NatsBroker
 from streampipes_client.model.container.resource_container import (
     StreamPipesDataModelError,
     StreamPipesResourceContainerJSONError,
@@ -386,3 +391,27 @@ class TestStreamPipesEndpoints(TestCase):
             client.dataLakeMeasureApi.all()
 
         self.assertTrue(isinstance(err.exception.validation_error, ValidationError))
+
+
+class TestMessagingEndpoint(TestCase):
+
+    client = StreamPipesClient(
+        client_config=StreamPipesClientConfig(
+            credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+            host_address="localhost",
+        )
+    )
+
+    def test_messaging_endpoint_happy_path(self):
+
+        demo_endpoint = MessagingEndpoint(parent_client=self.client)
+
+        demo_endpoint.configure(broker=NatsBroker())
+
+        self.assertTrue(isinstance(demo_endpoint.broker, NatsBroker))
+
+    def test_messaging_endpoint_missing_configure(self):
+        demo_endpoint = MessagingEndpoint(parent_client=self.client)
+
+        with self.assertRaises(MessagingEndpointNotConfiguredError):
+            demo_endpoint.broker

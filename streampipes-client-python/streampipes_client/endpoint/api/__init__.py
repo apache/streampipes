@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,14 +13,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-dist
-.angular
+from .data_lake_measure import DataLakeMeasureEndpoint
+from .data_stream import DataStreamEndpoint
 
-# Ignore csv files required for e2e tests
-cypress/fixtures/**/*.csv
-
-# Remove these in the future to lint additional modules
-# Please also see .prettierignore
-src/app/dashboard
-src/app/data-explorer
+__all__ = [
+    "DataLakeMeasureEndpoint",
+    "DataStreamEndpoint",
+]

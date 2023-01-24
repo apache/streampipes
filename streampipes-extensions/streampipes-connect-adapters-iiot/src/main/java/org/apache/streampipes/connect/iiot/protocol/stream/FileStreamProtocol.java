@@ -71,6 +71,8 @@ public class FileStreamProtocol extends Protocol {
   private static final String SPEED_UP_FACTOR = "speedUpFactor";
   private static final String FASTEST = "fastest";
 
+  private static final String SPEED_UP_FACTOR_GROUP = "speed-up-factor-group";
+
 
   private static final Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
 
@@ -300,7 +302,7 @@ public class FileStreamProtocol extends Protocol {
             Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
             Alternatives.from(Labels.withId(FASTEST)),
             Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
-                StaticProperties.group(Labels.withId("speed-up-factor-group"),
+                StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
                     StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP)))))
         .build();
   }
