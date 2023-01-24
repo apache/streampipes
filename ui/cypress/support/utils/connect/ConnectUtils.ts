@@ -182,7 +182,10 @@ export class ConnectUtils {
         ConnectUtils.startAdapter(adapterInput);
     }
 
-    public static startAdapter(adapterInput: AdapterInput) {
+    public static startAdapter(
+        adapterInput: AdapterInput,
+        noLiveDataView = false,
+    ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
@@ -202,7 +205,7 @@ export class ConnectUtils {
 
         ConnectBtns.adapterSettingsStartAdapter().click();
 
-        if (adapterInput.startAdapter) {
+        if (adapterInput.startAdapter && !noLiveDataView) {
             cy.dataCy('sp-connect-adapter-success-live-preview', {
                 timeout: 60000,
             }).should('be.visible');
@@ -294,7 +297,7 @@ export class ConnectUtils {
         ignoreTime: boolean,
         waitTime = 0,
     ) {
-        ConnectUtils.startAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(adapterConfiguration, true);
 
         // Wait till data is stored
         cy.wait(waitTime);
