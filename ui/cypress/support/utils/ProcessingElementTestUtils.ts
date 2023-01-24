@@ -57,7 +57,8 @@ export class ProcessingElementTestUtils {
                 'radio',
                 'speed',
                 'fastest_\\(ignore_original_time\\)',
-            );
+            )
+            .addProtocolInput('radio', 'replayonce', 'yes');
 
         if (formatType === 'csv') {
             adapterInputBuilder
