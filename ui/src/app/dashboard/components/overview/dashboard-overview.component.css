@@ -17,7 +17,7 @@
  */
 
 table {
-    width:100%;
+    width: 100%;
     background: transparent;
 }
 
@@ -26,7 +26,7 @@ table {
 }
 
 .options-bar {
-    padding:0px;
+    padding: 0px;
     border-bottom: 1px solid #cccccc;
     margin-bottom: 10px;
     height: 50px;

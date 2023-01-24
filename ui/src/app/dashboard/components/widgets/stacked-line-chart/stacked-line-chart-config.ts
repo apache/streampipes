@@ -23,22 +23,32 @@ import { EpRequirements } from '../../../sdk/ep-requirements';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class StackedLineChartConfig extends WidgetConfig {
+    static readonly VALUE_KEY: string = 'value-key';
 
-  static readonly VALUE_KEY: string = 'value-key';
+    constructor() {
+        super();
+    }
 
-  constructor() {
-    super();
-  }
-
-  getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('stacked-line-chart', 'Stacked Line Chart')
-      .withIcon('fas fa-chart-line')
-      .withDescription('Shows a stacked line chart based on multiple measurements.')
-      .withNumberOfPastEvents()
-      .requiredSchema(SchemaRequirementsBuilder
-        .create()
-        .requiredPropertyWithNaryMapping(StackedLineChartConfig.VALUE_KEY, 'Measurement fields', '', EpRequirements.numberReq())
-        .build())
-      .build();
-  }
+    getConfig(): DashboardWidgetSettings {
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            'stacked-line-chart',
+            'Stacked Line Chart',
+        )
+            .withIcon('fas fa-chart-line')
+            .withDescription(
+                'Shows a stacked line chart based on multiple measurements.',
+            )
+            .withNumberOfPastEvents()
+            .requiredSchema(
+                SchemaRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(
+                        StackedLineChartConfig.VALUE_KEY,
+                        'Measurement fields',
+                        '',
+                        EpRequirements.numberReq(),
+                    )
+                    .build(),
+            )
+            .build();
+    }
 }

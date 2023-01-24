@@ -16,9 +16,9 @@
  */
 
 .main-panel {
-    width:100%;
+    width: 100%;
     height: 100%;
-    display:inline-grid;
+    display: inline-grid;
     align-content: center;
 }
 
@@ -27,5 +27,5 @@
 }
 
 .title-panel {
-    font-size:20px;
+    font-size: 20px;
 }

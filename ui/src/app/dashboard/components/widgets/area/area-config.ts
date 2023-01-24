@@ -19,7 +19,6 @@
 import { BaseNgxLineConfig } from '../base/base-ngx-line-config';
 
 export class AreaConfig extends BaseNgxLineConfig {
-
     getWidgetLabel(): string {
         return 'Area Chart';
     }
@@ -35,6 +34,4 @@ export class AreaConfig extends BaseNgxLineConfig {
     getWidgetIcon(): string {
         return 'fas fa-chart-area';
     }
-
-
 }
