@@ -86,6 +86,8 @@ export class ProcessingElementTestUtils {
         ConnectUtils.goToConnect();
         ConnectBtns.startAdapter().click();
 
+        cy.wait(3000);
+
         DataLakeUtils.checkResults(
             dataLakeIndex,
             'cypress/fixtures/' + expectedResultFile,
