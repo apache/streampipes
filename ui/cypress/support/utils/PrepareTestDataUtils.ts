@@ -37,13 +37,8 @@ export class PrepareTestDataUtils {
             format,
             storeInDataLake,
         );
-        // ConnectUtils.addGenericStreamAdapter(adapter, 'sp-connect-adapter-gathering-live-preview');
-        ConnectUtils.addGenericStreamAdapter(adapter);
 
-        // Wait till data is stored
-        // if (storeInDataLake) {
-        //     cy.wait(10000);
-        // }
+        ConnectUtils.addGenericStreamAdapter(adapter);
     }
 
     private static getDataLakeTestAdapter(
@@ -54,7 +49,11 @@ export class PrepareTestDataUtils {
         const adapterBuilder = GenericAdapterBuilder.create('File_Stream')
             .setName(name)
             .setTimestampProperty('timestamp')
-            .addProtocolInput('input', 'speed', '1');
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            );
 
         if (format === 'csv') {
             adapterBuilder
@@ -69,7 +68,6 @@ export class PrepareTestDataUtils {
 
         if (storeInDataLake) {
             adapterBuilder.setStoreInDataLake();
-            adapterBuilder.setStartAdapter(false);
         }
 
         return adapterBuilder.build();

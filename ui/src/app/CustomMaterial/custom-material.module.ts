@@ -45,7 +45,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
 @NgModule({
     imports: [
         MatButtonModule,
@@ -75,7 +74,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatProgressBarModule,
         MatButtonToggleModule,
         MatChipsModule,
-        MatSliderModule
+        MatSliderModule,
     ],
     exports: [
         MatButtonModule,
@@ -101,9 +100,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatDividerModule,
         MatTooltipModule,
         MatProgressBarModule,
-        MatButtonToggleModule
-    ]
+        MatButtonToggleModule,
+    ],
 })
-export class CustomMaterialModule {
-}
-
+export class CustomMaterialModule {}
