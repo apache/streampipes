@@ -63,28 +63,6 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
     return getDataStreamResourceManager().findAllAsInvocation();
   }
 
-  @GET
-  @Path("/own")
-  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
-  @JacksonSerialized
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public List<SpDataStream> getOwn() {
-    return getDataStreamResourceManager().findAllAsInvocation();
-  }
-
-  @DELETE
-  @Path("/own/{elementId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public Response removeOwn(@PathParam("elementId") String elementId) {
-    getDataStreamResourceManager().delete(elementId);
-    return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
-  }
-
   @DELETE
   @Path("/{elementId}")
   @Produces(MediaType.APPLICATION_JSON)
