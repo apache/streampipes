@@ -15,8 +15,9 @@
 # limitations under the License.
 #
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
+from streampipes_client.functions.utils.function_config import FunctionConfig
 from streampipes_client.functions.utils.function_context import FunctionContext
 
 
@@ -28,12 +29,12 @@ class StreamPipesFunction(ABC):
     """
 
     @abstractmethod
-    def getFunctionId(self) -> Tuple[str, int]:
+    def getFunctionConfig(self) -> FunctionConfig:
         """Get the id of the function.
 
         Returns
         -------
-        Tuple of the function id und version number
+        FunctionConfig which contains the function id, version number and output streams
         """
         raise NotImplementedError
 

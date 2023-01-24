@@ -21,6 +21,7 @@ Provided classes and assets are aimed to be used for developing endpoints.
 An endpoint is provides all options to communicate with a central endpoint of the StreamPipes API in a handy way.
 """
 
+import json
 import logging
 from abc import ABC, abstractmethod
 from http import HTTPStatus
@@ -111,10 +112,7 @@ class APIEndpoint(Endpoint):
         raise NotImplementedError  # pragma: no cover
 
     @staticmethod
-    def _make_request(
-        request_method: Callable[..., Response],
-        url: str,
-    ) -> Response:
+    def _make_request(request_method: Callable[..., Response], url: str, **kwargs) -> Response:
         """Helper method to send requests to the StreamPipes API endpoint.
         Should be used from methods of this class that interacts with the API, e.g. `all()` and `get()`.
 
@@ -139,7 +137,7 @@ class APIEndpoint(Endpoint):
             If the HTTP status code of the error is between `400` and `600`.
         """
 
-        response = request_method(url=url)
+        response = request_method(url=url, **kwargs)
 
         # check if the API request was successful
         try:
@@ -209,3 +207,23 @@ class APIEndpoint(Endpoint):
         )
 
         return self._container_cls._resource_cls()(**response.json())
+
+    def post(self, resource: Resource) -> None:
+        """Post a resource to the StreamPipes API.
+
+        Parameters
+        ----------
+        resource: Resource
+            The resource to be posted.
+
+        Returns
+        -------
+        None
+        """
+
+        self._make_request(
+            request_method=self._parent_client.request_session.post,
+            url=f"{self.build_url()}/",
+            data=json.dumps(resource.dict(by_alias=True)),
+            headers={"Content-type": "application/json"},
+        )

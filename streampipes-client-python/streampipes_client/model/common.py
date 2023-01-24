@@ -52,6 +52,7 @@ class BasicModel(BaseModel):
 class BaseElement(BasicModel):
     """Structure of a basic element in the StreamPipes backend"""
 
+    class_name: Optional[StrictStr] = Field(alias="@class")
     element_id: Optional[StrictStr]
 
 
@@ -83,7 +84,7 @@ class EventProperty(BaseElement):
     value_specification: Optional[ValueSpecification]
 
 
-class EventSchema(BaseElement):
+class EventSchema(BasicModel):
     """
     Data model of an `EventSchema` in compliance to the StreamPipes Backend.
     """
@@ -116,13 +117,12 @@ class TransportProtocol(BaseElement):
     Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
     """
 
-    broker_name: StrictStr = Field(alias="@class")
     broker_hostname: StrictStr
     topic_definition: TopicDefinition
     port: StrictInt
 
 
-class TransportFormat(BaseElement):
+class TransportFormat(BasicModel):
     """
     Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
     """
@@ -130,7 +130,7 @@ class TransportFormat(BaseElement):
     rdf_type: Optional[List[Optional[StrictStr]]]
 
 
-class EventGrounding(BaseElement):
+class EventGrounding(BasicModel):
     """
     Data model of an `EventGrounding` in compliance to the StreamPipes Backend.
     """

@@ -39,13 +39,14 @@ class TestStreamPipesEndpoints(TestCase):
         # set example responses from endpoints
         self.data_lake_measure_all = [
             {
+                "@class": None,
                 "elementId": "urn:streampipes.apache.org:spi:datalakemeasure:xLSfXZ",
                 "measureName": "test",
                 "timestampField": "s0::timestamp",
                 "eventSchema": {
-                    "elementId": "urn:streampipes.apache.org:spi:eventschema:UDMHXn",
                     "eventProperties": [
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:utvSWg",
                             "label": "Density",
                             "description": "Denotes the current density of the fluid",
@@ -60,6 +61,7 @@ class TestStreamPipesEndpoints(TestCase):
                             "valueSpecification": None,
                         },
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:OgBuiz",
                             "label": "Temperature",
                             "description": "Denotes the current temperature in degrees celsius",
@@ -72,6 +74,7 @@ class TestStreamPipesEndpoints(TestCase):
                             "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
                             "measurementUnit": "http://codes.wmo.int/common/unit/degC",
                             "valueSpecification": {
+                                "@class": "org.apache.streampipes.model.schema.QuantitativeValue",
                                 "elementId": "urn:streampipes.apache.org:spi:quantitativevalue:sotOEB",
                                 "minValue": 0,
                                 "maxValue": 100,
@@ -89,6 +92,7 @@ class TestStreamPipesEndpoints(TestCase):
 
         self.data_stream_all: List[Dict] = [
             {
+                "@class": "org.apache.streampipes.model.SpDataStream",
                 "elementId": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "name": "Test",
                 "description": "",
@@ -102,13 +106,13 @@ class TestStreamPipesEndpoints(TestCase):
                 "internallyManaged": True,
                 "connectedTo": None,
                 "eventGrounding": {
-                    "elementId": "urn:streampipes.apache.org:spi:eventgrounding:TwGIQA",
                     "transportProtocols": [
                         {
-                            "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
                             "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
+                            "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
                             "brokerHostname": "nats",
                             "topicDefinition": {
+                                "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
                                 "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
                                 "actualTopicName": "org.apache.streampipes.connect."
                                 "fc22b8f6-698a-4127-aa71-e11854dc57c5",
@@ -118,15 +122,14 @@ class TestStreamPipesEndpoints(TestCase):
                     ],
                     "transportFormats": [
                         {
-                            "elementId": "urn:streampipes.apache.org:spi:transportformat:CMGsLP",
                             "rdfType": ["http://sepa.event-processing.org/sepa#json"],
                         }
                     ],
                 },
                 "eventSchema": {
-                    "elementId": "urn:streampipes.apache.org:spi:eventschema:rARlLX",
                     "eventProperties": [
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:yogPNV",
                             "label": "Density",
                             "description": "Denotes the current density of the fluid",
@@ -141,6 +144,7 @@ class TestStreamPipesEndpoints(TestCase):
                             "valueSpecification": None,
                         },
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:GjZgFg",
                             "label": "Temperature",
                             "description": "Denotes the current temperature in degrees celsius",
@@ -153,6 +157,7 @@ class TestStreamPipesEndpoints(TestCase):
                             "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
                             "measurementUnit": "http://codes.wmo.int/common/unit/degC",
                             "valueSpecification": {
+                                "@class": "org.apache.streampipes.model.schema.QuantitativeValue",
                                 "elementId": "urn:streampipes.apache.org:spi:quantitativevalue:ZQSJfk",
                                 "minValue": 0,
                                 "maxValue": 100,
@@ -235,7 +240,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
         self.assertEqual(
             self.data_stream_all_json,
-            result.to_json().replace("broker_name", "@class"),
+            result.to_json(),
         )
         self.assertEqual(
             self.data_stream_all,

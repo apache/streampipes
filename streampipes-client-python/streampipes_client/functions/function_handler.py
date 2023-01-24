@@ -71,7 +71,7 @@ class FunctionHandler:
                 # Get the data stream schema from the API
                 data_stream: DataStream = self.client.dataStreamApi.get(stream_id)  # type: ignore
                 # Get the broker
-                broker = self._get_broker(data_stream.event_grounding.transport_protocols[0].broker_name)
+                broker = self._get_broker(data_stream.event_grounding.transport_protocols[0].class_name)  # type: ignore
                 # Assign the functions, broker and schema to every stream
                 if stream_id in self.stream_contexts.keys():
                     self.stream_contexts[stream_id].add_function(streampipes_function)
@@ -126,7 +126,7 @@ class FunctionHandler:
             messages[stream_id] = broker.get_message()
             # Generate the function context
             for streampipes_function in self.stream_contexts[stream_id].functions:
-                function_id = streampipes_function.getFunctionId()[0]
+                function_id = streampipes_function.getFunctionConfig().function_id.id
                 if function_id in contexts.keys():
                     contexts[function_id].add_data_stream_schema(stream_id, data_stream)
                 else:
@@ -138,7 +138,7 @@ class FunctionHandler:
                     )
         # Start the functions
         for streampipes_function in self.registration.getFunctions():
-            streampipes_function.onServiceStarted(contexts[streampipes_function.getFunctionId()[0]])
+            streampipes_function.onServiceStarted(contexts[streampipes_function.getFunctionConfig().function_id.id])
 
         # Get the messages continuously and send them to the functions
         async for stream_id, msg in AsyncIterHandler.combine_async_messages(messages):

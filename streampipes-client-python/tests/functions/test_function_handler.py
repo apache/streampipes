@@ -24,13 +24,17 @@ from streampipes_client.client.credential_provider import StreamPipesApiKeyCrede
 from streampipes_client.functions.function_handler import FunctionHandler
 from streampipes_client.functions.registration import Registration
 from streampipes_client.functions.streampipes_function import StreamPipesFunction
+from streampipes_client.functions.utils.function_config import (
+    FunctionConfig,
+    FunctionId,
+)
 from streampipes_client.functions.utils.function_context import FunctionContext
 from streampipes_client.model.resource.data_stream import DataStream
 
 
 class TestFunction(StreamPipesFunction):
-    def getFunctionId(self) -> Tuple[str, int]:
-        return ("org.test.TestFunction", 1)
+    def getFunctionConfig(self) -> FunctionConfig:
+        return FunctionConfig(FunctionId("org.test.TestFunction", 1))
 
     def requiredStreamIds(self) -> List[str]:
         return ["urn:streampipes.apache.org:eventstream:uPDKLI"]
@@ -47,8 +51,8 @@ class TestFunction(StreamPipesFunction):
 
 
 class TestFunctionTwoStreams(StreamPipesFunction):
-    def getFunctionId(self) -> Tuple[str, int]:
-        return ("org.test.TestFunction2", 1)
+    def getFunctionConfig(self) -> FunctionConfig:
+        return FunctionConfig(FunctionId("org.test.TestFunction2", 1))
 
     def requiredStreamIds(self) -> List[str]:
         return ["urn:streampipes.apache.org:eventstream:uPDKLI", "urn:streampipes.apache.org:eventstream:HHoidJ"]
@@ -243,7 +247,7 @@ class TestFunctionHandler(TestCase):
             test_function.context.schema, {self.data_stream["elementId"]: DataStream(**self.data_stream)}
         )
         self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
-        self.assertEqual(test_function.context.function_id, test_function.getFunctionId()[0])
+        self.assertEqual(test_function.context.function_id, test_function.getFunctionConfig().function_id.id)
 
         self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)

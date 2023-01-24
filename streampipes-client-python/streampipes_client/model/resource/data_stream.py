@@ -49,6 +49,7 @@ class DataStream(Resource):
         return {
             **self.dict(
                 exclude={
+                    "class_name",
                     "event_grounding",
                     "measurement_capability",
                     "application_links",
