@@ -107,7 +107,10 @@ services:
         ipv4_address: ${SP_CONSUL_CONTAINER_IP}
 
   couchdb:
-    image: couchdb:2.3.1
+    image: couchdb:3.3.1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=admin
     volumes:
       - couchdb:/opt/couchdb/data
     logging: *default-logging
