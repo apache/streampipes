@@ -17,5 +17,5 @@ jobs:
     steps:
     - uses: actions/labeler@v4
       with:
-        configuration-path: .github/pr_labeler_config.yaml
+        configuration-path: .github/pr-labeler-config.yaml
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
