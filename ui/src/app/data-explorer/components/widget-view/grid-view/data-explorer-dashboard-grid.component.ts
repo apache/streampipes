@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, OnChanges, OnInit, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import {
+    Component,
+    OnChanges,
+    OnInit,
+    QueryList,
+    SimpleChanges,
+    ViewChildren,
+} from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../../dashboard/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../../models/dataview-dashboard.model';
@@ -25,77 +32,80 @@ import { DataViewDataExplorerService } from '@streampipes/platform-services';
 import { AbstractWidgetViewDirective } from '../abstract-widget-view.directive';
 
 @Component({
-  selector: 'sp-data-explorer-dashboard-grid',
-  templateUrl: './data-explorer-dashboard-grid.component.html',
-  styleUrls: ['./data-explorer-dashboard-grid.component.scss']
+    selector: 'sp-data-explorer-dashboard-grid',
+    templateUrl: './data-explorer-dashboard-grid.component.html',
+    styleUrls: ['./data-explorer-dashboard-grid.component.scss'],
 })
-export class DataExplorerDashboardGridComponent extends AbstractWidgetViewDirective implements OnInit, OnChanges {
+export class DataExplorerDashboardGridComponent
+    extends AbstractWidgetViewDirective
+    implements OnInit, OnChanges
+{
+    options: IDataViewDashboardConfig;
+    loaded = false;
 
-  options: IDataViewDashboardConfig;
-  loaded = false;
+    @ViewChildren(GridsterItemComponent)
+    gridsterItemComponents: QueryList<GridsterItemComponent>;
 
-  @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
-
-  constructor(protected resizeService: ResizeService,
-              protected dataViewDataExplorerService: DataViewDataExplorerService) {
-    super(resizeService, dataViewDataExplorerService);
-  }
-
-  ngOnInit(): void {
-    this.options = {
-      disablePushOnDrag: true,
-      draggable: {enabled: this.editMode},
-      gridType: GridType.VerticalFixed,
-      minCols: 8,
-      maxCols: 8,
-      minRows: 4,
-      fixedRowHeight: 100,
-      fixedColWidth: 100,
-      margin: 5,
-      displayGrid: this.editMode ? 'always' : 'none',
-      resizable: {enabled: this.editMode},
-      itemResizeCallback: ((item, itemComponent) => {
-        this.resizeService.notify({
-          gridsterItem: item,
-          gridsterItemComponent: itemComponent
-        } as GridsterInfo);
-      }),
-      itemInitCallback: ((item, itemComponent) => {
-        this.resizeService.notify({
-          gridsterItem: item,
-          gridsterItemComponent: itemComponent
-        } as GridsterInfo);
-        window.dispatchEvent(new Event('resize'));
-      })
-    };
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['editMode'] && this.options) {
-      this.options.draggable.enabled = this.editMode;
-      this.options.resizable.enabled = this.editMode;
-      this.options.displayGrid = this.editMode ? 'always' : 'none';
-      this.options.api.optionsChanged();
+    constructor(
+        protected resizeService: ResizeService,
+        protected dataViewDataExplorerService: DataViewDataExplorerService,
+    ) {
+        super(resizeService, dataViewDataExplorerService);
     }
-  }
 
-  toggleGrid() {
-    this.options.displayGrid = this.options.displayGrid === 'none' ? 'always' : 'none';
-    this.options.api.optionsChanged();
-  }
+    ngOnInit(): void {
+        this.options = {
+            disablePushOnDrag: true,
+            draggable: { enabled: this.editMode },
+            gridType: GridType.VerticalFixed,
+            minCols: 8,
+            maxCols: 8,
+            minRows: 4,
+            fixedRowHeight: 100,
+            fixedColWidth: 100,
+            margin: 5,
+            displayGrid: this.editMode ? 'always' : 'none',
+            resizable: { enabled: this.editMode },
+            itemResizeCallback: (item, itemComponent) => {
+                this.resizeService.notify({
+                    gridsterItem: item,
+                    gridsterItemComponent: itemComponent,
+                } as GridsterInfo);
+            },
+            itemInitCallback: (item, itemComponent) => {
+                this.resizeService.notify({
+                    gridsterItem: item,
+                    gridsterItemComponent: itemComponent,
+                } as GridsterInfo);
+                window.dispatchEvent(new Event('resize'));
+            },
+        };
+    }
 
-  onOptionsChanged() {
-    this.options.api.optionsChanged();
-  }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['editMode'] && this.options) {
+            this.options.draggable.enabled = this.editMode;
+            this.options.resizable.enabled = this.editMode;
+            this.options.displayGrid = this.editMode ? 'always' : 'none';
+            this.options.api.optionsChanged();
+        }
+    }
 
-  onWidgetsAvailable(): void {
-  }
+    toggleGrid() {
+        this.options.displayGrid =
+            this.options.displayGrid === 'none' ? 'always' : 'none';
+        this.options.api.optionsChanged();
+    }
 
-  isGridView(): boolean {
-    return true;
-  }
+    onOptionsChanged() {
+        this.options.api.optionsChanged();
+    }
 
-  selectNewWidget(widgetId): void {
-  }
+    onWidgetsAvailable(): void {}
 
+    isGridView(): boolean {
+        return true;
+    }
+
+    selectNewWidget(widgetId): void {}
 }

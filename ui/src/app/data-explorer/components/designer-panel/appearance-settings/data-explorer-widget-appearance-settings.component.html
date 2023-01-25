@@ -22,8 +22,10 @@
         <div fxFlex="100" fxLayout="row">
             <mat-form-field color="accent" fxFlex="100">
                 <mat-label>Widget Title</mat-label>
-                <input matInput
-                       [(ngModel)]="baseAppearanceConfig.widgetTitle"/>
+                <input
+                    matInput
+                    [(ngModel)]="baseAppearanceConfig.widgetTitle"
+                />
             </mat-form-field>
         </div>
     </div>
@@ -33,27 +35,32 @@
         <div fxFlex="100" fxLayout="row">
             <mat-form-field color="accent" fxFlex="100">
                 <mat-label>Background Color</mat-label>
-                <input matInput
-                       [(colorPicker)]="baseAppearanceConfig.backgroundColor"
-                       [cpPosition]="'bottom'"
-                       [style.background]="baseAppearanceConfig.backgroundColor" required
-                       [cpPresetColors]="presetColors"
-                       (colorPickerSelect)="triggerViewUpdate()"
-                       autocomplete="off"/>
+                <input
+                    matInput
+                    [(colorPicker)]="baseAppearanceConfig.backgroundColor"
+                    [cpPosition]="'bottom'"
+                    [style.background]="baseAppearanceConfig.backgroundColor"
+                    required
+                    [cpPresetColors]="presetColors"
+                    (colorPickerSelect)="triggerViewUpdate()"
+                    autocomplete="off"
+                />
             </mat-form-field>
         </div>
 
         <div fxFlex="100" fxLayout="row">
             <mat-form-field color="accent" fxFlex="100">
                 <mat-label>Text Color</mat-label>
-                <input matInput
-                       [(colorPicker)]="baseAppearanceConfig.textColor"
-                       [cpPosition]="'bottom'"
-                       [style.background]="baseAppearanceConfig.textColor"
-                       required
-                       [cpPresetColors]="presetColors"
-                       (colorPickerSelect)="triggerViewUpdate()"
-                       autocomplete="off"/>
+                <input
+                    matInput
+                    [(colorPicker)]="baseAppearanceConfig.textColor"
+                    [cpPosition]="'bottom'"
+                    [style.background]="baseAppearanceConfig.textColor"
+                    required
+                    [cpPresetColors]="presetColors"
+                    (colorPickerSelect)="triggerViewUpdate()"
+                    autocomplete="off"
+                />
             </mat-form-field>
         </div>
     </div>

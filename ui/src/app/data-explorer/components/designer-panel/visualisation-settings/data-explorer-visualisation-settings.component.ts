@@ -24,27 +24,26 @@ import { IWidget } from '../../../models/dataview-dashboard.model';
 import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
 
 @Component({
-  selector: 'sp-explorer-visualisation-settings',
-  templateUrl: './data-explorer-visualisation-settings.component.html',
-  styleUrls: ['./data-explorer-visualisation-settings.component.scss']
+    selector: 'sp-explorer-visualisation-settings',
+    templateUrl: './data-explorer-visualisation-settings.component.html',
+    styleUrls: ['./data-explorer-visualisation-settings.component.scss'],
 })
 export class DataExplorerVisualisationSettingsComponent implements OnInit {
+    @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
-  @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
+    constructor(private widgetTypeService: WidgetTypeService) {}
 
-  constructor(private widgetTypeService: WidgetTypeService) {
-  }
+    availableWidgets: IWidget[];
 
-  availableWidgets: IWidget[];
+    ngOnInit(): void {
+        this.availableWidgets =
+            DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
+    }
 
-  ngOnInit(): void {
-    this.availableWidgets = DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
-  }
-
-  triggerWidgetTypeChange(ev: MatSelectChange) {
-    this.widgetTypeService.notify(
-        {widgetId: this.currentlyConfiguredWidget._id, newWidgetTypeId: ev.value}
-    );
-  }
-
+    triggerWidgetTypeChange(ev: MatSelectChange) {
+        this.widgetTypeService.notify({
+            widgetId: this.currentlyConfiguredWidget._id,
+            newWidgetTypeId: ev.value,
+        });
+    }
 }

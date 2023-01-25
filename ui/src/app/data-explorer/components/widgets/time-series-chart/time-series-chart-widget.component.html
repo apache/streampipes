@@ -16,25 +16,36 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100" [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
+<div
+    fxLayout="column"
+    fxFlex="100"
+    [ngStyle]="{
+        background: dataExplorerWidget.baseAppearanceConfig.backgroundColor,
+        color: dataExplorerWidget.baseAppearanceConfig.textColor
+    }"
+>
+    <sp-no-data-in-date-range
+        *ngIf="showNoDataInDateRange"
+        [viewDateRange]="timeSettings"
+        class="h-100"
+    >
+    </sp-no-data-in-date-range>
 
-        <sp-no-data-in-date-range
-            *ngIf="showNoDataInDateRange"
-            [viewDateRange]="timeSettings"
-            class="h-100">
-        </sp-no-data-in-date-range>
+    <sp-too-much-data
+        [amountOfEvents]="amountOfTooMuchEvents"
+        (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
+        *ngIf="showTooMuchData"
+        class="h-100"
+    >
+    </sp-too-much-data>
 
-        <sp-too-much-data
-                [amountOfEvents]="amountOfTooMuchEvents"
-                (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
-                *ngIf="showTooMuchData" class="h-100">
-        </sp-too-much-data>
-
-        <plotly-plot *ngIf="showData"
-                     [divId]="dataExplorerWidget._id"
-                     class="plotly-container"
-                     [data]="data"
-                     [layout]="graph.layout"
-                     [config]="graph.config">
-        </plotly-plot>
+    <plotly-plot
+        *ngIf="showData"
+        [divId]="dataExplorerWidget._id"
+        class="plotly-container"
+        [data]="data"
+        [layout]="graph.layout"
+        [config]="graph.config"
+    >
+    </plotly-plot>
 </div>
