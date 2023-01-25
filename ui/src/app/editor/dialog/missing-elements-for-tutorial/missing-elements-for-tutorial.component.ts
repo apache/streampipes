@@ -20,21 +20,19 @@ import { Component, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
-  selector: 'missing-elements-for-tutorial',
-  templateUrl: './missing-elements-for-tutorial.component.html',
-  styleUrls: ['./missing-elements-for-tutorial.component.scss']
+    selector: 'sp-missing-elements-for-tutorial',
+    templateUrl: './missing-elements-for-tutorial.component.html',
+    styleUrls: ['./missing-elements-for-tutorial.component.scss'],
 })
 export class MissingElementsForTutorialComponent {
+    @Input()
+    missingElementsForTutorial: any[];
 
+    constructor(
+        private dialogRef: DialogRef<MissingElementsForTutorialComponent>,
+    ) {}
 
-  @Input()
-  missingElementsForTutorial: any[];
-
-  constructor(private dialogRef: DialogRef<MissingElementsForTutorialComponent>) {
-
-  }
-
-  close() {
-    this.dialogRef.close();
-  }
+    close() {
+        this.dialogRef.close();
+    }
 }

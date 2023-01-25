@@ -18,17 +18,17 @@
 
 @import '../../../../scss/_variables.scss';
 
-.mat-spinner-color::ng-deep svg circle{
+.mat-spinner-color::ng-deep svg circle {
     stroke: var(--color-accent) !important;
 }
 
 .pipeline-cache-progress {
-    display:inline-block;
+    display: inline-block;
 }
 
 .pipeline-cache-block {
     height: 100%;
-    margin-left:15px;
+    margin-left: 15px;
 }
 
 .outerAssembly {
@@ -76,7 +76,7 @@
 
 .jtk-surface-nopan {
     overflow: scroll !important;
-    cursor:default;
+    cursor: default;
 }
 
 .zoom-control {
@@ -89,7 +89,6 @@
     background: var(--color-bg-1);
     box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
     border-radius: 10px;
-
 }
 
 .pipeline-validation-hint {
@@ -174,5 +173,3 @@
 .color-warn {
     color: var(--color-warn);
 }
-
-

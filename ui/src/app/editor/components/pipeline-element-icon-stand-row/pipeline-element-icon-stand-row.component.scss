@@ -17,67 +17,67 @@
  */
 
 .draggable-icon-editor {
-  cursor: move;
-  vertical-align: top;
-  background-color: var(--color-pe);
-  display: inline-block;
-  height: 35px;
-  width: 35px;
-  line-height: 35px;
-  box-shadow: 1px 1px 2px var(--color-shadow);
-  text-align: center;
-  z-index:100;
+    cursor: move;
+    vertical-align: top;
+    background-color: var(--color-pe);
+    display: inline-block;
+    height: 35px;
+    width: 35px;
+    line-height: 35px;
+    box-shadow: 1px 1px 2px var(--color-shadow);
+    text-align: center;
+    z-index: 100;
 }
 
 .draggable-icon-drag {
-  cursor: pointer;
-  vertical-align: top;
-  background: var(--color-pe);
-  display: inline-block;
-  height: 70px;
-  width: 70px;
-  line-height: 70px;
-  box-shadow: 1px 1px 2px var(--color-shadow);
-  text-align: center;
-  background: white;
-  z-index: 100;
+    cursor: pointer;
+    vertical-align: top;
+    background: var(--color-pe);
+    display: inline-block;
+    height: 70px;
+    width: 70px;
+    line-height: 70px;
+    box-shadow: 1px 1px 2px var(--color-shadow);
+    text-align: center;
+    background: white;
+    z-index: 100;
 }
 
 .draggable-pipeline-element {
-  cursor: move;
-  z-index: 100;
+    cursor: move;
+    z-index: 100;
 }
 
 .element-name {
-  font-size: 11pt;
-  font-weight: 500;
+    font-size: 11pt;
+    font-weight: 500;
 }
 
 .element-description {
-  font-weight: 300;
+    font-weight: 300;
 }
 
 .help-button-stand {
-  padding: 0;
-  min-width: 0;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  line-height: 20px;
-  border-radius: 0;
-  margin-right: 5px;
+    padding: 0;
+    min-width: 0;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    line-height: 20px;
+    border-radius: 0;
+    margin-right: 5px;
 }
 
 .pe-container {
-  position:relative;
-  display:block;
-  width:35px;
-  height:35px;
+    position: relative;
+    display: block;
+    width: 35px;
+    height: 35px;
 }
 
 .pe-container-drag {
-  position:relative;
-  display:block;
-  width:70px;
-  height:70px;
+    position: relative;
+    display: block;
+    width: 70px;
+    height: 70px;
 }

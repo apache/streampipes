@@ -15,44 +15,56 @@
   ~ limitations under the License.
   ~
   -->
-<div fxLayout="row"
-     class="draggable-pipeline-element"
-     fxFlex="100"
-     id="{{ element.appId }}"
-     [attr.data-pe]="element.elementId"
-     (mouseenter)="updateMouseOver(element.name)"
-     (mouseleave)="updateMouseOver('')">
+<div
+    fxLayout="row"
+    class="draggable-pipeline-element"
+    fxFlex="100"
+    id="{{ element.appId }}"
+    [attr.data-pe]="element.elementId"
+    (mouseenter)="updateMouseOver(element.name)"
+    (mouseleave)="updateMouseOver('')"
+>
     <div fxFlex="50px">
-        <div matTooltip="{{element.name}}" [matTooltipPosition]="'above'"
-             class="draggable-icon-editor tt"
-             [ngClass]="activeCssClass">
+        <div
+            matTooltip="{{ element.name }}"
+            [matTooltipPosition]="'above'"
+            class="draggable-icon-editor tt"
+            [ngClass]="activeCssClass"
+        >
             <span id="container" class="pe-container">
-            <pipeline-element
+                <sp-pipeline-element
                     id="pe-icon-stand-{{ element.appId }}"
-                    style="margin-left:-3%"
+                    style="margin-left: -3%"
                     [iconStandSize]="true"
                     [attr.data-cy]="'sp-pipeline-element-' + cypressName"
                     [pipelineElement]="element"
-                    [preview]="false"></pipeline-element>
+                    [preview]="false"
+                ></sp-pipeline-element>
             </span>
         </div>
     </div>
     <div fxFlex fxLayoutAlign="start start" fxLayout="column">
         <div class="element-name" fxLayoutAlign="start start">
-            {{element.name}}
+            {{ element.name }}
         </div>
-        <div class="element-description" *ngIf="currentMouseOver" fxLayoutAlign="start start">
-            <small>{{element.description}}</small>
+        <div
+            class="element-description"
+            *ngIf="currentMouseOver"
+            fxLayoutAlign="start start"
+        >
+            <small>{{ element.description }}</small>
         </div>
     </div>
     <div fxLayoutAlign="end start" *ngIf="currentMouseOver">
-        <button mat-button
-                mat-raised-button
-                mat-icon-button
-                color="accent"
-                class="help-button-stand"
-                (click)="openHelpDialog(element)">?
+        <button
+            mat-button
+            mat-raised-button
+            mat-icon-button
+            color="accent"
+            class="help-button-stand"
+            (click)="openHelpDialog(element)"
+        >
+            ?
         </button>
     </div>
 </div>
-

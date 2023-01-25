@@ -20,23 +20,35 @@
     <div class="sp-dialog-content p-15">
         <div>
             <h4>These elements can't be connected.</h4>
-            <h4>The input data stream does not satisfy the requirements specified by the data processor.</h4>
-            <button mat-button (click)="toggleStatusDetailsVisible()" type="button" class="md-accent">
+            <h4>
+                The input data stream does not satisfy the requirements
+                specified by the data processor.
+            </h4>
+            <button
+                mat-button
+                (click)="toggleStatusDetailsVisible()"
+                type="button"
+                class="md-accent"
+            >
                 <div *ngIf="!statusDetailsVisible">Show Details</div>
                 <div *ngIf="statusDetailsVisible">Hide Details</div>
             </button>
             <div *ngIf="statusDetailsVisible">
                 <div *ngFor="let entry of notifications">
-                    <div fxFlex="100" class="md-whiteframe-z1" style="margin-bottom:10px;">
+                    <div
+                        fxFlex="100"
+                        class="md-whiteframe-z1"
+                        style="margin-bottom: 10px"
+                    >
                         <div fxFlex fxLayout="column" class="md-padding">
-<!--                            <div>-->
-<!--                                <i class="material-icons" *ngIf="entry.matchingResultMessage">done</i>-->
-<!--                                <i class="material-icons" *ngIf="entry.matchingSuccessful">warning</i>-->
-<!--                                <b>{{entry.title}} </b>-->
-<!--                            </div>-->
+                            <!--                            <div>-->
+                            <!--                                <i class="material-icons" *ngIf="entry.matchingResultMessage">done</i>-->
+                            <!--                                <i class="material-icons" *ngIf="entry.matchingSuccessful">warning</i>-->
+                            <!--                                <b>{{entry.title}} </b>-->
+                            <!--                            </div>-->
                             <div fxFlex="column">
-                                {{entry.title}}<br/>
-                                {{entry.description}}
+                                {{ entry.title }}<br />
+                                {{ entry.description }}
                             </div>
                         </div>
                     </div>
@@ -46,7 +58,12 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
             Close
         </button>
     </div>

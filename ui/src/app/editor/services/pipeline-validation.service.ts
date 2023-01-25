@@ -19,31 +19,51 @@
 import * as dagre from 'dagre';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { Injectable } from '@angular/core';
-import { PipelineElementConfig, PipelineElementConfigurationStatus } from '../model/editor.model';
-import { DataProcessorInvocation, DataSinkInvocation } from '@streampipes/platform-services';
+import {
+    PipelineElementConfig,
+    PipelineElementConfigurationStatus,
+} from '../model/editor.model';
+import {
+    DataProcessorInvocation,
+    DataSinkInvocation,
+} from '@streampipes/platform-services';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 import { Connection } from '@jsplumb/core';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PipelineValidationService {
-
     errorMessages: any = [];
     pipelineValid = false;
 
     availableErrorMessages: UserErrorMessage[] = [
-        new UserErrorMessage('Did you add a data stream?', 'Any pipeline needs at least one data stream.'),
-        new UserErrorMessage('Did you add a data sink?', 'Any pipeline needs at least one data sink.'),
-        new UserErrorMessage('Did you connect all elements?', 'No orphaned elements are allowed within a pipeline, make sure to connect all elements.'),
-        new UserErrorMessage('Separate pipelines', 'It seems you\'ve created more than one pipeline at once. Create only one pipeline at a time!'),
-        new UserErrorMessage('Did you configure all elements?', 'There\'s a pipeline element which is missing some configuration.')
+        new UserErrorMessage(
+            'Did you add a data stream?',
+            'Any pipeline needs at least one data stream.',
+        ),
+        new UserErrorMessage(
+            'Did you add a data sink?',
+            'Any pipeline needs at least one data sink.',
+        ),
+        new UserErrorMessage(
+            'Did you connect all elements?',
+            'No orphaned elements are allowed within a pipeline, make sure to connect all elements.',
+        ),
+        new UserErrorMessage(
+            'Separate pipelines',
+            "It seems you've created more than one pipeline at once. Create only one pipeline at a time!",
+        ),
+        new UserErrorMessage(
+            'Did you configure all elements?',
+            "There's a pipeline element which is missing some configuration.",
+        ),
     ];
 
-    constructor(private jsplumbFactoryService: JsplumbFactoryService) {
-    }
+    constructor(private jsplumbFactoryService: JsplumbFactoryService) {}
 
     isValidPipeline(rawPipelineModel, previewConfig: boolean) {
-        const jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
+        const jsplumbBridge =
+            this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
         const streamInAssembly = this.isStreamInAssembly(rawPipelineModel);
         const sepaInAssembly = this.isSepaInAssembly(rawPipelineModel);
         const actionInAssembly = this.isActionInAssembly(rawPipelineModel);
@@ -52,35 +72,57 @@ export class PipelineValidationService {
         let allElementsConfigured = true;
 
         if (streamInAssembly && (sepaInAssembly || actionInAssembly)) {
-            allElementsConnected = this.allElementsConnected(rawPipelineModel, jsplumbBridge);
-            allElementsConfigured = this.allElementsConfigured(rawPipelineModel);
+            allElementsConnected = this.allElementsConnected(
+                rawPipelineModel,
+                jsplumbBridge,
+            );
+            allElementsConfigured =
+                this.allElementsConfigured(rawPipelineModel);
         }
 
         if (streamInAssembly && actionInAssembly && allElementsConnected) {
-            onlyOnePipelineCreated = this.onlyOnePipelineCreated(rawPipelineModel, jsplumbBridge);
+            onlyOnePipelineCreated = this.onlyOnePipelineCreated(
+                rawPipelineModel,
+                jsplumbBridge,
+            );
         }
 
         if (!this.isEmptyPipeline(rawPipelineModel)) {
-            this.buildErrorMessages(streamInAssembly,
+            this.buildErrorMessages(
+                streamInAssembly,
                 actionInAssembly,
                 allElementsConnected,
                 onlyOnePipelineCreated,
-                allElementsConfigured);
+                allElementsConfigured,
+            );
         } else {
             this.errorMessages = [];
         }
 
-        this.pipelineValid = streamInAssembly && actionInAssembly &&
-            allElementsConnected && onlyOnePipelineCreated && allElementsConfigured;
+        this.pipelineValid =
+            streamInAssembly &&
+            actionInAssembly &&
+            allElementsConnected &&
+            onlyOnePipelineCreated &&
+            allElementsConfigured;
         return this.pipelineValid;
     }
 
     isEmptyPipeline(rawPipelineModel) {
-        return !this.isActionInAssembly(rawPipelineModel) &&
-            !this.isStreamInAssembly(rawPipelineModel) && !this.isInAssembly(rawPipelineModel, 'sepa');
+        return (
+            !this.isActionInAssembly(rawPipelineModel) &&
+            !this.isStreamInAssembly(rawPipelineModel) &&
+            !this.isInAssembly(rawPipelineModel, 'sepa')
+        );
     }
 
-    buildErrorMessages(streamInAssembly, actionInAssembly, allElementsConnected, onlyOnePipelineCreated, allElementsConfigured) {
+    buildErrorMessages(
+        streamInAssembly,
+        actionInAssembly,
+        allElementsConnected,
+        onlyOnePipelineCreated,
+        allElementsConfigured,
+    ) {
         this.errorMessages = [];
         if (!streamInAssembly) {
             this.errorMessages.push(this.availableErrorMessages[0]);
@@ -101,8 +143,16 @@ export class PipelineValidationService {
 
     allElementsConfigured(rawPipelineModel: PipelineElementConfig[]): boolean {
         return rawPipelineModel
-            .filter(config => ((config.payload instanceof DataProcessorInvocation) || (config.payload instanceof DataSinkInvocation)))
-            .every(config => (config.settings.completed === PipelineElementConfigurationStatus.OK));
+            .filter(
+                config =>
+                    config.payload instanceof DataProcessorInvocation ||
+                    config.payload instanceof DataSinkInvocation,
+            )
+            .every(
+                config =>
+                    config.settings.completed ===
+                    PipelineElementConfigurationStatus.OK,
+            );
     }
 
     allElementsConnected(rawPipelineModel, jsplumbBridge) {
@@ -116,7 +166,10 @@ export class PipelineValidationService {
     }
 
     isStreamInAssembly(rawPipelineModel) {
-        return this.isInAssembly(rawPipelineModel, 'stream') || this.isInAssembly(rawPipelineModel, 'set');
+        return (
+            this.isInAssembly(rawPipelineModel, 'stream') ||
+            this.isInAssembly(rawPipelineModel, 'set')
+        );
     }
 
     isActionInAssembly(rawPipelineModel) {
@@ -144,22 +197,28 @@ export class PipelineValidationService {
         return isElementInAssembly;
     }
 
-    makeGraph(rawPipelineModel: PipelineElementConfig[], jsplumbBridge: JsplumbBridge) {
+    makeGraph(
+        rawPipelineModel: PipelineElementConfig[],
+        jsplumbBridge: JsplumbBridge,
+    ) {
         const g = new dagre.graphlib.Graph();
-        g.setGraph({rankdir: 'LR'});
+        g.setGraph({ rankdir: 'LR' });
         g.setDefaultEdgeLabel(() => {
             return {};
         });
-        const nodes = $('#assembly').find('div[id^=\'jsplumb\']').get();
+        const nodes = $('#assembly').find("div[id^='jsplumb']").get();
         for (let i = 0; i < nodes.length; i++) {
             const n = nodes[i];
-            const elementOptions = this.getElementOptions(n.id, rawPipelineModel);
+            const elementOptions = this.getElementOptions(
+                n.id,
+                rawPipelineModel,
+            );
             if (!elementOptions.settings.disabled) {
                 g.setNode(n.id, {
                     label: n.id,
                     type: elementOptions.type,
                     name: elementOptions.payload.name,
-                    endpointCount: jsplumbBridge.getEndpointCount(n.id)
+                    endpointCount: jsplumbBridge.getEndpointCount(n.id),
                 });
             }
         }

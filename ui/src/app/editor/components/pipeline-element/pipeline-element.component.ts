@@ -16,20 +16,18 @@
  *
  */
 
-import { Component, Input, OnInit, } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RestApi } from '../../../services/rest-api.service';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
 import { PipelineElementUnion } from '../../model/editor.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
-
 @Component({
-    selector: 'pipeline-element',
+    selector: 'sp-pipeline-element',
     templateUrl: './pipeline-element.component.html',
-    styleUrls: ['./pipeline-element.component.css']
+    styleUrls: ['./pipeline-element.component.css'],
 })
-export class PipelineElementComponent implements OnInit {
-
+export class PipelineElementComponent {
     showImage: any;
     iconText: any;
 
@@ -47,19 +45,20 @@ export class PipelineElementComponent implements OnInit {
     iconUrl: any;
     image: SafeUrl;
 
-    constructor(private restApi: RestApi,
-                private elementIconText: ElementIconText,
-                private sanitizer: DomSanitizer) {
-
-    }
-
-    ngOnInit(): void {
-
-    }
+    constructor(
+        private restApi: RestApi,
+        private elementIconText: ElementIconText,
+        private sanitizer: DomSanitizer,
+    ) {}
 
     checkImageAvailable() {
-        if (this.pipelineElement.includesAssets && this.pipelineElement.includedAssets.indexOf('icon.png') > -1) {
-            this.image = this.sanitizer.bypassSecurityTrustUrl(this.makeAssetIconUrl());
+        if (
+            this.pipelineElement.includesAssets &&
+            this.pipelineElement.includedAssets.indexOf('icon.png') > -1
+        ) {
+            this.image = this.sanitizer.bypassSecurityTrustUrl(
+                this.makeAssetIconUrl(),
+            );
             this.showImage = true;
         } else {
             this.showImage = false;
@@ -89,8 +88,9 @@ export class PipelineElementComponent implements OnInit {
     @Input()
     set pipelineElement(pipelineElement: PipelineElementUnion) {
         this.pipelineElement_ = pipelineElement;
-        this.iconText =  this.elementIconText.getElementIconText(this.pipelineElement.name);
+        this.iconText = this.elementIconText.getElementIconText(
+            this.pipelineElement.name,
+        );
         this.checkImageAvailable();
     }
-
 }

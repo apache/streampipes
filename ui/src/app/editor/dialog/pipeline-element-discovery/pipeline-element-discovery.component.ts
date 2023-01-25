@@ -20,79 +20,85 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  SpDataSet,
-  SpDataStream
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataSet,
+    SpDataStream,
 } from '@streampipes/platform-services';
-import { PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
+import {
+    PipelineElementConfig,
+    PipelineElementUnion,
+} from '../../model/editor.model';
 
 @Component({
-  selector: 'sp-pipeline-element-discovery',
-  templateUrl: './pipeline-element-discovery.component.html',
-  styleUrls: ['./pipeline-element-discovery.component.scss']
+    selector: 'sp-pipeline-element-discovery',
+    templateUrl: './pipeline-element-discovery.component.html',
+    styleUrls: ['./pipeline-element-discovery.component.scss'],
 })
 export class PipelineElementDiscoveryComponent implements OnInit {
+    @Input()
+    rawPipelineModel: PipelineElementConfig[];
 
-  @Input()
-  rawPipelineModel: PipelineElementConfig[];
+    @Input()
+    currentElements: PipelineElementUnion[];
 
-  @Input()
-  currentElements: PipelineElementUnion[];
+    styles: any[] = [];
 
-  styles: any[] = [];
+    constructor(
+        private dialogRef: DialogRef<PipelineElementDiscoveryComponent>,
+        private JsPlumbService: JsplumbService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<PipelineElementDiscoveryComponent>,
-              private JsPlumbService: JsplumbService) {
-
-  }
-
-  ngOnInit() {
-    this.currentElements.sort((a, b) => a.name.localeCompare(b.name));
-    this.currentElements.forEach(pe => {
-      this.styles.push(this.makeStandardStyle());
-    });
-  }
-
-  create(selectedElement) {
-    this.JsPlumbService.createElementWithoutConnection(this.rawPipelineModel,
-        selectedElement,
-        200,
-        100);
-    this.hide();
-  }
-
-  hide() {
-    this.dialogRef.close();
-  }
-
-  currentElementStyle(possibleElement: PipelineElementUnion) {
-    if (possibleElement instanceof DataProcessorInvocation) {
-      return 'sepa';
-    } else if (possibleElement instanceof DataSinkInvocation) {
-      return 'action';
-    } else if (possibleElement instanceof SpDataSet) {
-      return 'set';
-    } else if (possibleElement instanceof SpDataStream) {
-      return 'stream';
+    ngOnInit() {
+        this.currentElements.sort((a, b) => a.name.localeCompare(b.name));
+        this.currentElements.forEach(pe => {
+            this.styles.push(this.makeStandardStyle());
+        });
     }
-  }
 
-  makeStandardStyle() {
-    return {
-      background: 'white',
-      cursor: 'auto'
-    };
-  }
+    create(selectedElement) {
+        this.JsPlumbService.createElementWithoutConnection(
+            this.rawPipelineModel,
+            selectedElement,
+            200,
+            100,
+        );
+        this.hide();
+    }
 
-  makeHoverStyle() {
-    return {
-      background: 'lightgrey',
-      cursor: 'pointer'
-    };
-  }
+    hide() {
+        this.dialogRef.close();
+    }
 
-  changeStyle(index: number, hover: boolean) {
-    hover ? this.styles[index] = this.makeHoverStyle() : this.styles[index] = this.makeStandardStyle();
-  }
+    currentElementStyle(possibleElement: PipelineElementUnion) {
+        if (possibleElement instanceof DataProcessorInvocation) {
+            return 'sepa';
+        } else if (possibleElement instanceof DataSinkInvocation) {
+            return 'action';
+        } else if (possibleElement instanceof SpDataSet) {
+            return 'set';
+        } else if (possibleElement instanceof SpDataStream) {
+            return 'stream';
+        }
+    }
+
+    makeStandardStyle() {
+        return {
+            background: 'white',
+            cursor: 'auto',
+        };
+    }
+
+    makeHoverStyle() {
+        return {
+            background: 'lightgrey',
+            cursor: 'pointer',
+        };
+    }
+
+    changeStyle(index: number, hover: boolean) {
+        hover
+            ? (this.styles[index] = this.makeHoverStyle())
+            : (this.styles[index] = this.makeStandardStyle());
+    }
 }
