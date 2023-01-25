@@ -32,9 +32,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import {
-  OWL_DATE_TIME_FORMATS,
-  OwlDateTimeModule,
-  OwlNativeDateTimeModule
+    OWL_DATE_TIME_FORMATS,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
 } from '@danielmoncada/angular-datetime-picker';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
@@ -42,11 +42,11 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import {
-  DatalakeRestService,
-  DataViewDataExplorerService,
-  DataViewQueryGeneratorService,
-  PlatformServicesModule,
-  SharedDatalakeRestService
+    DatalakeRestService,
+    DataViewDataExplorerService,
+    DataViewQueryGeneratorService,
+    PlatformServicesModule,
+    SharedDatalakeRestService,
 } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
@@ -95,150 +95,154 @@ import { GroupSelectionPanelComponent } from './components/designer-panel/data-s
 import { WidgetDirective } from './components/widget/widget.directive';
 import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
 import { TimeSelectionService } from './services/time-selection.service';
-import { NgxEchartsModule } from 'ngx-echarts';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
 import { SpValueHeatmapComponent } from './components/widgets/distribution-chart/value-heatmap/value-heatmap.component';
 import { RouterModule } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from './components/widget-view/slide-view/data-explorer-dashboard-slide-view.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { DataExplorerPanelCanDeactivateGuard } from './data-explorer-panel.can-deactivate.guard';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 export const MY_NATIVE_FORMATS = {
-  fullPickerInput: {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: false
-  },
-  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
-  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
-  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
-  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
-  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false}
+    fullPickerInput: {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+    },
+    datePickerInput: {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour12: false,
+    },
+    timePickerInput: { hour: 'numeric', minute: 'numeric', hour12: false },
+    monthYearLabel: { year: 'numeric', month: 'short', hour12: false },
+    dateA11yLabel: {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour12: false,
+    },
+    monthYearA11yLabel: { year: 'numeric', month: 'long', hour12: false },
 };
 
-
 @NgModule({
-  imports: [
-    CommonModule,
-    LeafletModule,
-    CoreUiModule,
-    MatTabsModule,
-    GridsterModule,
-    FlexLayoutModule,
-    CustomMaterialModule,
-    FormsModule,
-    ColorPickerModule,
-    MatGridListModule,
-    NgxChartsModule,
-    CdkTableModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    ReactiveFormsModule,
-    CoreUiModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    PlotlyViaWindowModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatChipsModule,
-    PlatformServicesModule,
-    SharedUiModule,
-    NgxEchartsModule.forRoot({
-      echarts: () => import('echarts'),
-    }),
-    RouterModule.forChild([
-      {
-        path: 'dataexplorer',
-        children: [
-          {
-            path: '',
-            component: DataExplorerDashboardOverviewComponent
-          },
-          {
-            path: ':id',
-            component: DataExplorerDashboardPanelComponent,
-            canDeactivate: [DataExplorerPanelCanDeactivateGuard]
-          },
-          {
-            path: ':id/:startTime/:endTime',
-            component: DataExplorerDashboardPanelComponent,
-            canDeactivate: [DataExplorerPanelCanDeactivateGuard]
-          }
-        ]
-      }
-    ]),
-
-  ],
-  declarations: [
-    AggregateConfigurationComponent,
-    DataExplorerDashboardGridComponent,
-    DataExplorerDashboardOverviewComponent,
-    DataExplorerDashboardPanelComponent,
-    DataExplorerDashboardSlideViewComponent,
-    DataExplorerDashboardWidgetComponent,
-    DataExplorerDesignerPanelComponent,
-    DataExplorerEditDataViewDialogComponent,
-    DataExplorerWidgetAppearanceSettingsComponent,
-    DataExplorerWidgetDataSettingsComponent,
-    CorrelationChartWidgetComponent,
-    CorrelationWidgetConfigComponent,
-    FieldSelectionPanelComponent,
-    FieldSelectionComponent,
-    FilterSelectionPanelComponent,
-    GroupConfigurationComponent,
-    ImageWidgetComponent,
-    ImageWidgetConfigComponent,
-    IndicatorChartWidgetComponent,
-    IndicatorWidgetConfigComponent,
-    TimeSeriesChartWidgetComponent,
-    TimeSeriesChartWidgetConfigComponent,
-    LoadDataSpinnerComponent,
-    NoDataInDateRangeComponent,
-    DistributionChartWidgetComponent,
-    DistributionWidgetConfigComponent,
-    SelectPropertiesComponent,
-    SelectColorPropertiesComponent,
-    SelectPropertyComponent,
-    SpValueHeatmapComponent,
-    TableWidgetComponent,
-    TableWidgetConfigComponent,
-    MapWidgetConfigComponent,
-    MapWidgetComponent,
-    HeatmapWidgetConfigComponent,
-    HeatmapWidgetComponent,
-    TimeRangeSelectorComponent,
-    DataExplorerVisualisationSettingsComponent,
-    GroupSelectionPanelComponent,
-    DataExplorerVisualisationSettingsComponent,
-    WidgetDirective,
-    TooMuchDataComponent,
-  ],
-  providers: [
-    DatalakeRestService,
-    SharedDatalakeRestService,
-    DataExplorerFieldProviderService,
-    DataViewDataExplorerService,
-    DataViewQueryGeneratorService,
-    ResizeService,
-    ColorService,
-    RefreshDashboardService,
-    SemanticTypeUtilsService,
-    TimeSelectionService,
-    WidgetConfigurationService,
-    {
-      provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
-    }
-  ],
-  exports: [
-  ]
+    imports: [
+        CommonModule,
+        LeafletModule,
+        CoreUiModule,
+        MatTabsModule,
+        GridsterModule,
+        FlexLayoutModule,
+        CustomMaterialModule,
+        FormsModule,
+        ColorPickerModule,
+        MatGridListModule,
+        NgxChartsModule,
+        CdkTableModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        ReactiveFormsModule,
+        CoreUiModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
+        PlotlyViaWindowModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatChipsModule,
+        PlatformServicesModule,
+        SharedUiModule,
+        NgxEchartsModule.forChild(),
+        RouterModule.forChild([
+            {
+                path: 'dataexplorer',
+                children: [
+                    {
+                        path: '',
+                        component: DataExplorerDashboardOverviewComponent,
+                    },
+                    {
+                        path: ':id',
+                        component: DataExplorerDashboardPanelComponent,
+                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                    },
+                    {
+                        path: ':id/:startTime/:endTime',
+                        component: DataExplorerDashboardPanelComponent,
+                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                    },
+                ],
+            },
+        ]),
+    ],
+    declarations: [
+        AggregateConfigurationComponent,
+        DataExplorerDashboardGridComponent,
+        DataExplorerDashboardOverviewComponent,
+        DataExplorerDashboardPanelComponent,
+        DataExplorerDashboardSlideViewComponent,
+        DataExplorerDashboardWidgetComponent,
+        DataExplorerDesignerPanelComponent,
+        DataExplorerEditDataViewDialogComponent,
+        DataExplorerWidgetAppearanceSettingsComponent,
+        DataExplorerWidgetDataSettingsComponent,
+        CorrelationChartWidgetComponent,
+        CorrelationWidgetConfigComponent,
+        FieldSelectionPanelComponent,
+        FieldSelectionComponent,
+        FilterSelectionPanelComponent,
+        GroupConfigurationComponent,
+        ImageWidgetComponent,
+        ImageWidgetConfigComponent,
+        IndicatorChartWidgetComponent,
+        IndicatorWidgetConfigComponent,
+        TimeSeriesChartWidgetComponent,
+        TimeSeriesChartWidgetConfigComponent,
+        LoadDataSpinnerComponent,
+        NoDataInDateRangeComponent,
+        DistributionChartWidgetComponent,
+        DistributionWidgetConfigComponent,
+        SelectPropertiesComponent,
+        SelectColorPropertiesComponent,
+        SelectPropertyComponent,
+        SpValueHeatmapComponent,
+        TableWidgetComponent,
+        TableWidgetConfigComponent,
+        MapWidgetConfigComponent,
+        MapWidgetComponent,
+        HeatmapWidgetConfigComponent,
+        HeatmapWidgetComponent,
+        TimeRangeSelectorComponent,
+        DataExplorerVisualisationSettingsComponent,
+        GroupSelectionPanelComponent,
+        DataExplorerVisualisationSettingsComponent,
+        WidgetDirective,
+        TooMuchDataComponent,
+    ],
+    providers: [
+        DatalakeRestService,
+        SharedDatalakeRestService,
+        DataExplorerFieldProviderService,
+        DataViewDataExplorerService,
+        DataViewQueryGeneratorService,
+        ResizeService,
+        ColorService,
+        RefreshDashboardService,
+        SemanticTypeUtilsService,
+        TimeSelectionService,
+        WidgetConfigurationService,
+        {
+            provide: OWL_DATE_TIME_FORMATS,
+            useValue: MY_NATIVE_FORMATS,
+        },
+    ],
+    exports: [],
 })
 export class DataExplorerModule {
-
-  constructor() {
-  }
+    constructor() {}
 }

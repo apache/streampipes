@@ -16,29 +16,24 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'sp-too-much-data',
-  templateUrl: './too-much-data.component.html',
-  styleUrls: ['./too-much-data.component.scss']
+    selector: 'sp-too-much-data',
+    templateUrl: './too-much-data.component.html',
+    styleUrls: ['./too-much-data.component.scss'],
 })
-export class TooMuchDataComponent implements OnInit {
+export class TooMuchDataComponent {
+    @Input()
+    amountOfEvents: number;
 
-  @Input()
-  amountOfEvents: number;
+    @Output()
+    loadDataWithTooManyEventsEmitter: EventEmitter<boolean> =
+        new EventEmitter();
 
-  @Output()
-  loadDataWithTooManyEventsEmitter: EventEmitter<boolean> = new EventEmitter();
+    constructor() {}
 
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  loadDataWithTooManyEvents() {
-    this.loadDataWithTooManyEventsEmitter.emit();
-  }
-
+    loadDataWithTooManyEvents() {
+        this.loadDataWithTooManyEventsEmitter.emit();
+    }
 }

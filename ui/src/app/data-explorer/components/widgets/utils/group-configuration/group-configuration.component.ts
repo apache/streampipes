@@ -20,50 +20,47 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-group-configuration',
-  templateUrl: './group-configuration.component.html',
-  styleUrls: ['./group-configuration.component.css']
+    selector: 'sp-group-configuration',
+    templateUrl: './group-configuration.component.html',
+    styleUrls: ['./group-configuration.component.css'],
 })
 export class GroupConfigurationComponent implements OnInit {
+    groupingAvailable = true;
 
-  groupingAvailable = true;
+    @Input()
+    groupValue;
 
-  @Input()
-  groupValue;
+    @Output()
+    groupValueChange = new EventEmitter();
 
-  @Output()
-  groupValueChange = new EventEmitter();
+    showCountValueCheckbox = false;
 
-  showCountValueCheckbox = false;
+    @Input()
+    showCountValue = false;
 
-  @Input()
-  showCountValue = false;
+    @Output()
+    showCountValueChange = new EventEmitter();
 
-  @Output()
-  showCountValueChange = new EventEmitter();
+    @Input()
+    dimensionProperties: EventPropertyUnion[];
 
-  @Input()
-  dimensionProperties: EventPropertyUnion[];
+    constructor() {}
 
-  constructor() {
-  }
-
-  ngOnInit(): void {
-    if (this.dimensionProperties.length === 0) {
-      this.groupingAvailable = false;
+    ngOnInit(): void {
+        if (this.dimensionProperties.length === 0) {
+            this.groupingAvailable = false;
+        }
     }
-  }
 
-  onModelChange(event, type) {
-    if (type === 'groupValue') {
-      if (this.groupValue !== 'None') {
-        this.showCountValueCheckbox = true;
-      } else {
-        this.showCountValueCheckbox = false;
-        this.showCountValue = false;
-      }
+    onModelChange(event, type) {
+        if (type === 'groupValue') {
+            if (this.groupValue !== 'None') {
+                this.showCountValueCheckbox = true;
+            } else {
+                this.showCountValueCheckbox = false;
+                this.showCountValue = false;
+            }
+        }
+        this[`${type}Change`].emit(event);
     }
-    this[`${type}Change`].emit(event);
-  }
-
 }

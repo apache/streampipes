@@ -17,45 +17,47 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
+import {
+    DataViewDataExplorerService,
+    Dashboard,
+} from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
-  selector: 'sp-data-explorer-edit-data-view-dialog-component',
-  templateUrl: './data-explorer-edit-data-view-dialog.component.html',
-  styleUrls: ['./data-explorer-edit-data-view-dialog.component.scss']
+    selector: 'sp-data-explorer-edit-data-view-dialog-component',
+    templateUrl: './data-explorer-edit-data-view-dialog.component.html',
+    styleUrls: ['./data-explorer-edit-data-view-dialog.component.scss'],
 })
 export class DataExplorerEditDataViewDialogComponent implements OnInit {
+    @Input() createMode: boolean;
+    @Input() dashboard: Dashboard;
 
-  @Input() createMode: boolean;
-  @Input() dashboard: Dashboard;
+    constructor(
+        private dialogRef: DialogRef<DataExplorerEditDataViewDialogComponent>,
+        private dashboardService: DataViewDataExplorerService,
+    ) {}
 
-  constructor(
-    private dialogRef: DialogRef<DataExplorerEditDataViewDialogComponent>,
-    private dashboardService: DataViewDataExplorerService) {
-  }
-
-  ngOnInit() {
-    if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
-      this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
+    ngOnInit() {
+        if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
+            this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
+        }
     }
-  }
 
-  onCancel(): void {
-    this.dialogRef.close();
-  }
-
-  onSave(): void {
-    if (this.createMode) {
-      this.dashboardService.saveDataView(this.dashboard).subscribe(() => {
+    onCancel(): void {
         this.dialogRef.close();
-      });
-    } else {
-      this.dashboardService.updateDashboard(this.dashboard).subscribe(() => {
-        this.dialogRef.close();
-      });
     }
-  }
 
-
+    onSave(): void {
+        if (this.createMode) {
+            this.dashboardService.saveDataView(this.dashboard).subscribe(() => {
+                this.dialogRef.close();
+            });
+        } else {
+            this.dashboardService
+                .updateDashboard(this.dashboard)
+                .subscribe(() => {
+                    this.dialogRef.close();
+                });
+        }
+    }
 }

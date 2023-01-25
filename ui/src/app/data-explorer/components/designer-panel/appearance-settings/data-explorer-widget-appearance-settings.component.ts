@@ -21,34 +21,42 @@ import { WidgetBaseAppearanceConfig } from '../../../models/dataview-dashboard.m
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({
-  selector: 'sp-data-explorer-widget-appearance-settings',
-  templateUrl: './data-explorer-widget-appearance-settings.component.html',
-  styleUrls: ['./data-explorer-widget-appearance-settings.component.scss'],
+    selector: 'sp-data-explorer-widget-appearance-settings',
+    templateUrl: './data-explorer-widget-appearance-settings.component.html',
+    styleUrls: ['./data-explorer-widget-appearance-settings.component.scss'],
 })
 export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
+    @Input() baseAppearanceConfig: WidgetBaseAppearanceConfig;
+    @Input() widgetId: string;
 
-  @Input() baseAppearanceConfig: WidgetBaseAppearanceConfig;
-  @Input() widgetId: string;
+    presetColors: string[] = [
+        '#39B54A',
+        '#1B1464',
+        '#f44336',
+        '#4CAF50',
+        '#FFEB3B',
+        '#FFFFFF',
+        '#000000',
+    ];
 
-  presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
+    constructor(
+        private widgetConfigurationService: WidgetConfigurationService,
+    ) {}
 
-
-  constructor(private widgetConfigurationService: WidgetConfigurationService) {
-
-  }
-
-  ngOnInit(): void {
-    if (!this.baseAppearanceConfig.backgroundColor) {
-      this.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+    ngOnInit(): void {
+        if (!this.baseAppearanceConfig.backgroundColor) {
+            this.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+        }
+        if (!this.baseAppearanceConfig.textColor) {
+            this.baseAppearanceConfig.textColor = '#3e3e3e';
+        }
     }
-    if (!this.baseAppearanceConfig.textColor) {
-      this.baseAppearanceConfig.textColor = '#3e3e3e';
+
+    triggerViewUpdate() {
+        this.widgetConfigurationService.notify({
+            widgetId: this.widgetId,
+            refreshView: true,
+            refreshData: false,
+        });
     }
-  }
-
-  triggerViewUpdate() {
-    this.widgetConfigurationService.notify({widgetId: this.widgetId, refreshView: true, refreshData: false });
-  }
-
-
 }
