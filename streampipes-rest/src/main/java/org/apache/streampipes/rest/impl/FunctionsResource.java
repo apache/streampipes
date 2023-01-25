@@ -45,6 +45,13 @@ public class FunctionsResource extends AbstractAuthGuardedRestResource {
     return ok(FunctionRegistrationService.INSTANCE.getAllFunctions());
   }
 
+  @GET
+  @Path("{functionId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getFunction(@PathParam("functionId") String functionId) {
+    return ok(FunctionRegistrationService.INSTANCE.getFunction(functionId));
+  }
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
