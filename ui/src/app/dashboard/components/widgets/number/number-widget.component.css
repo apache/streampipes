@@ -17,32 +17,31 @@
  */
 
 .circleNumber {
-    width:100%;
+    width: 100%;
     height: 100%;
     text-align: center;
     left: 50%;
-    display:inline-grid;
+    display: inline-grid;
     align-content: center;
 }
 
-
 .numberItem {
-    font-size:20px;
-    font-weight:bold;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .measurementUnitItem {
     font-size: 20px;
-    display:flex;
+    display: flex;
     justify-content: center;
 }
 
 .title-panel {
-    font-size:20px;
+    font-size: 20px;
 }
 
 .value-panel {
-    display:flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;

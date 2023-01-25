@@ -23,31 +23,47 @@ import { EpRequirements } from '../../../sdk/ep-requirements';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export abstract class BaseNgxLineConfig extends WidgetConfig {
+    static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
+    static readonly TIMESTAMP_MAPPING_KEY: string = 'timestamp-mapping';
+    static readonly MIN_Y_AXIS_KEY: string = 'min-y-axis-key';
+    static readonly MAX_Y_AXIS_KEY: string = 'max-y-axis-key';
 
-  static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
-  static readonly TIMESTAMP_MAPPING_KEY: string = 'timestamp-mapping';
-  static readonly MIN_Y_AXIS_KEY: string = 'min-y-axis-key';
-  static readonly MAX_Y_AXIS_KEY: string = 'max-y-axis-key';
+    getConfig(): DashboardWidgetSettings {
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            this.getWidgetName(),
+            this.getWidgetLabel(),
+        )
+            .withDescription(this.getWidgetDescription())
+            .withIcon(this.getWidgetIcon())
+            .withNumberOfPastEvents()
+            .requiredSchema(
+                SchemaRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                        BaseNgxLineConfig.NUMBER_MAPPING_KEY,
+                        'Number field',
+                        '',
+                        EpRequirements.numberReq(),
+                    )
+                    .build(),
+            )
+            .requiredIntegerParameter(
+                BaseNgxLineConfig.MIN_Y_AXIS_KEY,
+                'Y-axis range (min)',
+                '',
+            )
+            .requiredIntegerParameter(
+                BaseNgxLineConfig.MAX_Y_AXIS_KEY,
+                'Y-axis range (max)',
+                '',
+            )
+            .build();
+    }
 
-  getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(this.getWidgetName(), this.getWidgetLabel())
-      .withDescription(this.getWidgetDescription())
-      .withIcon(this.getWidgetIcon())
-      .withNumberOfPastEvents()
-      .requiredSchema(SchemaRequirementsBuilder
-        .create()
-        .requiredPropertyWithUnaryMapping(BaseNgxLineConfig.NUMBER_MAPPING_KEY, 'Number field', '', EpRequirements.numberReq())
-        .build())
-      .requiredIntegerParameter(BaseNgxLineConfig.MIN_Y_AXIS_KEY, 'Y-axis range (min)', '')
-      .requiredIntegerParameter(BaseNgxLineConfig.MAX_Y_AXIS_KEY, 'Y-axis range (max)', '')
-      .build();
-  }
+    abstract getWidgetName(): string;
 
-  abstract getWidgetName(): string;
+    abstract getWidgetLabel(): string;
 
-  abstract getWidgetLabel(): string;
+    abstract getWidgetDescription(): string;
 
-  abstract getWidgetDescription(): string;
-
-  abstract getWidgetIcon(): string;
+    abstract getWidgetIcon(): string;
 }

@@ -23,23 +23,38 @@ import { EpRequirements } from '../../../sdk/ep-requirements';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class BarRaceConfig extends WidgetConfig {
+    static readonly PARTITION_KEY: string = 'partition-key';
+    static readonly VALUE_KEY: string = 'value-key';
 
-  static readonly PARTITION_KEY: string = 'partition-key';
-  static readonly VALUE_KEY: string = 'value-key';
+    constructor() {
+        super();
+    }
 
-  constructor() {
-    super();
-  }
-
-  getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('bar-race', 'Bar Race Chart')
-      .withIcon('fas fa-chart-bar')
-      .withDescription('Renders ordered, separate bar charts based on a partition field (e.g., device id).')
-      .requiredSchema(SchemaRequirementsBuilder
-        .create()
-        .requiredPropertyWithUnaryMapping(BarRaceConfig.PARTITION_KEY, 'Partition field', '', EpRequirements.stringReq())
-        .requiredPropertyWithUnaryMapping(BarRaceConfig.VALUE_KEY, 'Value field', '', EpRequirements.numberReq())
-        .build())
-      .build();
-  }
+    getConfig(): DashboardWidgetSettings {
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            'bar-race',
+            'Bar Race Chart',
+        )
+            .withIcon('fas fa-chart-bar')
+            .withDescription(
+                'Renders ordered, separate bar charts based on a partition field (e.g., device id).',
+            )
+            .requiredSchema(
+                SchemaRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                        BarRaceConfig.PARTITION_KEY,
+                        'Partition field',
+                        '',
+                        EpRequirements.stringReq(),
+                    )
+                    .requiredPropertyWithUnaryMapping(
+                        BarRaceConfig.VALUE_KEY,
+                        'Value field',
+                        '',
+                        EpRequirements.numberReq(),
+                    )
+                    .build(),
+            )
+            .build();
+    }
 }

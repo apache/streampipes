@@ -20,7 +20,6 @@ import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export abstract class WidgetConfig {
-
     abstract getConfig(): DashboardWidgetSettings;
 
     makeOption(optionName: string): Tuple2<string, string> {

@@ -15,25 +15,30 @@
  *   limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { BaseStreamPipesWidget } from "../base/base-widget";
-import { StaticPropertyExtractor } from "../../../sdk/extractor/static-property-extractor";
-import { ResizeService } from "../../../services/resize.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '@streampipes/platform-services';
-import { WidgetConfigBuilder } from "../../../registry/widget-config-builder";
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 
 @Component({
-    selector: 'raw-widget',
+    selector: 'sp-raw-widget',
     templateUrl: './raw-widget.component.html',
-    styleUrls: ['./raw-widget.component.css']
+    styleUrls: ['./raw-widget.component.css'],
 })
-export class RawWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
-
+export class RawWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
     items: Array<string>;
     width: number;
     height: number;
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService, false);
     }
 
@@ -48,9 +53,7 @@ export class RawWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         super.ngOnDestroy();
     }
 
-    extractConfig(extractor: StaticPropertyExtractor) {
-
-    }
+    extractConfig(extractor: StaticPropertyExtractor) {}
 
     protected onEvent(events: any[]) {
         this.items = events.map(ev => JSON.stringify(ev)).reverse();
@@ -68,5 +71,4 @@ export class RawWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     getFieldsToQuery(): string[] {
         return undefined;
     }
-
 }

@@ -16,10 +16,11 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpDashboardRoutes {
-
-  static BASE: SpBreadcrumbItem = {label: 'Dashboards', link: ['dashboard']};
-
+    static BASE: SpBreadcrumbItem = {
+        label: 'Dashboards',
+        link: ['dashboard'],
+    };
 }

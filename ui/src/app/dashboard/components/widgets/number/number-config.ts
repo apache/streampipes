@@ -23,7 +23,6 @@ import { WidgetConfig } from '../base/base-config';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class NumberConfig extends WidgetConfig {
-
     static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
 
     constructor() {
@@ -31,13 +30,21 @@ export class NumberConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('number', 'Single Value')
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            'number',
+            'Single Value',
+        )
             .withDescription('Displays a single number or text value')
-            .requiredSchema(SchemaRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, 'Select property', '', EpRequirements.anyProperty())
-                .build())
+            .requiredSchema(
+                SchemaRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                        NumberConfig.NUMBER_MAPPING_KEY,
+                        'Select property',
+                        '',
+                        EpRequirements.anyProperty(),
+                    )
+                    .build(),
+            )
             .build();
     }
-
 }

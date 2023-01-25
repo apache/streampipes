@@ -19,12 +19,11 @@ import { EventSchema } from '@streampipes/platform-services';
 import { PropertyMatch } from './property-match';
 
 export class SchemaMatch {
-
     match(requirement: EventSchema, offer: EventSchema): boolean {
-        return requirement
-            .eventProperties
-            .every(req => offer
-                .eventProperties
-                .some(of => new PropertyMatch().match(req, of)));
+        return requirement.eventProperties.every(req =>
+            offer.eventProperties.some(of =>
+                new PropertyMatch().match(req, of),
+            ),
+        );
     }
 }
