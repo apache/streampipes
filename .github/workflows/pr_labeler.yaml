@@ -1,8 +1,9 @@
 name: "Pull Request Labeler"
-run-name: ${{ github.actor }} created Pull Request Labeler
+run-name: ${{ github.actor }} created pull request labeler
 
 on:
-- pull_request
+  pull_request:
+    types: [opened, closed, reopened]
 
 jobs:
   triage:
@@ -16,4 +17,5 @@ jobs:
     steps:
     - uses: actions/labeler@v4
       with:
+        configuration-path: .github/pr_labeler_config.yaml
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
