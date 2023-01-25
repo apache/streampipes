@@ -46,7 +46,7 @@ dev_packages = base_packages + [
     "isort==5.11.4",
     "mypy==0.991",
     "pandas-stubs==1.5.2.230105",
-    "pre-commit==2.21.0",
+    "pre-commit==3.0.0",
     "pytest==7.2.1",
     "pytest-cov==4.0.0",
     "pyupgrade==3.3.1",
