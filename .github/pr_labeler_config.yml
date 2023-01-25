@@ -1,0 +1,46 @@
+backend:
+# TODO
+
+connect:
+  - streampipes-extensions/streampipes-connect-adapters/**/*
+  - streampipes-extensions/streampipes-connect-adapters-iiot/**/*
+
+
+dependencies:
+  - ./**/pom.xml
+  - ./**/setup.py
+  - ui/**/package.json
+  - ui/**/package-lock.json
+
+documentation:
+  - ./**/*.md
+
+gh-actions:
+  - .github/**/*
+
+installer:
+  - installer/**/*
+
+java:
+  - ./**/*.java
+
+javascript:
+  - ./**/*.js
+
+'pipeline elements':
+  - streampipes-exensions/streampipes-extensions-*/**/*
+  - streampipes-extensions/streampipes-pipeline-*/**/*
+  - streampipes-extensions/streampipes-processors-*/**/*
+  - streampipes-extensions/streampipes-sinks-*/**/*
+  - streampipes-extensions/streampipes-sources-*/**/*
+
+python:
+  - ./**/*.py
+
+tests:
+  - streampipes-integration-tests/**/*
+  - streampipes-client-python/tests/**/*
+  - streampipes-*/**/test/**/*
+
+ui:
+  - ui/**/*
