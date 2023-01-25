@@ -203,7 +203,7 @@
 	<opencsv.version>5.5.2</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
-	<proton-j.version>0.30.0</proton-j.version>
+	<proton-j.version>0.34.0</proton-j.version>
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
 	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
