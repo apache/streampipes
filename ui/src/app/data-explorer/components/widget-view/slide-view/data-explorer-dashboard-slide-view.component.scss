@@ -17,32 +17,32 @@
  */
 
 .viz-preview {
-  height: 100px;
-  min-height: 100px;
-  border: 1px solid var(--color-bg-2);
-  cursor: pointer;
-  margin: 5px 10px;
-  padding: 5px;
+    height: 100px;
+    min-height: 100px;
+    border: 1px solid var(--color-bg-2);
+    cursor: pointer;
+    margin: 5px 10px;
+    padding: 5px;
 }
 
 .viz-preview-selected {
-  border: 3px solid var(--color-accent);
+    border: 3px solid var(--color-accent);
 }
 
 .selection-box {
-  overflow-y: auto;
-  overflow-x: hidden;
-  margin-bottom: 5px;
-  height: calc(100vh - 147px);
-  max-width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 5px;
+    height: calc(100vh - 147px);
+    max-width: 100%;
 }
 
 .slide-view-title {
-  text-align: center;
-  font-size: 10pt;
+    text-align: center;
+    font-size: 10pt;
 }
 
 .mw-100 {
-  max-width: 100%;
-  overflow-x: hidden;
+    max-width: 100%;
+    overflow-x: hidden;
 }

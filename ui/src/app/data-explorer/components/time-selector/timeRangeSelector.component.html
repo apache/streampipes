@@ -18,46 +18,75 @@
 
 <div fxLayout="row" fxLayoutAlign="start center">
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
-        <button mat-button mat-raised-button
-                *ngFor="let item of possibleTimeButtons"
-                [color]="selectedTimeButton.value === item.value ? 'accent' : ''"
-                [attr.data-cy]="item.value.replace(' ', '_')"
-                [ngClass]="'button-margin smaller-button-font-size'"
-                (click)="this.setCurrentDateRange(item)">{{item.value}}</button>
+        <button
+            mat-button
+            mat-raised-button
+            *ngFor="let item of possibleTimeButtons"
+            [color]="selectedTimeButton.value === item.value ? 'accent' : ''"
+            [attr.data-cy]="item.value.replace(' ', '_')"
+            [ngClass]="'button-margin smaller-button-font-size'"
+            (click)="this.setCurrentDateRange(item)"
+        >
+            {{ item.value }}
+        </button>
     </div>
     <div class="time-wrapper" fxFlex fxLayoutAlign="center center">
-        <button mat-button class="button-icon icon-button-font-size mr--15" color="accent">
+        <button
+            mat-button
+            class="button-icon icon-button-font-size mr--15"
+            color="accent"
+        >
             <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
         </button>
-        <mat-form-field appearance="standard" class="start-date form-field-margin form-field-size-smaller"
-                        color="accent">
+        <mat-form-field
+            appearance="standard"
+            class="start-date form-field-margin form-field-size-smaller"
+            color="accent"
+        >
             <mat-label>From</mat-label>
-            <input matInput
-                   data-cy="time-range-from"
-                   [owlDateTime]="dt1"
-                   [owlDateTimeTrigger]="dt1"
-                   [(ngModel)]="startDate"
-                   (dateTimeChange)="changeCustomDateRange()">
+            <input
+                matInput
+                data-cy="time-range-from"
+                [owlDateTime]="dt1"
+                [owlDateTimeTrigger]="dt1"
+                [(ngModel)]="startDate"
+                (dateTimeChange)="changeCustomDateRange()"
+            />
             <owl-date-time #dt1></owl-date-time>
         </mat-form-field>
-        <mat-form-field appearance="standard" class="end-date form-field-margin form-field-size-smaller" color="accent">
+        <mat-form-field
+            appearance="standard"
+            class="end-date form-field-margin form-field-size-smaller"
+            color="accent"
+        >
             <mat-label>To</mat-label>
-            <input matInput
-                   data-cy="time-range-to"
-                   [owlDateTime]="dt2"
-                   [owlDateTimeTrigger]="dt2"
-                   [(ngModel)]="endDate"
-                   (dateTimeChange)="changeCustomDateRange()">
+            <input
+                matInput
+                data-cy="time-range-to"
+                [owlDateTime]="dt2"
+                [owlDateTimeTrigger]="dt2"
+                [(ngModel)]="endDate"
+                (dateTimeChange)="changeCustomDateRange()"
+            />
             <owl-date-time #dt2></owl-date-time>
         </mat-form-field>
-        <button mat-button class="button-icon icon-button-font-size mr-15" color="accent">
+        <button
+            mat-button
+            class="button-icon icon-button-font-size mr-15"
+            color="accent"
+        >
             <mat-icon (click)="increaseTime()">navigate_next</mat-icon>
         </button>
     </div>
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
-        <button mat-button mat-raised-button color="accent"
-                class="button-margin smaller-button-font-size"
-                matTooltip="Reload" matTooltipPosition="above">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="button-margin smaller-button-font-size"
+            matTooltip="Reload"
+            matTooltipPosition="above"
+        >
             <mat-icon (click)="refreshData()">autorenew</mat-icon>
         </button>
     </div>

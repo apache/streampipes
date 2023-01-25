@@ -20,16 +20,21 @@ import { PrimitivePropertyMatch } from './primitive-property-match';
 import {
     EventPropertyList,
     EventPropertyPrimitive,
-    EventPropertyUnion
+    EventPropertyUnion,
 } from '@streampipes/platform-services';
 import { ListPropertyMatch } from './list-property-match';
 
 export class PropertyMatch {
-
     match(requirement: EventPropertyUnion, offer: EventPropertyUnion): boolean {
-        if (requirement instanceof EventPropertyPrimitive && offer instanceof EventPropertyPrimitive) {
+        if (
+            requirement instanceof EventPropertyPrimitive &&
+            offer instanceof EventPropertyPrimitive
+        ) {
             return new PrimitivePropertyMatch().match(requirement, offer);
-        } else if (requirement instanceof EventPropertyList && offer instanceof EventPropertyList) {
+        } else if (
+            requirement instanceof EventPropertyList &&
+            offer instanceof EventPropertyList
+        ) {
             return new ListPropertyMatch().match(requirement, offer);
         }
     }

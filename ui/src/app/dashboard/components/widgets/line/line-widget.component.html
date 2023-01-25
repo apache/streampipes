@@ -16,26 +16,37 @@
   ~
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    fxFlex="100"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    class="main-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
-    <ngx-charts-line-chart *ngIf="displayChart"
-                           [showXAxisLabel]="false"
-                           [showYAxisLabel]="false"
-                           [scheme]="colorScheme"
-                           [timeline]="false"
-                           [view]="view"
-                           [autoScale]="false"
-                           [xAxis]="true"
-                           [yAxis]="true"
-                           [yScaleMin]="minYAxisRange"
-                           [yScaleMax]="maxYAxisRange"
-                           [tooltipDisabled]="true"
-                           [animations]="false"
-                           [xAxisTickFormatting]="timestampTickFormatting"
-                           [results]="multi" class="mt-10 mb-10"
-                           [ngStyle]="{'fill': selectedPrimaryTextColor}">
+    <ngx-charts-line-chart
+        *ngIf="displayChart"
+        [showXAxisLabel]="false"
+        [showYAxisLabel]="false"
+        [scheme]="colorScheme"
+        [timeline]="false"
+        [view]="view"
+        [autoScale]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [yScaleMin]="minYAxisRange"
+        [yScaleMax]="maxYAxisRange"
+        [tooltipDisabled]="true"
+        [animations]="false"
+        [xAxisTickFormatting]="timestampTickFormatting"
+        [results]="multi"
+        class="mt-10 mb-10"
+        [ngStyle]="{ fill: selectedPrimaryTextColor }"
+    >
     </ngx-charts-line-chart>
 </div>
-

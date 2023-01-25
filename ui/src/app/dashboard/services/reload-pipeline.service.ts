@@ -21,10 +21,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ReloadPipelineService {
+    public reloadPipelineSubject: Subject<void> = new Subject<void>();
 
-  public reloadPipelineSubject: Subject<void> = new Subject<void>();
-
-  public notify(): void {
-    this.reloadPipelineSubject.next();
-  }
+    public notify(): void {
+        this.reloadPipelineSubject.next();
+    }
 }

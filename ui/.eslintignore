@@ -18,8 +18,3 @@ dist
 
 # Ignore csv files required for e2e tests
 cypress/fixtures/**/*.csv
-
-# Remove these in the future to lint additional modules
-# Please also see .prettierignore
-src/app/dashboard
-src/app/data-explorer

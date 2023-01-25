@@ -17,16 +17,23 @@
   -->
 
 <div fxFlex="100" fxLayout="column" class="ml-0 mr-0">
-
     <sp-select-color-properties
         (changeSelectedProperties)="setSelectedProperties($event)"
-        [availableProperties]="fieldProvider.numericFields.concat(fieldProvider.booleanFields)"
-        [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties"
-        [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+        [availableProperties]="
+            fieldProvider.numericFields.concat(fieldProvider.booleanFields)
+        "
+        [selectedProperties]="
+            currentlyConfiguredWidget.visualizationConfig
+                .selectedTimeSeriesChartProperties
+        "
+        [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+    >
     </sp-select-color-properties>
 
     <h5>Spike mode</h5>
-    <mat-checkbox [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.showSpike" (change)="setShowSpikeProperty($event)">Vertical axis
+    <mat-checkbox
+        [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.showSpike"
+        (change)="setShowSpikeProperty($event)"
+        >Vertical axis
     </mat-checkbox>
-
 </div>

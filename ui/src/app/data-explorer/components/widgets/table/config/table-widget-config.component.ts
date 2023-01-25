@@ -25,45 +25,52 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-table-widget-config',
-  templateUrl: './table-widget-config.component.html',
-  styleUrls: ['./table-widget-config.component.scss']
+    selector: 'sp-data-explorer-table-widget-config',
+    templateUrl: './table-widget-config.component.html',
+    styleUrls: ['./table-widget-config.component.scss'],
 })
-export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetModel, TableVisConfig> implements OnInit {
+export class TableWidgetConfigComponent
+    extends BaseWidgetConfig<TableWidgetModel, TableVisConfig>
+    implements OnInit
+{
+    constructor(
+        widgetConfigurationService: WidgetConfigurationService,
+        fieldService: DataExplorerFieldProviderService,
+    ) {
+        super(widgetConfigurationService, fieldService);
+    }
 
-  constructor(widgetConfigurationService: WidgetConfigurationService,
-              fieldService: DataExplorerFieldProviderService) {
-    super(widgetConfigurationService, fieldService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    onFilterChange(searchValue: string): void {
+        this.currentlyConfiguredWidget.visualizationConfig.searchValue =
+            searchValue.trim().toLowerCase();
+        this.triggerViewRefresh();
+        // this.dataSource.filter = searchValue.trim().toLowerCase();
+    }
 
-  onFilterChange(searchValue: string): void {
-    this.currentlyConfiguredWidget.visualizationConfig.searchValue = searchValue.trim().toLowerCase();
-    this.triggerViewRefresh();
-    // this.dataSource.filter = searchValue.trim().toLowerCase();
-  }
+    setSelectedColumn(selectedColumns: DataExplorerField[]) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
+            selectedColumns;
+        this.triggerDataRefresh();
+    }
 
-  setSelectedColumn(selectedColumns: DataExplorerField[]) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedColumns = selectedColumns;
-    this.triggerDataRefresh();
-  }
+    protected updateWidgetConfigOptions() {}
 
-  protected updateWidgetConfigOptions() {
-  }
+    protected getWidgetType(): WidgetType {
+        return WidgetType.Table;
+    }
 
-  protected getWidgetType(): WidgetType {
-    return WidgetType.Table;
-  }
-
-  protected initWidgetConfig(): TableVisConfig {
-    return {
-      forType: this.getWidgetType(),
-      selectedColumns: this.fieldProvider.allFields.length > 6 ?
-        this.fieldProvider.allFields.slice(0, 5) : this.fieldProvider.allFields,
-      searchValue: ''
-    };
-  }
+    protected initWidgetConfig(): TableVisConfig {
+        return {
+            forType: this.getWidgetType(),
+            selectedColumns:
+                this.fieldProvider.allFields.length > 6
+                    ? this.fieldProvider.allFields.slice(0, 5)
+                    : this.fieldProvider.allFields,
+            searchValue: '',
+        };
+    }
 }

@@ -16,64 +16,109 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100"
-     [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor, overflowX: 'auto'}">
-
+<div
+    fxLayout="column"
+    fxFlex="100"
+    [ngStyle]="{
+        background: dataExplorerWidget.baseAppearanceConfig.backgroundColor,
+        color: dataExplorerWidget.baseAppearanceConfig.textColor,
+        overflowX: 'auto'
+    }"
+>
     <sp-no-data-in-date-range
         *ngIf="showNoDataInDateRange"
         [viewDateRange]="timeSettings"
-        class="h-100">
+        class="h-100"
+    >
     </sp-no-data-in-date-range>
 
     <sp-too-much-data
-            [amountOfEvents]="amountOfTooMuchEvents"
-            (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
-            *ngIf="showTooMuchData"
-            class="h-100">
+        [amountOfEvents]="amountOfTooMuchEvents"
+        (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
+        *ngIf="showTooMuchData"
+        class="h-100"
+    >
     </sp-too-much-data>
 
     <div class="table-container">
         <table
-                mat-table
-                mat-sort
-                *ngIf="showData"
-                [dataSource]="dataSource" matSort
-                (matSortChange)="sortData($event)" class="table-widget">
-
-            <ng-container
-                    [cdkColumnDef]="'time'">
+            mat-table
+            mat-sort
+            *ngIf="showData"
+            [dataSource]="dataSource"
+            matSort
+            (matSortChange)="sortData($event)"
+            class="table-widget"
+        >
+            <ng-container [cdkColumnDef]="'time'">
                 <div>
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef
-                        [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
+                    <th
+                        mat-header-cell
+                        mat-sort-header
+                        *matHeaderCellDef
+                        [ngStyle]="{
+                            background:
+                                dataExplorerWidget.baseAppearanceConfig
+                                    .backgroundColor,
+                            color: dataExplorerWidget.baseAppearanceConfig
+                                .textColor
+                        }"
+                    >
                         <label class="column-header">Timestamp</label>
                     </th>
-                    <td mat-cell
+                    <td
+                        mat-cell
                         data-cy="data-explorer-table-row-timestamp"
-                        *matCellDef="let row" style="text-align: left;">
-                        {{row['time'] | date:'yyyy-MM-dd HH:mm:ss.SSS'}}
+                        *matCellDef="let row"
+                        style="text-align: left"
+                    >
+                        {{ row['time'] | date : 'yyyy-MM-dd HH:mm:ss.SSS' }}
                     </td>
                 </div>
             </ng-container>
 
             <ng-container
-                    *ngFor="let element of dataExplorerWidget.visualizationConfig.selectedColumns"
-                    [cdkColumnDef]="element.fullDbName">
+                *ngFor="
+                    let element of dataExplorerWidget.visualizationConfig
+                        .selectedColumns
+                "
+                [cdkColumnDef]="element.fullDbName"
+            >
                 <div *ngIf="!isTimestamp(element)">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef
-                        [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
-                        <label class="column-header">{{element.fullDbName}}</label>
+                    <th
+                        mat-header-cell
+                        mat-sort-header
+                        *matHeaderCellDef
+                        [ngStyle]="{
+                            background:
+                                dataExplorerWidget.baseAppearanceConfig
+                                    .backgroundColor,
+                            color: dataExplorerWidget.baseAppearanceConfig
+                                .textColor
+                        }"
+                    >
+                        <label class="column-header">{{
+                            element.fullDbName
+                        }}</label>
                     </th>
-                    <td mat-cell *matCellDef="let row"
-                        [attr.data-cy]="'data-explorer-table-row-'+ element.fullDbName"
-                        style="text-align: left;">
-                        {{row[element.fullDbName]}}
+                    <td
+                        mat-cell
+                        *matCellDef="let row"
+                        [attr.data-cy]="
+                            'data-explorer-table-row-' + element.fullDbName
+                        "
+                        style="text-align: left"
+                    >
+                        {{ row[element.fullDbName] }}
                     </td>
                 </div>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="columnNames; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: columnNames;"></tr>
-
+            <tr
+                mat-header-row
+                *matHeaderRowDef="columnNames; sticky: true"
+            ></tr>
+            <tr mat-row *matRowDef="let row; columns: columnNames"></tr>
         </table>
     </div>
 </div>

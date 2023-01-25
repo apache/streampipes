@@ -27,33 +27,40 @@ import { DatalakeRestService } from '@streampipes/platform-services';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 
 @Component({
-    selector: 'table-widget',
+    selector: 'sp-table-widget',
     templateUrl: './table-widget.component.html',
-    styleUrls: ['./table-widget.component.css']
+    styleUrls: ['./table-widget.component.css'],
 })
-export class TableWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
-
+export class TableWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
     selectedProperties: string[];
     fields: string[];
 
     displayedColumns: string[] = [];
     dataSource = new MatTableDataSource();
-    semanticTypes: { [key: string]: string; } = {};
+    semanticTypes: { [key: string]: string } = {};
     tableDisplayed = false;
 
-    constructor(dataLakeService: DatalakeRestService,
-                resizeService: ResizeService,
-                private semanticTypeUtils: SemanticTypeUtilsService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+        private semanticTypeUtils: SemanticTypeUtilsService,
+    ) {
         super(dataLakeService, resizeService, false);
     }
 
     ngOnInit(): void {
         super.ngOnInit();
 
-        this.widgetDataConfig.eventSchema.eventProperties.forEach((key, index) => {
-            this.semanticTypes[key.runtimeName] = key.domainProperties[0];
-        });
-        this.semanticTypes[BaseStreamPipesWidget.TIMESTAMP_KEY] = this.semanticTypeUtils.TIMESTAMP;
+        this.widgetDataConfig.eventSchema.eventProperties.forEach(
+            (key, index) => {
+                this.semanticTypes[key.runtimeName] = key.domainProperties[0];
+            },
+        );
+        this.semanticTypes[BaseStreamPipesWidget.TIMESTAMP_KEY] =
+            this.semanticTypeUtils.TIMESTAMP;
     }
 
     ngOnDestroy(): void {
@@ -61,8 +68,12 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedProperties = extractor.mappingPropertyValues(TableConfig.SELECTED_PROPERTIES_KEYS);
-        this.fields = extractor.mappingPropertyValues(TableConfig.SELECTED_PROPERTIES_KEYS);
+        this.selectedProperties = extractor.mappingPropertyValues(
+            TableConfig.SELECTED_PROPERTIES_KEYS,
+        );
+        this.fields = extractor.mappingPropertyValues(
+            TableConfig.SELECTED_PROPERTIES_KEYS,
+        );
         this.selectedProperties.push(BaseStreamPipesWidget.TIMESTAMP_KEY);
     }
 
@@ -71,24 +82,27 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
     }
 
     protected onEvent(events: any[]) {
-        this.dataSource.data = events.map(ev => this.createTableObject(ev)).reverse();
+        this.dataSource.data = events
+            .map(ev => this.createTableObject(ev))
+            .reverse();
         this.dataSource.data = [...this.dataSource.data];
     }
 
     createTableObject(event: any) {
         const object = {};
         this.selectedProperties.forEach((key, index) => {
-            event[key] = this.semanticTypeUtils.getValue(event[key], this.semanticTypes[key]);
+            event[key] = this.semanticTypeUtils.getValue(
+                event[key],
+                this.semanticTypes[key],
+            );
             object[key] = event[key];
         });
         return object;
     }
 
-    protected onSizeChanged(width: number, height: number) {
-    }
+    protected onSizeChanged(width: number, height: number) {}
 
     protected getQueryLimit(extractor: StaticPropertyExtractor): number {
         return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
     }
-
 }

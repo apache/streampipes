@@ -16,7 +16,6 @@
  *
  */
 
-
 export interface IMultiSeries {
     name?: string;
     series?: IMultiSeriesEntry[];

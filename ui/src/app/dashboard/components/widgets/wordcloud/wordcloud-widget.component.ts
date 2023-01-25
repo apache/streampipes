@@ -20,7 +20,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { ResizeService } from '../../../services/resize.service';
-import { DatalakeRestService, EventPropertyList } from '@streampipes/platform-services';
+import {
+    DatalakeRestService,
+    EventPropertyList,
+} from '@streampipes/platform-services';
 import { WordCloudConfig } from './wordcloud-config';
 
 import { EChartsOption } from 'echarts';
@@ -28,125 +31,141 @@ import 'echarts-wordcloud';
 import { ECharts } from 'echarts/core';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 
-
 @Component({
-  selector: 'wordcloud-widget',
-  templateUrl: './wordcloud-widget.component.html',
-  styleUrls: ['./wordcloud-widget.component.scss']
+    selector: 'sp-wordcloud-widget',
+    templateUrl: './wordcloud-widget.component.html',
+    styleUrls: ['./wordcloud-widget.component.scss'],
 })
-export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
+export class WordcloudWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
+    countProperty: string;
+    nameProperty: string;
+    windowSize: number;
+    eventProperty: EventPropertyList;
 
-  countProperty: string;
-  nameProperty: string;
-  windowSize: number;
-  eventProperty: EventPropertyList;
+    words: any[] = new Array<any>();
 
-  words: any[] = new Array<any>();
+    currentWidth: number;
+    currentHeight: number;
 
-  currentWidth: number;
-  currentHeight: number;
+    configReady = false;
 
-  configReady = false;
+    eChartsInstance: ECharts;
+    dynamicData: EChartsOption;
+    // @ts-ignore
+    chartOption: any = {
+        series: [
+            {
+                type: 'wordCloud',
+                shape: 'circle',
+                left: 'center',
+                top: 'center',
+                width: '100%',
+                height: '100%',
+                right: null,
+                bottom: null,
+                sizeRange: [12, 60],
+                rotationRange: [-90, 90],
+                rotationStep: 45,
+                gridSize: 8,
+                drawOutOfBound: false,
+                layoutAnimation: true,
 
-  eChartsInstance: ECharts;
-  dynamicData: EChartsOption;
-  // @ts-ignore
-  chartOption: any = {
-    series: [{
-      type: 'wordCloud',
-      shape: 'circle',
-      left: 'center',
-      top: 'center',
-      width: '100%',
-      height: '100%',
-      right: null,
-      bottom: null,
-      sizeRange: [12, 60],
-      rotationRange: [-90, 90],
-      rotationStep: 45,
-      gridSize: 8,
-      drawOutOfBound: false,
-      layoutAnimation: true,
+                textStyle: {
+                    fontFamily: 'sans-serif',
+                    fontWeight: 'bold',
+                    color() {
+                        return (
+                            'rgb(' +
+                            [
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160),
+                            ].join(',') +
+                            ')'
+                        );
+                    },
+                },
+                emphasis: {
+                    focus: 'self',
 
-      textStyle: {
-        fontFamily: 'sans-serif',
-        fontWeight: 'bold',
-        color () {
-          return 'rgb(' + [
-            Math.round(Math.random() * 160),
-            Math.round(Math.random() * 160),
-            Math.round(Math.random() * 160)
-          ].join(',') + ')';
+                    textStyle: {
+                        shadowBlur: 10,
+                        shadowColor: '#333',
+                    },
+                },
+                data: [],
+            },
+        ],
+    };
+
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
+        super(dataLakeService, resizeService, false);
+    }
+
+    ngOnInit(): void {
+        super.ngOnInit();
+        this.onSizeChanged(this.itemWidth, this.itemHeight);
+    }
+
+    protected extractConfig(extractor: StaticPropertyExtractor) {
+        this.countProperty = extractor.mappingPropertyValue(
+            WordCloudConfig.COUNT_PROPERTY_KEY,
+        );
+        this.nameProperty = extractor.mappingPropertyValue(
+            WordCloudConfig.NAME_PROPERTY_KEY,
+        );
+        this.windowSize = extractor.integerParameter(
+            WordCloudConfig.WINDOW_SIZE_KEY,
+        );
+    }
+
+    getFieldsToQuery(): string[] {
+        return [this.countProperty, this.nameProperty];
+    }
+
+    protected onEvent(event: any) {
+        const value = event[this.countProperty];
+        const name = event[this.nameProperty];
+        this.dynamicData = this.chartOption;
+        if (this.dynamicData.series[0].data.some(d => d.name == name)) {
+            this.dynamicData.series[0].data.find(d => d.name == name).value =
+                value;
+        } else {
+            this.dynamicData.series[0].data.push({ name, value });
         }
-      },
-      emphasis: {
-        focus: 'self',
-
-        textStyle: {
-          shadowBlur: 10,
-          shadowColor: '#333'
+        if (this.dynamicData.series[0].data.length > this.windowSize) {
+            this.dynamicData.series[0].data.shift();
         }
-      },
-      data: []
-    }]
-  };
-
-  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
-    super(dataLakeService, resizeService, false);
-  }
-
-  ngOnInit(): void {
-    super.ngOnInit();
-    this.onSizeChanged(this.itemWidth, this.itemHeight);
-  }
-
-  protected extractConfig(extractor: StaticPropertyExtractor) {
-    this.countProperty = extractor.mappingPropertyValue(WordCloudConfig.COUNT_PROPERTY_KEY);
-    this.nameProperty = extractor.mappingPropertyValue(WordCloudConfig.NAME_PROPERTY_KEY);
-    this.windowSize = extractor.integerParameter(WordCloudConfig.WINDOW_SIZE_KEY);
-  }
-
-  getFieldsToQuery(): string[] {
-    return [this.countProperty, this.nameProperty];
-  }
-
-  protected onEvent(event: any) {
-    const value = event[this.countProperty];
-    const name = event[this.nameProperty];
-    this.dynamicData = this.chartOption;
-    if (this.dynamicData.series[0].data.some(d => d.name == name)) {
-      this.dynamicData.series[0].data.find(d => d.name == name).value = value;
-    } else {
-      this.dynamicData.series[0].data.push({name, value});
+        if (this.eChartsInstance) {
+            this.eChartsInstance.setOption(this.dynamicData);
+        }
     }
-    if (this.dynamicData.series[0].data.length > this.windowSize) {
-      this.dynamicData.series[0].data.shift();
+
+    protected onSizeChanged(width: number, height: number) {
+        this.currentWidth = width;
+        this.currentHeight = height;
+        this.configReady = true;
+        this.applySize(width, height);
     }
-    if (this.eChartsInstance) {
-      this.eChartsInstance.setOption(this.dynamicData);
+
+    onChartInit(ec: ECharts) {
+        this.eChartsInstance = ec;
+        this.applySize(this.currentWidth, this.currentHeight);
     }
-  }
 
-  protected onSizeChanged(width: number, height: number) {
-    this.currentWidth = width;
-    this.currentHeight = height;
-    this.configReady = true;
-    this.applySize(width, height);
-  }
-
-  onChartInit(ec: ECharts) {
-    this.eChartsInstance = ec;
-    this.applySize(this.currentWidth, this.currentHeight);
-  }
-
-  applySize(width: number, height: number) {
-    if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width, height});
+    applySize(width: number, height: number) {
+        if (this.eChartsInstance) {
+            this.eChartsInstance.resize({ width, height });
+        }
     }
-  }
 
-  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
-    return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
-  }
-
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
+    }
 }

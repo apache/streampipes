@@ -19,44 +19,64 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
-            <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                style="margin: 5px; width: 100%"
+            >
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Data View Name</mat-label>
-                    <input matInput
-                           data-cy="data-view-name"
-                           [(ngModel)]="dashboard.name">
+                    <input
+                        matInput
+                        data-cy="data-view-name"
+                        [(ngModel)]="dashboard.name"
+                    />
                 </mat-form-field>
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Description</mat-label>
-                    <input matInput [(ngModel)]="dashboard.description">
+                    <input matInput [(ngModel)]="dashboard.description" />
                 </mat-form-field>
                 <label>Default view mode</label>
                 <mat-radio-group
-                        [(ngModel)]="dashboard.dashboardGeneralSettings.defaultViewMode">
-                    <mat-radio-button class="view-radio-button" [value]="'grid'">
+                    [(ngModel)]="
+                        dashboard.dashboardGeneralSettings.defaultViewMode
+                    "
+                >
+                    <mat-radio-button
+                        class="view-radio-button"
+                        [value]="'grid'"
+                    >
                         Grid View
                     </mat-radio-button>
-                    <mat-radio-button class="view-radio-button" [value]="'slide'">
+                    <mat-radio-button
+                        class="view-radio-button"
+                        [value]="'slide'"
+                    >
                         Slide View
                     </mat-radio-button>
                 </mat-radio-group>
                 <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
-
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic mr-10"
-                (click)="onCancel()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="onCancel()"
+        >
             Close
         </button>
-        <button mat-button mat-raised-button color="accent"
-                data-cy="save-data-view"
-                (click)="onSave()">
-            {{createMode ? 'Create' : 'Save'}}
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            data-cy="save-data-view"
+            (click)="onSave()"
+        >
+            {{ createMode ? 'Create' : 'Save' }}
         </button>
     </div>
 </div>
-
-

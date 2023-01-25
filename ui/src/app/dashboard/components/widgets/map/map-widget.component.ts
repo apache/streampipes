@@ -19,17 +19,29 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { MapConfig } from './map-config';
-import { Content, icon, latLng, LatLng, LatLngExpression, Map, Marker, marker, tileLayer } from 'leaflet';
+import {
+    Content,
+    icon,
+    latLng,
+    LatLng,
+    LatLngExpression,
+    Map,
+    Marker,
+    marker,
+    tileLayer,
+} from 'leaflet';
 import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'map-widget',
+    selector: 'sp-map-widget',
     templateUrl: './map-widget.component.html',
-    styleUrls: ['./map-widget.component.css']
+    styleUrls: ['./map-widget.component.css'],
 })
-export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
-
+export class MapWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
     item: any;
 
     selectedLatitudeField: string;
@@ -49,19 +61,25 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
 
     options = {
         layers: [
-            tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors' })
+            tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution:
+                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> Contributors",
+            }),
         ],
         zoom: 5,
-        center: latLng(46.879966, -121.726909)
+        center: latLng(46.879966, -121.726909),
     };
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService, false);
     }
 
     ngOnInit(): void {
         super.ngOnInit();
-        // this.markerLayer = this.makeMarker([0, 0]);
         this.markerLayers = [];
         this.markerIds = [];
         this.showMarkers = true;
@@ -74,21 +92,39 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedLatitudeField = extractor.mappingPropertyValue(MapConfig.LATITUDE_MAPPING_KEY);
-        this.selectedLongitudeField = extractor.mappingPropertyValue(MapConfig.LONGITUDE_MAPPING_KEY);
-        this.selectedMarkerIcon = this.markerImage(extractor.selectedSingleValue(MapConfig.MARKER_TYPE_KEY));
-        this.additionalItemsToDisplay = extractor.mappingPropertyValues(MapConfig.ITEMS_MAPPING_KEY);
-        this.idsToDisplay = extractor.mappingPropertyValues(MapConfig.ID_MAPPING_KEY);
+        this.selectedLatitudeField = extractor.mappingPropertyValue(
+            MapConfig.LATITUDE_MAPPING_KEY,
+        );
+        this.selectedLongitudeField = extractor.mappingPropertyValue(
+            MapConfig.LONGITUDE_MAPPING_KEY,
+        );
+        this.selectedMarkerIcon = this.markerImage(
+            extractor.selectedSingleValue(MapConfig.MARKER_TYPE_KEY),
+        );
+        this.additionalItemsToDisplay = extractor.mappingPropertyValues(
+            MapConfig.ITEMS_MAPPING_KEY,
+        );
+        this.idsToDisplay = extractor.mappingPropertyValues(
+            MapConfig.ID_MAPPING_KEY,
+        );
         const b = extractor.singleValueParameter(MapConfig.CENTER_MAP_KEY);
-        this.centerMap = extractor.selectedSingleValue(MapConfig.CENTER_MAP_KEY) === 'Center';
+        this.centerMap =
+            extractor.selectedSingleValue(MapConfig.CENTER_MAP_KEY) ===
+            'Center';
     }
 
     getFieldsToQuery(): string[] {
-        return [this.selectedLatitudeField, this.selectedLongitudeField, ...this.idsToDisplay];
+        return [
+            this.selectedLatitudeField,
+            this.selectedLongitudeField,
+            ...this.idsToDisplay,
+        ];
     }
 
     markerImage(selectedMarker: string): string {
-        return selectedMarker === 'Default' ? 'assets/img/marker-icon.png' : 'assets/img/pe_icons/car.png';
+        return selectedMarker === 'Default'
+            ? 'assets/img/marker-icon.png'
+            : 'assets/img/pe_icons/car.png';
     }
 
     onMapReady(map: Map) {
@@ -97,7 +133,6 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     }
 
     protected onEvent(events: any[]) {
-
         // TODO handle when user selected id field
 
         const tmpMarker = this.getMarker(events)[0];
@@ -106,7 +141,6 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         if (this.idsToDisplay.length === 0) {
             this.markerLayers = [tmpMarker];
         } else {
-
             const id = this.getId(events[0]);
             const index = this.markerIds.indexOf(id);
             if (index > -1) {
@@ -116,7 +150,6 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
                 this.markerLayers.push(tmpMarker);
             }
         }
-
     }
 
     getMarker(event) {
@@ -124,7 +157,9 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         const long = event[this.selectedLongitudeField];
         let text = '';
         this.additionalItemsToDisplay.forEach(item => {
-            text =  text.concat('<b>' + item + '</b>' +  ': ' + event[item] + '<br>');
+            text = text.concat(
+                '<b>' + item + '</b>' + ': ' + event[item] + '<br>',
+            );
         });
 
         const content: Content = text;
@@ -140,12 +175,14 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     }
 
     makeMarker(point: LatLngExpression): Marker {
-        return marker(point, { icon: icon({
-                iconSize: [ 25, 41 ],
-                iconAnchor: [ 13, 41 ],
+        return marker(point, {
+            icon: icon({
+                iconSize: [25, 41],
+                iconAnchor: [13, 41],
                 iconUrl: this.selectedMarkerIcon,
-                shadowUrl: 'assets/img/marker-shadow.png'
-            })});
+                shadowUrl: 'assets/img/marker-shadow.png',
+            }),
+        });
     }
 
     getId(event) {
@@ -167,5 +204,4 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     protected getQueryLimit(extractor: StaticPropertyExtractor): number {
         return 1;
     }
-
 }

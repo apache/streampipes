@@ -17,10 +17,12 @@
   -->
 
 <div fxFlex="100">
-    <div echarts [options]="option"
-         [ngStyle]="{'width': currentWidth_, 'height': '100%'}"
-         (chartInit)="onChartInit($event)"
-         [merge]= "dynamic"
-         *ngIf="configReady">
-    </div>
+    <div
+        echarts
+        [options]="option"
+        [ngStyle]="{ width: currentWidth_, height: '100%' }"
+        (chartInit)="onChartInit($event)"
+        [merge]="dynamic"
+        *ngIf="configReady"
+    ></div>
 </div>

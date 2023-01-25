@@ -17,7 +17,6 @@
  */
 
 export class Vocabulary {
-
     static readonly XSD: string = 'http://www.w3.org/2001/XMLSchema#';
     static readonly SO: string = 'http://schema.org/';
     static readonly GEO: string = 'http://www.w3.org/2003/01/geo/wgs84_pos#';
