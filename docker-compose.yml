@@ -101,6 +101,9 @@ services:
 
   couchdb:
     image: couchdb:2.3.1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=admin
     logging: *default-logging
     volumes:
       - couchdb:/opt/couchdb/data
