@@ -188,9 +188,7 @@ const navigateToFormatSelection = () => {
 
     ConnectUtils.selectAdapter('File_Stream');
 
-    ConnectUtils.configureAdapter(
-        UserInputBuilder.create().add('input', 'speed', '1').build(),
-    );
+    ConnectUtils.configureAdapter([]);
 };
 
 const validateResult = expected => {

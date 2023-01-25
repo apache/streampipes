@@ -77,7 +77,6 @@
 	<jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
 	<javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
 	<javax-websocket-api.version>1.1</javax-websocket-api.version>
-	<javapoet.version>1.6.1</javapoet.version>
 	<jakarta-json.version>2.0.1</jakarta-json.version>
 	<jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
 	<jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
@@ -203,7 +202,7 @@
 	<opencsv.version>5.5.2</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
-	<proton-j.version>0.30.0</proton-j.version>
+	<proton-j.version>0.34.0</proton-j.version>
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
 	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
@@ -369,11 +368,6 @@
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
 					<version>${commons-logging.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.squareup</groupId>
-					<artifactId>javapoet</artifactId>
-					<version>${javapoet.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>de.grundid.opendatalab</groupId>
