@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.svcdiscovery.api.model;
 
+import java.util.Objects;
+
 public class ConfigItem {
 
   private String key;
@@ -116,5 +118,27 @@ public class ConfigItem {
 
   public void setConfigurationScope(ConfigurationScope configurationScope) {
     this.configurationScope = configurationScope;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ConfigItem that = (ConfigItem) o;
+    return isPassword == that.isPassword
+        && Objects.equals(key, that.key)
+        && Objects.equals(description, that.description)
+        && Objects.equals(value, that.value)
+        && Objects.equals(valueType, that.valueType)
+        && configurationScope == that.configurationScope;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(key, description, value, valueType, configurationScope, isPassword);
   }
 }

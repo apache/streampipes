@@ -18,9 +18,9 @@
 package org.apache.streampipes.svcdiscovery.consul;
 
 import org.apache.streampipes.commons.constants.DefaultEnvValues;
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
 
-import com.orbitz.consul.Consul;
+import com.ecwid.consul.v1.ConsulClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,47 +29,52 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
-public class ConsulProvider {
+public enum ConsulProvider {
+
+  INSTANCE;
 
   private static final Logger LOG = LoggerFactory.getLogger(ConsulProvider.class);
   private static final int CHECK_INTERVAL = 1;
 
-  private final String consulHost;
-  private final String consulUrlString;
-  private final int consulPort;
+  private ConsulClient consulClient;
+  private boolean initialized = false;
 
-  public ConsulProvider() {
-    this.consulHost = getConsulHost();
-    this.consulPort = getConsulPort();
-    this.consulUrlString = makeConsulUrl();
+  ConsulProvider() {
   }
 
-  public Consul consulInstance() {
-    boolean connected;
+  public ConsulClient getConsulInstance(Environment environment) {
+    if (!initialized) {
+      createConsulInstance(environment);
+    }
 
-    do {
-      LOG.info("Checking if consul is available on host {} and port {}", consulHost, consulPort);
-      connected = checkConsulAvailable();
+    return consulClient;
+  }
 
-      if (!connected) {
-        LOG.info("Retrying in {} second", CHECK_INTERVAL);
-        try {
-          TimeUnit.SECONDS.sleep(CHECK_INTERVAL);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
+  private void createConsulInstance(Environment environment) {
+    var consulHost = getConsulHost(environment);
+    var consulPort = getConsulPort(environment);
+    var connected = false;
+
+    LOG.info("Checking if consul is available on host {} and port {}", consulHost, consulPort);
+    connected = checkConsulAvailable(consulHost, consulPort);
+
+    if (connected) {
+      LOG.info("Successfully connected to Consul on host {}", consulHost);
+      this.consulClient = new ConsulClient(consulHost, consulPort);
+      this.initialized = true;
+    } else {
+      LOG.info("Retrying in {} second", CHECK_INTERVAL);
+      try {
+        TimeUnit.SECONDS.sleep(CHECK_INTERVAL);
+        createConsulInstance(environment);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
-    } while (!connected);
-
-    LOG.info("Successfully connected to Consul");
-    return Consul.builder().withUrl(consulUrlString).build();
+    }
   }
 
-  public String makeConsulUrl() {
-    return "http://" + consulHost + ":" + consulPort;
-  }
-
-  private boolean checkConsulAvailable() {
+  private boolean checkConsulAvailable(String consulHost,
+                                       int consulPort) {
     try {
       InetSocketAddress sa = new InetSocketAddress(consulHost, consulPort);
       Socket ss = new Socket();
@@ -83,18 +88,18 @@ public class ConsulProvider {
     }
   }
 
-  private int getConsulPort() {
-    return Envs.SP_CONSUL_PORT.getValueAsIntOrDefault(DefaultEnvValues.CONSUL_PORT_DEFAULT);
+  private int getConsulPort(Environment environment) {
+    return environment.getConsulPort().getValueOrDefault();
   }
 
-  private String getConsulHost() {
-    if (Envs.SP_CONSUL_LOCATION.exists()) {
-      return Envs.SP_CONSUL_LOCATION.getValue();
+  private String getConsulHost(Environment environment) {
+    if (environment.getConsulLocation().exists()) {
+      return environment.getConsulLocation().getValue();
     } else {
-      if (Envs.SP_DEBUG.getValueAsBooleanOrDefault(false)) {
+      if (environment.getSpDebug().getValueOrReturn(false)) {
         return DefaultEnvValues.CONSUL_HOST_LOCAL;
       } else {
-        return Envs.SP_CONSUL_HOST.getValueOrDefault(DefaultEnvValues.CONSUL_HOST_DEFAULT);
+        return environment.getConsulHost().getValueOrDefault();
       }
     }
   }
