@@ -97,7 +97,7 @@
 	<kotlin-stdlib.version>1.8.0</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
 	<log4j.version>2.19.0</log4j.version>
-	<lz4.version>1.7.1</lz4.version>
+	<lz4.version>1.8.0</lz4.version>
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
 	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
