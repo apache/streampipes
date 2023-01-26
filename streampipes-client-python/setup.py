@@ -21,7 +21,7 @@ import os
 import setuptools
 
 # Package meta-data.
-NAME = "streampipes_client"
+NAME = "streampipes-client"
 DESCRIPTION = "Python client for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/apache/streampipes/"
