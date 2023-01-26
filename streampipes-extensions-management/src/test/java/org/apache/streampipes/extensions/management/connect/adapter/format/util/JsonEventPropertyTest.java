@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.management.connect.adapter.format.util
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.junit.Test;
 
@@ -30,6 +29,27 @@ public class JsonEventPropertyTest {
 	public void getEventPropertyForLongValue() {
 		EventPropertyPrimitive p = (EventPropertyPrimitive)JsonEventProperty.getEventProperty("timestamp_in_ms", 1674637204330L);
 
-		assertEquals(p.getRuntimeType(), "http://www.w3.org/2001/XMLSchema#long");
+		assertEquals("http://www.w3.org/2001/XMLSchema#long", p.getRuntimeType());
+	}
+
+	@Test
+	public void getEventPropertyForDoubleValue() {
+		EventPropertyPrimitive p = (EventPropertyPrimitive)JsonEventProperty.getEventProperty("double", 1674637204330.0D);
+
+		assertEquals("http://www.w3.org/2001/XMLSchema#double", p.getRuntimeType());
+	}
+
+	@Test
+	public void getEventPropertyForFloatValue() {
+		EventPropertyPrimitive p = (EventPropertyPrimitive)JsonEventProperty.getEventProperty("float", 1674637204330.0f);
+
+		assertEquals("http://www.w3.org/2001/XMLSchema#float", p.getRuntimeType());
+	}
+
+	@Test
+	public void getEventPropertyForIntegerValue() {
+		EventPropertyPrimitive p = (EventPropertyPrimitive)JsonEventProperty.getEventProperty("integer", 1674637204);
+
+		assertEquals("http://www.w3.org/2001/XMLSchema#integer", p.getRuntimeType());
 	}
 }
