@@ -15,16 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
 
-import java.util.Map;
+package org.apache.streampipes.commons.environment.variable;
 
-public interface ISpKvManagement {
+public interface EnvResolver<T> {
 
-  Map<String, String> getKeyValue(String route);
-
-  void updateConfig(String key, String entry, boolean password);
-
-  void deleteConfig(String key);
-
+  T resolve();
 }

@@ -17,15 +17,11 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
-import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.orbitz.consul.Consul;
-import com.orbitz.consul.KeyValueClient;
-import com.orbitz.consul.model.ConsulResponse;
-import com.orbitz.consul.model.kv.Value;
+import com.ecwid.consul.v1.Response;
+import com.ecwid.consul.v1.kv.model.GetValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,47 +29,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SpConsulKvManagement extends ConsulProvider implements ISpKvManagement {
+public class SpConsulKvManagement extends AbstractConsulService implements ISpKvManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(SpConsulKvManagement.class);
 
   private static final String CONSUL_NAMESPACE = "/sp/v1/";
 
-  public <T> T getValueForRoute(String route, Class<T> type) {
-    try {
-      String entry = getKeyValue(route)
-          .values()
-          .stream()
-          .findFirst()
-          .orElse(null);
-
-      if (type.equals(Integer.class)) {
-        return (T) Integer.valueOf(JacksonSerializer.getObjectMapper().readValue(entry, ConfigItem.class).getValue());
-      } else if (type.equals(Boolean.class)) {
-        return (T) Boolean.valueOf(JacksonSerializer.getObjectMapper().readValue(entry, ConfigItem.class).getValue());
-      } else {
-        return type.cast(JacksonSerializer.getObjectMapper().readValue(entry, ConfigItem.class).getValue());
-      }
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
-    throw new IllegalArgumentException("Cannot get entry from Consul");
+  public SpConsulKvManagement(Environment environment) {
+    super(environment);
   }
 
   public Map<String, String> getKeyValue(String route) {
-    Consul consul = consulInstance();
-    KeyValueClient keyValueClient = consul.keyValueClient();
+    var consul = consulInstance();
 
     Map<String, String> keyValues = new HashMap<>();
+    Response<List<GetValue>> consulResponseWithValues = consul.getKVValues(route);
 
-    ConsulResponse<List<Value>> consulResponseWithValues = keyValueClient.getConsulResponseWithValues(route);
-
-    if (consulResponseWithValues.getResponse() != null) {
-      for (Value value : consulResponseWithValues.getResponse()) {
+    if (consulResponseWithValues.getValue() != null) {
+      for (GetValue value : consulResponseWithValues.getValue()) {
         String key = value.getKey();
         String v = "";
-        if (value.getValueAsString().isPresent()) {
-          v = value.getValueAsString().get();
+        if (value.getValue() != null) {
+          v = value.getDecodedValue();
         }
         keyValues.put(key, v);
       }
@@ -82,16 +59,16 @@ public class SpConsulKvManagement extends ConsulProvider implements ISpKvManagem
   }
 
   public void updateConfig(String key, String entry, boolean password) {
-    Consul consul = consulInstance();
+    var consul = consulInstance();
     if (!password) {
       LOG.info("Updated config - key:" + key + " value: " + entry);
-      consul.keyValueClient().putValue(key, entry);
+      consul.setKVValue(key, entry);
     }
   }
 
   public void deleteConfig(String key) {
-    Consul consul = consulInstance();
+    var consul = consulInstance();
     LOG.info("Delete config: {}", key);
-    consul.keyValueClient().deleteKeys(CONSUL_NAMESPACE + key);
+    consul.deleteKVValue(CONSUL_NAMESPACE + key);
   }
 }

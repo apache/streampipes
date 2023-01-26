@@ -15,16 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
 
-import java.util.Map;
+package org.apache.streampipes.svcdiscovery.consul;
 
-public interface ISpKvManagement {
+import com.ecwid.consul.v1.QueryParams;
+import com.ecwid.consul.v1.Response;
+import com.ecwid.consul.v1.health.HealthServicesRequest;
+import com.ecwid.consul.v1.health.model.HealthService;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
-  Map<String, String> getKeyValue(String route);
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-  void updateConfig(String key, String entry, boolean password);
+public enum ServiceCache {
 
-  void deleteConfig(String key);
+  INSTANCE;
+
+  private LoadingCache<String, List<HealthService>> cache;
+
+  ServiceCache() {
+
+  }
+
 
 }

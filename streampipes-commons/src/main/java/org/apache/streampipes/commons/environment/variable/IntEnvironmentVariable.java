@@ -15,16 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
 
-import java.util.Map;
+package org.apache.streampipes.commons.environment.variable;
 
-public interface ISpKvManagement {
+import org.apache.streampipes.commons.constants.Envs;
 
-  Map<String, String> getKeyValue(String route);
+public class IntEnvironmentVariable extends EnvironmentVariable<Integer> {
+  public IntEnvironmentVariable(Envs envVariable) {
+    super(envVariable);
+  }
 
-  void updateConfig(String key, String entry, boolean password);
-
-  void deleteConfig(String key);
-
+  @Override
+  public Integer parse(String value) {
+    return Integer.parseInt(value);
+  }
 }

@@ -15,16 +15,21 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
 
-import java.util.Map;
+package org.apache.streampipes.commons.environment;
 
-public interface ISpKvManagement {
+import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
+import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
 
-  Map<String, String> getKeyValue(String route);
+public interface Environment {
 
-  void updateConfig(String key, String entry, boolean password);
+  StringEnvironmentVariable getConsulHost();
 
-  void deleteConfig(String key);
+  IntEnvironmentVariable getConsulPort();
 
+  BooleanEnvironmentVariable getSpDebug();
+
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  StringEnvironmentVariable getConsulLocation();
 }
