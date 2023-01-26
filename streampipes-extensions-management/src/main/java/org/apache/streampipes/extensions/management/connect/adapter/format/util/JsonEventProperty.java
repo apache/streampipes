@@ -56,10 +56,14 @@ public class JsonEventProperty {
       resultProperty.setRuntimeName(key);
       ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.STRING.toString());
     } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)
-        || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)) {
+        || o.getClass().equals(Float.class)) {
       resultProperty = new EventPropertyPrimitive();
       resultProperty.setRuntimeName(key);
       ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.FLOAT.toString());
+    } else if (o.getClass().equals(Long.class)) {
+        resultProperty = new EventPropertyPrimitive();
+        resultProperty.setRuntimeName(key);
+        ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.LONG.toString());
     } else if (o.getClass().equals(LinkedHashMap.class)) {
       resultProperty = new EventPropertyNested();
       resultProperty.setRuntimeName(key);
