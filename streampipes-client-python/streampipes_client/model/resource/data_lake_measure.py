@@ -41,10 +41,11 @@ class DataLakeMeasure(Resource):
         is returned with the column name `num_event_properties`.
         """
         return {
-            **self.dict(exclude={"class_name", "element_id", "event_schema", "schema_version"}),
+            **self.dict(exclude={"element_id", "event_schema", "schema_version"}),
             "num_event_properties": len(self.event_schema.event_properties),
         }
 
+    element_id: Optional[StrictStr]
     measure_name: StrictStr
     timestamp_field: StrictStr
     event_schema: Optional[EventSchema]

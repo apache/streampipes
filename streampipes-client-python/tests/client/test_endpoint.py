@@ -39,7 +39,6 @@ class TestStreamPipesEndpoints(TestCase):
         # set example responses from endpoints
         self.data_lake_measure_all = [
             {
-                "@class": None,
                 "elementId": "urn:streampipes.apache.org:spi:datalakemeasure:xLSfXZ",
                 "measureName": "test",
                 "timestampField": "s0::timestamp",
@@ -113,7 +112,6 @@ class TestStreamPipesEndpoints(TestCase):
                             "brokerHostname": "nats",
                             "topicDefinition": {
                                 "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                                "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
                                 "actualTopicName": "org.apache.streampipes.connect."
                                 "fc22b8f6-698a-4127-aa71-e11854dc57c5",
                             },
@@ -213,6 +211,26 @@ class TestStreamPipesEndpoints(TestCase):
         )
         self.assertTrue(isinstance(result, DataStream))
         self.assertEqual(result.dict(by_alias=True), self.data_stream_get)
+
+    @patch("streampipes_client.client.client.Session", autospec=True)
+    def test_endpoint_post(self, http_session: MagicMock):
+        http_session_mock = MagicMock()
+        http_session.return_value = http_session_mock
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        client.dataStreamApi.post(DataStream(**self.data_stream_get))
+
+        http_session_mock.post.assert_called_with(
+            url="https://localhost:80/streampipes-backend/api/v2/streams/",
+            data=json.dumps(self.data_stream_get),
+            headers={"Content-type": "application/json"},
+        )
 
     @patch("streampipes_client.client.client.Session", autospec=True)
     def test_endpoint_data_stream_happy_path(self, http_session: MagicMock):

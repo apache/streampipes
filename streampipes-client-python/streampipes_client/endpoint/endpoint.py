@@ -224,6 +224,6 @@ class APIEndpoint(Endpoint):
         self._make_request(
             request_method=self._parent_client.request_session.post,
             url=f"{self.build_url()}/",
-            data=json.dumps(resource.dict(by_alias=True)),
+            data=json.dumps(resource.to_dict(use_source_names=True)),
             headers={"Content-type": "application/json"},
         )
