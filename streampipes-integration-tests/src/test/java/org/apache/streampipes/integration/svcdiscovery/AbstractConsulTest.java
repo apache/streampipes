@@ -32,13 +32,13 @@ import static org.mockito.Mockito.mock;
 
 public class AbstractConsulTest {
 
-  static final ConsulContainer consulContainer;
+  static final ConsulContainer CONSUL_CONTAINER;
 
   static {
-    consulContainer = new ConsulContainer(
+    CONSUL_CONTAINER = new ConsulContainer(
         DockerImageName.parse("consul").withTag("1.14.3"))
         .withExposedPorts(8500);
-    consulContainer.start();
+    CONSUL_CONTAINER.start();
   }
 
   protected ConfigItem makeConfigItem(String key, String value) {
@@ -57,8 +57,8 @@ public class AbstractConsulTest {
     var consulLocationMock = mock(StringEnvironmentVariable.class);
     var spDebugMock = mock(BooleanEnvironmentVariable.class);
 
-    Mockito.when(hostVariableMock.getValueOrDefault()).thenReturn(consulContainer.getHost());
-    Mockito.when(portVariableMock.getValueOrDefault()).thenReturn(consulContainer.getMappedPort(8500));
+    Mockito.when(hostVariableMock.getValueOrDefault()).thenReturn(CONSUL_CONTAINER.getHost());
+    Mockito.when(portVariableMock.getValueOrDefault()).thenReturn(CONSUL_CONTAINER.getMappedPort(8500));
     Mockito.when(consulLocationMock.exists()).thenReturn(false);
     Mockito.when(spDebugMock.exists()).thenReturn(false);
     Mockito.when(spDebugMock.getValueOrReturn(false)).thenReturn(false);
