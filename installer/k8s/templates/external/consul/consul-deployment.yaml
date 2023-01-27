@@ -33,7 +33,7 @@ spec:
             claimName: consul-pvc
       containers:
         - name: consul
-          image: fogsyio/consul:{{ .Values.external.consulVersion }}
+          image: consul:{{ .Values.external.consulVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           command:
             - "/bin/sh"
