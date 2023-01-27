@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.sinks.databases.jvm.iotdb.title=IoTDB
-org.apache.streampipes.sinks.databases.jvm.iotdb.description=Stores events in a IoTDB database.
+org.apache.streampipes.sinks.databases.jvm.iotdb.title=Apache IoTDB
+org.apache.streampipes.sinks.databases.jvm.iotdb.description=Stores events in a IoTDB database. Events will be stored in timeseries root.${Database Name}.${Device (Entity) Name}.${Event Key}.
 
 db_host.title=Hostname
 db_host.description=The hostname of the IoTDB instance
@@ -24,14 +24,17 @@ db_host.description=The hostname of the IoTDB instance
 db_port.title=Port
 db_port.description=The port of the IoTDB instance (default 6667)
 
-db_storage_group.title=Storage Group Name
-db_storage_group.description=The name of the storage group where events will be stored
+db_database.title=Database Name
+db_database.description=The name of the database where events will be stored. A database is a group of devices (entities). Users can create any prefix path as a database.
+
+db_device.title=Device (Entity) Name
+db_device.description=The name of the device (entity) where events will be stored. A device (also called entity) is an equipped with measurements in real scenarios. In IoTDB, all measurements should have their corresponding devices.
 
 db_user.title=Username
-db_user.description=The username for the IoTDB Server
+db_user.description=The username for the IoTDB Server (default "root")
 
 db_password.title=Password
-db_password.description=The password for the IoTDB Server
+db_password.description=The password for the IoTDB Server (default "root")
 
 timestamp_mapping.title=Timestamp
 timestamp_mapping.description=The timestamp of the event
