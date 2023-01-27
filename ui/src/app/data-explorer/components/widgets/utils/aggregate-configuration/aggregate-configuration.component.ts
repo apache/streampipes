@@ -21,31 +21,32 @@ import { QueryConfig } from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({
-  selector: 'sp-aggregate-configuration',
-  templateUrl: './aggregate-configuration.component.html',
-  styleUrls: ['./aggregate-configuration.component.css']
+    selector: 'sp-aggregate-configuration',
+    templateUrl: './aggregate-configuration.component.html',
+    styleUrls: ['./aggregate-configuration.component.css'],
 })
 export class AggregateConfigurationComponent {
+    @Input() queryConfig: QueryConfig;
+    @Input() widgetId: string;
 
-  @Input() queryConfig: QueryConfig;
-  @Input() widgetId: string;
+    availableAggregations = [
+        { value: 'ms', label: 'Millisecond' },
+        { value: 's', label: 'Second' },
+        { value: 'm', label: 'Minute' },
+        { value: 'h', label: 'Hour' },
+        { value: 'd', label: 'Day' },
+        { value: 'w', label: 'Week' },
+    ];
 
-  availableAggregations = [
-    {value: 'ms', label: 'Millisecond'},
-    {value: 's', label: 'Second'},
-    {value: 'm', label: 'Minute'},
-    {value: 'h', label: 'Hour'},
-    {value: 'd', label: 'Day'},
-    {value: 'w', label: 'Week'}
-  ];
+    constructor(private widgetConfigService: WidgetConfigurationService) {}
 
-  constructor(private widgetConfigService: WidgetConfigurationService) {
-  }
-
-  triggerDataRefresh() {
-    if (this.widgetId) {
-      this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
+    triggerDataRefresh() {
+        if (this.widgetId) {
+            this.widgetConfigService.notify({
+                widgetId: this.widgetId,
+                refreshData: true,
+                refreshView: true,
+            });
+        }
     }
-  }
-
 }

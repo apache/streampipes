@@ -16,50 +16,71 @@
   ~
   -->
 
-<sp-basic-view [showBackLink]="true" [padding]="false" [backLinkTarget]="['dashboard']">
-
-    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
-        <div fxLayout="row" fxFlex="100" *ngIf="editMode" fxLayoutAlign="start center">
-            <button mat-button
-                    mat-raised-button
-                    color="accent"
-                    (click)="updateDashboardAndCloseEditMode()"
-                    class="mr-10"
-                    data-cy="dashboard-save-edit-mode">
+<sp-basic-view
+    [showBackLink]="true"
+    [padding]="false"
+    [backLinkTarget]="['dashboard']"
+>
+    <div
+        nav
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        class="pl-10"
+    >
+        <div
+            fxLayout="row"
+            fxFlex="100"
+            *ngIf="editMode"
+            fxLayoutAlign="start center"
+        >
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="updateDashboardAndCloseEditMode()"
+                class="mr-10"
+                data-cy="dashboard-save-edit-mode"
+            >
                 <i class="material-icons">save</i>
                 <span> Save</span>
             </button>
-            <button mat-button
-                    mat-raised-button
-                    class="mat-basic mr-10"
-                    (click)="discardChanges()">
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic mr-10"
+                (click)="discardChanges()"
+            >
                 <i class="material-icons">clear</i>
                 <span> Discard</span>
             </button>
-            <button mat-button
-                    mat-raised-button
-                    color="accent"
-                    (click)="addWidget()"
-                    [disabled]="!editMode"
-                    data-cy="dashboard-add-widget">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="addWidget()"
+                [disabled]="!editMode"
+                data-cy="dashboard-add-widget"
+            >
                 <i class="material-icons">add</i>
                 <span> Add visualization</span>
             </button>
             <span fxFlex></span>
-            <mat-slide-toggle
-                    color="accent"
-                    [(ngModel)]="headerVisible">
+            <mat-slide-toggle color="accent" [(ngModel)]="headerVisible">
                 Show widget controls
             </mat-slide-toggle>
         </div>
     </div>
     <div fxFlex="100" fxLayout="column">
-        <dashboard-grid [editMode]="editMode" [dashboard]="dashboard"
-                        [headerVisible]="headerVisible"
-                        [allMeasurements]="allMeasurements"
-                        (updateCallback)="updateAndQueueItemForDeletion($event)"
-                        (deleteCallback)="removeAndQueueItemForDeletion($event)"
-                        *ngIf="dashboard && allMeasurements"
-                        class="h-100 dashboard-grid"></dashboard-grid>
+        <sp-dashboard-grid
+            [editMode]="editMode"
+            [dashboard]="dashboard"
+            [headerVisible]="headerVisible"
+            [allMeasurements]="allMeasurements"
+            (updateCallback)="updateAndQueueItemForDeletion($event)"
+            (deleteCallback)="removeAndQueueItemForDeletion($event)"
+            *ngIf="dashboard && allMeasurements"
+            class="h-100 dashboard-grid"
+        ></sp-dashboard-grid>
     </div>
 </sp-basic-view>

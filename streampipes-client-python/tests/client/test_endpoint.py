@@ -114,12 +114,12 @@ class TestStreamPipesEndpoints(TestCase):
                     "elementId": "urn:streampipes.apache.org:spi:eventgrounding:TwGIQA",
                     "transportProtocols": [
                         {
-                            "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
                             "brokerHostname": "nats",
+                            "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
                             "topicDefinition": {
-                                "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
                                 "actualTopicName": "org.apache.streampipes.connect."
-                                "fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                                "fc22b8f6-698a-4127-aa71-e11854dc57c5tr",
+                                "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
                             },
                             "port": 4222,
                         }
@@ -235,6 +235,8 @@ class TestStreamPipesEndpoints(TestCase):
 
         result = client.dataStreamApi.all()
         result_pd = result.to_pandas()
+
+        self.maxDiff = None
 
         self.assertEqual(
             1,

@@ -22,21 +22,25 @@ import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-buil
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class StatusWidgetConfig extends WidgetConfig {
+    static readonly INTERVAL_KEY: string = 'interval-key';
 
-  static readonly INTERVAL_KEY: string = 'interval-key';
+    constructor() {
+        super();
+    }
 
-  constructor() {
-    super();
-  }
-
-  getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('status', 'Status')
-        .withIcon('fas fa-lightbulb')
-        .withDescription('Status light')
-        .requiredSchema(SchemaRequirementsBuilder
-            .create()
-            .build())
-        .requiredIntegerParameter(StatusWidgetConfig.INTERVAL_KEY, 'Interval [sec]', 'Interval in seconds in which an event must arrive')
-        .build();
-  }
+    getConfig(): DashboardWidgetSettings {
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            'status',
+            'Status',
+        )
+            .withIcon('fas fa-lightbulb')
+            .withDescription('Status light')
+            .requiredSchema(SchemaRequirementsBuilder.create().build())
+            .requiredIntegerParameter(
+                StatusWidgetConfig.INTERVAL_KEY,
+                'Interval [sec]',
+                'Interval in seconds in which an event must arrive',
+            )
+            .build();
+    }
 }

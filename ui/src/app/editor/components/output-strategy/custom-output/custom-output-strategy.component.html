@@ -17,35 +17,81 @@
   -->
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-        <h5 style="margin-right:10px;">{{selectedElement.inputStreams[0].name}}</h5>
-        <button mat-button mat-raised-button color="accent" class="small-button"
-                (click)="selectAll(collectedPropertiesFirstStream)"
-                style="margin-right:10px;margin-left:10px;" [disabled]="restrictedEditMode">Select all
+        <h5 style="margin-right: 10px">
+            {{ selectedElement.inputStreams[0].name }}
+        </h5>
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="selectAll(collectedPropertiesFirstStream)"
+            style="margin-right: 10px; margin-left: 10px"
+            [disabled]="restrictedEditMode"
+        >
+            Select all
         </button>
-        <button mat-button mat-raised-button class="mat-basic small-button"
-                (click)="deselectAll(collectedPropertiesFirstStream)" [disabled]="restrictedEditMode">Select
-            none
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic small-button"
+            (click)="deselectAll(collectedPropertiesFirstStream)"
+            [disabled]="restrictedEditMode"
+        >
+            Select none
         </button>
     </div>
     <div *ngFor="let property of collectedPropertiesFirstStream; let i = index">
-        <property-selection (validateForm)="checkFormValidity()" [outputStrategy]="outputStrategy" [eventProperty]="property"
-                            [layer]="0" [restrictedEditMode]="restrictedEditMode"></property-selection>
+        <sp-property-selection
+            (validateForm)="checkFormValidity()"
+            [outputStrategy]="outputStrategy"
+            [eventProperty]="property"
+            [layer]="0"
+            [restrictedEditMode]="restrictedEditMode"
+        ></sp-property-selection>
     </div>
-    <div fxLayout="column" fxFlex="100" *ngIf="collectedPropertiesSecondStream.length > 0">
+    <div
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="collectedPropertiesSecondStream.length > 0"
+    >
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-            <h5 style="margin-right:10px;">{{selectedElement.inputStreams[1].name}}</h5>
-            <button mat-button mat-raised-button color="accent" class="small-button"
-                    (click)="selectAll(collectedPropertiesSecondStream)"
-                    style="margin-right:10px;margin-left:10px;" [disabled]="restrictedEditMode">Select all
+            <h5 style="margin-right: 10px">
+                {{ selectedElement.inputStreams[1].name }}
+            </h5>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                class="small-button"
+                (click)="selectAll(collectedPropertiesSecondStream)"
+                style="margin-right: 10px; margin-left: 10px"
+                [disabled]="restrictedEditMode"
+            >
+                Select all
             </button>
-            <button mat-button mat-raised-button class="mat-basic small-button"
-                    (click)="deselectAll(collectedPropertiesSecondStream)" [disabled]="restrictedEditMode">Select
-                none
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic small-button"
+                (click)="deselectAll(collectedPropertiesSecondStream)"
+                [disabled]="restrictedEditMode"
+            >
+                Select none
             </button>
         </div>
-        <div *ngFor="let property of collectedPropertiesSecondStream; let i = index">
-            <property-selection [outputStrategy]="outputStrategy" [eventProperty]="property"
-                                [layer]="0" [restrictedEditMode]="restrictedEditMode"></property-selection>
+        <div
+            *ngFor="
+                let property of collectedPropertiesSecondStream;
+                let i = index
+            "
+        >
+            <sp-property-selection
+                [outputStrategy]="outputStrategy"
+                [eventProperty]="property"
+                [layer]="0"
+                [restrictedEditMode]="restrictedEditMode"
+            ></sp-property-selection>
         </div>
     </div>
 </div>

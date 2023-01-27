@@ -21,27 +21,24 @@ import { DialogRef } from '@streampipes/shared-ui';
 import { Notification } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'matching-error',
-  templateUrl: './matching-error.component.html',
-  styleUrls: ['./matching-error.component.scss']
+    selector: 'sp-matching-error',
+    templateUrl: './matching-error.component.html',
+    styleUrls: ['./matching-error.component.scss'],
 })
 export class MatchingErrorComponent {
+    @Input()
+    notifications: Notification[];
 
-  @Input()
-  notifications: Notification[];
+    msg: any;
+    statusDetailsVisible: any;
 
-  msg: any;
-  statusDetailsVisible: any;
+    constructor(private dialogRef: DialogRef<MatchingErrorComponent>) {}
 
-  constructor(private dialogRef: DialogRef<MatchingErrorComponent>) {
+    close() {
+        this.dialogRef.close();
+    }
 
-  }
-
-  close() {
-    this.dialogRef.close();
-  }
-
-  toggleStatusDetailsVisible() {
-    this.statusDetailsVisible = !(this.statusDetailsVisible);
-  }
+    toggleStatusDetailsVisible() {
+        this.statusDetailsVisible = !this.statusDetailsVisible;
+    }
 }

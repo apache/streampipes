@@ -16,11 +16,13 @@
 version: "3.4"
 services:
   consul:
-    image: fogsyio/consul:1.9.6
+    image: consul:1.14.3
     environment:
-      - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
+      - "CONSUL_LOCAL_CONFIG={\"rpc_streaming\": false, \"disable_update_check\": true, \"rpc\": {\"enable_streaming\": false}, \"use_streaming_backend\": false}"
       - "CONSUL_BIND_INTERFACE=eth0"
       - "CONSUL_HTTP_ADDR=0.0.0.0"
+      - "CONSUL_RPC_ENABLE_STREAMING=false"
+      - "CONSUL_USE_STREAMING_BACKEND=false"
     entrypoint:
       - consul
       - agent

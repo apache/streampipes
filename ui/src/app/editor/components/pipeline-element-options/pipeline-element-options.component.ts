@@ -20,19 +20,26 @@ import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import { RestApi } from '../../../services/rest-api.service';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { PipelineElementRecommendationService } from '../../services/pipeline-element-recommendation.service';
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
-  PipelineElementConfig,
-  PipelineElementConfigurationStatus,
-  PipelineElementUnion
+    PipelineElementConfig,
+    PipelineElementConfigurationStatus,
+    PipelineElementUnion,
 } from '../../model/editor.model';
 import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  SpDataStream,
-  WildcardTopicDefinition
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataStream,
+    WildcardTopicDefinition,
 } from '@streampipes/platform-services';
 import { EditorService } from '../../services/editor.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
@@ -42,148 +49,183 @@ import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 
 @Component({
-  selector: 'pipeline-element-options',
-  templateUrl: './pipeline-element-options.component.html',
-  styleUrls: ['./pipeline-element-options.component.css']
+    selector: 'sp-pipeline-element-options',
+    templateUrl: './pipeline-element-options.component.html',
+    styleUrls: ['./pipeline-element-options.component.css'],
 })
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
+    recommendationsAvailable: any = false;
+    possibleElements: PipelineElementUnion[];
+    recommendedElements: PipelineElementUnion[];
+    recommendationsShown: any = false;
+    pipelineElementCssType: string;
+    isDataSource: boolean;
 
-  recommendationsAvailable: any = false;
-  possibleElements: PipelineElementUnion[];
-  recommendedElements: PipelineElementUnion[];
-  recommendationsShown: any = false;
-  pipelineElementCssType: string;
-  isDataSource: boolean;
+    @Input()
+    currentMouseOverElement: string;
 
-  @Input()
-  currentMouseOverElement: string;
+    @Input()
+    pipelineElementId: string;
 
-  @Input()
-  pipelineElementId: string;
+    @Input()
+    pipelineValid: boolean;
 
-  @Input()
-  pipelineValid: boolean;
+    @Input()
+    internalId: string;
 
-  @Input()
-  internalId: string;
+    @Input()
+    pipelineElement: PipelineElementConfig;
 
-  @Input()
-  pipelineElement: PipelineElementConfig;
+    @Input()
+    rawPipelineModel: PipelineElementConfig[];
 
-  @Input()
-  rawPipelineModel: PipelineElementConfig[];
+    @Input()
+    allElements: PipelineElementUnion[];
 
-  @Input()
-  allElements: PipelineElementUnion[];
+    @Output()
+    delete: EventEmitter<PipelineElementConfig> =
+        new EventEmitter<PipelineElementConfig>();
 
-  @Output()
-  delete: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
+    @Output()
+    customize: EventEmitter<PipelineElementConfig> =
+        new EventEmitter<PipelineElementConfig>();
 
-  @Output()
-  customize: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
+    pipelineElementConfiguredObservable: Subscription;
 
-  pipelineElementConfiguredObservable: Subscription;
+    JsplumbBridge: JsplumbBridge;
 
-  JsplumbBridge: JsplumbBridge;
-
-  constructor(private objectProvider: ObjectProvider,
-              private pipelineElementRecommendationService: PipelineElementRecommendationService,
-              private dialogService: DialogService,
-              private editorService: EditorService,
-              private jsplumbFactoryService: JsplumbFactoryService,
-              private jsplumbService: JsplumbService,
-              private pipelineValidationService: PipelineValidationService,
-              private restApi: RestApi) {
-    this.recommendationsAvailable = false;
-    this.possibleElements = [];
-    this.recommendedElements = [];
-    this.recommendationsShown = false;
-    this.JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
-  }
-
-  ngOnInit() {
-    this.pipelineElementConfiguredObservable = this.editorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
-      this.pipelineElement.settings.openCustomize = false;
-      this.restApi.updateCachedPipeline(this.rawPipelineModel);
-      if (pipelineElementDomId === this.pipelineElement.payload.dom && ! (this.pipelineElement.payload instanceof DataSinkInvocation)) {
-        this.initRecs(this.pipelineElement.payload.dom);
-      }
-    });
-    this.pipelineElementCssType = this.pipelineElement.type;
-
-    this.isDataSource = this.pipelineElement.type === 'stream' || this.pipelineElement.type === 'set';
-
-    if (this.isDataSource ||
-      (this.pipelineElement.payload instanceof DataProcessorInvocation && this.pipelineElement.settings.completed === PipelineElementConfigurationStatus.OK)) {
-      this.initRecs(this.pipelineElement.payload.dom);
+    constructor(
+        private objectProvider: ObjectProvider,
+        private pipelineElementRecommendationService: PipelineElementRecommendationService,
+        private dialogService: DialogService,
+        private editorService: EditorService,
+        private jsplumbFactoryService: JsplumbFactoryService,
+        private jsplumbService: JsplumbService,
+        private pipelineValidationService: PipelineValidationService,
+        private restApi: RestApi,
+    ) {
+        this.recommendationsAvailable = false;
+        this.possibleElements = [];
+        this.recommendedElements = [];
+        this.recommendationsShown = false;
+        this.JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
     }
-  }
 
-  removeElement(pipelineElement: PipelineElementConfig) {
-    this.delete.emit(pipelineElement);
-  }
+    ngOnInit() {
+        this.pipelineElementConfiguredObservable =
+            this.editorService.pipelineElementConfigured$.subscribe(
+                pipelineElementDomId => {
+                    this.pipelineElement.settings.openCustomize = false;
+                    this.restApi.updateCachedPipeline(this.rawPipelineModel);
+                    if (
+                        pipelineElementDomId ===
+                            this.pipelineElement.payload.dom &&
+                        !(
+                            this.pipelineElement.payload instanceof
+                            DataSinkInvocation
+                        )
+                    ) {
+                        this.initRecs(this.pipelineElement.payload.dom);
+                    }
+                },
+            );
+        this.pipelineElementCssType = this.pipelineElement.type;
 
-  customizeElement(pipelineElement: PipelineElementConfig) {
-    this.customize.emit(pipelineElement);
-  }
+        this.isDataSource =
+            this.pipelineElement.type === 'stream' ||
+            this.pipelineElement.type === 'set';
 
-  openHelpDialog() {
-    this.editorService.openHelpDialog(this.pipelineElement.payload);
-  }
+        if (
+            this.isDataSource ||
+            (this.pipelineElement.payload instanceof DataProcessorInvocation &&
+                this.pipelineElement.settings.completed ===
+                    PipelineElementConfigurationStatus.OK)
+        ) {
+            this.initRecs(this.pipelineElement.payload.dom);
+        }
+    }
 
-  openCustomizeStreamDialog() {
-    // this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
-  }
+    removeElement(pipelineElement: PipelineElementConfig) {
+        this.delete.emit(pipelineElement);
+    }
 
-  initRecs(pipelineElementDomId) {
-    const clonedModel: PipelineElementConfig[] = cloneDeep(this.rawPipelineModel);
-    const currentPipeline = this.objectProvider.makePipeline(clonedModel);
-    this.editorService.recommendPipelineElement(currentPipeline, pipelineElementDomId).subscribe((result) => {
-      if (result.success) {
-        this.possibleElements =
-            cloneDeep(this.pipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements));
-        this.recommendedElements =
-            cloneDeep(this.pipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements));
-        this.recommendationsAvailable = true;
-      }
-    });
-  }
+    customizeElement(pipelineElement: PipelineElementConfig) {
+        this.customize.emit(pipelineElement);
+    }
 
-  openPossibleElementsDialog() {
-    const dialogRef = this.dialogService.open(CompatibleElementsComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Compatible Elements',
-      data: {
-        'rawPipelineModel': this.rawPipelineModel,
-        'possibleElements': this.possibleElements,
-        'pipelineElementDomId': this.pipelineElement.payload.dom
-      }
-    });
+    openHelpDialog() {
+        this.editorService.openHelpDialog(this.pipelineElement.payload);
+    }
 
-    dialogRef.afterClosed().subscribe(c => {
+    openCustomizeStreamDialog() {
+        // this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
+    }
 
-    });
-  }
+    initRecs(pipelineElementDomId) {
+        const clonedModel: PipelineElementConfig[] = cloneDeep(
+            this.rawPipelineModel,
+        );
+        const currentPipeline = this.objectProvider.makePipeline(clonedModel);
+        this.editorService
+            .recommendPipelineElement(currentPipeline, pipelineElementDomId)
+            .subscribe(result => {
+                if (result.success) {
+                    this.possibleElements = cloneDeep(
+                        this.pipelineElementRecommendationService.collectPossibleElements(
+                            this.allElements,
+                            result.possibleElements,
+                        ),
+                    );
+                    this.recommendedElements = cloneDeep(
+                        this.pipelineElementRecommendationService.populateRecommendedList(
+                            this.allElements,
+                            result.recommendedElements,
+                        ),
+                    );
+                    this.recommendationsAvailable = true;
+                }
+            });
+    }
 
-  showRecommendations(e) {
-    this.recommendationsShown = !this.recommendationsShown;
-    e.stopPropagation();
-  }
+    openPossibleElementsDialog() {
+        const dialogRef = this.dialogService.open(CompatibleElementsComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Compatible Elements',
+            data: {
+                rawPipelineModel: this.rawPipelineModel,
+                possibleElements: this.possibleElements,
+                pipelineElementDomId: this.pipelineElement.payload.dom,
+            },
+        });
 
-  isRootElement() {
-    return this.JsplumbBridge.getConnections({source: document.getElementById(this.pipelineElement.payload.dom)}).length === 0;
-  }
+        dialogRef.afterClosed().subscribe(c => {});
+    }
 
-  isWildcardTopic() {
-    console.log(this.pipelineElement);
-    return (this.pipelineElement
-        .payload as SpDataStream)
-        .eventGrounding
-        .transportProtocols[0]
-        .topicDefinition instanceof WildcardTopicDefinition;
-  }
+    showRecommendations(e) {
+        this.recommendationsShown = !this.recommendationsShown;
+        e.stopPropagation();
+    }
 
-  ngOnDestroy(): void {
-    this.pipelineElementConfiguredObservable.unsubscribe();
-  }
+    isRootElement() {
+        return (
+            this.JsplumbBridge.getConnections({
+                source: document.getElementById(
+                    this.pipelineElement.payload.dom,
+                ),
+            }).length === 0
+        );
+    }
+
+    isWildcardTopic() {
+        console.log(this.pipelineElement);
+        return (
+            (this.pipelineElement.payload as SpDataStream).eventGrounding
+                .transportProtocols[0].topicDefinition instanceof
+            WildcardTopicDefinition
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.pipelineElementConfiguredObservable.unsubscribe();
+    }
 }

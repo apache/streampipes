@@ -16,22 +16,22 @@
  *
  */
 
-
 import {
     EventPropertyUnion,
     EventSchema,
-    StaticPropertyUnion
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 
 export class CollectedSchemaRequirements {
-
-    constructor(private requiredEventProperties: EventPropertyUnion[], private requiredMappingProperties: StaticPropertyUnion[]) {
-
-    }
+    constructor(
+        private requiredEventProperties: EventPropertyUnion[],
+        private requiredMappingProperties: StaticPropertyUnion[],
+    ) {}
 
     getEventSchema(): EventSchema {
         const eventSchema = new EventSchema();
-        eventSchema['@class'] = 'org.apache.streampipes.model.schema.EventSchema';
+        eventSchema['@class'] =
+            'org.apache.streampipes.model.schema.EventSchema';
         eventSchema.eventProperties = this.requiredEventProperties;
         return eventSchema;
     }

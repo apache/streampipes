@@ -16,21 +16,31 @@
   ~
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel"
-     [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    fxFlex="100"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    class="main-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
     <ngx-charts-gauge
-            [view]="view"
-            [scheme]="colorScheme"
-            [results]="data"
-            [min]="min"
-            [max]="max"
-            [angleSpan]="240"
-            [startAngle]="-120"
-            [bigSegments]="10"
-            [smallSegments]="5"
-            [ngStyle]="{'fill': selectedPrimaryTextColor}" *ngIf="displayChart">
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="data"
+        [min]="min"
+        [max]="max"
+        [angleSpan]="240"
+        [startAngle]="-120"
+        [bigSegments]="10"
+        [smallSegments]="5"
+        [ngStyle]="{ fill: selectedPrimaryTextColor }"
+        *ngIf="displayChart"
+    >
     </ngx-charts-gauge>
 </div>

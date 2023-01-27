@@ -19,34 +19,66 @@
 package org.apache.streampipes.sinks.databases.jvm.iotdb;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectionParameters;
+import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class IotDbParameters extends JdbcConnectionParameters {
+public class IotDbParameters extends EventSinkBindingParams {
 
-  private String timestampField;
+  private final String host;
+  private final Integer port;
+
+  private final String user;
+  private final String password;
+
+  private final String database;
+  // entity
+  private final String device;
+
+  private final String timestampField;
 
   public IotDbParameters(DataSinkInvocation graph,
-                         String iotDbHost,
-                         Integer iotDbPort,
-                         String dbStorageGroup,
+                         String host,
+                         Integer port,
                          String user,
                          String password,
-                         boolean sslEnabled,
+                         String database,
+                         String device,
                          String timestampField) {
-    super(
-        graph,
-        iotDbHost,
-        iotDbPort,
-        "",
-        user,
-        password,
-        "root." + dbStorageGroup,
-        sslEnabled,
-        null,
-        false
-    );
+    super(graph);
+
+    this.host = host;
+    this.port = port;
+
+    this.user = user;
+    this.password = password;
+
+    this.database = database;
+    this.device = device;
 
     this.timestampField = timestampField;
+  }
+
+  public String getHost() {
+    return host;
+  }
+
+  public Integer getPort() {
+    return port;
+  }
+
+  public String getUser() {
+    return user;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public String getDatabase() {
+    return database;
+  }
+
+  public String getDevice() {
+    return device;
   }
 
   public String getTimestampField() {

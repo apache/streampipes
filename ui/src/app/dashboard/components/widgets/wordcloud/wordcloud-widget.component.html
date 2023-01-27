@@ -16,14 +16,24 @@
   ~
   -->
 
-<div class="wordcloud-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    class="wordcloud-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
     <div class="value-panel">
-        <div echarts [options]="chartOption" [ngStyle]="{'width': '100%', 'height': currentHeight}"
-             (chartInit)="onChartInit($event)" [merge]= "dynamicData" *ngIf="configReady">
-
-        </div>
+        <div
+            echarts
+            [options]="chartOption"
+            [ngStyle]="{ width: '100%', height: currentHeight }"
+            (chartInit)="onChartInit($event)"
+            [merge]="dynamicData"
+            *ngIf="configReady"
+        ></div>
     </div>
 </div>

@@ -18,96 +18,99 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { PipelineElementUnion } from '../../model/editor.model';
-import { PipelineElementService, SpDataStream } from '@streampipes/platform-services';
+import {
+    PipelineElementService,
+    SpDataStream,
+} from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineElementTypeUtils } from '../../utils/editor.utils';
 
 @Component({
-  selector: 'pipeline-element-help',
-  templateUrl: './help.component.html',
-  styleUrls: ['./help.component.scss']
+    selector: 'sp-pipeline-element-help',
+    templateUrl: './help.component.html',
+    styleUrls: ['./help.component.scss'],
 })
 export class HelpComponent implements OnInit {
+    selectedTab = 0;
+    pollingActive: boolean;
 
-  selectedTab = 0;
-  pollingActive: boolean;
+    selectedIndex = 0;
 
-  selectedIndex = 0;
+    nsPrefix = 'http://www.w3.org/2001/XMLSchema#';
+    availableTabs = [
+        {
+            title: 'Fields',
+            type: 'fields',
+            targets: ['set', 'stream'],
+        },
+        {
+            title: 'Values',
+            type: 'values',
+            targets: ['set', 'stream'],
+        },
+        {
+            title: 'Documentation',
+            type: 'documentation',
+            targets: ['set', 'stream', 'sepa', 'action'],
+        },
+    ];
 
-  nsPrefix = 'http://www.w3.org/2001/XMLSchema#';
-  availableTabs = [
-    {
-      title: 'Fields',
-      type: 'fields',
-      targets: ['set', 'stream']
-    },
-    {
-      title: 'Values',
-      type: 'values',
-      targets: ['set', 'stream']
-    },
-    {
-      title: 'Documentation',
-      type: 'documentation',
-      targets: ['set', 'stream', 'sepa', 'action']
+    tabs: any[] = [];
+    streamMode: boolean;
+
+    @Input()
+    pipelineElement: PipelineElementUnion;
+
+    constructor(
+        private pipelineElementService: PipelineElementService,
+        private dialogRef: DialogRef<HelpComponent>,
+    ) {
+        this.pollingActive = true;
     }
-  ];
 
-  tabs: any[] = [];
-  streamMode: boolean;
-
-  @Input()
-  pipelineElement: PipelineElementUnion;
-
-  constructor(private pipelineElementService: PipelineElementService,
-              private dialogRef: DialogRef<HelpComponent>) {
-    this.pollingActive = true;
-  }
-
-  ngOnInit() {
-    if (this.pipelineElement instanceof SpDataStream) {
-      this.tabs = this.availableTabs;
-      this.streamMode = true;
-    } else {
-      this.tabs.push(this.availableTabs[2]);
-      this.streamMode = false;
+    ngOnInit() {
+        if (this.pipelineElement instanceof SpDataStream) {
+            this.tabs = this.availableTabs;
+            this.streamMode = true;
+        } else {
+            this.tabs.push(this.availableTabs[2]);
+            this.streamMode = false;
+        }
     }
-  }
 
-  getFriendlyRuntimeType(runtimeType) {
-    if (this.isNumber(runtimeType)) {
-      return 'Number';
-    } else if (this.isBoolean(runtimeType)) {
-      return 'Boolean';
-    } else {
-      return 'Text';
+    getFriendlyRuntimeType(runtimeType) {
+        if (this.isNumber(runtimeType)) {
+            return 'Number';
+        } else if (this.isBoolean(runtimeType)) {
+            return 'Boolean';
+        } else {
+            return 'Text';
+        }
     }
-  }
 
-  isNumber(runtimeType) {
-    return (runtimeType === (this.nsPrefix + 'float')) ||
-        (runtimeType === (this.nsPrefix + 'integer')) ||
-        (runtimeType === (this.nsPrefix + 'long')) ||
-        (runtimeType === (this.nsPrefix + 'double'));
-  }
+    isNumber(runtimeType) {
+        return (
+            runtimeType === this.nsPrefix + 'float' ||
+            runtimeType === this.nsPrefix + 'integer' ||
+            runtimeType === this.nsPrefix + 'long' ||
+            runtimeType === this.nsPrefix + 'double'
+        );
+    }
 
-  isBoolean(runtimeType) {
-    return runtimeType === this.nsPrefix + 'boolean';
-  }
+    isBoolean(runtimeType) {
+        return runtimeType === this.nsPrefix + 'boolean';
+    }
 
-  close() {
-    this.pollingActive = false;
-    setTimeout(() => {
-      this.dialogRef.close();
-    });
-  }
+    close() {
+        this.pollingActive = false;
+        setTimeout(() => {
+            this.dialogRef.close();
+        });
+    }
 
-
-  filterTab(tab) {
-    const type = PipelineElementTypeUtils.fromType(this.pipelineElement);
-    const cssShortHand = PipelineElementTypeUtils.toCssShortHand(type);
-    return tab.targets.indexOf(cssShortHand) !== -1;
-  }
-
-
+    filterTab(tab) {
+        const type = PipelineElementTypeUtils.fromType(this.pipelineElement);
+        const cssShortHand = PipelineElementTypeUtils.toCssShortHand(type);
+        return tab.targets.indexOf(cssShortHand) !== -1;
+    }
 }

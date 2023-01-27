@@ -16,22 +16,17 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TimeSettings } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-no-data-in-date-range',
-  templateUrl: './no-data-in-date-range.component.html',
-  styleUrls: ['./no-data-in-date-range.component.css']
+    selector: 'sp-no-data-in-date-range',
+    templateUrl: './no-data-in-date-range.component.html',
+    styleUrls: ['./no-data-in-date-range.component.css'],
 })
-export class NoDataInDateRangeComponent implements OnInit {
+export class NoDataInDateRangeComponent {
+    @Input()
+    public viewDateRange: TimeSettings;
 
-  @Input()
-  public viewDateRange: TimeSettings;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+    constructor() {}
 }

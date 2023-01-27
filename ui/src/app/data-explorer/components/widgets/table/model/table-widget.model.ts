@@ -16,17 +16,19 @@
  *
  */
 
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel } from '@streampipes/platform-services';
 import {
-  DataExplorerVisConfig
-} from '../../../../models/dataview-dashboard.model';
+    DataExplorerDataConfig,
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
+import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface TableVisConfig extends DataExplorerVisConfig {
-  selectedColumns: DataExplorerField[];
-  searchValue: string;
+    selectedColumns: DataExplorerField[];
+    searchValue: string;
 }
 
 export interface TableWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: TableVisConfig;
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: TableVisConfig;
 }

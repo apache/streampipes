@@ -28,6 +28,10 @@
 
 Stores events in a IoTDB database.
 
+Events will be stored in timeseries `root.${Database Name}.${Device (Entity) Name}.${Event Key}`.
+
+Please reference to [https://iotdb.apache.org/](https://iotdb.apache.org/) for more information.
+
 ***
 
 ## Required input
@@ -46,11 +50,6 @@ The hostname of the IoTDB instance.
 
 The port of the IoTDB instance (default 6667).
 
-### Storage Group Name
-
-The name of the storage group where events will be stored (will be created if it does not exist).
-For each element of the stream a new time series will be created.
-
 ### Username
 
 The username for the IoTDB Server.
@@ -58,6 +57,28 @@ The username for the IoTDB Server.
 ### Password
 
 The password for the IoTDB Server.
+
+### **Database Name**
+
+The name of the database where events will be stored (will be created if it does not exist).
+
+A database is a group of devices (entities). Users can create any prefix path as a database.
+
+### **Device (Entity) Name**
+
+The name of the device (entity) where events will be stored.
+
+A device (also called entity) is an equipped with measurements in real scenarios. In IoTDB, all measurements should have
+their corresponding devices.
+
+### **Measurements**
+
+All keys of fields in an event will be automatically converted to suffixes of timeseries.
+
+A measurement is information measured by detection equipment in an actual scene and can transform the sensed information
+into an electrical signal or other desired form of information output and send it to IoTDB.
+
+In IoTDB, all data and paths stored are organized in units of measurements.
 
 ## Output
 

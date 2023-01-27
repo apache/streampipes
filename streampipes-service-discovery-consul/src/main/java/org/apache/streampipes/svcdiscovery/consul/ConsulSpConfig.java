@@ -18,20 +18,17 @@
 
 package org.apache.streampipes.svcdiscovery.consul;
 
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItemUtils;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
 
+import com.ecwid.consul.v1.ConsulClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.orbitz.consul.Consul;
-import com.orbitz.consul.KeyValueClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
-import java.util.Optional;
 
 public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
 
@@ -39,14 +36,12 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
   private static final Logger LOG = LoggerFactory.getLogger(ConsulSpConfig.class);
   private static final String SLASH = "/";
   private final String serviceName;
-  private final KeyValueClient kvClient;
+  private final ConsulClient kvClient;
 
-  // TODO Implement mechanism to update the client when some configuration parameters change in Consul
-  private Map<String, Object> configProps;
-
-  public ConsulSpConfig(String serviceName) {
-    Consul consul = consulInstance();
-    this.kvClient = consul.keyValueClient();
+  public ConsulSpConfig(String serviceName,
+                        Environment environment) {
+    super(environment);
+    this.kvClient = consulInstance();
     this.serviceName = serviceName;
   }
 
@@ -82,9 +77,9 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
 
   @Override
   public void registerObject(String key, Object defaultValue, String description) {
-    Optional<String> i = kvClient.getValueAsString(addSn(key));
-    if (!i.isPresent()) {
-      kvClient.putValue(addSn(key), toJson(defaultValue));
+    var i = kvClient.getKVValue(addSn(key));
+    if (i.getValue() == null) {
+      kvClient.setKVValue(addSn(key), toJson(defaultValue));
     }
   }
 
@@ -96,28 +91,28 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
   @Override
   public void register(ConfigItem configItem) {
     String key = addSn(configItem.getKey());
-    Optional<String> i = kvClient.getValueAsString(key);
+    var i = kvClient.getKVValue(key);
 
-    if (!i.isPresent()) {
+    if (i.getValue() == null) {
       // Set the value of environment variable as default
       String envVariable = System.getenv(configItem.getKey());
       if (envVariable != null) {
         configItem.setValue(envVariable);
-        kvClient.putValue(key, toJson(configItem));
+        kvClient.setKVValue(key, toJson(configItem));
       } else {
-        kvClient.putValue(key, toJson(configItem));
+        kvClient.setKVValue(key, toJson(configItem));
       }
     }
   }
 
-  private void register(String key, String defaultValue, String valueType, String description,
-                        ConfigurationScope configurationScope, boolean isPassword) {
+  private void register(String key,
+                        String defaultValue,
+                        String valueType,
+                        String description,
+                        ConfigurationScope configurationScope,
+                        boolean isPassword) {
     ConfigItem configItem = ConfigItem.from(key, defaultValue, description, valueType, configurationScope, isPassword);
     register(configItem);
-
-    if (configProps != null) {
-      configProps.put(key, getString(key));
-    }
   }
 
   @Override
@@ -142,10 +137,10 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
 
   @Override
   public <T> T getObject(String key, Class<T> clazz, T defaultValue) {
-    Optional<String> os = kvClient.getValueAsString(addSn(key));
-    if (os.isPresent()) {
+    var os = kvClient.getKVValue(addSn(key));
+    if (os.getValue() != null) {
       try {
-        return JacksonSerializer.getObjectMapper().readValue(os.get(), clazz);
+        return JacksonSerializer.getObjectMapper().readValue(os.getValue().getDecodedValue(), clazz);
       } catch (JsonProcessingException e) {
         LOG.info("Could not deserialize object", e);
         return defaultValue;
@@ -157,9 +152,9 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
 
   @Override
   public ConfigItem getConfigItem(String key) {
-    Optional<String> os = kvClient.getValueAsString(addSn(key));
+    var os = kvClient.getKVValue(addSn(key)).getValue();
 
-    return fromJson(os.get());
+    return fromJson(os.getDecodedValue());
   }
 
   @Override
@@ -179,12 +174,12 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
 
   @Override
   public void setString(String key, String value) {
-    kvClient.putValue(addSn(key), value);
+    kvClient.setKVValue(addSn(key), value);
   }
 
   @Override
   public void setObject(String key, Object value) {
-    kvClient.putValue(addSn(key), toJson(value));
+    kvClient.setKVValue(addSn(key), toJson(value));
   }
 
   private String addSn(String key) {
@@ -202,7 +197,9 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
     }
   }
 
-  private ConfigItem prepareConfigItem(String valueType, String description, ConfigurationScope configurationScope,
+  private ConfigItem prepareConfigItem(String valueType,
+                                       String description,
+                                       ConfigurationScope configurationScope,
                                        boolean password) {
     ConfigItem configItem = new ConfigItem();
     configItem.setValueType(valueType);

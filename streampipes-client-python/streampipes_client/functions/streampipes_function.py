@@ -15,27 +15,36 @@
 # limitations under the License.
 #
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional
 
 from streampipes_client.functions.utils.function_context import FunctionContext
+from streampipes_client.model.resource import FunctionDefinition
 
 
 class StreamPipesFunction(ABC):
     """Abstract implementation of a StreamPipesFunction.
     A StreamPipesFunction allows users to get the data of a StreamPipes data streams easily.
-    It makes it possible to work with the live data in python and enabels to use the powerful
-    data analytics libaries there.
+    It makes it possible to work with the live data in python and enables to use the powerful
+    data analytics libraries there.
+
+    Parameters
+    ----------
+    function_definition: FunctionDefinition
+        the definition of the function that contains metadata about the connected function
     """
 
-    @abstractmethod
-    def getFunctionId(self) -> Tuple[str, int]:
-        """Get the id of the function.
+    def __init__(self, function_definition: Optional[FunctionDefinition] = None):
+        self.function_definition = function_definition or FunctionDefinition()
+
+    def getFunctionId(self) -> FunctionDefinition.FunctionId:
+        """Returns the id of the function.
 
         Returns
         -------
-        Tuple of the function id und version number
+        FunctionId: FunctionDefinition.FunctionId
+            Identification object of the StreamPipes function
         """
-        raise NotImplementedError
+        return self.function_definition.function_id
 
     @abstractmethod
     def requiredStreamIds(self) -> List[str]:

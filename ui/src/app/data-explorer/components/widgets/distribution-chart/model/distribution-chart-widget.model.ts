@@ -16,18 +16,21 @@
  *
  */
 
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel } from '@streampipes/platform-services';
+import {
+    DataExplorerDataConfig,
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
 import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-
 export interface DistributionChartVisConfig extends DataExplorerVisConfig {
-  selectedProperty: DataExplorerField;
-  displayType: string;
-  roundingValue: number;
-  resolution: number;
+    selectedProperty: DataExplorerField;
+    displayType: string;
+    roundingValue: number;
+    resolution: number;
 }
 
 export interface DistributionChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: DistributionChartVisConfig;
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: DistributionChartVisConfig;
 }

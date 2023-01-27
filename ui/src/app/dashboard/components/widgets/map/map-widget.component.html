@@ -15,15 +15,28 @@
   ~   limitations under the License.
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    fxFlex="100"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    class="main-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
-    <div [ngStyle]="{'width': mapWidth + 'px', 'height': mapHeight + 'px'}"
-         leaflet
-         [leafletOptions]="options"
-         (leafletMapReady)="onMapReady($event)">
-<!--        <div *ngIf="showMarkers" [leafletLayer]="markerLayer"></div>-->
-        <div *ngFor="let markerLayer of markerLayers" [leafletLayer]="markerLayer"></div>
+    <div
+        [ngStyle]="{ width: mapWidth + 'px', height: mapHeight + 'px' }"
+        leaflet
+        [leafletOptions]="options"
+        (leafletMapReady)="onMapReady($event)"
+    >
+        <div
+            *ngFor="let markerLayer of markerLayers"
+            [leafletLayer]="markerLayer"
+        ></div>
     </div>
 </div>

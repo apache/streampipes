@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.extensions.management.config;
 
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 
 import java.io.Serializable;
 
@@ -27,7 +27,7 @@ public class ConfigExtractor implements Serializable {
   private SpConfig config;
 
   private ConfigExtractor(String serviceGroup) {
-    this.config = new ConsulSpConfig(serviceGroup);
+    this.config = SpServiceDiscovery.getSpConfig(serviceGroup);
   }
 
   public static ConfigExtractor from(String serviceGroup) {

@@ -18,13 +18,13 @@
 
 import { CollectedSchemaRequirements } from './collected-schema-requirements';
 import {
-    EventPropertyUnion, MappingPropertyNary,
+    EventPropertyUnion,
+    MappingPropertyNary,
     MappingPropertyUnary,
-    StaticPropertyUnion
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 
 export class SchemaRequirementsBuilder {
-
     private requiredEventProperties: EventPropertyUnion[];
     private staticProperties: StaticPropertyUnion[];
 
@@ -37,16 +37,20 @@ export class SchemaRequirementsBuilder {
         return new SchemaRequirementsBuilder();
     }
 
-    requiredPropertyWithUnaryMapping(internalId: string,
-                                     label: string,
-                                     description: string,
-                                     eventProperty: EventPropertyUnion): SchemaRequirementsBuilder {
+    requiredPropertyWithUnaryMapping(
+        internalId: string,
+        label: string,
+        description: string,
+        eventProperty: EventPropertyUnion,
+    ): SchemaRequirementsBuilder {
         eventProperty.runtimeName = internalId;
-        const mp = this.makeMappingProperty(internalId,
+        const mp = this.makeMappingProperty(
+            internalId,
             label,
             description,
             new MappingPropertyUnary(),
-            'org.apache.streampipes.model.staticproperty.MappingPropertyUnary');
+            'org.apache.streampipes.model.staticproperty.MappingPropertyUnary',
+        );
 
         this.staticProperties.push(mp);
         this.requiredEventProperties.push(eventProperty);
@@ -54,16 +58,20 @@ export class SchemaRequirementsBuilder {
         return this;
     }
 
-    requiredPropertyWithNaryMapping(internalId: string,
-                                    label: string,
-                                    description: string,
-                                    eventProperty: EventPropertyUnion): SchemaRequirementsBuilder {
+    requiredPropertyWithNaryMapping(
+        internalId: string,
+        label: string,
+        description: string,
+        eventProperty: EventPropertyUnion,
+    ): SchemaRequirementsBuilder {
         eventProperty.runtimeName = internalId;
-        const mp = this.makeMappingProperty(internalId,
+        const mp = this.makeMappingProperty(
+            internalId,
             label,
             description,
             new MappingPropertyNary(),
-            'org.apache.streampipes.model.staticproperty.MappingPropertyNary');
+            'org.apache.streampipes.model.staticproperty.MappingPropertyNary',
+        );
 
         this.staticProperties.push(mp);
         this.requiredEventProperties.push(eventProperty);
@@ -71,11 +79,13 @@ export class SchemaRequirementsBuilder {
         return this;
     }
 
-    makeMappingProperty(internalId: string,
-                        label: string,
-                        description: string,
-                        sp: StaticPropertyUnion,
-                        className: any): StaticPropertyUnion {
+    makeMappingProperty(
+        internalId: string,
+        label: string,
+        description: string,
+        sp: StaticPropertyUnion,
+        className: any,
+    ): StaticPropertyUnion {
         sp.internalName = internalId;
         sp.label = label;
         sp.description = description;
@@ -84,6 +94,9 @@ export class SchemaRequirementsBuilder {
     }
 
     build() {
-        return new CollectedSchemaRequirements(this.requiredEventProperties, this.staticProperties);
+        return new CollectedSchemaRequirements(
+            this.requiredEventProperties,
+            this.staticProperties,
+        );
     }
 }

@@ -23,21 +23,25 @@ import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-
 import { GaugeConfig } from './gauge-config';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
-
 @Component({
-    selector: 'gauge-widget',
+    selector: 'sp-gauge-widget',
     templateUrl: './gauge-widget.component.html',
-    styleUrls: ['./gauge-widget.component.css']
+    styleUrls: ['./gauge-widget.component.css'],
 })
-export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget implements OnInit, OnDestroy {
-
+export class GaugeWidgetComponent
+    extends BaseNgxChartsStreamPipesWidget
+    implements OnInit, OnDestroy
+{
     data: any = [];
     min: number;
     max: number;
 
     selectedProperty: string;
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService);
     }
 
@@ -52,7 +56,9 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
     extractConfig(extractor: StaticPropertyExtractor) {
         this.min = extractor.integerParameter(GaugeConfig.MIN_KEY);
         this.max = extractor.integerParameter(GaugeConfig.MAX_KEY);
-        this.selectedProperty = extractor.mappingPropertyValue(GaugeConfig.NUMBER_MAPPING_KEY);
+        this.selectedProperty = extractor.mappingPropertyValue(
+            GaugeConfig.NUMBER_MAPPING_KEY,
+        );
     }
 
     isNumber(item: any): boolean {
@@ -60,7 +66,10 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
     }
 
     protected onEvent(events: any[]) {
-        this.data[0] = ({'name': 'value', 'value': events[0][this.selectedProperty]});
+        this.data[0] = {
+            name: 'value',
+            value: events[0][this.selectedProperty],
+        };
         this.data = [...this.data];
     }
 
@@ -71,5 +80,4 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
     getFieldsToQuery(): string[] {
         return [this.selectedProperty];
     }
-
 }

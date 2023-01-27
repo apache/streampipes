@@ -19,7 +19,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ColorService {
-
     getColor(str) {
         let hash = 0;
         if (str.length === 0) {
