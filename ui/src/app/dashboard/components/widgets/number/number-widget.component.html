@@ -16,17 +16,23 @@
   ~
   -->
 
-<div class="circleNumber" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    class="circleNumber"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
     <div class="value-panel">
         <div class="numberItem">
-            <div *ngIf="isNumber(item)">{{item}}</div>
-            <div *ngIf="!isNumber(item)">{{item}}</div>
+            <div *ngIf="isNumber(item)">{{ item }}</div>
+            <div *ngIf="!isNumber(item)">{{ item }}</div>
         </div>
         <div class="measurementUnitItem" *ngIf="measurementUnitAbbrev">
-            {{measurementUnitAbbrev}}
+            {{ measurementUnitAbbrev }}
         </div>
     </div>
 </div>

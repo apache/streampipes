@@ -16,23 +16,22 @@
  *
  */
 
-import {BaseNgxLineConfig} from "../base/base-ngx-line-config";
+import { BaseNgxLineConfig } from '../base/base-ngx-line-config';
 
 export class LineConfig extends BaseNgxLineConfig {
-
     getWidgetLabel(): string {
-        return "Line Chart";
+        return 'Line Chart';
     }
 
     getWidgetName(): string {
-        return "line";
+        return 'line';
     }
 
     getWidgetDescription(): string {
-        return "A line chart with customizable axes and fields to display";
+        return 'A line chart with customizable axes and fields to display';
     }
 
     getWidgetIcon(): string {
-        return "fas fa-chart-line";
+        return 'fas fa-chart-line';
     }
 }

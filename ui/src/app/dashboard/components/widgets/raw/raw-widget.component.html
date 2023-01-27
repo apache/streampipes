@@ -15,14 +15,25 @@
   ~   limitations under the License.
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    fxFlex="100"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    class="main-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
-    <div [ngStyle]="{'width': width + 'px', 'height': height + 'px'}" class="p-10">
-        <div *ngFor="let item of items"
-             data-cy="dashboard-raw-item">
-            {{item}}
+    <div
+        [ngStyle]="{ width: width + 'px', height: height + 'px' }"
+        class="p-10"
+    >
+        <div *ngFor="let item of items" data-cy="dashboard-raw-item">
+            {{ item }}
         </div>
     </div>
 </div>

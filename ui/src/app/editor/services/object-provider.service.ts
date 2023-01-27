@@ -18,18 +18,21 @@
 
 import { Injectable } from '@angular/core';
 import { RestApi } from '../../services/rest-api.service';
-import { InvocablePipelineElementUnion, PipelineElementConfig } from '../model/editor.model';
+import {
+    InvocablePipelineElementUnion,
+    PipelineElementConfig,
+} from '../model/editor.model';
 import { DataSinkInvocation, Pipeline } from '@streampipes/platform-services';
 import { EditorService } from './editor.service';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ObjectProvider {
-
-    constructor(private restApi: RestApi,
-                private editorService: EditorService,
-                private jsplumbFactoryService: JsplumbFactoryService) {
-    }
+    constructor(
+        private restApi: RestApi,
+        private editorService: EditorService,
+        private jsplumbFactoryService: JsplumbFactoryService,
+    ) {}
 
     prepareElement(pipelineElement: InvocablePipelineElementUnion) {
         pipelineElement.connectedTo = [];
@@ -57,38 +60,65 @@ export class ObjectProvider {
         return pipeline;
     }
 
-    hasConnectedPipelineElement(pipelineElementDomId: string,
-                                rawPipelineModel: PipelineElementConfig[]) {
-        const pipelineElement = this.findElement(pipelineElementDomId, rawPipelineModel);
+    hasConnectedPipelineElement(
+        pipelineElementDomId: string,
+        rawPipelineModel: PipelineElementConfig[],
+    ) {
+        const pipelineElement = this.findElement(
+            pipelineElementDomId,
+            rawPipelineModel,
+        );
         if (pipelineElement.payload instanceof DataSinkInvocation) {
             return false;
         } else {
-            return rawPipelineModel
-                .filter(pe => !pe.settings.disabled && pe.payload.connectedTo)
-                .find(pe => (pe.payload.connectedTo.indexOf(pipelineElementDomId) > -1))
-                !== undefined;
+            return (
+                rawPipelineModel
+                    .filter(
+                        pe => !pe.settings.disabled && pe.payload.connectedTo,
+                    )
+                    .find(
+                        pe =>
+                            pe.payload.connectedTo.indexOf(
+                                pipelineElementDomId,
+                            ) > -1,
+                    ) !== undefined
+            );
         }
     }
 
-    findElement(elementId, rawPipelineModel: PipelineElementConfig[]): PipelineElementConfig {
-        return rawPipelineModel.find(pe => pe.payload.dom === elementId) || {} as PipelineElementConfig;
+    findElement(
+        elementId,
+        rawPipelineModel: PipelineElementConfig[],
+    ): PipelineElementConfig {
+        return (
+            rawPipelineModel.find(pe => pe.payload.dom === elementId) ||
+            ({} as PipelineElementConfig)
+        );
     }
 
-    addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]): Pipeline {
-        const JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
+    addElementNew(
+        pipeline,
+        currentPipelineElements: PipelineElementConfig[],
+    ): Pipeline {
+        const JsplumbBridge =
+            this.jsplumbFactoryService.getJsplumbBridge(false);
         currentPipelineElements.forEach(pe => {
-            if (pe.settings.disabled === undefined || !(pe.settings.disabled)) {
+            if (pe.settings.disabled === undefined || !pe.settings.disabled) {
                 if (pe.type === 'sepa' || pe.type === 'action') {
                     let payload = pe.payload;
-                    payload = this.prepareElement(payload as InvocablePipelineElementUnion);
+                    payload = this.prepareElement(
+                        payload as InvocablePipelineElementUnion,
+                    );
                     const connections = JsplumbBridge.getConnections({
-                        target: document.getElementById(payload.dom)
+                        target: document.getElementById(payload.dom),
                     });
                     for (let i = 0; i < connections.length; i++) {
                         payload.connectedTo.push(connections[i].sourceId);
                     }
                     if (payload.connectedTo && payload.connectedTo.length > 0) {
-                        pe.type === 'action' ? pipeline.actions.push(payload) : pipeline.sepas.push(payload);
+                        pe.type === 'action'
+                            ? pipeline.actions.push(payload)
+                            : pipeline.sepas.push(payload);
                     }
                 } else {
                     pipeline.streams.push(pe.payload);

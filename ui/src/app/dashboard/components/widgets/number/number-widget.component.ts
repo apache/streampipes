@@ -21,65 +21,78 @@ import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { NumberConfig } from './number-config';
 import { ResizeService } from '../../../services/resize.service';
-import { DashboardService, DatalakeRestService, EventPropertyPrimitive } from '@streampipes/platform-services';
+import {
+    DashboardService,
+    DatalakeRestService,
+    EventPropertyPrimitive,
+} from '@streampipes/platform-services';
 
 @Component({
-  selector: 'number-widget',
-  templateUrl: './number-widget.component.html',
-  styleUrls: ['./number-widget.component.css']
+    selector: 'sp-number-widget',
+    templateUrl: './number-widget.component.html',
+    styleUrls: ['./number-widget.component.css'],
 })
-export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
+export class NumberWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
+    item: any = '-';
 
-  item: any = '-';
+    selectedProperty: string;
+    measurementUnitAbbrev: string;
 
-  selectedProperty: string;
-  measurementUnitAbbrev: string;
-
-  constructor(dataLakeService: DatalakeRestService,
-              resizeService: ResizeService,
-              private dashboardService: DashboardService) {
-    super(dataLakeService, resizeService, false);
-  }
-
-  ngOnInit(): void {
-    super.ngOnInit();
-  }
-
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-  }
-
-  extractConfig(extractor: StaticPropertyExtractor) {
-    this.selectedProperty = extractor.mappingPropertyValue(NumberConfig.NUMBER_MAPPING_KEY);
-    const eventProperty: EventPropertyPrimitive = extractor.getEventPropertyByName(this.selectedProperty) as EventPropertyPrimitive;
-    if (eventProperty.measurementUnit) {
-      this.dashboardService.getMeasurementUnitInfo(eventProperty.measurementUnit).subscribe(unit => {
-        this.measurementUnitAbbrev = unit.abbreviation;
-      });
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+        private dashboardService: DashboardService,
+    ) {
+        super(dataLakeService, resizeService, false);
     }
-  }
 
-  isNumber(item: any): boolean {
-    return false;
-  }
-
-  protected onEvent(events: any[]) {
-    let value = events[0][this.selectedProperty];
-    if (typeof value === 'number') {
-      value = value.toFixed(2);
+    ngOnInit(): void {
+        super.ngOnInit();
     }
-    this.item = value;
-  }
 
-  protected onSizeChanged(width: number, height: number) {
-  }
+    ngOnDestroy(): void {
+        super.ngOnDestroy();
+    }
 
-  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
-    return 1;
-  }
+    extractConfig(extractor: StaticPropertyExtractor) {
+        this.selectedProperty = extractor.mappingPropertyValue(
+            NumberConfig.NUMBER_MAPPING_KEY,
+        );
+        const eventProperty: EventPropertyPrimitive =
+            extractor.getEventPropertyByName(
+                this.selectedProperty,
+            ) as EventPropertyPrimitive;
+        if (eventProperty.measurementUnit) {
+            this.dashboardService
+                .getMeasurementUnitInfo(eventProperty.measurementUnit)
+                .subscribe(unit => {
+                    this.measurementUnitAbbrev = unit.abbreviation;
+                });
+        }
+    }
 
-  getFieldsToQuery(): string[] {
-    return [this.selectedProperty];
-  }
+    isNumber(item: any): boolean {
+        return false;
+    }
 
+    protected onEvent(events: any[]) {
+        let value = events[0][this.selectedProperty];
+        if (typeof value === 'number') {
+            value = value.toFixed(2);
+        }
+        this.item = value;
+    }
+
+    protected onSizeChanged(width: number, height: number) {}
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return 1;
+    }
+
+    getFieldsToQuery(): string[] {
+        return [this.selectedProperty];
+    }
 }

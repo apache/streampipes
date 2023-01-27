@@ -19,24 +19,41 @@
     <div fxLayout="row" fxLayoutAlign="start center">
         <span class="data-explorer-header">Group By</span>
         <div fxLayout="row" fxLayoutAlign="start center">
-            <button mat-button mat-raised-button color="accent" class="small-button"
-                    style="margin-right:10px;"
-                    (click)="selectAllFields()">Select all
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                class="small-button"
+                style="margin-right: 10px"
+                (click)="selectAllFields()"
+            >
+                Select all
             </button>
-            <button mat-button mat-raised-button class="small-button mat-basic"
-                    style="margin-right:10px;"
-                    (click)="deselectAllFields()">Deselect all
+            <button
+                mat-button
+                mat-raised-button
+                class="small-button mat-basic"
+                style="margin-right: 10px"
+                (click)="deselectAllFields()"
+            >
+                Deselect all
             </button>
         </div>
     </div>
     <div fxLayout="column" class="field-scroll-panel">
-        <div fxLayout="column"
-             *ngFor="let groupByField of sourceConfig.queryConfig.groupBy">
-            <mat-checkbox [(ngModel)]="groupByField.selected"
-                          [attr.data-cy]="'data-explorer-group-by-'+ groupByField.runtimeName"
-                          (change)="triggerConfigurationUpdate()"
-                          color="accent">
-                {{groupByField.runtimeName}}
+        <div
+            fxLayout="column"
+            *ngFor="let groupByField of sourceConfig.queryConfig.groupBy"
+        >
+            <mat-checkbox
+                [(ngModel)]="groupByField.selected"
+                [attr.data-cy]="
+                    'data-explorer-group-by-' + groupByField.runtimeName
+                "
+                (change)="triggerConfigurationUpdate()"
+                color="accent"
+            >
+                {{ groupByField.runtimeName }}
             </mat-checkbox>
         </div>
     </div>

@@ -30,6 +30,7 @@ import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
 import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { InfoModule } from './info/info.module';
 import {ProfileModule} from './profile/profile.module';
 import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
@@ -77,6 +78,9 @@ import * as $ from 'jquery';
         PipelineDetailsModule,
         ServicesModule,
         ProfileModule,
+        NgxEchartsModule.forRoot({
+            echarts: () => import('echarts'),
+        }),
         {{#modulesActive}}
         {{{ng5_moduleName}}},
         {{/modulesActive}}

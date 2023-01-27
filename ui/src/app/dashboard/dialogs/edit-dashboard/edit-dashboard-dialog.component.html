@@ -19,30 +19,50 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
-            <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                style="margin: 5px; width: 100%"
+            >
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Dashboard Name</mat-label>
-                    <input matInput
-                           required
-                           [(ngModel)]="dashboard.name"
-                           data-cy="dashboard-name-input">
+                    <input
+                        matInput
+                        required
+                        [(ngModel)]="dashboard.name"
+                        data-cy="dashboard-name-input"
+                    />
                 </mat-form-field>
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Description</mat-label>
-                    <input matInput [(ngModel)]="dashboard.description">
+                    <input matInput [(ngModel)]="dashboard.description" />
                 </mat-form-field>
-                <mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard
+                <mat-checkbox [(ngModel)]="dashboard.displayHeader"
+                    >Show name and description in dashboard
                 </mat-checkbox>
                 <div fxLayout="column" class="mt-10">
-                    <mat-checkbox [(ngModel)]="dashboard.dashboardGeneralSettings.globalRefresh">
-                        Use same update frequency for all widgets (will override widget-specific intervals)
+                    <mat-checkbox
+                        [(ngModel)]="
+                            dashboard.dashboardGeneralSettings.globalRefresh
+                        "
+                    >
+                        Use same update frequency for all widgets (will override
+                        widget-specific intervals)
                     </mat-checkbox>
 
-                    <mat-form-field class="full-width mt-10"
-                                    color="accent"
-                                    *ngIf="dashboard.dashboardGeneralSettings.globalRefresh">
+                    <mat-form-field
+                        class="full-width mt-10"
+                        color="accent"
+                        *ngIf="dashboard.dashboardGeneralSettings.globalRefresh"
+                    >
                         <mat-label>Refresh interval (seconds)</mat-label>
-                        <input matInput [(ngModel)]="dashboard.dashboardGeneralSettings.refreshIntervalInSeconds">
+                        <input
+                            matInput
+                            [(ngModel)]="
+                                dashboard.dashboardGeneralSettings
+                                    .refreshIntervalInSeconds
+                            "
+                        />
                     </mat-form-field>
                 </div>
             </div>
@@ -50,18 +70,23 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic mr-10" (click)="onCancel()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="onCancel()"
+        >
             Cancel
         </button>
-        <button mat-button
-                mat-raised-button
-                color="accent"
-                [disabled]="dashboard.name === '' || dashboard.name === undefined"
-                (click)="onSave()"
-                data-cy="dashboard-save-btn">
-            {{createMode ? 'Create' : 'Save'}}
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            [disabled]="dashboard.name === '' || dashboard.name === undefined"
+            (click)="onSave()"
+            data-cy="dashboard-save-btn"
+        >
+            {{ createMode ? 'Create' : 'Save' }}
         </button>
     </div>
 </div>
-
-

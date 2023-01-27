@@ -19,6 +19,7 @@
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
+import { UserInputBuilder } from '../builder/UserInputBuilder';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -31,27 +32,28 @@ export class PrepareTestDataUtils {
         // Create adapter with dataset
         FileManagementUtils.addFile(dataSet);
 
-        const adapter = this.getDataLakeTestSetAdapter(
+        const adapter = this.getDataLakeTestAdapter(
             PrepareTestDataUtils.dataName,
             format,
             storeInDataLake,
         );
-        ConnectUtils.addGenericSetAdapter(adapter);
 
-        // Wait till data is stored
-        if (storeInDataLake) {
-            cy.wait(10000);
-        }
+        ConnectUtils.addGenericStreamAdapter(adapter);
     }
 
-    private static getDataLakeTestSetAdapter(
+    private static getDataLakeTestAdapter(
         name: string,
         format: 'csv' | 'json_array',
         storeInDataLake: boolean = true,
     ) {
-        const adapterBuilder = GenericAdapterBuilder.create('File_Set')
+        const adapterBuilder = GenericAdapterBuilder.create('File_Stream')
             .setName(name)
-            .setTimestampProperty('timestamp');
+            .setTimestampProperty('timestamp')
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            );
 
         if (format === 'csv') {
             adapterBuilder
@@ -62,9 +64,12 @@ export class PrepareTestDataUtils {
             adapterBuilder.setFormat('json_array');
         }
 
+        adapterBuilder.setStartAdapter(true);
+
         if (storeInDataLake) {
             adapterBuilder.setStoreInDataLake();
         }
+
         return adapterBuilder.build();
     }
 }

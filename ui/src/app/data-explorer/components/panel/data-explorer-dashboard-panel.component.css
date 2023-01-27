@@ -21,7 +21,7 @@
 }
 
 .data-explorer-options {
-    padding:0px;
+    padding: 0px;
 }
 
 .data-explorer-options-item {
@@ -34,11 +34,11 @@
 }
 
 .h-100 {
-    height:100%;
+    height: 100%;
 }
 
 .dashboard-grid {
-    display:flex;
+    display: flex;
     flex-direction: column;
     flex: 1 1 100%;
 }
@@ -56,5 +56,3 @@
 .edit-menu-btn {
     margin-right: 5px;
 }
-
-

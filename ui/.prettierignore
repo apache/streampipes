@@ -18,11 +18,3 @@ dist
 
 # Ignore csv files required for e2e tests
 cypress/fixtures/**/*.csv
-
-# Remove these in the future to format additional modules
-# Please also see .eslintignore
-src/app/CustomMaterial
-src/app/dashboard
-src/app/data-explorer
-src/app/editor
-src/app/files

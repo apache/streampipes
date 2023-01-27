@@ -16,17 +16,17 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import {
-  DataExplorerField,
-  DatalakeQueryParameterBuilder,
-  DatalakeQueryParameters,
-  DatalakeRestService,
-  DataViewQueryGeneratorService,
-  EventPropertyUnion,
-  SpQueryResult
+    DataExplorerField,
+    DatalakeQueryParameterBuilder,
+    DatalakeQueryParameters,
+    DatalakeRestService,
+    DataViewQueryGeneratorService,
+    EventPropertyUnion,
+    SpQueryResult,
 } from '@streampipes/platform-services';
 import { ImageWidgetModel } from './model/image-widget.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
@@ -36,81 +36,89 @@ import { TimeSelectionService } from '../../../services/time-selection.service';
 import { SecurePipe } from '../../../../services/secure.pipe';
 
 @Component({
-  selector: 'sp-data-explorer-image-widget',
-  templateUrl: './image-widget.component.html',
-  styleUrls: ['./image-widget.component.css']
+    selector: 'sp-data-explorer-image-widget',
+    templateUrl: './image-widget.component.html',
+    styleUrls: ['./image-widget.component.css'],
 })
-export class ImageWidgetComponent extends BaseDataExplorerWidgetDirective<ImageWidgetModel> implements OnInit, OnDestroy {
+export class ImageWidgetComponent
+    extends BaseDataExplorerWidgetDirective<ImageWidgetModel>
+    implements OnInit
+{
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+    imageBaseUrl: string;
+    imagePaths = [];
 
-  imageBaseUrl: string;
-  imagePaths = [];
+    availableColumns: EventPropertyUnion[];
+    selectedColumn: EventPropertyUnion;
 
-  availableColumns: EventPropertyUnion[];
-  selectedColumn: EventPropertyUnion;
+    canvasHeight;
+    canvasWidth;
+    imagePreviewHeight;
 
-  canvasHeight;
-  canvasWidth;
-  imagePreviewHeight;
-
-  constructor(dataLakeRestService: DatalakeRestService,
-              widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService,
-              dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-              fieldService: DataExplorerFieldProviderService,
-              timeSelectionService: TimeSelectionService,
-              private securePipe: SecurePipe) {
-    super(
-      dataLakeRestService,
-      widgetConfigurationService,
-      resizeService,
-      dataViewQueryGeneratorService,
-      fieldService,
-      timeSelectionService
-    );
-  }
-
-  ngOnInit(): void {
-    super.ngOnInit();
-    this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
-    this.imageBaseUrl = this.dataLakeRestService.dataLakeUrl + '/images/';
-  }
-
-  ngOnDestroy(): void {
-
-  }
-
-  refreshView() {
-  }
-
-  buildQuery(): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime).build();
-  }
-
-  onResize(width: number, height: number) {
-    this.canvasHeight = height - 50;
-    this.canvasWidth = width - 20;
-    this.imagePreviewHeight = width / 14;
-  }
-
-  beforeDataFetched() {
-    this.setShownComponents(false, false, true, false);
-  }
-
-  onDataReceived(spQueryResult: SpQueryResult[]) {
-    const selectedField = this.dataExplorerWidget.visualizationConfig.selectedField;
-    if (spQueryResult.length > 0) {
-      const qr = spQueryResult[selectedField.sourceIndex];
-      const columnIndex = qr.headers.indexOf(selectedField.runtimeName);
-      this.imagePaths = qr.allDataSeries[0].rows
-        .map(row => row[columnIndex])
-        .map(imageId => this.imageBaseUrl + imageId)
-        .map(imageRoute => this.securePipe.transform(imageRoute));
+    constructor(
+        dataLakeRestService: DatalakeRestService,
+        widgetConfigurationService: WidgetConfigurationService,
+        resizeService: ResizeService,
+        dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+        fieldService: DataExplorerFieldProviderService,
+        timeSelectionService: TimeSelectionService,
+        private securePipe: SecurePipe,
+    ) {
+        super(
+            dataLakeRestService,
+            widgetConfigurationService,
+            resizeService,
+            dataViewQueryGeneratorService,
+            fieldService,
+            timeSelectionService,
+        );
     }
-    this.setShownComponents(false, true, false, false);
-  }
 
-  handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
-  }
+    ngOnInit(): void {
+        super.ngOnInit();
+        this.onResize(
+            this.gridsterItemComponent.width,
+            this.gridsterItemComponent.height - 40,
+        );
+        this.imageBaseUrl = this.dataLakeRestService.dataLakeUrl + '/images/';
+    }
+
+    refreshView() {}
+
+    buildQuery(): DatalakeQueryParameters {
+        return DatalakeQueryParameterBuilder.create(
+            this.timeSettings.startTime,
+            this.timeSettings.endTime,
+        ).build();
+    }
+
+    onResize(width: number, height: number) {
+        this.canvasHeight = height - 50;
+        this.canvasWidth = width - 20;
+        this.imagePreviewHeight = width / 14;
+    }
+
+    beforeDataFetched() {
+        this.setShownComponents(false, false, true, false);
+    }
+
+    onDataReceived(spQueryResult: SpQueryResult[]) {
+        const selectedField =
+            this.dataExplorerWidget.visualizationConfig.selectedField;
+        if (spQueryResult.length > 0) {
+            const qr = spQueryResult[selectedField.sourceIndex];
+            const columnIndex = qr.headers.indexOf(selectedField.runtimeName);
+            this.imagePaths = qr.allDataSeries[0].rows
+                .map(row => row[columnIndex])
+                .map(imageId => this.imageBaseUrl + imageId)
+                .map(imageRoute => this.securePipe.transform(imageRoute));
+        }
+        this.setShownComponents(false, true, false, false);
+    }
+
+    handleUpdatedFields(
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ) {}
 }

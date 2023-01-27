@@ -22,7 +22,6 @@ import { WidgetConfig } from '../base/base-config';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class MapConfig extends WidgetConfig {
-
     static readonly LATITUDE_MAPPING_KEY: string = 'latitude-mapping';
     static readonly LONGITUDE_MAPPING_KEY: string = 'longitude-mapping';
     static readonly ITEMS_MAPPING_KEY: string = 'items-mapping';
@@ -35,21 +34,54 @@ export class MapConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('map', 'Map')
-          .withIcon('fas fa-map')
-          .withDescription('A map including a marker to show the live position of a thing')
-          .requiredSchema(SchemaRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(MapConfig.LATITUDE_MAPPING_KEY, 'Latitude field', '', EpRequirements.latitudeReq())
-            .requiredPropertyWithUnaryMapping(MapConfig.LONGITUDE_MAPPING_KEY, 'Latitude field', '', EpRequirements.longitudeReq())
-            .requiredPropertyWithNaryMapping(MapConfig.ID_MAPPING_KEY, 'Group Markers', 'Each id gets its own marker', EpRequirements.anyProperty())
-            .requiredPropertyWithNaryMapping(MapConfig.ITEMS_MAPPING_KEY, 'Fields to display', '', EpRequirements.anyProperty())
-            .build())
-          .requiredSingleValueSelection(
-            MapConfig.CENTER_MAP_KEY, 'Center map', 'Center the map around new markers', [this.makeOption('Center'), this.makeOption('No Center')])
-          .requiredSingleValueSelection(
-            MapConfig.MARKER_TYPE_KEY, 'Marker type', '', [this.makeOption('Default'), this.makeOption('Car')])
-          .build();
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            'map',
+            'Map',
+        )
+            .withIcon('fas fa-map')
+            .withDescription(
+                'A map including a marker to show the live position of a thing',
+            )
+            .requiredSchema(
+                SchemaRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                        MapConfig.LATITUDE_MAPPING_KEY,
+                        'Latitude field',
+                        '',
+                        EpRequirements.latitudeReq(),
+                    )
+                    .requiredPropertyWithUnaryMapping(
+                        MapConfig.LONGITUDE_MAPPING_KEY,
+                        'Latitude field',
+                        '',
+                        EpRequirements.longitudeReq(),
+                    )
+                    .requiredPropertyWithNaryMapping(
+                        MapConfig.ID_MAPPING_KEY,
+                        'Group Markers',
+                        'Each id gets its own marker',
+                        EpRequirements.anyProperty(),
+                    )
+                    .requiredPropertyWithNaryMapping(
+                        MapConfig.ITEMS_MAPPING_KEY,
+                        'Fields to display',
+                        '',
+                        EpRequirements.anyProperty(),
+                    )
+                    .build(),
+            )
+            .requiredSingleValueSelection(
+                MapConfig.CENTER_MAP_KEY,
+                'Center map',
+                'Center the map around new markers',
+                [this.makeOption('Center'), this.makeOption('No Center')],
+            )
+            .requiredSingleValueSelection(
+                MapConfig.MARKER_TYPE_KEY,
+                'Marker type',
+                '',
+                [this.makeOption('Default'), this.makeOption('Car')],
+            )
+            .build();
     }
-
 }

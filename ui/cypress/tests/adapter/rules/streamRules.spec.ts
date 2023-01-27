@@ -31,8 +31,9 @@ describe('Connect aggregation rule transformations', () => {
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
         cy.dataCy('connect-reduce-event-rate-box').children().click();
-        cy.dataCy('connect-reduce-event-input').type('3000');
+        cy.dataCy('connect-reduce-event-input').type('2000');
 
         ConnectUtils.tearDownPreprocessingRuleTest(
             adapterConfiguration,
@@ -61,6 +62,7 @@ describe('Remove duplicates rule transformations', () => {
             adapterConfiguration,
             'cypress/fixtures/connect/removeDuplicateRules/expected.csv',
             false,
+            2000,
         );
     });
 });

@@ -15,110 +15,196 @@
   ~ limitations under the License.
   ~
   -->
-<div fxFlex="100" fxLayout="column" class="border" style="width: 250px;" [attr.data-cy]="'sp-pipeline-element-selection'">
-    <div class="editorIconStandOptions sp-bg-lightgray page-container-nav" style="padding:0px;">
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="padding-left:5px;">
+<div
+    fxFlex="100"
+    fxLayout="column"
+    class="border"
+    style="width: 250px"
+    [attr.data-cy]="'sp-pipeline-element-selection'"
+>
+    <div
+        class="editorIconStandOptions sp-bg-lightgray page-container-nav"
+        style="padding: 0px"
+    >
+        <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            style="padding-left: 5px"
+        >
             <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
                 <i class="material-icons sp-accent">search</i>
-                <mat-form-field floatLabel="never" color="accent" class="search-field">
+                <mat-form-field
+                    floatLabel="never"
+                    color="accent"
+                    class="search-field"
+                >
                     <mat-label>Find element</mat-label>
-                    <input matInput
-                           type="text"
-                           (keyup)="makeDraggable()"
-                           placeholder="Find element"
-                           [(ngModel)]="elementFilter">
-                    <button *ngIf="elementFilter"
-                            matSuffix
-                            mat-icon-button
-                            aria-label="Find element" (click)="clearInput()">
+                    <input
+                        matInput
+                        type="text"
+                        (keyup)="makeDraggable()"
+                        placeholder="Find element"
+                        [(ngModel)]="elementFilter"
+                    />
+                    <button
+                        *ngIf="elementFilter"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Find element"
+                        (click)="clearInput()"
+                    >
                         <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
                 <span fxFlex></span>
-                <button mat-button
-                        mat-icon-button
-                        color="accent"
-                        (click)="startCreatePipelineTour()"
-                        [matTooltip]="'Tutorial'" style="margin-right: 5px;">
-                    <i class="material-icons">
-                        school
-                    </i>
+                <button
+                    mat-button
+                    mat-icon-button
+                    color="accent"
+                    (click)="startCreatePipelineTour()"
+                    [matTooltip]="'Tutorial'"
+                    style="margin-right: 5px"
+                >
+                    <i class="material-icons"> school </i>
                 </button>
             </div>
         </div>
     </div>
-    <div id="editor-icon-stand"
-         class="icon-stand"
-         *ngIf="allElements">
-        <div fxFlex="100"
-             fxLayout="column">
-            <div *ngFor="let availableType; let i = index of availableTypes"
-                 fxLayout="column"
-                 class="panel-outer">
-                <div class="panel-header"
-                     id="panel-{{availableType.filters[0]}}"
-                     fxLayout="row"
-                     fxLayoutAlign="start center"
-                     [ngStyle]="{background: 'var(--color-bg-2)'}">
-                    <div class="panel-title"
-                         fxLayoutAlign="start center">
-                        {{availableType.title}}
+    <div id="editor-icon-stand" class="icon-stand" *ngIf="allElements">
+        <div fxFlex="100" fxLayout="column">
+            <div
+                *ngFor="let availableType; let i = index; of: availableTypes"
+                fxLayout="column"
+                class="panel-outer"
+            >
+                <div
+                    class="panel-header"
+                    id="panel-{{ availableType.filters[0] }}"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    [ngStyle]="{ background: 'var(--color-bg-2)' }"
+                >
+                    <div class="panel-title" fxLayoutAlign="start center">
+                        {{ availableType.title }}
                     </div>
                     <span fxFlex></span>
-                    <button mat-icon-button
-                            matTooltip="Create new source"
-                            (click)="navigateToConnect()"
-                            *ngIf="availableType.title === availableTypes[0].title">
+                    <button
+                        mat-icon-button
+                        matTooltip="Create new source"
+                        (click)="navigateToConnect()"
+                        *ngIf="availableType.title === availableTypes[0].title"
+                    >
                         <mat-icon>add</mat-icon>
                     </button>
-                    <button mat-icon-button
-                            (click)="toggleOpen(availableType)"
-                            *ngIf="!availableType.open">
+                    <button
+                        mat-icon-button
+                        (click)="toggleOpen(availableType)"
+                        *ngIf="!availableType.open"
+                    >
                         <mat-icon>expand_more</mat-icon>
                     </button>
-                    <button mat-icon-button
-                            (click)="toggleOpen(availableType)"
-                            *ngIf="availableType.open">
+                    <button
+                        mat-icon-button
+                        (click)="toggleOpen(availableType)"
+                        *ngIf="availableType.open"
+                    >
                         <mat-icon>expand_less</mat-icon>
                     </button>
                 </div>
-                <div fxFlex="100"
-                     fxLayout="column"
-                     *ngIf="availableType.open" class="panel-content">
-                    <div fxLayout="row"
-                         fxLayoutAlign="end center"
-                         class="panel-options"
-                         *ngIf="!(availableType.filters[0] === 1)">
-                        <small>Sort:&nbsp;<a (click)="changeSorting(availableType, 'group')"
-                                             class="sort-option"
-                                             [ngClass]="availableType.sort === 'group' ? 'sort-selected' : 'sort-unselected'">Group</a>&nbsp;|&nbsp;
-                            <a (click)="changeSorting(availableType, 'name')"
-                               class="sort-option"
-                               [ngClass]="availableType.sort === 'name' ? 'sort-selected' : 'sort-unselected'">Name</a></small>
+                <div
+                    fxFlex="100"
+                    fxLayout="column"
+                    *ngIf="availableType.open"
+                    class="panel-content"
+                >
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="end center"
+                        class="panel-options"
+                        *ngIf="!(availableType.filters[0] === 1)"
+                    >
+                        <small
+                            >Sort:&nbsp;<a
+                                (click)="changeSorting(availableType, 'group')"
+                                class="sort-option"
+                                [ngClass]="
+                                    availableType.sort === 'group'
+                                        ? 'sort-selected'
+                                        : 'sort-unselected'
+                                "
+                                >Group</a
+                            >&nbsp;|&nbsp;
+                            <a
+                                (click)="changeSorting(availableType, 'name')"
+                                class="sort-option"
+                                [ngClass]="
+                                    availableType.sort === 'name'
+                                        ? 'sort-selected'
+                                        : 'sort-unselected'
+                                "
+                                >Name</a
+                            ></small
+                        >
                     </div>
-                    <div fxFlex="100"
-                         fxLayout="column"
-                         *ngIf="availableType.sort === 'name'">
-                        <div fxLayout="column"
-                             fxFlex="100"
-                             *ngFor="let element of allElements | pipelineElementType:availableType.filters | pipelineElementName:elementFilter"
-                             class="pe-row">
-                            <sp-pe-icon-stand-row [element]="element" fxFlex="100"></sp-pe-icon-stand-row>
+                    <div
+                        fxFlex="100"
+                        fxLayout="column"
+                        *ngIf="availableType.sort === 'name'"
+                    >
+                        <div
+                            fxLayout="column"
+                            fxFlex="100"
+                            *ngFor="
+                                let element of allElements
+                                    | pipelineElementType
+                                        : availableType.filters
+                                    | pipelineElementName : elementFilter
+                            "
+                            class="pe-row"
+                        >
+                            <sp-pe-icon-stand-row
+                                [element]="element"
+                                fxFlex="100"
+                            ></sp-pe-icon-stand-row>
                         </div>
                     </div>
-                    <div fxFlex="100"
-                         fxLayout="column"
-                         *ngIf="availableType.sort === 'group' && categoriesReady">
-                        <div *ngFor="let category of allCategories.get(availableType.filters[0])"
-                             fxLayout="column">
+                    <div
+                        fxFlex="100"
+                        fxLayout="column"
+                        *ngIf="
+                            availableType.sort === 'group' && categoriesReady
+                        "
+                    >
+                        <div
+                            *ngFor="
+                                let category of allCategories.get(
+                                    availableType.filters[0]
+                                )
+                            "
+                            fxLayout="column"
+                        >
                             <div class="group-outer">
-                                <span class="group-title">{{category.label}}</span>
+                                <span class="group-title">{{
+                                    category.label
+                                }}</span>
                             </div>
-                            <div fxLayout="column"
-                                 fxFlex="100"
-                                 *ngFor="let element of allElements | pipelineElementType:availableType.filters | pipelineElementName:elementFilter | pipelineElementGroup:category"
-                                 class="pe-row">
-                                <sp-pe-icon-stand-row [element]="element" fxFlex="100"></sp-pe-icon-stand-row>
+                            <div
+                                fxLayout="column"
+                                fxFlex="100"
+                                *ngFor="
+                                    let element of allElements
+                                        | pipelineElementType
+                                            : availableType.filters
+                                        | pipelineElementName : elementFilter
+                                        | pipelineElementGroup : category
+                                "
+                                class="pe-row"
+                            >
+                                <sp-pe-icon-stand-row
+                                    [element]="element"
+                                    fxFlex="100"
+                                ></sp-pe-icon-stand-row>
                             </div>
                         </div>
                     </div>

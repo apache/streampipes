@@ -21,74 +21,93 @@ import { WidgetConfigurationService } from '../../../../services/widget-configur
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../time-series-chart/model/time-series-chart-widget.model';
 
-
 @Component({
-  selector: 'sp-select-color-properties',
-  templateUrl: './select-color-properties.component.html',
-  styleUrls: ['./select-color-properties.component.scss']
+    selector: 'sp-select-color-properties',
+    templateUrl: './select-color-properties.component.html',
+    styleUrls: ['./select-color-properties.component.scss'],
 })
 export class SelectColorPropertiesComponent implements OnInit {
+    @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =
+        new EventEmitter();
 
-  @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> = new EventEmitter();
+    @Input() availableProperties: DataExplorerField[];
+    @Input() selectedProperties: DataExplorerField[];
+    @Input() currentlyConfiguredWidget: TimeSeriesChartWidgetModel;
 
-  @Input() availableProperties: DataExplorerField[];
-  @Input() selectedProperties: DataExplorerField[];
-  @Input() currentlyConfiguredWidget: TimeSeriesChartWidgetModel;
+    constructor(
+        protected widgetConfigurationService: WidgetConfigurationService,
+    ) {}
 
-  constructor(protected widgetConfigurationService: WidgetConfigurationService) {
-  }
+    presetColors: string[] = [
+        '#39B54A',
+        '#1B1464',
+        '#f44336',
+        '#4CAF50',
+        '#FFEB3B',
+        '#FFFFFF',
+        '#000000',
+    ];
 
-  presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
-
-  ngOnInit(): void {
-    if (!this.selectedProperties) {
-      this.selectedProperties = [];
+    ngOnInit(): void {
+        if (!this.selectedProperties) {
+            this.selectedProperties = [];
+        }
     }
-  }
 
-  triggerSelectedProperties() {
-    this.changeSelectedProperties.emit(this.selectedProperties);
-  }
-
-  selectAllFields() {
-    this.selectFields(true);
-  }
-
-  deselectAllFields() {
-    this.selectFields(false);
-  }
-
-  selectFields(selected: boolean) {
-    this.selectedProperties = selected ? this.availableProperties : [];
-    this.triggerSelectedProperties();
-  }
-
-  isSelected(field: DataExplorerField): boolean {
-    return this.selectedProperties.find(sp => sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex) !== undefined;
-  }
-
-  toggleFieldSelection(field: DataExplorerField) {
-    if (this.isSelected(field)) {
-      this.selectedProperties = this.selectedProperties.filter(
-        sp => !(sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex)
-      );
-    } else {
-      this.selectedProperties.push(field);
+    triggerSelectedProperties() {
+        this.changeSelectedProperties.emit(this.selectedProperties);
     }
-    this.triggerSelectedProperties();
-  }
 
-  triggerDataRefresh() {
-    this.widgetConfigurationService.notify({
-      widgetId: this.currentlyConfiguredWidget._id,
-      refreshData: true,
-      refreshView: true
-    });
-  }
+    selectAllFields() {
+        this.selectFields(true);
+    }
 
-  onFilterChange(searchValue: string, field: DataExplorerField): void {
-    this.currentlyConfiguredWidget.visualizationConfig.displayName[field.fullDbName + field.sourceIndex.toString()] = searchValue;
-    this.triggerDataRefresh();
-  }
+    deselectAllFields() {
+        this.selectFields(false);
+    }
 
+    selectFields(selected: boolean) {
+        this.selectedProperties = selected ? this.availableProperties : [];
+        this.triggerSelectedProperties();
+    }
+
+    isSelected(field: DataExplorerField): boolean {
+        return (
+            this.selectedProperties.find(
+                sp =>
+                    sp.fullDbName === field.fullDbName &&
+                    sp.sourceIndex === field.sourceIndex,
+            ) !== undefined
+        );
+    }
+
+    toggleFieldSelection(field: DataExplorerField) {
+        if (this.isSelected(field)) {
+            this.selectedProperties = this.selectedProperties.filter(
+                sp =>
+                    !(
+                        sp.fullDbName === field.fullDbName &&
+                        sp.sourceIndex === field.sourceIndex
+                    ),
+            );
+        } else {
+            this.selectedProperties.push(field);
+        }
+        this.triggerSelectedProperties();
+    }
+
+    triggerDataRefresh() {
+        this.widgetConfigurationService.notify({
+            widgetId: this.currentlyConfiguredWidget._id,
+            refreshData: true,
+            refreshView: true,
+        });
+    }
+
+    onFilterChange(searchValue: string, field: DataExplorerField): void {
+        this.currentlyConfiguredWidget.visualizationConfig.displayName[
+            field.fullDbName + field.sourceIndex.toString()
+        ] = searchValue;
+        this.triggerDataRefresh();
+    }
 }

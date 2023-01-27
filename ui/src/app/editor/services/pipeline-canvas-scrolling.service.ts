@@ -19,17 +19,16 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PipelineCanvasScrollingService {
+    public canvasScrollXSubject: Subject<number> = new Subject<number>();
+    public canvasScrollYSubject: Subject<number> = new Subject<number>();
 
-  public canvasScrollXSubject: Subject<number> = new Subject<number>();
-  public canvasScrollYSubject: Subject<number> = new Subject<number>();
+    public notifyX(position: number): void {
+        this.canvasScrollXSubject.next(position);
+    }
 
-  public notifyX(position: number): void {
-    this.canvasScrollXSubject.next(position);
-  }
-
-  public notifyY(position: number): void {
-    this.canvasScrollYSubject.next(position);
-  }
+    public notifyY(position: number): void {
+        this.canvasScrollYSubject.next(position);
+    }
 }

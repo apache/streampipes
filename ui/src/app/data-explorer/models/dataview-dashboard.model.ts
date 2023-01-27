@@ -20,48 +20,41 @@ import { GridsterConfig } from 'angular-gridster2';
 import { WidgetType } from '../registry/data-explorer-widgets';
 import { DataExplorerField } from '@streampipes/platform-services';
 
-
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IDataViewDashboardConfig extends GridsterConfig {
-}
+export interface IDataViewDashboardConfig extends GridsterConfig {}
 
 export interface IWidget {
-  id: string;
-  label: string;
-  componentClass: any;
+    id: string;
+    label: string;
+    componentClass: any;
 }
 
 export interface WidgetBaseAppearanceConfig {
-  backgroundColor: string;
-  textColor: string;
-  widgetTitle: string;
+    backgroundColor: string;
+    textColor: string;
+    widgetTitle: string;
 }
 
 export interface WidgetTypeChangeMessage {
-  widgetId: string;
-  newWidgetTypeId: string;
+    widgetId: string;
+    newWidgetTypeId: string;
 }
 
 export interface RefreshMessage {
-  widgetId: string;
-  refreshData: boolean;
-  refreshView: boolean;
+    widgetId: string;
+    refreshData: boolean;
+    refreshView: boolean;
 }
 
 export interface FieldProvider {
-  primaryTimestampField?: DataExplorerField;
-  allFields: DataExplorerField[];
-  numericFields: DataExplorerField[];
-  booleanFields: DataExplorerField[];
-  dimensionFields: DataExplorerField[];
-  nonNumericFields: DataExplorerField[];
+    primaryTimestampField?: DataExplorerField;
+    allFields: DataExplorerField[];
+    numericFields: DataExplorerField[];
+    booleanFields: DataExplorerField[];
+    dimensionFields: DataExplorerField[];
+    nonNumericFields: DataExplorerField[];
 }
-
-
 
 export interface DataExplorerVisConfig {
-  forType: WidgetType;
+    forType: WidgetType;
 }
-
-
-

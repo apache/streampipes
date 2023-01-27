@@ -17,26 +17,34 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-  <h5>Correlation Plot Type</h5>
-  <mat-form-field class="marginColorField"
-                            color="accent"
-                            fxFlex="35">
-      <mat-select
-              [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType"
-              (selectionChange)="updateDisplayType($event.value)">
-          <mat-option [value]="'Scatter'">Scatter</mat-option>
-          <mat-option [value]="'Density'">Density</mat-option>
-      </mat-select>
-  </mat-form-field>
-  <h5>First Field</h5>
-    <sp-select-property [availableProperties]="fieldProvider.numericFields"
-                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.firstField"
-                        (changeSelectedProperty)="updateFirstField($event)">
+    <h5>Correlation Plot Type</h5>
+    <mat-form-field class="marginColorField" color="accent" fxFlex="35">
+        <mat-select
+            [(value)]="
+                currentlyConfiguredWidget.visualizationConfig.displayType
+            "
+            (selectionChange)="updateDisplayType($event.value)"
+        >
+            <mat-option [value]="'Scatter'">Scatter</mat-option>
+            <mat-option [value]="'Density'">Density</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <h5>First Field</h5>
+    <sp-select-property
+        [availableProperties]="fieldProvider.numericFields"
+        [selectedProperty]="
+            currentlyConfiguredWidget.visualizationConfig.firstField
+        "
+        (changeSelectedProperty)="updateFirstField($event)"
+    >
     </sp-select-property>
     <h5>Second Field</h5>
-    <sp-select-property [availableProperties]="fieldProvider.numericFields"
-                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.secondField"
-                        (changeSelectedProperty)="updateSecondField($event)">
+    <sp-select-property
+        [availableProperties]="fieldProvider.numericFields"
+        [selectedProperty]="
+            currentlyConfiguredWidget.visualizationConfig.secondField
+        "
+        (changeSelectedProperty)="updateSecondField($event)"
+    >
     </sp-select-property>
 </div>
-
