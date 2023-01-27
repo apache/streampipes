@@ -25,7 +25,7 @@ streampipes:
   registry: "apachestreampipes"
 
 external:
-  consulVersion: 1.9.6
+  consulVersion: 1.14.3
   couchdbVersion: 2.3.1
   flinkVersion: 1.13.5-scala_2.11
   kafkaVersion: 2.2.0
