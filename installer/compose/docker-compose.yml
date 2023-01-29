@@ -123,13 +123,20 @@ services:
       spnet:
 
   influxdb:
-    image: fogsyio/influxdb:1.7
+    image: influxdb:2.6
     environment:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
       - INFLUXDB_ADMIN_ENABLED=true
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=sp-admin
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=sp-admin
+      - DOCKER_INFLUXDB_INIT_ORG=sp
+      - DOCKER_INFLUXDB_INIT_BUCKET=sp
+      - DOCKER_INFLUXDB_INIT_MODE=upgrade
     volumes:
       - influxdb:/var/lib/influxdb
+      - influxdb2:/var/lib/influxdb2
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -166,6 +173,7 @@ volumes:
   kafka:
   zookeeper:
   influxdb:
+  influxdb2:
   files:
   nginx:
 
