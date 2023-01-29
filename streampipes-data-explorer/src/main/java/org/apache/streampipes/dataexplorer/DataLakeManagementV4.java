@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.RetentionPolicyQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
@@ -182,7 +183,7 @@ public class DataLakeManagementV4 {
 
   public Map<String, Object> getTagValues(String measurementId,
                                           String fields) {
-    InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+    InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
     Map<String, Object> tags = new HashMap<>();
     if (fields != null && !("".equals(fields))) {
       List<String> fieldList = Arrays.asList(fields.split(","));

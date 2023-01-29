@@ -19,12 +19,12 @@
 package org.apache.streampipes.dataexplorer.commons;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.image.ImageStore;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxStore;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class TimeSeriesStore {
   private ImageStore imageStore;
 
 
-  public TimeSeriesStore(SpConfig config,
+  public TimeSeriesStore(Environment environment,
                          StreamPipesClient client,
                          DataLakeMeasure measure,
                          boolean enableImageStore) {
@@ -47,10 +47,10 @@ public class TimeSeriesStore {
 
     if (enableImageStore) {
       // TODO check if event properties are replaces correctly
-      this.imageStore = new ImageStore(measure, config);
+      this.imageStore = new ImageStore(measure, environment);
     }
 
-    this.influxStore = new InfluxStore(measure, config);
+    this.influxStore = new InfluxStore(measure, environment);
 
   }
 

@@ -41,6 +41,60 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getTsStorageProtocol() {
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_PROTOCOL);
+  }
+
+  @Override
+  public StringEnvironmentVariable getTsStorageHost() {
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getTsStoragePort() {
+    return new IntEnvironmentVariable(Envs.SP_TS_STORAGE_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getTsStorageToken() {
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_TOKEN);
+  }
+
+  @Override
+  public StringEnvironmentVariable getTsStorageOrg() {
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_ORG);
+  }
+
+  @Override
+  public StringEnvironmentVariable getTsStorageBucket() {
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_BUCKET);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCouchDbProtocol() {
+    return new StringEnvironmentVariable(Envs.SP_COUCHDB_PROTOCOL);
+  }
+  @Override
+  public StringEnvironmentVariable getCouchDbHost() {
+    return new StringEnvironmentVariable(Envs.SP_COUCHDB_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getCouchDbPort() {
+    return new IntEnvironmentVariable(Envs.SP_COUCHDB_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCouchDbUsername() {
+    return new StringEnvironmentVariable(Envs.SP_COUCHDB_USER);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCouchDbPassword() {
+    return new StringEnvironmentVariable(Envs.SP_COUCHDB_PASSWORD);
+  }
+
+  @Override
   public StringEnvironmentVariable getConsulLocation() {
     return new StringEnvironmentVariable(Envs.SP_CONSUL_LOCATION);
   }

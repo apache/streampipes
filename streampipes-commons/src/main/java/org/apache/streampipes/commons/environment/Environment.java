@@ -24,12 +24,40 @@ import org.apache.streampipes.commons.environment.variable.StringEnvironmentVari
 
 public interface Environment {
 
+  // Consul env variables
   StringEnvironmentVariable getConsulHost();
 
   IntEnvironmentVariable getConsulPort();
 
-  BooleanEnvironmentVariable getSpDebug();
-
   @Deprecated(since = "0.90.0", forRemoval = true)
   StringEnvironmentVariable getConsulLocation();
+
+  BooleanEnvironmentVariable getSpDebug();
+
+  // Time series storage env variables
+
+  StringEnvironmentVariable getTsStorageProtocol();
+
+  StringEnvironmentVariable getTsStorageHost();
+
+  IntEnvironmentVariable getTsStoragePort();
+
+  StringEnvironmentVariable getTsStorageToken();
+
+  StringEnvironmentVariable getTsStorageOrg();
+
+  StringEnvironmentVariable getTsStorageBucket();
+
+  // CouchDB env variables
+
+  StringEnvironmentVariable getCouchDbProtocol();
+
+  StringEnvironmentVariable getCouchDbHost();
+
+  IntEnvironmentVariable getCouchDbPort();
+
+  StringEnvironmentVariable getCouchDbUsername();
+
+  StringEnvironmentVariable getCouchDbPassword();
+
 }

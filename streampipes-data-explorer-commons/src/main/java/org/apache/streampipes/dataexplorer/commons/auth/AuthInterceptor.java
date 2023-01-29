@@ -15,19 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.utils;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+package org.apache.streampipes.dataexplorer.commons.auth;
 
-import java.util.List;
+import okhttp3.Interceptor;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
-public class DataExplorerUtils {
+import java.io.IOException;
 
-  public static List<DataLakeMeasure> getInfos() {
-    return StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataLakeStorage()
-        .getAllDataLakeMeasures();
+public class AuthInterceptor implements Interceptor {
+
+  private String token;
+
+  public AuthInterceptor(String token) {
+    this.token = token;
+  }
+
+  @NotNull
+  @Override
+  public Response intercept(@NotNull Chain chain) throws IOException {
+    var req = chain.request();
+    var authHeaderValue = "Token " + token;
+    req = req.newBuilder().addHeader("Authorization", authHeaderValue).build();
+
+    return chain.proceed(req);
   }
 }

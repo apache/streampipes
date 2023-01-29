@@ -23,8 +23,9 @@ import org.apache.streampipes.commons.constants.Envs;
 
 public abstract class EnvironmentVariable<T> {
 
-  private T defaultValue;
-  private String envVariableName;
+  private final T defaultValue;
+  private final String envVariableName;
+  private boolean devModeActive;
 
   public EnvironmentVariable(String envVariableName,
                              T defaultValue) {
@@ -34,7 +35,8 @@ public abstract class EnvironmentVariable<T> {
 
   public EnvironmentVariable(Envs envVariable) {
     this.envVariableName = envVariable.getEnvVariableName();
-    this.defaultValue = parse(envVariable.getDefaultValue());
+    this.devModeActive = isDevModeActive();
+    this.defaultValue = devModeActive ? parse(envVariable.getDevDefaultValue()) : parse(envVariable.getDefaultValue());
   }
 
   public T getValue() {
@@ -55,6 +57,10 @@ public abstract class EnvironmentVariable<T> {
 
   public T getValueOrResolve(EnvResolver<T> resolver) {
     return resolver.resolve();
+  }
+
+  private boolean isDevModeActive() {
+    return CustomEnvs.getEnvAsBoolean(Envs.SP_DEBUG.getEnvVariableName());
   }
 
   public abstract T parse(String value);
