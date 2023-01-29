@@ -13,36 +13,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# lite or full (default: lite)
-deployment: lite
-preferredBroker: "nats"
-pullPolicy: "IfNotPresent"
-persistentVolumeReclaimPolicy: "Delete"
-persistentVolumeAccessModes: "ReadWriteOnce"
-
-streampipes:
-  version: "0.91.0-SNAPSHOT"
-  registry: "apachestreampipes"
-
-external:
-  consulVersion: 1.14.3
-  couchdbVersion: 3.3.1
-  flinkVersion: 1.13.5-scala_2.11
-  kafkaVersion: 2.2.0
-  zookeeperVersion: 3.4.13
-  influxdbVersion: 2.6
-
-influxdb:
-  username: "admin"
-  password: "sp-admin"
-  adminToken: "sp-admin"
-  initOrg: "sp"
-  initBucket: "sp"
-  initMode: "upgrade"
-
-
-
-# NOTE: Local testing only!
-# minikube start --mount-string ${HOME}/streampipes-k8s:/streampipes-k8s --mount --memory=4g --cpus=4
-# Specify minikube directory:
-hostPath: "/streampipes-k8s"
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: influx2-pv
+spec:
+  storageClassName: local-storage-influx2
+  capacity:
+    storage: 250Mi
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
+  hostPath:
+    path: {{ .Values.hostPath }}/influxdb2
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: influxdb
+  name: influxdb2-pvc
+spec:
+  storageClassName: local-storage-influx2
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  resources:
+    requests:
+      storage: 250Mi

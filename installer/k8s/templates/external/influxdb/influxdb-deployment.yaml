@@ -31,9 +31,12 @@ spec:
         - name: influxdb-pv
           persistentVolumeClaim:
             claimName: influxdb-pvc
+        - name: influxdb2-pv
+          persistentVolumeClaim:
+            claimName: influxdb2-pvc
       containers:
         - name: influxdb
-          image: fogsyio/influxdb:{{ .Values.external.influxdbVersion }}
+          image: influxdb:{{ .Values.external.influxdbVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8083
@@ -46,6 +49,20 @@ spec:
               value: "false"
             - name: INFLUXDB_ADMIN_ENABLED
               value: "true"
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
+              value: {{ .Values.influxdb.username }}
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              value: {{ .Values.influxdb.password }}
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              value: {{ .Values.influxdb.adminToken }}
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              value: {{ .Values.influxdb.initOrg }}
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              value: {{ .Values.influxdb.initBucket }}
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              value: {{ .Values.influxdb.initMode }}
           volumeMounts:
             - mountPath: "/var/lib/influxdb"
               name: influxdb-pv
+            - mountPath: "/var/lib/influxdb2"
+              name: influxdb2-pv
