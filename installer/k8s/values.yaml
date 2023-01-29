@@ -32,13 +32,15 @@ external:
   zookeeperVersion: 3.4.13
   influxdbVersion: 2.6
 
+# For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
+
 influxdb:
   username: "admin"
   password: "sp-admin"
   adminToken: "sp-admin"
   initOrg: "sp"
   initBucket: "sp"
-  initMode: "upgrade"
+  initMode: "setup"
 
 
 

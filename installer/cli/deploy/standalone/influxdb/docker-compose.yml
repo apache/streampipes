@@ -26,7 +26,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=sp-admin
       - DOCKER_INFLUXDB_INIT_ORG=sp
       - DOCKER_INFLUXDB_INIT_BUCKET=sp
-      - DOCKER_INFLUXDB_INIT_MODE=upgrade
+      - DOCKER_INFLUXDB_INIT_MODE=${SP_INFLUX_INIT_MODE}
     volumes:
       - influxdb:/var/lib/influxdb
       - influxdb2:/var/lib/influxdb2
