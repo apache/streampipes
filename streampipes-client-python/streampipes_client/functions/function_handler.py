@@ -62,7 +62,7 @@ class FunctionHandler:
                 self.client.dataStreamApi.post(output_stream)
                 logger.info(
                     f'Create output data stream "{stream_id}" '
-                    'for the function "{streampipes_function.getFunctionId().id}"'
+                    f'for the function "{streampipes_function.getFunctionId().id}"'
                 )
             # Choose the broker and collect the schema for every data stream
             for stream_id in streampipes_function.requiredStreamIds():

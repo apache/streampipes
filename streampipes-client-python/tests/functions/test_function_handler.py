@@ -76,7 +76,7 @@ class TestFunctionOutput(StreamPipesFunction):
         self.i = 0
 
     def onEvent(self, event: Dict[str, Any], streamId: str):
-        self.add_output(list(self.output_collectors.keys())[0], event={"number": self.i})
+        self.add_output(self.function_definition.get_output_stream_ids()[0], event={"number": self.i})
         self.i += 1
 
     def onServiceStopped(self):

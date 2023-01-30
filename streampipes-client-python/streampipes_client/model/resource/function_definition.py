@@ -61,13 +61,22 @@ class FunctionDefinition(Resource):
         return self
 
     def get_output_data_streams(self) -> Dict[str, DataStream]:
-        """Get the output data streams of the function
+        """Get the output data streams of the function.
 
         Returns
         -------
         Dictonary with every stream id and the related output stream.
         """
         return self.output_data_streams
+
+    def get_output_stream_ids(self) -> List[str]:
+        """Get the stream ids of the output data streams.
+
+        Returns
+        -------
+        List of all stream ids.
+        """
+        return list(self.output_data_streams.keys())
 
     class FunctionId(BasicModel):
         """Identification object for a StreamPipes function.

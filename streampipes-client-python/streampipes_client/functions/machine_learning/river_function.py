@@ -100,7 +100,7 @@ class RiverFunction(StreamPipesFunction):
             else:
                 self.model.learn_one(event)
 
-        self.add_output(list(self.function_definition.get_output_data_streams().keys())[0], output_event)
+        self.add_output(self.function_definition.get_output_stream_ids()[0], output_event)
 
     def onServiceStopped(self):
         """Executes the `on_stop` function."""
