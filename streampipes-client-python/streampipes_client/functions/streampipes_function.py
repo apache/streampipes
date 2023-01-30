@@ -81,7 +81,7 @@ class StreamPipesFunction(ABC):
         -------
         List of the stream ids
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def onServiceStarted(self, context: FunctionContext) -> None:
@@ -96,7 +96,7 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def onEvent(self, event: Dict[str, Any], streamId: str) -> None:
@@ -113,7 +113,7 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def onServiceStopped(self) -> None:
@@ -123,4 +123,4 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

@@ -66,7 +66,7 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     async def createSubscription(self) -> None:
@@ -76,7 +76,7 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     async def publish_event(self, event: Dict[str, Any]):
@@ -91,7 +91,7 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     async def disconnect(self) -> None:
@@ -101,7 +101,7 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_message(self) -> AsyncIterator:
@@ -111,4 +111,4 @@ class Broker(ABC):
         -------
         An async iterator for the messages.
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
