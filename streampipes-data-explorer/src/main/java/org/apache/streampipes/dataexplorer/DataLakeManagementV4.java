@@ -101,7 +101,7 @@ public class DataLakeManagementV4 {
       if (measure.getMeasureName().equals(measurementID)) {
         QueryResult queryResult = new DeleteDataQuery(new DataLakeMeasure(measurementID, null)).executeQuery();
 
-        return !queryResult.hasError() && queryResult.getResults().get(0).getError() == null;
+        return !queryResult.hasError();
       }
     }
     return false;
