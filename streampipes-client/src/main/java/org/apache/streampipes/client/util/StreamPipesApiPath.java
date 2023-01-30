@@ -73,8 +73,7 @@ public class StreamPipesApiPath {
 
     StringJoiner joiner = new StringJoiner("&");
     for (Map.Entry<String, String> parameter : queryParameters.entrySet()) {
-      joiner.add(URLEncoder.encode(parameter.getKey(), StandardCharsets.UTF_8) + "="
-                 + URLEncoder.encode(parameter.getValue(), StandardCharsets.UTF_8));
+      joiner.add(applyEncoding(parameter.getKey()) + "=" + applyEncoding(parameter.getValue()));
     }
 
     if (joiner.length() > 0) {
@@ -82,5 +81,9 @@ public class StreamPipesApiPath {
     } else {
       return input;
     }
+  }
+
+  private String applyEncoding(String value) {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 }
