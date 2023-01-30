@@ -89,7 +89,7 @@
 	<jetty.version>10.0.10</jetty.version>
 	<jgrapht.version>1.5.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
-	<jna.version>5.8.0</jna.version>
+	<jna.version>5.13.0</jna.version>
 	<json-path.version>5.3.0</json-path.version>
 	<json-smart.version>2.4.8</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
