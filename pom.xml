@@ -205,7 +205,7 @@
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
 	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-	<checkstyle.version>9.2.1</checkstyle.version>
+	<checkstyle.version>10.6.0</checkstyle.version>
 	<extra-enforcer-rules.version>1.6.1</extra-enforcer-rules.version>
 	<formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
 	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
