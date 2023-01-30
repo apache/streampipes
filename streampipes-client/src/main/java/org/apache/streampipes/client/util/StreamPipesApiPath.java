@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.client.util;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,9 +70,11 @@ public class StreamPipesApiPath {
   }
 
   private String appendQueryParameters(String input) {
+
     StringJoiner joiner = new StringJoiner("&");
     for (Map.Entry<String, String> parameter : queryParameters.entrySet()) {
-      joiner.add(parameter.getKey() + "=" + parameter.getValue());
+      joiner.add(URLEncoder.encode(parameter.getKey(), StandardCharsets.UTF_8) + "="
+                 + URLEncoder.encode(parameter.getValue(), StandardCharsets.UTF_8));
     }
 
     if (joiner.length() > 0) {

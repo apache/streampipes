@@ -65,4 +65,16 @@ public class StreamPipesApiPathTest {
 
     assertEquals(baseRoute + "?two=v2&one=v1", result);
   }
+
+  @Test
+  public void testEncodeParameters() {
+    queryParameters.put("one", "[v1]");
+
+    var result = streamPipesApiPath
+        .withQueryParameters(queryParameters)
+        .toString();
+
+    assertEquals(baseRoute + "?one=%5Bv1%5D", result);
+  }
+
 }
