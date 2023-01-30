@@ -16,21 +16,24 @@
  *
  */
 
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel } from '@streampipes/platform-services';
+import {
+    DataExplorerDataConfig,
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
 import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface MapVisConfig extends DataExplorerVisConfig {
-  selectedLatitudeProperty: DataExplorerField;
-  selectedLongitudeProperty: DataExplorerField;
-  selectedToolTipContent: DataExplorerField[];
-  selectedMarkerOrTrace: string;
-  selectedMarkerType: string;
-  selectedZoomValue: number;
-  useLastEventCoordinates: boolean;
-
+    selectedLatitudeProperty: DataExplorerField;
+    selectedLongitudeProperty: DataExplorerField;
+    selectedToolTipContent: DataExplorerField[];
+    selectedMarkerOrTrace: string;
+    selectedMarkerType: string;
+    selectedZoomValue: number;
+    useLastEventCoordinates: boolean;
 }
 
 export interface MapWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: MapVisConfig;
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: MapVisConfig;
 }

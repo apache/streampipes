@@ -21,10 +21,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class EditModeService {
+    public editModeSubject: Subject<boolean> = new Subject<boolean>();
 
-  public editModeSubject: Subject<boolean> = new Subject<boolean>();
-
-  public notify(editMode: boolean): void {
-    this.editModeSubject.next(editMode);
-  }
+    public notify(editMode: boolean): void {
+        this.editModeSubject.next(editMode);
+    }
 }

@@ -25,9 +25,11 @@ from streampipes_client.model.resource import FunctionDefinition
 
 class StreamPipesFunction(ABC):
     """Abstract implementation of a StreamPipesFunction.
+
     A StreamPipesFunction allows users to get the data of a StreamPipes data streams easily.
     It makes it possible to work with the live data in python and enables to use the powerful
     data analytics libraries there.
+
     Parameters
     ----------
     function_definition: FunctionDefinition

@@ -18,56 +18,92 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <h4>{{pipelineElement.name}}</h4>
+        <h4>{{ pipelineElement.name }}</h4>
         <p>
-            {{pipelineElement.description}}
+            {{ pipelineElement.description }}
         </p>
 
-        <mat-tab-group color="accent"
-                       [selectedIndex]="selectedIndex"
-                       (selectedIndexChange)="selectedIndex=$event">
-            <mat-tab *ngFor="let tab of tabs"
-                     label="{{tab.title}}">
+        <mat-tab-group
+            color="accent"
+            [selectedIndex]="selectedIndex"
+            (selectedIndexChange)="selectedIndex = $event"
+        >
+            <mat-tab *ngFor="let tab of tabs" label="{{ tab.title }}">
             </mat-tab>
         </mat-tab-group>
-        <div style="margin-top:15px;">
-            <div *ngIf="selectedIndex == 0 && streamMode">
+        <div style="margin-top: 15px">
+            <div *ngIf="selectedIndex === 0 && streamMode">
                 <h5>Field Names</h5>
 
                 <div>
                     <table class="dataTable row-border hover preview-table">
                         <thead>
-                        <tr class="preview-row">
-                            <th>Field Name</th>
-                            <th>Description</th>
-                            <th>Runtime Name</th>
-                            <th>Type</th>
-                        </tr>
+                            <tr class="preview-row">
+                                <th>Field Name</th>
+                                <th>Description</th>
+                                <th>Runtime Name</th>
+                                <th>Type</th>
+                            </tr>
                         </thead>
                         <tbody id="preview-data-rows-id">
-                        <tr *ngFor="let property of pipelineElement.eventSchema.eventProperties" class="preview-row">
-                            <td>{{property.label ? property.label : "(n/a)"}}</td>
-                            <td>{{property.description ? property.description : "(n/a)"}}</td>
-                            <td>{{property.runtimeName}}</td>
-                            <td>{{getFriendlyRuntimeType(property.runtimeType)}}</td>
-                        </tr>
+                            <tr
+                                *ngFor="
+                                    let property of pipelineElement.eventSchema
+                                        .eventProperties
+                                "
+                                class="preview-row"
+                            >
+                                <td>
+                                    {{
+                                        property.label
+                                            ? property.label
+                                            : '(n/a)'
+                                    }}
+                                </td>
+                                <td>
+                                    {{
+                                        property.description
+                                            ? property.description
+                                            : '(n/a)'
+                                    }}
+                                </td>
+                                <td>{{ property.runtimeName }}</td>
+                                <td>
+                                    {{
+                                        getFriendlyRuntimeType(
+                                            property.runtimeType
+                                        )
+                                    }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div *ngIf="selectedIndex == 1 && streamMode">
+            <div *ngIf="selectedIndex === 1 && streamMode">
                 <div>
-                    <sp-pipeline-element-runtime-info [streamDescription]="pipelineElement" [pollingActive]="pollingActive"></sp-pipeline-element-runtime-info>
+                    <sp-pipeline-element-runtime-info
+                        [streamDescription]="pipelineElement"
+                        [pollingActive]="pollingActive"
+                    ></sp-pipeline-element-runtime-info>
                 </div>
             </div>
-            <div *ngIf="selectedTab == 2 || !(streamMode)">
-                <pipeline-element-documentation [useStyling]="false" [appId]="pipelineElement.appId"></pipeline-element-documentation>
+            <div *ngIf="selectedTab === 2 || !streamMode">
+                <sp-pipeline-element-documentation
+                    [useStyling]="false"
+                    [appId]="pipelineElement.appId"
+                ></sp-pipeline-element-documentation>
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
             Close
         </button>
     </div>

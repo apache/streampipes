@@ -18,71 +18,81 @@
 
 import { Injectable } from '@angular/core';
 import { JsplumbConfigService } from './jsplumb-config.service';
-import { EdgeValidationStatus, PipelineEdgeValidation } from '@streampipes/platform-services';
+import {
+    EdgeValidationStatus,
+    PipelineEdgeValidation,
+} from '@streampipes/platform-services';
 import { Endpoint } from '@jsplumb/core';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
-import { PipelineElementConfig, PipelineElementConfigurationStatus } from '../model/editor.model';
+import {
+    PipelineElementConfig,
+    PipelineElementConfigurationStatus,
+} from '../model/editor.model';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PipelineStyleService {
+    constructor(
+        private jsPlumbConfigService: JsplumbConfigService,
+        private jsplumbFactoryService: JsplumbFactoryService,
+    ) {}
 
-  constructor(private jsPlumbConfigService: JsplumbConfigService,
-              private jsplumbFactoryService: JsplumbFactoryService) {
+    updateAllConnectorStyles(edgeValidations: PipelineEdgeValidation[]) {
+        edgeValidations.forEach(edgeValidation =>
+            this.updateConnectorStyle(edgeValidation),
+        );
+    }
 
-  }
+    updateAllEndpointStyles(edgeValidations: PipelineEdgeValidation[]) {
+        const jsplumbBridge =
+            this.jsplumbFactoryService.getJsplumbBridge(false);
+        edgeValidations.forEach(value => {
+            const endpoints = jsplumbBridge.getTargetEndpoint(value.targetId);
+            endpoints.each(endpoint => {
+                if (endpoint.connections.length > 0) {
+                    endpoint.setType('token');
+                }
+            });
+        });
+    }
 
-  updateAllConnectorStyles(edgeValidations: PipelineEdgeValidation[]) {
-    edgeValidations.forEach(edgeValidation => this.updateConnectorStyle(edgeValidation));
-  }
+    updateConnectorStyle(validation: PipelineEdgeValidation) {
+        const jsplumbBridge =
+            this.jsplumbFactoryService.getJsplumbBridge(false);
+        const connections = jsplumbBridge.getConnections({
+            source: this.byId(validation.sourceId),
+            target: this.byId(validation.targetId),
+        });
+        const connectorStyle = this.getConnectorStyleConfig(validation.status);
 
-  updateAllEndpointStyles(edgeValidations: PipelineEdgeValidation[]) {
-    const jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
-    edgeValidations.forEach(value => {
-      const endpoints = jsplumbBridge.getTargetEndpoint(value.targetId);
-      endpoints.each(endpoint => {
-        if (endpoint.connections.length > 0) {
-          endpoint.setType('token');
+        if (Array.isArray(connections)) {
+            connections.forEach(connection => {
+                connection.setPaintStyle(connectorStyle);
+            });
         }
-      });
-    });
-  }
-
-  updateConnectorStyle(validation: PipelineEdgeValidation) {
-    const jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
-    const connections = jsplumbBridge.getConnections({
-      source: this.byId(validation.sourceId),
-      target: this.byId(validation.targetId)
-    });
-    const connectorStyle = this.getConnectorStyleConfig(validation.status);
-
-    if (Array.isArray(connections)) {
-      connections.forEach(connection => {
-        connection.setPaintStyle(connectorStyle);
-      });
     }
-  }
 
-  getConnectorStyleConfig(status: EdgeValidationStatus) {
-    if (status.validationStatusType === 'COMPLETE') {
-      return this.jsPlumbConfigService.getConnectorStyleSuccess();
-    } else if (status.validationStatusType === 'INCOMPLETE') {
-      return this.jsPlumbConfigService.getConnectorStyleWarning();
-    } else {
-      return this.jsPlumbConfigService.getConnectorStyleError();
+    getConnectorStyleConfig(status: EdgeValidationStatus) {
+        if (status.validationStatusType === 'COMPLETE') {
+            return this.jsPlumbConfigService.getConnectorStyleSuccess();
+        } else if (status.validationStatusType === 'INCOMPLETE') {
+            return this.jsPlumbConfigService.getConnectorStyleWarning();
+        } else {
+            return this.jsPlumbConfigService.getConnectorStyleError();
+        }
     }
-  }
 
-  updateEndpointStyle(endpoint: Endpoint,
-                      endpointType: string) {
-    endpoint.setType(endpointType);
-  }
+    updateEndpointStyle(endpoint: Endpoint, endpointType: string) {
+        endpoint.setType(endpointType);
+    }
 
-  updatePeConfigurationStatus(pe: PipelineElementConfig,
-                              status: PipelineElementConfigurationStatus) {
-    pe.settings.completed = status;
-  }
+    updatePeConfigurationStatus(
+        pe: PipelineElementConfig,
+        status: PipelineElementConfigurationStatus,
+    ) {
+        pe.settings.completed = status;
+    }
 
-  byId(id: string) {
-    return document.getElementById(id);
-  }
+    byId(id: string) {
+        return document.getElementById(id);
+    }
 }

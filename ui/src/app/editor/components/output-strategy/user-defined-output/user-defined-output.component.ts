@@ -19,84 +19,99 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import {
-  EventPropertyPrimitive,
-  UserDefinedOutputStrategy
+    EventPropertyPrimitive,
+    UserDefinedOutputStrategy,
 } from '@streampipes/platform-services';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-  selector: 'user-defined-output-strategy',
-  templateUrl: './user-defined-output.component.html',
-  styleUrls: ['./user-defined-output.component.scss']
+    selector: 'sp-user-defined-output-strategy',
+    templateUrl: './user-defined-output.component.html',
+    styleUrls: ['./user-defined-output.component.scss'],
 })
-export class UserDefinedOutputStrategyComponent extends BaseOutputStrategy<UserDefinedOutputStrategy> implements OnInit {
+export class UserDefinedOutputStrategyComponent
+    extends BaseOutputStrategy<UserDefinedOutputStrategy>
+    implements OnInit
+{
+    private prefix = 'urn:streampipes.org:spi:';
+    private chars =
+        '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-  private prefix = 'urn:streampipes.org:spi:';
-  private chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    collectedPropertiesFirstStream: any;
+    collectedPropertiesSecondStream: any;
 
-  collectedPropertiesFirstStream: any;
-  collectedPropertiesSecondStream: any;
+    primitiveClasses = [
+        { label: 'String', id: 'http://www.w3.org/2001/XMLSchema#string' },
+        { label: 'Boolean', id: 'http://www.w3.org/2001/XMLSchema#boolean' },
+        { label: 'Integer', id: 'http://www.w3.org/2001/XMLSchema#integer' },
+        { label: 'Long', id: 'http://www.w3.org/2001/XMLSchema#long' },
+        { label: 'Double', id: 'http://www.w3.org/2001/XMLSchema#double' },
+        { label: 'Float', id: 'http://www.w3.org/2001/XMLSchema#float' },
+    ];
 
-  primitiveClasses = [{'label': 'String', 'id': 'http://www.w3.org/2001/XMLSchema#string'},
-    {'label': 'Boolean', 'id': 'http://www.w3.org/2001/XMLSchema#boolean'},
-    {'label': 'Integer', 'id': 'http://www.w3.org/2001/XMLSchema#integer'},
-    {'label': 'Long', 'id': 'http://www.w3.org/2001/XMLSchema#long'},
-    {'label': 'Double', 'id': 'http://www.w3.org/2001/XMLSchema#double'},
-    {'label': 'Float', 'id': 'http://www.w3.org/2001/XMLSchema#float'}];
-
-  constructor() {
-    super();
-  }
-
-  ngOnInit() {
-    this.parentForm.addControl('output-strategy', new UntypedFormControl());
-    if (!this.outputStrategy.eventProperties) {
-      this.outputStrategy.eventProperties = [];
+    constructor() {
+        super();
     }
-    this.checkFormValidity();
-  }
 
-  applyDefaultSchema() {
-    this.outputStrategy.eventProperties =
-        [...this.selectedElement.inputStreams[0].eventSchema.eventProperties];
-    this.checkFormValidity();
-  }
-
-  removeProperty(ep: any) {
-    this.outputStrategy.eventProperties
-        .splice(this.outputStrategy.eventProperties.indexOf(ep), 1);
-    this.checkFormValidity();
-  }
-
-  addProperty() {
-    this.outputStrategy.eventProperties.push(this.makeDefaultProperty());
-    this.checkFormValidity();
-  }
-
-  makeDefaultProperty() {
-    const ep = {} as EventPropertyPrimitive;
-    ep['@class'] = 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-    ep.domainProperties = [];
-    ep.elementId = 'urn:streampipes.org:spi:eventpropertyprimitive:' + this.makeId();
-
-    return ep;
-  }
-
-  makeId() {
-    return this.prefix + this.randomString(6);
-  }
-
-  randomString(length) {
-    let result = '';
-    for (let i = length; i > 0; --i) { result += this.chars[Math.floor(Math.random() * this.chars.length)]; }
-    return result;
-  }
-
-  checkFormValidity() {
-    if (!this.outputStrategy.eventProperties || this.outputStrategy.eventProperties.length === 0) {
-      this.parentForm.controls['output-strategy'].setErrors({});
-    } else {
-      this.parentForm.controls['output-strategy'].setErrors(undefined);
+    ngOnInit() {
+        this.parentForm.addControl('output-strategy', new UntypedFormControl());
+        if (!this.outputStrategy.eventProperties) {
+            this.outputStrategy.eventProperties = [];
+        }
+        this.checkFormValidity();
     }
-  }
+
+    applyDefaultSchema() {
+        this.outputStrategy.eventProperties = [
+            ...this.selectedElement.inputStreams[0].eventSchema.eventProperties,
+        ];
+        this.checkFormValidity();
+    }
+
+    removeProperty(ep: any) {
+        this.outputStrategy.eventProperties.splice(
+            this.outputStrategy.eventProperties.indexOf(ep),
+            1,
+        );
+        this.checkFormValidity();
+    }
+
+    addProperty() {
+        this.outputStrategy.eventProperties.push(this.makeDefaultProperty());
+        this.checkFormValidity();
+    }
+
+    makeDefaultProperty() {
+        const ep = {} as EventPropertyPrimitive;
+        ep['@class'] =
+            'org.apache.streampipes.model.schema.EventPropertyPrimitive';
+        ep.domainProperties = [];
+        ep.elementId =
+            'urn:streampipes.org:spi:eventpropertyprimitive:' + this.makeId();
+
+        return ep;
+    }
+
+    makeId() {
+        return this.prefix + this.randomString(6);
+    }
+
+    randomString(length) {
+        let result = '';
+        for (let i = length; i > 0; --i) {
+            result += this.chars[Math.floor(Math.random() * this.chars.length)];
+        }
+        return result;
+    }
+
+    checkFormValidity() {
+        if (
+            !this.outputStrategy.eventProperties ||
+            this.outputStrategy.eventProperties.length === 0
+        ) {
+            this.parentForm.controls['output-strategy'].setErrors({});
+        } else {
+            this.parentForm.controls['output-strategy'].setErrors(undefined);
+        }
+    }
 }

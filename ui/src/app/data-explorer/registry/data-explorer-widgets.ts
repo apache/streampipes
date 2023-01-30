@@ -27,51 +27,75 @@ import { CorrelationChartWidgetComponent } from '../components/widgets/correlati
 import { DistributionChartWidgetComponent } from '../components/widgets/distribution-chart/distribution-chart-widget.component';
 
 export enum WidgetType {
-  Table,
-  Map,
-  Heatmap,
-  LineChart,
-  Image,
-  IndicatorChart,
-  CorrelationChart,
-  DistributionChart
+    Table,
+    Map,
+    Heatmap,
+    LineChart,
+    Image,
+    IndicatorChart,
+    CorrelationChart,
+    DistributionChart,
 }
 
 export const WidgetTypeMap = new Map<number, IWidget>([
-  [WidgetType.Table, {
-    id: 'table',
-    label: 'Table',
-    componentClass: TableWidgetComponent
-  }],
-  [WidgetType.Map, {
-    id: 'map',
-    label: 'Map',
-    componentClass: MapWidgetComponent
-  }],
-  [WidgetType.Heatmap, {
-    id: 'heatmap',
-    label: 'Heatmap',
-    componentClass: HeatmapWidgetComponent
-  }],
-  [WidgetType.LineChart, {
-    id: 'time-series-chart',
-    label: 'Time Series',
-    componentClass: TimeSeriesChartWidgetComponent
-  }],
-  [WidgetType.Image, {id: 'image', label: 'Image', componentClass: ImageWidgetComponent}],
-  [WidgetType.IndicatorChart, {
-    id: 'indicator-chart',
-    label: 'Indicator',
-    componentClass: IndicatorChartWidgetComponent
-  }],
-  [WidgetType.CorrelationChart, {
-    id: 'correlation-chart',
-    label: '2D Correlation',
-    componentClass: CorrelationChartWidgetComponent
-  }],
-  [WidgetType.DistributionChart, {
-    id: 'distribution-chart',
-    label: 'Distribution',
-    componentClass: DistributionChartWidgetComponent
-  }],
+    [
+        WidgetType.Table,
+        {
+            id: 'table',
+            label: 'Table',
+            componentClass: TableWidgetComponent,
+        },
+    ],
+    [
+        WidgetType.Map,
+        {
+            id: 'map',
+            label: 'Map',
+            componentClass: MapWidgetComponent,
+        },
+    ],
+    [
+        WidgetType.Heatmap,
+        {
+            id: 'heatmap',
+            label: 'Heatmap',
+            componentClass: HeatmapWidgetComponent,
+        },
+    ],
+    [
+        WidgetType.LineChart,
+        {
+            id: 'time-series-chart',
+            label: 'Time Series',
+            componentClass: TimeSeriesChartWidgetComponent,
+        },
+    ],
+    [
+        WidgetType.Image,
+        { id: 'image', label: 'Image', componentClass: ImageWidgetComponent },
+    ],
+    [
+        WidgetType.IndicatorChart,
+        {
+            id: 'indicator-chart',
+            label: 'Indicator',
+            componentClass: IndicatorChartWidgetComponent,
+        },
+    ],
+    [
+        WidgetType.CorrelationChart,
+        {
+            id: 'correlation-chart',
+            label: '2D Correlation',
+            componentClass: CorrelationChartWidgetComponent,
+        },
+    ],
+    [
+        WidgetType.DistributionChart,
+        {
+            id: 'distribution-chart',
+            label: 'Distribution',
+            componentClass: DistributionChartWidgetComponent,
+        },
+    ],
 ]);

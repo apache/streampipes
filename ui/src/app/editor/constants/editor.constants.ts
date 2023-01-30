@@ -17,9 +17,12 @@
  */
 
 export class EditorConstants {
-
-  static readonly DATA_STREAM_IDENTIFIER = 'org.apache.streampipes.model.SpDataStream';
-  static readonly DATA_SET_IDENTIFIER = 'org.apache.streampipes.model.SpDataSet';
-  static readonly DATA_PROCESSOR_IDENTIFIER = 'org.apache.streampipes.model.graph.DataProcessorInvocation';
-  static readonly DATA_SINK_IDENTIFIER = 'org.apache.streampipes.model.graph.DataSinkInvocation';
+    static readonly DATA_STREAM_IDENTIFIER =
+        'org.apache.streampipes.model.SpDataStream';
+    static readonly DATA_SET_IDENTIFIER =
+        'org.apache.streampipes.model.SpDataSet';
+    static readonly DATA_PROCESSOR_IDENTIFIER =
+        'org.apache.streampipes.model.graph.DataProcessorInvocation';
+    static readonly DATA_SINK_IDENTIFIER =
+        'org.apache.streampipes.model.graph.DataSinkInvocation';
 }

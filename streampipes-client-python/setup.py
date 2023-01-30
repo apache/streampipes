@@ -40,15 +40,17 @@ base_packages = [
 dev_packages = base_packages + [
     "autoflake==2.0.0",
     "black==22.12.0",
+    "blacken-docs==1.13.0",
     "flake8==6.0.0",
     "interrogate==1.5.0",
-    "isort==5.11.4",
+    "isort==5.12.0",
     "mypy==0.991",
     "pandas-stubs==1.5.2.230105",
-    "pre-commit==2.21.0",
+    "pre-commit==3.0.0",
     "pytest==7.2.1",
     "pytest-cov==4.0.0",
     "pyupgrade==3.3.1",
+    "types-Jinja2==2.11.9",
     "types-requests==2.28.11.7",
 ]
 

@@ -56,6 +56,11 @@ export class GenericAdapterBuilder {
         return this;
     }
 
+    public setStartAdapter(startAdapter: boolean) {
+        this.genericAdapterInput.startAdapter = startAdapter;
+        return this;
+    }
+
     public addProtocolInput(
         type: UserInputType,
         selector: string,
@@ -71,7 +76,7 @@ export class GenericAdapterBuilder {
         return this;
     }
 
-    public setFormat(format: 'csv' | 'json_array') {
+    public setFormat(format: 'csv' | 'json_array' | 'json_object') {
         this.genericAdapterInput.format = format;
         return this;
     }

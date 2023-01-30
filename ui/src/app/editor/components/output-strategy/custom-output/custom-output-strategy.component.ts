@@ -23,51 +23,74 @@ import { PropertySelectorService } from '../../../../services/property-selector.
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-  selector: 'custom-output-strategy',
-  templateUrl: './custom-output-strategy.component.html',
-  styleUrls: ['./custom-output-strategy.component.scss']
+    selector: 'sp-custom-output-strategy',
+    templateUrl: './custom-output-strategy.component.html',
+    styleUrls: ['./custom-output-strategy.component.scss'],
 })
-export class CustomOutputStrategyComponent extends BaseOutputStrategy<CustomOutputStrategy> implements OnInit {
+export class CustomOutputStrategyComponent
+    extends BaseOutputStrategy<CustomOutputStrategy>
+    implements OnInit
+{
+    collectedPropertiesFirstStream: any;
+    collectedPropertiesSecondStream: any;
 
-  collectedPropertiesFirstStream: any;
-  collectedPropertiesSecondStream: any;
-
-  constructor(private propertySelectorService: PropertySelectorService) {
-    super();
-  }
-
-  ngOnInit() {
-    this.parentForm.addControl('output-strategy', new UntypedFormControl());
-    this.collectedPropertiesFirstStream = this.propertySelectorService
-        .makeProperties(this.getProperties(0), this.outputStrategy.availablePropertyKeys, this.propertySelectorService.firstStreamPrefix);
-    this.collectedPropertiesSecondStream = this.propertySelectorService
-        .makeProperties(this.getProperties(1), this.outputStrategy.availablePropertyKeys, this.propertySelectorService.secondStreamPrefix);
-    this.checkFormValidity();
-  }
-
-  getProperties(streamIndex) {
-    return this.selectedElement.inputStreams[streamIndex] === undefined ?
-      [] : this.selectedElement.inputStreams[streamIndex].eventSchema.eventProperties;
-  }
-
-  selectAll(collectedProperties) {
-    collectedProperties.forEach(ep => this.outputStrategy.selectedPropertyKeys.push(ep.runtimeId));
-    // This is needed to trigger update of scope
-    this.outputStrategy.selectedPropertyKeys = this.outputStrategy.selectedPropertyKeys.filter(el => true);
-    this.checkFormValidity();
-  }
-
-  deselectAll(collectedProperties) {
-    collectedProperties.forEach(ep => this.outputStrategy.selectedPropertyKeys =
-        this.outputStrategy.selectedPropertyKeys.filter(item => item !== ep.runtimeId));
-    this.checkFormValidity();
-  }
-
-  checkFormValidity() {
-    if (!this.outputStrategy.selectedPropertyKeys || this.outputStrategy.selectedPropertyKeys.length === 0) {
-      this.parentForm.controls['output-strategy'].setErrors({});
-    } else {
-      this.parentForm.controls['output-strategy'].setErrors(undefined);
+    constructor(private propertySelectorService: PropertySelectorService) {
+        super();
     }
-  }
+
+    ngOnInit() {
+        this.parentForm.addControl('output-strategy', new UntypedFormControl());
+        this.collectedPropertiesFirstStream =
+            this.propertySelectorService.makeProperties(
+                this.getProperties(0),
+                this.outputStrategy.availablePropertyKeys,
+                this.propertySelectorService.firstStreamPrefix,
+            );
+        this.collectedPropertiesSecondStream =
+            this.propertySelectorService.makeProperties(
+                this.getProperties(1),
+                this.outputStrategy.availablePropertyKeys,
+                this.propertySelectorService.secondStreamPrefix,
+            );
+        this.checkFormValidity();
+    }
+
+    getProperties(streamIndex) {
+        return this.selectedElement.inputStreams[streamIndex] === undefined
+            ? []
+            : this.selectedElement.inputStreams[streamIndex].eventSchema
+                  .eventProperties;
+    }
+
+    selectAll(collectedProperties) {
+        collectedProperties.forEach(ep =>
+            this.outputStrategy.selectedPropertyKeys.push(ep.runtimeId),
+        );
+        // This is needed to trigger update of scope
+        this.outputStrategy.selectedPropertyKeys =
+            this.outputStrategy.selectedPropertyKeys.filter(el => true);
+        this.checkFormValidity();
+    }
+
+    deselectAll(collectedProperties) {
+        collectedProperties.forEach(
+            ep =>
+                (this.outputStrategy.selectedPropertyKeys =
+                    this.outputStrategy.selectedPropertyKeys.filter(
+                        item => item !== ep.runtimeId,
+                    )),
+        );
+        this.checkFormValidity();
+    }
+
+    checkFormValidity() {
+        if (
+            !this.outputStrategy.selectedPropertyKeys ||
+            this.outputStrategy.selectedPropertyKeys.length === 0
+        ) {
+            this.parentForm.controls['output-strategy'].setErrors({});
+        } else {
+            this.parentForm.controls['output-strategy'].setErrors(undefined);
+        }
+    }
 }

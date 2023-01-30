@@ -18,26 +18,38 @@
 
 import { BaseStreamPipesWidget } from './base-widget';
 import { ResizeService } from '../../../services/resize.service';
-import { Directive } from '@angular/core';
+import { Directive, OnInit } from '@angular/core';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Directive()
-export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidget {
-
+export abstract class BaseNgxChartsStreamPipesWidget
+    extends BaseStreamPipesWidget
+    implements OnInit
+{
     view: any[] = [];
     displayChart = false;
 
     colorScheme: any;
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService, true);
     }
 
     ngOnInit() {
         super.ngOnInit();
-        this.colorScheme = {domain: [this.selectedSecondaryTextColor, this.selectedPrimaryTextColor]};
-        this.view = [this.computeCurrentWidth(this.itemWidth),
-            this.computeCurrentHeight(this.itemHeight)];
+        this.colorScheme = {
+            domain: [
+                this.selectedSecondaryTextColor,
+                this.selectedPrimaryTextColor,
+            ],
+        };
+        this.view = [
+            this.computeCurrentWidth(this.itemWidth),
+            this.computeCurrentHeight(this.itemHeight),
+        ];
         this.displayChart = true;
     }
 
@@ -46,5 +58,4 @@ export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidg
         this.view = [width, height];
         this.displayChart = true;
     }
-
 }

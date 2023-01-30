@@ -21,13 +21,13 @@ import { Subject } from 'rxjs';
 import { WidgetTypeChangeMessage } from '../models/dataview-dashboard.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class WidgetTypeService {
+    public widgetTypeChangeSubject: Subject<WidgetTypeChangeMessage> =
+        new Subject<WidgetTypeChangeMessage>();
 
-  public widgetTypeChangeSubject: Subject<WidgetTypeChangeMessage> = new Subject<WidgetTypeChangeMessage>();
-
-  public notify(widgetTypeChangeMessage: WidgetTypeChangeMessage): void {
-    this.widgetTypeChangeSubject.next(widgetTypeChangeMessage);
-  }
+    public notify(widgetTypeChangeMessage: WidgetTypeChangeMessage): void {
+        this.widgetTypeChangeSubject.next(widgetTypeChangeMessage);
+    }
 }

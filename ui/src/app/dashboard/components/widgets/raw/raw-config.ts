@@ -21,21 +21,22 @@ import { WidgetConfig } from '../base/base-config';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class RawConfig extends WidgetConfig {
+    constructor() {
+        super();
+    }
 
-  constructor() {
-    super();
-  }
-
-  getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('raw', 'Raw')
-      .withIcon('fas fa-terminal')
-      .withNumberOfPastEvents()
-      .withDescription('Displays the raw message as it comes in for testing purposes')
-      .withNumberOfPastEvents()
-      .requiredSchema(SchemaRequirementsBuilder
-        .create()
-        .build())
-      .build();
-  }
-
+    getConfig(): DashboardWidgetSettings {
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            'raw',
+            'Raw',
+        )
+            .withIcon('fas fa-terminal')
+            .withNumberOfPastEvents()
+            .withDescription(
+                'Displays the raw message as it comes in for testing purposes',
+            )
+            .withNumberOfPastEvents()
+            .requiredSchema(SchemaRequirementsBuilder.create().build())
+            .build();
+    }
 }

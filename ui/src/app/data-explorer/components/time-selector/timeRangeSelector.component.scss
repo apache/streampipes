@@ -16,7 +16,7 @@
  *
  */
 
-@import "../../../../scss/variables";
+@import '../../../../scss/variables';
 
 .start-date {
     width: 100px;
@@ -33,7 +33,7 @@
 .button-margin {
     border-radius: 0 !important;
     padding-left: 4px !important;
-    padding-right:4px !important;
+    padding-right: 4px !important;
     border-right: 1px solid #cccccc !important;
 }
 
@@ -52,5 +52,5 @@
 }
 
 .mr--15 {
-    margin-right: -15px
+    margin-right: -15px;
 }

@@ -23,7 +23,6 @@ import { EpRequirements } from '../../../sdk/ep-requirements';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class GaugeConfig extends WidgetConfig {
-
     static readonly TITLE_KEY: string = 'title-key';
     static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
     static readonly COLOR_KEY: string = 'color-key';
@@ -35,16 +34,32 @@ export class GaugeConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('gauge', 'Gauge')
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(
+            'gauge',
+            'Gauge',
+        )
             .withDescription('A gauge visualization')
             .withIcon('fas fa-tachometer-alt')
-            .requiredSchema(SchemaRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(GaugeConfig.NUMBER_MAPPING_KEY, 'Select property', '', EpRequirements.numberReq())
-                .build())
-            .requiredIntegerParameter(GaugeConfig.MIN_KEY, 'Min Y axis value', '')
-            .requiredIntegerParameter(GaugeConfig.MAX_KEY, 'Max Y axis value', '')
+            .requiredSchema(
+                SchemaRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                        GaugeConfig.NUMBER_MAPPING_KEY,
+                        'Select property',
+                        '',
+                        EpRequirements.numberReq(),
+                    )
+                    .build(),
+            )
+            .requiredIntegerParameter(
+                GaugeConfig.MIN_KEY,
+                'Min Y axis value',
+                '',
+            )
+            .requiredIntegerParameter(
+                GaugeConfig.MAX_KEY,
+                'Max Y axis value',
+                '',
+            )
             .build();
     }
-
 }

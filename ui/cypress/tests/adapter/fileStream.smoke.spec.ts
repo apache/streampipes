@@ -38,7 +38,6 @@ describe(
             const adapterInput = GenericAdapterBuilder.create('File_Stream')
                 .setName('File Stream Adapter Test')
                 .setTimestampProperty('timestamp')
-                .addProtocolInput('input', 'speed', '1')
                 .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
                 .setFormat('csv')
                 .addFormatInput('input', 'delimiter', ';')

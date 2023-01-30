@@ -22,10 +22,10 @@ import { TimeSettings } from '@streampipes/platform-services';
 
 @Injectable()
 export class TimeSelectionService {
+    public timeSelectionChangeSubject: Subject<TimeSettings> =
+        new Subject<TimeSettings>();
 
-  public timeSelectionChangeSubject: Subject<TimeSettings> = new Subject<TimeSettings>();
-
-  public notify(timeSettings: TimeSettings): void {
-    this.timeSelectionChangeSubject.next(timeSettings);
-  }
+    public notify(timeSettings: TimeSettings): void {
+        this.timeSelectionChangeSubject.next(timeSettings);
+    }
 }

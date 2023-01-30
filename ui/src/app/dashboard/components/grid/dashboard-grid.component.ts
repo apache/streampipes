@@ -17,145 +17,156 @@
  */
 
 import {
-  AfterContentInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges, OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  ViewChildren
+    AfterContentInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    ViewChildren,
 } from '@angular/core';
 import {
-  Dashboard,
-  DashboardConfig,
-  DashboardItem,
-  DashboardWidgetModel, DataLakeMeasure,
-  DatalakeRestService, SpQueryResult
+    Dashboard,
+    DashboardConfig,
+    DashboardItem,
+    DashboardWidgetModel,
+    DataLakeMeasure,
+    DatalakeRestService,
+    SpQueryResult,
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../services/resize.service';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
-import { GridsterInfo } from "../../models/gridster-info.model";
+import { GridsterInfo } from '../../models/gridster-info.model';
 import { DashboardWidgetComponent } from '../widget/dashboard-widget.component';
 import { exhaustMap } from 'rxjs/operators';
-import { Observable, of, Subscription, timer } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 
 @Component({
-  selector: 'dashboard-grid',
-  templateUrl: './dashboard-grid.component.html',
-  styleUrls: ['./dashboard-grid.component.css']
+    selector: 'sp-dashboard-grid',
+    templateUrl: './dashboard-grid.component.html',
+    styleUrls: ['./dashboard-grid.component.css'],
 })
-export class DashboardGridComponent implements OnInit, OnChanges, AfterContentInit, OnDestroy {
+export class DashboardGridComponent
+    implements OnInit, OnChanges, AfterContentInit, OnDestroy
+{
+    @Input() editMode: boolean;
+    @Input() headerVisible: boolean;
+    @Input() dashboard: Dashboard;
+    @Input() allMeasurements: DataLakeMeasure[];
 
-  @Input() editMode: boolean;
-  @Input() headerVisible: boolean;
-  @Input() dashboard: Dashboard;
-  @Input() allMeasurements: DataLakeMeasure[];
+    @Output() deleteCallback: EventEmitter<DashboardItem> =
+        new EventEmitter<DashboardItem>();
+    @Output() updateCallback: EventEmitter<DashboardWidgetModel> =
+        new EventEmitter<DashboardWidgetModel>();
 
-  @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
-  @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
+    options: DashboardConfig;
+    loaded = false;
 
-  options: DashboardConfig;
-  loaded = false;
+    subscription: Subscription;
 
-  subscription: Subscription;
+    @ViewChildren(GridsterItemComponent)
+    gridsterItemComponents: QueryList<GridsterItemComponent>;
+    @ViewChildren(DashboardWidgetComponent)
+    dashboardWidgetComponents: QueryList<DashboardWidgetComponent>;
 
-  @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
-  @ViewChildren(DashboardWidgetComponent) dashboardWidgetComponents: QueryList<DashboardWidgetComponent>;
+    constructor(
+        private resizeService: ResizeService,
+        private datalakeRestService: DatalakeRestService,
+    ) {}
 
-  constructor(private resizeService: ResizeService,
-              private datalakeRestService: DatalakeRestService) {
-
-  }
-
-  ngOnInit(): void {
-    this.options = {
-      disablePushOnDrag: true,
-      draggable: {enabled: this.editMode},
-      gridType: GridType.VerticalFixed,
-      minCols: 12,
-      maxCols: 12,
-      minRows: 4,
-      fixedRowHeight: 50,
-      fixedColWidth: 50,
-      margin: 5,
-      resizable: {enabled: this.editMode},
-      displayGrid: this.editMode ? 'always' : 'none',
-      itemResizeCallback: ((item, itemComponent) => {
-        this.resizeService.notify({
-          gridsterItem: item,
-          gridsterItemComponent: itemComponent
-        } as GridsterInfo);
-      }),
-      itemInitCallback: ((item, itemComponent) => {
-        this.resizeService.notify({
-          gridsterItem: item,
-          gridsterItemComponent: itemComponent
-        } as GridsterInfo);
-        //window.dispatchEvent(new Event('resize'));
-      })
-    };
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    ngOnInit(): void {
+        this.options = {
+            disablePushOnDrag: true,
+            draggable: { enabled: this.editMode },
+            gridType: GridType.VerticalFixed,
+            minCols: 12,
+            maxCols: 12,
+            minRows: 4,
+            fixedRowHeight: 50,
+            fixedColWidth: 50,
+            margin: 5,
+            resizable: { enabled: this.editMode },
+            displayGrid: this.editMode ? 'always' : 'none',
+            itemResizeCallback: (item, itemComponent) => {
+                this.resizeService.notify({
+                    gridsterItem: item,
+                    gridsterItemComponent: itemComponent,
+                } as GridsterInfo);
+            },
+            itemInitCallback: (item, itemComponent) => {
+                this.resizeService.notify({
+                    gridsterItem: item,
+                    gridsterItemComponent: itemComponent,
+                } as GridsterInfo);
+            },
+        };
     }
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['editMode'] && this.options) {
-      this.options.draggable.enabled = this.editMode;
-      this.options.resizable.enabled = this.editMode;
-      this.options.displayGrid = this.editMode ? 'always' : 'none';
-      this.options.api.optionsChanged();
-    }
-  }
-
-  propagateItemRemoval(widget: DashboardItem) {
-    this.deleteCallback.emit(widget);
-  }
-
-  propagateItemUpdate(dashboardWidget: DashboardWidgetModel) {
-    this.updateCallback.emit(dashboardWidget);
-  }
-
-  ngAfterContentInit(): void {
-    if (this.dashboard.dashboardGeneralSettings.globalRefresh) {
-      this.checkWidgetsReady();
-    }
-  }
-
-  checkWidgetsReady() {
-    if (this.dashboardWidgetComponents) {
-      this.createQuerySubscription();
-    } else {
-      setTimeout(() => this.checkWidgetsReady(), 1000);
-    }
-  }
-
-  createQuerySubscription() {
-    this.subscription = timer(0, this.dashboard.dashboardGeneralSettings.refreshIntervalInSeconds * 1000)
-      .pipe(exhaustMap(() => this.makeQueryObservable()))
-      .subscribe(res => {
-        if (res.length > 0) {
-          this.dashboardWidgetComponents.forEach((widget, index) => {
-            const widgetId = widget.getWidgetId();
-            const queryResult = res.find(r => r.forId === widgetId);
-            if (queryResult) {
-              widget.processQueryResponse(queryResult);
-            }
-          });
+    ngOnDestroy() {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
         }
-      });
-  }
+    }
 
-  makeQueryObservable(): Observable<SpQueryResult[]> {
-    const queries = this.dashboardWidgetComponents
-      .map(dw => dw.getWidgetQuery())
-      .filter(query => query !== undefined);
-    return this.datalakeRestService.performMultiQuery(queries);
-  }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['editMode'] && this.options) {
+            this.options.draggable.enabled = this.editMode;
+            this.options.resizable.enabled = this.editMode;
+            this.options.displayGrid = this.editMode ? 'always' : 'none';
+            this.options.api.optionsChanged();
+        }
+    }
+
+    propagateItemRemoval(widget: DashboardItem) {
+        this.deleteCallback.emit(widget);
+    }
+
+    propagateItemUpdate(dashboardWidget: DashboardWidgetModel) {
+        this.updateCallback.emit(dashboardWidget);
+    }
+
+    ngAfterContentInit(): void {
+        if (this.dashboard.dashboardGeneralSettings.globalRefresh) {
+            this.checkWidgetsReady();
+        }
+    }
+
+    checkWidgetsReady() {
+        if (this.dashboardWidgetComponents) {
+            this.createQuerySubscription();
+        } else {
+            setTimeout(() => this.checkWidgetsReady(), 1000);
+        }
+    }
+
+    createQuerySubscription() {
+        this.subscription = timer(
+            0,
+            this.dashboard.dashboardGeneralSettings.refreshIntervalInSeconds *
+                1000,
+        )
+            .pipe(exhaustMap(() => this.makeQueryObservable()))
+            .subscribe(res => {
+                if (res.length > 0) {
+                    this.dashboardWidgetComponents.forEach((widget, index) => {
+                        const widgetId = widget.getWidgetId();
+                        const queryResult = res.find(r => r.forId === widgetId);
+                        if (queryResult) {
+                            widget.processQueryResponse(queryResult);
+                        }
+                    });
+                }
+            });
+    }
+
+    makeQueryObservable(): Observable<SpQueryResult[]> {
+        const queries = this.dashboardWidgetComponents
+            .map(dw => dw.getWidgetQuery())
+            .filter(query => query !== undefined);
+        return this.datalakeRestService.performMultiQuery(queries);
+    }
 }

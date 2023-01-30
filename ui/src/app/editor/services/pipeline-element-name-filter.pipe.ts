@@ -19,19 +19,21 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { PipelineElementUnion } from '../model/editor.model';
 
-@Pipe({name: 'pipelineElementName'})
+@Pipe({ name: 'pipelineElementName' })
 export class PipelineElementNameFilterPipe implements PipeTransform {
+    transform(
+        pipelineElements: PipelineElementUnion[],
+        filter: string,
+    ): PipelineElementUnion[] {
+        return pipelineElements.filter(pe => {
+            return this.matchesText(filter, pe);
+        });
+    }
 
-  transform(pipelineElements: PipelineElementUnion[],
-            filter: string): PipelineElementUnion[] {
-    return pipelineElements.filter(pe => {
-      return this.matchesText(filter, pe);
-    });
-  }
-
-  matchesText(filter: string,
-              el: PipelineElementUnion): boolean {
-    return filter === '' || el.name.toLowerCase().includes(filter.toLowerCase());
-  }
-
+    matchesText(filter: string, el: PipelineElementUnion): boolean {
+        return (
+            filter === '' ||
+            el.name.toLowerCase().includes(filter.toLowerCase())
+        );
+    }
 }

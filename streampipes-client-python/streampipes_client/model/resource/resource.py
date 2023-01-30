@@ -45,14 +45,17 @@ class Resource(ABC, BasicModel):
 
     def to_dict(self, use_source_names=True):
         """Returns the resource in dictionary representation.
+
         Parameters
         ----------
         use_source_names: bool
             Indicates if the dictionary keys are in python representation or
             equally named to the StreamPipes backend
+
         Returns
         ------
         resource: Dict[str, Any]
             The resource as dictionary representation
+
         """
         return self.dict(by_alias=use_source_names)

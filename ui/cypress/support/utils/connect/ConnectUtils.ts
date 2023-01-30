@@ -30,8 +30,6 @@ import { ConnectBtns } from './ConnectBtns';
 export class ConnectUtils {
     public static testSpecificStreamAdapter(
         adapterConfiguration: SpecificAdapterInput,
-        starting = true,
-        successElement = 'sp-connect-adapter-live-preview',
     ) {
         ConnectUtils.goToConnect();
 
@@ -55,11 +53,7 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(
-            adapterConfiguration,
-            starting,
-            successElement,
-        );
+        ConnectUtils.startStreamAdapter(adapterConfiguration);
     }
 
     public static testGenericStreamAdapter(
@@ -76,17 +70,7 @@ export class ConnectUtils {
         ConnectUtils.startStreamAdapter(adapterConfiguration);
     }
 
-    public static addGenericSetAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
-        ConnectUtils.addGenericAdapter(adapterConfiguration);
-
-        ConnectUtils.startSetAdapter(adapterConfiguration);
-    }
-
-    private static addGenericAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
+    public static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -194,26 +178,13 @@ export class ConnectUtils {
         cy.get('#event-schema-next-button').click();
     }
 
-    public static startStreamAdapter(
-        adapterInput: AdapterInput,
-        starting = true,
-        successElement = 'sp-connect-adapter-live-preview',
-    ) {
-        ConnectUtils.startAdapter(adapterInput, successElement, starting);
-    }
-
-    public static startSetAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(
-            adapterInput,
-            'sp-connect-adapter-set-success',
-            true,
-        );
+    public static startStreamAdapter(adapterInput: AdapterInput) {
+        ConnectUtils.startAdapter(adapterInput);
     }
 
     public static startAdapter(
         adapterInput: AdapterInput,
-        successElement: string,
-        starting: boolean,
+        noLiveDataView = false,
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -228,13 +199,21 @@ export class ConnectUtils {
         }
 
         // Deselect auto start of adapter
-        if (!starting) {
+        if (!adapterInput.startAdapter) {
             ConnectBtns.startAdapterNowCheckbox().parent().click();
         }
 
         ConnectBtns.adapterSettingsStartAdapter().click();
 
-        cy.dataCy(successElement, { timeout: 60000 }).should('be.visible');
+        if (adapterInput.startAdapter && !noLiveDataView) {
+            cy.dataCy('sp-connect-adapter-success-live-preview', {
+                timeout: 60000,
+            }).should('be.visible');
+        } else {
+            cy.dataCy('sp-connect-adapter-success-added', {
+                timeout: 60000,
+            }).should('be.visible');
+        }
 
         this.closeAdapterPreview();
     }
@@ -261,9 +240,15 @@ export class ConnectUtils {
     }
 
     public static setUpPreprocessingRuleTest(): AdapterInput {
-        const adapterConfiguration = GenericAdapterBuilder.create('File_Set')
+        const adapterConfiguration = GenericAdapterBuilder.create('File_Stream')
             .setStoreInDataLake()
             .setTimestampProperty('timestamp')
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            )
+            .addProtocolInput('radio', 'replayonce', 'yes')
             .setName('Adapter to test rules')
             .setFormat('csv')
             .addFormatInput('input', 'delimiter', ';')
@@ -296,9 +281,9 @@ export class ConnectUtils {
         cy.get('div').contains('Values').parent().click();
 
         // Validate resulting event
-        cy.dataCy('sp-connect-adapter-live-preview', { timeout: 10000 }).should(
-            'be.visible',
-        );
+        cy.dataCy('sp-connect-adapter-success-live-preview', {
+            timeout: 10000,
+        }).should('be.visible');
 
         // validate that three event properties
         cy.get('.preview-row', { timeout: 10000 })
@@ -310,11 +295,12 @@ export class ConnectUtils {
         adapterConfiguration: AdapterInput,
         expectedFile: string,
         ignoreTime: boolean,
+        waitTime = 0,
     ) {
-        ConnectUtils.startSetAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(adapterConfiguration, true);
 
         // Wait till data is stored
-        cy.wait(10000);
+        cy.wait(waitTime);
 
         DataLakeUtils.checkResults(
             'Adapter to test rules',

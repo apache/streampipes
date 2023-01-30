@@ -18,39 +18,44 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ImageWidgetModel, ImageWidgetVisConfig } from '../model/image-widget.model';
+import {
+    ImageWidgetModel,
+    ImageWidgetVisConfig,
+} from '../model/image-widget.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-data-explorer-image-widget-config',
-  templateUrl: './image-widget-config.component.html',
-  styleUrls: ['./image-widget-config.component.scss']
+    selector: 'sp-data-explorer-image-widget-config',
+    templateUrl: './image-widget-config.component.html',
+    styleUrls: ['./image-widget-config.component.scss'],
 })
-export class ImageWidgetConfigComponent extends BaseWidgetConfig<ImageWidgetModel, ImageWidgetVisConfig> implements OnInit {
+export class ImageWidgetConfigComponent extends BaseWidgetConfig<
+    ImageWidgetModel,
+    ImageWidgetVisConfig
+> {
+    imageSemanticType = 'https://image.com';
+    imageFields: DataExplorerField[];
 
-  imageSemanticType = 'https://image.com';
-  imageFields: DataExplorerField[];
+    protected getWidgetType(): WidgetType {
+        return WidgetType.Image;
+    }
 
-  ngOnInit(): void {
-  }
+    protected initWidgetConfig(): ImageWidgetVisConfig {
+        this.imageFields = this.fieldProvider.allFields.filter(field =>
+            field.fieldCharacteristics.semanticTypes.find(
+                st => st === this.imageSemanticType,
+            ),
+        );
+        return {
+            forType: this.getWidgetType(),
+            selectedField: this.imageFields[0],
+        };
+    }
 
-  protected getWidgetType(): WidgetType {
-    return WidgetType.Image;
-  }
-
-  protected initWidgetConfig(): ImageWidgetVisConfig {
-    this.imageFields = this.fieldProvider.allFields
-      .filter(field => field.fieldCharacteristics.semanticTypes.find(st => st === this.imageSemanticType));
-    return {
-      forType: this.getWidgetType(),
-      selectedField: this.imageFields[0]
-    };
-  }
-
-  setSelectedImageProperty(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedField = field;
-    this.triggerDataRefresh();
-  }
-
+    setSelectedImageProperty(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedField =
+            field;
+        this.triggerDataRefresh();
+    }
 }

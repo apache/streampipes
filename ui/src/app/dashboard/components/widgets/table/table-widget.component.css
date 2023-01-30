@@ -17,17 +17,17 @@
  */
 
 .title-panel {
-    font-size:20px;
-    text-align:center;
+    font-size: 20px;
+    text-align: center;
 }
 
 .mt-20 {
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .main-panel {
-    width:100%;
+    width: 100%;
     height: 100%;
-    display:inline-grid;
+    display: inline-grid;
     align-content: center;
 }

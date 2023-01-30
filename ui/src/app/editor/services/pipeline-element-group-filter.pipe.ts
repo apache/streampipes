@@ -19,18 +19,21 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { PeCategory, PipelineElementUnion } from '../model/editor.model';
 
-@Pipe({name: 'pipelineElementGroup'})
+@Pipe({ name: 'pipelineElementGroup' })
 export class PipelineElementGroupFilterPipe implements PipeTransform {
-
-  transform(pipelineElements: PipelineElementUnion[],
-            category: PeCategory): PipelineElementUnion[] {
-    return pipelineElements.filter(pe => {
-      if ((!pe.category || pe.category.length === 0) && category.code === 'UNCATEGORIZED') {
-        return true;
-      } else {
-        return pe.category.find(c => c === category.code) !== undefined;
-      }
-    });
-  }
-
+    transform(
+        pipelineElements: PipelineElementUnion[],
+        category: PeCategory,
+    ): PipelineElementUnion[] {
+        return pipelineElements.filter(pe => {
+            if (
+                (!pe.category || pe.category.length === 0) &&
+                category.code === 'UNCATEGORIZED'
+            ) {
+                return true;
+            } else {
+                return pe.category.find(c => c === category.code) !== undefined;
+            }
+        });
+    }
 }

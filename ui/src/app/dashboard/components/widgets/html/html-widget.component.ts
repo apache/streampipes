@@ -23,19 +23,24 @@ import { HtmlConfig } from './html-config';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'html-widget',
+    selector: 'sp-html-widget',
     templateUrl: './html-widget.component.html',
-    styleUrls: ['./html-widget.component.css']
+    styleUrls: ['./html-widget.component.css'],
 })
-export class HtmlWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
-
+export class HtmlWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
     item: string;
     width: number;
     height: number;
 
     selectedHtmlField: string;
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService, false);
     }
 
@@ -50,7 +55,9 @@ export class HtmlWidgetComponent extends BaseStreamPipesWidget implements OnInit
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedHtmlField = extractor.mappingPropertyValue(HtmlConfig.HTML_MAPPING_KEY);
+        this.selectedHtmlField = extractor.mappingPropertyValue(
+            HtmlConfig.HTML_MAPPING_KEY,
+        );
     }
 
     protected onEvent(events: any[]) {
@@ -69,5 +76,4 @@ export class HtmlWidgetComponent extends BaseStreamPipesWidget implements OnInit
     getFieldsToQuery(): string[] {
         return [this.selectedHtmlField];
     }
-
 }

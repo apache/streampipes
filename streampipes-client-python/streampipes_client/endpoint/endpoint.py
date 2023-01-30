@@ -25,15 +25,18 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from http import HTTPStatus
-from typing import Callable, Tuple, Type
+from typing import Callable, Optional, Tuple, Type, final
 
 from requests import Response
 from requests.exceptions import HTTPError
 
 __all__ = [
     "APIEndpoint",
+    "MessagingEndpoint",
 ]
 
+from streampipes_client.endpoint.exceptions import MessagingEndpointNotConfiguredError
+from streampipes_client.functions.broker.broker import Broker
 from streampipes_client.model.container.resource_container import ResourceContainer
 from streampipes_client.model.resource.resource import Resource
 
@@ -59,6 +62,7 @@ _error_code_to_message = {
 
 class Endpoint(ABC):
     """Abstract implementation of an StreamPipes endpoint.
+
     Serves as template for all endpoints used for interaction with a StreamPipes instance.
     By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
 
@@ -71,6 +75,19 @@ class Endpoint(ABC):
 
     def __init__(self, parent_client: "StreamPipesClient"):  # type: ignore # noqa: F821
         self._parent_client = parent_client
+
+
+class APIEndpoint(Endpoint):
+    """Abstract implementation of an API endpoint.
+
+    Serves as template for all endpoints for the StreamPipes API.
+    By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
+
+    Parameters
+    ----------
+    parent_client: StreamPipesClient
+        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
+    """
 
     @property
     @abstractmethod
@@ -85,18 +102,6 @@ class Endpoint(ABC):
         needs to a subclass of `model.container.ResourceContainer`.
         """
         raise NotImplementedError  # pragma: no cover
-
-
-class APIEndpoint(Endpoint):
-    """Abstract implementation of an API endpoint.
-    Serves as template for all endpoints for the StreamPipes API.
-    By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
-
-    Parameters
-    ----------
-    parent_client: StreamPipesClient
-        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
-    """
 
     @property
     @abstractmethod
@@ -227,3 +232,65 @@ class APIEndpoint(Endpoint):
             data=json.dumps(resource.to_dict(use_source_names=True)),
             headers={"Content-type": "application/json"},
         )
+
+
+class MessagingEndpoint(Endpoint):
+    """Abstract implementation of a StreamPipes messaging endpoint.
+    Serves as template for all endpoints used for interacting with the StreamPipes messaging layer directly.
+    Therefore, they need to provide the functionality to talk with the broker system running in StreamPipes.
+    By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
+
+    Parameters
+    ----------
+    parent_client: StreamPipesClient
+        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
+
+    """
+
+    def __init__(self, parent_client: "StreamPipesClient"):  # type: ignore # noqa: F821
+        self._broker: Optional[Broker] = None
+        super().__init__(parent_client=parent_client)
+
+    @property
+    def broker(self) -> Broker:
+        """Defines the broker instance that is used to connect to StreamPipes' messaging layer.
+
+        This instance enables the client to authenticate to the broker used in the target StreamPipes instance,
+        to consume messages from and to write messages to the broker.
+
+        Raises
+        ------
+        MessagingEndpointNotConfiguredError
+            If the endpoint is used before the broker instance is set via `configure()`
+
+        Returns
+        -------
+        The broker instance to be used to communicate with
+        StreamPipes' messaging layer.
+        """
+
+        if self._broker is not None:
+            return self._broker
+        raise MessagingEndpointNotConfiguredError(
+            endpoint_name=f"{self=}".split("=")[0],
+        )
+
+    @broker.setter
+    def broker(self, broker: Broker) -> None:
+        """Setter method for internal property `broker`"""
+        self._broker = broker
+
+    @final
+    def configure(self, broker: Broker) -> None:
+        """Configures the message endpoint by setting the broker instance to be used.
+
+        This configuration step is required before the endpoint can be actually used.
+        The based `broker` instance is passed to an internal property
+
+        Returns
+        _______
+        None
+
+        """
+
+        self.broker = broker

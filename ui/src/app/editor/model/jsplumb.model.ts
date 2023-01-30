@@ -17,10 +17,10 @@
  */
 
 export interface JsplumbSettings {
-  dotRadius: number;
-  lineWidth: number;
-  arrowWidth: number;
-  arrowLength: number;
-  arrowLineWidth: number;
-  curviness: number;
+    dotRadius: number;
+    lineWidth: number;
+    arrowWidth: number;
+    arrowLength: number;
+    arrowLineWidth: number;
+    curviness: number;
 }

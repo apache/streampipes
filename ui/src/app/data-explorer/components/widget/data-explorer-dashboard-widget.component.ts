@@ -17,23 +17,25 @@
  */
 
 import {
-  Component,
-  ComponentFactoryResolver, ComponentRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    Component,
+    ComponentFactoryResolver,
+    ComponentRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild,
 } from '@angular/core';
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
-  DashboardItem, DataExplorerDataConfig,
-  DataExplorerWidgetModel,
-  DataLakeMeasure,
-  DataViewDataExplorerService,
-  DateRange,
-  TimeSettings
+    DashboardItem,
+    DataExplorerDataConfig,
+    DataExplorerWidgetModel,
+    DataLakeMeasure,
+    DataViewDataExplorerService,
+    DateRange,
+    TimeSettings,
 } from '@streampipes/platform-services';
 import { DataDownloadDialogComponent } from '../../../core-ui/data-download-dialog/data-download-dialog.component';
 import { interval, Subscription } from 'rxjs';
@@ -48,178 +50,205 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
-  selector: 'sp-data-explorer-dashboard-widget',
-  templateUrl: './data-explorer-dashboard-widget.component.html',
-  styleUrls: ['./data-explorer-dashboard-widget.component.scss']
+    selector: 'sp-data-explorer-dashboard-widget',
+    templateUrl: './data-explorer-dashboard-widget.component.html',
+    styleUrls: ['./data-explorer-dashboard-widget.component.scss'],
 })
 export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
+    @Input()
+    dashboardItem: DashboardItem;
 
-  @Input()
-  dashboardItem: DashboardItem;
+    @Input()
+    configuredWidget: DataExplorerWidgetModel;
 
-  @Input()
-  configuredWidget: DataExplorerWidgetModel;
+    @Input()
+    dataLakeMeasure: DataLakeMeasure;
 
-  @Input()
-  dataLakeMeasure: DataLakeMeasure;
+    @Input()
+    editMode: boolean;
 
-  @Input()
-  editMode: boolean;
+    @Input()
+    gridsterItemComponent: GridsterItemComponent;
 
-  @Input()
-  gridsterItemComponent: GridsterItemComponent;
+    @Input()
+    currentlyConfiguredWidgetId: string;
 
-  @Input()
-  currentlyConfiguredWidgetId: string;
+    @Input()
+    previewMode = false;
 
-  @Input()
-  previewMode = false;
+    @Input()
+    gridMode = true;
 
-  @Input()
-  gridMode = true;
+    /**
+     * This is the date range (start, end) to view the data and is set in data-explorer.ts
+     */
+    @Input()
+    timeSettings: TimeSettings;
 
-  /**
-   * This is the date range (start, end) to view the data and is set in data-explorer.ts
-   */
-  @Input()
-  timeSettings: TimeSettings;
+    @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> =
+        new EventEmitter<DataExplorerWidgetModel>();
+    @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> =
+        new EventEmitter<DataExplorerWidgetModel>();
+    @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> =
+        new EventEmitter<DataExplorerWidgetModel>();
+    @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
+        new EventEmitter<DataExplorerWidgetModel>();
 
-  @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel>
-    = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
+    title = '';
+    widgetLoaded = false;
 
-  title = '';
-  widgetLoaded = false;
+    msCounter = interval(10);
+    timerActive = false;
+    loadingTime = 0;
 
-  msCounter = interval(10);
-  timerActive = false;
-  loadingTime = 0;
+    hasDataExplorerWritePrivileges = false;
 
-  hasDataExplorerWritePrivileges = false;
+    authSubscription: Subscription;
+    widgetTypeChangedSubscription: Subscription;
+    intervalSubscription: Subscription;
 
-  authSubscription: Subscription;
-  widgetTypeChangedSubscription: Subscription;
-  intervalSubscription: Subscription;
+    errorMessage: StreamPipesErrorMessage;
 
-  errorMessage: StreamPipesErrorMessage;
+    componentRef: ComponentRef<BaseWidgetData<any>>;
 
-  componentRef: ComponentRef<BaseWidgetData<any>>;
+    @ViewChild(WidgetDirective, { static: true }) widgetHost!: WidgetDirective;
 
-  @ViewChild(WidgetDirective, {static: true}) widgetHost!: WidgetDirective;
+    constructor(
+        private dataViewDataExplorerService: DataViewDataExplorerService,
+        private dialogService: DialogService,
+        private componentFactoryResolver: ComponentFactoryResolver,
+        private widgetTypeService: WidgetTypeService,
+        private authService: AuthService,
+    ) {}
 
-  constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
-              private dialogService: DialogService,
-              private componentFactoryResolver: ComponentFactoryResolver,
-              private widgetTypeService: WidgetTypeService,
-              private authService: AuthService) {
-  }
-
-  ngOnInit(): void {
-    this.authSubscription = this.authService.user$.subscribe(user => {
-      this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
-    });
-    this.widgetLoaded = true;
-    this.title = this.dataLakeMeasure.measureName;
-    this.widgetTypeChangedSubscription = this.widgetTypeService.widgetTypeChangeSubject.subscribe(typeChange => {
-      if (typeChange.widgetId === this.configuredWidget._id) {
-        this.chooseWidget(typeChange.newWidgetTypeId);
-      }
-    });
-    this.chooseWidget(this.configuredWidget.widgetType);
-  }
-
-  ngOnDestroy() {
-    this.componentRef.destroy();
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
+    ngOnInit(): void {
+        this.authSubscription = this.authService.user$.subscribe(user => {
+            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+            );
+        });
+        this.widgetLoaded = true;
+        this.title = this.dataLakeMeasure.measureName;
+        this.widgetTypeChangedSubscription =
+            this.widgetTypeService.widgetTypeChangeSubject.subscribe(
+                typeChange => {
+                    if (typeChange.widgetId === this.configuredWidget._id) {
+                        this.chooseWidget(typeChange.newWidgetTypeId);
+                    }
+                },
+            );
+        this.chooseWidget(this.configuredWidget.widgetType);
     }
-    if (this.widgetTypeChangedSubscription) {
-      this.widgetTypeChangedSubscription.unsubscribe();
-    }
-  }
 
-  chooseWidget(widgetTypeId: string) {
-    const widgets = DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
-    const widgetToDisplay = widgets.find(widget => widget.id === widgetTypeId);
-    this.loadComponent(widgetToDisplay.componentClass);
-  }
-
-  loadComponent(widgetToDisplay) {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory<BaseWidgetData<any>>(widgetToDisplay);
-
-    const viewContainerRef = this.widgetHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    this.componentRef = viewContainerRef.createComponent<BaseWidgetData<any>>(componentFactory);
-    this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
-    this.componentRef.instance.timeSettings = this.timeSettings;
-    this.componentRef.instance.gridsterItem = this.dashboardItem;
-    this.componentRef.instance.gridsterItemComponent = this.gridsterItemComponent;
-    this.componentRef.instance.editMode = this.editMode;
-    this.componentRef.instance.dataViewDashboardItem = this.dashboardItem;
-    this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
-    this.componentRef.instance.previewMode = this.previewMode;
-    this.componentRef.instance.gridMode = this.gridMode;
-    const removeSub = this.componentRef.instance.removeWidgetCallback.subscribe(ev => this.removeWidget());
-    const timerSub = this.componentRef.instance.timerCallback.subscribe(ev => this.handleTimer(ev));
-    const errorSub = this.componentRef.instance.errorCallback.subscribe(ev => this.errorMessage = ev);
-
-    this.componentRef.onDestroy(destroy => {
-      this.componentRef.instance.cleanupSubscriptions();
-      removeSub.unsubscribe();
-      timerSub.unsubscribe();
-      errorSub.unsubscribe();
-    });
-  }
-
-  removeWidget() {
-    this.deleteCallback.emit(this.configuredWidget);
-  }
-
-  downloadDataAsFile() {
-    this.dialogService.open(DataDownloadDialogComponent, {
-      panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Download data',
-      width: '50vw',
-      data: {
-        'dataDownloadDialogModel': {
-          'dataExplorerDateRange': DateRange.fromTimeSettings(this.timeSettings),
-          'dataExplorerDataConfig': this.configuredWidget.dataConfig as DataExplorerDataConfig
+    ngOnDestroy() {
+        this.componentRef.destroy();
+        if (this.authSubscription) {
+            this.authSubscription.unsubscribe();
         }
-      }
-    });
-  }
-
-  startEditMode() {
-    this.startEditModeEmitter.emit(this.configuredWidget);
-  }
-
-  triggerWidgetEditMode() {
-    if (this.currentlyConfiguredWidgetId === this.configuredWidget._id) {
-      this.configureWidgetCallback.emit();
-    } else {
-      this.configureWidgetCallback.emit(this.configuredWidget);
+        if (this.widgetTypeChangedSubscription) {
+            this.widgetTypeChangedSubscription.unsubscribe();
+        }
     }
-  }
 
-  startLoadingTimer() {
-    this.timerActive = true;
-    this.intervalSubscription = interval( 10 )
-        .pipe(takeWhile(() => this.timerActive))
-        .subscribe(value => {
-      this.loadingTime = (value * 10 / 1000);
-    });
-  }
+    chooseWidget(widgetTypeId: string) {
+        const widgets =
+            DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
+        const widgetToDisplay = widgets.find(
+            widget => widget.id === widgetTypeId,
+        );
+        this.loadComponent(widgetToDisplay.componentClass);
+    }
 
-  stopLoadingTimer() {
-    this.timerActive = false;
-    this.intervalSubscription.unsubscribe();
-  }
+    loadComponent(widgetToDisplay) {
+        const componentFactory =
+            this.componentFactoryResolver.resolveComponentFactory<
+                BaseWidgetData<any>
+            >(widgetToDisplay);
 
-  handleTimer(start: boolean) {
-    start ? this.startLoadingTimer() : this.stopLoadingTimer();
-  }
+        const viewContainerRef = this.widgetHost.viewContainerRef;
+        viewContainerRef.clear();
 
+        this.componentRef =
+            viewContainerRef.createComponent<BaseWidgetData<any>>(
+                componentFactory,
+            );
+        this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
+        this.componentRef.instance.timeSettings = this.timeSettings;
+        this.componentRef.instance.gridsterItem = this.dashboardItem;
+        this.componentRef.instance.gridsterItemComponent =
+            this.gridsterItemComponent;
+        this.componentRef.instance.editMode = this.editMode;
+        this.componentRef.instance.dataViewDashboardItem = this.dashboardItem;
+        this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
+        this.componentRef.instance.previewMode = this.previewMode;
+        this.componentRef.instance.gridMode = this.gridMode;
+        const removeSub =
+            this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
+                this.removeWidget(),
+            );
+        const timerSub = this.componentRef.instance.timerCallback.subscribe(
+            ev => this.handleTimer(ev),
+        );
+        const errorSub = this.componentRef.instance.errorCallback.subscribe(
+            ev => (this.errorMessage = ev),
+        );
+
+        this.componentRef.onDestroy(destroy => {
+            this.componentRef.instance.cleanupSubscriptions();
+            removeSub.unsubscribe();
+            timerSub.unsubscribe();
+            errorSub.unsubscribe();
+        });
+    }
+
+    removeWidget() {
+        this.deleteCallback.emit(this.configuredWidget);
+    }
+
+    downloadDataAsFile() {
+        this.dialogService.open(DataDownloadDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Download data',
+            width: '50vw',
+            data: {
+                dataDownloadDialogModel: {
+                    dataExplorerDateRange: DateRange.fromTimeSettings(
+                        this.timeSettings,
+                    ),
+                    dataExplorerDataConfig: this.configuredWidget
+                        .dataConfig as DataExplorerDataConfig,
+                },
+            },
+        });
+    }
+
+    startEditMode() {
+        this.startEditModeEmitter.emit(this.configuredWidget);
+    }
+
+    triggerWidgetEditMode() {
+        if (this.currentlyConfiguredWidgetId === this.configuredWidget._id) {
+            this.configureWidgetCallback.emit();
+        } else {
+            this.configureWidgetCallback.emit(this.configuredWidget);
+        }
+    }
+
+    startLoadingTimer() {
+        this.timerActive = true;
+        this.intervalSubscription = interval(10)
+            .pipe(takeWhile(() => this.timerActive))
+            .subscribe(value => {
+                this.loadingTime = (value * 10) / 1000;
+            });
+    }
+
+    stopLoadingTimer() {
+        this.timerActive = false;
+        this.intervalSubscription.unsubscribe();
+    }
+
+    handleTimer(start: boolean) {
+        start ? this.startLoadingTimer() : this.stopLoadingTimer();
+    }
 }

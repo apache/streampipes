@@ -17,7 +17,7 @@
 
 
 org.apache.streampipes.connect.iiot.protocol.stream.file.title=File Stream
-org.apache.streampipes.connect.iiot.protocol.stream.file=Continuously streams the content from a file.
+org.apache.streampipes.connect.iiot.protocol.stream.file.description=Continuously streams the content from a file.
 
 filePath.title=File
 filePath.description=File Path
@@ -26,5 +26,19 @@ replaceTimestamp.title=Use current time
 replaceTimestamp.description=Replace Event Time with Current Timestamp
 
 speed.title=Replay Speed
-speed.description=original = 1; speedup 2x = 2; half speed  =  0.5
+speed.description=
 
+speedUp.title=Speed Up
+speedUp.description=original = 1; speedup 2x = 2; half speed  =  0.5
+
+replayOnce.title=Replay Once
+replayOnce.description='yes' file is only replayed once, 'no' the file is replayed till adapter is stopped
+
+keepOriginalTime.title=Keep original time
+keepOriginalTime.description=
+
+speedUpFactor.title=Speed Up Factor
+speedUpFactor.description=
+
+fastest.title=Fastest (Ignore original time)
+fastest.description=

@@ -22,13 +22,18 @@ import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'area-widget',
+    selector: 'sp-area-widget',
     templateUrl: './area-widget.component.html',
-    styleUrls: ['./area-widget.component.css']
+    styleUrls: ['./area-widget.component.css'],
 })
-export class AreaWidgetComponent extends BaseNgxLineChartsStreamPipesWidget implements OnInit, OnDestroy {
-
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+export class AreaWidgetComponent
+    extends BaseNgxLineChartsStreamPipesWidget
+    implements OnInit, OnDestroy
+{
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService);
     }
 

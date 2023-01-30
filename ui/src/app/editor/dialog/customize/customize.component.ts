@@ -16,20 +16,28 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import {
-  InvocablePipelineElementUnion,
-  PipelineElementConfig,
-  PipelineElementConfigurationStatus
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation,
+} from '@angular/core';
+import {
+    InvocablePipelineElementUnion,
+    PipelineElementConfig,
+    PipelineElementConfigurationStatus,
 } from '../../model/editor.model';
 import { DialogRef } from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import {
-  DataProcessorInvocation, DataSinkInvocation,
-  EventSchema,
-  PipelineElementTemplate,
-  PipelineElementTemplateConfig,
-  PipelineElementTemplateService
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    EventSchema,
+    PipelineElementTemplate,
+    PipelineElementTemplateConfig,
+    PipelineElementTemplateService,
 } from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
@@ -37,174 +45,195 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 
 @Component({
-  selector: 'customize-pipeline-element',
-  templateUrl: './customize.component.html',
-  styleUrls: ['./customize.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'sp-customize-pipeline-element',
+    templateUrl: './customize.component.html',
+    styleUrls: ['./customize.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class CustomizeComponent implements OnInit, AfterViewInit {
+    @Input()
+    pipelineElement: PipelineElementConfig;
 
-  @Input()
-  pipelineElement: PipelineElementConfig;
+    cachedPipelineElement: InvocablePipelineElementUnion;
+    eventSchemas: EventSchema[] = [];
 
-  cachedPipelineElement: InvocablePipelineElementUnion;
-  eventSchemas: EventSchema[] = [];
+    displayRecommended = true;
+    _showDocumentation = false;
 
-  displayRecommended = true;
-  _showDocumentation = false;
+    selection: any;
+    matchingSelectionLeft: any;
+    matchingSelectionRight: any;
+    invalid: any;
+    helpDialogVisible: any;
+    validationErrors: any;
 
-  selection: any;
-  matchingSelectionLeft: any;
-  matchingSelectionRight: any;
-  invalid: any;
-  helpDialogVisible: any;
-  validationErrors: any;
+    sourceEndpoint: any;
+    sepa: any;
 
-  sourceEndpoint: any;
-  sepa: any;
+    parentForm: UntypedFormGroup;
+    formValid: boolean;
+    viewInitialized = false;
 
-  parentForm: UntypedFormGroup;
-  formValid: boolean;
-  viewInitialized = false;
+    isDataProcessor = false;
+    originalDialogWidth: string | number;
+    completedStaticProperty: ConfigurationInfo;
 
-  isDataProcessor = false;
-  originalDialogWidth: string | number;
-  completedStaticProperty: ConfigurationInfo;
+    availableTemplates: PipelineElementTemplate[];
+    selectedTemplate: any = false;
+    templateMode = false;
+    template: PipelineElementTemplate;
+    templateConfigs: Map<string, any> = new Map();
 
-  availableTemplates: PipelineElementTemplate[];
-  selectedTemplate: any = false;
-  templateMode = false;
-  template: PipelineElementTemplate;
-  templateConfigs: Map<string, any> = new Map();
+    constructor(
+        private dialogRef: DialogRef<CustomizeComponent>,
+        private jsPlumbService: JsplumbService,
+        private shepherdService: ShepherdService,
+        private fb: UntypedFormBuilder,
+        private changeDetectorRef: ChangeDetectorRef,
+        private pipelineElementTemplateService: PipelineElementTemplateService,
+        private pipelineStyleService: PipelineStyleService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<CustomizeComponent>,
-              private jsPlumbService: JsplumbService,
-              private shepherdService: ShepherdService,
-              private fb: UntypedFormBuilder,
-              private changeDetectorRef: ChangeDetectorRef,
-              private pipelineElementTemplateService: PipelineElementTemplateService,
-              private pipelineStyleService: PipelineStyleService) {
-
-  }
-
-  ngOnInit(): void {
-    this.originalDialogWidth = this.dialogRef.currentConfig().width;
-    this.cachedPipelineElement = this.jsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
-    this.isDataProcessor = this.cachedPipelineElement instanceof DataProcessorInvocation;
-    this.cachedPipelineElement.inputStreams.forEach(is => {
-      this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
-    });
-    this.formValid = this.pipelineElement.settings.completed === PipelineElementConfigurationStatus.OK;
-
-    this.parentForm = this.fb.group({});
-
-    this.parentForm.valueChanges.subscribe(v => {
-    });
-
-    this.parentForm.statusChanges.subscribe((status) => {
-      this.formValid = this.viewInitialized && this.parentForm.valid;
-    });
-    if (this.shepherdService.isTourActive()) {
-      this.shepherdService.trigger('customize-' + this.pipelineElement.type);
-    }
-    this.loadPipelineElementTemplates();
-  }
-
-  loadPipelineElementTemplates() {
-    this.pipelineElementTemplateService
-        .getPipelineElementTemplates(this.cachedPipelineElement.appId)
-        .subscribe(templates => {
-          this.availableTemplates = templates;
+    ngOnInit(): void {
+        this.originalDialogWidth = this.dialogRef.currentConfig().width;
+        this.cachedPipelineElement = this.jsPlumbService.clone(
+            this.pipelineElement.payload,
+        ) as InvocablePipelineElementUnion;
+        this.isDataProcessor =
+            this.cachedPipelineElement instanceof DataProcessorInvocation;
+        this.cachedPipelineElement.inputStreams.forEach(is => {
+            this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
         });
-  }
+        this.formValid =
+            this.pipelineElement.settings.completed ===
+            PipelineElementConfigurationStatus.OK;
 
-  close() {
-    this.dialogRef.close();
-  }
+        this.parentForm = this.fb.group({});
 
-  save() {
-    this.pipelineElement.payload = this.cachedPipelineElement;
-    this.pipelineStyleService.updatePeConfigurationStatus(this.pipelineElement, PipelineElementConfigurationStatus.OK);
-    this.pipelineElement.payload.configured = true;
-    if (this.shepherdService.isTourActive()) {
-      this.shepherdService.trigger('save-' + this.pipelineElement.type);
-    }
-    this.dialogRef.close(this.pipelineElement);
-  }
+        this.parentForm.valueChanges.subscribe(v => {});
 
-  validConfiguration(event: any) {
-
-  }
-
-  set showDocumentation(value: boolean) {
-    if (value) {
-      this.dialogRef.changeDialogSize({width: '90vw'});
-    } else {
-      this.dialogRef.changeDialogSize({width: this.originalDialogWidth});
-    }
-    this._showDocumentation = value;
-  }
-
-  get showDocumentation(): boolean {
-    return this._showDocumentation;
-  }
-
-  ngAfterViewInit(): void {
-    this.viewInitialized = true;
-    this.formValid = this.viewInitialized && this.parentForm.valid;
-    this.changeDetectorRef.detectChanges();
-  }
-
-  triggerUpdate(configurationInfo: ConfigurationInfo) {
-    this.completedStaticProperty = {...configurationInfo};
-  }
-
-  triggerTemplateMode() {
-    this.template = new PipelineElementTemplate();
-    this.templateMode = true;
-  }
-
-  saveTemplate() {
-    this.template.templateConfigs = this.convert(this.templateConfigs);
-    this.pipelineElementTemplateService.storePipelineElementTemplate(this.template).subscribe(result => {
-      this.loadPipelineElementTemplates();
-      this.templateMode = false;
-    });
-  }
-
-  convert(templateConfigs: Map<string, any>): any {
-    const configs: { [index: string]: PipelineElementTemplateConfig } = {};
-    templateConfigs.forEach((value, key) => {
-      configs[key] = new PipelineElementTemplateConfig();
-      configs[key].editable = value.editable;
-      configs[key].displayed = value.displayed;
-      configs[key].value = value.value;
-    });
-    return configs;
-  }
-
-  cancelTemplateMode() {
-    this.templateMode = false;
-  }
-
-  loadTemplate(event: any) {
-    if (!event.value) {
-      this.cachedPipelineElement = this.jsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
-      this.selectedTemplate = false;
-    } else {
-      this.selectedTemplate = event.value;
-      if (this.cachedPipelineElement instanceof DataProcessorInvocation) {
-        this.pipelineElementTemplateService.getConfiguredDataProcessorForTemplate(event.value._id, this.cachedPipelineElement)
-            .subscribe(pe => {
-          this.cachedPipelineElement = pe as InvocablePipelineElementUnion;
+        this.parentForm.statusChanges.subscribe(status => {
+            this.formValid = this.viewInitialized && this.parentForm.valid;
         });
-      } else {
-        this.pipelineElementTemplateService.getConfiguredDataSinkForTemplate(event.value._id,
-            this.cachedPipelineElement as DataSinkInvocation)
-            .subscribe(pe => {
-          this.cachedPipelineElement = pe as InvocablePipelineElementUnion;
-        });
-      }
+        if (this.shepherdService.isTourActive()) {
+            this.shepherdService.trigger(
+                'customize-' + this.pipelineElement.type,
+            );
+        }
+        this.loadPipelineElementTemplates();
     }
-  }
+
+    loadPipelineElementTemplates() {
+        this.pipelineElementTemplateService
+            .getPipelineElementTemplates(this.cachedPipelineElement.appId)
+            .subscribe(templates => {
+                this.availableTemplates = templates;
+            });
+    }
+
+    close() {
+        this.dialogRef.close();
+    }
+
+    save() {
+        this.pipelineElement.payload = this.cachedPipelineElement;
+        this.pipelineStyleService.updatePeConfigurationStatus(
+            this.pipelineElement,
+            PipelineElementConfigurationStatus.OK,
+        );
+        this.pipelineElement.payload.configured = true;
+        if (this.shepherdService.isTourActive()) {
+            this.shepherdService.trigger('save-' + this.pipelineElement.type);
+        }
+        this.dialogRef.close(this.pipelineElement);
+    }
+
+    validConfiguration(event: any) {}
+
+    set showDocumentation(value: boolean) {
+        if (value) {
+            this.dialogRef.changeDialogSize({ width: '90vw' });
+        } else {
+            this.dialogRef.changeDialogSize({
+                width: this.originalDialogWidth,
+            });
+        }
+        this._showDocumentation = value;
+    }
+
+    get showDocumentation(): boolean {
+        return this._showDocumentation;
+    }
+
+    ngAfterViewInit(): void {
+        this.viewInitialized = true;
+        this.formValid = this.viewInitialized && this.parentForm.valid;
+        this.changeDetectorRef.detectChanges();
+    }
+
+    triggerUpdate(configurationInfo: ConfigurationInfo) {
+        this.completedStaticProperty = { ...configurationInfo };
+    }
+
+    triggerTemplateMode() {
+        this.template = new PipelineElementTemplate();
+        this.templateMode = true;
+    }
+
+    saveTemplate() {
+        this.template.templateConfigs = this.convert(this.templateConfigs);
+        this.pipelineElementTemplateService
+            .storePipelineElementTemplate(this.template)
+            .subscribe(result => {
+                this.loadPipelineElementTemplates();
+                this.templateMode = false;
+            });
+    }
+
+    convert(templateConfigs: Map<string, any>): any {
+        const configs: { [index: string]: PipelineElementTemplateConfig } = {};
+        templateConfigs.forEach((value, key) => {
+            configs[key] = new PipelineElementTemplateConfig();
+            configs[key].editable = value.editable;
+            configs[key].displayed = value.displayed;
+            configs[key].value = value.value;
+        });
+        return configs;
+    }
+
+    cancelTemplateMode() {
+        this.templateMode = false;
+    }
+
+    loadTemplate(event: any) {
+        if (!event.value) {
+            this.cachedPipelineElement = this.jsPlumbService.clone(
+                this.pipelineElement.payload,
+            ) as InvocablePipelineElementUnion;
+            this.selectedTemplate = false;
+        } else {
+            this.selectedTemplate = event.value;
+            if (this.cachedPipelineElement instanceof DataProcessorInvocation) {
+                this.pipelineElementTemplateService
+                    .getConfiguredDataProcessorForTemplate(
+                        event.value._id,
+                        this.cachedPipelineElement,
+                    )
+                    .subscribe(pe => {
+                        this.cachedPipelineElement =
+                            pe as InvocablePipelineElementUnion;
+                    });
+            } else {
+                this.pipelineElementTemplateService
+                    .getConfiguredDataSinkForTemplate(
+                        event.value._id,
+                        this.cachedPipelineElement as DataSinkInvocation,
+                    )
+                    .subscribe(pe => {
+                        this.cachedPipelineElement =
+                            pe as InvocablePipelineElementUnion;
+                    });
+            }
+        }
+    }
 }
