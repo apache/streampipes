@@ -20,16 +20,20 @@ package org.apache.streampipes.client.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 public class StreamPipesApiPath {
 
   private static final List<String> BaseApiPathV2 = Arrays.asList("streampipes-backend", "api", "v2");
-  private List<String> pathItems;
+  private final List<String> pathItems;
+  private final Map<String, String> queryParameters;
 
   private StreamPipesApiPath(List<String> initialPathItems) {
     this.pathItems = initialPathItems;
+    this.queryParameters = new HashMap<>();
   }
 
   public static StreamPipesApiPath fromStreamPipesBasePath() {
@@ -51,10 +55,28 @@ public class StreamPipesApiPath {
     return this;
   }
 
+  public StreamPipesApiPath withQueryParameters(Map<String, String> queryParameters) {
+    this.queryParameters.putAll(queryParameters);
+    return this;
+  }
+
   @Override
   public String toString() {
     StringJoiner joiner = new StringJoiner("/");
     pathItems.forEach(joiner::add);
-    return joiner.toString();
+    return appendQueryParameters(joiner.toString());
+  }
+
+  private String appendQueryParameters(String input) {
+    StringJoiner joiner = new StringJoiner("&");
+    for (Map.Entry<String, String> parameter : queryParameters.entrySet()) {
+      joiner.add(parameter.getKey() + "=" + parameter.getValue());
+    }
+
+    if (joiner.length() > 0) {
+      return input + "?" + joiner;
+    } else {
+      return input;
+    }
   }
 }
