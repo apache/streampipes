@@ -15,28 +15,61 @@
 # limitations under the License.
 #
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List
+from time import time
+from typing import Any, Dict, List, Optional
 
-from streampipes_client.functions.utils.function_config import FunctionConfig
+from streampipes_client.functions.broker.output_collector import OutputCollector
 from streampipes_client.functions.utils.function_context import FunctionContext
+from streampipes_client.model.resource import FunctionDefinition
 
 
 class StreamPipesFunction(ABC):
     """Abstract implementation of a StreamPipesFunction.
     A StreamPipesFunction allows users to get the data of a StreamPipes data streams easily.
-    It makes it possible to work with the live data in python and enabels to use the powerful
-    data analytics libaries there.
+    It makes it possible to work with the live data in python and enables to use the powerful
+    data analytics libraries there.
+    Parameters
+    ----------
+    function_definition: FunctionDefinition
+        the definition of the function that contains metadata about the connected function
     """
 
-    @abstractmethod
-    def getFunctionConfig(self) -> FunctionConfig:
-        """Get the id of the function.
+    def __init__(self, function_definition: Optional[FunctionDefinition] = None):
+        self.function_definition = function_definition or FunctionDefinition()
+        self.output_collectors = {
+            stream_id: OutputCollector(data_stream)
+            for stream_id, data_stream in self.function_definition.output_data_streams.items()
+        }
+
+    def add_output(self, stream_id: str, event: Dict[str, Any]):
+        """Send an event via an output data stream to StreamPipes
+
+        Parameters
+        ----------
+        stream_id: str
+            The id of the output data stream
+        event: Dict[str, Any]
+            The event which should be sended
+        """
+        event["timestamp"] = int(1000 * time())
+        self.output_collectors[stream_id].collect(event)
+
+    def getFunctionId(self) -> FunctionDefinition.FunctionId:
+        """Returns the id of the function.
 
         Returns
         -------
-        FunctionConfig which contains the function id, version number and output streams
+        FunctionId: FunctionDefinition.FunctionId
+            Identification object of the StreamPipes function
         """
-        raise NotImplementedError
+        return self.function_definition.function_id
+
+    def stop(self) -> None:
+        """Stops the function and disconnects from the output streams"""
+
+        for collector in self.output_collectors.values():
+            collector.disconnect()
+        self.onServiceStopped()
 
     @abstractmethod
     def requiredStreamIds(self) -> List[str]:

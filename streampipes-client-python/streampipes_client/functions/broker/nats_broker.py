@@ -14,8 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import json
 import logging
-from typing import AsyncIterator
+from typing import Any, AsyncIterator, Dict
 
 from nats import connect
 from streampipes_client.functions.broker.broker import Broker
@@ -46,8 +47,8 @@ class NatsBroker(Broker):
         if self.nats_client.connected_url is not None:
             logger.info(f"Connected to NATS at {self.nats_client.connected_url.netloc}")
 
-    async def _createSubscription(self) -> None:
-        """Helper function to create a subscription for a data stream.
+    async def createSubscription(self) -> None:
+        """Creates a subscription to a data stream.
 
         Returns
         -------
@@ -55,6 +56,20 @@ class NatsBroker(Broker):
         """
         self.subscription = await self.nats_client.subscribe(self.topic_name)
         logger.info(f"Subscribed to stream: {self.stream_id}")
+
+    async def publish_event(self, event: Dict[str, Any]):
+        """Publish an event to a connected data stream.
+
+        Parameters
+        ----------
+         event: Dict[str, Any]
+            The event to be published.
+
+        Returns
+        -------
+        None
+        """
+        await self.nats_client.publish(subject=self.topic_name, payload=json.dumps(event).encode("utf-8"))
 
     async def disconnect(self) -> None:
         """Closes the connection to the server.

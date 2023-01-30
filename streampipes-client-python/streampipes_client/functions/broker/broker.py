@@ -16,16 +16,9 @@
 #
 import os
 from abc import ABC, abstractmethod
-from enum import Enum
-from typing import AsyncIterator
+from typing import Any, AsyncIterator, Dict
 
 from streampipes_client.model.resource.data_stream import DataStream
-
-
-class SupportedBroker(Enum):
-    """Enum for the supported brokers."""
-
-    NATS = "NatsTransportProtocol"
 
 
 class Broker(ABC):
@@ -34,7 +27,7 @@ class Broker(ABC):
     """
 
     async def connect(self, data_stream: DataStream) -> None:
-        """Connects the broker to a server and subscribes to a data stream.
+        """Connects the broker to a server.
 
         Parameters
         ----------
@@ -55,7 +48,6 @@ class Broker(ABC):
         if "BROKER-HOST" in os.environ.keys():
             hostname = os.environ["BROKER-HOST"]
         await self._makeConnection(hostname, transport_protocol.port)
-        await self._createSubscription()
 
     @abstractmethod
     async def _makeConnection(self, hostname: str, port: int) -> None:
@@ -77,8 +69,23 @@ class Broker(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def _createSubscription(self) -> None:
-        """Helper function to create a subscription for a data stream.
+    async def createSubscription(self) -> None:
+        """Creates a subscription to a data stream.
+
+        Returns
+        -------
+        None
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    async def publish_event(self, event: Dict[str, Any]):
+        """Publish an event to a connected data stream.
+
+        Parameters
+        ----------
+         event: Dict[str, Any]
+            The event to be published.
 
         Returns
         -------

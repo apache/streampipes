@@ -20,8 +20,7 @@ import logging
 from typing import AsyncIterator, Dict, List
 
 from streampipes_client.client.client import StreamPipesClient
-from streampipes_client.functions.broker.broker import Broker, SupportedBroker
-from streampipes_client.functions.broker.nats_broker import NatsBroker
+from streampipes_client.functions.broker import Broker, get_broker
 from streampipes_client.functions.registration import Registration
 from streampipes_client.functions.utils.async_iter_handler import AsyncIterHandler
 from streampipes_client.functions.utils.data_stream_context import DataStreamContext
@@ -29,14 +28,6 @@ from streampipes_client.functions.utils.function_context import FunctionContext
 from streampipes_client.model.resource.data_stream import DataStream
 
 logger = logging.getLogger(__name__)
-
-
-# TODO Exception should be removed once all brokers are implemented.
-class UnsupportedBroker(Exception):
-    """Exception if a broker isn't implemented yet."""
-
-    def __init__(self, message):
-        super().__init__(message)
 
 
 class FunctionHandler:
@@ -65,13 +56,20 @@ class FunctionHandler:
         -------
         None
         """
-        # Choose the broker and collect the schema for every data stream
         for streampipes_function in self.registration.getFunctions():
+            # Create the output data streams for every function
+            for stream_id, output_stream in streampipes_function.function_definition.get_output_data_streams().items():
+                self.client.dataStreamApi.post(output_stream)
+                logger.info(
+                    f'Create output data stream "{stream_id}" '
+                    'for the function "{streampipes_function.getFunctionId().id}"'
+                )
+            # Choose the broker and collect the schema for every data stream
             for stream_id in streampipes_function.requiredStreamIds():
                 # Get the data stream schema from the API
                 data_stream: DataStream = self.client.dataStreamApi.get(stream_id)  # type: ignore
                 # Get the broker
-                broker = self._get_broker(data_stream.event_grounding.transport_protocols[0].class_name)  # type: ignore
+                broker = get_broker(data_stream)
                 # Assign the functions, broker and schema to every stream
                 if stream_id in self.stream_contexts.keys():
                     self.stream_contexts[stream_id].add_function(streampipes_function)
@@ -79,7 +77,7 @@ class FunctionHandler:
                     self.stream_contexts[stream_id] = DataStreamContext(
                         functions=[streampipes_function], schema=data_stream, broker=broker
                     )
-                logger.info(f"Using {broker.__class__.__name__} for {streampipes_function}")
+                logger.info(f"Using {broker.__class__.__name__} for {streampipes_function.__class__.__name__}")
 
         # Start the function loop or add it as tasks if a loop is already running
         try:
@@ -88,23 +86,6 @@ class FunctionHandler:
             asyncio.run(self._function_loop())
         else:
             loop.create_task(self._function_loop())
-
-    def _get_broker(self, broker_name: str) -> Broker:  # TODO implementation for more transport_protocols
-        """Get a broker by a name.
-
-        Parameters
-        ----------
-        broker_name: str
-            A string that represents a broker.
-
-        Returns
-        -------
-        The broker which belongs to the name.
-        """
-        if SupportedBroker.NATS.value in broker_name:
-            return NatsBroker()
-        else:
-            raise UnsupportedBroker(f'The python client doesn\'t include the broker: "{broker_name}" yet')
 
     async def _function_loop(self) -> None:
         """Loops through all messages and sends them to the functions until the function handler gets stopped.
@@ -121,12 +102,13 @@ class FunctionHandler:
             broker = self.stream_contexts[stream_id].broker
             # Connect the broker
             await broker.connect(data_stream)
+            await broker.createSubscription()
             self.brokers.append(broker)
             # Get the messages
             messages[stream_id] = broker.get_message()
             # Generate the function context
             for streampipes_function in self.stream_contexts[stream_id].functions:
-                function_id = streampipes_function.getFunctionConfig().function_id.id
+                function_id = streampipes_function.getFunctionId().id
                 if function_id in contexts.keys():
                     contexts[function_id].add_data_stream_schema(stream_id, data_stream)
                 else:
@@ -138,7 +120,7 @@ class FunctionHandler:
                     )
         # Start the functions
         for streampipes_function in self.registration.getFunctions():
-            streampipes_function.onServiceStarted(contexts[streampipes_function.getFunctionConfig().function_id.id])
+            streampipes_function.onServiceStarted(contexts[streampipes_function.getFunctionId().id])
 
         # Get the messages continuously and send them to the functions
         async for stream_id, msg in AsyncIterHandler.combine_async_messages(messages):
@@ -158,7 +140,7 @@ class FunctionHandler:
         None
         """
         for streampipes_function in self.registration.getFunctions():
-            streampipes_function.onServiceStopped()
+            streampipes_function.stop()
 
     def force_stop_functions(self) -> None:
         """Stops the StreamPipesFunctions when the event loop was stopped without stopping the functions.

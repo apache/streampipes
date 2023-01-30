@@ -24,18 +24,16 @@ from streampipes_client.client.credential_provider import StreamPipesApiKeyCrede
 from streampipes_client.functions.function_handler import FunctionHandler
 from streampipes_client.functions.registration import Registration
 from streampipes_client.functions.streampipes_function import StreamPipesFunction
-from streampipes_client.functions.utils.function_config import (
-    FunctionConfig,
-    FunctionId,
+from streampipes_client.functions.utils.data_stream_generator import (
+    RuntimeType,
+    create_data_stream,
 )
 from streampipes_client.functions.utils.function_context import FunctionContext
 from streampipes_client.model.resource.data_stream import DataStream
+from streampipes_client.model.resource.function_definition import FunctionDefinition
 
 
 class TestFunction(StreamPipesFunction):
-    def getFunctionConfig(self) -> FunctionConfig:
-        return FunctionConfig(FunctionId("org.test.TestFunction", 1))
-
     def requiredStreamIds(self) -> List[str]:
         return ["urn:streampipes.apache.org:eventstream:uPDKLI"]
 
@@ -51,9 +49,6 @@ class TestFunction(StreamPipesFunction):
 
 
 class TestFunctionTwoStreams(StreamPipesFunction):
-    def getFunctionConfig(self) -> FunctionConfig:
-        return FunctionConfig(FunctionId("org.test.TestFunction2", 1))
-
     def requiredStreamIds(self) -> List[str]:
         return ["urn:streampipes.apache.org:eventstream:uPDKLI", "urn:streampipes.apache.org:eventstream:HHoidJ"]
 
@@ -67,6 +62,22 @@ class TestFunctionTwoStreams(StreamPipesFunction):
             self.data1.append(event)
         else:
             self.data2.append(event)
+
+    def onServiceStopped(self):
+        self.stopped = True
+
+
+class TestFunctionOutput(StreamPipesFunction):
+    def requiredStreamIds(self) -> List[str]:
+        return ["urn:streampipes.apache.org:eventstream:uPDKLI"]
+
+    def onServiceStarted(self, context: FunctionContext):
+        self.context = context
+        self.i = 0
+
+    def onEvent(self, event: Dict[str, Any], streamId: str):
+        self.add_output(list(self.output_collectors.keys())[0], event={"number": self.i})
+        self.i += 1
 
     def onServiceStopped(self):
         self.stopped = True
@@ -217,10 +228,10 @@ class TestFunctionHandler(TestCase):
             {"density": 3.6, "temperature": 30.4, "timestamp": 1670000007000},
         ]
 
-    @patch("streampipes_client.functions.function_handler.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes_client.functions.function_handler.NatsBroker._createSubscription", autospec=True)
-    @patch("streampipes_client.functions.function_handler.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes_client.functions.function_handler.NatsBroker.get_message", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
     @patch("streampipes_client.client.client.Session", autospec=True)
     def test_function_handler(self, http_session: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         http_session_mock = MagicMock()
@@ -247,15 +258,15 @@ class TestFunctionHandler(TestCase):
             test_function.context.schema, {self.data_stream["elementId"]: DataStream(**self.data_stream)}
         )
         self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
-        self.assertEqual(test_function.context.function_id, test_function.getFunctionConfig().function_id.id)
+        self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
 
         self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)
 
-    @patch("streampipes_client.functions.function_handler.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes_client.functions.function_handler.NatsBroker._createSubscription", autospec=True)
-    @patch("streampipes_client.functions.function_handler.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes_client.functions.function_handler.NatsBroker.get_message", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
     @patch("streampipes_client.endpoint.endpoint.APIEndpoint.get", autospec=True)
     def test_function_handler_two_streams(self, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         def get_stream(endpoint, stream_id):
@@ -306,3 +317,57 @@ class TestFunctionHandler(TestCase):
         self.assertListEqual(test_function2.data1, self.test_stream_data1)
         self.assertListEqual(test_function2.data2, self.test_stream_data2)
         self.assertTrue(test_function2.stopped)
+
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes_client.functions.streampipes_function.time", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
+    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
+    @patch("streampipes_client.client.client.Session", autospec=True)
+    def test_function_output_stream(
+        self,
+        http_session: MagicMock,
+        pulish_event: MagicMock,
+        get_message: MagicMock,
+        time: MagicMock,
+        *args: Tuple[AsyncMock]
+    ):
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.json.return_value = self.data_stream
+        http_session.return_value = http_session_mock
+
+        output_events = []
+
+        def save_event(self, event: Dict[str, Any]):
+            output_events.append(event)
+
+        pulish_event.side_effect = save_event
+        get_message.return_value = TestMessageIterator(self.test_stream_data1)
+        time.side_effect = lambda: 0
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        output_stream = create_data_stream("test", attributes={"number": RuntimeType.INTEGER.value})
+        test_function = TestFunctionOutput(
+            function_definition=FunctionDefinition().add_output_data_stream(output_stream)
+        )
+        registration = Registration()
+        registration.register(test_function)
+        function_handler = FunctionHandler(registration, client)
+        function_handler.initializeFunctions()
+
+        self.assertEqual(test_function.context.client, client)
+        self.assertDictEqual(
+            test_function.context.schema, {self.data_stream["elementId"]: DataStream(**self.data_stream)}
+        )
+        self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
+        self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
+        self.assertTrue(test_function.stopped)
+
+        self.assertListEqual(output_events, [{"number": i, "timestamp": 0} for i in range(len(self.test_stream_data1))])
