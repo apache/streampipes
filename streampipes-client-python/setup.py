@@ -43,7 +43,7 @@ dev_packages = base_packages + [
     "blacken-docs==1.13.0",
     "flake8==6.0.0",
     "interrogate==1.5.0",
-    "isort==5.11.4",
+    "isort==5.12.0",
     "mypy==0.991",
     "pandas-stubs==1.5.2.230105",
     "pre-commit==3.0.0",
