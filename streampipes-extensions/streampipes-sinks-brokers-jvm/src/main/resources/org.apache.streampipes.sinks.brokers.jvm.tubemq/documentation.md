@@ -19,7 +19,7 @@
 ## TubeMQ (InLong) Publisher
 
 <p align="center"> 
-    <img src="icon.svg" width="150px;" class="pe-image-documentation"/>
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
 ***
