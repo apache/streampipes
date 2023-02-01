@@ -190,7 +190,6 @@
 	<!-- Connect Dependencies-->
 	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
 	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
-	<bcprov.version>1.68</bcprov.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<commons-text.version>1.8</commons-text.version>
@@ -1091,11 +1090,6 @@
 					<groupId>org.apache.commons</groupId>
 					<artifactId>commons-text</artifactId>
 					<version>${commons-text.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk14</artifactId>
-					<version>${bcprov.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.bouncycastle</groupId>
