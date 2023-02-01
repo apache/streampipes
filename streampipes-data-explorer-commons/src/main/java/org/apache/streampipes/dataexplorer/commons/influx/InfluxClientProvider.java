@@ -20,13 +20,9 @@ package org.apache.streampipes.dataexplorer.commons.influx;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.commons.auth.AuthInterceptor;
 
-import okhttp3.OkHttpClient;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
-
-import java.util.concurrent.TimeUnit;
 
 public class InfluxClientProvider {
 
@@ -47,17 +43,19 @@ public class InfluxClientProvider {
    * @return InfluxDB
    */
   public static InfluxDB getInfluxDBClient(InfluxConnectionSettings settings) {
-    OkHttpClient.Builder okHttpClientBuilder = getHttpClientBuilder(settings.getToken());
+    if (settings.getAuthMode() == InfluxAuthMode.TOKEN) {
+      var okHttpClientBuilder = InfluxClientUtils.getHttpClientBuilder(settings.getToken());
 
-    return InfluxDBFactory.connect(settings.getConnectionUrl(), okHttpClientBuilder);
-  }
-
-  private static OkHttpClient.Builder getHttpClientBuilder(String authToken) {
-    return new OkHttpClient().newBuilder()
-        .addInterceptor(new AuthInterceptor(authToken))
-        .connectTimeout(120, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
-        .writeTimeout(120, TimeUnit.SECONDS);
+      return InfluxDBFactory.connect(settings.getConnectionUrl(), okHttpClientBuilder);
+    } else {
+      var okHttpClientBuilder = InfluxClientUtils.getHttpClientBuilder();
+      return InfluxDBFactory.connect(
+          settings.getConnectionUrl(),
+          settings.getUsername(),
+          settings.getPassword(),
+          okHttpClientBuilder
+      );
+    }
   }
 
   private static Environment getEnvironment() {

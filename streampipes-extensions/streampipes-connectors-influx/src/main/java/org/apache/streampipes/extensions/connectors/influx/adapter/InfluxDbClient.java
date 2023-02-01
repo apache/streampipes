@@ -16,20 +16,20 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.influxdb;
+package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxRequests;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.connectors.influx.shared.SharedInfluxClient;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
 import org.influxdb.InfluxDBIOException;
-import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 
@@ -43,27 +43,11 @@ import java.util.Map;
 
 import static org.apache.streampipes.vocabulary.SO.DATE_TIME;
 
-public class InfluxDbClient {
-
-  private InfluxDB influxDb;
-
-  static final String HOST = "influxDbHost";
-  static final String PORT = "influxDbPort";
-  static final String DATABASE = "influxDbDatabase";
-  static final String MEASUREMENT = "influxDbMeasurement";
-  static final String USERNAME = "influxDbUsername";
-  static final String PASSWORD = "influxDbPassword";
+public class InfluxDbClient extends SharedInfluxClient {
 
   static final String REPLACE_NULL_VALUES = "replaceNullValues";
   static final String DO_REPLACE = "doReplace";
   static final String DO_NOT_REPLACE = "doNotReplace";
-
-  private final String host;
-  private final int port;
-  private final String database;
-  private final String measurement;
-  private final String username;
-  private final String password;
 
   private final boolean replaceNullValues;
 
@@ -90,42 +74,28 @@ public class InfluxDbClient {
     }
   }
 
-  InfluxDbClient(String host,
-                 int port,
-                 String database,
+  InfluxDbClient(InfluxConnectionSettings connectionSettings,
                  String measurement,
-                 String username,
-                 String password,
                  boolean replaceNullValues) {
-    this.host = host;
-    this.port = port;
-    this.database = database;
-    this.measurement = measurement;
-    this.username = username;
-    this.password = password;
+    super(connectionSettings, measurement);
     this.replaceNullValues = replaceNullValues;
 
     this.connected = false;
   }
 
   public void connect() throws AdapterException {
-    String urlAndPort = host + ":" + port;
     try {
-      // Connect to the server and check if the server is available
-      influxDb = InfluxDBFactory.connect(urlAndPort, username, password);
-      Pong living = influxDb.ping();
-      if (living.getVersion().equalsIgnoreCase("unknown")) {
-        throw new AdapterException("Could not connect to InfluxDb Server: " + urlAndPort);
-      }
+      super.initClient();
+      var database = connectionSettings.getDatabaseName();
 
       // Checking whether the database exists
-      if (!databaseExists(database)) {
+      if (!InfluxRequests.databaseExists(influxDb, database)) {
         throw new AdapterException("Database " + database + " could not be found.");
       }
 
       // Checking, whether the measurement exists
-      if (!measurementExists(measurement)) {
-        throw new AdapterException("Measurement " + measurement + " could not be found.");
+      if (!measurementExists(measureName)) {
+        throw new AdapterException("Measurement " + measureName + " could not be found.");
       }
 
       connected = true;
@@ -141,19 +111,10 @@ public class InfluxDbClient {
     }
   }
 
-  private boolean databaseExists(String dbName) {
-    QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
-    for (List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
-      if (a.get(0).equals(dbName)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   private boolean measurementExists(String measurement) {
     // Database must exist
-    QueryResult queryResult = influxDb.query(new Query("SHOW MEASUREMENTS", database));
+    QueryResult queryResult = influxDb
+        .query(new Query("SHOW MEASUREMENTS", connectionSettings.getDatabaseName()));
     for (List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
       if (a.get(0).equals(measurement)) {
         return true;
@@ -193,8 +154,8 @@ public class InfluxDbClient {
     if (!connected) {
       throw new AdapterException("Client must be connected to the server in order to load the columns.");
     }
-    List<List<Object>> fieldKeys = query("SHOW FIELD KEYS FROM " + measurement);
-    List<List<Object>> tagKeys = query("SHOW TAG KEYS FROM " + measurement);
+    List<List<Object>> fieldKeys = query("SHOW FIELD KEYS FROM " + measureName);
+    List<List<Object>> tagKeys = query("SHOW TAG KEYS FROM " + measureName);
 //        if (fieldKeys.size() == 0 || tagKeys.size() == 0) {
     if (fieldKeys.size() == 0) {
       throw new AdapterException("Error while checking the Schema (does the measurement exist?)");
@@ -245,7 +206,7 @@ public class InfluxDbClient {
     if (!connected) {
       throw new RuntimeException("InfluxDbClient not connected");
     }
-    QueryResult queryResult = influxDb.query(new Query(query, database));
+    QueryResult queryResult = influxDb.query(new Query(query, connectionSettings.getDatabaseName()));
     if (queryResult.getResults().get(0).getSeries() != null) {
       return queryResult.getResults().get(0).getSeries().get(0).getValues();
     } else {
@@ -313,7 +274,7 @@ public class InfluxDbClient {
   }
 
   String getMeasurement() {
-    return measurement;
+    return measureName;
   }
 
   boolean isConnected() {

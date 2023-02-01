@@ -19,23 +19,41 @@
 org.apache.streampipes.connect.iiot.adapters.influxdb.stream.title=InfluxDB Stream Adapter
 org.apache.streampipes.connect.iiot.adapters.influxdb.stream.description=Creates a data stream for an InfluxDB measurement
 
-influxDbHost.title=Hostname
-influxDbHost.description=Hostname of the InfluxDB Server (needs an "http://" in front)
+db_protocol.title=Protocol
+db_protocol.description=The protocol to connect to the InfluxDB instance
 
-influxDbPort.title=Port
-influxDbPort.description=Port of the InfluxDB Server (e.g. 8086)
+db_host.title=Hostname
+db_host.description=The hostname/URL of the InfluxDB instance
 
-influxDbDatabase.title=Database
-influxDbDatabase.description=Name of the database
+db_port.title=Port
+db_port.description=The port of the InfluxDB instance
 
-influxDbMeasurement.title=Measurement
-influxDbMeasurement.description=Name of the measurement which should be observed
+db_name.title=Database Name
+db_name.description=The name of the database where events will be stored
 
-influxDbUsername.title=Username
-influxDbUsername.description=The username to log into the InfluxDB
+db_measurement.title=Measurement Name
+db_measurement.description=The name of the Measurement where events will be stored (will be created if it does not exist)
 
-influxDbPassword.title=Password
-influxDbPassword.description=The password to log into the InfluxDB
+db_authentication.title=Authentication Options
+db_authentication.description=Select authentication option
+
+db_token.title=Token
+db_token.description=The InfluxDB authentication token
+
+db_username_group.title=
+db_username_group.description=
+
+db_username_alt.title=Username/Password
+db_username_alt.description=
+
+db_token_alt.title=Token
+db_token_alt.description=
+
+db_user.title=Username
+db_user.description=The username for the InfluxDB Server
+
+db_password.title=Password
+db_password.description=The password for the InfluxDB Server
 
 replaceNullValues.title=Replace Null Values
 replaceNullValues.description=Should null values in the incoming data be replace by defaults? If not, these events are skipped

@@ -70,10 +70,12 @@ export class DataDownloadDialogUtils {
         const downloadsFolder = Cypress.config('downloadsFolder');
         cy.readFile(downloadsFolder + '/' + fileName).then(
             (downloadFileString: string) => {
+                console.log(downloadFileString);
+                downloadFileString = downloadFileString.normalize('NFC');
                 cy.readFile(
                     `cypress/fixtures/dataDownloadDialog/${resultFileLocation}`,
                 ).then(expectedResultString => {
-                    expect(expectedResultString).to.deep.equal(
+                    expect(expectedResultString.normalize('NFC')).to.deep.equal(
                         downloadFileString,
                     );
                 });

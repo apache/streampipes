@@ -16,44 +16,37 @@
  *
  */
 
-package org.apache.streampipes.sinks.databases.jvm;
+package org.apache.streampipes.extensions.connectors.influx;
 
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.connectors.influx.adapter.InfluxDbStreamAdapter;
+import org.apache.streampipes.extensions.connectors.influx.sink.InfluxDbSink;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
-import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
-import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
-import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
-import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
-import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
 
-public class DatabasesJvmInit extends ExtensionsModelSubmitter {
+public class InfluxConnectorsInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
-    new DatabasesJvmInit().init();
+    new InfluxConnectorsInit().init();
   }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.databases.jvm",
-            "Sinks Databases JVM",
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.connectors.influx",
+            "Connectors for InfluxDB",
             "",
             8090)
         .registerPipelineElements(
-            new CouchDbController(),
-            new UpcUaController(),
-            new PostgreSqlController(),
-            new IotDbController(),
-            new DittoController(),
-            new RedisController())
+            new InfluxDbSink())
+        .registerAdapters(
+            new InfluxDbStreamAdapter())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

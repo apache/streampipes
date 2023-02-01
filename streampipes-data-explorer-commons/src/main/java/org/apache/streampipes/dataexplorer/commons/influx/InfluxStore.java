@@ -32,14 +32,12 @@ import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -84,7 +82,7 @@ public class InfluxStore {
 
     String databaseName = settings.getDatabaseName();
     // Checking whether the database exists
-    if (!databaseExists(databaseName)) {
+    if (!InfluxRequests.databaseExists(influxDb, databaseName)) {
       LOG.info("Database '" + databaseName + "' not found. Gets created ...");
       createDatabase(databaseName);
     }
@@ -94,16 +92,6 @@ public class InfluxStore {
     int batchSize = 2000;
     int flushDuration = 500;
     influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
-  }
-
-  private boolean databaseExists(String dbName) {
-    QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
-    for (List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
-      if (a.get(0).equals(dbName)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**
