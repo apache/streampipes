@@ -15,7 +15,7 @@
 
 version: "3.4"
 services:
-  kafka:
+  tubemq:
     image: inlong/tubemq-all:1.5.0
     volumes:
       - tubemq:/tubemq
