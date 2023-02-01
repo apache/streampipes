@@ -14,48 +14,49 @@
 # limitations under the License.
 
 backend:
-# TODO
+  - "streampipes-*/**/*.java"
 
 connect:
-  - streampipes-extensions/streampipes-connect-adapters/**/*
-  - streampipes-extensions/streampipes-connect-adapters-iiot/**/*
+  - "streampipes-extensions/streampipes-connect-adapters/**/*"
+  - "streampipes-extensions/streampipes-connect-adapters-iiot/**/*"
 
 
 dependencies:
-  - ./**/pom.xml
-  - ./**/setup.py
-  - ui/**/package.json
-  - ui/**/package-lock.json
+  - "**/pom.xml"
+  - "**/setup.py"
+  - "ui/**/package.json"
+  - "ui/**/package-lock.json"
 
 documentation:
-  - ./**/*.md
+  - "**/*.md"
 
 gh-actions:
-  - .github/**/*
+  - ".github/**/*"
 
 installer:
-  - installer/**/*
+  - "installer/**/*"
 
 java:
-  - ./**/*.java
+  - "**/*.java"
 
 javascript:
-  - ./**/*.js
+  - "**/*.js"
 
 'pipeline elements':
-  - streampipes-exensions/streampipes-extensions-*/**/*
-  - streampipes-extensions/streampipes-pipeline-*/**/*
-  - streampipes-extensions/streampipes-processors-*/**/*
-  - streampipes-extensions/streampipes-sinks-*/**/*
-  - streampipes-extensions/streampipes-sources-*/**/*
+  - "streampipes-exensions/streampipes-extensions-*/**/*"
+  - "streampipes-extensions/streampipes-pipeline-*/**/*"
+  - "streampipes-extensions/streampipes-processors-*/**/*"
+  - "streampipes-extensions/streampipes-sinks-*/**/*"
+  - "streampipes-extensions/streampipes-sources-*/**/*"
 
 python:
-  - ./**/*.py
+  - "**/*.py"
 
-tests:
-  - streampipes-integration-tests/**/*
-  - streampipes-client-python/tests/**/*
-  - streampipes-*/**/test/**/*
+testing:
+  - "streampipes-integration-tests/**/*"
+  - "streampipes-client-python/tests/**/*"
+  - "streampipes-*/**/test/**/*"
+  - "ui/cypress/**/*"
 
 ui:
-  - ui/**/*
+  - "ui/**/*"
