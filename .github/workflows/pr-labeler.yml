@@ -32,6 +32,6 @@ jobs:
     steps:
     - uses: actions/labeler@v4
       with:
-        configuration-path: .github/pr-labeler-config.yaml
+        configuration-path: .github/pr-labeler-config.yml
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         sync-labels: true
