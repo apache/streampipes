@@ -17,23 +17,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nats
+  name: {{ .Values.external.nats.appName }}
 spec:
   selector:
     matchLabels:
-      app: nats
+      app: {{ .Values.external.nats.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: nats
+        app: {{ .Values.external.nats.appName }}
     spec:
       initContainers:
         - name: init-wait-consul
           image: alpine
           command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8500 && exit 0 || sleep 3; done; exit 1"]
       containers:
-        - name: nats
+        - name: {{ .Values.external.nats.appName }}
           image: nats
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:

@@ -16,27 +16,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: influxdb
+  name: {{ .Values.external.influxdb.appName }}
 spec:
   selector:
     matchLabels:
-      app: influxdb
+      app: {{ .Values.external.influxdb.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: influxdb
+        app: {{ .Values.external.influxdb.appName }}
     spec:
       volumes:
-        - name: influxdb-pv
+        - name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
           persistentVolumeClaim:
-            claimName: influxdb-pvc
-        - name: influxdb2-pv
+            claimName: {{ .Values.external.influxdb.persistence.claimNameV1 }}
+        - name: {{ .Values.external.influxdb.persistence.pvName }}
           persistentVolumeClaim:
-            claimName: influxdb2-pvc
+            claimName: {{ .Values.external.influxdb.persistence.claimName }}
       containers:
-        - name: influxdb
-          image: influxdb:{{ .Values.external.influxdbVersion }}
+        - name: {{ .Values.external.influxdb.appName }}
+          image: influxdb:{{ .Values.external.influxdb.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8083
@@ -50,19 +50,19 @@ spec:
             - name: INFLUXDB_ADMIN_ENABLED
               value: "true"
             - name: DOCKER_INFLUXDB_INIT_USERNAME
-              value: {{ .Values.influxdb.username }}
+              value: {{ .Values.external.influxdb.username }}
             - name: DOCKER_INFLUXDB_INIT_PASSWORD
-              value: {{ .Values.influxdb.password }}
+              value: {{ .Values.external.influxdb.password }}
             - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
-              value: {{ .Values.influxdb.adminToken }}
+              value: {{ .Values.external.influxdb.adminToken }}
             - name: DOCKER_INFLUXDB_INIT_ORG
-              value: {{ .Values.influxdb.initOrg }}
+              value: {{ .Values.external.influxdb.initOrg }}
             - name: DOCKER_INFLUXDB_INIT_BUCKET
-              value: {{ .Values.influxdb.initBucket }}
+              value: {{ .Values.external.influxdb.initBucket }}
             - name: DOCKER_INFLUXDB_INIT_MODE
-              value: {{ .Values.influxdb.initMode }}
+              value: {{ .Values.external.influxdb.initMode }}
           volumeMounts:
             - mountPath: "/var/lib/influxdb"
-              name: influxdb-pv
+              name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
             - mountPath: "/var/lib/influxdb2"
-              name: influxdb2-pv
+              name: {{ .Values.external.influxdb.persistence.pvName }}

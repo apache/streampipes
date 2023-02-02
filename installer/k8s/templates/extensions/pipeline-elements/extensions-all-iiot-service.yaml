@@ -13,22 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.deployment "full" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: jobmanager
+  name: extensions-all-iiot
+  labels:
+    name: extensions-all-iiot
 spec:
   selector:
-    app: jobmanager
+    app: extensions-all-iiot
   ports:
-    - name: webui
-      port: 8081
-      targetPort: 8081
-    - name: rpc
-      port: 6123
-      targetPort: 6123
-    - name: blob-server
-      port: 6124
-      targetPort: 6124  
-{{- end }}
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090

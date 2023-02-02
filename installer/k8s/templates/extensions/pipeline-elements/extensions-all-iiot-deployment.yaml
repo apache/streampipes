@@ -13,19 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if (eq .Values.deployment "full") }}
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: pipeline-elements-all-flink
-  labels:
-    name: pipeline-elements-all-flink
+  name: extensions-all-iiot
 spec:
   selector:
-    app: pipeline-elements-all-flink
-  ports:
-    - name: main
-      protocol: TCP
-      port: 8090
-      targetPort: 8090
-{{- end }}
+    matchLabels:
+      app: extensions-all-iiot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: extensions-all-iiot
+    spec:
+      containers:
+        - name: extensions-all-iiot
+          image: {{ .Values.streampipes.registry }}/extensions-all-iiot:{{ .Values.streampipes.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 8090
