@@ -122,7 +122,7 @@
     "csv-string": "^4.1.1",
     "cypress": "^12.3.0",
     "cypress-file-upload": "^5.0.8",
-    "eslint": "8.31.0",
+    "eslint": "8.33.0",
     "eslint-config-prettier": "^8.6.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.2",
