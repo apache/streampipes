@@ -30,3 +30,19 @@ Consumes messages from an Apache TubeMQ broker.
 
 ***
 
+## Configuration
+
+### TubeMQ Master Information
+
+This field describes the endpoints of all the TubeMQ masters.
+
+The format should be like `ip1:port1,ip2:port2,ip3:port3`.
+
+### TubeMQ Topic
+
+The topic where events should be sent to.
+
+### TubeMQ Consumer Group
+
+The consumer group of the TubeMQ Consumer.
+
