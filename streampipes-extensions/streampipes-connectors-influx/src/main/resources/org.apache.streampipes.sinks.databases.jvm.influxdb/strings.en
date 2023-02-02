@@ -18,8 +18,11 @@
 org.apache.streampipes.sinks.databases.jvm.influxdb.title=InfluxDB
 org.apache.streampipes.sinks.databases.jvm.influxdb.description=Stores events in an InfluxDB.
 
+db_protocol.title=Protocol
+db_protocol.description=The protocol to connect to the InfluxDB instance
+
 db_host.title=Hostname
-db_host.description=The hostname/URL of the InfluxDB instance. (Include http(s)://)
+db_host.description=The hostname/URL of the InfluxDB instance
 
 db_port.title=Port
 db_port.description=The port of the InfluxDB instance
@@ -29,6 +32,21 @@ db_name.description=The name of the database where events will be stored
 
 db_measurement.title=Measurement Name
 db_measurement.description=The name of the Measurement where events will be stored (will be created if it does not exist)
+
+db_authentication.title=Authentication Options
+db_authentication.description=Select authentication option
+
+db_token.title=Token
+db_token.description=The InfluxDB authentication token
+
+db_username_group.title=
+db_username_group.description=
+
+db_username_alt.title=Username/Password
+db_username_alt.description=
+
+db_token_alt.title=Token
+db_token_alt.description=
 
 db_user.title=Username
 db_user.description=The username for the InfluxDB Server

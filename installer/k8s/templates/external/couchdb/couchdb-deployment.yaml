@@ -35,6 +35,11 @@ spec:
         - name: couchdb
           image: couchdb:{{ .Values.external.couchdbVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
+          env:
+            - name: COUCHDB_USER
+              value: "admin"
+            - name: COUCHDB_PASSWORD
+              value: "admin"
           ports:
             - containerPort: 5984
           volumeMounts:

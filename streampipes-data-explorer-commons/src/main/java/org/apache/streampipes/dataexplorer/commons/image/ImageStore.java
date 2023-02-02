@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.dataexplorer.commons.image;
 
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.commons.configs.CouchDbEnvKeys;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
 import org.apache.commons.codec.binary.Base64;
 import org.lightcouch.CouchDbClient;
@@ -44,18 +43,21 @@ public class ImageStore {
   private List<EventProperty> imageProperties;
   private CouchDbClient couchDbClient;
 
-  public ImageStore(DataLakeMeasure measure, SpConfig config) {
-    this.couchDbClient = new CouchDbClient(from(config));
+  public ImageStore(DataLakeMeasure measure,
+                    Environment environment) {
+    this.couchDbClient = new CouchDbClient(from(environment));
     this.imageProperties = ImageStoreUtils.getImageProperties(measure);
   }
 
-  private static CouchDbProperties from(SpConfig config) {
-    String couchDbProtocol = config.getString(CouchDbEnvKeys.COUCHDB_PROTOCOL);
-    String couchDbHost = config.getString(CouchDbEnvKeys.COUCHDB_HOST);
-    int couchDbPort = config.getInteger(CouchDbEnvKeys.COUCHDB_PORT);
+  private static CouchDbProperties from(Environment env) {
+    String couchDbProtocol = env.getCouchDbProtocol().getValueOrDefault();
+    String couchDbHost = env.getCouchDbHost().getValueOrDefault();
+    int couchDbPort = env.getCouchDbPort().getValueOrDefault();
+    String username = env.getCouchDbUsername().getValueOrDefault();
+    String password = env.getCouchDbPassword().getValueOrDefault();
 
     return new CouchDbProperties(DB_NAME, true, couchDbProtocol,
-        couchDbHost, couchDbPort, null, null);
+        couchDbHost, couchDbPort, username, password);
   }
 
   public void onEvent(Event event) throws SpRuntimeException {

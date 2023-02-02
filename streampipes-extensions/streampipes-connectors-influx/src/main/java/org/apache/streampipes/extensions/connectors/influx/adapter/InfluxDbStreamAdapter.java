@@ -16,28 +16,34 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.influxdb;
+package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
+import org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 
 public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
+  private static final Logger LOG = LoggerFactory.getLogger(InfluxDbStreamAdapter.class);
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.influxdb.stream";
 
   private static final String POLLING_INTERVAL = "pollingInterval";
@@ -65,7 +71,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
     @Override
     public void run() {
       if (!influxDbClient.isConnected()) {
-        System.out.println("Cannot start PollingThread, when the client is not connected");
+        LOG.warn("Cannot start PollingThread, when the client is not connected");
         return;
       }
       // Checking the most recent timestamp
@@ -74,7 +80,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
       try {
         lastTimestamp = getNewestTimestamp();
       } catch (SpRuntimeException e) {
-        System.out.println(e.getMessage());
+        LOG.error(e.getMessage());
         return;
       }
 
@@ -97,7 +103,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 influxDbStreamAdapter.send(out);
               }
             } catch (SpRuntimeException e) {
-              System.out.println("Error: " + e.getMessage());
+              LOG.error("Error: " + e.getMessage());
             }
           }
         }
@@ -133,24 +139,19 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+    var builder = SpecificDataStreamAdapterBuilder.create(ID)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .withLocales(Locales.EN)
-        .requiredTextParameter(Labels.withId(InfluxDbClient.HOST))
-        .requiredIntegerParameter(Labels.withId(InfluxDbClient.PORT))
-        .requiredTextParameter(Labels.withId(InfluxDbClient.DATABASE))
-        .requiredTextParameter(Labels.withId(InfluxDbClient.MEASUREMENT))
-        .requiredTextParameter(Labels.withId(InfluxDbClient.USERNAME))
-        .requiredSecret(Labels.withId(InfluxDbClient.PASSWORD))
-        .requiredIntegerParameter(Labels.withId(POLLING_INTERVAL))
-        .requiredSingleValueSelection(Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
-            Options.from(
-                new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
-                new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)))
-        .build();
+        .withLocales(Locales.EN);
 
-    description.setAppId(ID);
-    return description;
+    InfluxConfigs.appendSharedInfluxConfig(builder);
+
+    builder.requiredIntegerParameter(Labels.withId(POLLING_INTERVAL));
+    builder.requiredSingleValueSelection(Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
+        Options.from(
+            new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
+            new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)));
+
+    return builder.build();
   }
 
   @Override
@@ -192,18 +193,14 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
   }
 
   private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+    var extractor = StaticPropertyExtractor.from(adapterDescription.getConfig());
 
-    pollingInterval = extractor.singleValue(POLLING_INTERVAL, Integer.class);
-    String replace = extractor.selectedSingleValueInternalName(InfluxDbClient.REPLACE_NULL_VALUES);
+    pollingInterval = extractor.singleValueParameter(POLLING_INTERVAL, Integer.class);
+    String replace = extractor.selectedSingleValueInternalName(InfluxDbClient.REPLACE_NULL_VALUES, String.class);
 
     influxDbClient = new InfluxDbClient(
-        extractor.singleValue(InfluxDbClient.HOST, String.class),
-        extractor.singleValue(InfluxDbClient.PORT, Integer.class),
-        extractor.singleValue(InfluxDbClient.DATABASE, String.class),
-        extractor.singleValue(InfluxDbClient.MEASUREMENT, String.class),
-        extractor.singleValue(InfluxDbClient.USERNAME, String.class),
-        extractor.secretValue(InfluxDbClient.PASSWORD),
+        InfluxConfigs.fromExtractor(extractor),
+        extractor.singleValueParameter(InfluxKeys.DATABASE_MEASUREMENT_KEY, String.class),
         replace.equals(InfluxDbClient.DO_REPLACE));
 
   }

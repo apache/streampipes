@@ -1446,6 +1446,7 @@
         <module>streampipes-messaging-nats</module>
         <module>streampipes-integration-tests</module>
 		<module>streampipes-rest-extensions</module>
+        <module>streampipes-extensions/streampipes-connectors-influx</module>
     </modules>
 
     <profiles>
