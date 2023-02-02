@@ -129,6 +129,9 @@
 	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
+			<!-- Geo dependencies -->
+			<jts-core.version>1.19.0</jts-core.version>
+			<apache-sis-referencing.version>1.2</apache-sis-referencing.version>
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
@@ -1382,6 +1385,19 @@
                 <artifactId>quartz</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
+				     <!-- Geo dependencies -->
+				    <dependency>
+							<!-- https://mvnrepository.com/artifact/org.locationtech.jts/jts-core -->
+							<groupId>org.locationtech.jts</groupId>
+							<artifactId>jts-core</artifactId>
+							<version>${jts-core.version}</version>
+						</dependency>
+				    <dependency>
+							<!-- https://mvnrepository.com/artifact/org.apache.sis.core/sis-referencing -->
+							<groupId>org.apache.sis.core</groupId>
+							<artifactId>sis-referencing</artifactId>
+							<version>${apache-sis-referencing.version}</version>
+						</dependency>
 
             <!-- dependency convergence -->
             <dependency>
