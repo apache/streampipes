@@ -396,7 +396,6 @@ class TestStreamPipesEndpoints(TestCase):
 
 
 class TestMessagingEndpoint(TestCase):
-
     client = StreamPipesClient(
         client_config=StreamPipesClientConfig(
             credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
@@ -405,7 +404,6 @@ class TestMessagingEndpoint(TestCase):
     )
 
     def test_messaging_endpoint_happy_path(self):
-
         demo_endpoint = MessagingEndpoint(parent_client=self.client)
 
         demo_endpoint.configure(broker=NatsBroker())
