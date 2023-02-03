@@ -37,9 +37,9 @@ spec:
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: COUCHDB_USER
-              value: "admin"
+              value: {{ .Values.external.couchdb.user }}
             - name: COUCHDB_PASSWORD
-              value: "admin"
+              value: {{ .Values.external.couchdb.password }}
           ports:
             - containerPort: 5984
           volumeMounts:

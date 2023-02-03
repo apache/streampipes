@@ -41,6 +41,8 @@ external:
   couchdb:
     appName: "couchdb"
     version: 3.3.1
+    user: "admin"
+    password: "admin"
     persistence:
       storageClassName: ""
       claimName: "couchdb-pvc"
