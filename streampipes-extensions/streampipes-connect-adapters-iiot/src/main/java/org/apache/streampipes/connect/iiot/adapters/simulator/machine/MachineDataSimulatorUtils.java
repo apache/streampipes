@@ -142,7 +142,7 @@ public class MachineDataSimulatorUtils {
             .description("Denotes the current temperature in degrees celsius")
             .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://codes.wmo.int/common/unit/degC"))
+            .measurementUnit(URI.create("http://qudt.org/vocab/unit#DegreeCelsius"))
             .valueSpecification(0.0f, 100.0f, 0.1f)
             .build())
         .sample(TEMPERATURE, 33.221f)
