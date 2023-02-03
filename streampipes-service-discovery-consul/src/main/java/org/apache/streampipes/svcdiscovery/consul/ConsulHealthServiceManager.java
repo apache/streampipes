@@ -17,90 +17,64 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.commons.environment.Environment;
 
-import com.orbitz.consul.Consul;
-import com.orbitz.consul.HealthClient;
-import com.orbitz.consul.cache.ServiceHealthCache;
-import com.orbitz.consul.model.health.ServiceHealth;
-import com.orbitz.consul.option.QueryOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ecwid.consul.v1.QueryParams;
+import com.ecwid.consul.v1.Response;
+import com.ecwid.consul.v1.health.HealthServicesRequest;
+import com.ecwid.consul.v1.health.model.Check;
+import com.ecwid.consul.v1.health.model.HealthService;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public enum ConsulHealthServiceManager {
+public class ConsulHealthServiceManager extends AbstractConsulService {
 
-  INSTANCE;
-
-  private static final Logger LOG = LoggerFactory.getLogger(ConsulHealthServiceManager.class);
   private static final int MAX_RETRIES = 3;
-  private final Consul client;
-  private final Map<String, ServiceHealthCache> serviceHealthCaches;
 
-  ConsulHealthServiceManager() {
-    serviceHealthCaches = new HashMap<>();
-    client = new ConsulProvider().consulInstance();
-    initializeAll();
+  public ConsulHealthServiceManager(Environment environment) {
+    super(environment);
+    initializeCache();
   }
 
-  public void initializeAll() {
-    initialize(DefaultSpServiceGroups.CORE);
-    initialize(DefaultSpServiceGroups.EXT);
-  }
+  public void initializeCache() {
 
-  public void initialize(String serviceGroup) {
-    HealthClient healthClient = client.healthClient();
-    ServiceHealthCache svHealth = ServiceHealthCache.newCache(healthClient, serviceGroup, false, 9, QueryOptions.BLANK);
-    svHealth.start();
-    try {
-      svHealth.awaitInitialized(5, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-    serviceHealthCaches.put(serviceGroup, svHealth);
   }
 
   public List<String> getServiceEndpoints(String serviceGroup,
                                           boolean restrictToHealthy,
                                           List<String> filterByTags) {
-    List<ServiceHealth> activeServices = findService(serviceGroup, 0);
+    List<HealthService> activeServices = findService(serviceGroup, 0);
 
     return activeServices
         .stream()
         .filter(service -> allFiltersSupported(service, filterByTags))
         .filter(service -> !restrictToHealthy
-            || service.getChecks().stream().allMatch(check -> check.getStatus().equals("passing")))
+            || service.getChecks().stream().allMatch(check -> check.getStatus() == Check.CheckStatus.PASSING))
         .map(this::makeServiceUrl)
         .collect(Collectors.toList());
   }
 
-  private String makeServiceUrl(ServiceHealth service) {
+  private String makeServiceUrl(HealthService service) {
     return service.getService().getAddress() + ":" + service.getService().getPort();
   }
 
-  private boolean allFiltersSupported(ServiceHealth service,
+  private boolean allFiltersSupported(HealthService service,
                                       List<String> filterByTags) {
-    return service.getService().getTags().containsAll(filterByTags);
+    return new HashSet<>(service.getService().getTags()).containsAll(filterByTags);
   }
 
-  private List<ServiceHealth> findService(String serviceGroup, int retryCount) {
-
-    if (serviceHealthCaches.containsKey(serviceGroup)
-        && serviceHealthCaches.get(serviceGroup).getMap() != null) {
-      ServiceHealthCache cache = serviceHealthCaches.get(serviceGroup);
-      return cache
-          .getMap()
-          .values()
-          .stream()
-          .filter((value) -> value.getService().getService().equals(serviceGroup))
-          .collect(Collectors.toList());
-    } else {
+  private List<HealthService> findService(String serviceGroup, int retryCount) {
+    HealthServicesRequest request = HealthServicesRequest.newBuilder()
+        .setPassing(true)
+        .setQueryParams(QueryParams.DEFAULT)
+        .build();
+    Response<List<HealthService>> healthyServicesResp = consulInstance().getHealthServices(serviceGroup, request);
+    var healthyServices = healthyServicesResp.getValue();
+    if (healthyServices.size() == 0) {
       if (retryCount < MAX_RETRIES) {
         try {
           retryCount++;
@@ -113,10 +87,10 @@ public enum ConsulHealthServiceManager {
       } else {
         return Collections.emptyList();
       }
+    } else {
+      return healthyServices;
     }
   }
 
-  public Consul consulInstance() {
-    return this.client;
-  }
+
 }

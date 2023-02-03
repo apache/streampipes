@@ -19,48 +19,82 @@
 <div id="formWrapper" fxFlex="100" fxLayout="column">
     <div fxFlex fxLayout="column" class="content">
         <div>
-            <mat-radio-group *ngIf="staticProperty.alternatives.length > 1"
-                             class="radio-group" (change)="radioSelectionChange($event)" required>
-                <mat-radio-button class="radio-button"
-                                  *ngFor="let alternative of staticProperty.alternatives"
-                                  [value]="alternative"
-                                  [checked]="alternative.selected"
-                                  [matTooltip]="alternative.description"
-                                  [attr.data-cy]="staticProperty.internalName.split(' ').join('_').toLowerCase() + '-' + alternative.label.split(' ').join('_').toLowerCase()">
-                    <label style="font-weight: normal;">
-                        {{alternative.label}}
+            <mat-radio-group
+                *ngIf="staticProperty.alternatives.length > 1"
+                class="radio-group"
+                (change)="radioSelectionChange($event)"
+                required
+            >
+                <mat-radio-button
+                    class="radio-button"
+                    *ngFor="let alternative of staticProperty.alternatives"
+                    [value]="alternative"
+                    [checked]="alternative.selected"
+                    [matTooltip]="alternative.description"
+                    [attr.data-cy]="
+                        staticProperty.internalName
+                            .split(' ')
+                            .join('_')
+                            .toLowerCase() +
+                        '-' +
+                        alternative.label.split(' ').join('_').toLowerCase()
+                    "
+                >
+                    <label style="font-weight: normal">
+                        {{ alternative.label }}
                     </label>
                 </mat-radio-button>
             </mat-radio-group>
 
             <!-- TODO: Remove hack -->
-            <mat-checkbox *ngIf="staticProperty.alternatives.length === 1"
-                          [(ngModel)]="staticProperty.alternatives[0].selected">
-                {{staticProperty.alternatives[0].label}}
+            <mat-checkbox
+                *ngIf="staticProperty.alternatives.length === 1"
+                [(ngModel)]="staticProperty.alternatives[0].selected"
+            >
+                {{ staticProperty.alternatives[0].label }}
             </mat-checkbox>
-
         </div>
 
-        <div *ngFor="let alternative of staticProperty.alternatives; let i = index">
-            <div *ngIf="alternative.selected == true && alternative.staticProperty != null">
-                <div style="padding-top: 0px; padding-bottom: 0px;
-                                                   padding-left: 10px; padding-right: 10px">
-                    <app-static-property [adapterId]="adapterId"
-                                         [eventSchemas]="eventSchemas"
-                                         [parentForm]="parentForm"
-                                         [staticProperties]="staticProperties"
-                                         [fieldName]="fieldName + '-'  + alternative.staticProperty.internalName + '-' + i"
-                                         [staticProperty]="alternative.staticProperty"
-                                         [displayRecommended]="displayRecommended"
-                                         (validateEmitter)="valueChange($event)"
-                                         class="test fullWidth">
-                    </app-static-property>
+        <div
+            *ngFor="
+                let alternative of staticProperty.alternatives;
+                let i = index
+            "
+        >
+            <div
+                *ngIf="
+                    alternative.selected === true &&
+                    alternative.staticProperty !== null
+                "
+            >
+                <div
+                    style="
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    "
+                >
+                    <sp-app-static-property
+                        [adapterId]="adapterId"
+                        [eventSchemas]="eventSchemas"
+                        [parentForm]="parentForm"
+                        [staticProperties]="staticProperties"
+                        [fieldName]="
+                            fieldName +
+                            '-' +
+                            alternative.staticProperty.internalName +
+                            '-' +
+                            i
+                        "
+                        [staticProperty]="alternative.staticProperty"
+                        [displayRecommended]="displayRecommended"
+                        (validateEmitter)="valueChange($event)"
+                        class="test fullWidth"
+                    >
+                    </sp-app-static-property>
                 </div>
             </div>
         </div>
-
-
     </div>
-
-
 </div>

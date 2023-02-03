@@ -21,8 +21,6 @@ import java.util.Map;
 
 public interface ISpKvManagement {
 
-  <T> T getValueForRoute(String route, Class<T> type);
-
   Map<String, String> getKeyValue(String route);
 
   void updateConfig(String key, String entry, boolean password);

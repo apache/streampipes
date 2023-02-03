@@ -42,10 +42,6 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
     super(adapterDescription);
   }
 
-  public GenericAdapter(T adapterDescription, boolean debug) {
-    super(adapterDescription, debug);
-  }
-
   public GenericAdapter() {
     super();
   }
@@ -62,7 +58,7 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
     IParser parser = getParser(adapterDescription);
     IFormat format = getFormat(adapterDescription);
 
-    ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
+    ProtocolDescription protocolDescription = (adapterDescription).getProtocolDescription();
 
     IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
     this.protocol = protocolInstance;

@@ -17,34 +17,39 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataProcessorInvocation, OutputStrategy } from '@streampipes/platform-services';
+import {
+    DataProcessorInvocation,
+    OutputStrategy,
+} from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'output-strategy',
-  templateUrl: './output-strategy.component.html',
-  styleUrls: ['./output-strategy.component.scss']
+    selector: 'sp-output-strategy',
+    templateUrl: './output-strategy.component.html',
+    styleUrls: ['./output-strategy.component.scss'],
 })
 export class OutputStrategyComponent implements OnInit {
+    @Input()
+    parentForm: UntypedFormGroup;
 
-  @Input()
-  parentForm: UntypedFormGroup;
+    @Input()
+    outputStrategy: OutputStrategy;
 
-  @Input()
-  outputStrategy: OutputStrategy;
+    @Input()
+    selectedElement: DataProcessorInvocation;
 
-  @Input()
-  selectedElement: DataProcessorInvocation;
+    @Input()
+    restrictedEditMode: boolean;
 
-  @Input()
-  restrictedEditMode: boolean;
+    label: string;
 
-  label: string;
+    customizableOutputStrategy: boolean;
 
-  customizableOutputStrategy: boolean;
-
-  ngOnInit(): void {
-    this.customizableOutputStrategy = this.outputStrategy['@class'] === 'org.apache.streampipes.model.output.CustomOutputStrategy' ||
-        this.outputStrategy['@class'] === 'org.apache.streampipes.model.output.UserDefinedOutputStrategy';
-  }
+    ngOnInit(): void {
+        this.customizableOutputStrategy =
+            this.outputStrategy['@class'] ===
+                'org.apache.streampipes.model.output.CustomOutputStrategy' ||
+            this.outputStrategy['@class'] ===
+                'org.apache.streampipes.model.output.UserDefinedOutputStrategy';
+    }
 }

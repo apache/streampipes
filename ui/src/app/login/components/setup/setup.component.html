@@ -16,72 +16,148 @@
   ~
   -->
 
-<div class="full-background setup-container light-mode" fxLayout="row" fxLayoutAlign="center center">
+<div
+    class="full-background setup-container light-mode"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+>
     <div fxFlex="80" fxLayout="column" fxLayoutAlign="center center">
         <div fxFlex="100" fxLayout="column" class="box-shadow-login setup-card">
             <form #setupForm="ngForm" fxFlex="100" fxLayout="column">
                 <div class="setup-header p-20">
-                    <img class="sp-logo" alt="icon" src="../../../../assets/img/sp/logo.png">
-                    <h2 class="text-center">Welcome to {{appConstants.APP_NAME}}!</h2>
-                    <span class="text-center">Create a user and you are ready to go (the initial setup might take some time)</span>
+                    <img
+                        class="sp-logo"
+                        alt="icon"
+                        src="../../../../assets/img/sp/logo.png"
+                    />
+                    <h2 class="text-center">
+                        Welcome to {{ appConstants.APP_NAME }}!
+                    </h2>
+                    <span class="text-center"
+                        >Create a user and you are ready to go (the initial
+                        setup might take some time)</span
+                    >
                 </div>
-                <div fxFlex="100" fxLayout="column" *ngIf="!installationRunning" >
-                        <div class="setup-inline-content">
-                            <h3>Initial User</h3>
-                            <div fxLayout="column">
-                                <mat-form-field fxFlex color="accent">
-                                    <mat-label>Email</mat-label>
-                                    <input [(ngModel)]="setup.adminEmail" matInput type="email" name="email" class="sp"
-                                           required/>
-                                </mat-form-field>
-                                <mat-form-field fxFlex color="accent">
-                                    <mat-label>Password</mat-label>
-                                    <input [(ngModel)]="setup.adminPassword" matInput type="password" name="password"
-                                           class="sp" required/>
-                                </mat-form-field>
-                                <mat-checkbox style="margin-bottom: 10px;" color="accent"
-                                              [(ngModel)]="setup.installPipelineElements" name="install"><span>Also install available data streams, processors and sinks.</span>
-                                </mat-checkbox>
-                            </div>
+                <div
+                    fxFlex="100"
+                    fxLayout="column"
+                    *ngIf="!installationRunning"
+                >
+                    <div class="setup-inline-content">
+                        <h3>Initial User</h3>
+                        <div fxLayout="column">
+                            <mat-form-field fxFlex color="accent">
+                                <mat-label>Email</mat-label>
+                                <input
+                                    [(ngModel)]="setup.adminEmail"
+                                    matInput
+                                    type="email"
+                                    name="email"
+                                    class="sp"
+                                    required
+                                />
+                            </mat-form-field>
+                            <mat-form-field fxFlex color="accent">
+                                <mat-label>Password</mat-label>
+                                <input
+                                    [(ngModel)]="setup.adminPassword"
+                                    matInput
+                                    type="password"
+                                    name="password"
+                                    class="sp"
+                                    required
+                                />
+                            </mat-form-field>
+                            <mat-checkbox
+                                style="margin-bottom: 10px"
+                                color="accent"
+                                [(ngModel)]="setup.installPipelineElements"
+                                name="install"
+                                ><span
+                                    >Also install available data streams,
+                                    processors and sinks.</span
+                                >
+                            </mat-checkbox>
                         </div>
+                    </div>
                 </div>
-                <div *ngIf="installationRunning" #scroll class="installation-status-container">
+                <div
+                    *ngIf="installationRunning"
+                    #scroll
+                    class="installation-status-container"
+                >
                     <div fxLayout="column" class="setup-inline-content">
                         <div *ngFor="let msg of installationResults">
                             <div fxFlex fxLayout="row">
-                                <div fxFlex="80" style="width:50%">
-                                    <h4>{{msg.notifications[0].title}}</h4></div>
-                                <div fxFlex="20" style="width:50%">
-                                    <mat-icon class="md-accent" color="accent" style="width: 36px; height: 36px"
-                                              *ngIf="msg.success">done
+                                <div fxFlex="80" style="width: 50%">
+                                    <h4>{{ msg.notifications[0].title }}</h4>
+                                </div>
+                                <div fxFlex="20" style="width: 50%">
+                                    <mat-icon
+                                        class="md-accent"
+                                        color="accent"
+                                        style="width: 36px; height: 36px"
+                                        *ngIf="msg.success"
+                                        >done
                                     </mat-icon>
-                                    <mat-icon class="md-accent" color="accent" style="width: 36px; height: 36px"
-                                              *ngIf="!(msg.success)">error
+                                    <mat-icon
+                                        class="md-accent"
+                                        color="accent"
+                                        style="width: 36px; height: 36px"
+                                        *ngIf="!msg.success"
+                                        >error
                                     </mat-icon>
                                 </div>
                             </div>
                         </div>
-                        <div fxFlex fxLayout="row" *ngIf="nextTaskTitle != ''">
-                            <div fxFlex="80" style="width:50%"><h4>{{nextTaskTitle}}</h4></div>
-                            <div fxFlex="20" style="width:50%">
-                                <mat-spinner class="md-accent" [mode]="'indeterminate'" [diameter]="20"
-                                             style="margin-top:10px;"
-                                             *ngIf="loading"></mat-spinner>
+                        <div fxFlex fxLayout="row" *ngIf="nextTaskTitle !== ''">
+                            <div fxFlex="80" style="width: 50%">
+                                <h4>{{ nextTaskTitle }}</h4>
+                            </div>
+                            <div fxFlex="20" style="width: 50%">
+                                <mat-spinner
+                                    class="md-accent"
+                                    [mode]="'indeterminate'"
+                                    [diameter]="20"
+                                    style="margin-top: 10px"
+                                    *ngIf="loading"
+                                ></mat-spinner>
                             </div>
                         </div>
                     </div>
                 </div>
                 <mat-divider></mat-divider>
                 <div fxLayout="row" fxLayoutAlign="center center">
-                    <div fxLayout="row" style="margin-top: 10px; margin-bottom: 10px;">
-                        <button mat-button mat-raised-button color="accent"
-                                [disabled]="!(setupForm.valid) || loading || installationFinished"
-                                (click)="configure(0)" *ngIf="!installationFinished">
-                            <span>{{!installationRunning ? 'Install' : 'Installing...'}}</span>
+                    <div
+                        fxLayout="row"
+                        style="margin-top: 10px; margin-bottom: 10px"
+                    >
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            [disabled]="
+                                !setupForm.valid ||
+                                loading ||
+                                installationFinished
+                            "
+                            (click)="configure(0)"
+                            *ngIf="!installationFinished"
+                        >
+                            <span>{{
+                                !installationRunning
+                                    ? 'Install'
+                                    : 'Installing...'
+                            }}</span>
                         </button>
-                        <button mat-button mat-raised-button color="accent"
-                                (click)="openLoginPage()" *ngIf="installationFinished"
-                                data-cy="sp-button-finish-installation">
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            (click)="openLoginPage()"
+                            *ngIf="installationFinished"
+                            data-cy="sp-button-finish-installation"
+                        >
                             <mat-icon>arrow_forward</mat-icon>
                             <span>Go to login page</span>
                         </button>
@@ -91,4 +167,3 @@
         </div>
     </div>
 </div>
-

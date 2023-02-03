@@ -23,57 +23,65 @@ import { ResizeService } from '../../../services/resize.service';
 import { StatusWidgetConfig } from './status-config';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
-
 @Component({
-  selector: 'status-widget',
-  templateUrl: './status-widget.component.html',
-  styleUrls: ['./status-widget.component.scss']
+    selector: 'sp-status-widget',
+    templateUrl: './status-widget.component.html',
+    styleUrls: ['./status-widget.component.scss'],
 })
-export class StatusWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
+export class StatusWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
+    interval: number;
+    active = false;
+    lastTimestamp = 0;
 
-  interval: number;
-  active = false;
-  lastTimestamp = 0;
+    statusLightWidth: string;
+    statusLightHeight: string;
 
-  statusLightWidth: string;
-  statusLightHeight: string;
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
+        super(dataLakeService, resizeService, false);
+    }
 
-  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
-    super(dataLakeService, resizeService, false);
-  }
+    ngOnInit(): void {
+        super.ngOnInit();
+        this.onSizeChanged(
+            this.computeCurrentWidth(this.itemWidth),
+            this.computeCurrentHeight(this.itemHeight),
+        );
+    }
 
-  ngOnInit(): void {
-    super.ngOnInit();
-    this.onSizeChanged(this.computeCurrentWidth(this.itemWidth), this.computeCurrentHeight(this.itemHeight));
-  }
+    protected extractConfig(extractor: StaticPropertyExtractor) {
+        this.interval = extractor.integerParameter(
+            StatusWidgetConfig.INTERVAL_KEY,
+        );
+    }
 
-  protected extractConfig(extractor: StaticPropertyExtractor) {
-    this.interval = extractor.integerParameter(StatusWidgetConfig.INTERVAL_KEY);
-  }
+    protected onEvent(events: any[]) {
+        this.active = true;
+        const timestamp = new Date().getTime();
+        this.lastTimestamp = timestamp;
+        setTimeout(() => {
+            if (this.lastTimestamp <= timestamp) {
+                this.active = false;
+            }
+        }, this.interval * 1000);
+    }
 
-  protected onEvent(events: any[]) {
-    this.active = true;
-    const timestamp = new Date().getTime();
-    this.lastTimestamp = timestamp;
-    setTimeout(() => {
-      if (this.lastTimestamp <= timestamp) {
-        this.active = false;
-      }
-    }, (this.interval * 1000));
-  }
+    protected onSizeChanged(width: number, height: number) {
+        const size: string = Math.min(width, height) * 0.6 + 'px';
+        this.statusLightWidth = size;
+        this.statusLightHeight = size;
+    }
 
-  protected onSizeChanged(width: number, height: number) {
-    const size: string = Math.min(width, height) * 0.6 + 'px';
-    this.statusLightWidth = size;
-    this.statusLightHeight = size;
-  }
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return 1;
+    }
 
-  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
-    return 1;
-  }
-
-  getFieldsToQuery(): string[] {
-    return undefined;
-  }
-
+    getFieldsToQuery(): string[] {
+        return undefined;
+    }
 }

@@ -76,7 +76,7 @@
                             fxLayout="row"
                         >
                             <i class="material-icons">done</i>
-                            <span
+                            <span data-cy="sp-connect-adapter-success-added"
                                 >&nbsp;Your new data stream is now available in
                                 the pipeline editor.</span
                             >
@@ -98,7 +98,7 @@
                         </div>
                     </div>
 
-                    <div *ngIf="!isSetAdapter" fxFlex="100">
+                    <div *ngIf="!isSetAdapter && startAdapterNow" fxFlex="100">
                         <sp-pipeline-element-runtime-info
                             [streamDescription]="streamDescription"
                             [pollingActive]="pollingActive"

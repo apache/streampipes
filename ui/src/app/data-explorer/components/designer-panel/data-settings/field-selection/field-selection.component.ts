@@ -17,33 +17,39 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventPropertyUnion, FieldConfig, SourceConfig } from '@streampipes/platform-services';
+import {
+    EventPropertyUnion,
+    FieldConfig,
+    SourceConfig,
+} from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({
-  selector: 'sp-field-selection',
-  templateUrl: './field-selection.component.html',
-  styleUrls: ['./field-selection.component.scss']
+    selector: 'sp-field-selection',
+    templateUrl: './field-selection.component.html',
+    styleUrls: ['./field-selection.component.scss'],
 })
 export class FieldSelectionComponent implements OnInit {
+    @Input() field: FieldConfig;
+    @Input() sourceConfig: SourceConfig;
+    @Input() widgetId: string;
 
-  @Input() field: FieldConfig;
-  @Input() sourceConfig: SourceConfig;
-  @Input() widgetId: string;
+    @Output() addFieldEmitter: EventEmitter<EventPropertyUnion> =
+        new EventEmitter<EventPropertyUnion>();
 
-  @Output() addFieldEmitter: EventEmitter<EventPropertyUnion> = new EventEmitter<EventPropertyUnion>();
+    constructor(private widgetConfigService: WidgetConfigurationService) {}
 
-  constructor(private widgetConfigService: WidgetConfigurationService) {}
-
-  ngOnInit() {
-    if (!this.field.aggregations) {
-      this.field.aggregations = [];
+    ngOnInit() {
+        if (!this.field.aggregations) {
+            this.field.aggregations = [];
+        }
     }
-  }
 
-  triggerConfigurationUpdate() {
-    this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
-  }
-
+    triggerConfigurationUpdate() {
+        this.widgetConfigService.notify({
+            widgetId: this.widgetId,
+            refreshData: true,
+            refreshView: true,
+        });
+    }
 }
-

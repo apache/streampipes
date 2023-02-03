@@ -88,6 +88,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     saveInDataLake = false;
     dataLakeTimestampField: string;
 
+    startAdapterNow = true;
+
     constructor(
         private dialogService: DialogService,
         private shepherdService: ShepherdService,
@@ -172,6 +174,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 saveInDataLake: this.saveInDataLake,
                 dataLakeTimestampField: this.dataLakeTimestampField,
                 editMode: false,
+                startAdapterNow: this.startAdapterNow,
             },
         });
 

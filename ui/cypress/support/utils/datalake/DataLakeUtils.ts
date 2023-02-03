@@ -34,10 +34,16 @@ export class DataLakeUtils {
         storeInDataLake: boolean = true,
         format: 'csv' | 'json_array',
     ) {
-        const adapterBuilder = GenericAdapterBuilder.create('File_Set')
+        const adapterBuilder = GenericAdapterBuilder.create('File_Stream')
             .setName(name)
             .setTimestampProperty('timestamp')
-            .addDimensionProperty('randomtext');
+            .addDimensionProperty('randomtext')
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            )
+            .setStartAdapter(true);
 
         if (format === 'csv') {
             adapterBuilder
@@ -67,12 +73,8 @@ export class DataLakeUtils {
             true,
             format,
         );
-        ConnectUtils.addGenericSetAdapter(adapter);
 
-        // Wait till data is stored
-        if (wait) {
-            cy.wait(10000);
-        }
+        ConnectUtils.addGenericStreamAdapter(adapter);
     }
 
     public static addDataViewAndWidget(

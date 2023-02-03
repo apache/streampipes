@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.commons.influx;
 
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
@@ -25,22 +26,18 @@ import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -64,8 +61,8 @@ public class InfluxStore {
   }
 
   public InfluxStore(DataLakeMeasure measure,
-                     SpConfig configStore) throws SpRuntimeException {
-    this(measure, InfluxConnectionSettings.from(configStore));
+                     Environment environment) throws SpRuntimeException {
+    this(measure, InfluxConnectionSettings.from(environment));
   }
 
   /**
@@ -75,20 +72,17 @@ public class InfluxStore {
    *                            be found
    */
   private void connect(InfluxConnectionSettings settings) throws SpRuntimeException {
-    // Connecting to the server
-    // "http://" must be in front
-    String urlAndPort = settings.getInfluxDbHost() + ":" + settings.getInfluxDbPort();
-    influxDb = InfluxDBFactory.connect(urlAndPort, settings.getUser(), settings.getPassword());
+    influxDb = InfluxClientProvider.getInfluxDBClient(settings);
 
     // Checking, if server is available
     Pong response = influxDb.ping();
     if (response.getVersion().equalsIgnoreCase("unknown")) {
-      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + urlAndPort);
+      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
     }
 
     String databaseName = settings.getDatabaseName();
     // Checking whether the database exists
-    if (!databaseExists(databaseName)) {
+    if (!InfluxRequests.databaseExists(influxDb, databaseName)) {
       LOG.info("Database '" + databaseName + "' not found. Gets created ...");
       createDatabase(databaseName);
     }
@@ -98,16 +92,6 @@ public class InfluxStore {
     int batchSize = 2000;
     int flushDuration = 500;
     influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
-  }
-
-  private boolean databaseExists(String dbName) {
-    QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
-    for (List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
-      if (a.get(0).equals(dbName)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**

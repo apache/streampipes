@@ -21,7 +21,7 @@ import os
 import setuptools
 
 # Package meta-data.
-NAME = "streampipes_client"
+NAME = "streampipes-client"
 DESCRIPTION = "Python client for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/apache/streampipes/"
@@ -39,16 +39,18 @@ base_packages = [
 
 dev_packages = base_packages + [
     "autoflake==2.0.0",
-    "black==22.12.0",
+    "black==23.1.0",
+    "blacken-docs==1.13.0",
     "flake8==6.0.0",
     "interrogate==1.5.0",
-    "isort==5.11.4",
+    "isort==5.12.0",
     "mypy==0.991",
     "pandas-stubs==1.5.2.230105",
-    "pre-commit==2.21.0",
+    "pre-commit==3.0.0",
     "pytest==7.2.1",
     "pytest-cov==4.0.0",
     "pyupgrade==3.3.1",
+    "types-Jinja2==2.11.9",
     "types-requests==2.28.11.7",
 ]
 
@@ -56,7 +58,7 @@ docs_packages = [
     "mkdocs==1.4.2",
     "mkdocs-awesome-pages-plugin==2.8.0",
     "mkdocs-material==8.5.11",  # < 9.x.y is required by mkdocs-jupyter
-    "mkdocstrings[python]==0.19.1",
+    "mkdocstrings[python]==0.20.0",
     "pytkdocs[numpy-style]>=0.16.1",
     "mkdocs-gen-files==0.4.0",
     "mkdocs-literate-nav==0.6.0",
@@ -72,7 +74,7 @@ with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
 
 # Load the package's __version__.py module as a dictionary.
 about = {}
-with open(os.path.join(here, NAME, "__version__.py")) as f:
+with open(os.path.join(here, "streampipes_client", "__version__.py")) as f:
     exec(f.read(), about)
 
 # Where the magic happens:

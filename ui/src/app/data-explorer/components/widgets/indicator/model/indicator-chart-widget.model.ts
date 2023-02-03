@@ -16,16 +16,20 @@
  *
  */
 
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel } from '@streampipes/platform-services';
+import {
+    DataExplorerDataConfig,
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
 import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface IndicatorChartVisConfig extends DataExplorerVisConfig {
-  valueField?: DataExplorerField;
-  deltaField?: DataExplorerField;
-  showDelta?: boolean;
+    valueField?: DataExplorerField;
+    deltaField?: DataExplorerField;
+    showDelta?: boolean;
 }
 
 export interface IndicatorChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: IndicatorChartVisConfig;
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: IndicatorChartVisConfig;
 }

@@ -16,26 +16,17 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-image',
-  templateUrl: './image.component.html',
-  styleUrls: ['./image.component.css']
+    selector: 'sp-image',
+    templateUrl: './image.component.html',
+    styleUrls: ['./image.component.css'],
 })
-export class ImageComponent implements OnInit {
+export class ImageComponent {
+    @Input()
+    availableImageData: SpQueryResult;
 
-  @Input()
-  availableImageData: SpQueryResult;
-
-  constructor() {
-
-  }
-
-  ngOnInit(): void {
-
-  }
-
-
+    constructor() {}
 }

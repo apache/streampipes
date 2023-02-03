@@ -22,7 +22,6 @@ import { GridsterInfo } from '../models/gridster-info.model';
 
 @Injectable()
 export class ResizeService {
-
     public resizeSubject: Subject<GridsterInfo> = new Subject<GridsterInfo>();
 
     public notify(info: GridsterInfo): void {

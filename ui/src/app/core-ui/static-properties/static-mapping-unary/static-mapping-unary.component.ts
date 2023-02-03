@@ -22,12 +22,14 @@ import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyUnary } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'app-static-mapping-unary',
+    selector: 'sp-app-static-mapping-unary',
     templateUrl: './static-mapping-unary.component.html',
-    styleUrls: ['./static-mapping-unary.component.css']
+    styleUrls: ['./static-mapping-unary.component.css'],
 })
-export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingPropertyUnary> implements OnInit {
-
+export class StaticMappingUnaryComponent
+    extends StaticMappingComponent<MappingPropertyUnary>
+    implements OnInit
+{
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     constructor() {
@@ -36,21 +38,23 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingP
 
     ngOnInit() {
         this.extractPossibleSelections();
-        if (!(this.staticProperty.selectedProperty)) {
-            this.staticProperty.selectedProperty = this.availableProperties[0].propertySelector;
+        if (!this.staticProperty.selectedProperty) {
+            this.staticProperty.selectedProperty =
+                this.availableProperties[0].propertySelector;
             this.emitUpdate(true);
         }
-        this.addValidator(this.staticProperty.selectedProperty, Validators.required);
+        this.addValidator(
+            this.staticProperty.selectedProperty,
+            Validators.required,
+        );
         this.enableValidators();
     }
 
-    onStatusChange(status: any) {
-    }
+    onStatusChange(status: any) {}
 
     onValueChange(value: any) {
         console.log(value);
         this.staticProperty.selectedProperty = value;
         this.emitUpdate(true);
     }
-
 }

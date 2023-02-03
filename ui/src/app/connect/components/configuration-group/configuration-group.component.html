@@ -19,7 +19,7 @@
 <div style="padding: 15px">
     <form [formGroup]="configurationGroup" fxFlex="100">
         <div fxFlex="100">
-            <app-static-property
+            <sp-app-static-property
                 *ngFor="let config of configuration"
                 [staticProperty]="config"
                 [staticProperties]="configuration"
@@ -29,7 +29,7 @@
                 (updateEmitter)="triggerUpdate($event)"
                 [completedStaticProperty]="completedStaticProperty"
             >
-            </app-static-property>
+            </sp-app-static-property>
         </div>
     </form>
 </div>

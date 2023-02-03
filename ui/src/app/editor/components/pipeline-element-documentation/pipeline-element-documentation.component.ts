@@ -20,33 +20,31 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PipelineElementService } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'pipeline-element-documentation',
-  templateUrl: './pipeline-element-documentation.component.html',
-  styleUrls: ['./pipeline-element-documentation.component.scss']
+    selector: 'sp-pipeline-element-documentation',
+    templateUrl: './pipeline-element-documentation.component.html',
+    styleUrls: ['./pipeline-element-documentation.component.scss'],
 })
 export class PipelineElementDocumentationComponent implements OnInit {
+    @Input()
+    appId: string;
 
-  @Input()
-  appId: string;
+    @Input()
+    useStyling: boolean;
 
-  @Input()
-  useStyling: boolean;
+    documentationMarkdown: any;
+    error: any;
 
-  documentationMarkdown: any;
-  error: any;
+    constructor(private pipelineElementService: PipelineElementService) {}
 
-  constructor(private pipelineElementService: PipelineElementService) {
-
-  }
-
-  ngOnInit(): void {
-    this.pipelineElementService.getDocumentation(this.appId).subscribe(msg => {
-      this.error = false;
-      this.documentationMarkdown = msg;
-    }, error => {
-      this.error = true;
-    });
-  }
-
-
+    ngOnInit(): void {
+        this.pipelineElementService.getDocumentation(this.appId).subscribe(
+            msg => {
+                this.error = false;
+                this.documentationMarkdown = msg;
+            },
+            error => {
+                this.error = true;
+            },
+        );
+    }
 }

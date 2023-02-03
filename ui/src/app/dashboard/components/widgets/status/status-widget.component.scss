@@ -17,40 +17,40 @@
  */
 
 .status-panel {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  align-content: flex-start;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
 }
 
 .title-panel {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .value-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
-  flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex: 1;
 }
 
 .status-light {
-  border-radius: 50%;
-  float: left;
-  margin: 10px 10px;
+    border-radius: 50%;
+    float: left;
+    margin: 10px 10px;
 }
 
 .status-light-red {
-  background-color: #C22;
-  box-shadow: #338 0 -1px 7px 1px, inset #600 0 -1px 9px, #F00 0 0px 8px;
+    background-color: #c22;
+    box-shadow: #338 0 -1px 7px 1px, inset #600 0 -1px 9px, #f00 0 0px 8px;
 }
 
 .status-light-green {
-  background-color: #690;
-  box-shadow: #225 0 -1px 7px 1px, inset #460 0 -1px 9px, #7D0 0 0px 8px;
+    background-color: #690;
+    box-shadow: #225 0 -1px 7px 1px, inset #460 0 -1px 9px, #7d0 0 0px 8px;
 }

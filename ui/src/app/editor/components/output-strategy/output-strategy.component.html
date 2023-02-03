@@ -22,21 +22,35 @@
             <b>Select output</b>
         </div>
         <div fxFlex="100">
-            <div class="customize-item-content"
-                 *ngIf="outputStrategy['@class'] === 'org.apache.streampipes.model.output.CustomOutputStrategy'">
-                <custom-output-strategy [outputStrategy]="outputStrategy"
-                               [selectedElement]="selectedElement"
-                               [parentForm]="parentForm"
-                               [restrictedEditMode]="restrictedEditMode">
-                </custom-output-strategy>
+            <div
+                class="customize-item-content"
+                *ngIf="
+                    outputStrategy['@class'] ===
+                    'org.apache.streampipes.model.output.CustomOutputStrategy'
+                "
+            >
+                <sp-custom-output-strategy
+                    [outputStrategy]="outputStrategy"
+                    [selectedElement]="selectedElement"
+                    [parentForm]="parentForm"
+                    [restrictedEditMode]="restrictedEditMode"
+                >
+                </sp-custom-output-strategy>
             </div>
-            <div class="customize-item-content"
-                 *ngIf="outputStrategy['@class'] === 'org.apache.streampipes.model.output.UserDefinedOutputStrategy'">
-                <user-defined-output-strategy [outputStrategy]="outputStrategy"
-                                     [selectedElement]="selectedElement"
-                                     [parentForm]="parentForm"
-                                     [restrictedEditMode]="restrictedEditMode">
-                </user-defined-output-strategy>
+            <div
+                class="customize-item-content"
+                *ngIf="
+                    outputStrategy['@class'] ===
+                    'org.apache.streampipes.model.output.UserDefinedOutputStrategy'
+                "
+            >
+                <sp-user-defined-output-strategy
+                    [outputStrategy]="outputStrategy"
+                    [selectedElement]="selectedElement"
+                    [parentForm]="parentForm"
+                    [restrictedEditMode]="restrictedEditMode"
+                >
+                </sp-user-defined-output-strategy>
             </div>
         </div>
     </div>

@@ -16,49 +16,93 @@
   ~
   -->
 
-<div
-        fxLayout="column"
+<div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+    <div
+        class="success-message"
+        fxFlex="100"
         fxLayoutAlign="center center"
-        fxFlex="100">
-    <div class="success-message"
-         fxFlex="100"
-         fxLayoutAlign="center center"
-         fxLayout="column"
-         data-cy="sp-pipeline-started-dialog">
+        fxLayout="column"
+        data-cy="sp-pipeline-started-dialog"
+    >
         <div fxLayout="row">
-            <mat-icon color="accent" *ngIf="pipelineOperationStatus.success">done</mat-icon>
-            <mat-icon style="color: red;" *ngIf="!pipelineOperationStatus.success">error</mat-icon>
-            <span>&nbsp;{{pipelineOperationStatus.title}}.</span>
+            <mat-icon color="accent" *ngIf="pipelineOperationStatus.success"
+                >done</mat-icon
+            >
+            <mat-icon
+                style="color: red"
+                *ngIf="!pipelineOperationStatus.success"
+                >error</mat-icon
+            >
+            <span>&nbsp;{{ pipelineOperationStatus.title }}.</span>
         </div>
-        <span *ngIf="action == 1 && !pipelineOperationStatus.success" class="message-small">You can perform a forced stop, which will stop and reset the pipeline status.</span>
+        <span
+            *ngIf="action === 1 && !pipelineOperationStatus.success"
+            class="message-small"
+            >You can perform a forced stop, which will stop and reset the
+            pipeline status.</span
+        >
     </div>
     <div fxLayout="row">
-        <button mat-button mat-raised-button class="mat-basic" (click)="toggleStatusDetailsVisible()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="toggleStatusDetailsVisible()"
+        >
             <div *ngIf="!statusDetailsVisible">Show Details</div>
             <div *ngIf="statusDetailsVisible">Hide Details</div>
         </button>
-        <button mat-button mat-raised-button class="ml-10" color="accent" (click)="forceStopPipeline()"
-                *ngIf="action == 1 && !pipelineOperationStatus.success">
+        <button
+            mat-button
+            mat-raised-button
+            class="ml-10"
+            color="accent"
+            (click)="forceStopPipeline()"
+            *ngIf="action === 1 && !pipelineOperationStatus.success"
+        >
             <div>Force stop</div>
         </button>
     </div>
 
-    <div fxFlex="100" fxLayout="column" *ngIf="statusDetailsVisible" class="w-100">
-        <div fxFlex="100" fxLayout="column" class="mat-elevation-z1 mt-10"
-             *ngFor="let msg of pipelineOperationStatus.elementStatus">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        *ngIf="statusDetailsVisible"
+        class="w-100"
+    >
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            class="mat-elevation-z1 mt-10"
+            *ngFor="let msg of pipelineOperationStatus.elementStatus"
+        >
             <div fxFlex="100" fxLayout="column" class="p-15">
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                     <mat-icon color="accent" *ngIf="msg.success">done</mat-icon>
-                    <mat-icon style="color:red;" *ngIf="!msg.success">warning</mat-icon>
+                    <mat-icon style="color: red" *ngIf="!msg.success"
+                        >warning</mat-icon
+                    >
                     <div fxFlex="100" fxLayout="column" class="ml-5">
-                        <span><b>{{msg.elementName}}</b></span>
-                        <small>{{msg.elementId.substr(0, msg.elementId.lastIndexOf("/"))}}</small>
+                        <span
+                            ><b>{{ msg.elementName }}</b></span
+                        >
+                        <small>{{
+                            msg.elementId.substr(
+                                0,
+                                msg.elementId.lastIndexOf('/')
+                            )
+                        }}</small>
                     </div>
                 </div>
                 <div>
-                    <div fxFlex="100" fxLayout="column" *ngIf="msg.optionalMessage" class="mt-10">
+                    <div
+                        fxFlex="100"
+                        fxLayout="column"
+                        *ngIf="msg.optionalMessage"
+                        class="mt-10"
+                    >
                         <div class="error-message">
-                            {{msg.optionalMessage}}
+                            {{ msg.optionalMessage }}
                         </div>
                     </div>
                 </div>

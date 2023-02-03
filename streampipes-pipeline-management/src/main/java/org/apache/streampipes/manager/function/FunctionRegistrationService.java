@@ -38,6 +38,10 @@ public enum FunctionRegistrationService {
     return registeredFunctions.values();
   }
 
+  public FunctionDefinition getFunction (String functionId) {
+    return registeredFunctions.get(functionId);
+  }
+
   public void registerFunction(FunctionDefinition function) {
     this.registeredFunctions.put(function.getFunctionId().getId(), function);
   }

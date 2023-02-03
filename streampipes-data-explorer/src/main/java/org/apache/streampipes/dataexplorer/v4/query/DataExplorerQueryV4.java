@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.v4.query;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
 import org.apache.streampipes.dataexplorer.v4.params.FillParams;
 import org.apache.streampipes.dataexplorer.v4.params.GroupingByTagsParams;
@@ -88,7 +88,7 @@ public class DataExplorerQueryV4 {
   }
 
   public SpQueryResult executeQuery(boolean ignoreMissingValues) throws RuntimeException {
-    InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+    InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
     List<QueryElement<?>> queryElements = getQueryElements();
 
     if (this.maximumAmountOfEvents != -1) {
@@ -119,7 +119,7 @@ public class DataExplorerQueryV4 {
   }
 
   public SpQueryResult executeQuery(Query query, boolean ignoreMissingValues) {
-    InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+    InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
     var dataResult = executeQuery(influxDB, query, ignoreMissingValues);
     influxDB.close();
 

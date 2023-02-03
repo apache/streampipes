@@ -25,132 +25,157 @@ import { Label } from '@streampipes/platform-services';
 
 @Injectable()
 export class BrushLabelingService {
+    private points: number[];
+    private brushsize: number;
 
-  private points: number[];
-  private brushsize: number;
+    private isLabeling: boolean;
 
-  private isLabeling: boolean;
+    constructor(
+        private colorService: ColorService,
+        private labelingMode: LabelingModeService,
+    ) {}
 
-  constructor(private colorService: ColorService,
-              private labelingMode: LabelingModeService) {
-
-  }
-
-
-  startLabeling(position: ICoordinates, brushSize: number) {
-    this.isLabeling = true;
-    this.points = [];
-    this.points.push(position.x);
-    this.points.push(position.y);
-    this.brushsize = brushSize;
-  }
-
-  executeLabeling(position: ICoordinates) {
-    this.points.push(position.x);
-    this.points.push(position.y);
-  }
-
-  endLabeling(position: ICoordinates) {
-    this.isLabeling = false;
-    return [this.points, this.brushsize];
-  }
-
-  tempDraw(layer: Konva.Layer, shift: ICoordinates, label: Label) {
-    if (this.isLabeling) {
-      const tmp = [];
-      for (let i = 0; i < this.points.length; i += 2) {
-        tmp.push(this.points[i] + shift.x);
-        tmp.push(this.points[i + 1] + shift.y);
-      }
-
-      const line = new Konva.Line({
-        points: tmp,
-        stroke: label.color,
-        opacity: 0.8,
-        strokeWidth: this.brushsize,
-        closed: false
-      });
-      layer.add(line);
-    }
-  }
-
-  draw(layer: Konva.Layer, shift: ICoordinates, annotation: Annotation, imageView) {
-    const tmp = [];
-    for (let i = 0; i < annotation.segmentation[0].length; i += 2) {
-      tmp.push(annotation.segmentation[0][i] + shift.x);
-      tmp.push(annotation.segmentation[0][i + 1] + shift.y);
+    startLabeling(position: ICoordinates, brushSize: number) {
+        this.isLabeling = true;
+        this.points = [];
+        this.points.push(position.x);
+        this.points.push(position.y);
+        this.brushsize = brushSize;
     }
 
-    const line = new Konva.Line({
-      points: tmp,
-      stroke: this.colorService.getColor(annotation.category_name),
-      opacity: 0.5,
-      strokeWidth: this.brushsize,
-      closed: false,
-      draggable: false,
-    });
-    layer.add(line);
-
-    const transformer = new Konva.Transformer({
-      anchorFill: '#FFFFFF',
-      anchorSize: 10,
-      rotateEnabled: false,
-      enabledAnchors: [],
-      borderStroke: 'green',
-    });
-
-    if (annotation.isSelected) {
-      transformer.attachTo(line);
+    executeLabeling(position: ICoordinates) {
+        this.points.push(position.x);
+        this.points.push(position.y);
     }
 
-    this.addMouseHandler(line, annotation, layer, transformer, this.labelingMode);
-    this.addClickHandler(line, annotation, layer, transformer, this.labelingMode);
+    endLabeling(position: ICoordinates) {
+        this.isLabeling = false;
+        return [this.points, this.brushsize];
+    }
 
-    layer.add(line);
-    layer.add(transformer);
-  }
+    tempDraw(layer: Konva.Layer, shift: ICoordinates, label: Label) {
+        if (this.isLabeling) {
+            const tmp = [];
+            for (let i = 0; i < this.points.length; i += 2) {
+                tmp.push(this.points[i] + shift.x);
+                tmp.push(this.points[i + 1] + shift.y);
+            }
 
-  private addClickHandler(brush, annotation, layer, transformer, labelingMode) {
-    brush.on('click', function() {
-      if (labelingMode.isNoneMode()) {
-        annotation.isSelected = !annotation.isSelected;
+            const line = new Konva.Line({
+                points: tmp,
+                stroke: label.color,
+                opacity: 0.8,
+                strokeWidth: this.brushsize,
+                closed: false,
+            });
+            layer.add(line);
+        }
+    }
 
-        if (annotation.isSelected) {
-          transformer.attachTo(this);
-        } else {
-          transformer.detach();
+    draw(
+        layer: Konva.Layer,
+        shift: ICoordinates,
+        annotation: Annotation,
+        imageView,
+    ) {
+        const tmp = [];
+        for (let i = 0; i < annotation.segmentation[0].length; i += 2) {
+            tmp.push(annotation.segmentation[0][i] + shift.x);
+            tmp.push(annotation.segmentation[0][i + 1] + shift.y);
         }
 
-        layer.batchDraw();
-      }
-    });
+        const line = new Konva.Line({
+            points: tmp,
+            stroke: this.colorService.getColor(annotation.category_name),
+            opacity: 0.5,
+            strokeWidth: this.brushsize,
+            closed: false,
+            draggable: false,
+        });
+        layer.add(line);
 
-  }
+        const transformer = new Konva.Transformer({
+            anchorFill: '#FFFFFF',
+            anchorSize: 10,
+            rotateEnabled: false,
+            enabledAnchors: [],
+            borderStroke: 'green',
+        });
 
-  private addMouseHandler(brush, annotation, layer, transformer, labelingMode) {
-    brush.on('mouseover', function() {
-      if (labelingMode.isNoneMode()) {
-        annotation.isHovered = true;
-        brush.opacity(0.8);
-        layer.batchDraw();
-      }
-    });
+        if (annotation.isSelected) {
+            transformer.attachTo(line);
+        }
 
-    brush.on('mouseout', function() {
-      annotation.isHovered = false;
-      brush.opacity(0.5);
-      layer.batchDraw();
-    });
+        this.addMouseHandler(
+            line,
+            annotation,
+            layer,
+            transformer,
+            this.labelingMode,
+        );
+        this.addClickHandler(
+            line,
+            annotation,
+            layer,
+            transformer,
+            this.labelingMode,
+        );
 
-    transformer.on('mouseover', function() {
-      if (labelingMode.isNoneMode()) {
-        annotation.isHovered = true;
-      }
-    });
+        layer.add(line);
+        layer.add(transformer);
+    }
 
-    transformer.on('mouseout', function() {
-      annotation.isHovered = false;
-    });
-  }
+    private addClickHandler(
+        brush,
+        annotation,
+        layer,
+        transformer,
+        labelingMode,
+    ) {
+        brush.on('click', function () {
+            if (labelingMode.isNoneMode()) {
+                annotation.isSelected = !annotation.isSelected;
 
+                if (annotation.isSelected) {
+                    transformer.attachTo(this);
+                } else {
+                    transformer.detach();
+                }
+
+                layer.batchDraw();
+            }
+        });
+    }
+
+    private addMouseHandler(
+        brush,
+        annotation,
+        layer,
+        transformer,
+        labelingMode,
+    ) {
+        brush.on('mouseover', function () {
+            if (labelingMode.isNoneMode()) {
+                annotation.isHovered = true;
+                brush.opacity(0.8);
+                layer.batchDraw();
+            }
+        });
+
+        brush.on('mouseout', function () {
+            annotation.isHovered = false;
+            brush.opacity(0.5);
+            layer.batchDraw();
+        });
+
+        transformer.on('mouseover', function () {
+            if (labelingMode.isNoneMode()) {
+                annotation.isHovered = true;
+            }
+        });
+
+        transformer.on('mouseout', function () {
+            annotation.isHovered = false;
+        });
+    }
 }

@@ -16,26 +16,39 @@
   ~
   -->
 
-<div class="property-selection" style="margin-left:{{layer*5}}%">
+<div class="property-selection" style="margin-left:{{ layer * 5 }}%">
     <div fxLayout="row">
-        <mat-checkbox [checked]="exists(eventProperty.runtimeId)"
-                      (change)="toggle(eventProperty.runtimeId)"
-                      style="margin-right: 10px;" [disabled]="restrictedEditMode"
-                      [attr.data-cy]="eventProperty.runtimeName">
+        <mat-checkbox
+            [checked]="exists(eventProperty.runtimeId)"
+            (change)="toggle(eventProperty.runtimeId)"
+            style="margin-right: 10px"
+            [disabled]="restrictedEditMode"
+            [attr.data-cy]="eventProperty.runtimeName"
+        >
         </mat-checkbox>
         <div>
-            <div *ngIf="eventProperty.label"><b>{{eventProperty.label}}</b><br/>
-                <mat-hint class="description">{{eventProperty.description}},
-                    field name: {{eventProperty.runtimeName}}</mat-hint>
-                <br/></div>
-            <div *ngIf="!eventProperty.label"><b>{{eventProperty.runtimeName}}</b><br/>
+            <div *ngIf="eventProperty.label">
+                <b>{{ eventProperty.label }}</b
+                ><br />
+                <mat-hint class="description"
+                    >{{ eventProperty.description }}, field name:
+                    {{ eventProperty.runtimeName }}</mat-hint
+                >
+                <br />
+            </div>
+            <div *ngIf="!eventProperty.label">
+                <b>{{ eventProperty.runtimeName }}</b
+                ><br />
             </div>
         </div>
     </div>
 </div>
 <div *ngIf="isNestedProperty">
     <div *ngFor="let nestedProperty of eventProperty.eventProperties">
-        <property-selection [outputStrategy]="outputStrategy" [eventProperty]="nestedProperty"
-                            [layer]="(layer + 1)"></property-selection>
+        <sp-property-selection
+            [outputStrategy]="outputStrategy"
+            [eventProperty]="nestedProperty"
+            [layer]="layer + 1"
+        ></sp-property-selection>
     </div>
 </div>

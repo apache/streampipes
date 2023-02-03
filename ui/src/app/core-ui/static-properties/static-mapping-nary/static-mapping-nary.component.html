@@ -18,21 +18,40 @@
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayoutAlign="start center">
-        <button mat-button mat-raised-button color="accent" class="small-button" (click)="selectAll()"
-                style="margin-right:10px;margin-left:10px;">Select all
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="selectAll()"
+            style="margin-right: 10px; margin-left: 10px"
+        >
+            Select all
         </button>
-        <button mat-button mat-raised-button class="mat-basic small-button" (click)="selectNone()">Select
-            none
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic small-button"
+            (click)="selectNone()"
+        >
+            Select none
         </button>
     </div>
-    <div fxFlex="100" fxLayout="column" style="margin-top:10px;">
+    <div fxFlex="100" fxLayout="column" style="margin-top: 10px">
         <mat-checkbox
-                *ngFor="let property of availableProperties | displayRecommendedPipe: staticProperty.propertyScope: displayRecommended"
-                [attr.data-cy]="property.runtimeName"
-                [(ngModel)]="property['checked']"
-                (change)="selectOption(property, $event)"
-                style="margin-left: 10px;" color="accent">
-            {{property.runtimeName}}
+            *ngFor="
+                let property of availableProperties
+                    | displayRecommendedPipe
+                        : staticProperty.propertyScope
+                        : displayRecommended
+            "
+            [attr.data-cy]="property.runtimeName"
+            [(ngModel)]="property['checked']"
+            (change)="selectOption(property, $event)"
+            style="margin-left: 10px"
+            color="accent"
+        >
+            {{ property.runtimeName }}
         </mat-checkbox>
     </div>
 </div>

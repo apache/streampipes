@@ -25,45 +25,48 @@ import { UserAccount, UserInfo } from '@streampipes/platform-services';
 import { ProfileService } from '../../../profile/profile.service';
 
 @Component({
-  selector: 'welcome-tour',
-  templateUrl: './welcome-tour.component.html',
-  styleUrls: ['./welcome-tour.component.scss']
+    selector: 'sp-welcome-tour',
+    templateUrl: './welcome-tour.component.html',
+    styleUrls: ['./welcome-tour.component.scss'],
 })
 export class WelcomeTourComponent implements OnInit {
+    @Input()
+    userInfo: UserInfo;
 
-  @Input()
-  userInfo: UserInfo;
+    currentUser: UserAccount;
 
-  currentUser: UserAccount;
+    constructor(
+        private authService: AuthService,
+        private dialogRef: DialogRef<WelcomeTourComponent>,
+        private profileService: ProfileService,
+        private shepherdService: ShepherdService,
+        public appConstants: AppConstants,
+    ) {}
 
-  constructor(private authService: AuthService,
-              private dialogRef: DialogRef<WelcomeTourComponent>,
-              private profileService: ProfileService,
-              private shepherdService: ShepherdService,
-              public appConstants: AppConstants) {
-  }
+    ngOnInit(): void {
+        this.profileService
+            .getUserProfile(this.userInfo.username)
+            .subscribe(data => {
+                this.currentUser = data;
+            });
+    }
 
-  ngOnInit(): void {
-    this.profileService.getUserProfile(this.userInfo.username).subscribe(data => {
-      this.currentUser = data;
-    });
-  }
+    startCreatePipelineTour() {
+        this.shepherdService.startCreatePipelineTour();
+        this.close();
+    }
 
-  startCreatePipelineTour() {
-    this.shepherdService.startCreatePipelineTour();
-    this.close();
-  }
+    hideTourForever() {
+        this.currentUser.hideTutorial = true;
+        this.profileService
+            .updateUserProfile(this.currentUser)
+            .subscribe(data => {
+                this.authService.updateTokenAndUserInfo();
+                this.close();
+            });
+    }
 
-  hideTourForever() {
-    this.currentUser.hideTutorial = true;
-    this.profileService.updateUserProfile(this.currentUser).subscribe(data => {
-      this.authService.updateTokenAndUserInfo();
-      this.close();
-    });
-  }
-
-  close() {
-    this.dialogRef.close();
-  }
-
+    close() {
+        this.dialogRef.close();
+    }
 }

@@ -19,9 +19,10 @@
 @import '../../../../scss/_variables.scss';
 
 ::ng-deep .mat-progress-bar-fill::after {
-  background: $sp-color-accent;
+    background: $sp-color-accent;
 }
 
 .sp-progress {
-  margin-top:10px;width:800px;
+    margin-top: 10px;
+    width: 800px;
 }

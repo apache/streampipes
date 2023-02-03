@@ -20,16 +20,18 @@ import { BrowserJsPlumbInstance } from '@jsplumb/browser-ui';
 import { EndpointSelection, SelectOptions } from '@jsplumb/core';
 
 export class JsplumbBridge {
-
-    constructor(private jsPlumbInstance: BrowserJsPlumbInstance) {
-    }
+    constructor(private jsPlumbInstance: BrowserJsPlumbInstance) {}
 
     activateEndpoint(endpointId: string, endpointEnabled: boolean) {
         const endpoint = this.getEndpointById(endpointId);
         endpoint.enabled = endpointEnabled;
     }
 
-    activateEndpointWithType(endpointId: string, endpointEnabled: boolean, endpointType: string) {
+    activateEndpointWithType(
+        endpointId: string,
+        endpointEnabled: boolean,
+        endpointType: string,
+    ) {
         this.activateEndpoint(endpointId, endpointEnabled);
         this.setEndpointType(endpointId, endpointType);
     }
@@ -69,7 +71,7 @@ export class JsplumbBridge {
         return this.jsPlumbInstance.bind(event, fn);
     }
 
-    selectEndpoints(endpoint?): EndpointSelection  {
+    selectEndpoints(endpoint?): EndpointSelection {
         if (endpoint === undefined) {
             return this.jsPlumbInstance.selectEndpoints();
         } else {
@@ -78,11 +80,15 @@ export class JsplumbBridge {
     }
 
     getTargetEndpoint(id: string): EndpointSelection {
-        return this.jsPlumbInstance.selectEndpoints({target: document.getElementById(id)});
+        return this.jsPlumbInstance.selectEndpoints({
+            target: document.getElementById(id),
+        });
     }
 
     getEndpointCount(id: string): number {
-        return this.jsPlumbInstance.selectEndpoints({element: document.getElementById(id)}).length;
+        return this.jsPlumbInstance.selectEndpoints({
+            element: document.getElementById(id),
+        }).length;
     }
 
     detach(connection) {
@@ -93,10 +99,12 @@ export class JsplumbBridge {
         return this.jsPlumbInstance.getConnections(filter);
     }
 
-    addEndpoint(pipelineElementDomId: string,
-                options: any) {
+    addEndpoint(pipelineElementDomId: string, options: any) {
         options.cssClass = 'sp-no-pan';
-        return this.jsPlumbInstance.addEndpoint(document.getElementById(pipelineElementDomId), options);
+        return this.jsPlumbInstance.addEndpoint(
+            document.getElementById(pipelineElementDomId),
+            options,
+        );
     }
 
     connect(connection) {
@@ -104,7 +112,9 @@ export class JsplumbBridge {
     }
 
     removeAllEndpoints(element) {
-        this.jsPlumbInstance.removeAllEndpoints(document.getElementById(element));
+        this.jsPlumbInstance.removeAllEndpoints(
+            document.getElementById(element),
+        );
     }
 
     registerEndpointTypes(typeInfo) {

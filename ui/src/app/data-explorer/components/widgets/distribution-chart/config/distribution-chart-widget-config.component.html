@@ -17,50 +17,85 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-  <h5>Distribution Plot Type</h5>
-  <mat-form-field class="marginColorField"
-                            color="accent"
-                            fxFlex="35">
-      <mat-select
-              [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType"
-              (selectionChange)="updateDisplayType($event.value)">
-          <mat-option [value]="'histogram'">Histogram</mat-option>
-          <mat-option [value]="'pie'">Pie</mat-option>
-          <mat-option [value]="'heatmap'">Value Heatmap</mat-option>
-      </mat-select>
-  </mat-form-field>  
-  
-  <h5>Field</h5>
-    <sp-select-property [availableProperties]="currentlyConfiguredWidget.visualizationConfig.displayType === 'heatmap' ? fieldProvider.numericFields : fieldProvider.allFields"
-                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedProperty"
-                        (changeSelectedProperty)="setSelectedProperty($event)">
+    <h5>Distribution Plot Type</h5>
+    <mat-form-field class="marginColorField" color="accent" fxFlex="35">
+        <mat-select
+            [(value)]="
+                currentlyConfiguredWidget.visualizationConfig.displayType
+            "
+            (selectionChange)="updateDisplayType($event.value)"
+        >
+            <mat-option [value]="'histogram'">Histogram</mat-option>
+            <mat-option [value]="'pie'">Pie</mat-option>
+            <mat-option [value]="'heatmap'">Value Heatmap</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <h5>Field</h5>
+    <sp-select-property
+        [availableProperties]="
+            currentlyConfiguredWidget.visualizationConfig.displayType ===
+            'heatmap'
+                ? fieldProvider.numericFields
+                : fieldProvider.allFields
+        "
+        [selectedProperty]="
+            currentlyConfiguredWidget.visualizationConfig.selectedProperty
+        "
+        (changeSelectedProperty)="setSelectedProperty($event)"
+    >
     </sp-select-property>
 
-  <h5 *ngIf="currentlyConfiguredWidget.visualizationConfig.displayType === 'pie' 
-              && currentlyConfiguredWidget.visualizationConfig.selectedProperty.fieldCharacteristics.numeric">Rounding</h5>
-  <mat-form-field class="marginColorField"
-                            color="accent"
-                            fxFlex="35"
-                            *ngIf="currentlyConfiguredWidget.visualizationConfig.displayType === 'pie'
-                                     && currentlyConfiguredWidget.visualizationConfig.selectedProperty.fieldCharacteristics.numeric">
-      <mat-select
-              [(value)]="currentlyConfiguredWidget.visualizationConfig.roundingValue"
-              (selectionChange)="updateRoundingValue($event.value)">
-          <mat-option [value]="100">100</mat-option>
-          <mat-option [value]="10">10</mat-option>
-          <mat-option [value]="1">1</mat-option>
-          <mat-option [value]="0.1">0.1</mat-option>
-          <mat-option [value]="0.01">0.01</mat-option>
-      </mat-select>
-  </mat-form-field>
+    <h5
+        *ngIf="
+            currentlyConfiguredWidget.visualizationConfig.displayType ===
+                'pie' &&
+            currentlyConfiguredWidget.visualizationConfig.selectedProperty
+                .fieldCharacteristics.numeric
+        "
+    >
+        Rounding
+    </h5>
+    <mat-form-field
+        class="marginColorField"
+        color="accent"
+        fxFlex="35"
+        *ngIf="
+            currentlyConfiguredWidget.visualizationConfig.displayType ===
+                'pie' &&
+            currentlyConfiguredWidget.visualizationConfig.selectedProperty
+                .fieldCharacteristics.numeric
+        "
+    >
+        <mat-select
+            [(value)]="
+                currentlyConfiguredWidget.visualizationConfig.roundingValue
+            "
+            (selectionChange)="updateRoundingValue($event.value)"
+        >
+            <mat-option [value]="100">100</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="0.1">0.1</mat-option>
+            <mat-option [value]="0.01">0.01</mat-option>
+        </mat-select>
+    </mat-form-field>
 
-    <div *ngIf="currentlyConfiguredWidget.visualizationConfig.displayType === 'heatmap'">
+    <div
+        *ngIf="
+            currentlyConfiguredWidget.visualizationConfig.displayType ===
+            'heatmap'
+        "
+    >
         <mat-form-field fxFlex="100" color="accent">
-            <mat-label>
-                <span>Resolution</span></mat-label>
-            <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.resolution" matInput (input)="onResolutionChange($event.target.value)">
+            <mat-label> <span>Resolution</span></mat-label>
+            <input
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig.resolution
+                "
+                matInput
+                (input)="onResolutionChange($event.target.value)"
+            />
         </mat-form-field>
     </div>
-
 </div>
-

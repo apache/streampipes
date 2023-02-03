@@ -51,6 +51,7 @@ describe('Connect value rule transformations', () => {
             adapterConfiguration,
             'cypress/fixtures/connect/valueRules/expected.csv',
             false,
+            2000,
         );
     });
 });

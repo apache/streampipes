@@ -29,8 +29,6 @@ public class DbDataTypeFactory {
     switch (sqlEngine) {
       case MY_SQL:
         return DbDataTypes.INT;
-      case IOT_DB:
-        return DbDataTypes.INT32;
       case POSTGRESQL:
         return DbDataTypes.INTEGER;
     }
@@ -40,8 +38,6 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getLong(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case IOT_DB:
-        return DbDataTypes.INT64;
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.BIGINT;
@@ -52,7 +48,6 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getFloat(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case IOT_DB:
       case MY_SQL:
         return DbDataTypes.FLOAT;
       case POSTGRESQL:
@@ -63,8 +58,6 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getDouble(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case IOT_DB:
-        return DbDataTypes.DOUBLE;
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.DOUBLE_PRECISION;
@@ -74,8 +67,6 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getShortString(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case IOT_DB:
-        return DbDataTypes.TEXT;
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.VAR_CHAR;
@@ -85,7 +76,6 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getLongString(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case IOT_DB:
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.TEXT;
@@ -95,7 +85,6 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getBoolean(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case IOT_DB:
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.BOOLEAN;
@@ -108,8 +97,6 @@ public class DbDataTypeFactory {
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.TIMESTAMP;
-      case IOT_DB:
-        return getLong(sqlEngine);
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support timestamps.");
   }
@@ -119,7 +106,6 @@ public class DbDataTypeFactory {
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.DATE;
-      case IOT_DB:
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support dates.");
   }
@@ -129,7 +115,6 @@ public class DbDataTypeFactory {
       case MY_SQL:
       case POSTGRESQL:
         return DbDataTypes.TIME;
-      case IOT_DB:
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support time.");
   }
@@ -138,7 +123,6 @@ public class DbDataTypeFactory {
     switch (sqlEngine) {
       case MY_SQL:
         return DbDataTypes.DATETIME;
-      case IOT_DB:
       case POSTGRESQL:
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support datetime.");
@@ -189,17 +173,14 @@ public class DbDataTypeFactory {
   public static Datatypes getDataType(DbDataTypes dbDataType) throws SpRuntimeException {
 
     switch (dbDataType) {
-      case BOOL:
       case BOOLEAN:
         return Datatypes.Boolean;
       case TEXT:
       case VAR_CHAR:
-      case STRING:
       case TIMESTAMP:
       case DATE:
       case TIME:
         return Datatypes.String;
-      case DOUBLE:
       case DOUBLE_PRECISION:
         return Datatypes.Double;
       case FLOAT:
@@ -208,10 +189,8 @@ public class DbDataTypeFactory {
         return Datatypes.Float;
       case BIGINT:
       case TINYINT:
-      case INT64:
         return Datatypes.Long;
       case INT:
-      case INT32:
       case INTEGER:
         return Datatypes.Integer;
       default:

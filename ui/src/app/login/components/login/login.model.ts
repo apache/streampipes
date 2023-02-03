@@ -17,6 +17,6 @@
  */
 
 export interface LoginModel {
-  allowSelfRegistration: boolean;
-  allowPasswordRecovery: boolean;
+    allowSelfRegistration: boolean;
+    allowPasswordRecovery: boolean;
 }

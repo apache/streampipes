@@ -23,14 +23,19 @@
     <div fxLayout="column" fxFlex="100">
         <div fxLayout="column" class="mt-10">
             <div>
-                <h5 *ngIf="!activationPerformed">Verifying account activation...</h5>
-                <h5 *ngIf="activationPerformed && activationSuccess">Account successfully activated.</h5>
-                <h5 *ngIf="activationPerformed && !activationSuccess">Your account could not be activated.</h5>
+                <h5 *ngIf="!activationPerformed">
+                    Verifying account activation...
+                </h5>
+                <h5 *ngIf="activationPerformed && activationSuccess">
+                    Account successfully activated.
+                </h5>
+                <h5 *ngIf="activationPerformed && !activationSuccess">
+                    Your account could not be activated.
+                </h5>
             </div>
             <div>
                 <a [routerLink]="['/login']">Go to login page</a>
             </div>
         </div>
     </div>
-
 </sp-auth-box>

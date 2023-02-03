@@ -34,11 +34,12 @@ describe('Test InfluxDB Integration', () => {
         const sink: PipelineElementInput = PipelineElementBuilder.create(
             'influxdb',
         )
-            .addInput('input', 'db_host', 'http://' + host)
+            .addInput('input', 'db_host', host)
+            .addInput('input', 'db_port', '8086')
             .addInput('input', 'db_name', 'sp')
             .addInput('input', 'db_measurement', dbName)
-            .addInput('input', 'db_user', 'sp')
-            .addInput('input', 'db_password', 'default')
+            .addInput('select', 'db_authentication-token', 'check')
+            .addInput('input', 'undefined-db_token-0', 'sp-admin')
             .addInput('input', 'batch_interval_actions', '2')
             .addInput(
                 'input',
@@ -50,12 +51,12 @@ describe('Test InfluxDB Integration', () => {
 
         const adapter = SpecificAdapterBuilder.create('InfluxDB_Stream_Adapter')
             .setName('InfluxDB Adapter')
-            .addInput('input', 'influxDbHost', 'http://' + host)
-            .addInput('input', 'influxDbPort', '8086')
-            .addInput('input', 'influxDbDatabase', 'sp')
-            .addInput('input', 'influxDbMeasurement', dbName)
-            .addInput('input', 'influxDbUsername', 'sp')
-            .addInput('input', 'influxDbPassword', 'default')
+            .addInput('input', 'db_host', host)
+            .addInput('input', 'db_port', '8086')
+            .addInput('input', 'db_name', 'sp')
+            .addInput('input', 'db_measurement', dbName)
+            .addInput('select', 'db_authentication-token', 'check')
+            .addInput('input', 'undefined-db_token-0', 'sp-admin')
             .addInput('input', 'pollingInterval', '200')
             .build();
 

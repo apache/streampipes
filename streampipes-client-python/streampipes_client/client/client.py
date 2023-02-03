@@ -29,7 +29,7 @@ from typing import Dict, Optional
 
 from requests import Session
 from streampipes_client.client.client_config import StreamPipesClientConfig
-from streampipes_client.endpoint import DataLakeMeasureEndpoint, DataStreamEndpoint
+from streampipes_client.endpoint.api import DataLakeMeasureEndpoint, DataStreamEndpoint
 from streampipes_client.endpoint.endpoint import APIEndpoint
 
 logger = logging.getLogger(__name__)

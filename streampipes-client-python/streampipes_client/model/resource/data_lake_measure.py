@@ -45,6 +45,7 @@ class DataLakeMeasure(Resource):
             "num_event_properties": len(self.event_schema.event_properties),
         }
 
+    element_id: Optional[StrictStr]
     measure_name: StrictStr
     timestamp_field: StrictStr
     event_schema: Optional[EventSchema]

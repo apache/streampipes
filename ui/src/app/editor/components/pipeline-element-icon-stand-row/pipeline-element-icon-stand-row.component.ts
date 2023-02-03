@@ -16,46 +16,47 @@
  *
  */
 
-import { Component, Input, OnInit, } from '@angular/core';
-import { PipelineElementType, PipelineElementUnion } from '../../model/editor.model';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+    PipelineElementType,
+    PipelineElementUnion,
+} from '../../model/editor.model';
 import { PipelineElementTypeUtils } from '../../utils/editor.utils';
 import { EditorService } from '../../services/editor.service';
 
-
 @Component({
-  selector: 'sp-pe-icon-stand-row',
-  templateUrl: './pipeline-element-icon-stand-row.component.html',
-  styleUrls: ['./pipeline-element-icon-stand-row.component.scss']
+    selector: 'sp-pe-icon-stand-row',
+    templateUrl: './pipeline-element-icon-stand-row.component.html',
+    styleUrls: ['./pipeline-element-icon-stand-row.component.scss'],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
+    @Input()
+    element: PipelineElementUnion;
 
-  @Input()
-  element: PipelineElementUnion;
+    activeCssClass: string;
+    cypressName: string;
 
-  activeCssClass: string;
-  cypressName: string;
+    currentMouseOver = false;
 
-  currentMouseOver = false;
+    constructor(private editorService: EditorService) {}
 
-  constructor(private editorService: EditorService) {
+    ngOnInit(): void {
+        const activeType = PipelineElementTypeUtils.fromClassName(
+            this.element['@class'],
+        );
+        this.activeCssClass = this.makeActiveCssClass(activeType);
+        this.cypressName = this.element.name.toLowerCase().replace(' ', '_');
+    }
 
-  }
+    makeActiveCssClass(elementType: PipelineElementType): string {
+        return PipelineElementTypeUtils.toCssShortHand(elementType);
+    }
 
-  ngOnInit(): void {
-    const activeType = PipelineElementTypeUtils.fromClassName(this.element['@class']);
-    this.activeCssClass = this.makeActiveCssClass(activeType);
-    this.cypressName = this.element.name.toLowerCase().replace(' ', '_');
-  }
+    updateMouseOver(e: string) {
+        this.currentMouseOver = !this.currentMouseOver;
+    }
 
-  makeActiveCssClass(elementType: PipelineElementType): string {
-    return PipelineElementTypeUtils.toCssShortHand(elementType);
-  }
-
-  updateMouseOver(e: string) {
-    this.currentMouseOver = !this.currentMouseOver;
-  }
-
-  openHelpDialog(pipelineElement) {
-    this.editorService.openHelpDialog(pipelineElement);
-  }
+    openHelpDialog(pipelineElement) {
+        this.editorService.openHelpDialog(pipelineElement);
+    }
 }

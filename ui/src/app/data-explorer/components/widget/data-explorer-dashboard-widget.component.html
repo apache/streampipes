@@ -17,83 +17,149 @@
   -->
 
 <div class="h-100">
-  <div class="box"
-       [ngStyle]="{background: configuredWidget.baseAppearanceConfig.backgroundColor,
-         color: configuredWidget.baseAppearanceConfig.textColor,
-         height: (gridsterItemComponent.height - 13) + 'px',
-         border: editMode && currentlyConfiguredWidgetId === configuredWidget._id ? '4px solid var(--color-accent)' : '2px solid ' + configuredWidget.baseAppearanceConfig.backgroundColor}"
-       [attr.data-cy]="'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle">
-    <div class="widget-header h-40" *ngIf="!previewMode">
-      <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="widget-header-text">
-        {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
-      </div>
-      <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-        <mat-spinner [diameter]="20" color="primary" class="mr-10" *ngIf="timerActive">
-        </mat-spinner>
-        <div class="time-counter"
-             *ngIf="editMode"
-             [ngStyle]="{background: configuredWidget.baseAppearanceConfig.textColor, color: configuredWidget.baseAppearanceConfig.backgroundColor}">
-          {{loadingTime}}s
+    <div
+        class="box"
+        [ngStyle]="{
+            background: configuredWidget.baseAppearanceConfig.backgroundColor,
+            color: configuredWidget.baseAppearanceConfig.textColor,
+            height: gridsterItemComponent.height - 13 + 'px',
+            border:
+                editMode && currentlyConfiguredWidgetId === configuredWidget._id
+                    ? '4px solid var(--color-accent)'
+                    : '2px solid ' +
+                      configuredWidget.baseAppearanceConfig.backgroundColor
+        }"
+        [attr.data-cy]="
+            'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
+        "
+    >
+        <div class="widget-header h-40" *ngIf="!previewMode">
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="widget-header-text"
+            >
+                {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
+            </div>
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                <mat-spinner
+                    [diameter]="20"
+                    color="primary"
+                    class="mr-10"
+                    *ngIf="timerActive"
+                >
+                </mat-spinner>
+                <div
+                    class="time-counter"
+                    *ngIf="editMode"
+                    [ngStyle]="{
+                        background:
+                            configuredWidget.baseAppearanceConfig.textColor,
+                        color: configuredWidget.baseAppearanceConfig
+                            .backgroundColor
+                    }"
+                >
+                    {{ loadingTime }}s
+                </div>
+                <button
+                    mat-button
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    aria-label="More options"
+                    matTooltip="More options"
+                    *ngIf="!editMode"
+                    [attr.data-cy]="
+                        'more-options-' +
+                        configuredWidget.baseAppearanceConfig.widgetTitle
+                    "
+                >
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="downloadDataAsFile()">
+                        <mat-icon>get_app</mat-icon>
+                        <span>Download data</span>
+                    </button>
+                    <button
+                        mat-menu-item
+                        (click)="startEditMode()"
+                        *ngIf="hasDataExplorerWritePrivileges"
+                        [attr.data-cy]="
+                            'start-edit-' +
+                            configuredWidget.baseAppearanceConfig.widgetTitle
+                        "
+                    >
+                        <mat-icon>edit</mat-icon>
+                        <span>Edit Widget</span>
+                    </button>
+                </mat-menu>
+                <button
+                    mat-button
+                    mat-icon-button
+                    *ngIf="editMode"
+                    (click)="downloadDataAsFile()"
+                    [attr.data-cy]="
+                        'download-' +
+                        configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
+                            ' ',
+                            ''
+                        )
+                    "
+                >
+                    <mat-icon>get_app</mat-icon>
+                </button>
+                <button
+                    mat-button
+                    mat-icon-button
+                    [class.mat-raised-button]="
+                        currentlyConfiguredWidgetId === configuredWidget._id
+                    "
+                    (click)="triggerWidgetEditMode()"
+                    *ngIf="editMode"
+                    [color]="
+                        currentlyConfiguredWidgetId === configuredWidget._id
+                            ? 'accent'
+                            : ''
+                    "
+                    matTooltip="Edit widget"
+                    [attr.data-cy]="
+                        'edit-' +
+                        configuredWidget.baseAppearanceConfig.widgetTitle
+                    "
+                >
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                    mat-button
+                    mat-icon-button
+                    (click)="removeWidget()"
+                    matTooltip="Delete widget"
+                    *ngIf="editMode && hasDataExplorerWritePrivileges"
+                    [attr.data-cy]="
+                        'remove-' +
+                        configuredWidget.baseAppearanceConfig.widgetTitle
+                    "
+                >
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
         </div>
-        <button mat-button
-                mat-icon-button
-                [matMenuTriggerFor]="menu"
-                aria-label="More options"
-                matTooltip="More options"
-                *ngIf="!editMode"
-                [attr.data-cy]="'more-options-' + configuredWidget.baseAppearanceConfig.widgetTitle">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item
-                  (click)="downloadDataAsFile()">
-            <mat-icon>get_app</mat-icon>
-            <span>Download data</span>
-          </button>
-          <button mat-menu-item
-                  (click)="startEditMode()"
-                  *ngIf="hasDataExplorerWritePrivileges"
-                  [attr.data-cy]="'start-edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
-            <mat-icon>edit</mat-icon>
-            <span>Edit Widget</span>
-          </button>
-        </mat-menu>
-        <button mat-button
-                mat-icon-button
-                *ngIf="editMode"
-                (click)="downloadDataAsFile()"
-                [attr.data-cy]="'download-' + configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')">
-          <mat-icon>get_app</mat-icon>
-        </button>
-        <button mat-button
-                mat-icon-button
-                [class.mat-raised-button]="currentlyConfiguredWidgetId === configuredWidget._id"
-                (click)="triggerWidgetEditMode()"
-                *ngIf="editMode"
-                [color]="currentlyConfiguredWidgetId === configuredWidget._id ? 'accent' : ''"
-                matTooltip="Edit widget"
-                [attr.data-cy]="'edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-button
-                mat-icon-button
-                (click)="removeWidget()"
-                matTooltip="Delete widget"
-                *ngIf="editMode && hasDataExplorerWritePrivileges"
-                [attr.data-cy]="'remove-' + configuredWidget.baseAppearanceConfig.widgetTitle">
-          <mat-icon>clear</mat-icon>
-        </button>
-      </div>
+        <div
+            class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100 mw-100"
+        >
+            <ng-template spWidgetHost class="h-100 p-0"></ng-template>
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                *ngIf="errorMessage"
+            >
+                <sp-exception-message
+                    [message]="errorMessage"
+                    [showDetails]="true"
+                ></sp-exception-message>
+            </div>
+        </div>
     </div>
-    <div class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100 mw-100">
-      <ng-template widgetHost class="h-100 p-0"></ng-template>
-      <div fxFlex="100"
-           fxLayout="column"
-           fxLayoutAlign="center center"
-           *ngIf="errorMessage">
-        <sp-exception-message [message]="errorMessage"
-                              [showDetails]="true"></sp-exception-message>
-      </div>
-    </div>
-  </div>
 </div>

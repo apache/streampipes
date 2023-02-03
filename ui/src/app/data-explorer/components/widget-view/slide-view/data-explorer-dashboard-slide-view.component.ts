@@ -16,97 +16,98 @@
  *
  */
 
-import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    SimpleChanges,
+    ViewChild,
+} from '@angular/core';
 import { AbstractWidgetViewDirective } from '../abstract-widget-view.directive';
 import { ResizeService } from '../../../services/resize.service';
 import {
-  DashboardItem,
-  DataExplorerWidgetModel,
-  DataLakeMeasure,
-  DataViewDataExplorerService
+    DashboardItem,
+    DataExplorerWidgetModel,
+    DataLakeMeasure,
+    DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-data-explorer-dashboard-slide-view',
-  templateUrl: './data-explorer-dashboard-slide-view.component.html',
-  styleUrls: ['./data-explorer-dashboard-slide-view.component.scss']
+    selector: 'sp-data-explorer-dashboard-slide-view',
+    templateUrl: './data-explorer-dashboard-slide-view.component.html',
+    styleUrls: ['./data-explorer-dashboard-slide-view.component.scss'],
 })
-export class DataExplorerDashboardSlideViewComponent extends AbstractWidgetViewDirective implements OnInit, AfterViewInit, OnChanges {
+export class DataExplorerDashboardSlideViewComponent
+    extends AbstractWidgetViewDirective
+    implements AfterViewInit
+{
+    selectedWidgetIndex = 0;
 
-  selectedWidgetIndex = 0;
+    gridsterItemComponent: any = { width: 100, height: 100 };
+    previewGridsterItemComponent: any = { width: 200, height: 100 };
 
-  gridsterItemComponent: any = {width: 100, height: 100};
-  previewGridsterItemComponent: any = {width: 200, height: 100};
+    currentWidget: DataExplorerWidgetModel;
+    currentMeasure: DataLakeMeasure;
+    currentDashboardItem: DashboardItem;
 
-  currentWidget: DataExplorerWidgetModel;
-  currentMeasure: DataLakeMeasure;
-  currentDashboardItem: DashboardItem;
+    displayWidget = false;
 
-  displayWidget = false;
+    @ViewChild('slideViewOuter') slideViewOuter: ElementRef;
 
-  @ViewChild('slideViewOuter') slideViewOuter: ElementRef;
+    constructor(
+        protected resizeService: ResizeService,
+        protected dataViewDataExplorerService: DataViewDataExplorerService,
+    ) {
+        super(resizeService, dataViewDataExplorerService);
+    }
 
-  constructor(protected resizeService: ResizeService,
-              protected dataViewDataExplorerService: DataViewDataExplorerService) {
-    super(resizeService, dataViewDataExplorerService);
-  }
+    selectWidget(index: number, widgetId: string): void {
+        this.displayWidget = false;
+        setTimeout(() => {
+            this.selectedWidgetIndex = index;
+            this.currentWidget = this.configuredWidgets.get(widgetId);
+            this.currentMeasure = this.dataLakeMeasures.get(widgetId);
+            this.currentDashboardItem = this.dashboard.widgets[
+                index
+            ] as unknown as DashboardItem;
+            this.currentlyConfiguredWidgetId = widgetId;
 
-  ngOnChanges(changes: SimpleChanges): void {
-  }
+            // Opens the design panel for the current widget when in edit mode
+            if (this.editMode) {
+                this.startEditModeEmitter.emit(this.currentWidget);
+            }
 
-  ngOnInit(): void {
-  }
-
-
-  onOptionsChanged(): void {
-  }
-
-  selectWidget(index: number,
-               widgetId: string): void {
-    this.displayWidget = false;
-    setTimeout(() => {
-      this.selectedWidgetIndex = index;
-      this.currentWidget = this.configuredWidgets.get(widgetId);
-      this.currentMeasure = this.dataLakeMeasures.get(widgetId);
-      this.currentDashboardItem = this.dashboard.widgets[index] as unknown as DashboardItem;
-      this.currentlyConfiguredWidgetId = widgetId;
-
-      // Opens the design panel for the current widget when in edit mode 
-      if (this.editMode) {
-        this.startEditModeEmitter.emit(this.currentWidget);
-      }
-
-      this.displayWidget = true;
-    });
-
-  }
-
-  ngAfterViewInit(): void {
-    const obs = new ResizeObserver(entries => {
-      entries.forEach(entry => {
-        const cr = entry.contentRect;
-        this.gridsterItemComponent.width = cr.width;
-        this.gridsterItemComponent.height = cr.height;
-        this.resizeService.notify({
-          gridsterItem: this.dashboard.widgets[this.selectedWidgetIndex],
-          gridsterItemComponent: this.gridsterItemComponent
+            this.displayWidget = true;
         });
-      });
-    });
-    obs.observe(document.getElementById('slideViewOuter'));
+    }
 
-  }
+    ngAfterViewInit(): void {
+        const obs = new ResizeObserver(entries => {
+            entries.forEach(entry => {
+                const cr = entry.contentRect;
+                this.gridsterItemComponent.width = cr.width;
+                this.gridsterItemComponent.height = cr.height;
+                this.resizeService.notify({
+                    gridsterItem:
+                        this.dashboard.widgets[this.selectedWidgetIndex],
+                    gridsterItemComponent: this.gridsterItemComponent,
+                });
+            });
+        });
+        obs.observe(document.getElementById('slideViewOuter'));
+    }
 
-  onWidgetsAvailable(): void {
-    this.selectWidget(0, this.dashboard.widgets[0].id);
-  }
+    onOptionsChanged() {}
 
-  isGridView(): boolean {
-    return false;
-  }
+    onWidgetsAvailable(): void {
+        this.selectWidget(0, this.dashboard.widgets[0].id);
+    }
 
-  selectNewWidget(widgetId): void {
-    this.selectWidget(this.dashboard.widgets.length - 1, widgetId);
-  }
+    isGridView(): boolean {
+        return false;
+    }
 
+    selectNewWidget(widgetId): void {
+        this.selectWidget(this.dashboard.widgets.length - 1, widgetId);
+    }
 }

@@ -16,11 +16,24 @@
   ~
   -->
 
-<div class="status-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    class="status-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
     <div class="value-panel">
-        <div [ngStyle]="{width: statusLightWidth, height: statusLightHeight}" [ngClass]="active ? 'status-light status-light-green' : 'status-light status-light-red'"></div>
+        <div
+            [ngStyle]="{ width: statusLightWidth, height: statusLightHeight }"
+            [ngClass]="
+                active
+                    ? 'status-light status-light-green'
+                    : 'status-light status-light-red'
+            "
+        ></div>
     </div>
 </div>

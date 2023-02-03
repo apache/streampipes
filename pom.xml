@@ -77,7 +77,6 @@
 	<jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
 	<javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
 	<javax-websocket-api.version>1.1</javax-websocket-api.version>
-	<javapoet.version>1.6.1</javapoet.version>
 	<jakarta-json.version>2.0.1</jakarta-json.version>
 	<jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
 	<jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
@@ -90,7 +89,7 @@
 	<jetty.version>10.0.10</jetty.version>
 	<jgrapht.version>1.5.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
-	<jna.version>5.8.0</jna.version>
+	<jna.version>5.13.0</jna.version>
 	<json-path.version>5.3.0</json-path.version>
 	<json-smart.version>2.4.8</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
@@ -98,7 +97,7 @@
 	<kotlin-stdlib.version>1.8.0</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
 	<log4j.version>2.19.0</log4j.version>
-	<lz4.version>1.7.1</lz4.version>
+	<lz4.version>1.8.0</lz4.version>
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
 	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
@@ -117,7 +116,7 @@
 	<retrofit.version>2.5.0</retrofit.version>
 	<roaster.version>2.28.0.Final</roaster.version>
 	<siddhi.version>5.1.27</siddhi.version>
-	<simple-java-mail.version>7.6.0</simple-java-mail.version>
+	<simple-java-mail.version>7.8.0</simple-java-mail.version>
 	<slf4j.version>2.0.6</slf4j.version>
 	<snakeyaml.version>1.32</snakeyaml.version>
 	<snappy-java.version>1.1.7.7</snappy-java.version>
@@ -147,7 +146,7 @@
 	<amqp-client.version>5.16.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
 	<boofcv.version>0.33</boofcv.version>
-	<bcprov.version>1.66</bcprov.version>
+	<bcprov.version>1.70</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
 	<checker-qual.version>3.28.0</checker-qual.version>
@@ -160,8 +159,7 @@
 	<ddogleg.version>0.16</ddogleg.version>
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
 	<google-maps-services.version>0.10.0</google-maps-services.version>
-	<graalvm.js.version>21.3.0</graalvm.js.version>
-	<iotdb.version>1.0.0</iotdb.version>
+	<graalvm.js.version>22.3.1</graalvm.js.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
 	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
@@ -188,6 +186,7 @@
 	<snakeyaml.version>1.26</snakeyaml.version>
 	<xerces.version>2.12.2</xerces.version>
 	<zstd-jni.version>1.4.3-1</zstd-jni.version>
+	<inlong.version>1.5.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 	<maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -195,30 +194,28 @@
 	<!-- Connect Dependencies-->
 	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
 	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
-	<bcprov.version>1.68</bcprov.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<commons-text.version>1.8</commons-text.version>
 	<guice.version>5.1.0</guice.version>
-	<jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
 	<opencsv.version>5.5.2</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
-	<proton-j.version>0.30.0</proton-j.version>
+	<proton-j.version>0.34.0</proton-j.version>
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
 	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-	<checkstyle.version>9.2.1</checkstyle.version>
+	<checkstyle.version>10.6.0</checkstyle.version>
 	<extra-enforcer-rules.version>1.6.1</extra-enforcer-rules.version>
 	<formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
 	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
 	<maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
 	<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 	<maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
-	<maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
+	<maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
 	<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
 	<mave-release-plugin.version>3.0.0-M5</mave-release-plugin.version>
 	<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
@@ -373,11 +370,6 @@
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
 					<version>${commons-logging.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.squareup</groupId>
-					<artifactId>javapoet</artifactId>
-					<version>${javapoet.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>de.grundid.opendatalab</groupId>
@@ -1105,11 +1097,6 @@
 				</dependency>
 				<dependency>
 					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk14</artifactId>
-					<version>${bcprov.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
 					<artifactId>bcprov-jdk15on</artifactId>
 					<version>${bcprov.version}</version>
 				</dependency>
@@ -1153,11 +1140,6 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>${jcl-over-slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
@@ -1299,17 +1281,6 @@
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.iotdb</groupId>
-                <artifactId>iotdb-jdbc</artifactId>
-                <version>${iotdb.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.opennlp</groupId>
                 <artifactId>opennlp-tools</artifactId>
                 <version>${opennlp.version}</version>
@@ -1385,6 +1356,11 @@
                 <artifactId>quartz</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.inlong</groupId>
+                <artifactId>tubemq-client</artifactId>
+                <version>${inlong.version}</version>
+            </dependency>
 				     <!-- Geo dependencies -->
 				    <dependency>
 							<!-- https://mvnrepository.com/artifact/org.locationtech.jts/jts-core -->
@@ -1452,7 +1428,6 @@
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
-        <module>streampipes-performance-tests</module>
         <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>
@@ -1487,6 +1462,7 @@
         <module>streampipes-messaging-nats</module>
         <module>streampipes-integration-tests</module>
 		<module>streampipes-rest-extensions</module>
+        <module>streampipes-extensions/streampipes-connectors-influx</module>
     </modules>
 
     <profiles>

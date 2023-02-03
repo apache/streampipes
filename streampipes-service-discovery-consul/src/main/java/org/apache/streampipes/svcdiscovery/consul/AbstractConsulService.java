@@ -17,17 +17,19 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
-import com.orbitz.consul.Consul;
+import org.apache.streampipes.commons.environment.Environment;
+
+import com.ecwid.consul.v1.ConsulClient;
 
 public abstract class AbstractConsulService {
 
-  protected ConsulHealthServiceManager consul;
+  private final Environment environment;
 
-  public AbstractConsulService() {
-    this.consul = ConsulHealthServiceManager.INSTANCE;
+  public AbstractConsulService(Environment environment) {
+    this.environment = environment;
   }
 
-  public Consul consulInstance() {
-    return this.consul.consulInstance();
+  public ConsulClient consulInstance() {
+    return ConsulProvider.INSTANCE.getConsulInstance(environment);
   }
 }

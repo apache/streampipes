@@ -27,12 +27,15 @@
                 >Loading</mat-spinner
             >
         </div>
-        <div fxLayoutAlign="center">
+        <div
+            fxLayoutAlign="center"
+            data-cy="sp-connect-adapter-gathering-live-preview"
+        >
             <h3>Gathering data for live preview...</h3>
         </div>
     </div>
 </div>
-<div *ngIf="runtimeData" data-cy="sp-connect-adapter-live-preview">
+<div *ngIf="runtimeData" data-cy="sp-connect-adapter-success-live-preview">
     <p>Here is a preview of your data:</p>
     <table class="dataTable row-border hover">
         <thead>
