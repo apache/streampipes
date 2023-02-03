@@ -35,7 +35,6 @@ class TestStreamPipesApiKeyCredentials(TestCase):
         self.assertDictEqual(expected_extended, result_extended)
 
     def test_api_key_from_env(self):
-
         os.environ["USER"] = "user"
         os.environ["KEY"] = "api-key"
         credentials = StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="KEY")
@@ -44,6 +43,5 @@ class TestStreamPipesApiKeyCredentials(TestCase):
         self.assertEqual("api-key", credentials.api_key)
 
     def test_api_key_from_env_not_set(self):
-
         with self.assertRaises(KeyError):
             StreamPipesApiKeyCredentials.from_env(username_env="test", api_key_env="key")
