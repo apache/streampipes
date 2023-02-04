@@ -60,4 +60,37 @@ public interface Environment {
 
   StringEnvironmentVariable getCouchDbPassword();
 
+
+  // JWT & Authentication
+
+  StringEnvironmentVariable getClientUser();
+
+  StringEnvironmentVariable getClientSecret();
+
+  StringEnvironmentVariable getJwtSecret();
+
+  StringEnvironmentVariable getJwtPublicKeyLoc();
+
+  StringEnvironmentVariable getJwtPrivateKeyLoc();
+
+  StringEnvironmentVariable getJwtSigningMode();
+
+  StringEnvironmentVariable getExtensionsAuthMode();
+
+  StringEnvironmentVariable getEncryptionPasscode();
+
+  // Messaging
+  StringEnvironmentVariable getKafkaRetentionTimeMs();
+
+
+  // Setup
+  BooleanEnvironmentVariable getSetupInstallPipelineElements();
+
+  StringEnvironmentVariable getInitialServiceUserSecret();
+
+  StringEnvironmentVariable getInitialServiceUser();
+
+  StringEnvironmentVariable getInitialAdminEmail();
+
+  StringEnvironmentVariable getInitialAdminPassword();
 }

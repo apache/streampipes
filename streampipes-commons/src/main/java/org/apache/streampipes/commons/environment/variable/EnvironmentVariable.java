@@ -59,6 +59,14 @@ public abstract class EnvironmentVariable<T> {
     return resolver.resolve();
   }
 
+  public T getDefault() {
+    return this.defaultValue;
+  }
+
+  public String getEnvVariableName() {
+    return this.envVariableName;
+  }
+
   private boolean isDevModeActive() {
     return CustomEnvs.getEnvAsBoolean(Envs.SP_DEBUG.getEnvVariableName());
   }

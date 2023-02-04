@@ -29,7 +29,9 @@ public class DefaultEnvValues {
   public static final int CONSUL_PORT_DEFAULT = 8500;
 
   public static final int MAX_WAIT_TIME_AT_SHUTDOWN_DEFAULT = 10000;
-  public static final boolean INSTALL_PIPELINE_ELEMENTS = true;
+  public static final String INSTALL_PIPELINE_ELEMENTS = "true";
 
   public static final String DEFAULT_ENCRYPTION_PASSCODE = "eGgemyGBoILAu3xckoIp";
+
+  public static final String SP_KAFKA_RETENTION_MS_DEFAULT = "600000";
 }

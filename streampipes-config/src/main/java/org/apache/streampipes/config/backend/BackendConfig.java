@@ -19,7 +19,8 @@
 package org.apache.streampipes.config.backend;
 
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.random.TokenGenerator;
 import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.config.backend.model.GeneralConfig;
@@ -59,9 +60,6 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
     config.register(BackendConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Hostname for backend service for zookeeper");
     config.register(BackendConfigKeys.ZOOKEEPER_PORT, 2181, "Port for backend service for zookeeper");
-    config.register(BackendConfigKeys.ELASTICSEARCH_HOST, "elasticsearch", "Hostname for elasticsearch service");
-    config.register(BackendConfigKeys.ELASTICSEARCH_PORT, 9200, "Port for elasticsearch service");
-    config.register(BackendConfigKeys.ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
     config.register(BackendConfigKeys.IS_CONFIGURED, false,
         "Boolean that indicates whether streampipes is " + "already configured or not");
     config.register(BackendConfigKeys.IS_SETUP_RUNNING, false,
@@ -108,22 +106,6 @@ public enum BackendConfig {
         false, false, possibleCharacters, new SecureRandom());
   }
 
-  public String getBackendHost() {
-    return config.getString(BackendConfigKeys.BACKEND_HOST);
-  }
-
-  public int getBackendPort() {
-    return config.getInteger(BackendConfigKeys.BACKEND_PORT);
-  }
-
-  public String getBackendUrl() {
-    return "http://" + getBackendHost() + ":" + getBackendPort();
-  }
-
-  public String getBackendApiUrl() {
-    return getBackendUrl() + "/streampipes-backend/";
-  }
-
   public String getJmsHost() {
     return config.getString(BackendConfigKeys.JMS_HOST);
   }
@@ -156,10 +138,6 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.KAFKA_PORT);
   }
 
-  public String getKafkaUrl() {
-    return getKafkaHost() + ":" + getKafkaPort();
-  }
-
   public String getZookeeperHost() {
     return config.getString(BackendConfigKeys.ZOOKEEPER_HOST);
   }
@@ -189,56 +167,12 @@ public enum BackendConfig {
     config.setBoolean(BackendConfigKeys.IS_CONFIGURED, b);
   }
 
-  public String getElasticsearchHost() {
-    return config.getString(BackendConfigKeys.ELASTICSEARCH_HOST);
-  }
-
-  public int getElasticsearchPort() {
-    return config.getInteger(BackendConfigKeys.ELASTICSEARCH_PORT);
-  }
-
-  public String getElasticsearchProtocol() {
-    return config.getString(BackendConfigKeys.ELASTICSEARCH_PROTOCOL);
-  }
-
-  public String getKafkaRestHost() {
-    return config.getString(BackendConfigKeys.KAFKA_REST_HOST);
-  }
-
-  public Integer getKafkaRestPort() {
-    return config.getInteger(BackendConfigKeys.KAFKA_REST_PORT);
-  }
-
-  public String getKafkaRestUrl() {
-    return "http://" + getKafkaRestHost() + ":" + getKafkaRestPort();
-  }
-
   public String getAssetDir() {
     return config.getString(BackendConfigKeys.ASSETS_DIR);
   }
 
   public String getFilesDir() {
     return config.getString(BackendConfigKeys.FILES_DIR);
-  }
-
-  public String getDatalakeHost() {
-    return config.getString(BackendConfigKeys.DATA_LAKE_HOST);
-  }
-
-  public int getDatalakePort() {
-    return config.getInteger(BackendConfigKeys.DATA_LAKE_PORT);
-  }
-
-  public String getDataLakeUrl() {
-    return getDatalakeHost() + ":" + getDatalakePort();
-  }
-
-  public String getInfluxHost() {
-    return config.getString(BackendConfigKeys.INFLUX_HOST);
-  }
-
-  public int getInfluxPort() {
-    return config.getInteger(BackendConfigKeys.INFLUX_PORT);
   }
 
   public String getInfluxDatabaseName() {
@@ -270,24 +204,21 @@ public enum BackendConfig {
     config.setObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, authConfig);
   }
 
-  public boolean isSetupRunning() {
-    return config.getBoolean(BackendConfigKeys.IS_SETUP_RUNNING);
-  }
-
   public void updateSetupStatus(boolean status) {
     config.setBoolean(BackendConfigKeys.IS_SETUP_RUNNING, status);
   }
 
   private String getJwtSecret() {
-    if (Envs.SP_JWT_SECRET.exists()) {
-      return Envs.SP_JWT_SECRET.getValue();
-    } else {
-      return makeDefaultJwtSecret();
-    }
+    var env = getEnvironment();
+    return env.getJwtSecret().getValueOrResolve(this::makeDefaultJwtSecret);
   }
 
   private String makeDefaultJwtSecret() {
     return TokenGenerator.generateNewToken();
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 
 }
