@@ -41,11 +41,7 @@ spec:
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: SP_PRIORITIZED_PROTOCOL
-              {{ if (eq .Values.preferredBroker "nats") }}
-              value: "nats"
-              {{ else }}
-              value: "kafka"
-              {{ end }}
+              value: {{ .Values.preferredBroker }}
           ports:
             - containerPort: 8030
           volumeMounts:

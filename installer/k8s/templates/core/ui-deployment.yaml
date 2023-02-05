@@ -16,23 +16,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ui
+  name: {{ .Values.streampipes.ui.appName }}
 spec:
   selector:
     matchLabels:
-      app: ui
+      app: {{ .Values.streampipes.ui.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: ui
+        app: {{ .Values.streampipes.ui.appName }}
     spec:
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf # place ConfigMap `nginx-conf` on /etc/nginx
       containers:
-        - name: ui
+        - name: {{ .Values.streampipes.ui.appName }}
           image: {{ .Values.streampipes.registry }}/ui:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.streampipes.ui.port }}
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
         # This is necessary because a custom dns resolver is set in nginx default conf
         - name: dnsmasq
           image: fogsyio/go-dnsmasq:1.0.7

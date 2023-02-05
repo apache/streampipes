@@ -16,7 +16,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.streampipes.core.appName }}
+  name: {{ .Values.streampipes.core.svcName }}
 spec:
   selector:
     app: {{ .Values.streampipes.core.appName }}

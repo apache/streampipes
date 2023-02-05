@@ -25,6 +25,6 @@ spec:
         pathType: Prefix
         backend:
           service: 
-            name: ui
+            name: {{ .Values.streampipes.ui.appName }}
             port: 
-              number: 80
+              number: {{ .Values.streampipes.ui.port }}

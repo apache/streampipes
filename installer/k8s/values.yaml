@@ -25,10 +25,14 @@ streampipes:
   registry: "apachestreampipes"
   core:
     appName: "backend"
+    svcName: "backend"
     persistence:
       storageClassName: ""
       claimName: "backend-pvc"
       pvName: "backend-pv"
+  ui:
+    appName: "ui"
+    port: 8088
 
 external:
   consul:
