@@ -20,9 +20,9 @@ Implementation of a resource container for the data streams endpoint.
 """
 from typing import Type
 
-from streampipes_client.model.container.resource_container import ResourceContainer
-from streampipes_client.model.resource.data_stream import DataStream
-from streampipes_client.model.resource.resource import Resource
+from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.resource.data_stream import DataStream
+from streampipes.model.resource.resource import Resource
 
 __all__ = [
     "DataStreams",

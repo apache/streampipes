@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-from streampipes_client.client.credential_provider import CredentialProvider
+from streampipes.client.credential_provider import CredentialProvider
 
 
 @dataclass

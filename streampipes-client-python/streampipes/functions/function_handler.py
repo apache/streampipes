@@ -19,13 +19,13 @@ import json
 import logging
 from typing import AsyncIterator, Dict, List
 
-from streampipes_client.client.client import StreamPipesClient
-from streampipes_client.functions.broker import Broker, NatsBroker, SupportedBroker
-from streampipes_client.functions.registration import Registration
-from streampipes_client.functions.utils.async_iter_handler import AsyncIterHandler
-from streampipes_client.functions.utils.data_stream_context import DataStreamContext
-from streampipes_client.functions.utils.function_context import FunctionContext
-from streampipes_client.model.resource.data_stream import DataStream
+from streampipes.client.client import StreamPipesClient
+from streampipes.functions.broker import Broker, NatsBroker, SupportedBroker
+from streampipes.functions.registration import Registration
+from streampipes.functions.utils.async_iter_handler import AsyncIterHandler
+from streampipes.functions.utils.data_stream_context import DataStreamContext
+from streampipes.functions.utils.function_context import FunctionContext
+from streampipes.model.resource.data_stream import DataStream
 
 logger = logging.getLogger(__name__)
 

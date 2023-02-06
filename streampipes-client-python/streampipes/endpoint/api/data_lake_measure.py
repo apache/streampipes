@@ -21,10 +21,10 @@ This endpoint allows to consume data stored in StreamPipes' data lake
 """
 from typing import Tuple, Type
 
-from streampipes_client.endpoint.endpoint import APIEndpoint
-from streampipes_client.model.container import DataLakeMeasures
-from streampipes_client.model.container.resource_container import ResourceContainer
-from streampipes_client.model.resource import DataLakeSeries
+from streampipes.endpoint.endpoint import APIEndpoint
+from streampipes.model.container import DataLakeMeasures
+from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.resource import DataLakeSeries
 
 __all__ = [
     "DataLakeMeasureEndpoint",
@@ -49,9 +49,9 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     Examples
     --------
 
-    >>> from streampipes_client.client import StreamPipesClient
-    >>> from streampipes_client.client.client_config import StreamPipesClientConfig
-    >>> from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
+    >>> from streampipes.client import StreamPipesClient
+    >>> from streampipes.client.client_config import StreamPipesClientConfig
+    >>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
     >>> client_config = StreamPipesClientConfig(
     ...     credential_provider=StreamPipesApiKeyCredentials(username="test-user", api_key="api-key"),

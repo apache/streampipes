@@ -34,10 +34,10 @@ __all__ = [
     "MessagingEndpoint",
 ]
 
-from streampipes_client.endpoint.exceptions import MessagingEndpointNotConfiguredError
-from streampipes_client.functions.broker.broker import Broker
-from streampipes_client.model.container.resource_container import ResourceContainer
-from streampipes_client.model.resource.resource import Resource
+from streampipes.endpoint.exceptions import MessagingEndpointNotConfiguredError
+from streampipes.functions.broker.broker import Broker
+from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.resource.resource import Resource
 
 logger = logging.getLogger(__name__)
 

@@ -16,7 +16,7 @@
 #
 from typing import List
 
-from streampipes_client.functions.streampipes_function import StreamPipesFunction
+from streampipes.functions.streampipes_function import StreamPipesFunction
 
 
 class Registration:

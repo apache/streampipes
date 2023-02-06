@@ -17,14 +17,14 @@
 from typing import List, Optional
 
 from pydantic import StrictBool, StrictInt, StrictStr
-from streampipes_client.model.common import (
+from streampipes.model.common import (
     ApplicationLink,
     EventGrounding,
     EventSchema,
     MeasurementCapability,
     MeasurementObject,
 )
-from streampipes_client.model.resource.resource import Resource
+from streampipes.model.resource.resource import Resource
 
 __all__ = [
     "DataStream",

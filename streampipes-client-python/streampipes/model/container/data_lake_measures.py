@@ -20,9 +20,9 @@ Implementation of a resource container for the data lake measures endpoint.
 """
 from typing import Type
 
-from streampipes_client.model.container.resource_container import ResourceContainer
-from streampipes_client.model.resource.data_lake_measure import DataLakeMeasure
-from streampipes_client.model.resource.resource import Resource
+from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.resource.data_lake_measure import DataLakeMeasure
+from streampipes.model.resource.resource import Resource
 
 __all__ = [
     "DataLakeMeasures",

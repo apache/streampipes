@@ -18,10 +18,10 @@ import json
 from unittest import TestCase
 from unittest.mock import MagicMock, call, patch
 
-from streampipes_client.client import StreamPipesClient
-from streampipes_client.client.client_config import StreamPipesClientConfig
-from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes_client.model.resource.data_lake_series import (
+from streampipes.client import StreamPipesClient
+from streampipes.client.config import StreamPipesClientConfig
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.model.resource.data_lake_series import (
     StreamPipesUnsupportedDataLakeSeries,
 )
 
@@ -100,7 +100,7 @@ class TestDataLakeSeries(TestCase):
             "allDataSeries": [],
         }
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_to_pandas(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = json.dumps(self.series_regular)
@@ -138,7 +138,7 @@ class TestDataLakeSeries(TestCase):
         )
         self.assertEqual(73.37740325927734, result_pd["level"][0])
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_to_pandas_unsupported_series(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = json.dumps(self.series_missing)

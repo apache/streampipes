@@ -24,7 +24,7 @@ doc:
 
 .PHONY: lint
 lint:
-	flake8 streampipes_client --max-line-length 120
+	flake8 streampipes --max-line-length 120
 
 .PHONY: livedoc
 livedoc: doc
@@ -32,7 +32,7 @@ livedoc: doc
 
 .PHONY: mypy
 mypy:
-	mypy streampipes_client --warn-unused-ignores --warn-redundant-casts --pretty
+	mypy streampipes --warn-unused-ignores --warn-redundant-casts --pretty
 
 .PHONY: rebase
 rebase:
@@ -41,14 +41,14 @@ rebase:
 .PHONY: reformat-all
 reformat-all:
 	pyupgrade --py38 --keep-runtime-typing
-	autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes_client tests
-	isort --profile black streampipes_client tests
-	black --line-length=120 streampipes_client tests
+	autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes tests
+	isort --profile black streampipes tests
+	black --line-length=120 streampipes tests
 
 .PHONY: pre-commit
 pre-commit:
-	pre-commit run --verbose --all-files
+	git ls-files -- 'streampipes/**/*' | xargs pre-commit run --verbose --files
 
 .PHONY: unit-tests
 unit-tests:
-	pytest --cov=streampipes_client tests/ --cov-fail-under=90 --cov-report term-missing --no-cov-on-fail
+	pytest --cov=streampipes tests/ --cov-fail-under=90 --cov-report term-missing --no-cov-on-fail

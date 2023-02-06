@@ -14,46 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from abc import ABC, abstractmethod
-from enum import Enum
+import logging
 from typing import AsyncIterator
 
-from streampipes_client.model.resource.data_stream import DataStream
+from nats import connect
+from streampipes.functions.broker.broker import Broker
+
+logger = logging.getLogger(__name__)
 
 
-class SupportedBroker(Enum):
-    """Enum for the supported brokers."""
+class NatsBroker(Broker):
+    """Implementation of the NatsBroker"""
 
-    NATS = "nats"
-
-
-class Broker(ABC):
-    """Abstract implementation of a broker.
-    A broker is used to subscribe to a data stream and to consume the published events.
-    """
-
-    async def connect(self, data_stream: DataStream, host_address: str) -> None:
-        """Connects the broker to a server and subscribes to a data stream.
-
-        Parameters
-        ----------
-         data_stream: DataStream
-            Contains the meta information (resources) for a data stream.
-
-        host_address: str
-            The host address of the server, which the broker connects to.
-
-        Returns
-        -------
-        None
-        """
-        self.stream_id = data_stream.element_id
-        transport_protocol = data_stream.event_grounding.transport_protocols[0]
-        self.topic_name = transport_protocol.topic_definition.actual_topic_name
-        await self._makeConnection(host_address, transport_protocol.port)
-        await self._createSubscription()
-
-    @abstractmethod
     async def _makeConnection(self, host_address: str, port: int) -> None:
         """Helper function to connect to a server.
 
@@ -61,7 +33,7 @@ class Broker(ABC):
         ----------
 
         host_address: str
-            The host adress of the server, which the broker connects to.
+            The host address of the server, which the broker connects to.
 
         port: int
             The port number of the connection.
@@ -70,9 +42,10 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        self.nats_client = await connect(f"nats://{host_address}:{port}")
+        if self.nats_client.connected_url is not None:
+            logger.info(f"Connected to NATS at {self.nats_client.connected_url.netloc}")
 
-    @abstractmethod
     async def _createSubscription(self) -> None:
         """Helper function to create a subscription for a data stream.
 
@@ -80,9 +53,9 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        self.subscription = await self.nats_client.subscribe(self.topic_name)
+        logger.info(f"Subscribed to stream: {self.stream_id}")
 
-    @abstractmethod
     async def disconnect(self) -> None:
         """Closes the connection to the server.
 
@@ -90,9 +63,9 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        await self.nats_client.close()
+        logger.info(f"Stopped connection to stream: {self.stream_id}")
 
-    @abstractmethod
     def get_message(self) -> AsyncIterator:
         """Get the published messages of the subscription.
 
@@ -100,4 +73,4 @@ class Broker(ABC):
         -------
         An async iterator for the messages.
         """
-        raise NotImplementedError
+        return self.subscription.messages
