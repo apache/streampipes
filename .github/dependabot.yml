@@ -17,6 +17,8 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
+    labels:
+      - "gh-actions"
     schedule:
       interval: "daily"
   - package-ecosystem: "maven"
