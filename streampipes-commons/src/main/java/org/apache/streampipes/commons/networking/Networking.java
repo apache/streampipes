@@ -17,7 +17,8 @@
  */
 package org.apache.streampipes.commons.networking;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +36,11 @@ public class Networking {
   private static final String DEFAULT_LOCALHOST_IP = "127.0.0.1";
 
   public static String getHostname() throws UnknownHostException {
+    var svcHostname = getEnvironment().getServiceHost();
     String selectedAddress;
-    if (Envs.SP_HOST.exists()) {
-      selectedAddress = Envs.SP_HOST.getValue();
-      LOG.info("Using IP from provided environment variable {}: {}", Envs.SP_HOST, selectedAddress);
+    if (svcHostname.exists()) {
+      selectedAddress = svcHostname.getValue();
+      LOG.info("Using IP from provided environment variable {}: {}", svcHostname.getEnvVariableName(), selectedAddress);
     } else {
       selectedAddress = InetAddress.getLocalHost().getHostAddress();
 
@@ -79,15 +81,20 @@ public class Networking {
   }
 
   public static Integer getPort(Integer defaultPort) {
+    var servicePort = getEnvironment().getServicePort();
     Integer selectedPort;
-    if (Envs.SP_PORT.exists()) {
-      selectedPort = Envs.SP_PORT.getValueAsInt();
-      LOG.info("Using port from provided environment variable {}: {}", Envs.SP_PORT, selectedPort);
+    if (servicePort.exists()) {
+      selectedPort = servicePort.getValue();
+      LOG.info("Using port from provided environment variable {}: {}", servicePort.getEnvVariableName(), selectedPort);
     } else {
       selectedPort = defaultPort;
       LOG.info("Using default port: {}", defaultPort);
     }
 
     return selectedPort;
+  }
+
+  private static Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 }

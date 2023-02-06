@@ -29,10 +29,7 @@ import org.apache.streampipes.model.config.MessagingSettings;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.io.File;
-import java.security.SecureRandom;
 
 public enum BackendConfig {
   INSTANCE;
@@ -68,13 +65,6 @@ public enum BackendConfig {
         "The directory where " + "pipeline element assets are stored.");
     config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(),
         "The directory where " + "pipeline element files are stored.");
-    config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch",
-        "The host of the data base used for the data lake");
-    config.register(BackendConfigKeys.DATA_LAKE_PORT, 9200, "The port of the data base used for the data lake");
-
-    config.register(BackendConfigKeys.INFLUX_HOST, "influxdb", "The host of the influx data base");
-    config.register(BackendConfigKeys.INFLUX_PORT, 8086, "The hist of the influx data base");
-    config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
     config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, DefaultMessagingSettings.make(),
         "Default Messaging Settings");
 
@@ -99,11 +89,6 @@ public enum BackendConfig {
         + File.separator
         + ".streampipes"
         + File.separator;
-  }
-
-  private String randomKey() {
-    return RandomStringUtils.random(10, 0, possibleCharacters.length - 1,
-        false, false, possibleCharacters, new SecureRandom());
   }
 
   public String getJmsHost() {

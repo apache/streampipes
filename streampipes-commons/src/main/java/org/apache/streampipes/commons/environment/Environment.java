@@ -34,6 +34,13 @@ public interface Environment {
 
   BooleanEnvironmentVariable getSpDebug();
 
+  // Service base configuration
+
+  StringEnvironmentVariable getServiceHost();
+
+  IntEnvironmentVariable getServicePort();
+
+
   // Time series storage env variables
 
   StringEnvironmentVariable getTsStorageProtocol();
