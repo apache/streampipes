@@ -114,7 +114,7 @@ jobs:
           python-version: 3.8
 
       - name: Cache Python dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
@@ -152,7 +152,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Cache Python dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~~.cache/pip
           key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('**/setup.py') }}
@@ -182,7 +182,7 @@ jobs:
           python-version: 3.8
 
       - name: Cache Python dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
