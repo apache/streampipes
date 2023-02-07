@@ -18,7 +18,7 @@
 package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
@@ -32,7 +32,7 @@ import java.util.List;
 public abstract class DataExplorerQuery<T> {
 
   public T executeQuery() throws RuntimeException {
-    InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+    InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
     DataExplorerQueryBuilder queryBuilder =
         DataExplorerQueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
     getQuery(queryBuilder);

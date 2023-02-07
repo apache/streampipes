@@ -148,7 +148,6 @@ class APIEndpoint(Endpoint):
         try:
             response.raise_for_status()
         except HTTPError as err:
-
             status_code = err.response.status_code
 
             # get custom error message based on the returned status code

@@ -241,10 +241,6 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.INFLUX_PORT);
   }
 
-  public String getInfluxUrl() {
-    return "http://" + getInfluxHost() + ":" + getInfluxPort();
-  }
-
   public String getInfluxDatabaseName() {
     return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
   }

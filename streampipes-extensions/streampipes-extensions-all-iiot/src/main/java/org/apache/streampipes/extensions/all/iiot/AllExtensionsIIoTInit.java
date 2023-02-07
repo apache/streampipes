@@ -23,6 +23,7 @@ import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsInit;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
@@ -61,6 +62,7 @@ public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
         .merge(new BrokersJvmInit().provideServiceDefinition())
         .merge(new DatabasesJvmInit().provideServiceDefinition())
         .merge(new SinksNotificationsJvmInit().provideServiceDefinition())
+        .merge(new InfluxConnectorsInit().provideServiceDefinition())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

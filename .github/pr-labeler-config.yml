@@ -1,0 +1,65 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+backend:
+  - "streampipes-*/**/*.java"
+
+connect:
+  - "streampipes-extensions/streampipes-connect-adapters/**/*"
+  - "streampipes-extensions/streampipes-connect-adapters-iiot/**/*"
+
+
+dependencies:
+  - "**/pom.xml"
+  - "**/setup.py"
+  - "ui/**/package.json"
+  - "ui/**/package-lock.json"
+
+documentation:
+  - "**/*.md"
+
+gh-actions:
+  - ".github/**/*"
+
+helm:
+  - "installer/k8s/**/*.yaml"
+
+installer:
+  - "installer/**/*"
+
+java:
+  - "**/*.java"
+
+javascript:
+  - "**/*.js"
+
+'pipeline elements':
+  - "streampipes-exensions/streampipes-extensions-*/**/*"
+  - "streampipes-extensions/streampipes-pipeline-*/**/*"
+  - "streampipes-extensions/streampipes-processors-*/**/*"
+  - "streampipes-extensions/streampipes-sinks-*/**/*"
+  - "streampipes-extensions/streampipes-sources-*/**/*"
+
+python:
+  - "**/*.py"
+
+testing:
+  - "streampipes-integration-tests/**/*"
+  - "streampipes-client-python/tests/**/*"
+  - "streampipes-*/**/test/**/*"
+  - "ui/cypress/**/*"
+
+ui:
+  - "ui/**/*"

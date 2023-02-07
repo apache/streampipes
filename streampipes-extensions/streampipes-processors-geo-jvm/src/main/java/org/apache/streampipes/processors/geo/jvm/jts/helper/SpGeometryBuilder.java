@@ -21,7 +21,12 @@ package org.apache.streampipes.processors.geo.jvm.jts.helper;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
@@ -97,6 +102,20 @@ public class SpGeometryBuilder {
   }
 
 
+  public static Geometry createSPGeom(Geometry geom, Integer epsgCode) {
+
+    Geometry returnedGeom = null;
+    //gets precision model from getPrecisionModel method
+    PrecisionModel prec = getPrecisionModel(epsgCode);
+    //creates the factory object
+    GeometryFactory geomFactory = new GeometryFactory(prec, epsgCode);
+    // creates the new geom from the input geom.
+    returnedGeom = geomFactory.createGeometry(geom);
+
+    return returnedGeom;
+  }
+
+
   /**
    * Is in wgs coordinate range boolean.
    *
@@ -119,7 +138,7 @@ public class SpGeometryBuilder {
    * @param epsg EPSG Code representing SRID
    * @return {@link org.locationtech.jts.geom.PrecisionModel}
    */
-  private static PrecisionModel getPrecisionModel(Integer epsg) {
+  protected static PrecisionModel getPrecisionModel(Integer epsg) {
     PrecisionModel precisionModel;
     if (epsg == 4326) {
       // use scale precision with 7 decimal positions like default OSM
@@ -130,4 +149,43 @@ public class SpGeometryBuilder {
     }
     return precisionModel;
   }
+  public static Geometry createEmptyGeometry(Geometry geom) {
+    Geometry outputGeom = null;
+
+    if (geom instanceof Point) {
+      outputGeom = geom.getFactory().createPoint();
+    } else if (geom instanceof LineString) {
+      outputGeom = geom.getFactory().createLineString();
+    } else if (geom instanceof Polygon) {
+      outputGeom = geom.getFactory().createPolygon();
+    } else if (geom instanceof MultiPoint) {
+      outputGeom = geom.getFactory().createMultiPoint();
+    } else if (geom instanceof MultiLineString) {
+      outputGeom = geom.getFactory().createMultiLineString();
+    } else if (geom instanceof MultiPolygon) {
+      outputGeom = geom.getFactory().createMultiPolygon();
+    } else {
+      outputGeom = geom.getFactory().createGeometryCollection();
+    }
+    return outputGeom;
+  }
+
+  public static Point extractPoint(Geometry geom) {
+    Point returnedPoint = null;
+
+    Integer epsgCode = geom.getSRID();
+
+    if (geom instanceof Point) {
+      // get y lng and x lat coords from point. has to be casted because input is basic geometry
+      returnedPoint =  (Point) geom;
+
+    } else if (geom instanceof LineString) {
+      // cast geometry to line and calculates the centroid to get point
+      returnedPoint = (Point) createSPGeom((geom).getInteriorPoint(), epsgCode);
+    } else {
+      returnedPoint = (Point) createSPGeom(geom.getCentroid(), epsgCode);
+    }
+    return returnedPoint;
+  }
+
 }

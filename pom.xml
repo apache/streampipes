@@ -89,7 +89,7 @@
 	<jetty.version>10.0.10</jetty.version>
 	<jgrapht.version>1.5.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
-	<jna.version>5.8.0</jna.version>
+	<jna.version>5.13.0</jna.version>
 	<json-path.version>5.3.0</json-path.version>
 	<json-smart.version>2.4.8</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
@@ -128,6 +128,9 @@
 	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
+			<!-- Geo dependencies -->
+			<jts-core.version>1.19.0</jts-core.version>
+			<apache-sis-referencing.version>1.2</apache-sis-referencing.version>
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
@@ -143,12 +146,12 @@
 	<amqp-client.version>5.16.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
 	<boofcv.version>0.33</boofcv.version>
-	<bcprov.version>1.66</bcprov.version>
+	<bcprov.version>1.70</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
 	<checker-qual.version>3.28.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
-	<commons-compress.version>1.21</commons-compress.version>
+	<commons-compress.version>1.22</commons-compress.version>
 	<commons-text.version>1.10.0</commons-text.version>
 	<commons-pool2.version>2.11.1</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
@@ -161,7 +164,7 @@
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
 	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
 	<jsrosbridge.version>0.2.0</jsrosbridge.version>
-	<jedis.version>3.3.0</jedis.version>
+	<jedis.version>4.3.1</jedis.version>
 	<j2objc-annotations.version>1.3</j2objc-annotations.version>
 	<language-detector.version>0.6</language-detector.version>
 	<log4j-to-slf4j.version>2.8.2</log4j-to-slf4j.version>
@@ -183,6 +186,7 @@
 	<snakeyaml.version>1.26</snakeyaml.version>
 	<xerces.version>2.12.2</xerces.version>
 	<zstd-jni.version>1.4.3-1</zstd-jni.version>
+	<inlong.version>1.5.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 	<maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -190,14 +194,13 @@
 	<!-- Connect Dependencies-->
 	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
 	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
-	<bcprov.version>1.68</bcprov.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<commons-text.version>1.8</commons-text.version>
 	<guice.version>5.1.0</guice.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
-	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
+	<nimbus-jose-jwt.version>9.30.1</nimbus-jose-jwt.version>
 	<opencsv.version>5.5.2</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
@@ -205,7 +208,7 @@
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
 	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-	<checkstyle.version>9.2.1</checkstyle.version>
+	<checkstyle.version>10.6.0</checkstyle.version>
 	<extra-enforcer-rules.version>1.6.1</extra-enforcer-rules.version>
 	<formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
 	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
@@ -213,7 +216,7 @@
 	<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 	<maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
 	<maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
-	<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+	<maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
 	<mave-release-plugin.version>3.0.0-M5</mave-release-plugin.version>
 	<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 	<maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
@@ -1094,11 +1097,6 @@
 				</dependency>
 				<dependency>
 					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk14</artifactId>
-					<version>${bcprov.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
 					<artifactId>bcprov-jdk15on</artifactId>
 					<version>${bcprov.version}</version>
 				</dependency>
@@ -1358,6 +1356,24 @@
                 <artifactId>quartz</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.inlong</groupId>
+                <artifactId>tubemq-client</artifactId>
+                <version>${inlong.version}</version>
+            </dependency>
+				     <!-- Geo dependencies -->
+				    <dependency>
+							<!-- https://mvnrepository.com/artifact/org.locationtech.jts/jts-core -->
+							<groupId>org.locationtech.jts</groupId>
+							<artifactId>jts-core</artifactId>
+							<version>${jts-core.version}</version>
+						</dependency>
+				    <dependency>
+							<!-- https://mvnrepository.com/artifact/org.apache.sis.core/sis-referencing -->
+							<groupId>org.apache.sis.core</groupId>
+							<artifactId>sis-referencing</artifactId>
+							<version>${apache-sis-referencing.version}</version>
+						</dependency>
 
             <!-- dependency convergence -->
             <dependency>
@@ -1446,6 +1462,7 @@
         <module>streampipes-messaging-nats</module>
         <module>streampipes-integration-tests</module>
 		<module>streampipes-rest-extensions</module>
+        <module>streampipes-extensions/streampipes-connectors-influx</module>
     </modules>
 
     <profiles>

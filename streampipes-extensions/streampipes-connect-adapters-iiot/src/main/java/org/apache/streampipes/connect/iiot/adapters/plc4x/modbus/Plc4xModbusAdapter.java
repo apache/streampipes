@@ -228,7 +228,7 @@ public class Plc4xModbusAdapter extends PullAdapter {
 
     try {
       this.plcConnection = new PlcDriverManager().getConnection(
-          "modbus:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
+          "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
 
       if (!this.plcConnection.getMetadata().canRead()) {
         throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
