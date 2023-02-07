@@ -20,7 +20,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from streampipes_client.client.client import StreamPipesClient, StreamPipesClientConfig
 from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes_client.functions.machine_learning.river_function import OnlineML
+from streampipes_client.function_zoo.river_function import OnlineML
 from streampipes_client.functions.utils.data_stream_generator import (
     RuntimeType,
     create_data_stream,
