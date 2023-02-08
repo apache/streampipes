@@ -17,7 +17,7 @@
 import os
 from unittest import TestCase
 
-from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
 
 class TestStreamPipesApiKeyCredentials(TestCase):

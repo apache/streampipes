@@ -17,8 +17,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
 
-from streampipes_client.functions.utils.function_context import FunctionContext
-from streampipes_client.model.resource import FunctionDefinition
+from streampipes.functions.utils.function_context import FunctionContext
+from streampipes.model.resource import FunctionDefinition
 
 
 class StreamPipesFunction(ABC):

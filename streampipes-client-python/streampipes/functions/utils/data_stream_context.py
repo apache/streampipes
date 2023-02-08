@@ -16,9 +16,9 @@
 #
 from typing import List
 
-from streampipes_client.functions.broker.broker import Broker
-from streampipes_client.functions.streampipes_function import StreamPipesFunction
-from streampipes_client.model.resource.data_stream import DataStream
+from streampipes.functions.broker.broker import Broker
+from streampipes.functions.streampipes_function import StreamPipesFunction
+from streampipes.model.resource.data_stream import DataStream
 
 
 class DataStreamContext:

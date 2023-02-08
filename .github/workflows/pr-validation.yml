@@ -131,7 +131,7 @@ jobs:
       - name: Run style & code checks
         run: |
           cd ./streampipes-client-python
-          pre-commit run -a
+          make pre-commit
           make mypy
           make lint
 

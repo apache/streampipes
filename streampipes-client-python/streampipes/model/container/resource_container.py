@@ -35,7 +35,7 @@ __all__ = [
     "ResourceContainer",
 ]
 
-from streampipes_client.model.resource.resource import Resource
+from streampipes.model.resource.resource import Resource
 
 
 class StreamPipesDataModelError(Exception):

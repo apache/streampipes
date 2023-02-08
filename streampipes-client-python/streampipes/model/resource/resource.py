@@ -22,7 +22,7 @@ A resource defines the data model that is used by a resource container (`model.c
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from streampipes_client.model.common import BasicModel
+from streampipes.model.common import BasicModel
 
 __all__ = [
     "Resource",

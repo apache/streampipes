@@ -23,8 +23,8 @@ from typing import Dict, List
 from uuid import uuid4
 
 from pydantic import Field, StrictInt, StrictStr
-from streampipes_client.model.common import BasicModel
-from streampipes_client.model.resource.resource import Resource
+from streampipes.model.common import BasicModel
+from streampipes.model.resource.resource import Resource
 
 
 class FunctionDefinition(Resource):

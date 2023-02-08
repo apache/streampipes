@@ -28,9 +28,9 @@ import sys
 from typing import Dict, Optional
 
 from requests import Session
-from streampipes_client.client.client_config import StreamPipesClientConfig
-from streampipes_client.endpoint.api import DataLakeMeasureEndpoint, DataStreamEndpoint
-from streampipes_client.endpoint.endpoint import APIEndpoint
+from streampipes.client.config import StreamPipesClientConfig
+from streampipes.endpoint.api import DataLakeMeasureEndpoint, DataStreamEndpoint
+from streampipes.endpoint.endpoint import APIEndpoint
 
 logger = logging.getLogger(__name__)
 
@@ -55,9 +55,9 @@ class StreamPipesClient:
     Examples
     --------
 
-    >>> from streampipes_client.client import StreamPipesClient
-    >>> from streampipes_client.client.client_config import StreamPipesClientConfig
-    >>> from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
+    >>> from streampipes.client import StreamPipesClient
+    >>> from streampipes.client.client_config import StreamPipesClientConfig
+    >>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
     >>> client_config = StreamPipesClientConfig(
     ...     credential_provider=StreamPipesApiKeyCredentials(

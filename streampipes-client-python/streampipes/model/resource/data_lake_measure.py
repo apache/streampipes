@@ -17,8 +17,8 @@
 from typing import Optional
 
 from pydantic import StrictBool, StrictStr
-from streampipes_client.model.common import EventSchema
-from streampipes_client.model.resource.resource import Resource
+from streampipes.model.common import EventSchema
+from streampipes.model.resource.resource import Resource
 
 __all__ = [
     "DataLakeMeasure",

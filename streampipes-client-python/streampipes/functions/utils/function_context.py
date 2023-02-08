@@ -16,8 +16,8 @@
 #
 from typing import Dict, List
 
-from streampipes_client.client.client import StreamPipesClient
-from streampipes_client.model.resource.data_stream import DataStream
+from streampipes.client.client import StreamPipesClient
+from streampipes.model.resource.data_stream import DataStream
 
 
 class FunctionContext:

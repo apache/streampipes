@@ -22,7 +22,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
 from pydantic import StrictInt, StrictStr
-from streampipes_client.model.resource.resource import Resource
+from streampipes.model.resource.resource import Resource
 
 __all__ = [
     "DataLakeSeries",
