@@ -19,6 +19,7 @@ updates:
     directory: "/"
     labels:
       - "gh-actions"
+      - "dependencies"
     schedule:
       interval: "daily"
   - package-ecosystem: "maven"
