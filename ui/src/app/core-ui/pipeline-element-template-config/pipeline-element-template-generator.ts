@@ -17,81 +17,89 @@
  */
 
 import {
-  AnyStaticProperty,
-  CodeInputStaticProperty,
-  CollectionStaticProperty,
-  ColorPickerStaticProperty,
-  FileStaticProperty,
-  FreeTextStaticProperty,
-  OneOfStaticProperty,
-  SecretStaticProperty,
-  StaticPropertyAlternative,
-  StaticPropertyAlternatives, StaticPropertyGroup,
-  StaticPropertyUnion,
-  SlideToggleStaticProperty
+    AnyStaticProperty,
+    CodeInputStaticProperty,
+    CollectionStaticProperty,
+    ColorPickerStaticProperty,
+    FileStaticProperty,
+    FreeTextStaticProperty,
+    OneOfStaticProperty,
+    SecretStaticProperty,
+    StaticPropertyAlternative,
+    StaticPropertyAlternatives,
+    StaticPropertyGroup,
+    StaticPropertyUnion,
+    SlideToggleStaticProperty,
 } from '@streampipes/platform-services';
 
 export class PipelineElementTemplateGenerator {
+    constructor(private sp: StaticPropertyUnion) {}
 
-  constructor(private sp: StaticPropertyUnion) {
-
-  }
-
-  public toTemplateValue(): any {
-    if (this.sp instanceof FreeTextStaticProperty) {
-      return this.sp.value;
-    } else if (this.sp instanceof OneOfStaticProperty) {
-      return this.sp.options.find(o => o.selected) ? this.sp.options.find(o => o.selected).name : '';
-    } else if (this.sp instanceof ColorPickerStaticProperty) {
-      return this.sp.selectedColor;
-    } else if (this.sp instanceof SecretStaticProperty) {
-      return {encrypted: this.sp.encrypted, value: this.sp.value};
-    } else if (this.sp instanceof AnyStaticProperty) {
-      return this.sp.options.filter(o => o.selected).map(o => o.name);
-    } else if (this.sp instanceof CodeInputStaticProperty) {
-      return this.sp.value;
-    } else if (this.sp instanceof SlideToggleStaticProperty) {
-      return this.sp.selected;
-    } else if (this.sp instanceof CollectionStaticProperty) {
-      return {
-        members: this.addListEntry(this.sp.members)
-      };
-    } else if (this.sp instanceof FileStaticProperty) {
-      return this.sp.locationPath;
-    } else if (this.sp instanceof StaticPropertyAlternatives) {
-      return {
-        alternatives: this.addNestedEntry(this.sp.alternatives)
-      };
-    } else if (this.sp instanceof StaticPropertyAlternative) {
-      const sp = this.sp.staticProperty ? this.addNestedEntry([this.sp.staticProperty]) : {};
-      return {
-        selected: this.sp.selected,
-        staticProperty: sp
-      };
-    } else if (this.sp instanceof StaticPropertyGroup) {
-      return { staticProperties: this.addNestedEntry(this.sp.staticProperties)};
+    public toTemplateValue(): any {
+        if (this.sp instanceof FreeTextStaticProperty) {
+            return this.sp.value;
+        } else if (this.sp instanceof OneOfStaticProperty) {
+            return this.sp.options.find(o => o.selected)
+                ? this.sp.options.find(o => o.selected).name
+                : '';
+        } else if (this.sp instanceof ColorPickerStaticProperty) {
+            return this.sp.selectedColor;
+        } else if (this.sp instanceof SecretStaticProperty) {
+            return { encrypted: this.sp.encrypted, value: this.sp.value };
+        } else if (this.sp instanceof AnyStaticProperty) {
+            return this.sp.options.filter(o => o.selected).map(o => o.name);
+        } else if (this.sp instanceof CodeInputStaticProperty) {
+            return this.sp.value;
+        } else if (this.sp instanceof SlideToggleStaticProperty) {
+            return this.sp.selected;
+        } else if (this.sp instanceof CollectionStaticProperty) {
+            return {
+                members: this.addListEntry(this.sp.members),
+            };
+        } else if (this.sp instanceof FileStaticProperty) {
+            return this.sp.locationPath;
+        } else if (this.sp instanceof StaticPropertyAlternatives) {
+            return {
+                alternatives: this.addNestedEntry(this.sp.alternatives),
+            };
+        } else if (this.sp instanceof StaticPropertyAlternative) {
+            const sp = this.sp.staticProperty
+                ? this.addNestedEntry([this.sp.staticProperty])
+                : {};
+            return {
+                selected: this.sp.selected,
+                staticProperty: sp,
+            };
+        } else if (this.sp instanceof StaticPropertyGroup) {
+            return {
+                staticProperties: this.addNestedEntry(this.sp.staticProperties),
+            };
+        }
     }
-  }
 
-  addEntry(sp: StaticPropertyUnion) {
-    const entry = {};
-    entry[sp.internalName] = new PipelineElementTemplateGenerator(sp).toTemplateValue();
-    return entry;
-  }
+    addEntry(sp: StaticPropertyUnion) {
+        const entry = {};
+        entry[sp.internalName] = new PipelineElementTemplateGenerator(
+            sp,
+        ).toTemplateValue();
+        return entry;
+    }
 
-  addListEntry(staticProperties: StaticPropertyUnion[]) {
-    const values = [];
-    staticProperties.forEach(sp => {
-      values.push(this.addEntry(sp));
-    });
-    return values;
-  }
+    addListEntry(staticProperties: StaticPropertyUnion[]) {
+        const values = [];
+        staticProperties.forEach(sp => {
+            values.push(this.addEntry(sp));
+        });
+        return values;
+    }
 
-  addNestedEntry(staticProperties: StaticPropertyUnion[]) {
-    const entry = {};
-    staticProperties.forEach(sp => {
-      entry[sp.internalName] = new PipelineElementTemplateGenerator(sp).toTemplateValue();
-    });
-    return entry;
-  }
+    addNestedEntry(staticProperties: StaticPropertyUnion[]) {
+        const entry = {};
+        staticProperties.forEach(sp => {
+            entry[sp.internalName] = new PipelineElementTemplateGenerator(
+                sp,
+            ).toTemplateValue();
+        });
+        return entry;
+    }
 }

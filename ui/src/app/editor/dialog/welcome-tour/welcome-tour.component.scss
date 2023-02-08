@@ -19,23 +19,23 @@
 @import '../../../../scss/sp/sp-dialog.scss';
 
 .welcome-animation {
-  font-family: Arial;
-  border-right: .1em solid black;
-  width: 5ch;
-  white-space: nowrap;
-  overflow: hidden;
-  -webkit-animation: typing 1s steps(5, end),
-  blink-caret .5s step-end infinite alternate;
+    font-family: Arial;
+    border-right: 0.1em solid black;
+    width: 5ch;
+    white-space: nowrap;
+    overflow: hidden;
+    -webkit-animation: typing 1s steps(5, end),
+        blink-caret 0.5s step-end infinite alternate;
 }
 
 @keyframes typing {
-  from {
-    width: 0;
-  }
+    from {
+        width: 0;
+    }
 }
 
 @keyframes blink-caret {
-  50% {
-    border-color: transparent;
-  }
+    50% {
+        border-color: transparent;
+    }
 }

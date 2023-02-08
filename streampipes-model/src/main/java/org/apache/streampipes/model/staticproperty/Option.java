@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
-public class Option extends UnnamedStreamPipesEntity {
+public class Option {
 
-  private static final long serialVersionUID = 8536995294188662931L;
+  private String elementId;
 
   private String name;
 
@@ -31,32 +31,38 @@ public class Option extends UnnamedStreamPipesEntity {
   private String internalName;
 
   public Option() {
-    super();
+    this.elementId = ElementIdGenerator.makeElementId(Option.class);
   }
 
   public Option(String name) {
-    super();
+    this();
     this.name = name;
   }
 
   public Option(String name, String internalName) {
-    super();
-    this.name = name;
+    this(name);
     this.internalName = internalName;
   }
 
   public Option(String name, boolean selected) {
-    super();
-    this.name = name;
+    this(name);
     this.selected = selected;
   }
 
   public Option(Option o) {
-    super(o);
+    this.elementId = o.getElementId();
     this.name = o.getName();
     this.selected = o.isSelected();
     this.internalName = o.getInternalName();
 
+  }
+
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
   }
 
   public String getName() {

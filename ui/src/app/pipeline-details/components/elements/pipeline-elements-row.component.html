@@ -18,14 +18,26 @@
 
 <div fxFlex="100" fxLayout="column">
     <div fxLayout="row" fxFlex="100">
-        <div fxFlex="{{showDescription ? 30 : 100}}}" fxLayout="row" style="margin-bottom:10px;">
-            <span class="draggable-icon {{elementType}}">
-                <pipeline-element [preview]="true" [pipelineElement]="_element"></pipeline-element>
+        <div
+            fxFlex="{{ showDescription ? 30 : 100 }}}"
+            fxLayout="row"
+            style="margin-bottom: 10px"
+        >
+            <span class="draggable-icon {{ elementType }}">
+                <sp-pipeline-element
+                    [preview]="true"
+                    [pipelineElement]="_element"
+                ></sp-pipeline-element>
             </span>
         </div>
-        <div fxFlex="70" fxLayout="column" fxLayoutAlign="center left" *ngIf="showDescription">
-            <b>{{element.name}}</b>
-            {{element.description}}
+        <div
+            fxFlex="70"
+            fxLayout="column"
+            fxLayoutAlign="center left"
+            *ngIf="showDescription"
+        >
+            <b>{{ element.name }}</b>
+            {{ element.description }}
         </div>
     </div>
 </div>

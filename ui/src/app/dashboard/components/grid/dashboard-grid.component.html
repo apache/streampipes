@@ -17,23 +17,27 @@
   -->
 
 <div *ngIf="dashboard && dashboard.displayHeader" class="text-center">
-    <h2>{{dashboard.name}}</h2>
-    <h3>{{dashboard.description}}</h3>
+    <h2>{{ dashboard.name }}</h2>
+    <h3>{{ dashboard.description }}</h3>
 </div>
 <gridster [options]="options" [ngClass]="editMode ? 'edit' : ''">
-    <ng-container *ngFor="let item of dashboard.widgets;let i=index">
+    <ng-container *ngFor="let item of dashboard.widgets; let i = index">
         <gridster-item [item]="item" #gridsterItemComponent>
-            <dashboard-widget (updateCallback)="propagateItemUpdate($event)" #dashboardWidgetComponent
-                              (deleteCallback)="propagateItemRemoval($event)"
-                              [widget]="item"
-                              [editMode]="editMode"
-                              [allMeasurements]="allMeasurements"
-                              [globalRefresh]="dashboard.dashboardGeneralSettings.globalRefresh"
-                              [headerVisible]="headerVisible"
-                              [gridsterItemComponent]="gridsterItemComponent"
-                              [itemWidth]="gridsterItemComponent.width"
-                              [itemHeight]="gridsterItemComponent.height"
-            ></dashboard-widget>
+            <sp-dashboard-widget
+                (updateCallback)="propagateItemUpdate($event)"
+                #dashboardWidgetComponent
+                (deleteCallback)="propagateItemRemoval($event)"
+                [widget]="item"
+                [editMode]="editMode"
+                [allMeasurements]="allMeasurements"
+                [globalRefresh]="
+                    dashboard.dashboardGeneralSettings.globalRefresh
+                "
+                [headerVisible]="headerVisible"
+                [gridsterItemComponent]="gridsterItemComponent"
+                [itemWidth]="gridsterItemComponent.width"
+                [itemHeight]="gridsterItemComponent.height"
+            ></sp-dashboard-widget>
         </gridster-item>
     </ng-container>
 </gridster>

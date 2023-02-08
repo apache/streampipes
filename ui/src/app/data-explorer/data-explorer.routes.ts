@@ -16,10 +16,11 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpDataExplorerRoutes {
-
-  static BASE: SpBreadcrumbItem = {label: 'Data Views', link: ['dataexplorer']};
-
+    static BASE: SpBreadcrumbItem = {
+        label: 'Data Views',
+        link: ['dataexplorer'],
+    };
 }

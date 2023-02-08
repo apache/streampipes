@@ -16,26 +16,31 @@
   ~
   -->
 
-<sp-basic-nav-tabs [spNavigationItems]="tabs"
-                   [activeLink]="'logs'"
-                   [showBackLink]="true"
-                   [backLinkTarget]="['pipelines']">
-  <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-    <button mat-button
+<sp-basic-nav-tabs
+    [spNavigationItems]="tabs"
+    [activeLink]="'logs'"
+    [showBackLink]="true"
+    [backLinkTarget]="['pipelines']"
+>
+    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+        <button
+            mat-button
             mat-icon-button
             color="accent"
             class="mr-10"
             matTooltip="Refresh"
-            (click)="triggerUpdate()">
-      <i class="material-icons">refresh</i>
-    </button>
-  </div>
-  <div fxFlex="100" fxLayout="column" *ngIf="activeFunction && contentReady">
-    <sp-simple-logs [elementName]="activeFunction.functionId.id" [logs]="logs"
-                    fxFlex="100"
-                    fxLayout="column">
-    </sp-simple-logs>
-  </div>
-
-
+            (click)="triggerUpdate()"
+        >
+            <i class="material-icons">refresh</i>
+        </button>
+    </div>
+    <div fxFlex="100" fxLayout="column" *ngIf="activeFunction && contentReady">
+        <sp-simple-logs
+            [elementName]="activeFunction.functionId.id"
+            [logs]="logs"
+            fxFlex="100"
+            fxLayout="column"
+        >
+        </sp-simple-logs>
+    </div>
 </sp-basic-nav-tabs>

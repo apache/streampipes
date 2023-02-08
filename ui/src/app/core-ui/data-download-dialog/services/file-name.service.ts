@@ -20,33 +20,40 @@ import { Injectable } from '@angular/core';
 import { ExportConfig } from '../model/export-config.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class FileNameService {
-
     public generateName(exportConfig: ExportConfig, exportDate: Date): string {
-    const baseName = `${this.getDateString(exportDate)}_${exportConfig.dataExportConfig.measurement}_`;
-    const dataRangeOption = exportConfig.dataExportConfig.dataRangeConfiguration;
-    let dateRange = '';
-    const fileExtension = `.${exportConfig.formatExportConfig.exportFormat}`;
+        const baseName = `${this.getDateString(exportDate)}_${
+            exportConfig.dataExportConfig.measurement
+        }_`;
+        const dataRangeOption =
+            exportConfig.dataExportConfig.dataRangeConfiguration;
+        let dateRange = '';
+        const fileExtension = `.${exportConfig.formatExportConfig.exportFormat}`;
 
-    if (exportConfig.dataExportConfig.dateRange !== undefined && (dataRangeOption === 'customInterval' || dataRangeOption === 'visible')) {
-      if (exportConfig.dataExportConfig.dateRange.startDate) {
-        dateRange += `_${this.getDateString(exportConfig.dataExportConfig.dateRange.startDate)}`;
-      }
+        if (
+            exportConfig.dataExportConfig.dateRange !== undefined &&
+            (dataRangeOption === 'customInterval' ||
+                dataRangeOption === 'visible')
+        ) {
+            if (exportConfig.dataExportConfig.dateRange.startDate) {
+                dateRange += `_${this.getDateString(
+                    exportConfig.dataExportConfig.dateRange.startDate,
+                )}`;
+            }
 
-      if (exportConfig.dataExportConfig.dateRange.endDate) {
-        dateRange += `_${this.getDateString(exportConfig.dataExportConfig.dateRange.endDate)}`;
-      }
+            if (exportConfig.dataExportConfig.dateRange.endDate) {
+                dateRange += `_${this.getDateString(
+                    exportConfig.dataExportConfig.dateRange.endDate,
+                )}`;
+            }
+        }
+
+        return baseName + dataRangeOption + dateRange + fileExtension;
     }
 
-    return baseName + dataRangeOption + dateRange + fileExtension;
-  }
-
-  public getDateString(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
+    public getDateString(date: Date): string {
+        return date.toISOString().split('T')[0];
+    }
 }
-
-

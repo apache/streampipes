@@ -30,21 +30,29 @@ import { RoleModel } from '../_models/auth.model';
 
 @Injectable()
 export class AuthService {
+    public authToken$: BehaviorSubject<string> = new BehaviorSubject<string>(
+        undefined,
+    );
+    public user$: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(
+        undefined,
+    );
+    public isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        false,
+    );
+    public darkMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        false,
+    );
 
-    public authToken$: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
-    public user$: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(undefined);
-    public isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    public darkMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-    constructor(private restApi: RestApi,
-                private tokenStorage: JwtTokenStorageService,
-                private router: Router,
-                private loginService: LoginService) {
+    constructor(
+        private restApi: RestApi,
+        private tokenStorage: JwtTokenStorageService,
+        private router: Router,
+        private loginService: LoginService,
+    ) {
         if (this.authenticated()) {
             this.authToken$.next(tokenStorage.getToken());
             this.user$.next(tokenStorage.getUser());
             this.isLoggedIn$.next(true);
-
         } else {
             this.logout();
         }
@@ -71,10 +79,15 @@ export class AuthService {
     }
 
     public authenticated(): boolean {
-        const token = this.authToken$.getValue() || this.tokenStorage.getToken();
+        const token =
+            this.authToken$.getValue() || this.tokenStorage.getToken();
         const jwtHelper: JwtHelperService = new JwtHelperService({});
 
-        return token !== null && token !== undefined && !jwtHelper.isTokenExpired(token);
+        return (
+            token !== null &&
+            token !== undefined &&
+            !jwtHelper.isTokenExpired(token)
+        );
     }
 
     public decodeJwtToken(token: string): any {
@@ -83,27 +96,38 @@ export class AuthService {
     }
 
     checkConfiguration(): Observable<boolean> {
-        return Observable.create((observer) => this.restApi.configured().subscribe(response => {
-            if (response.configured) {
-                observer.next(true);
-            } else {
-                observer.next(false);
-            }
-        }, error => {
-            observer.error();
-        }));
+        return Observable.create(observer =>
+            this.restApi.configured().subscribe(
+                response => {
+                    if (response.configured) {
+                        observer.next(true);
+                    } else {
+                        observer.next(false);
+                    }
+                },
+                error => {
+                    observer.error();
+                },
+            ),
+        );
     }
 
     scheduleTokenRenew() {
-        this.authToken$.pipe(
-            filter((token: any) => !!token),
-            map((token: any) => new JwtHelperService({}).getTokenExpirationDate(token)),
-            switchMap((expiresIn: Date) => timer(expiresIn.getTime() - Date.now() - 60000)),
-        ).subscribe(() => {
-            if (this.authenticated()) {
-                this.updateTokenAndUserInfo();
-            }
-        });
+        this.authToken$
+            .pipe(
+                filter((token: any) => !!token),
+                map((token: any) =>
+                    new JwtHelperService({}).getTokenExpirationDate(token),
+                ),
+                switchMap((expiresIn: Date) =>
+                    timer(expiresIn.getTime() - Date.now() - 60000),
+                ),
+            )
+            .subscribe(() => {
+                if (this.authenticated()) {
+                    this.updateTokenAndUserInfo();
+                }
+            });
     }
 
     updateTokenAndUserInfo() {
@@ -113,14 +137,20 @@ export class AuthService {
     }
 
     watchTokenExpiration() {
-        this.authToken$.pipe(
-            filter((token: any) => !!token),
-            map((token: any) => new JwtHelperService({}).getTokenExpirationDate(token)),
-            switchMap((expiresIn: Date) => timer(expiresIn.getTime() - Date.now() + 1))
-        ).subscribe(() => {
-            this.logout();
-            this.router.navigate(['login']);
-        });
+        this.authToken$
+            .pipe(
+                filter((token: any) => !!token),
+                map((token: any) =>
+                    new JwtHelperService({}).getTokenExpirationDate(token),
+                ),
+                switchMap((expiresIn: Date) =>
+                    timer(expiresIn.getTime() - Date.now() + 1),
+                ),
+            )
+            .subscribe(() => {
+                this.logout();
+                this.router.navigate(['login']);
+            });
     }
 
     getUserRoles(): string[] {
@@ -128,24 +158,32 @@ export class AuthService {
     }
 
     public hasRole(role: RoleModel): boolean {
-        return this.getUserRoles().includes('ROLE_ADMIN') || this.getUserRoles().includes(role);
+        return (
+            this.getUserRoles().includes('ROLE_ADMIN') ||
+            this.getUserRoles().includes(role)
+        );
     }
 
     public hasAnyRole(roles: RoleModel[]): boolean {
         if (Array.isArray(roles)) {
-            return roles.reduce((aggregator: false, role: RoleModel) => aggregator || this.hasRole(role), false);
+            return roles.reduce(
+                (aggregator: false, role: RoleModel) =>
+                    aggregator || this.hasRole(role),
+                false,
+            );
         }
 
         return false;
     }
 
-    isAnyAccessGranted(pageNames: PageName[],
-                       redirect?: boolean): boolean {
+    isAnyAccessGranted(pageNames: PageName[], redirect?: boolean): boolean {
         if (!pageNames || pageNames.length === 0) {
             return true;
         }
 
-        const result = pageNames.some(pageName => this.isAccessGranted(pageName));
+        const result = pageNames.some(pageName =>
+            this.isAccessGranted(pageName),
+        );
         if (!result && redirect) {
             this.router.navigate(['']);
         }
@@ -162,17 +200,29 @@ export class AuthService {
             case PageName.PIPELINE_EDITOR:
                 return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
             case PageName.PIPELINE_OVERVIEW:
-                return this.hasAnyRole(['ROLE_PIPELINE_ADMIN', 'ROLE_PIPELINE_USER']);
+                return this.hasAnyRole([
+                    'ROLE_PIPELINE_ADMIN',
+                    'ROLE_PIPELINE_USER',
+                ]);
             case PageName.CONNECT:
                 return this.hasAnyRole(['ROLE_CONNECT_ADMIN']);
             case PageName.DASHBOARD:
-                return this.hasAnyRole(['ROLE_DASHBOARD_USER', 'ROLE_DASHBOARD_ADMIN']);
+                return this.hasAnyRole([
+                    'ROLE_DASHBOARD_USER',
+                    'ROLE_DASHBOARD_ADMIN',
+                ]);
             case PageName.DATA_EXPLORER:
-                return this.hasAnyRole(['ROLE_DATA_EXPLORER_ADMIN', 'ROLE_DATA_EXPLORER_USER']);
+                return this.hasAnyRole([
+                    'ROLE_DATA_EXPLORER_ADMIN',
+                    'ROLE_DATA_EXPLORER_USER',
+                ]);
             case PageName.APPS:
                 return this.hasAnyRole(['ROLE_APP_USER']);
             case PageName.FILE_UPLOAD:
-                return this.hasAnyRole(['ROLE_CONNECT_ADMIN', 'ROLE_PIPELINE_ADMIN']);
+                return this.hasAnyRole([
+                    'ROLE_CONNECT_ADMIN',
+                    'ROLE_PIPELINE_ADMIN',
+                ]);
             case PageName.INSTALL_PIPELINE_ELEMENTS:
                 return this.hasAnyRole(['ROLE_ADMIN']);
             case PageName.NOTIFICATIONS:

@@ -49,8 +49,6 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 public class HttpServerProtocol extends Protocol {
 
@@ -151,11 +149,6 @@ public class HttpServerProtocol extends Protocol {
       default:
         return Datatypes.Double.toString();
     }
-  }
-
-  @Override
-  public List<Map<String, Object>> getNElements(int n) throws ParseException {
-    return null;
   }
 
   @Override

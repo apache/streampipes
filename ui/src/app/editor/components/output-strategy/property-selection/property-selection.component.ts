@@ -18,63 +18,69 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-  CustomOutputStrategy,
-  EventPropertyNested,
-  EventPropertyUnion
+    CustomOutputStrategy,
+    EventPropertyNested,
+    EventPropertyUnion,
 } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'property-selection',
-  templateUrl: './property-selection.component.html',
-  styleUrls: ['./property-selection.component.scss']
+    selector: 'sp-property-selection',
+    templateUrl: './property-selection.component.html',
+    styleUrls: ['./property-selection.component.scss'],
 })
 export class PropertySelectionComponent implements OnInit {
+    @Input()
+    outputStrategy: CustomOutputStrategy;
 
-  @Input()
-  outputStrategy: CustomOutputStrategy;
+    @Input()
+    eventProperty: EventPropertyUnion;
 
-  @Input()
-  eventProperty: EventPropertyUnion;
+    @Input()
+    layer: number;
 
-  @Input()
-  layer: number;
+    @Input()
+    restrictedEditMode: boolean;
 
-  @Input()
-  restrictedEditMode: boolean;
+    @Output()
+    validateForm: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  @Output()
-  validateForm: EventEmitter<boolean> = new EventEmitter<boolean>();
+    isNestedProperty: boolean;
 
-  isNestedProperty: boolean;
-
-  ngOnInit() {
-    this.isNestedProperty = this.eventProperty instanceof EventPropertyNested;
-  }
-
-  toggle(runtimeId) {
-    if (this.exists(runtimeId)) {
-      this.remove(runtimeId);
-    } else {
-      this.add(runtimeId);
+    ngOnInit() {
+        this.isNestedProperty =
+            this.eventProperty instanceof EventPropertyNested;
     }
-    this.triggerFormValidation();
-  }
 
-  exists(runtimeId) {
-    return this.outputStrategy.selectedPropertyKeys.some(e => e === runtimeId);
-  }
+    toggle(runtimeId) {
+        if (this.exists(runtimeId)) {
+            this.remove(runtimeId);
+        } else {
+            this.add(runtimeId);
+        }
+        this.triggerFormValidation();
+    }
 
-  add(runtimeId) {
-    this.outputStrategy.selectedPropertyKeys.push(runtimeId);
-    // This is needed to trigger update of scope
-    this.outputStrategy.selectedPropertyKeys = this.outputStrategy.selectedPropertyKeys.filter(el => true);
-  }
+    exists(runtimeId) {
+        return this.outputStrategy.selectedPropertyKeys.some(
+            e => e === runtimeId,
+        );
+    }
 
-  remove(runtimeId) {
-    this.outputStrategy.selectedPropertyKeys =  this.outputStrategy.selectedPropertyKeys.filter(el => el !== runtimeId);
-  }
+    add(runtimeId) {
+        this.outputStrategy.selectedPropertyKeys.push(runtimeId);
+        // This is needed to trigger update of scope
+        this.outputStrategy.selectedPropertyKeys =
+            this.outputStrategy.selectedPropertyKeys.filter(el => true);
+    }
 
-  triggerFormValidation() {
-    this.validateForm.emit(true);
-  }
+    remove(runtimeId) {
+        this.outputStrategy.selectedPropertyKeys =
+            this.outputStrategy.selectedPropertyKeys.filter(
+                el => el !== runtimeId,
+            );
+    }
+
+    triggerFormValidation() {
+        this.validateForm.emit(true);
+    }
 }

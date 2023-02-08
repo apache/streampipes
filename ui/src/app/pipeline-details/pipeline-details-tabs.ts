@@ -19,13 +19,28 @@
 import { SpNavigationItem } from '@streampipes/shared-ui';
 
 export class SpPipelineDetailsTabs {
-
-  public getTabs(pipelineId: string): SpNavigationItem[] {
-    return [
-      {itemId: 'overview', itemTitle: 'Overview', itemLink: ['pipelines', 'details', pipelineId, 'overview']},
-      {itemId: 'monitoring', itemTitle: 'Metrics', itemLink: ['pipelines', 'details', pipelineId, 'metrics']},
-      {itemId: 'logs', itemTitle: 'Logs', itemLink: ['pipelines', 'details', pipelineId, 'logs']},
-      {itemId: 'quick-edit', itemTitle: 'Quick Edit', itemLink: ['pipelines', 'details', pipelineId, 'quick-edit']}
-    ];
-  }
+    public getTabs(pipelineId: string): SpNavigationItem[] {
+        return [
+            {
+                itemId: 'overview',
+                itemTitle: 'Overview',
+                itemLink: ['pipelines', 'details', pipelineId, 'overview'],
+            },
+            {
+                itemId: 'monitoring',
+                itemTitle: 'Metrics',
+                itemLink: ['pipelines', 'details', pipelineId, 'metrics'],
+            },
+            {
+                itemId: 'logs',
+                itemTitle: 'Logs',
+                itemLink: ['pipelines', 'details', pipelineId, 'logs'],
+            },
+            {
+                itemId: 'quick-edit',
+                itemTitle: 'Quick Edit',
+                itemLink: ['pipelines', 'details', pipelineId, 'quick-edit'],
+            },
+        ];
+    }
 }

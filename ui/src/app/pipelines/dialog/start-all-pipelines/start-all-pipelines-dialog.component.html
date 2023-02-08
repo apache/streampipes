@@ -19,31 +19,66 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div>
-            <div fxFlex="100" class="md-dialog-content" style="padding:20px;" *ngIf="page == 'preview'">
-                <h4>You are about to {{action ? 'start' : 'stop'}} the following pipelines:</h4>
+            <div
+                fxFlex="100"
+                class="md-dialog-content"
+                style="padding: 20px"
+                *ngIf="page === 'preview'"
+            >
+                <h4>
+                    You are about to {{ action ? 'start' : 'stop' }} the
+                    following pipelines:
+                </h4>
                 <div *ngFor="let pipeline of pipelinesToModify">
-                    <h5>{{pipeline.name}}</h5>
+                    <h5>{{ pipeline.name }}</h5>
                 </div>
                 <h5><b>Press 'Next' to start the process.</b></h5>
             </div>
-            <div fxFlex="100" class="md-dialog-content" style="padding:20px;" *ngIf="page == 'installation'">
+            <div
+                fxFlex="100"
+                class="md-dialog-content"
+                style="padding: 20px"
+                *ngIf="page === 'installation'"
+            >
                 <div *ngFor="let status of installationStatus">
-                    <h4>{{action ? 'Starting pipeline ' : 'Stopping pipeline'}} {{status.id + 1}} of
-                        {{pipelinesToModify.length}} ({{status.name}})...{{status.status}}</h4>
+                    <h4>
+                        {{
+                            action ? 'Starting pipeline ' : 'Stopping pipeline'
+                        }}
+                        {{ status.id + 1 }} of
+                        {{ pipelinesToModify.length }} ({{ status.name }})...{{
+                            status.status
+                        }}
+                    </h4>
                 </div>
-                <div *ngIf="pipelinesToModify.length == 0">
-                    <h4>Sorry, there are no pipelines that are currently {{action ? "idle." : "running."}}</h4>
+                <div *ngIf="pipelinesToModify.length === 0">
+                    <h4>
+                        Sorry, there are no pipelines that are currently
+                        {{ action ? 'idle.' : 'running.' }}
+                    </h4>
                 </div>
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close(false)" style="margin-right:10px;">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close(false)"
+            style="margin-right: 10px"
+        >
             Cancel
         </button>
-        <button mat-button mat-raised-button color="accent" [disabled]="installationRunning" (click)="next()">
-            {{nextButton}}
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            [disabled]="installationRunning"
+            (click)="next()"
+        >
+            {{ nextButton }}
         </button>
     </div>
 </div>

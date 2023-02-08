@@ -18,9 +18,16 @@
 
 import { Component, OnInit } from '@angular/core';
 import { EditorService } from './services/editor.service';
-import { DataSourceDescription, PipelineElementService, SpDataStream } from '@streampipes/platform-services';
-import { PipelineElementConfig, PipelineElementUnion } from './model/editor.model';
-import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
+import { PipelineElementService } from '@streampipes/platform-services';
+import {
+    PipelineElementConfig,
+    PipelineElementUnion,
+} from './model/editor.model';
+import {
+    DialogService,
+    PanelType,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { ShepherdService } from '../services/tour/shepherd.service';
@@ -31,141 +38,152 @@ import { AppConstants } from '../services/app.constants';
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
 
 @Component({
-  selector: 'editor',
-  templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss']
+    selector: 'sp-editor',
+    templateUrl: './editor.component.html',
+    styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent implements OnInit {
+    allElements: PipelineElementUnion[] = [];
 
-  allElements: PipelineElementUnion[] = [];
+    rawPipelineModel: PipelineElementConfig[] = [];
+    currentModifiedPipelineId: string;
 
-  rawPipelineModel: PipelineElementConfig[] = [];
-  currentModifiedPipelineId: string;
+    allElementsLoaded = false;
 
-  allElementsLoaded = false;
+    requiredStreamForTutorialAppId: any =
+        'org.apache.streampipes.sources.simulator.flowrate1';
+    requiredProcessorForTutorialAppId: any =
+        'org.apache.streampipes.processors.filters.jvm.numericalfilter';
+    requiredSinkForTutorialAppId: any =
+        'org.apache.streampipes.sinks.internal.jvm.datalake';
+    missingElementsForTutorial: any = [];
 
-  requiredStreamForTutorialAppId: any = 'org.apache.streampipes.sources.simulator.flowrate1';
-  requiredProcessorForTutorialAppId: any = 'org.apache.streampipes.processors.filters.jvm.numericalfilter';
-  requiredSinkForTutorialAppId: any = 'org.apache.streampipes.sinks.internal.jvm.datalake';
-  missingElementsForTutorial: any = [];
+    isTutorialOpen = false;
 
-  isTutorialOpen = false;
+    constructor(
+        private editorService: EditorService,
+        private pipelineElementService: PipelineElementService,
+        private authService: AuthService,
+        private dialogService: DialogService,
+        private shepherdService: ShepherdService,
+        private activatedRoute: ActivatedRoute,
+        private appConstants: AppConstants,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
-  constructor(private editorService: EditorService,
-              private pipelineElementService: PipelineElementService,
-              private authService: AuthService,
-              private dialogService: DialogService,
-              private shepherdService: ShepherdService,
-              private activatedRoute: ActivatedRoute,
-              private appConstants: AppConstants,
-              private breadcrumbService: SpBreadcrumbService) {
-  }
-
-  ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      if (params.pipelineId) {
-        this.currentModifiedPipelineId = params.pipelineId;
-      } else {
-        this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: 'New Pipeline'}]);
-      }
-    });
-    zip(this.pipelineElementService.getDataStreams(),
-      this.pipelineElementService.getDataProcessors(),
-      this.pipelineElementService.getDataSinks()).subscribe(response => {
-      this.allElements = this.allElements
-        .concat(response[0])
-        .concat(response[1])
-        .concat(response[2])
-        .sort((a, b) => {
-          return a.name.localeCompare(b.name);
+    ngOnInit() {
+        this.activatedRoute.params.subscribe(params => {
+            if (params.pipelineId) {
+                this.currentModifiedPipelineId = params.pipelineId;
+            } else {
+                this.breadcrumbService.updateBreadcrumb([
+                    SpPipelineRoutes.BASE,
+                    { label: 'New Pipeline' },
+                ]);
+            }
         });
-      this.allElementsLoaded = true;
-      this.checkForTutorial();
-    });
-  }
-
-  checkForTutorial() {
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser.showTutorial && !this.isTutorialOpen) {
-      if (this.requiredPipelineElementsForTourPresent()) {
-        this.isTutorialOpen = true;
-        this.dialogService.open(WelcomeTourComponent, {
-          panelType: PanelType.STANDARD_PANEL,
-          title: 'Welcome to ' + this.appConstants.APP_NAME,
-          data: {
-            'userInfo': currentUser
-          }
+        zip(
+            this.pipelineElementService.getDataStreams(),
+            this.pipelineElementService.getDataProcessors(),
+            this.pipelineElementService.getDataSinks(),
+        ).subscribe(response => {
+            this.allElements = this.allElements
+                .concat(response[0])
+                .concat(response[1])
+                .concat(response[2])
+                .sort((a, b) => {
+                    return a.name.localeCompare(b.name);
+                });
+            this.allElementsLoaded = true;
+            this.checkForTutorial();
         });
-      }
     }
-  }
 
-  collectStreams(sources: DataSourceDescription[]): SpDataStream[] {
-    const streams: SpDataStream[] = [];
-    sources.forEach(source => {
-      source.spDataStreams.forEach(stream => {
-        streams.push(stream);
-      });
-    });
-    return streams;
-  }
-
-  selectPipelineElements(index: number) {
-    // this.shepherdService.trigger('select-' + this.activeShorthand);
-  }
-
-  startCreatePipelineTour() {
-    if (this.requiredPipelineElementsForTourPresent()) {
-      this.shepherdService.startCreatePipelineTour();
-    } else {
-      this.missingElementsForTutorial = [];
-      if (!this.requiredStreamForTourPresent()) {
-        this.missingElementsForTutorial.push({'name': 'Flow Rate 1', 'appId': this.requiredStreamForTutorialAppId});
-      }
-      if (!this.requiredProcessorForTourPresent()) {
-        this.missingElementsForTutorial.push({
-          'name': 'Numerical Filter',
-          'appId': this.requiredProcessorForTutorialAppId
-        });
-      }
-      if (!this.requiredSinkForTourPresent()) {
-        this.missingElementsForTutorial.push({'name': 'Dashboard Sink', 'appId': this.requiredSinkForTutorialAppId});
-      }
-
-      this.dialogService.open(MissingElementsForTutorialComponent, {
-        panelType: PanelType.STANDARD_PANEL,
-        title: 'Tutorial requires pipeline elements',
-        data: {
-          'missingElementsForTutorial': this.missingElementsForTutorial
+    checkForTutorial() {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser.showTutorial && !this.isTutorialOpen) {
+            if (this.requiredPipelineElementsForTourPresent()) {
+                this.isTutorialOpen = true;
+                this.dialogService.open(WelcomeTourComponent, {
+                    panelType: PanelType.STANDARD_PANEL,
+                    title: 'Welcome to ' + this.appConstants.APP_NAME,
+                    data: {
+                        userInfo: currentUser,
+                    },
+                });
+            }
         }
-      });
     }
-  }
 
-  requiredPipelineElementsForTourPresent() {
-    return this.requiredStreamForTourPresent() &&
-      this.requiredProcessorForTourPresent() &&
-      this.requiredSinkForTourPresent();
-  }
+    startCreatePipelineTour() {
+        if (this.requiredPipelineElementsForTourPresent()) {
+            this.shepherdService.startCreatePipelineTour();
+        } else {
+            this.missingElementsForTutorial = [];
+            if (!this.requiredStreamForTourPresent()) {
+                this.missingElementsForTutorial.push({
+                    name: 'Flow Rate 1',
+                    appId: this.requiredStreamForTutorialAppId,
+                });
+            }
+            if (!this.requiredProcessorForTourPresent()) {
+                this.missingElementsForTutorial.push({
+                    name: 'Numerical Filter',
+                    appId: this.requiredProcessorForTutorialAppId,
+                });
+            }
+            if (!this.requiredSinkForTourPresent()) {
+                this.missingElementsForTutorial.push({
+                    name: 'Dashboard Sink',
+                    appId: this.requiredSinkForTutorialAppId,
+                });
+            }
 
-  requiredStreamForTourPresent() {
-    return this.requiredPeForTourPresent(this.allElements,
-      this.requiredStreamForTutorialAppId);
-  }
+            this.dialogService.open(MissingElementsForTutorialComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Tutorial requires pipeline elements',
+                data: {
+                    missingElementsForTutorial: this.missingElementsForTutorial,
+                },
+            });
+        }
+    }
 
-  requiredProcessorForTourPresent() {
-    return this.requiredPeForTourPresent(this.allElements,
-      this.requiredProcessorForTutorialAppId);
-  }
+    requiredPipelineElementsForTourPresent() {
+        return (
+            this.requiredStreamForTourPresent() &&
+            this.requiredProcessorForTourPresent() &&
+            this.requiredSinkForTourPresent()
+        );
+    }
 
-  requiredSinkForTourPresent() {
-    return this.requiredPeForTourPresent(this.allElements,
-      this.requiredSinkForTutorialAppId);
-  }
+    requiredStreamForTourPresent() {
+        return this.requiredPeForTourPresent(
+            this.allElements,
+            this.requiredStreamForTutorialAppId,
+        );
+    }
 
-  requiredPeForTourPresent(list, appId) {
-    return list && list.some(el => {
-      return el.appId === appId;
-    });
-  }
+    requiredProcessorForTourPresent() {
+        return this.requiredPeForTourPresent(
+            this.allElements,
+            this.requiredProcessorForTutorialAppId,
+        );
+    }
+
+    requiredSinkForTourPresent() {
+        return this.requiredPeForTourPresent(
+            this.allElements,
+            this.requiredSinkForTutorialAppId,
+        );
+    }
+
+    requiredPeForTourPresent(list, appId) {
+        return (
+            list &&
+            list.some(el => {
+                return el.appId === appId;
+            })
+        );
+    }
 }

@@ -20,12 +20,12 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
-  AdapterDescriptionUnion,
-  EventSchema,
-  GenericAdapterSetDescription,
-  GenericAdapterStreamDescription,
-  SpecificAdapterSetDescription,
-  SpecificAdapterStreamDescription
+    AdapterDescriptionUnion,
+    EventSchema,
+    GenericAdapterSetDescription,
+    GenericAdapterStreamDescription,
+    SpecificAdapterSetDescription,
+    SpecificAdapterStreamDescription,
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
@@ -34,128 +34,137 @@ import { TransformationRuleService } from '../../services/transformation-rule.se
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'sp-adapter-configuration',
-  templateUrl: './adapter-configuration.component.html',
-  styleUrls: ['./adapter-configuration.component.scss']
+    selector: 'sp-adapter-configuration',
+    templateUrl: './adapter-configuration.component.html',
+    styleUrls: ['./adapter-configuration.component.scss'],
 })
 export class AdapterConfigurationComponent implements OnInit {
+    /**
+     * Used to display the type of the configured adapter
+     */
+    @Input() displayName = '';
+    @Input() adapter: AdapterDescriptionUnion;
+    @Input() isEditMode;
 
-  /**
-   * Used to display the type of the configured adapter
-   */
-  @Input() displayName = '';
-  @Input() adapter: AdapterDescriptionUnion;
-  @Input() isEditMode;
+    /**
+     * Required to render the corresponding components
+     */
+    isDataStreamDescription = true;
+    isGenericAdapter = false;
 
-  /**
-   * Required to render the corresponding components
-   */
-  isDataStreamDescription = true;
-  isGenericAdapter = false;
+    myStepper: MatStepper;
+    parentForm: UntypedFormGroup;
 
-  myStepper: MatStepper;
-  parentForm: UntypedFormGroup;
+    eventSchema: EventSchema;
+    oldEventSchema: EventSchema;
 
-  eventSchema: EventSchema;
-  oldEventSchema: EventSchema;
+    private eventSchemaComponent: EventSchemaComponent;
 
-  private eventSchemaComponent: EventSchemaComponent;
+    constructor(
+        private transformationRuleService: TransformationRuleService,
+        private shepherdService: ShepherdService,
+        private connectService: ConnectService,
+        private _formBuilder: UntypedFormBuilder,
+        private router: Router,
+    ) {}
 
-  constructor(
-    private transformationRuleService: TransformationRuleService,
-    private shepherdService: ShepherdService,
-    private connectService: ConnectService,
-    private _formBuilder: UntypedFormBuilder,
-    private router: Router,
-  ) {
-  }
+    ngOnInit() {
+        this.parentForm = this._formBuilder.group({});
 
-  ngOnInit() {
-    this.parentForm = this._formBuilder.group({});
+        this.isDataStreamDescription =
+            this.connectService.isDataStreamDescription(this.adapter);
+        this.isGenericAdapter = this.connectService.isGenericDescription(
+            this.adapter,
+        );
 
-    this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-    this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
-
-    this.eventSchema = this.connectService.getEventSchema(this.adapter);
-
-  }
-
-  removeSelection() {
-    this.router.navigate(['connect', 'create']).then();
-  }
-
-  clickProtocolSettingsNextButton() {
-    this.shepherdService.trigger('specific-settings-next-button');
-    this.goForward();
-  }
-
-  clickSpecificSettingsNextButton() {
-    this.shepherdService.trigger('specific-settings-next-button');
-    this.guessEventSchema();
-    this.goForward();
-  }
-
-  clickEventSchemaNextButtonButton() {
-    this.setSchema();
-
-    this.shepherdService.trigger('event-schema-next-button');
-    this.goForward();
-  }
-
-  clickFormatSelectionNextButton() {
-    this.shepherdService.trigger('format-selection-next-button');
-    this.guessEventSchema();
-    this.goForward();
-  }
-
-  guessEventSchema() {
-    const eventSchema: EventSchema = this.connectService.getEventSchema(this.adapter);
-    if (eventSchema.eventProperties.length === 0) {
-      this.eventSchemaComponent.guessSchema();
-    } else {
-      this.oldEventSchema = eventSchema;
+        this.eventSchema = this.connectService.getEventSchema(this.adapter);
     }
 
-
-  }
-
-  public setSchema() {
-
-    if (this.adapter instanceof GenericAdapterSetDescription) {
-      (this.adapter as GenericAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
-    } else if (this.adapter instanceof SpecificAdapterSetDescription) {
-      (this.adapter as SpecificAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
-    } else if (this.adapter instanceof GenericAdapterStreamDescription) {
-      (this.adapter as GenericAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
-    } else if (this.adapter instanceof SpecificAdapterStreamDescription) {
-      (this.adapter as SpecificAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
-    } else {
-      console.log('Error: Adapter type is unknown');
+    removeSelection() {
+        this.router.navigate(['connect', 'create']).then();
     }
 
-    this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
+    clickProtocolSettingsNextButton() {
+        this.shepherdService.trigger('specific-settings-next-button');
+        this.goForward();
+    }
 
-    this.transformationRuleService.setNewEventSchema(this.eventSchema);
-    this.adapter.rules = this.transformationRuleService.getTransformationRuleDescriptions();
-  }
+    clickSpecificSettingsNextButton() {
+        this.shepherdService.trigger('specific-settings-next-button');
+        this.guessEventSchema();
+        this.goForward();
+    }
 
-  goBack() {
-    this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
-  }
+    clickEventSchemaNextButtonButton() {
+        this.setSchema();
 
-  goForward() {
-    this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
-  }
+        this.shepherdService.trigger('event-schema-next-button');
+        this.goForward();
+    }
 
-  public adapterWasStarted() {
-    this.router.navigate(['connect']).then();
-  }
+    clickFormatSelectionNextButton() {
+        this.shepherdService.trigger('format-selection-next-button');
+        this.guessEventSchema();
+        this.goForward();
+    }
 
-  @ViewChild(EventSchemaComponent) set schemaComponent(eventSchemaComponent: EventSchemaComponent) {
-    this.eventSchemaComponent = eventSchemaComponent;
-  }
+    guessEventSchema() {
+        const eventSchema: EventSchema = this.connectService.getEventSchema(
+            this.adapter,
+        );
+        if (eventSchema.eventProperties.length === 0) {
+            this.eventSchemaComponent.guessSchema();
+        } else {
+            this.oldEventSchema = eventSchema;
+        }
+    }
 
-  @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
-    this.myStepper = stepperComponent;
-  }
+    public setSchema() {
+        if (this.adapter instanceof GenericAdapterSetDescription) {
+            (this.adapter as GenericAdapterSetDescription).dataSet.eventSchema =
+                this.eventSchema;
+        } else if (this.adapter instanceof SpecificAdapterSetDescription) {
+            (
+                this.adapter as SpecificAdapterSetDescription
+            ).dataSet.eventSchema = this.eventSchema;
+        } else if (this.adapter instanceof GenericAdapterStreamDescription) {
+            (
+                this.adapter as GenericAdapterStreamDescription
+            ).dataStream.eventSchema = this.eventSchema;
+        } else if (this.adapter instanceof SpecificAdapterStreamDescription) {
+            (
+                this.adapter as SpecificAdapterStreamDescription
+            ).dataStream.eventSchema = this.eventSchema;
+        } else {
+            console.log('Error: Adapter type is unknown');
+        }
+
+        this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
+
+        this.transformationRuleService.setNewEventSchema(this.eventSchema);
+        this.adapter.rules =
+            this.transformationRuleService.getTransformationRuleDescriptions();
+    }
+
+    goBack() {
+        this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
+    }
+
+    goForward() {
+        this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
+    }
+
+    public adapterWasStarted() {
+        this.router.navigate(['connect']).then();
+    }
+
+    @ViewChild(EventSchemaComponent) set schemaComponent(
+        eventSchemaComponent: EventSchemaComponent,
+    ) {
+        this.eventSchemaComponent = eventSchemaComponent;
+    }
+
+    @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
+        this.myStepper = stepperComponent;
+    }
 }

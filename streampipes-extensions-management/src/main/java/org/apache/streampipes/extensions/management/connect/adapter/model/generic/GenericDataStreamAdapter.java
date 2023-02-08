@@ -18,26 +18,17 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.generic;
 
+import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStreamDescription> {
 
   public static final String ID = GenericAdapterStreamDescription.ID;
 
-  Logger logger = LoggerFactory.getLogger(Adapter.class);
-
   public GenericDataStreamAdapter() {
     super();
-  }
-
-  public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription, boolean debug) {
-    super(adapterDescription, debug);
   }
 
   public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription) {
@@ -47,14 +38,12 @@ public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStrea
   @Override
   public GenericAdapterStreamDescription declareModel() {
     GenericAdapterStreamDescription adapterDescription = new GenericAdapterStreamDescription();
-//        adapterDescription.setAdapterId(GenericAdapterStreamDescription.ID);
-//        adapterDescription.setUri(GenericAdapterStreamDescription.ID);
     adapterDescription.setAppId(GenericAdapterStreamDescription.ID);
     return adapterDescription;
   }
 
   @Override
-  public Adapter getInstance(GenericAdapterStreamDescription adapterDescription) {
+  public IAdapter<GenericAdapterStreamDescription> getInstance(GenericAdapterStreamDescription adapterDescription) {
     return new GenericDataStreamAdapter(adapterDescription);
   }
 

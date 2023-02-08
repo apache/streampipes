@@ -30,7 +30,6 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
-import org.apache.streampipes.sinks.databases.jvm.influxdb.InfluxDbController;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
 import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
@@ -50,7 +49,6 @@ public class DatabasesJvmInit extends ExtensionsModelSubmitter {
             8090)
         .registerPipelineElements(
             new CouchDbController(),
-            new InfluxDbController(),
             new UpcUaController(),
             new PostgreSqlController(),
             new IotDbController(),

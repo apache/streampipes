@@ -83,104 +83,107 @@ import org.apache.streampipes.rest.impl.pe.DataProcessorResource;
 import org.apache.streampipes.rest.impl.pe.DataSinkResource;
 import org.apache.streampipes.rest.impl.pe.DataStreamResource;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
+import org.apache.streampipes.service.base.rest.BaseResourceConfig;
 import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.ws.rs.ApplicationPath;
 
-import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 @Configuration
 @ApplicationPath("/api")
-public class StreamPipesResourceConfig extends ResourceConfig {
+public class StreamPipesResourceConfig extends BaseResourceConfig {
 
-  public StreamPipesResourceConfig() {
-    setProperties(Collections.singletonMap("jersey.config.server.response.setStatusOverSendError", true));
-    register(AccountActivationResource.class);
-    register(AdapterMonitoringResource.class);
-    register(Authentication.class);
-    register(AssetDashboardResource.class);
-    register(AssetManagementResource.class);
-    register(AutoComplete.class);
-    register(CategoryResource.class);
-    register(ConsulConfig.class);
-    register(ContainerProvidedOptions.class);
-    register(DashboardWidget.class);
-    register(Dashboard.class);
-    register(DataExportResource.class);
-    register(DataImportResource.class);
-    register(DataLakeImageResource.class);
-    register(DataLakeResourceV3.class);
-    register(DataLakeMeasureResourceV3.class);
-    register(DataLakeMeasureResourceV4.class);
-    register(DataStream.class);
-    register(EmailConfigurationResource.class);
-    register(EmailResource.class);
-    register(ExtensionsServiceEndpointResource.class);
-    register(FunctionsResource.class);
-    register(GeneralConfigurationResource.class);
-    register(GenericStorageResource.class);
-    register(LabelResource.class);
-    register(MeasurementUnitResource.class);
-    register(Notification.class);
-    register(OntologyMeasurementUnit.class);
-    register(PermissionResource.class);
-    register(PersistedDataStreamResource.class);
-    register(PipelineCanvasMetadataCache.class);
-    register(PipelineCanvasMetadataResource.class);
-    register(PipelineCache.class);
-    register(PipelineCategory.class);
-    register(PipelineElementAsset.class);
-    register(PipelineElementCategory.class);
-    register(PipelineElementFile.class);
-    register(PipelineElementImport.class);
-    register(PipelineElementPreview.class);
-    register(PipelineElementRuntimeInfo.class);
-    register(PipelineMonitoring.class);
-    register(PipelineResource.class);
-    register(PipelineTemplate.class);
-    register(DataSinkResource.class);
-    register(DataProcessorResource.class);
-    register(DataStreamResource.class);
-    register(Setup.class);
-    register(ResetResource.class);
-    register(RestorePasswordResource.class);
-    register(ServiceHealthResource.class);
-    register(UserResource.class);
-    register(Version.class);
-    register(PipelineElementAsset.class);
-    register(DataLakeDashboardResource.class);
-    register(DataLakeWidgetResource.class);
-    register(DataLakeResourceV3.class);
-    register(PipelineElementFile.class);
-    register(DashboardWidget.class);
-    register(Dashboard.class);
-    register(VisualizablePipelineResource.class);
-    register(UserGroupResource.class);
+  @Override
+  public Set<Class<?>> getClassesToRegister() {
+    return Set.of(
+        AccountActivationResource.class,
+        AdapterMonitoringResource.class,
+        Authentication.class,
+        AssetDashboardResource.class,
+        AssetManagementResource.class,
+        AutoComplete.class,
+        CategoryResource.class,
+        ConsulConfig.class,
+        ContainerProvidedOptions.class,
+        DashboardWidget.class,
+        Dashboard.class,
+        DataExportResource.class,
+        DataImportResource.class,
+        DataLakeDashboardResource.class,
+        DataLakeWidgetResource.class,
+        DataLakeImageResource.class,
+        DataLakeResourceV3.class,
+        DataLakeMeasureResourceV3.class,
+        DataLakeMeasureResourceV4.class,
+        DataStream.class,
+        EmailConfigurationResource.class,
+        EmailResource.class,
+        ExtensionsServiceEndpointResource.class,
+        FunctionsResource.class,
+        GeneralConfigurationResource.class,
+        GenericStorageResource.class,
+        LabelResource.class,
+        MeasurementUnitResource.class,
+        Notification.class,
+        OntologyMeasurementUnit.class,
+        PermissionResource.class,
+        PersistedDataStreamResource.class,
+        PipelineCanvasMetadataCache.class,
+        PipelineCanvasMetadataResource.class,
+        PipelineCache.class,
+        PipelineCategory.class,
+        PipelineElementAsset.class,
+        PipelineElementCategory.class,
+        PipelineElementFile.class,
+        PipelineElementImport.class,
+        PipelineElementPreview.class,
+        PipelineElementRuntimeInfo.class,
+        PipelineMonitoring.class,
+        PipelineResource.class,
+        PipelineTemplate.class,
+        DataSinkResource.class,
+        DataProcessorResource.class,
+        DataStreamResource.class,
+        Setup.class,
+        ResetResource.class,
+        RestorePasswordResource.class,
+        ServiceHealthResource.class,
+        UserResource.class,
+        Version.class,
 
-    // Serializers
-    register(JacksonSerializationProvider.class);
-    register(MultiPartFeature.class);
+        VisualizablePipelineResource.class,
+        UserGroupResource.class,
 
-    // Platform Services
-    register(PipelineElementTemplateResource.class);
-    register(DataLakeResourceV4.class);
-    register(OpenApiResource.class);
+        // Serializers
+        JacksonSerializationProvider.class,
+        MultiPartFeature.class,
 
+        // Platform Services
+        PipelineElementTemplateResource.class,
+        DataLakeResourceV4.class,
+        OpenApiResource.class,
 
-    // Connect Master
-    register(AdapterResource.class);
-    register(DescriptionResource.class);
-    register(SourcesResource.class);
-    register(GuessResource.class);
-//    register(MultiPartFeature.class);
-    register(UnitResource.class);
-    register(WorkerAdministrationResource.class);
-    register(RuntimeResolvableResource.class);
+        // Connect Master
+        AdapterResource.class,
+        DescriptionResource.class,
+        SourcesResource.class,
+        GuessResource.class,
+
+        UnitResource.class,
+        WorkerAdministrationResource.class,
+        RuntimeResolvableResource.class
+    );
   }
 
+  @Override
+  public void addAdditionalConfigs(Map<String, Object> configs) {
+    configs.put(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
+  }
 }

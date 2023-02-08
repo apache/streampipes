@@ -89,4 +89,8 @@ public class TransformValueAdapterPipelineElement implements IAdapterPipelineEle
   public Map<String, Object> process(Map<String, Object> event) {
     return eventTransformer.transform(event);
   }
+
+  public ValueEventTransformer getEventTransformer() {
+    return eventTransformer;
+  }
 }

@@ -20,73 +20,81 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { DataProcessorInvocation } from '@streampipes/platform-services';
-import { PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
+import {
+    PipelineElementConfig,
+    PipelineElementUnion,
+} from '../../model/editor.model';
 
 @Component({
-  selector: 'compatible-elements',
-  templateUrl: './compatible-elements.component.html',
-  styleUrls: ['./compatible-elements.component.scss']
+    selector: 'sp-compatible-elements',
+    templateUrl: './compatible-elements.component.html',
+    styleUrls: ['./compatible-elements.component.scss'],
 })
 export class CompatibleElementsComponent implements OnInit {
+    @Input()
+    rawPipelineModel: PipelineElementConfig[];
 
-  @Input()
-  rawPipelineModel: PipelineElementConfig[];
+    @Input()
+    pipelineElementDomId: any;
 
-  @Input()
-  pipelineElementDomId: any;
+    @Input()
+    possibleElements: PipelineElementUnion[];
 
-  @Input()
-  possibleElements: PipelineElementUnion[];
+    styles: any[] = [];
 
-  styles: any[] = [];
+    constructor(
+        private dialogRef: DialogRef<CompatibleElementsComponent>,
+        private JsPlumbService: JsplumbService,
+    ) {
+        // this.ElementIconText = ElementIconText;
+    }
 
+    ngOnInit() {
+        this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));
+        this.possibleElements.forEach(pe => {
+            this.styles.push(this.makeStandardStyle());
+        });
+    }
 
-  constructor(private dialogRef: DialogRef<CompatibleElementsComponent>,
-              private JsPlumbService: JsplumbService) {
-    // this.ElementIconText = ElementIconText;
-  }
+    create(possibleElement) {
+        this.JsPlumbService.createElement(
+            this.rawPipelineModel,
+            possibleElement,
+            this.pipelineElementDomId,
+        );
+        this.hide();
+    }
 
-  ngOnInit() {
-    this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));
-    this.possibleElements.forEach(pe => {
-      this.styles.push(this.makeStandardStyle());
-    });
-  }
+    iconText(elementId) {
+        // return this.ElementIconText.getElementIconText(elementId);
+    }
 
-  create(possibleElement) {
-    this.JsPlumbService.createElement(this.rawPipelineModel, possibleElement, this.pipelineElementDomId);
-    this.hide();
-  }
+    hide() {
+        // this.$mdDialog.hide();
+        this.dialogRef.close();
+    }
 
-  iconText(elementId) {
-    // return this.ElementIconText.getElementIconText(elementId);
-  }
+    isDataProcessor(possibleElement: PipelineElementUnion) {
+        return possibleElement instanceof DataProcessorInvocation;
+    }
 
-  hide() {
-    // this.$mdDialog.hide();
-    this.dialogRef.close();
-  }
+    makeStandardStyle() {
+        return {
+            background: 'var(--color-bg-dialog)',
+            cursor: 'auto',
+        };
+    }
 
-  isDataProcessor(possibleElement: PipelineElementUnion) {
-    return possibleElement instanceof DataProcessorInvocation;
-  }
+    makeHoverStyle() {
+        return {
+            background: 'var(--color-bg-1)',
+            cursor: 'pointer',
+        };
+    }
 
-  makeStandardStyle() {
-    return {
-      background: 'var(--color-bg-dialog)',
-      cursor: 'auto'
-    };
-  }
-
-  makeHoverStyle() {
-    return {
-      background: 'var(--color-bg-1)',
-      cursor: 'pointer'
-    };
-  }
-
-  changeStyle(index: number, hover: boolean) {
-    hover ? this.styles[index] = this.makeHoverStyle() : this.styles[index] = this.makeStandardStyle();
-  }
-
+    changeStyle(index: number, hover: boolean) {
+        hover
+            ? (this.styles[index] = this.makeHoverStyle())
+            : (this.styles[index] = this.makeStandardStyle());
+    }
 }

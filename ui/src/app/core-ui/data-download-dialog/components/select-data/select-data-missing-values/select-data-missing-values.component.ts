@@ -16,23 +16,19 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DataExportConfig } from '../../../model/data-export-config.model';
 
 @Component({
-  selector: 'sp-select-data-missing-values',
-  templateUrl: './select-data-missing-values.component.html',
-  styleUrls: ['./select-data-missing-values.component.scss',
-              '../select-data.component.scss']
+    selector: 'sp-select-data-missing-values',
+    templateUrl: './select-data-missing-values.component.html',
+    styleUrls: [
+        './select-data-missing-values.component.scss',
+        '../select-data.component.scss',
+    ],
 })
-export class SelectDataMissingValuesComponent implements OnInit {
+export class SelectDataMissingValuesComponent {
+    @Input() dataExportConfig: DataExportConfig;
 
-  @Input() dataExportConfig: DataExportConfig;
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+    constructor() {}
 }

@@ -16,22 +16,46 @@
   ~
   -->
 
-<div class="md-padding sp-fade" fxLayout="row" fxLayoutAlign="center center"
-     style="min-height:100vh !important; background:white;">
-    <div fxFlex="80" fxLayout="column" fxLayoutAlign="center center" style="display:flex;">
-        <img src="../../../../assets/img/sp/logo.png" style="max-width:500px;"/>
+<div
+    class="md-padding sp-fade"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    style="min-height: 100vh !important; background: white"
+>
+    <div
+        fxFlex="80"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        style="display: flex"
+    >
+        <img
+            src="../../../../assets/img/sp/logo.png"
+            style="max-width: 500px"
+        />
 
         <div fxFlex="100">
             <h2>Welcome!</h2>
         </div>
         <div fxFlex="100">
-            <h4 style="text-align:center;">Please wait while {{appConstants.APP_NAME}} is starting up.</h4>
-            <h5 style="text-align:center;"><i>On some systems, initial startup might take a few minutes. We'll automatically forward you once {{appConstants.APP_NAME}} is ready.</i></h5>
+            <h4 style="text-align: center">
+                Please wait while {{ appConstants.APP_NAME }} is starting up.
+            </h4>
+            <h5 style="text-align: center">
+                <i
+                    >On some systems, initial startup might take a few minutes.
+                    We'll automatically forward you once
+                    {{ appConstants.APP_NAME }} is ready.</i
+                >
+            </h5>
         </div>
 
         <div fxFlex="100" fxLayoutAlign="center center">
-            <mat-progress-bar class="sp-progress" mode="determinate" [value]="progress" color="accent"></mat-progress-bar>
+            <mat-progress-bar
+                class="sp-progress"
+                mode="determinate"
+                [value]="progress"
+                color="accent"
+            ></mat-progress-bar>
         </div>
     </div>
-
 </div>

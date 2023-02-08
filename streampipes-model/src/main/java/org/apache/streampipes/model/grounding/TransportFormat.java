@@ -18,13 +18,11 @@
 
 package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransportFormat extends UnnamedStreamPipesEntity {
+public class TransportFormat {
 
   private static final long serialVersionUID = -525073244975968386L;
 
@@ -42,7 +40,6 @@ public class TransportFormat extends UnnamedStreamPipesEntity {
   }
 
   public TransportFormat(TransportFormat other) {
-    super(other);
     this.rdfType = other.getRdfType();
   }
 

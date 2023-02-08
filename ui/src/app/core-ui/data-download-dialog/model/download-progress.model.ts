@@ -17,6 +17,6 @@
  */
 
 export interface DownloadProgress {
- downloadedMBs?: number;
- finished: boolean;
+    downloadedMBs?: number;
+    finished: boolean;
 }

@@ -23,12 +23,12 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class RestApi {
-
     encodeURIComponent: any;
 
-    constructor (private platformServicesCommons: PlatformServicesCommons,
-                 private $http: HttpClient) {
-    }
+    constructor(
+        private platformServicesCommons: PlatformServicesCommons,
+        private $http: HttpClient,
+    ) {}
 
     getServerUrl() {
         return this.platformServicesCommons.apiBasePath;
@@ -44,16 +44,21 @@ export class RestApi {
 
     configured(): Observable<any> {
         return this.$http.get(this.getServerUrl() + '/setup/configured', {
-            headers: { ignoreLoadingBar: '' }
+            headers: { ignoreLoadingBar: '' },
         });
     }
 
     getUnreadNotificationsCount(): Observable<any> {
-        return this.$http.get(this.urlApiBase() + '/notifications/count', { headers: { ignoreLoadingBar: '' }});
+        return this.$http.get(this.urlApiBase() + '/notifications/count', {
+            headers: { ignoreLoadingBar: '' },
+        });
     }
 
     getDomainKnowledgeItems(query) {
-        return this.$http.post(this.getServerUrl() + '/autocomplete/domain', query);
+        return this.$http.post(
+            this.getServerUrl() + '/autocomplete/domain',
+            query,
+        );
     }
 
     getAllUnits() {
@@ -65,7 +70,11 @@ export class RestApi {
     }
 
     getUnit(resource) {
-        return this.$http.get(this.getServerUrl() + '/units/instances/' + encodeURIComponent(resource));
+        return this.$http.get(
+            this.getServerUrl() +
+                '/units/instances/' +
+                encodeURIComponent(resource),
+        );
     }
 
     getEpaCategories() {
@@ -89,7 +98,10 @@ export class RestApi {
     }
 
     updateCachedPipeline(rawPipelineModel: any) {
-        return this.$http.post(this.urlApiBase() + '/pipeline-cache', rawPipelineModel);
+        return this.$http.post(
+            this.urlApiBase() + '/pipeline-cache',
+            rawPipelineModel,
+        );
     }
 
     removePipelineFromCache() {

@@ -44,7 +44,12 @@ public class XmlMapConverter {
         convert((Map<String, Object>) map.get(key));
       } else if (value instanceof String) {
         String stringValue = String.valueOf(value);
-        if (isInteger(stringValue)) {
+
+        if (isBoolean(stringValue)) {
+          map.put(key, Boolean.parseBoolean(stringValue));
+        } else if (isLong(stringValue)) {
+          map.put(key, Long.parseLong(stringValue));
+        } else if (isInteger(stringValue)) {
           map.put(key, Integer.parseInt(stringValue));
         } else if (isFloat(stringValue)) {
           map.put(key, Float.parseFloat(stringValue));
@@ -99,5 +104,18 @@ public class XmlMapConverter {
     } catch (NumberFormatException e) {
       return false;
     }
+  }
+
+  private Boolean isLong(String value) {
+    try {
+      Long.parseLong(value);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
+  private Boolean isBoolean(String value) {
+    return value.toLowerCase().equals("true") || value.toLowerCase().equals("false");
   }
 }

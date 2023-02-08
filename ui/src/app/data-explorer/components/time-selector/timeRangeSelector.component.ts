@@ -16,142 +16,165 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewEncapsulation,
+} from '@angular/core';
 import { TimeSettings } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-time-range-selector',
-  templateUrl: 'timeRangeSelector.component.html',
-  styleUrls: ['./timeRangeSelector.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'sp-time-range-selector',
+    templateUrl: 'timeRangeSelector.component.html',
+    styleUrls: ['./timeRangeSelector.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class TimeRangeSelectorComponent implements OnInit {
+    @Output() dateRangeEmitter = new EventEmitter<TimeSettings>();
 
-  @Output() dateRangeEmitter = new EventEmitter<TimeSettings>();
+    _dateRange: TimeSettings;
 
-  _dateRange: TimeSettings;
+    startDate: Date;
+    endDate: Date;
 
-  startDate: Date;
-  endDate: Date;
+    public possibleTimeButtons = [
+        { value: '15 min', offset: 15 },
+        { value: '1 hour', offset: 60 },
+        { value: '1 day', offset: 1440 },
+        { value: '1 week', offset: 10080 },
+        { value: '1 month', offset: 43800 },
+        { value: '1 year', offset: 525600 },
+        { value: 'custom', offset: -1 },
+    ];
 
-  public possibleTimeButtons = [
-    {value: '15 min', offset: 15},
-    {value: '1 hour', offset: 60},
-    {value: '1 day', offset: 1440},
-    {value: '1 week', offset: 10080},
-    {value: '1 month', offset: 43800},
-    {value: '1 year', offset: 525600},
-    {value: 'custom', offset: -1},
-  ];
+    public selectedTimeButton;
 
-  public selectedTimeButton;
+    constructor() {}
 
-  constructor() {
-  }
-
-  ngOnInit() {
-    if (!this.dateRange.startTime) {
-      this.setCurrentDateRange(this.possibleTimeButtons[0]);
-    } else if (this.dateRange.dynamicSelection !== -1) {
-      this.setCurrentDateRange(this.possibleTimeButtons.find(tb => tb.offset === this.dateRange.dynamicSelection));
-    } else {
-      this.startDate = new Date(this._dateRange.startTime);
-      this.endDate = new Date(this._dateRange.endTime);
+    ngOnInit() {
+        if (!this.dateRange.startTime) {
+            this.setCurrentDateRange(this.possibleTimeButtons[0]);
+        } else if (this.dateRange.dynamicSelection !== -1) {
+            this.setCurrentDateRange(
+                this.possibleTimeButtons.find(
+                    tb => tb.offset === this.dateRange.dynamicSelection,
+                ),
+            );
+        } else {
+            this.startDate = new Date(this._dateRange.startTime);
+            this.endDate = new Date(this._dateRange.endTime);
+        }
     }
-  }
 
-  @Input()
-  set dateRange(dateRange: TimeSettings) {
-    if (!this.compare(dateRange, this._dateRange)) {
-      this._dateRange = dateRange;
-      this.updateTimeSettings();
+    @Input()
+    set dateRange(dateRange: TimeSettings) {
+        if (!this.compare(dateRange, this._dateRange)) {
+            this._dateRange = dateRange;
+            this.updateTimeSettings();
+        }
     }
-  }
 
-  get dateRange(): TimeSettings {
-    return this._dateRange;
-  }
+    get dateRange(): TimeSettings {
+        return this._dateRange;
+    }
 
-  compare(newDateRange: TimeSettings,
-          oldDateRange: TimeSettings): boolean {
-    return newDateRange &&
-        oldDateRange &&
-        newDateRange.startTime === oldDateRange.startTime
-        && newDateRange.endTime === oldDateRange.endTime
-        && newDateRange.dynamicSelection === oldDateRange.dynamicSelection;
-  }
+    compare(newDateRange: TimeSettings, oldDateRange: TimeSettings): boolean {
+        return (
+            newDateRange &&
+            oldDateRange &&
+            newDateRange.startTime === oldDateRange.startTime &&
+            newDateRange.endTime === oldDateRange.endTime &&
+            newDateRange.dynamicSelection === oldDateRange.dynamicSelection
+        );
+    }
 
+    updateTimeSettings() {
+        this.startDate = new Date(this.dateRange.startTime);
+        this.endDate = new Date(this.dateRange.endTime);
+        this.selectedTimeButton = this.findOffset(
+            this.dateRange.dynamicSelection,
+        );
+        this.reloadData();
+    }
 
+    findOffset(dynamicSelection: number) {
+        return (
+            this.possibleTimeButtons.find(
+                el => el.offset === dynamicSelection,
+            ) || this.possibleTimeButtons[0]
+        );
+    }
 
-  updateTimeSettings() {
-    this.startDate = new Date(this.dateRange.startTime);
-    this.endDate = new Date(this.dateRange.endTime);
-    this.selectedTimeButton = this.findOffset(this.dateRange.dynamicSelection);
-    this.reloadData();
-  }
+    reloadData() {
+        this.dateRangeEmitter.emit(this.dateRange);
+    }
 
-  findOffset(dynamicSelection: number) {
-    return this.possibleTimeButtons.find(el => el.offset === dynamicSelection) || this.possibleTimeButtons[0];
-  }
+    increaseTime() {
+        this.changeTimeByInterval((a, b) => a + b);
+    }
 
-  reloadData() {
-    this.dateRangeEmitter.emit(this.dateRange);
-  }
+    decreaseTime() {
+        this.changeTimeByInterval((a, b) => a - b);
+    }
 
-  increaseTime() {
-    this.changeTimeByInterval((a, b) => a + b);
-  }
+    refreshData() {
+        const difference = this.endDate.getTime() - this.startDate.getTime();
 
-  decreaseTime() {
-    this.changeTimeByInterval((a, b) => a - b);
-  }
+        const current = new Date().getTime();
+        this.dateRange = {
+            startTime: current - difference,
+            endTime: current,
+            dynamicSelection: this.dateRange.dynamicSelection,
+        };
 
-  refreshData() {
-    const difference = this.endDate.getTime() - this.startDate.getTime();
+        this.reloadData();
+    }
 
-    const current = new Date().getTime();
-    this.dateRange = {
-      startTime: current - difference,
-      endTime: current,
-      dynamicSelection: this.dateRange.dynamicSelection
-    };
+    private changeTimeByInterval(func) {
+        const difference = this.endDate.getTime() - this.startDate.getTime();
+        const newStartTime = func(this.startDate.getTime(), difference);
+        const newEndTime = func(this.endDate.getTime(), difference);
 
-    this.reloadData();
-  }
+        this.startDate = new Date(newStartTime);
+        this.endDate = new Date(newEndTime);
+        this.selectedTimeButton =
+            this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
+        this.dateRange = {
+            startTime: newStartTime,
+            endTime: newEndTime,
+            dynamicSelection: -1,
+        };
+    }
 
-  private changeTimeByInterval(func) {
-    const difference = this.endDate.getTime() - this.startDate.getTime();
-    const newStartTime = (func(this.startDate.getTime(), difference));
-    const newEndTime = (func(this.endDate.getTime(), difference));
+    changeCustomDateRange() {
+        this.selectedTimeButton =
+            this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
+        const newStartTime = this.startDate.getTime();
+        const newEndTime = this.endDate.getTime();
 
-    this.startDate = new Date(newStartTime);
-    this.endDate = new Date(newEndTime);
-    this.selectedTimeButton = this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
-    this.dateRange = {startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1};
-  }
+        this.dateRange = {
+            startTime: newStartTime,
+            endTime: newEndTime,
+            dynamicSelection: -1,
+        };
+    }
 
-  changeCustomDateRange() {
-    this.selectedTimeButton = this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
-    const newStartTime = this.startDate.getTime();
-    const newEndTime = this.endDate.getTime();
-
-    this.dateRange = {startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1};
-  }
-
-  /**
-   * Sets the current date range from now to the value of offset in the past
-   * @param offset in minutes
-   */
-  setCurrentDateRange(item) {
-    this.selectedTimeButton = item;
-    const current = new Date().getTime();
-    this.startDate = new Date(current - item.offset * 60000);
-    this.endDate = new Date(current);
-    this.dateRange = {
-      startTime: this.startDate.getTime(),
-      endTime: this.endDate.getTime(),
-      dynamicSelection: item.offset
-    };
-  }
-
+    /**
+     * Sets the current date range from now to the value of offset in the past
+     * @param offset in minutes
+     */
+    setCurrentDateRange(item) {
+        this.selectedTimeButton = item;
+        const current = new Date().getTime();
+        this.startDate = new Date(current - item.offset * 60000);
+        this.endDate = new Date(current);
+        this.dateRange = {
+            startTime: this.startDate.getTime(),
+            endTime: this.endDate.getTime(),
+            dynamicSelection: item.offset,
+        };
+    }
 }

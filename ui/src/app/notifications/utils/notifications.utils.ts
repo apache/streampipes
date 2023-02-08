@@ -18,9 +18,13 @@
 import { ExistingNotification } from '../model/notifications.model';
 
 export class NotificationUtils {
-
-    static makeNotificationIdFromNotification(existingNotification: ExistingNotification): string {
-       return this.makeNotificationId(existingNotification.pipelineId, existingNotification.notificationTitle);
+    static makeNotificationIdFromNotification(
+        existingNotification: ExistingNotification,
+    ): string {
+        return this.makeNotificationId(
+            existingNotification.pipelineId,
+            existingNotification.notificationTitle,
+        );
     }
 
     static makeNotificationId(pipelineId: string, notificationTitle: string) {

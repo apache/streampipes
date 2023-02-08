@@ -16,14 +16,18 @@
  *
  */
 
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel } from '@streampipes/platform-services';
+import {
+    DataExplorerDataConfig,
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
 import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface ImageWidgetVisConfig extends DataExplorerVisConfig {
-  selectedField: DataExplorerField;
+    selectedField: DataExplorerField;
 }
 
 export interface ImageWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: ImageWidgetVisConfig;
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: ImageWidgetVisConfig;
 }

@@ -19,32 +19,32 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'sp-edit-value-transformation',
-  templateUrl: './edit-value-transformation.component.html',
-  styleUrls: ['./edit-value-transformation.component.scss']
+    selector: 'sp-edit-value-transformation',
+    templateUrl: './edit-value-transformation.component.html',
+    styleUrls: ['./edit-value-transformation.component.scss'],
 })
 export class EditValueTransformationComponent implements OnInit {
+    @Input()
+    cachedProperty: any;
 
-  @Input()
-  cachedProperty: any;
+    @Input() isTimestampProperty: boolean;
+    @Input() isNestedProperty: boolean;
+    @Input() isListProperty: boolean;
+    @Input() isPrimitiveProperty: boolean;
+    @Input() isNumericProperty: boolean;
 
-  @Input() isTimestampProperty: boolean;
-  @Input() isNestedProperty: boolean;
-  @Input() isListProperty: boolean;
-  @Input() isPrimitiveProperty: boolean;
-  @Input() isNumericProperty: boolean;
+    addedByUser: boolean;
 
-  addedByUser: boolean;
-
-  ngOnInit(): void {
-    this.addedByUser = this.staticValueAddedByUser();
-    if (!this.cachedProperty.staticValue) {
-      this.cachedProperty.staticValue = '';
+    ngOnInit(): void {
+        this.addedByUser = this.staticValueAddedByUser();
+        if (!this.cachedProperty.staticValue) {
+            this.cachedProperty.staticValue = '';
+        }
     }
-  }
 
-  staticValueAddedByUser() {
-    return this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/');
-  }
-
+    staticValueAddedByUser() {
+        return this.cachedProperty.elementId.startsWith(
+            'http://eventProperty.de/staticValue/',
+        );
+    }
 }

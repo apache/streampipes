@@ -105,32 +105,42 @@ public class GeoJsonFormat implements IFormat {
     String type = (String) map.get("type");
 
     if (type.equalsIgnoreCase("POINT")) {
-      List<Double> coordinates = (List<Double>) map.get("coordinates");
+      List<Double> coordinates = (List<Double>) map.get(GeoJsonConstants.COORDINATES);
 
       try {
-        geometryFields.put("longitude", coordinates.get(0));
-        geometryFields.put("latitude", coordinates.get(1));
+        geometryFields.put(GeoJsonConstants.LONGITUDE, coordinates.get(0));
+        geometryFields.put(GeoJsonConstants.LATITUDE, coordinates.get(1));
         if (coordinates.size() == 3) {
-          geometryFields.put("altitude", coordinates.get(2));
+          geometryFields.put(GeoJsonConstants.ALTITUDE, coordinates.get(2));
         }
       } catch (IndexOutOfBoundsException e) {
         logger.error(e.getMessage());
       }
 
     } else if (type.equalsIgnoreCase("LINESTRING")) {
-      geometryFields.put("coordinatesLineString", map.get("coordinates").toString());
+      geometryFields.put(
+          GeoJsonConstants.COORDINATES_LINE_STRING,
+          map.get(GeoJsonConstants.COORDINATES).toString());
 
     } else if (type.equalsIgnoreCase("POLYGON")) {
-      geometryFields.put("coordinatesPolygon", map.get("coordinates").toString());
+      geometryFields.put(
+          GeoJsonConstants.COORDINATES_POLYGON,
+          map.get(GeoJsonConstants.COORDINATES).toString());
 
     } else if (type.equalsIgnoreCase("MULTIPOINT")) {
-      geometryFields.put("coordinatesMultiPoint", map.get("coordinates").toString());
+      geometryFields.put(
+          GeoJsonConstants.COORDINATES_MULTI_POINT,
+          map.get(GeoJsonConstants.COORDINATES).toString());
 
     } else if (type.equalsIgnoreCase("MULTILINESTRING")) {
-      geometryFields.put("coordinatesMultiString", map.get("coordinates").toString());
+      geometryFields.put(
+          GeoJsonConstants.COORDINATES_MULTI_STRING,
+          map.get(GeoJsonConstants.COORDINATES).toString());
 
     } else if (type.equalsIgnoreCase("MULTIPOLYGON")) {
-      geometryFields.put("coordinatesMultiPolygon", map.get("coordinates").toString());
+      geometryFields.put(
+          GeoJsonConstants.COORDINATES_MULTI_POLYGON,
+          map.get(GeoJsonConstants.COORDINATES).toString());
 
     } else {
       logger.error(type + "is not a suppported field type");

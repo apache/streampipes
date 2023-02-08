@@ -18,77 +18,87 @@
 
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { AdapterDescriptionUnion, PipelineElementTemplate, PipelineElementTemplateService } from '@streampipes/platform-services';
+import {
+    AdapterDescriptionUnion,
+    PipelineElementTemplate,
+    PipelineElementTemplateService,
+} from '@streampipes/platform-services';
 import { UntypedFormBuilder } from '@angular/forms';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { DialogService } from '@streampipes/shared-ui';
 
 @Directive()
 export abstract class AdapterTemplateConfigurationDirective {
+    /**
+     * Adapter description the selected format is added to
+     */
+    @Input() adapterDescription: AdapterDescriptionUnion;
 
-  /**
-   * Adapter description the selected format is added to
-   */
-  @Input() adapterDescription: AdapterDescriptionUnion;
+    cachedAdapterDescription: AdapterDescriptionUnion;
 
-  cachedAdapterDescription: AdapterDescriptionUnion;
+    /**
+     * Cancels the adapter configuration process
+     */
+    @Output() removeSelectionEmitter: EventEmitter<boolean> =
+        new EventEmitter();
 
-  /**
-   * Cancels the adapter configuration process
-   */
-  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
+    /**
+     * Go to next configuration step when this is complete
+     */
+    @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-  /**
-   * Go to next configuration step when this is complete
-   */
-  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+    @Output()
+    updateAdapterDescriptionEmitter: EventEmitter<AdapterDescriptionUnion> =
+        new EventEmitter<AdapterDescriptionUnion>();
 
-  @Output() updateAdapterDescriptionEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
+    availableTemplates: PipelineElementTemplate[];
+    selectedTemplate: any = false;
 
-  availableTemplates: PipelineElementTemplate[];
-  selectedTemplate: any = false;
+    protected constructor(
+        protected _formBuilder: UntypedFormBuilder,
+        protected dialogService: DialogService,
+        protected pipelineElementTemplateService: PipelineElementTemplateService,
+        protected adapterTemplateService: AdapterTemplateService,
+    ) {}
 
-  protected constructor(protected _formBuilder: UntypedFormBuilder,
-              protected dialogService: DialogService,
-              protected pipelineElementTemplateService: PipelineElementTemplateService,
-              protected adapterTemplateService: AdapterTemplateService) {
-  }
-
-  onInit(): void {
-    this.loadPipelineElementTemplates();
-  }
-
-  public removeSelection() {
-    this.removeSelectionEmitter.emit();
-  }
-
-  public clickNext() {
-    this.clickNextEmitter.emit();
-  }
-
-  loadPipelineElementTemplates() {
-    this.pipelineElementTemplateService
-      .getPipelineElementTemplates(this.adapterDescription.appId)
-      .subscribe(templates => {
-        this.availableTemplates = templates;
-      });
-  }
-
-  loadTemplate(event: any) {
-    if (!event.value) {
-      this.adapterDescription = {...this.cachedAdapterDescription};
-      this.selectedTemplate = false;
-    } else {
-      this.selectedTemplate = event.value;
-      this.pipelineElementTemplateService.getConfiguredAdapterForTemplate(event.value._id, this.adapterDescription)
-        .subscribe(adapterDescription => {
-          this.afterTemplateReceived(adapterDescription);
-        });
+    onInit(): void {
+        this.loadPipelineElementTemplates();
     }
-  }
 
-  abstract openTemplateDialog(): void;
+    public removeSelection() {
+        this.removeSelectionEmitter.emit();
+    }
 
-  abstract afterTemplateReceived(adapterDescription: any);
+    public clickNext() {
+        this.clickNextEmitter.emit();
+    }
 
+    loadPipelineElementTemplates() {
+        this.pipelineElementTemplateService
+            .getPipelineElementTemplates(this.adapterDescription.appId)
+            .subscribe(templates => {
+                this.availableTemplates = templates;
+            });
+    }
+
+    loadTemplate(event: any) {
+        if (!event.value) {
+            this.adapterDescription = { ...this.cachedAdapterDescription };
+            this.selectedTemplate = false;
+        } else {
+            this.selectedTemplate = event.value;
+            this.pipelineElementTemplateService
+                .getConfiguredAdapterForTemplate(
+                    event.value._id,
+                    this.adapterDescription,
+                )
+                .subscribe(adapterDescription => {
+                    this.afterTemplateReceived(adapterDescription);
+                });
+        }
+    }
+
+    abstract openTemplateDialog(): void;
+
+    abstract afterTemplateReceived(adapterDescription: any);
 }

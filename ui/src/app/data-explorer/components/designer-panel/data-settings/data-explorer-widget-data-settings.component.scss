@@ -17,62 +17,61 @@
  */
 
 .pipeline-name {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .measure-name {
-  font-weight: normal;
+    font-weight: normal;
 }
 
 .selection-radio-group {
-  display: flex;
-  flex-direction: row;
-  margin: 5px 0;
+    display: flex;
+    flex-direction: row;
+    margin: 5px 0;
 }
 
 .selection-radio-button {
-  margin: 5px;
+    margin: 5px;
 }
 
 .mat-accordion .mat-expansion-panel-header.expansion-panel-header {
-  background-color: var(--color-bg-2);
-  padding-left: 15px;
-  padding-right: 5px;
-  height: 40px;
+    background-color: var(--color-bg-2);
+    padding-left: 15px;
+    padding-right: 5px;
+    height: 40px;
 }
 
 .mat-accordion .mat-expansion-panel-header.mat-expanded.expansion-panel-header {
-  height: 40px;
-  margin: 0;
+    height: 40px;
+    margin: 0;
 }
 
 .mat-accordion .mat-expansion-panel:last-of-type.expansion-panel {
-  border-radius: 0;
-  margin: 0;
+    border-radius: 0;
+    margin: 0;
 }
 
 .data-source-selection-panel .mat-expansion-panel-header-title,
 .data-source-selection-panel .mat-expansion-panel-header-description {
-  flex-basis: 0;
+    flex-basis: 0;
 }
 
 .data-source-selection-panel .mat-expansion-panel-header-description {
-  justify-content: flex-end;
-  align-items: center;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .plus-icon {
-  vertical-align: text-bottom;
+    vertical-align: text-bottom;
 }
 .data-source-selection-panel .mat-form-field + .mat-form-field {
-  margin-left: 8px;
+    margin-left: 8px;
 }
 
 .small-form {
-  margin-bottom: -1.25em;
+    margin-bottom: -1.25em;
 }
 
 .align-btn {
-  vertical-align: text-bottom;
+    vertical-align: text-bottom;
 }
-

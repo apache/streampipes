@@ -18,63 +18,82 @@
 
 <div class="general-options-panel" fxLayout="column">
     <div class="general-options-header"><span>Schema</span></div>
-    <sp-ep-settings-section sectionTitle="Field runtime name"
-                            sectionDescription="Identifies the field in the underlying runtime format">
-        <div attr.id="input-runtime-name-{{cachedProperty.label}}"
-             fxFlex="100">
+    <sp-ep-settings-section
+        sectionTitle="Field runtime name"
+        sectionDescription="Identifies the field in the underlying runtime format"
+    >
+        <div
+            attr.id="input-runtime-name-{{ cachedProperty.label }}"
+            fxFlex="100"
+        >
             <mat-form-field class="w-100" color="accent">
                 <mat-label>Field runtime name</mat-label>
-                <input matInput
-                       placeholder="RuntimeName"
-                       name="runtimename"
-                       id="runtimename"
-                       data-cy="connect-edit-field-runtime-name"
-                       [(ngModel)]="cachedProperty.runtimeName">
+                <input
+                    matInput
+                    placeholder="RuntimeName"
+                    name="runtimename"
+                    id="runtimename"
+                    data-cy="connect-edit-field-runtime-name"
+                    [(ngModel)]="cachedProperty.runtimeName"
+                />
             </mat-form-field>
         </div>
     </sp-ep-settings-section>
 
-    <sp-ep-settings-section sectionTitle="Field semantic type"
-                            sectionDescription="Identifies field semantics, e.g., oil temperature"
-                            fxLayout="column"
-                            fxFlex="100"
-                            *ngIf="isPrimitiveProperty">
-        <div fxFlex="100" fxLayout="column" style="margin-bottom: 5px;">
-            <mat-checkbox name="timestampCheckbox"
-                          (change)="editTimestampDomainProperty($event.checked)"
-                          [checked]="isTimestampProperty"
-                          color="accent"
-                          data-cy="sp-mark-as-timestamp">
+    <sp-ep-settings-section
+        sectionTitle="Field semantic type"
+        sectionDescription="Identifies field semantics, e.g., oil temperature"
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="isPrimitiveProperty"
+    >
+        <div fxFlex="100" fxLayout="column" style="margin-bottom: 5px">
+            <mat-checkbox
+                name="timestampCheckbox"
+                (change)="editTimestampDomainProperty($event.checked)"
+                [checked]="isTimestampProperty"
+                color="accent"
+                data-cy="sp-mark-as-timestamp"
+            >
                 Mark as timestamp
             </mat-checkbox>
         </div>
         <div *ngIf="isPrimitiveProperty" fxFlex="100" fxLayout="column">
             <mat-form-field class="w-100" color="accent" fxFlex="100">
-                <input matInput placeholder="Semantic Type"
-                       class="dmainProperty"
-                       name="domainproperty"
-                       id="domainproperty"
-                       [(ngModel)]="cachedProperty.domainProperties[0]"
-                       [matAutocomplete]="st"
-                       [disabled]="isTimestampProperty"
-                       [matAutocompleteDisabled]="isTimestampProperty"
-                       [formControl]="domainPropertyControl">
+                <input
+                    matInput
+                    placeholder="Semantic Type"
+                    class="dmainProperty"
+                    name="domainproperty"
+                    id="domainproperty"
+                    [(ngModel)]="cachedProperty.domainProperties[0]"
+                    [matAutocomplete]="st"
+                    [disabled]="isTimestampProperty"
+                    [matAutocompleteDisabled]="isTimestampProperty"
+                    [formControl]="domainPropertyControl"
+                />
                 <mat-autocomplete #st="matAutocomplete" [panelWidth]="'300px'">
-                    <mat-option *ngFor="let semanticType of semanticTypes | async" [value]="semanticType"
-                                style="font-size: 10pt;">
-                        {{semanticType}}
+                    <mat-option
+                        *ngFor="let semanticType of semanticTypes | async"
+                        [value]="semanticType"
+                        style="font-size: 10pt"
+                    >
+                        {{ semanticType }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
         </div>
     </sp-ep-settings-section>
 
-    <sp-ep-settings-section sectionTitle="Field data type"
-                            sectionDescription="The data type of the field values"
-                            *ngIf="!isTimestampProperty">
+    <sp-ep-settings-section
+        sectionTitle="Field data type"
+        sectionDescription="The data type of the field values"
+        *ngIf="!isTimestampProperty"
+    >
         <sp-edit-data-type
-                [cachedProperty]="cachedProperty"
-                (dataTypeChanged)="dataTypeChanged.emit($event)">
+            [cachedProperty]="cachedProperty"
+            (dataTypeChanged)="dataTypeChanged.emit($event)"
+        >
         </sp-edit-data-type>
     </sp-ep-settings-section>
 </div>

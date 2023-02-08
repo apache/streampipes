@@ -17,26 +17,25 @@
  */
 
 .sp-dialog-container {
-  display: grid;
-  height: 100%;
-  grid-template-rows: auto 10px 60px;
-
+    display: grid;
+    height: 100%;
+    grid-template-rows: auto 10px 60px;
 }
 
 .sp-dialog-content {
-  margin: 0px;
-  overflow-y:auto;
-  flex: 1 1 auto;
+    margin: 0px;
+    overflow-y: auto;
+    flex: 1 1 auto;
 }
 
 .sp-dialog-actions {
-  padding: 10px;
+    padding: 10px;
 }
 
 .actions-align-right {
-  margin-left: auto;
+    margin-left: auto;
 }
 
 .p-15 {
-  padding: 15px;
+    padding: 15px;
 }

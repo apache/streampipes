@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManag
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,9 +34,12 @@ import java.util.Map;
 public class FunctionContext {
 
   private final Map<String, SpDataStream> streams;
+
   private StreamPipesClient client;
   private String functionId;
   private ConfigExtractor config;
+
+  private Map<String, SpOutputCollector> outputCollectors;
 
   public FunctionContext() {
     this.streams = new HashMap<>();
@@ -44,11 +48,13 @@ public class FunctionContext {
   public FunctionContext(String functionId,
                          String serviceGroup,
                          List<SpDataStream> streams,
+                         Map<String, SpOutputCollector> outputCollectors,
                          StreamPipesClient client) {
     this();
     streams.forEach(stream -> this.streams.put(stream.getElementId(), stream));
     this.config = ConfigExtractor.from(serviceGroup);
     this.functionId = functionId;
+    this.outputCollectors = outputCollectors;
     this.client = client;
   }
 
@@ -76,4 +82,7 @@ public class FunctionContext {
     SpMonitoringManager.INSTANCE.addErrorMessage(functionId, logEntry);
   }
 
+  public Map<String, SpOutputCollector> getOutputCollectors() {
+    return outputCollectors;
+  }
 }

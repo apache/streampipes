@@ -16,59 +16,71 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 import { ActivatedRoute } from '@angular/router';
-import { PipelineMonitoringService, PipelineService, SpLogEntry } from '@streampipes/platform-services';
+import {
+    PipelineMonitoringService,
+    PipelineService,
+    SpLogEntry,
+} from '@streampipes/platform-services';
 import { AuthService } from '../../../services/auth.service';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
 
 @Component({
-  selector: 'sp-pipeline-logs',
-  templateUrl: './pipeline-logs.component.html',
-  styleUrls: ['./pipeline-logs.component.scss']
+    selector: 'sp-pipeline-logs',
+    templateUrl: './pipeline-logs.component.html',
+    styleUrls: ['./pipeline-logs.component.scss'],
 })
-export class PipelineLogsComponent extends SpPipelineDetailsDirective implements OnInit, OnDestroy {
+export class PipelineLogsComponent
+    extends SpPipelineDetailsDirective
+    implements OnInit
+{
+    logInfos: Record<string, SpLogEntry[]> = {};
+    selectedElementId: string;
 
-  logInfos: Record<string, SpLogEntry[]> = {};
-  selectedElementId: string;
+    constructor(
+        activatedRoute: ActivatedRoute,
+        pipelineService: PipelineService,
+        authService: AuthService,
+        breadcrumbService: SpBreadcrumbService,
+        private pipelineMonitoringService: PipelineMonitoringService,
+    ) {
+        super(activatedRoute, pipelineService, authService, breadcrumbService);
+    }
 
-  constructor(activatedRoute: ActivatedRoute,
-              pipelineService: PipelineService,
-              authService: AuthService,
-              breadcrumbService: SpBreadcrumbService,
-              private pipelineMonitoringService: PipelineMonitoringService) {
-    super(activatedRoute, pipelineService, authService, breadcrumbService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnDestroy(): void {
-  }
+    onPipelineAvailable(): void {
+        this.breadcrumbService.updateBreadcrumb([
+            SpPipelineRoutes.BASE,
+            { label: this.pipeline.name },
+            { label: 'Logs' },
+        ]);
+        this.receiveLogInfos();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    receiveLogInfos(): void {
+        this.pipelineMonitoringService
+            .getLogInfoForPipeline(this.pipeline._id)
+            .subscribe(response => {
+                this.logInfos = response;
+            });
+    }
 
-  onPipelineAvailable(): void {
-    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Logs'}]);
-    this.receiveLogInfos();
-  }
+    selectElement(pipelineElement: PipelineElementUnion): void {
+        this.selectedElementId = pipelineElement.elementId;
+    }
 
-  receiveLogInfos(): void {
-    this.pipelineMonitoringService.getLogInfoForPipeline(this.pipeline._id).subscribe(response => {
-      this.logInfos = response;
-    });
-  }
-
-  selectElement(pipelineElement: PipelineElementUnion): void {
-    this.selectedElementId = pipelineElement.elementId;
-  }
-
-  triggerLogUpdate(): void {
-    this.pipelineMonitoringService.triggerMonitoringUpdate().subscribe(res => {
-      this.receiveLogInfos();
-    });
-  }
-
+    triggerLogUpdate(): void {
+        this.pipelineMonitoringService
+            .triggerMonitoringUpdate()
+            .subscribe(res => {
+                this.receiveLogInfos();
+            });
+    }
 }

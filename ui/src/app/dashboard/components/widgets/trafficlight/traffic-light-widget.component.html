@@ -15,17 +15,51 @@
   ~   limitations under the License.
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    fxFlex="100"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    class="main-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
     <div class="p-10 h-100">
-       <div class="tl-container" [ngStyle]="{'width': containerWidth + 'px', 'height': containerHeight + 'px'}">
-           <div class="light" [ngClass]="{'light-red': activeClass === 'red'}" [ngStyle]="{'width': lightWidth + 'px', 'height': lightHeight + 'px'}"></div>
-           <div class="light" [ngClass]="{'light-yellow': activeClass === 'yellow'}" [ngStyle]="{'width': lightWidth +
-           'px', 'height': lightHeight + 'px'}"></div>
-           <div class="light" [ngClass]="{'light-green': activeClass === 'green'}" [ngStyle]="{'width':
-           lightWidth + 'px', 'height': lightHeight + 'px'}"></div>
-       </div>
+        <div
+            class="tl-container"
+            [ngStyle]="{
+                width: containerWidth + 'px',
+                height: containerHeight + 'px'
+            }"
+        >
+            <div
+                class="light"
+                [ngClass]="{ 'light-red': activeClass === 'red' }"
+                [ngStyle]="{
+                    width: lightWidth + 'px',
+                    height: lightHeight + 'px'
+                }"
+            ></div>
+            <div
+                class="light"
+                [ngClass]="{ 'light-yellow': activeClass === 'yellow' }"
+                [ngStyle]="{
+                    width: lightWidth + 'px',
+                    height: lightHeight + 'px'
+                }"
+            ></div>
+            <div
+                class="light"
+                [ngClass]="{ 'light-green': activeClass === 'green' }"
+                [ngStyle]="{
+                    width: lightWidth + 'px',
+                    height: lightHeight + 'px'
+                }"
+            ></div>
+        </div>
     </div>
 </div>

@@ -37,7 +37,7 @@ public class AdapterDescriptionTest {
 
   @Before
   public void init() {
-    adapterDescription = new AdapterDescription() {
+    adapterDescription = new SpecificAdapterStreamDescription() {
     };
 
     List rules = new ArrayList<>();

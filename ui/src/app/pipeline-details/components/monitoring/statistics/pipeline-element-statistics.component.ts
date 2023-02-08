@@ -19,105 +19,130 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  SpDataSet,
-  SpDataStream,
-  SpMetricsEntry
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataSet,
+    SpDataStream,
+    SpMetricsEntry,
 } from '@streampipes/platform-services';
-import { HistoricalMonitoringData, ObservedMetricsStream } from '../../model/pipeline-details.model';
+import {
+    HistoricalMonitoringData,
+    ObservedMetricsStream,
+} from '../../model/pipeline-details.model';
 
 @Component({
-  selector: 'pipeline-element-statistics',
-  templateUrl: './pipeline-element-statistics.component.html',
-  styleUrls: ['./pipeline-element-statistics.component.scss']
+    selector: 'sp-pipeline-element-statistics',
+    templateUrl: './pipeline-element-statistics.component.html',
+    styleUrls: ['./pipeline-element-statistics.component.scss'],
 })
 export class PipelineElementStatisticsComponent implements OnInit {
+    @Input()
+    allElements: (
+        | SpDataSet
+        | SpDataStream
+        | DataProcessorInvocation
+        | DataSinkInvocation
+    )[];
 
-  @Input()
-  allElements: (SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation)[];
+    @Input()
+    pipelineElement:
+        | SpDataSet
+        | SpDataStream
+        | DataProcessorInvocation
+        | DataSinkInvocation;
 
-  @Input()
-  pipelineElement: (SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation);
+    _metricsInfo: SpMetricsEntry;
 
-  _metricsInfo: SpMetricsEntry;
+    currentPipelineElement:
+        | SpDataSet
+        | SpDataStream
+        | DataProcessorInvocation
+        | DataSinkInvocation;
+    consumedMessagesFirstInputStream = '';
+    consumedMessagesSecondInputStream = '';
 
-  currentPipelineElement: SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation;
-  consumedMessagesFirstInputStream = '';
-  consumedMessagesSecondInputStream = '';
+    producedMessages: string | number = '';
 
-  producedMessages: string | number = '';
+    cardColor = 'rgb(27, 20, 100)';
+    deactivatedCardColor = 'rgb(241,241,241)';
 
-  cardColor = 'rgb(27, 20, 100)';
-  deactivatedCardColor = 'rgb(241,241,241)';
+    textColor = 'rgb(208,208,208)';
+    deactivatedTextColor = 'rgb(205,205,205)';
 
-  textColor = 'rgb(208,208,208)';
-  deactivatedTextColor = 'rgb(205,205,205)';
+    bandColor = 'rgb(27, 20, 100)';
+    deactivatedBandColor = 'rgb(241,241,241)';
+    okBandColor = 'rgb(11,186,0)';
+    warningBandColor = 'rgb(253,144,0)';
 
-  bandColor = 'rgb(27, 20, 100)';
-  deactivatedBandColor = 'rgb(241,241,241)';
-  okBandColor = 'rgb(11,186,0)';
-  warningBandColor = 'rgb(253,144,0)';
+    chartBackgroundColor = 'rgb(27, 20, 100)';
+    chartTextColor = 'rgb(208,208,208)';
 
-  chartBackgroundColor = 'rgb(27, 20, 100)';
-  chartTextColor = 'rgb(208,208,208)';
+    consumedMessagesFirstStreamBandColor: string;
+    consumedMessagesSecondStreamBandColor: string;
 
-  consumedMessagesFirstStreamBandColor: string;
-  consumedMessagesSecondStreamBandColor: string;
+    notAvailable = '-';
 
-  notAvailable = '-';
+    historicFirstConsumedInputValues: HistoricalMonitoringData[] = [];
+    historicSecondConsumedInputValues: HistoricalMonitoringData[] = [];
+    historicProducedOutputValues: HistoricalMonitoringData[] = [];
 
-  historicFirstConsumedInputValues: HistoricalMonitoringData[] = [];
-  historicSecondConsumedInputValues: HistoricalMonitoringData[] = [];
-  historicProducedOutputValues: HistoricalMonitoringData[] = [];
+    consumedMessagesFirstStreamLastValue = -1;
+    consumedMessagesSecondStreamLastValue = -1;
+    producedMessageOutputLastValue = -1;
 
-  consumedMessagesFirstStreamLastValue = -1;
-  consumedMessagesSecondStreamLastValue = -1;
-  producedMessageOutputLastValue = -1;
+    consumedMessagesFirstStreamAvailable = false;
+    consumedMessagesSecondStreamAvailable = false;
+    producedMessagesAvailable = false;
 
-  consumedMessagesFirstStreamAvailable = false;
-  consumedMessagesSecondStreamAvailable = false;
-  producedMessagesAvailable = false;
+    observedInputStreams: ObservedMetricsStream[] = [];
+    dataSink = false;
 
-  observedInputStreams: ObservedMetricsStream[] = [];
-  dataSink = false;
-
-  ngOnInit(): void {
-    this.dataSink = this.pipelineElement instanceof DataSinkInvocation;
-    if (this.pipelineElement instanceof DataSinkInvocation || this.pipelineElement instanceof DataProcessorInvocation) {
-      this.pipelineElement.inputStreams.forEach(is => {
-        const identifier = is.eventGrounding.transportProtocols[0].topicDefinition.actualTopicName;
-        this.observedInputStreams.push({
-          pipelineElementName: this.extractName(identifier),
-          identifier
-        });
-      });
-    }
-  }
-
-  extractName(outputTopic: string): string {
-    return this.allElements
-      .filter(el => ! (el instanceof DataSinkInvocation))
-      .find(el => {
-        if (el instanceof DataProcessorInvocation) {
-          return el.outputStream.eventGrounding.transportProtocols[0].topicDefinition.actualTopicName === outputTopic;
-        } else {
-          return (el as SpDataStream).eventGrounding.transportProtocols[0].topicDefinition.actualTopicName === outputTopic;
+    ngOnInit(): void {
+        this.dataSink = this.pipelineElement instanceof DataSinkInvocation;
+        if (
+            this.pipelineElement instanceof DataSinkInvocation ||
+            this.pipelineElement instanceof DataProcessorInvocation
+        ) {
+            this.pipelineElement.inputStreams.forEach(is => {
+                const identifier =
+                    is.eventGrounding.transportProtocols[0].topicDefinition
+                        .actualTopicName;
+                this.observedInputStreams.push({
+                    pipelineElementName: this.extractName(identifier),
+                    identifier,
+                });
+            });
         }
-      }).name;
-  }
+    }
 
-  updateMonitoringInfo() {
+    extractName(outputTopic: string): string {
+        return this.allElements
+            .filter(el => !(el instanceof DataSinkInvocation))
+            .find(el => {
+                if (el instanceof DataProcessorInvocation) {
+                    return (
+                        el.outputStream.eventGrounding.transportProtocols[0]
+                            .topicDefinition.actualTopicName === outputTopic
+                    );
+                } else {
+                    return (
+                        (el as SpDataStream).eventGrounding
+                            .transportProtocols[0].topicDefinition
+                            .actualTopicName === outputTopic
+                    );
+                }
+            }).name;
+    }
 
-  }
+    updateMonitoringInfo() {}
 
-  get metricsInfo() {
-    return this._metricsInfo;
-  }
+    get metricsInfo() {
+        return this._metricsInfo;
+    }
 
-  @Input()
-  set metricsInfo(metricsInfo: SpMetricsEntry) {
-    this._metricsInfo = metricsInfo;
-    this.updateMonitoringInfo();
-  }
+    @Input()
+    set metricsInfo(metricsInfo: SpMetricsEntry) {
+        this._metricsInfo = metricsInfo;
+        this.updateMonitoringInfo();
+    }
 }

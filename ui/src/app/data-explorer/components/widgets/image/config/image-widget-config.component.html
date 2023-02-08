@@ -17,11 +17,13 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-
     <h5>Image Field</h5>
-    <sp-select-property [availableProperties]="imageFields"
-                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedField"
-                        (changeSelectedProperty)="setSelectedImageProperty($event)">
+    <sp-select-property
+        [availableProperties]="imageFields"
+        [selectedProperty]="
+            currentlyConfiguredWidget.visualizationConfig.selectedField
+        "
+        (changeSelectedProperty)="setSelectedImageProperty($event)"
+    >
     </sp-select-property>
-
 </div>

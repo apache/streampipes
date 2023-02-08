@@ -25,6 +25,7 @@ import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
 import { GenericAdapterBuilder } from '../../builder/GenericAdapterBuilder';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
+import { ConnectBtns } from './ConnectBtns';
 
 export class ConnectUtils {
     public static testSpecificStreamAdapter(
@@ -69,17 +70,7 @@ export class ConnectUtils {
         ConnectUtils.startStreamAdapter(adapterConfiguration);
     }
 
-    public static addGenericSetAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
-        ConnectUtils.addGenericAdapter(adapterConfiguration);
-
-        ConnectUtils.startSetAdapter(adapterConfiguration);
-    }
-
-    private static addGenericAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
+    public static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -163,11 +154,11 @@ export class ConnectUtils {
     public static configureFormat(adapterConfiguration: GenericAdapterInput) {
         // Select format
         if (adapterConfiguration.format.indexOf('json') !== -1) {
-            cy.dataCy('connect-select-json-formats').click();
+            ConnectBtns.json().click();
             if (adapterConfiguration.format.indexOf('object') !== -1) {
-                cy.dataCy('single_object').click();
+                ConnectBtns.jsonObject().click();
             } else {
-                cy.dataCy('array').click();
+                ConnectBtns.jsonArray().click();
             }
         } else {
             cy.dataCy(adapterConfiguration.format).click();
@@ -176,10 +167,7 @@ export class ConnectUtils {
         StaticPropertyUtils.input(adapterConfiguration.formatConfiguration);
 
         // Click next
-        cy.dataCy('sp-format-selection-next-button')
-            .contains('Next')
-            .parent()
-            .click();
+        ConnectBtns.formatSelectionNextBtn().click();
     }
 
     public static finishEventSchemaConfiguration() {
@@ -191,20 +179,13 @@ export class ConnectUtils {
     }
 
     public static startStreamAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(
-            adapterInput,
-            'sp-connect-adapter-live-preview',
-        );
+        ConnectUtils.startAdapter(adapterInput);
     }
 
-    public static startSetAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(
-            adapterInput,
-            'sp-connect-adapter-set-success',
-        );
-    }
-
-    public static startAdapter(adapterInput: AdapterInput, successElement) {
+    public static startAdapter(
+        adapterInput: AdapterInput,
+        noLiveDataView = false,
+    ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
@@ -217,9 +198,22 @@ export class ConnectUtils {
                 .click();
         }
 
-        // Start adapter
-        cy.get('#button-startAdapter').click();
-        cy.dataCy(successElement, { timeout: 60000 }).should('be.visible');
+        // Deselect auto start of adapter
+        if (!adapterInput.startAdapter) {
+            ConnectBtns.startAdapterNowCheckbox().parent().click();
+        }
+
+        ConnectBtns.adapterSettingsStartAdapter().click();
+
+        if (adapterInput.startAdapter && !noLiveDataView) {
+            cy.dataCy('sp-connect-adapter-success-live-preview', {
+                timeout: 60000,
+            }).should('be.visible');
+        } else {
+            cy.dataCy('sp-connect-adapter-success-added', {
+                timeout: 60000,
+            }).should('be.visible');
+        }
 
         this.closeAdapterPreview();
     }
@@ -246,9 +240,15 @@ export class ConnectUtils {
     }
 
     public static setUpPreprocessingRuleTest(): AdapterInput {
-        const adapterConfiguration = GenericAdapterBuilder.create('File_Set')
+        const adapterConfiguration = GenericAdapterBuilder.create('File_Stream')
             .setStoreInDataLake()
             .setTimestampProperty('timestamp')
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            )
+            .addProtocolInput('radio', 'replayonce', 'yes')
             .setName('Adapter to test rules')
             .setFormat('csv')
             .addFormatInput('input', 'delimiter', ';')
@@ -271,15 +271,36 @@ export class ConnectUtils {
         return adapterConfiguration;
     }
 
+    public static startAndValidateAdapter(amountOfProperties: number) {
+        ConnectBtns.startAdapter().should('not.be.disabled');
+
+        ConnectBtns.startAdapter().click();
+
+        // View data
+        ConnectBtns.infoAdapter().click();
+        cy.get('div').contains('Values').parent().click();
+
+        // Validate resulting event
+        cy.dataCy('sp-connect-adapter-success-live-preview', {
+            timeout: 10000,
+        }).should('be.visible');
+
+        // validate that three event properties
+        cy.get('.preview-row', { timeout: 10000 })
+            .its('length')
+            .should('eq', amountOfProperties);
+    }
+
     public static tearDownPreprocessingRuleTest(
         adapterConfiguration: AdapterInput,
         expectedFile: string,
         ignoreTime: boolean,
+        waitTime = 0,
     ) {
-        ConnectUtils.startSetAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(adapterConfiguration, true);
 
         // Wait till data is stored
-        cy.wait(10000);
+        cy.wait(waitTime);
 
         DataLakeUtils.checkResults(
             'Adapter to test rules',

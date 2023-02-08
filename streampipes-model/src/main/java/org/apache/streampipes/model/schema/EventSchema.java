@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.schema;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 
 import org.apache.commons.collections.ListUtils;
@@ -26,7 +25,7 @@ import org.apache.commons.collections.ListUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventSchema extends UnnamedStreamPipesEntity {
+public class EventSchema {
 
   private static final long serialVersionUID = -3994041794693686406L;
 
@@ -43,7 +42,6 @@ public class EventSchema extends UnnamedStreamPipesEntity {
   }
 
   public EventSchema(EventSchema other) {
-    super(other);
     this.eventProperties = new Cloner().properties(other.getEventProperties());
   }
 

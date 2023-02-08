@@ -19,139 +19,138 @@
 @import '../_variables';
 
 .sp-navbar-item {
-  background: var(--color-navigation-bg);
-  //-webkit-transition: all 0.75s ease;
-  //transition: all 0.75s ease;
+    background: var(--color-navigation-bg);
+    //-webkit-transition: all 0.75s ease;
+    //transition: all 0.75s ease;
 }
 
 .sp-navbar-item-selected {
-  background: var(--color-navigation-bg-selected);
+    background: var(--color-navigation-bg-selected);
 }
 
 .sp-navbar-item:hover {
-  color: var(--color-navigation-selected);
-  background: var(--color-navigation-hover);
+    color: var(--color-navigation-selected);
+    background: var(--color-navigation-hover);
 }
 
 .sp-navbar-icon {
-  color: var(--color-navigation-link-text);
+    color: var(--color-navigation-link-text);
 }
 
 .sp-navbar-icon-selected {
-  color: var(--color-navigation-selected);
+    color: var(--color-navigation-selected);
 }
 
 .sp-icon-button:hover {
-  color: var(--color-navigation-selected) !important;
+    color: var(--color-navigation-selected) !important;
 }
 
 .sp-icon-button-no-hover:hover {
-
 }
 
 .sp-button {
-  display: inline-block ;
-  vertical-align: middle;
-  border: 0;
-  border-radius: 3px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 0.9em;
-  letter-spacing: 0.1em;
-  line-height: 1em;
-  padding: 0.75em 1.25em;
-  margin-right:0.25em;
-  margin-left: 0.25em;
-  margin-top:0px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.1em;
+    line-height: 1em;
+    padding: 0.75em 1.25em;
+    margin-right: 0.25em;
+    margin-left: 0.25em;
+    margin-top: 0px;
 }
 
 .sp-button.sp-button-small-padding {
-  padding: 0.25em 0.75em;
-  font-size: 0.8em;
-  max-height: 20px;
+    padding: 0.25em 0.75em;
+    font-size: 0.8em;
+    max-height: 20px;
 }
 
-.sp-button>i {
-  vertical-align:middle;
-  line-height: inherit;
+.sp-button > i {
+    vertical-align: middle;
+    line-height: inherit;
 }
 
-.sp-button>span {
-  vertical-align:middle;
+.sp-button > span {
+    vertical-align: middle;
 }
 
 .sp-button.sp-button-icon:enabled {
-  color:$sp-color-accent;
-  background: rgba(0, 0, 0, 0);
+    color: $sp-color-accent;
+    background: rgba(0, 0, 0, 0);
 }
 
 .sp-button.sp-button-icon:hover:enabled {
-  color:$sp-color-accent-light-blue;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    color: $sp-color-accent-light-blue;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-icon:disabled {
-  color: #cdcdcd;
-  background: rgba(0, 0, 0, 0);
+    color: #cdcdcd;
+    background: rgba(0, 0, 0, 0);
 }
 
 .sp-button.sp-button-flat:enabled {
-  color: $sp-color-accent;
-  background: rgba(0, 0, 0, 0);
+    color: $sp-color-accent;
+    background: rgba(0, 0, 0, 0);
 }
 
 .sp-button.sp-button-gray:enabled {
-  background: #e5e5e5;
-  color: rgba(0, 0, 0, 0.75);
+    background: #e5e5e5;
+    color: rgba(0, 0, 0, 0.75);
 }
 
 .sp-button.sp-button-blue:enabled {
-  background: $sp-color-accent;
-  color: rgba(255, 255, 255, 0.75);
+    background: $sp-color-accent;
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .sp-button.sp-button-gray:hover:enabled {
-  background: #cbcbcb;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: #cbcbcb;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-flat:hover:enabled {
-  background: #d9d9d9;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: #d9d9d9;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-blue:hover:enabled {
-  background: $sp-color-accent-light-blue;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: $sp-color-accent-light-blue;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-blue:disabled {
-  background: #ebebeb;
-  color: #cdcdcd;
+    background: #ebebeb;
+    color: #cdcdcd;
 }
 
 .sp-button.sp-button-gray:disabled {
-  background: #ebebeb;
-  color: #cdcdcd;
+    background: #ebebeb;
+    color: #cdcdcd;
 }
 
 .sp-button-flat:disabled {
-  color: #cdcdcd;
-  background: rgba(0,0,0,0);
+    color: #cdcdcd;
+    background: rgba(0, 0, 0, 0);
 }
 
 .md-button.md-icon-button.settings-bar-icon-button:hover:enabled {
-  background: #a8a8a8;
+    background: #a8a8a8;
 }
 
 .settings-bar-icon-button:hover:enabled {
-  background:#a8a8a8;
-  -webkit-transition: all 0.75s ease;
-  transition: all 0.75s ease;
+    background: #a8a8a8;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }

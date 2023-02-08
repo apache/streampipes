@@ -17,61 +17,115 @@
   -->
 
 <sp-basic-view [showBackLink]="false" [padding]="true">
-    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
-        <button mat-button mat-raised-button color="accent" (click)="navigateToPipelineEditor()" data-cy="pipelines-navigate-to-editor">
+    <div
+        nav
+        fxFlex="100"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        class="pl-10"
+    >
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="navigateToPipelineEditor()"
+            data-cy="pipelines-navigate-to-editor"
+        >
             <i class="material-icons">add</i>&nbsp;New pipeline
         </button>
-        <button class="mr-10" mat-button color="accent" (click)="startAllPipelines(true)"
-                [disabled]="checkCurrentSelectionStatus(false)" *ngIf="hasPipelineWritePrivileges">
+        <button
+            class="mr-10"
+            mat-button
+            color="accent"
+            (click)="startAllPipelines(true)"
+            [disabled]="checkCurrentSelectionStatus(false)"
+            *ngIf="hasPipelineWritePrivileges"
+        >
             <mat-icon>play_arrow</mat-icon><span>Start all pipelines</span>
         </button>
-        <button mat-button color="accent" (click)="startAllPipelines(false)"
-                [disabled]="checkCurrentSelectionStatus(true)" *ngIf="hasPipelineWritePrivileges">
+        <button
+            mat-button
+            color="accent"
+            (click)="startAllPipelines(false)"
+            [disabled]="checkCurrentSelectionStatus(true)"
+            *ngIf="hasPipelineWritePrivileges"
+        >
             <mat-icon>stop</mat-icon>
             <span>Stop all pipelines</span>
         </button>
         <span fxFlex></span>
-        <button mat-button mat-icon-button color="accent" matTooltip="Refresh pipelines" matTooltipPosition="above"
-                (click)="refreshPipelines()">
-            <i class="material-icons">
-                refresh
-            </i>
+        <button
+            mat-button
+            mat-icon-button
+            color="accent"
+            matTooltip="Refresh pipelines"
+            matTooltipPosition="above"
+            (click)="refreshPipelines()"
+        >
+            <i class="material-icons"> refresh </i>
         </button>
-        <button mat-button mat-icon-button color="accent" matTooltip="Export pipelines" matTooltipPosition="above"
-                (click)="exportPipelines()">
-            <i class="material-icons">
-                cloud_download
-            </i>
+        <button
+            mat-button
+            mat-icon-button
+            color="accent"
+            matTooltip="Export pipelines"
+            matTooltipPosition="above"
+            (click)="exportPipelines()"
+        >
+            <i class="material-icons"> cloud_download </i>
         </button>
-        <button mat-button mat-icon-button color="accent" matTooltip="Import pipelines" matTooltipPosition="above"
-                (click)="openImportPipelinesDialog()">
-            <i class="material-icons">
-                cloud_upload
-            </i>
+        <button
+            mat-button
+            mat-icon-button
+            color="accent"
+            matTooltip="Import pipelines"
+            matTooltipPosition="above"
+            (click)="openImportPipelinesDialog()"
+        >
+            <i class="material-icons"> cloud_upload </i>
         </button>
     </div>
     <div fxFlex="100" fxLayout="column">
         <div fxLayout="column">
-            <sp-basic-header-title-component title="Pipelines"></sp-basic-header-title-component>
+            <sp-basic-header-title-component
+                title="Pipelines"
+            ></sp-basic-header-title-component>
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90"
-                                      [hideToolbar]="true">
+                <sp-basic-inner-panel
+                    [showTitle]="false"
+                    innerPadding="0"
+                    outerMargin="0"
+                    fxFlex="90"
+                    [hideToolbar]="true"
+                >
                     <div fxFlex="100">
-                        <pipeline-overview [activeCategoryId]="activeCategoryId" [pipelines]="pipelines"
-                                           [pipelineToStart]="pipelineToStart"
-                                           (refreshPipelinesEmitter)="refreshPipelines()"
-                                           *ngIf="pipelinesReady"></pipeline-overview>
+                        <sp-pipeline-overview
+                            [activeCategoryId]="activeCategoryId"
+                            [pipelines]="pipelines"
+                            [pipelineToStart]="pipelineToStart"
+                            (refreshPipelinesEmitter)="refreshPipelines()"
+                            *ngIf="pipelinesReady"
+                        ></sp-pipeline-overview>
                     </div>
                 </sp-basic-inner-panel>
             </div>
-            <div fxFlex="100" fxLayout="column" style="margin-top: 20px;">
-                <sp-basic-header-title-component title="Functions"></sp-basic-header-title-component>
+            <div fxFlex="100" fxLayout="column" style="margin-top: 20px">
+                <sp-basic-header-title-component
+                    title="Functions"
+                ></sp-basic-header-title-component>
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                    <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90"
-                                          [hideToolbar]="true">
+                    <sp-basic-inner-panel
+                        [showTitle]="false"
+                        innerPadding="0"
+                        outerMargin="0"
+                        fxFlex="90"
+                        [hideToolbar]="true"
+                    >
                         <div fxFlex="100">
-                            <sp-functions-overview [functions]="functions"
-                                               *ngIf="functionsReady">
+                            <sp-functions-overview
+                                [functions]="functions"
+                                *ngIf="functionsReady"
+                            >
                             </sp-functions-overview>
                         </div>
                     </sp-basic-inner-panel>
@@ -80,4 +134,3 @@
         </div>
     </div>
 </sp-basic-view>
-

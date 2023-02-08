@@ -17,15 +17,15 @@
  */
 
 .image-box {
-    width:100%;
+    width: 100%;
     height: 100%;
     color: #fff;
     text-align: center;
     left: 50%;
-    display:inline-grid;
+    display: inline-grid;
     align-content: center;
 }
 
 .image-title {
-    font-size:14px;
+    font-size: 14px;
 }

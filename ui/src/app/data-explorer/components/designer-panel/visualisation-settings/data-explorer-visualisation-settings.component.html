@@ -22,55 +22,93 @@
         <mat-form-field color="accent" fxFlex="100">
             <mat-label>Select visualization</mat-label>
             <mat-select
-                    [(value)]="currentlyConfiguredWidget.widgetType"
-                    (selectionChange)="triggerWidgetTypeChange($event)"
-                    data-cy="data-explorer-select-visualization-type">
-                <mat-option [value]="widget.id" *ngFor="let widget of availableWidgets">
-                    <span class="pipeline-name">{{widget.label}}</span>
+                [(value)]="currentlyConfiguredWidget.widgetType"
+                (selectionChange)="triggerWidgetTypeChange($event)"
+                data-cy="data-explorer-select-visualization-type"
+            >
+                <mat-option
+                    [value]="widget.id"
+                    *ngFor="let widget of availableWidgets"
+                >
+                    <span class="pipeline-name">{{ widget.label }}</span>
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
         <span class="data-explorer-header">Configuration</span>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
+        <div
+            *ngIf="currentlyConfiguredWidget.widgetType === 'table'"
+            class="h-100 p-0"
+        >
             <sp-data-explorer-table-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-table-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'map'" class="h-100 p-0">
+        <div
+            *ngIf="currentlyConfiguredWidget.widgetType === 'map'"
+            class="h-100 p-0"
+        >
             <sp-data-explorer-map-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-map-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'heatmap'" class="h-100 p-0">
+        <div
+            *ngIf="currentlyConfiguredWidget.widgetType === 'heatmap'"
+            class="h-100 p-0"
+        >
             <sp-data-explorer-heatmap-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-heatmap-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'time-series-chart'" class="h-100 p-0">
+        <div
+            *ngIf="currentlyConfiguredWidget.widgetType === 'time-series-chart'"
+            class="h-100 p-0"
+        >
             <sp-data-explorer-time-series-chart-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-time-series-chart-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">
+        <div
+            *ngIf="currentlyConfiguredWidget.widgetType === 'indicator-chart'"
+            class="h-100 p-0"
+        >
             <sp-data-explorer-indicator-chart-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-indicator-chart-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'correlation-chart'" class="h-100 p-0">
+        <div
+            *ngIf="currentlyConfiguredWidget.widgetType === 'correlation-chart'"
+            class="h-100 p-0"
+        >
             <sp-data-explorer-correlation-chart-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-correlation-chart-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'distribution-chart'" class="h-100 p-0">
+        <div
+            *ngIf="
+                currentlyConfiguredWidget.widgetType === 'distribution-chart'
+            "
+            class="h-100 p-0"
+        >
             <sp-data-explorer-distribution-chart-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-distribution-chart-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'image'" class="h-100 p-0">
+        <div
+            *ngIf="currentlyConfiguredWidget.widgetType === 'image'"
+            class="h-100 p-0"
+        >
             <sp-data-explorer-image-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            >
             </sp-data-explorer-image-widget-config>
         </div>
     </div>

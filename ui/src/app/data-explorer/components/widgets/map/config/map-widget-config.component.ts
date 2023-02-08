@@ -25,68 +25,76 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-map-widget-config',
-  templateUrl: './map-widget-config.component.html',
-  styleUrls: ['./map-widget-config.component.scss']
+    selector: 'sp-data-explorer-map-widget-config',
+    templateUrl: './map-widget-config.component.html',
+    styleUrls: ['./map-widget-config.component.scss'],
 })
-export class MapWidgetConfigComponent extends BaseWidgetConfig<MapWidgetModel, MapVisConfig> implements OnInit {
+export class MapWidgetConfigComponent
+    extends BaseWidgetConfig<MapWidgetModel, MapVisConfig>
+    implements OnInit
+{
+    markerOrTrace: string[];
+    markerType: string[];
 
-  markerOrTrace: string[];
-  markerType: string[];
+    constructor(
+        widgetConfigurationService: WidgetConfigurationService,
+        fieldService: DataExplorerFieldProviderService,
+    ) {
+        super(widgetConfigurationService, fieldService);
+    }
 
-  constructor(widgetConfigurationService: WidgetConfigurationService,
-              fieldService: DataExplorerFieldProviderService) {
-    super(widgetConfigurationService, fieldService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    setSelectedLongitudeProperty(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedLongitudeProperty =
+            field;
+        this.triggerDataRefresh();
+    }
 
-  setSelectedLongitudeProperty(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedLongitudeProperty = field;
-    this.triggerDataRefresh();
-  }
+    setSelectedLatitudeProperty(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedLatitudeProperty =
+            field;
+        this.triggerDataRefresh();
+    }
 
-  setSelectedLatitudeProperty(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedLatitudeProperty = field;
-    this.triggerDataRefresh();
-  }
+    setZoomValue(field: string) {
+        const fieldToNumber: number = +field;
+        this.currentlyConfiguredWidget.visualizationConfig.selectedZoomValue =
+            fieldToNumber;
+        this.triggerDataRefresh();
+    }
 
-  setZoomValue(field: string) {
-    const fieldToNumber: number = +field;
-    this.currentlyConfiguredWidget.visualizationConfig.selectedZoomValue = fieldToNumber;
-    this.triggerDataRefresh();
-  }
+    setUseLastEventCoordinations(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.useLastEventCoordinates =
+            field['checked'];
+        this.triggerDataRefresh();
+    }
 
-  setUseLastEventCoordinations(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.useLastEventCoordinates = field['checked'];
-    this.triggerDataRefresh();
-  }
+    setSelectedToolTipContent(fields: DataExplorerField[]) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedToolTipContent =
+            fields;
+        this.triggerDataRefresh();
+    }
 
-  setSelectedToolTipContent(fields: DataExplorerField[]) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedToolTipContent = fields;
-    this.triggerDataRefresh();
-  }
+    protected getWidgetType(): WidgetType {
+        return WidgetType.Map;
+    }
 
-  protected getWidgetType(): WidgetType {
-    return WidgetType.Map;
-  }
+    protected initWidgetConfig(): MapVisConfig {
+        this.markerOrTrace = ['marker', 'trace'];
+        this.markerType = ['pin', 'car'];
 
-  protected initWidgetConfig(): MapVisConfig {
-    this.markerOrTrace = ['marker', 'trace'];
-    this.markerType = ['pin', 'car'];
-
-    return {
-      forType: this.getWidgetType(),
-      selectedLatitudeProperty: this.fieldProvider.numericFields[0],
-      selectedLongitudeProperty: this.fieldProvider.numericFields[1],
-      selectedToolTipContent: this.fieldProvider.allFields,
-      selectedMarkerOrTrace: this.markerOrTrace[0],
-      selectedMarkerType: this.markerType[0],
-      selectedZoomValue: 1,
-      useLastEventCoordinates: true,
-    };
-  }
-
+        return {
+            forType: this.getWidgetType(),
+            selectedLatitudeProperty: this.fieldProvider.numericFields[0],
+            selectedLongitudeProperty: this.fieldProvider.numericFields[1],
+            selectedToolTipContent: this.fieldProvider.allFields,
+            selectedMarkerOrTrace: this.markerOrTrace[0],
+            selectedMarkerType: this.markerType[0],
+            selectedZoomValue: 1,
+            useLastEventCoordinates: true,
+        };
+    }
 }

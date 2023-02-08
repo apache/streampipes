@@ -20,20 +20,26 @@
     <div class="sp-dialog-content p-15">
         <div fxLayout="column">
             <div fxLayout="column">
-                <div fxFlex="100"
-                     fxLayoutAlign="center center"
-                     fxLayout="column"
-                     data-cy="can-not-edit-adapter-dialog-warning">
+                <div
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="column"
+                    data-cy="can-not-edit-adapter-dialog-warning"
+                >
                     <b><h4>This adapter can not be edited.</h4></b>
                     <h5>It is used in the following pipelines:</h5>
                 </div>
             </div>
             <div fxFlex="100" fxLayout="column" class="w-100">
-                <div fxFlex="100" fxLayout="column" class="mat-elevation-z1 mt-10"
-                     *ngFor="let pipeline of pipelines"
-                     data-cy="adapter-in-pipeline">
+                <div
+                    fxFlex="100"
+                    fxLayout="column"
+                    class="mat-elevation-z1 mt-10"
+                    *ngFor="let pipeline of pipelines"
+                    data-cy="adapter-in-pipeline"
+                >
                     <div fxFlex="100" fxLayout="column" class="p-15">
-                        {{pipeline.name}}
+                        {{ pipeline.name }}
                     </div>
                 </div>
             </div>
@@ -41,11 +47,13 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button
-                mat-raised-button
-                class="mat-basic"
-                (click)="close()"
-                data-cy="can-not-edit-adapter-dialog-close">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+            data-cy="can-not-edit-adapter-dialog-close"
+        >
             Close
         </button>
     </div>

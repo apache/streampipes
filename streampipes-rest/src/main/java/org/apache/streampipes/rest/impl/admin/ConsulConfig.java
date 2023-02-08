@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.MessagingSettings;
+import org.apache.streampipes.model.config.MessagingSettings;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;

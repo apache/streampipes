@@ -17,158 +17,206 @@
  */
 
 import { Injectable } from '@angular/core';
+import { FieldProvider } from '../models/dataview-dashboard.model';
 import {
-  FieldProvider,
-} from '../models/dataview-dashboard.model';
-import {
-  DataExplorerField,
-  EventProperty,
-  EventPropertyPrimitive,
-  EventPropertyUnion,
-  FieldConfig,
-  SourceConfig
+    DataExplorerField,
+    EventProperty,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
+    FieldConfig,
+    SourceConfig,
 } from '@streampipes/platform-services';
-
 
 @Injectable()
 export class DataExplorerFieldProviderService {
+    public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
+        const provider: FieldProvider = {
+            allFields: [],
+            numericFields: [],
+            booleanFields: [],
+            dimensionFields: [],
+            nonNumericFields: [],
+        };
 
-  public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
+        sourceConfigs.forEach((sourceConfig, sourceIndex) => {
+            sourceConfig.queryConfig.fields
+                .filter(field => field.selected)
+                .forEach(field => {
+                    this.addField(
+                        sourceConfig.measureName,
+                        sourceConfig.measure.eventSchema.eventProperties,
+                        sourceIndex,
+                        field,
+                        provider,
+                        sourceConfig.queryType === 'aggregated' ||
+                            sourceConfig.queryType === 'single',
+                    );
+                });
+        });
 
-    const provider: FieldProvider = {
-      allFields: [],
-      numericFields: [],
-      booleanFields: [],
-      dimensionFields: [],
-      nonNumericFields: []
-    };
+        return provider;
+    }
 
-    sourceConfigs.forEach((sourceConfig, sourceIndex) => {
-      sourceConfig.queryConfig.fields
-          .filter(field => field.selected)
-          .forEach(field => {
-            this.addField(sourceConfig.measureName,
-                sourceConfig.measure.eventSchema.eventProperties,
+    private addField(
+        measure: string,
+        eventProperties: EventPropertyUnion[],
+        sourceIndex: number,
+        fieldConfig: FieldConfig,
+        provider: FieldProvider,
+        useAggregations: boolean,
+    ) {
+        const property: EventPropertyUnion = eventProperties.find(
+            p => p.runtimeName === fieldConfig.runtimeName,
+        );
+
+        if (!useAggregations) {
+            this.addSingleField(
+                measure,
+                property,
                 sourceIndex,
-                field,
+                fieldConfig,
                 provider,
-                sourceConfig.queryType === 'aggregated' || sourceConfig.queryType === 'single');
-          });
-    });
-
-    return provider;
-  }
-
-  private addField(measure: string,
-                   eventProperties: EventPropertyUnion[],
-                   sourceIndex: number,
-                   fieldConfig: FieldConfig,
-                   provider: FieldProvider,
-                   useAggregations: boolean) {
-    const property: EventPropertyUnion = eventProperties.find(p => p.runtimeName === fieldConfig.runtimeName);
-
-    if (!useAggregations) {
-      this.addSingleField(measure, property, sourceIndex, fieldConfig, provider);
-    } else {
-      fieldConfig.aggregations.forEach(agg => this.addSingleField(measure, property, sourceIndex, fieldConfig, provider, agg));
-    }
-  }
-
-  private addSingleField(measure: string,
-                         property: EventPropertyUnion,
-                         sourceIndex: number,
-                         fieldConfig: FieldConfig,
-                         provider: FieldProvider,
-                         aggregation?: string) {
-    const field: DataExplorerField = {
-      runtimeName: fieldConfig.runtimeName,
-      measure,
-      aggregation,
-      fullDbName: this.makeFullDbName(fieldConfig, aggregation),
-      sourceIndex,
-      fieldCharacteristics: {
-        dimension: this.isDimensionProperty(property),
-        numeric: this.isNumber(property) || aggregation === 'COUNT',
-        binary: this.isBoolean(property),
-        semanticTypes: property.domainProperties
-      }
-    };
-    provider.allFields.push(field);
-
-    if (field.fieldCharacteristics.numeric) {
-      provider.numericFields.push(field);
-    } else {
-      provider.nonNumericFields.push(field);
+            );
+        } else {
+            fieldConfig.aggregations.forEach(agg =>
+                this.addSingleField(
+                    measure,
+                    property,
+                    sourceIndex,
+                    fieldConfig,
+                    provider,
+                    agg,
+                ),
+            );
+        }
     }
 
-    if (field.fieldCharacteristics.binary) {
-      provider.booleanFields.push(field);
+    private addSingleField(
+        measure: string,
+        property: EventPropertyUnion,
+        sourceIndex: number,
+        fieldConfig: FieldConfig,
+        provider: FieldProvider,
+        aggregation?: string,
+    ) {
+        const field: DataExplorerField = {
+            runtimeName: fieldConfig.runtimeName,
+            measure,
+            aggregation,
+            fullDbName: this.makeFullDbName(fieldConfig, aggregation),
+            sourceIndex,
+            fieldCharacteristics: {
+                dimension: this.isDimensionProperty(property),
+                numeric: this.isNumber(property) || aggregation === 'COUNT',
+                binary: this.isBoolean(property),
+                semanticTypes: property.domainProperties,
+            },
+        };
+        provider.allFields.push(field);
+
+        if (field.fieldCharacteristics.numeric) {
+            provider.numericFields.push(field);
+        } else {
+            provider.nonNumericFields.push(field);
+        }
+
+        if (field.fieldCharacteristics.binary) {
+            provider.booleanFields.push(field);
+        }
+
+        if (this.isTimestamp(property)) {
+            provider.primaryTimestampField = field;
+        }
+
+        if (field.fieldCharacteristics.dimension) {
+            provider.dimensionFields.push(field);
+        }
     }
 
-    if (this.isTimestamp(property)) {
-      provider.primaryTimestampField = field;
+    public isDimensionProperty(p: EventProperty): boolean {
+        return p.propertyScope === 'DIMENSION_PROPERTY';
     }
 
-    if (field.fieldCharacteristics.dimension) {
-      provider.dimensionFields.push(field);
+    public isBoolean(p: EventPropertyUnion): boolean {
+        return (
+            this.isPrimitive(p) &&
+            (p as EventPropertyPrimitive).runtimeType ===
+                'http://www.w3.org/2001/XMLSchema#boolean'
+        );
     }
-  }
 
-  public isDimensionProperty(p: EventProperty): boolean {
-    return p.propertyScope === 'DIMENSION_PROPERTY';
-  }
-
-  public isBoolean(p: EventPropertyUnion): boolean {
-    return this.isPrimitive(p) && (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#boolean';
-  }
-
-  public isString(p: EventPropertyUnion): boolean {
-    return this.isPrimitive(p) && (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#string';
-  }
-
-  public isTimestamp(p: EventProperty) {
-    return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
-  }
-
-  public getAddedFields(currentFields: DataExplorerField[], newFields: DataExplorerField[]): DataExplorerField[] {
-    return this.getMissingFields(newFields, currentFields);
-  }
-
-  public getRemovedFields(currentFields: DataExplorerField[], newFields: DataExplorerField[]): DataExplorerField[] {
-    return this.getMissingFields(currentFields, newFields);
-  }
-
-  public getMissingFields(origin: DataExplorerField[], target: DataExplorerField[]): DataExplorerField[] {
-    return origin.filter(field => !(target.find(newField => newField.fullDbName === field.fullDbName)));
-  }
-
-  isNumber(p: EventPropertyUnion): boolean {
-    if (this.isPrimitive(p)) {
-      const runtimeType = (p as EventPropertyPrimitive).runtimeType;
-
-      return runtimeType === 'http://schema.org/Number' ||
-          runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
-          runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
-          runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-          runtimeType === 'https://schema.org/Number' ||
-          runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
-          runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
-          runtimeType === 'https://www.w3.org/2001/XMLSchema#integer';
-    } else {
-      return false;
+    public isString(p: EventPropertyUnion): boolean {
+        return (
+            this.isPrimitive(p) &&
+            (p as EventPropertyPrimitive).runtimeType ===
+                'http://www.w3.org/2001/XMLSchema#string'
+        );
     }
-  }
 
-  private isPrimitive(property: any): boolean {
-    return property instanceof EventPropertyPrimitive ||
-        property['@class'] === 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-  }
+    public isTimestamp(p: EventProperty) {
+        return p.domainProperties.some(
+            dp => dp === 'http://schema.org/DateTime',
+        );
+    }
 
-  private makeFullDbName(fieldConfig: FieldConfig,
-                         aggregation?: string): string {
-    const prefix = aggregation ? aggregation.toLowerCase() + '_' : '';
-    return prefix + fieldConfig.runtimeName;
-  }
+    public getAddedFields(
+        currentFields: DataExplorerField[],
+        newFields: DataExplorerField[],
+    ): DataExplorerField[] {
+        return this.getMissingFields(newFields, currentFields);
+    }
 
+    public getRemovedFields(
+        currentFields: DataExplorerField[],
+        newFields: DataExplorerField[],
+    ): DataExplorerField[] {
+        return this.getMissingFields(currentFields, newFields);
+    }
 
+    public getMissingFields(
+        origin: DataExplorerField[],
+        target: DataExplorerField[],
+    ): DataExplorerField[] {
+        return origin.filter(
+            field =>
+                !target.find(
+                    newField => newField.fullDbName === field.fullDbName,
+                ),
+        );
+    }
+
+    isNumber(p: EventPropertyUnion): boolean {
+        if (this.isPrimitive(p)) {
+            const runtimeType = (p as EventPropertyPrimitive).runtimeType;
+
+            return (
+                runtimeType === 'http://schema.org/Number' ||
+                runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+                runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
+                runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
+                runtimeType === 'https://schema.org/Number' ||
+                runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
+                runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
+                runtimeType === 'https://www.w3.org/2001/XMLSchema#integer'
+            );
+        } else {
+            return false;
+        }
+    }
+
+    private isPrimitive(property: any): boolean {
+        return (
+            property instanceof EventPropertyPrimitive ||
+            property['@class'] ===
+                'org.apache.streampipes.model.schema.EventPropertyPrimitive'
+        );
+    }
+
+    private makeFullDbName(
+        fieldConfig: FieldConfig,
+        aggregation?: string,
+    ): string {
+        const prefix = aggregation ? aggregation.toLowerCase() + '_' : '';
+        return prefix + fieldConfig.runtimeName;
+    }
 }

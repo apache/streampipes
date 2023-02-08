@@ -25,148 +25,166 @@ import { EChartsOption } from 'echarts';
 import { BarRaceConfig } from './bar-race-config';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
-
 @Component({
-  selector: 'bar-race-widget',
-  templateUrl: './bar-race-widget.component.html',
-  styleUrls: ['./bar-race-widget.component.scss']
+    selector: 'sp-bar-race-widget',
+    templateUrl: './bar-race-widget.component.html',
+    styleUrls: ['./bar-race-widget.component.scss'],
 })
-export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
+export class BarRaceWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
+    currentWidth: number;
+    currentHeight: number;
 
-  currentWidth: number;
-  currentHeight: number;
+    configReady = false;
 
-  configReady = false;
+    eChartsInstance: ECharts;
+    dynamicData: any;
 
-  eChartsInstance: ECharts;
-  dynamicData: any;
+    partitionField: string;
+    valueField: string;
 
-  partitionField: string;
-  valueField: string;
-
-  chartOption = {
-    grid: {
-      left: 100,
-      top: 10,
-      right: 120,
-      bottom: 100
-    },
-    xAxis: {
-      max: 'dataMax',
-      label: {
-        formatter: n => {
-          return Math.round(n);
+    chartOption = {
+        grid: {
+            left: 100,
+            top: 10,
+            right: 120,
+            bottom: 100,
         },
-      },
-      axisLabel: {
-        textStyle: {
-          color: '#FFFFFF'
-        }
-      }
-    },
-    dataset: {
-      source: [],
-    },
-    yAxis: {
-      type: 'category',
-      inverse: true,
-      interval: 0,
-      data: [],
-      axisLabel: {
-        show: true,
-        formatter: value => {
-          return value;
+        xAxis: {
+            max: 'dataMax',
+            label: {
+                formatter: n => {
+                    return Math.round(n);
+                },
+            },
+            axisLabel: {
+                textStyle: {
+                    color: '#FFFFFF',
+                },
+            },
         },
-        textStyle: {
-          color: '#FFFFFF'
-        }
-      },
-      animationDuration: 300,
-      animationDurationUpdate: 300
-    },
-    series: [{
-      // data: [],
-      data: [],
-      realtimeSort: true,
-      seriesLayoutBy: 'column',
-      type: 'bar',
-      itemStyle: {
-        color: param => {
-          return this.selectedPrimaryTextColor;
-        }
-      },
-      encode: {
-        x: 'value',
-        y: 'name'
-      },
-      label: {
-        show: true,
-        precision: 1,
-        position: 'right',
-        valueAnimation: true,
-        fontFamily: 'monospace',
-        color: param => {
-          return this.selectedPrimaryTextColor;
-        }
-      }
-    }],
-    // Disable init animation.
-    animationDuration: 0,
-    animationDurationUpdate: 1000,
-    animationEasing: 'linear',
-    animationEasingUpdate: 'linear',
-  };
+        dataset: {
+            source: [],
+        },
+        yAxis: {
+            type: 'category',
+            inverse: true,
+            interval: 0,
+            data: [],
+            axisLabel: {
+                show: true,
+                formatter: value => {
+                    return value;
+                },
+                textStyle: {
+                    color: '#FFFFFF',
+                },
+            },
+            animationDuration: 300,
+            animationDurationUpdate: 300,
+        },
+        series: [
+            {
+                data: [],
+                realtimeSort: true,
+                seriesLayoutBy: 'column',
+                type: 'bar',
+                itemStyle: {
+                    color: param => {
+                        return this.selectedPrimaryTextColor;
+                    },
+                },
+                encode: {
+                    x: 'value',
+                    y: 'name',
+                },
+                label: {
+                    show: true,
+                    precision: 1,
+                    position: 'right',
+                    valueAnimation: true,
+                    fontFamily: 'monospace',
+                    color: param => {
+                        return this.selectedPrimaryTextColor;
+                    },
+                },
+            },
+        ],
+        // Disable init animation.
+        animationDuration: 0,
+        animationDurationUpdate: 1000,
+        animationEasing: 'linear',
+        animationEasingUpdate: 'linear',
+    };
 
-  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
-    super(dataLakeService, resizeService, false);
-  }
-
-  protected extractConfig(extractor: StaticPropertyExtractor) {
-    this.partitionField = extractor.mappingPropertyValue(BarRaceConfig.PARTITION_KEY);
-    this.valueField = extractor.mappingPropertyValue(BarRaceConfig.VALUE_KEY);
-    this.chartOption.xAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
-    this.chartOption.yAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
-  }
-
-  protected onEvent(events: any[]) {
-    this.dynamicData = this.chartOption;
-    const partitionValue = events[0][this.partitionField];
-    const value = events[0][this.valueField];
-    if (this.dynamicData.series[0].data.some(d => d.name === partitionValue)) {
-      this.dynamicData.series[0].data.find(d => d.name === partitionValue).value = value;
-    } else {
-      this.dynamicData.series[0].data.push({name: partitionValue, value});
-      this.dynamicData.yAxis.data.push(partitionValue);
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
+        super(dataLakeService, resizeService, false);
     }
 
-    if (this.eChartsInstance) {
-      this.eChartsInstance.setOption(this.dynamicData as EChartsOption);
+    protected extractConfig(extractor: StaticPropertyExtractor) {
+        this.partitionField = extractor.mappingPropertyValue(
+            BarRaceConfig.PARTITION_KEY,
+        );
+        this.valueField = extractor.mappingPropertyValue(
+            BarRaceConfig.VALUE_KEY,
+        );
+        this.chartOption.xAxis.axisLabel.textStyle.color =
+            this.selectedPrimaryTextColor;
+        this.chartOption.yAxis.axisLabel.textStyle.color =
+            this.selectedPrimaryTextColor;
     }
-  }
 
-  protected onSizeChanged(width: number, height: number) {
-    this.currentWidth = width;
-    this.currentHeight = height;
-    this.configReady = true;
-    this.applySize(width, height);
-  }
+    protected onEvent(events: any[]) {
+        this.dynamicData = this.chartOption;
+        const partitionValue = events[0][this.partitionField];
+        const value = events[0][this.valueField];
+        if (
+            this.dynamicData.series[0].data.some(d => d.name === partitionValue)
+        ) {
+            this.dynamicData.series[0].data.find(
+                d => d.name === partitionValue,
+            ).value = value;
+        } else {
+            this.dynamicData.series[0].data.push({
+                name: partitionValue,
+                value,
+            });
+            this.dynamicData.yAxis.data.push(partitionValue);
+        }
 
-  onChartInit(ec) {
-    this.eChartsInstance = ec;
-    this.applySize(this.currentWidth, this.currentHeight);
-  }
-
-  applySize(width: number, height: number) {
-    if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width, height});
+        if (this.eChartsInstance) {
+            this.eChartsInstance.setOption(this.dynamicData as EChartsOption);
+        }
     }
-  }
 
-  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
-    return 1;
-  }
+    protected onSizeChanged(width: number, height: number) {
+        this.currentWidth = width;
+        this.currentHeight = height;
+        this.configReady = true;
+        this.applySize(width, height);
+    }
 
-  getFieldsToQuery(): string[] {
-    return [this.partitionField, this.valueField];
-  }
+    onChartInit(ec) {
+        this.eChartsInstance = ec;
+        this.applySize(this.currentWidth, this.currentHeight);
+    }
+
+    applySize(width: number, height: number) {
+        if (this.eChartsInstance) {
+            this.eChartsInstance.resize({ width, height });
+        }
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return 1;
+    }
+
+    getFieldsToQuery(): string[] {
+        return [this.partitionField, this.valueField];
+    }
 }

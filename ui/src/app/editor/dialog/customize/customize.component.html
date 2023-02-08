@@ -19,69 +19,124 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column">
-            <div style="border-bottom:1px solid #ccc;padding:10px;" fxLayout="row" class="sp-tab-bg">
-                <div fxFlex fxLayoutAlign="start center" *ngIf="availableTemplates && availableTemplates.length > 0">
-                    <mat-form-field class="form-field" floatLabel="never" color="accent">
+            <div
+                style="border-bottom: 1px solid #ccc; padding: 10px"
+                fxLayout="row"
+                class="sp-tab-bg"
+            >
+                <div
+                    fxFlex
+                    fxLayoutAlign="start center"
+                    *ngIf="availableTemplates && availableTemplates.length > 0"
+                >
+                    <mat-form-field
+                        class="form-field"
+                        floatLabel="never"
+                        color="accent"
+                    >
                         <mat-label>Use template</mat-label>
-                        <mat-select (selectionChange)="loadTemplate($event)"
-                                    [(value)]="selectedTemplate">
+                        <mat-select
+                            (selectionChange)="loadTemplate($event)"
+                            [(value)]="selectedTemplate"
+                        >
                             <mat-option>--</mat-option>
-                            <mat-option [value]="template" *ngFor="let template of availableTemplates">
-                                {{template.templateName}}
+                            <mat-option
+                                [value]="template"
+                                *ngFor="let template of availableTemplates"
+                            >
+                                {{ template.templateName }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
                 <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-                    <mat-slide-toggle [(ngModel)]="showDocumentation"
-                                      color="accent"
-                                      [disabled]="!pipelineElement.payload.includesAssets">
+                    <mat-slide-toggle
+                        [(ngModel)]="showDocumentation"
+                        color="accent"
+                        [disabled]="!pipelineElement.payload.includesAssets"
+                    >
                         Show documentation
                     </mat-slide-toggle>
                     <span>&nbsp;</span>
-                    <mat-slide-toggle [(ngModel)]="displayRecommended" color="accent">
+                    <mat-slide-toggle
+                        [(ngModel)]="displayRecommended"
+                        color="accent"
+                    >
                         Show only recommended settings
                     </mat-slide-toggle>
                 </div>
             </div>
             <div fxFlex="100" fxLayout="row">
-                <div fxFlex="{{_showDocumentation ? 50: 100}}">
+                <div fxFlex="{{ _showDocumentation ? 50 : 100 }}">
                     <div fxLayout="column" *ngIf="!templateMode">
-                        <div fxFlex="100" fxLayout="column" class="customize-section p-15">
+                        <div
+                            fxFlex="100"
+                            fxLayout="column"
+                            class="customize-section p-15"
+                        >
                             <form [formGroup]="parentForm" fxFlex="100">
-                                <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
-                                                     [staticProperty]="config"
-                                                     [pipelineElement]="cachedPipelineElement"
-                                                     [displayRecommended]="displayRecommended"
-                                                     [staticProperties]="cachedPipelineElement.staticProperties"
-                                                     [eventSchemas]="eventSchemas"
-                                                     [parentForm]="parentForm"
-                                                     [fieldName]="config.internalName"
-                                                     [completedStaticProperty]="completedStaticProperty"
-                                                     (updateEmitter)="triggerUpdate($event)"
-                                                     (validateEmitter)="validConfiguration($event)">
-                                </app-static-property>
+                                <sp-app-static-property
+                                    *ngFor="
+                                        let config of cachedPipelineElement.staticProperties
+                                    "
+                                    [staticProperty]="config"
+                                    [pipelineElement]="cachedPipelineElement"
+                                    [displayRecommended]="displayRecommended"
+                                    [staticProperties]="
+                                        cachedPipelineElement.staticProperties
+                                    "
+                                    [eventSchemas]="eventSchemas"
+                                    [parentForm]="parentForm"
+                                    [fieldName]="config.internalName"
+                                    [completedStaticProperty]="
+                                        completedStaticProperty
+                                    "
+                                    (updateEmitter)="triggerUpdate($event)"
+                                    (validateEmitter)="
+                                        validConfiguration($event)
+                                    "
+                                >
+                                </sp-app-static-property>
                                 <div *ngIf="isDataProcessor">
-                                    <output-strategy
-                                            *ngFor="let outputStrategy of cachedPipelineElement.outputStrategies"
-                                            [parentForm]="parentForm"
-                                            [outputStrategy]="outputStrategy"
-                                            [selectedElement]="cachedPipelineElement">
-                                    </output-strategy>
+                                    <sp-output-strategy
+                                        *ngFor="
+                                            let outputStrategy of cachedPipelineElement.outputStrategies
+                                        "
+                                        [parentForm]="parentForm"
+                                        [outputStrategy]="outputStrategy"
+                                        [selectedElement]="
+                                            cachedPipelineElement
+                                        "
+                                    >
+                                    </sp-output-strategy>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div fxLayout="column" *ngIf="templateMode">
-                        <pipeline-element-template-config [staticProperties]="cachedPipelineElement.staticProperties"
-                        [template]="template" [templateConfigs]="templateConfigs" [appId]="cachedPipelineElement.appId">
-                        </pipeline-element-template-config>
+                        <sp-pipeline-element-template-config
+                            [staticProperties]="
+                                cachedPipelineElement.staticProperties
+                            "
+                            [template]="template"
+                            [templateConfigs]="templateConfigs"
+                            [appId]="cachedPipelineElement.appId"
+                        >
+                        </sp-pipeline-element-template-config>
                     </div>
                 </div>
-                <div fxFlex="50" *ngIf="showDocumentation"
-                     style="padding-left:10px;border-left: 2px solid rgb(204, 204, 204);">
-                    <pipeline-element-documentation [useStyling]="false"
-                                                    [appId]="pipelineElement.payload.appId"></pipeline-element-documentation>
+                <div
+                    fxFlex="50"
+                    *ngIf="showDocumentation"
+                    style="
+                        padding-left: 10px;
+                        border-left: 2px solid rgb(204, 204, 204);
+                    "
+                >
+                    <sp-pipeline-element-documentation
+                        [useStyling]="false"
+                        [appId]="pipelineElement.payload.appId"
+                    ></sp-pipeline-element-documentation>
                 </div>
             </div>
         </div>
@@ -89,26 +144,55 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="row" *ngIf="!templateMode">
-            <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
-                    [disabled]="!(formValid)"
-            data-cy="sp-element-configuration-save">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="save()"
+                style="margin-right: 10px"
+                [disabled]="!formValid"
+                data-cy="sp-element-configuration-save"
+            >
                 <i class="material-icons">save</i><span>&nbsp;Save</span>
             </button>
-            <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic"
+                (click)="close()"
+            >
                 Cancel
             </button>
             <div fxFlex></div>
-            <button mat-button mat-raised-button color="accent" [disabled]="!(formValid)"
-                    (click)="triggerTemplateMode()">
-                <i class="material-icons">add_circle_outline</i><span>&nbsp;Create template</span>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                [disabled]="!formValid"
+                (click)="triggerTemplateMode()"
+            >
+                <i class="material-icons">add_circle_outline</i
+                ><span>&nbsp;Create template</span>
             </button>
         </div>
         <div fxLayout="row" *ngIf="templateMode">
-            <button mat-button mat-raised-button color="accent" (click)="saveTemplate()" style="margin-right:10px;"
-                    [disabled]="!(formValid)">
-                <i class="material-icons">save</i><span>&nbsp;Save template</span>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="saveTemplate()"
+                style="margin-right: 10px"
+                [disabled]="!formValid"
+            >
+                <i class="material-icons">save</i
+                ><span>&nbsp;Save template</span>
             </button>
-            <button mat-button mat-raised-button class="mat-basic" (click)="cancelTemplateMode()">
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic"
+                (click)="cancelTemplateMode()"
+            >
                 Cancel
             </button>
         </div>

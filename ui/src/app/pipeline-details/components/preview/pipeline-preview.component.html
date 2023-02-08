@@ -16,11 +16,18 @@
   ~
   -->
 
-<sp-basic-inner-panel [panelTitle]="'Preview: ' +pipeline.name" innerPadding="0">
+<sp-basic-inner-panel
+    [panelTitle]="'Preview: ' + pipeline.name"
+    innerPadding="0"
+>
     <div class="outer-assembly-preview">
         <div class="canvas-preview-inner">
-            <div id="{{jspcanvas}}" class="canvas-preview">
-                <pipeline [canvasId]="jspcanvas" [rawPipelineModel]="rawPipelineModel" [preview]="true"></pipeline>
+            <div id="{{ jspcanvas }}" class="canvas-preview">
+                <sp-pipeline
+                    [canvasId]="jspcanvas"
+                    [rawPipelineModel]="rawPipelineModel"
+                    [preview]="true"
+                ></sp-pipeline>
             </div>
         </div>
     </div>

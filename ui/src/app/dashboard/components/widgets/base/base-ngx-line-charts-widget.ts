@@ -20,14 +20,16 @@ import { ResizeService } from '../../../services/resize.service';
 import { BaseNgxChartsStreamPipesWidget } from './base-ngx-charts-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { LineConfig } from '../line/line-config';
-import { Directive } from '@angular/core';
+import { Directive, OnInit } from '@angular/core';
 import { DatalakeRestService } from '@streampipes/platform-services';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 import { BaseStreamPipesWidget } from './base-widget';
 
 @Directive()
-export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsStreamPipesWidget {
-
+export abstract class BaseNgxLineChartsStreamPipesWidget
+    extends BaseNgxChartsStreamPipesWidget
+    implements OnInit
+{
     multi: any = [];
 
     selectedNumberProperty: string;
@@ -35,7 +37,10 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     minYAxisRange: number;
     maxYAxisRange: number;
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService);
     }
 
@@ -43,21 +48,30 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
         super.ngOnInit();
         this.multi = [
             {
-                'name': this.selectedNumberProperty,
-                'series': [
-                ]
-            }];
+                name: this.selectedNumberProperty,
+                series: [],
+            },
+        ];
     }
 
     protected extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedNumberProperty = extractor.mappingPropertyValue(LineConfig.NUMBER_MAPPING_KEY);
-        this.minYAxisRange = extractor.integerParameter(LineConfig.MIN_Y_AXIS_KEY);
-        this.maxYAxisRange = extractor.integerParameter(LineConfig.MAX_Y_AXIS_KEY);
+        this.selectedNumberProperty = extractor.mappingPropertyValue(
+            LineConfig.NUMBER_MAPPING_KEY,
+        );
+        this.minYAxisRange = extractor.integerParameter(
+            LineConfig.MIN_Y_AXIS_KEY,
+        );
+        this.maxYAxisRange = extractor.integerParameter(
+            LineConfig.MAX_Y_AXIS_KEY,
+        );
     }
 
     protected onEvent(events: any[]) {
         this.multi[0].series = events.map(ev => {
-            return { 'name': ev[BaseStreamPipesWidget.TIMESTAMP_KEY], 'value': ev[this.selectedNumberProperty]};
+            return {
+                name: ev[BaseStreamPipesWidget.TIMESTAMP_KEY],
+                value: ev[this.selectedNumberProperty],
+            };
         });
         this.multi = [...this.multi];
     }
@@ -65,7 +79,13 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     timestampTickFormatting(timestamp: any): string {
         const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
         const date = new Date(timestamp);
-        return date.getHours() + ':' + `${padL(date.getMinutes())}` + ':' + `${padL(date.getSeconds())}`;
+        return (
+            date.getHours() +
+            ':' +
+            `${padL(date.getMinutes())}` +
+            ':' +
+            `${padL(date.getSeconds())}`
+        );
     }
 
     protected getQueryLimit(extractor: StaticPropertyExtractor): number {

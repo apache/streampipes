@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonSubTypes({
     @JsonSubTypes.Type(AnyStaticProperty.class),
@@ -45,7 +45,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
     @JsonSubTypes.Type(SlideToggleStaticProperty.class)
 })
 @TsModel
-public abstract class StaticProperty extends UnnamedStreamPipesEntity {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
+public abstract class StaticProperty {
 
   private static final long serialVersionUID = 2509153122084646025L;
   protected boolean valueRequired;
@@ -68,7 +69,6 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
   }
 
   public StaticProperty(StaticProperty other) {
-    super(other);
     this.index = other.getIndex();
     this.description = other.getDescription();
     this.internalName = other.getInternalName();

@@ -63,14 +63,6 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription im
     this.formatDescription = formatDescription;
   }
 
-  @Override
-  public EventSchema getEventSchema() {
-    if (this.getDataStream() != null) {
-      return this.getDataStream().getEventSchema();
-    }
-    return null;
-  }
-
   public ProtocolDescription getProtocolDescription() {
     return protocolDescription;
   }
@@ -78,5 +70,7 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription im
   public void setProtocolDescription(ProtocolDescription protocolDescription) {
     this.protocolDescription = protocolDescription;
   }
-
+  public EventSchema getEventSchema() {
+    return this.getDataStream().getEventSchema();
+  }
 }

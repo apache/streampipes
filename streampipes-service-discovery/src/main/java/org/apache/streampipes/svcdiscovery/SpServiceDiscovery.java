@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.svcdiscovery;
 
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
@@ -27,15 +29,28 @@ import org.apache.streampipes.svcdiscovery.consul.SpConsulServiceDiscovery;
 public class SpServiceDiscovery {
 
   public static ISpServiceDiscovery getServiceDiscovery() {
-    return new SpConsulServiceDiscovery();
+    return new SpConsulServiceDiscovery(Environments.getEnvironment());
+  }
+
+  public static ISpServiceDiscovery getServiceDiscovery(Environment environment) {
+    return new SpConsulServiceDiscovery(environment);
   }
 
   public static ISpKvManagement getKeyValueStore() {
-    return new SpConsulKvManagement();
+    return new SpConsulKvManagement(Environments.getEnvironment());
+  }
+
+  public static ISpKvManagement getKeyValueStore(Environment environment) {
+    return new SpConsulKvManagement(environment);
   }
 
   public static SpConfig getSpConfig(String serviceGroup) {
-    return new ConsulSpConfig(serviceGroup);
+    return getSpConfig(serviceGroup, Environments.getEnvironment());
+  }
+
+  public static SpConfig getSpConfig(String serviceGroup,
+                                     Environment environment) {
+    return new ConsulSpConfig(serviceGroup, environment);
   }
 
 }

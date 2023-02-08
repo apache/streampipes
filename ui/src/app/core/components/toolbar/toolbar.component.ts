@@ -31,91 +31,105 @@ import { exhaustMap } from 'rxjs/operators';
 import { NotificationCountService } from '../../../services/notification-count-service';
 
 @Component({
-  selector: 'toolbar',
-  templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.scss']
+    selector: 'sp-toolbar',
+    templateUrl: './toolbar.component.html',
+    styleUrls: ['./toolbar.component.scss'],
 })
-export class ToolbarComponent extends BaseNavigationComponent implements OnInit, OnDestroy {
+export class ToolbarComponent
+    extends BaseNavigationComponent
+    implements OnInit, OnDestroy
+{
+    @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
+    @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
-  @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
-  @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
+    userEmail;
+    darkMode: boolean;
 
-  userEmail;
-  darkMode: boolean;
+    appearanceControl: UntypedFormControl;
 
-  appearanceControl: UntypedFormControl;
+    unreadNotificationCount = 0;
+    unreadNotificationsSubscription: Subscription;
 
-  unreadNotificationCount = 0;
-  unreadNotificationsSubscription: Subscription;
-
-  constructor(router: Router,
-              private profileService: ProfileService,
-              private restApi: RestApi,
-              private overlay: OverlayContainer,
-              authService: AuthService,
-              appConstants: AppConstants,
-              public notificationCountService: NotificationCountService) {
-    super(authService, router, appConstants);
-  }
-
-  ngOnInit(): void {
-    this.unreadNotificationsSubscription = timer(0, 10000).pipe(
-      exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
-      .subscribe(response => {
-        this.notificationCountService.unreadNotificationCount$.next(response.count);
-      });
-
-    this.notificationCountService.unreadNotificationCount$.subscribe(count => {
-      this.unreadNotificationCount = count;
-    });
-    this.authService.user$.subscribe(user => {
-      const displayName = user.displayName;
-      this.userEmail = (displayName.length > 33) ? displayName.slice(0, 32) + '...' : displayName;
-      this.profileService.getUserProfile(user.username).subscribe(userInfo => {
-        this.darkMode = this.authService.darkMode$.getValue();
-        this.modifyAppearance(userInfo.darkMode);
-      });
-    });
-
-    this.appearanceControl = new UntypedFormControl(this.authService.darkMode$.getValue());
-    this.appearanceControl.valueChanges.subscribe(darkMode => {
-      this.authService.darkMode$.next(darkMode);
-      this.modifyAppearance(darkMode);
-    });
-    super.onInit();
-  }
-
-  modifyAppearance(darkMode: boolean) {
-    if (darkMode) {
-      this.overlay.getContainerElement().classList.remove('light-mode');
-      this.overlay.getContainerElement().classList.add('dark-mode');
-    } else {
-      this.overlay.getContainerElement().classList.remove('dark-mode');
-      this.overlay.getContainerElement().classList.add('light-mode');
+    constructor(
+        router: Router,
+        private profileService: ProfileService,
+        private restApi: RestApi,
+        private overlay: OverlayContainer,
+        authService: AuthService,
+        appConstants: AppConstants,
+        public notificationCountService: NotificationCountService,
+    ) {
+        super(authService, router, appConstants);
     }
-  }
 
-  openDocumentation() {
-    window.open('https://streampipes.apache.org/docs', '_blank');
-  }
+    ngOnInit(): void {
+        this.unreadNotificationsSubscription = timer(0, 10000)
+            .pipe(exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
+            .subscribe(response => {
+                this.notificationCountService.unreadNotificationCount$.next(
+                    response.count,
+                );
+            });
 
-  openInfo() {
-    this.router.navigate(['info']);
-    this.activePage = 'Info';
-  }
+        this.notificationCountService.unreadNotificationCount$.subscribe(
+            count => {
+                this.unreadNotificationCount = count;
+            },
+        );
+        this.authService.user$.subscribe(user => {
+            const displayName = user.displayName;
+            this.userEmail =
+                displayName.length > 33
+                    ? displayName.slice(0, 32) + '...'
+                    : displayName;
+            this.profileService
+                .getUserProfile(user.username)
+                .subscribe(userInfo => {
+                    this.darkMode = this.authService.darkMode$.getValue();
+                    this.modifyAppearance(userInfo.darkMode);
+                });
+        });
 
-  openProfile() {
-    this.router.navigate(['profile']);
-    this.activePage = 'Profile';
-  }
+        this.appearanceControl = new UntypedFormControl(
+            this.authService.darkMode$.getValue(),
+        );
+        this.appearanceControl.valueChanges.subscribe(darkMode => {
+            this.authService.darkMode$.next(darkMode);
+            this.modifyAppearance(darkMode);
+        });
+        super.onInit();
+    }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['login']);
-  }
+    modifyAppearance(darkMode: boolean) {
+        if (darkMode) {
+            this.overlay.getContainerElement().classList.remove('light-mode');
+            this.overlay.getContainerElement().classList.add('dark-mode');
+        } else {
+            this.overlay.getContainerElement().classList.remove('dark-mode');
+            this.overlay.getContainerElement().classList.add('light-mode');
+        }
+    }
 
-  ngOnDestroy() {
-    this.unreadNotificationsSubscription.unsubscribe();
-  }
+    openDocumentation() {
+        window.open('https://streampipes.apache.org/docs', '_blank');
+    }
 
+    openInfo() {
+        this.router.navigate(['info']);
+        this.activePage = 'Info';
+    }
+
+    openProfile() {
+        this.router.navigate(['profile']);
+        this.activePage = 'Profile';
+    }
+
+    logout() {
+        this.authService.logout();
+        this.router.navigate(['login']);
+    }
+
+    ngOnDestroy() {
+        this.unreadNotificationsSubscription.unsubscribe();
+    }
 }

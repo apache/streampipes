@@ -19,47 +19,55 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { HeatmapVisConfig, HeatmapWidgetModel } from '../model/heatmap-widget.model';
+import {
+    HeatmapVisConfig,
+    HeatmapWidgetModel,
+} from '../model/heatmap-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-heatmap-widget-config',
-  templateUrl: './heatmap-widget-config.component.html',
-  styleUrls: ['./heatmap-widget-config.component.scss']
+    selector: 'sp-data-explorer-heatmap-widget-config',
+    templateUrl: './heatmap-widget-config.component.html',
+    styleUrls: ['./heatmap-widget-config.component.scss'],
 })
-export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<HeatmapWidgetModel, HeatmapVisConfig> implements OnInit {
+export class HeatmapWidgetConfigComponent
+    extends BaseWidgetConfig<HeatmapWidgetModel, HeatmapVisConfig>
+    implements OnInit
+{
+    constructor(
+        widgetConfigurationService: WidgetConfigurationService,
+        fieldService: DataExplorerFieldProviderService,
+    ) {
+        super(widgetConfigurationService, fieldService);
+    }
 
-   constructor(widgetConfigurationService: WidgetConfigurationService,
-              fieldService: DataExplorerFieldProviderService) {
-    super(widgetConfigurationService, fieldService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    setShowLabelsProperty(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.showLabelsProperty =
+            field['checked'];
+        this.triggerDataRefresh();
+    }
 
-  setShowLabelsProperty(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.showLabelsProperty = field['checked'];
-    this.triggerDataRefresh();
-  }
+    setSelectedHeatProperty(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedHeatProperty =
+            field;
+        this.triggerDataRefresh();
+    }
 
-  setSelectedHeatProperty(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedHeatProperty = field;
-    this.triggerDataRefresh();
-  }
+    protected getWidgetType(): WidgetType {
+        return WidgetType.Heatmap;
+    }
 
-  protected getWidgetType(): WidgetType {
-    return WidgetType.Heatmap;
-  }
-
-  protected initWidgetConfig(): HeatmapVisConfig {
-    return {
-      forType: this.getWidgetType(),
-      selectedHeatProperty: this.fieldProvider.numericFields[1],
-      showLabelsProperty: false,
-    };
-  }
-
+    protected initWidgetConfig(): HeatmapVisConfig {
+        return {
+            forType: this.getWidgetType(),
+            selectedHeatProperty: this.fieldProvider.numericFields[1],
+            showLabelsProperty: false,
+        };
+    }
 }

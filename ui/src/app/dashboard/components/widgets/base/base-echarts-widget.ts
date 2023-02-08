@@ -24,29 +24,31 @@ import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Directive()
 export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
+    currentWidth: number;
+    currentHeight: number;
 
-  currentWidth: number;
-  currentHeight: number;
+    configReady = false;
 
-  configReady = false;
+    eChartsInstance: ECharts;
+    dynamicData: any;
 
-  eChartsInstance: ECharts;
-  dynamicData: any;
-
-  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
-    super(dataLakeService, resizeService, false);
-  }
-
-  protected onSizeChanged(width: number, height: number) {
-    this.currentWidth = width;
-    this.currentHeight = height;
-    this.configReady = true;
-    if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width, height});
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
+        super(dataLakeService, resizeService, false);
     }
-  }
 
-  onChartInit(ec) {
-    this.eChartsInstance = ec;
-  }
+    protected onSizeChanged(width: number, height: number) {
+        this.currentWidth = width;
+        this.currentHeight = height;
+        this.configReady = true;
+        if (this.eChartsInstance) {
+            this.eChartsInstance.resize({ width, height });
+        }
+    }
+
+    onChartInit(ec) {
+        this.eChartsInstance = ec;
+    }
 }

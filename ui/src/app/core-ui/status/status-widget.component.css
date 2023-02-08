@@ -20,13 +20,13 @@
     font-size: 40pt;
     background: darkblue;
     color: white;
-    margin:5px;
-    min-height:140px;
+    margin: 5px;
+    min-height: 140px;
     padding: 15px;
 }
 
-.statusValue>h4 {
-    font-size:20pt;
+.statusValue > h4 {
+    font-size: 20pt;
     margin-bottom: 30px;
 }
 

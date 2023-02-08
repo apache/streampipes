@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.sdk.builder;
 
-import org.apache.streampipes.model.quality.Accuracy;
-import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
-import org.apache.streampipes.model.quality.Resolution;
 import org.apache.streampipes.model.schema.Enumeration;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -28,18 +25,15 @@ import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PrimitivePropertyBuilder {
 
   private EventPropertyPrimitive eventProperty;
-  private List<EventPropertyQualityDefinition> qualityDefinitions;
 
   private PrimitivePropertyBuilder(Datatypes datatype, String runtimeName) {
     this.eventProperty = new EventPropertyPrimitive();
-    this.qualityDefinitions = new ArrayList<>();
     this.eventProperty.setRuntimeType(datatype.toString());
     this.eventProperty.setRuntimeName(runtimeName);
   }
@@ -130,18 +124,6 @@ public class PrimitivePropertyBuilder {
     return this;
   }
 
-  public PrimitivePropertyBuilder accuracy(Float accuracy, URI measurementUnit) {
-    // TODO extend event property
-    this.qualityDefinitions.add(new Accuracy(accuracy));
-    return this;
-  }
-
-  public PrimitivePropertyBuilder resolution(Float resolution, URI measurementUnit) {
-    // TODO extend event property
-    this.qualityDefinitions.add(new Resolution(resolution));
-    return this;
-  }
-
   /**
    * Assigns a property scope to the event property.
    *
@@ -155,9 +137,6 @@ public class PrimitivePropertyBuilder {
 
 
   public EventPropertyPrimitive build() {
-    if (qualityDefinitions.size() > 0) {
-      this.eventProperty.setEventPropertyQualities(qualityDefinitions);
-    }
     return this.eventProperty;
   }
 

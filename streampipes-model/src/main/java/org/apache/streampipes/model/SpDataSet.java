@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.model;
 
+import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class SpDataSet extends SpDataStream {
+public class SpDataSet extends SpDataStream implements EndpointSelectable {
 
   private EventGrounding supportedGrounding;
 
@@ -32,11 +32,13 @@ public class SpDataSet extends SpDataStream {
   private String correspondingPipeline;
   private String selectedEndpointUrl;
 
-  public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
-      hasEventStreamQualities,
+  public SpDataSet(String uri,
+                   String name,
+                   String description,
+                   String iconUrl,
                    EventGrounding eventGrounding,
                    EventSchema eventSchema) {
-    super(uri, name, description, iconUrl, hasEventStreamQualities, eventGrounding, eventSchema);
+    super(uri, name, description, iconUrl, eventGrounding, eventSchema);
   }
 
   public SpDataSet(String uri, String name, String description, EventSchema eventSchema) {
@@ -91,18 +93,28 @@ public class SpDataSet extends SpDataStream {
     this.datasetInvocationId = datasetInvocationId;
   }
 
+  @Override
   public String getCorrespondingPipeline() {
     return correspondingPipeline;
   }
 
+  @Override
   public void setCorrespondingPipeline(String correspondingPipeline) {
     this.correspondingPipeline = correspondingPipeline;
   }
 
+  @Override
+  @JsonIgnore
+  public String getDetachPath() {
+    return "/" + getCorrespondingAdapterId() + "/" + getDatasetInvocationId();
+  }
+
+  @Override
   public String getSelectedEndpointUrl() {
     return selectedEndpointUrl;
   }
 
+  @Override
   public void setSelectedEndpointUrl(String selectedEndpointUrl) {
     this.selectedEndpointUrl = selectedEndpointUrl;
   }

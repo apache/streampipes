@@ -16,24 +16,17 @@
  *
  */
 
-
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'sp-ep-settings-section',
-  templateUrl: './ep-settings-section.component.html',
-  styleUrls: ['./ep-settings-section.component.scss']
+    selector: 'sp-ep-settings-section',
+    templateUrl: './ep-settings-section.component.html',
+    styleUrls: ['./ep-settings-section.component.scss'],
 })
-export class SpEpSettingsSectionComponent implements OnInit {
+export class SpEpSettingsSectionComponent {
+    @Input()
+    sectionTitle: string;
 
-  @Input()
-  sectionTitle: string;
-
-  @Input()
-  sectionDescription: string;
-
-  ngOnInit(): void {
-  }
-
-
+    @Input()
+    sectionDescription: string;
 }

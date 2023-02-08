@@ -19,35 +19,65 @@ package org.apache.streampipes.commons.constants;
 
 public enum Envs {
 
-  SP_HOST("SP_HOST"),
-  SP_PORT("SP_PORT"),
+  SP_HOST("SP_HOST", null),
+  SP_PORT("SP_PORT", null),
 
   @Deprecated(since = "0.90.0", forRemoval = true)
-  SP_CONSUL_LOCATION("CONSUL_LOCATION"),
+  SP_CONSUL_LOCATION("CONSUL_LOCATION", "consul", "localhost"),
 
-  SP_CONSUL_HOST("SP_CONSUL_HOST"),
-  SP_CONSUL_PORT("SP_CONSUL_PORT"),
-  SP_KAFKA_RETENTION_MS("SP_KAFKA_RETENTION_MS"),
-  SP_JWT_SECRET("JWT_SECRET"),
-  SP_JWT_SIGNING_MODE("SP_JWT_SIGNING_MODE"),
-  SP_JWT_PRIVATE_KEY_LOC("SP_JWT_PRIVATE_KEY_LOC"),
-  SP_JWT_PUBLIC_KEY_LOC("SP_JWT_PUBLIC_KEY_LOC"),
-  SP_INITIAL_ADMIN_EMAIL("SP_INITIAL_ADMIN_EMAIL"),
-  SP_INITIAL_ADMIN_PASSWORD("SP_INITIAL_ADMIN_PASSWORD"),
-  SP_INITIAL_SERVICE_USER("SP_INITIAL_SERVICE_USER"),
-  SP_INITIAL_SERVICE_USER_SECRET("SP_INITIAL_SERVICE_USER_SECRET"),
-  SP_SETUP_INSTALL_PIPELINE_ELEMENTS("SP_SETUP_INSTALL_PIPELINE_ELEMENTS"),
-  SP_EXT_AUTH_MODE("SP_EXT_AUTH_MODE"),
-  SP_CLIENT_USER("SP_CLIENT_USER"),
-  SP_CLIENT_SECRET("SP_CLIENT_SECRET"),
-  SP_ENCRYPTION_PASSCODE("SP_ENCRYPTION_PASSCODE"),
-  SP_DEBUG("SP_DEBUG"),
-  SP_MAX_WAIT_TIME_AT_SHUTDOWN("SP_MAX_WAIT_TIME_AT_SHUTDOWN");
+  SP_CONSUL_HOST("SP_CONSUL_HOST", "consul", "localhost"),
+  SP_CONSUL_PORT("SP_CONSUL_PORT", "8500"),
+  SP_KAFKA_RETENTION_MS("SP_KAFKA_RETENTION_MS", null),
+  SP_JWT_SECRET("JWT_SECRET", null),
+  SP_JWT_SIGNING_MODE("SP_JWT_SIGNING_MODE", null),
+  SP_JWT_PRIVATE_KEY_LOC("SP_JWT_PRIVATE_KEY_LOC", null),
+  SP_JWT_PUBLIC_KEY_LOC("SP_JWT_PUBLIC_KEY_LOC", null),
+  SP_INITIAL_ADMIN_EMAIL("SP_INITIAL_ADMIN_EMAIL", null),
+  SP_INITIAL_ADMIN_PASSWORD("SP_INITIAL_ADMIN_PASSWORD", null),
+  SP_INITIAL_SERVICE_USER("SP_INITIAL_SERVICE_USER", null),
+  SP_INITIAL_SERVICE_USER_SECRET("SP_INITIAL_SERVICE_USER_SECRET", null),
+  SP_SETUP_INSTALL_PIPELINE_ELEMENTS("SP_SETUP_INSTALL_PIPELINE_ELEMENTS", null),
+  SP_EXT_AUTH_MODE("SP_EXT_AUTH_MODE", null),
+  SP_CLIENT_USER("SP_CLIENT_USER", null),
+  SP_CLIENT_SECRET("SP_CLIENT_SECRET", null),
+  SP_ENCRYPTION_PASSCODE("SP_ENCRYPTION_PASSCODE", null),
+  SP_DEBUG("SP_DEBUG", "false"),
+  SP_MAX_WAIT_TIME_AT_SHUTDOWN("SP_MAX_WAIT_TIME_AT_SHUTDOWN", null),
+
+  // CouchDB Storage
+  SP_COUCHDB_PROTOCOL("SP_COUCHDB_PROTOCOL", "http"),
+  SP_COUCHDB_HOST("SP_COUCHDB_HOST", "couchdb", "localhost"),
+  SP_COUCHDB_PORT("SP_COUCHDB_PORT", "5984"),
+  SP_COUCHDB_USER("SP_COUCHDB_USER", "admin"),
+  SP_COUCHDB_PASSWORD("SP_COUCHDB_PASSWORD", "admin"),
+
+
+  // Time Series Storage
+  SP_TS_STORAGE_PROTOCOL("SP_TS_STORAGE_PROTOCOL", "http"),
+  SP_TS_STORAGE_HOST("SP_TS_STORAGE_HOST", "influxdb", "localhost"),
+  SP_TS_STORAGE_PORT("SP_TS_STORAGE_PORT", "8086"),
+
+  SP_TS_STORAGE_TOKEN("SP_TS_STORAGE_TOKEN", "sp-admin"),
+
+  SP_TS_STORAGE_ORG("SP_TS_STORAGE_ORG", "sp"),
+
+  SP_TS_STORAGE_BUCKET("SP_TS_STORAGE_BUCKET", "sp");
 
   private final String envVariableName;
+  private final String defaultValue;
 
-  Envs(String envVariableName) {
+  private final String devDefaultValue;
+
+  Envs(String envVariableName, String defaultValue, String devDefaultValue) {
     this.envVariableName = envVariableName;
+    this.defaultValue = defaultValue;
+    this.devDefaultValue = devDefaultValue;
+  }
+
+  Envs(String envVariableName, String defaultValue) {
+    this.envVariableName = envVariableName;
+    this.defaultValue = defaultValue;
+    this.devDefaultValue = defaultValue;
   }
 
   public boolean exists() {
@@ -82,4 +112,11 @@ public enum Envs {
     return this.exists() ? this.getValue() : defaultValue;
   }
 
+  public String getDefaultValue() {
+    return defaultValue;
+  }
+
+  public String getDevDefaultValue() {
+    return devDefaultValue;
+  }
 }

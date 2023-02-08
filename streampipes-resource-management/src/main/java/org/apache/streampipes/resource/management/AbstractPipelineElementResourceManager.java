@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -37,7 +37,7 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
   }
 
   public List<String> findAllIdsOnly() {
-    return db.getAll().stream().map(AbstractStreamPipesEntity::getElementId).collect(Collectors.toList());
+    return db.getAll().stream().map(NamedStreamPipesEntity::getElementId).collect(Collectors.toList());
   }
 
   public List<X> findAllAsInvocation() {
@@ -60,6 +60,17 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
     if (description != null) {
       deleteAssetsAndPermissions(description);
       db.deleteElement(description);
+    }
+  }
+
+  public void add(W pipelineElement, String principalSid) throws IllegalArgumentException {
+    W existing = find(pipelineElement.getElementId());
+    if (existing == null) {
+      this.db.createElement(pipelineElement);
+      new PermissionResourceManager()
+          .createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid, false);
+    } else {
+      throw new IllegalArgumentException("This pipeline element already exists");
     }
   }
 

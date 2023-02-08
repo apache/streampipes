@@ -20,41 +20,60 @@ import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { AdapterService, AdapterMonitoringService, SpLogEntry } from '@streampipes/platform-services';
+import {
+    AdapterService,
+    AdapterMonitoringService,
+    SpLogEntry,
+} from '@streampipes/platform-services';
 import { SpPipelineRoutes } from '../../../../pipelines/pipelines.routes';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.routes';
 
 @Component({
-  selector: 'sp-adapter-details-logs',
-  templateUrl: './adapter-details-logs.component.html',
-  styleUrls: ['./adapter-details-logs.component.scss']
+    selector: 'sp-adapter-details-logs',
+    templateUrl: './adapter-details-logs.component.html',
+    styleUrls: ['./adapter-details-logs.component.scss'],
 })
-export class SpAdapterDetailsLogsComponent extends SpAbstractAdapterDetailsDirective implements OnInit {
+export class SpAdapterDetailsLogsComponent
+    extends SpAbstractAdapterDetailsDirective
+    implements OnInit
+{
+    adapterLogs: SpLogEntry[];
 
-  adapterLogs: SpLogEntry[];
+    constructor(
+        authService: AuthService,
+        activatedRoute: ActivatedRoute,
+        adapterService: AdapterService,
+        adapterMonitoringService: AdapterMonitoringService,
+        breadcrumbService: SpBreadcrumbService,
+    ) {
+        super(
+            authService,
+            activatedRoute,
+            adapterService,
+            adapterMonitoringService,
+            breadcrumbService,
+        );
+    }
 
-  constructor(authService: AuthService,
-              activatedRoute: ActivatedRoute,
-              adapterService: AdapterService,
-              adapterMonitoringService: AdapterMonitoringService,
-              breadcrumbService: SpBreadcrumbService) {
-    super(authService, activatedRoute, adapterService, adapterMonitoringService, breadcrumbService);
-  }
+    ngOnInit(): void {
+        super.onInit();
+    }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
+    loadLogs(): void {
+        this.adapterMonitoringService
+            .getLogInfoForAdapter(this.currentAdapterId)
+            .subscribe(res => {
+                this.adapterLogs = res;
+            });
+    }
 
-  loadLogs(): void {
-    this.adapterMonitoringService.getLogInfoForAdapter(this.currentAdapterId).subscribe(res => {
-      this.adapterLogs = res;
-    });
-  }
-
-  onAdapterLoaded(): void {
-    this.breadcrumbService.updateBreadcrumb([SpConnectRoutes.BASE, {label: this.adapter.name}, {label: 'Logs'}]);
-    this.loadLogs();
-  }
-
+    onAdapterLoaded(): void {
+        this.breadcrumbService.updateBreadcrumb([
+            SpConnectRoutes.BASE,
+            { label: this.adapter.name },
+            { label: 'Logs' },
+        ]);
+        this.loadLogs();
+    }
 }

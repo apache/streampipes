@@ -23,12 +23,14 @@ import { TrafficLightConfig } from './traffic-light-config';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'traffic-light-widget',
+    selector: 'sp-traffic-light-widget',
     templateUrl: './traffic-light-widget.component.html',
-    styleUrls: ['./traffic-light-widget.component.css']
+    styleUrls: ['./traffic-light-widget.component.css'],
 })
-export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
-
+export class TrafficLightWidgetComponent
+    extends BaseStreamPipesWidget
+    implements OnInit, OnDestroy
+{
     items: string[];
     width: number;
     height: number;
@@ -46,7 +48,10 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
 
     activeClass = 'red';
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService, false);
     }
 
@@ -74,10 +79,19 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedThreshold = extractor.integerParameter(TrafficLightConfig.CRITICAL_VALUE_KEY);
-        this.selectedFieldToObserve = extractor.mappingPropertyValue(TrafficLightConfig.NUMBER_MAPPING_KEY);
-        this.selectedWarningRange = extractor.integerParameter(TrafficLightConfig.WARNING_RANGE_KEY);
-        this.selectedLimitGreaterThan = extractor.selectedSingleValue(TrafficLightConfig.CRITICAL_VALUE_LIMIT) === 'Upper Limit';
+        this.selectedThreshold = extractor.integerParameter(
+            TrafficLightConfig.CRITICAL_VALUE_KEY,
+        );
+        this.selectedFieldToObserve = extractor.mappingPropertyValue(
+            TrafficLightConfig.NUMBER_MAPPING_KEY,
+        );
+        this.selectedWarningRange = extractor.integerParameter(
+            TrafficLightConfig.WARNING_RANGE_KEY,
+        );
+        this.selectedLimitGreaterThan =
+            extractor.selectedSingleValue(
+                TrafficLightConfig.CRITICAL_VALUE_LIMIT,
+            ) === 'Upper Limit';
     }
 
     getFieldsToQuery(): string[] {
@@ -104,12 +118,23 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
     }
 
     isInWarningRange(value) {
-        if (this.exceedsThreshold(value)) { return false; }
-        else {
+        if (this.exceedsThreshold(value)) {
+            return false;
+        } else {
             if (this.selectedLimitGreaterThan) {
-                return value >= (this.selectedThreshold - this.selectedThreshold * (this.selectedWarningRange / 100));
+                return (
+                    value >=
+                    this.selectedThreshold -
+                        this.selectedThreshold *
+                            (this.selectedWarningRange / 100)
+                );
             } else {
-                return value <= (this.selectedThreshold + this.selectedThreshold * (this.selectedWarningRange / 100));
+                return (
+                    value <=
+                    this.selectedThreshold +
+                        this.selectedThreshold *
+                            (this.selectedWarningRange / 100)
+                );
             }
         }
     }
@@ -127,5 +152,4 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
     protected getQueryLimit(extractor: StaticPropertyExtractor): number {
         return 1;
     }
-
 }

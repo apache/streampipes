@@ -16,6 +16,6 @@
  */
 
 export interface ICoordinates {
-  x;
-  y;
+    x;
+    y;
 }

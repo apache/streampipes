@@ -16,32 +16,38 @@
  *
  */
 
-
 import {
-    ColorPickerStaticProperty, EventPropertyUnion,
-    EventSchema, FreeTextStaticProperty, MappingPropertyNary,
-    MappingPropertyUnary, OneOfStaticProperty,
-    StaticPropertyUnion
+    ColorPickerStaticProperty,
+    EventPropertyUnion,
+    EventSchema,
+    FreeTextStaticProperty,
+    MappingPropertyNary,
+    MappingPropertyUnary,
+    OneOfStaticProperty,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 
 export class StaticPropertyExtractor {
-
-    constructor(private inputSchema: EventSchema,
-                private staticProperties: StaticPropertyUnion[]) {
-
-    }
+    constructor(
+        private inputSchema: EventSchema,
+        private staticProperties: StaticPropertyUnion[],
+    ) {}
 
     hasStaticProperty(internalId: string): boolean {
         return this.getStaticPropertyByName(internalId) !== undefined;
     }
 
     mappingPropertyValue(internalId: string): string {
-        const sp: MappingPropertyUnary = this.getStaticPropertyByName(internalId) as MappingPropertyUnary;
+        const sp: MappingPropertyUnary = this.getStaticPropertyByName(
+            internalId,
+        ) as MappingPropertyUnary;
         return this.removePrefix(sp.selectedProperty);
     }
 
     mappingPropertyValues(internalId: string): string[] {
-        const sp: MappingPropertyNary = this.getStaticPropertyByName(internalId) as MappingPropertyNary;
+        const sp: MappingPropertyNary = this.getStaticPropertyByName(
+            internalId,
+        ) as MappingPropertyNary;
         const properties: string[] = [];
         // TODO this quick-fixes a deserialization bug in Tson-LD
         if (sp.selectedProperties && !Array.isArray(sp.selectedProperties)) {
@@ -57,17 +63,23 @@ export class StaticPropertyExtractor {
     }
 
     singleValueParameter(internalId: string): any {
-        const sp: FreeTextStaticProperty = this.getStaticPropertyByName(internalId) as FreeTextStaticProperty;
+        const sp: FreeTextStaticProperty = this.getStaticPropertyByName(
+            internalId,
+        ) as FreeTextStaticProperty;
         return sp.value;
     }
 
     selectedColor(internalId: string): any {
-        const sp: ColorPickerStaticProperty = this.getStaticPropertyByName(internalId) as ColorPickerStaticProperty;
+        const sp: ColorPickerStaticProperty = this.getStaticPropertyByName(
+            internalId,
+        ) as ColorPickerStaticProperty;
         return sp.selectedColor;
     }
 
     selectedSingleValue(internalId: string): string {
-        const sp: OneOfStaticProperty = this.getStaticPropertyByName(internalId) as OneOfStaticProperty;
+        const sp: OneOfStaticProperty = this.getStaticPropertyByName(
+            internalId,
+        ) as OneOfStaticProperty;
         return sp.options.find(o => o.selected).name;
     }
 
@@ -80,16 +92,18 @@ export class StaticPropertyExtractor {
     }
 
     getStaticPropertyByName(internalId: string): StaticPropertyUnion {
-        return this.staticProperties.find(sp => (sp.internalName === internalId));
+        return this.staticProperties.find(sp => sp.internalName === internalId);
     }
 
     getEventPropertyByName(runtimeName: string): EventPropertyUnion {
-        return this.inputSchema.eventProperties.find(ep => ep.runtimeName === runtimeName);
+        return this.inputSchema.eventProperties.find(
+            ep => ep.runtimeName === runtimeName,
+        );
     }
-
 
     removePrefix(propertyValue: string) {
-        return propertyValue.split('::').length > 1 ? propertyValue.split('::')[1] : propertyValue;
+        return propertyValue.split('::').length > 1
+            ? propertyValue.split('::')[1]
+            : propertyValue;
     }
-
 }

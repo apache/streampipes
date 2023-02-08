@@ -47,7 +47,6 @@ public class PropertyDuplicateRemover {
           EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
           newProperty = new EventPropertyPrimitive(primitive.getRuntimeType(), primitive.getRuntimeName() + i, "",
               primitive.getDomainProperties());
-          newProperty.setElementId(primitive.getElementId() + i);
         }
         if (newProperty instanceof EventPropertyNested) {
           EventPropertyNested nested = (EventPropertyNested) newProperty;
@@ -61,14 +60,12 @@ public class PropertyDuplicateRemover {
               EventProperty newNested =
                   new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), "",
                       thisPrimitive.getDomainProperties());
-              newNested.setElementId(thisPrimitive.getElementId());
               nestedProperties.add(newNested);
             }
 
           }
           newProperty = new EventPropertyNested(nested.getRuntimeName() + i, nestedProperties);
           //newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
-          newProperty.setElementId(nested.getElementId() + i);
         }
         i++;
       }

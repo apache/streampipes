@@ -26,108 +26,129 @@ import { DatalakeRestService } from '@streampipes/platform-services';
 import { BaseNgxLineChartsStreamPipesWidget } from '../base/base-ngx-line-charts-widget';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 
-
 @Component({
-  selector: 'stacked-line-chart-widget',
-  templateUrl: './stacked-line-chart-widget.component.html',
-  styleUrls: ['./stacked-line-chart-widget.component.scss']
+    selector: 'sp-stacked-line-chart-widget',
+    templateUrl: './stacked-line-chart-widget.component.html',
+    styleUrls: ['./stacked-line-chart-widget.component.scss'],
 })
-export class StackedLineChartWidgetComponent extends BaseEchartsWidget implements OnInit, OnDestroy {
+export class StackedLineChartWidgetComponent
+    extends BaseEchartsWidget
+    implements OnInit, OnDestroy
+{
+    partitionField: string;
+    valueFields: string[];
+    timestampField: string;
 
-  partitionField: string;
-  valueFields: string[];
-  timestampField: string;
-
-  chartOption = {
-    grid: {
-      left: 50,
-      top: 10,
-      right: 50,
-      bottom: 100
-    },
-    tooltip: {
-      trigger: 'axis',
-      formatter (params) {
-        params = params[0];
-        const date = new Date(params.value[0]);
-        return date.getHours() + ':' + (date.getMinutes() + 1) + ':' + date.getSeconds() + ' : ' + params.value[1];
-      },
-      axisPointer: {
-        animation: false
-      }
-    },
-    xAxis: {
-      type: 'time',
-      axisLabel: {
-        formatter: params => {
-          const date = new Date(params);
-          return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    chartOption = {
+        grid: {
+            left: 50,
+            top: 10,
+            right: 50,
+            bottom: 100,
         },
-        textStyle: {
-          color: this.selectedPrimaryTextColor
-        }
-      }
-    },
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        textStyle: {
-          color: this.selectedPrimaryTextColor
-        }
-      }
-    },
-    series: [],
-    animationDuration: 300
-  };
+        tooltip: {
+            trigger: 'axis',
+            formatter(params) {
+                params = params[0];
+                const date = new Date(params.value[0]);
+                return (
+                    date.getHours() +
+                    ':' +
+                    (date.getMinutes() + 1) +
+                    ':' +
+                    date.getSeconds() +
+                    ' : ' +
+                    params.value[1]
+                );
+            },
+            axisPointer: {
+                animation: false,
+            },
+        },
+        xAxis: {
+            type: 'time',
+            axisLabel: {
+                formatter: params => {
+                    const date = new Date(params);
+                    return (
+                        date.getHours() +
+                        ':' +
+                        date.getMinutes() +
+                        ':' +
+                        date.getSeconds()
+                    );
+                },
+                textStyle: {
+                    color: this.selectedPrimaryTextColor,
+                },
+            },
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                textStyle: {
+                    color: this.selectedPrimaryTextColor,
+                },
+            },
+        },
+        series: [],
+        animationDuration: 300,
+    };
 
-  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
-    super(dataLakeService, resizeService);
-    this.configReady = true;
-  }
-
-  protected extractConfig(extractor: StaticPropertyExtractor) {
-    this.valueFields = extractor.mappingPropertyValues(StackedLineChartConfig.VALUE_KEY);
-    this.chartOption.xAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
-    this.chartOption.yAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
-  }
-
-  getFieldsToQuery(): string[] {
-    return this.valueFields;
-  }
-
-  protected onEvent(events: any) {
-    this.dynamicData = this.chartOption;
-    this.dynamicData.series = [];
-
-    this.valueFields.forEach(field => {
-      const series = this.makeNewSeries(field);
-      series.data = events.map(event => {
-        const timestamp = event[BaseNgxLineChartsStreamPipesWidget.TIMESTAMP_KEY];
-        return {
-          'name': timestamp.toString(),
-          value: [timestamp, event[field]]
-        };
-      });
-      this.dynamicData.series.push(series);
-    });
-
-    if (this.eChartsInstance) {
-      this.eChartsInstance.setOption(this.dynamicData as EChartsOption);
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
+        super(dataLakeService, resizeService);
+        this.configReady = true;
     }
 
-  }
+    protected extractConfig(extractor: StaticPropertyExtractor) {
+        this.valueFields = extractor.mappingPropertyValues(
+            StackedLineChartConfig.VALUE_KEY,
+        );
+        this.chartOption.xAxis.axisLabel.textStyle.color =
+            this.selectedPrimaryTextColor;
+        this.chartOption.yAxis.axisLabel.textStyle.color =
+            this.selectedPrimaryTextColor;
+    }
 
-  makeNewSeries(seriesName: string): any {
-    return {
-      type: 'line',
-      smooth: true,
-      name: seriesName,
-      data: [],
-    };
-  }
+    getFieldsToQuery(): string[] {
+        return this.valueFields;
+    }
 
-  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
-    return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
-  }
+    protected onEvent(events: any) {
+        this.dynamicData = this.chartOption;
+        this.dynamicData.series = [];
 
+        this.valueFields.forEach(field => {
+            const series = this.makeNewSeries(field);
+            series.data = events.map(event => {
+                const timestamp =
+                    event[BaseNgxLineChartsStreamPipesWidget.TIMESTAMP_KEY];
+                return {
+                    name: timestamp.toString(),
+                    value: [timestamp, event[field]],
+                };
+            });
+            this.dynamicData.series.push(series);
+        });
+
+        if (this.eChartsInstance) {
+            this.eChartsInstance.setOption(this.dynamicData as EChartsOption);
+        }
+    }
+
+    makeNewSeries(seriesName: string): any {
+        return {
+            type: 'line',
+            smooth: true,
+            name: seriesName,
+            data: [],
+        };
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
+    }
 }

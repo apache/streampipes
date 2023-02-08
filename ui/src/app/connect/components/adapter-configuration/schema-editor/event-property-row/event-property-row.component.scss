@@ -16,77 +16,77 @@
  *
  */
 
-
-::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
-  background-color: var(--color-accent) !important;
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: var(--color-accent) !important;
 }
 
-::ng-deep .mat-checkbox:not(.mat-checkbox-disabled).mat-accent .mat-checkbox-ripple .mat-ripple-element {
-  background-color: var(--color-accent) !important;
+::ng-deep
+    .mat-checkbox:not(.mat-checkbox-disabled).mat-accent
+    .mat-checkbox-ripple
+    .mat-ripple-element {
+    background-color: var(--color-accent) !important;
 }
 
 .checkbox-selected {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
 .timestamp-property {
-  margin-left: 15px;
-  border-radius: 10px;
-  background: var(--color-processor);
-  padding: 0px 10px;
-  font-size: 12px;
-  color: #FFFFFF;
+    margin-left: 15px;
+    border-radius: 10px;
+    background: var(--color-processor);
+    padding: 0px 10px;
+    font-size: 12px;
+    color: #ffffff;
 }
 
 .timestamp-icon {
-  font-size: 12px;
+    font-size: 12px;
 }
 
 .status-good {
-  background: #75c575;
-  color: white;
+    background: #75c575;
+    color: white;
 }
 
 .status-bad {
-  background: #d2a169;
-  color: white;
+    background: #d2a169;
+    color: white;
 }
 
 .status {
-  width: 70px;
-  min-width: 70px;
-  text-align: center;
-  padding: 5px;
-  border-radius: 5px;
+    width: 70px;
+    min-width: 70px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
 }
 
 .status-outer {
-  width: 70px;
-  min-width: 70px;
+    width: 70px;
+    min-width: 70px;
 }
 
 .runtime-info {
-  border-radius: 5px;
-  color: var(--color-default-text);
-  font-size: 10pt;
-  text-align: center;
+    border-radius: 5px;
+    color: var(--color-default-text);
+    font-size: 10pt;
+    text-align: center;
 }
 
 .runtime-type-info {
-  border-radius: 5px;
-  color: var(--color-default-text);
-  font-size: 10pt;
-  width: 70px;
-  border: 1px solid var(--color-bg-3);
-  text-align: center;
+    border-radius: 5px;
+    color: var(--color-default-text);
+    font-size: 10pt;
+    width: 70px;
+    border: 1px solid var(--color-bg-3);
+    text-align: center;
 }
 
 .runtime-type-info-outer {
-  padding: 3px;
-  border-radius: 5px;
-  width: 170px;
-  text-align: center;
-
+    padding: 3px;
+    border-radius: 5px;
+    width: 170px;
+    text-align: center;
 }
-
-

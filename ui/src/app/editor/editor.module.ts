@@ -63,7 +63,6 @@ import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-
 import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
 import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
 
-
 @NgModule({
     imports: [
         CoreUiModule,
@@ -109,21 +108,11 @@ import { PipelineElementGroupFilterPipe } from './services/pipeline-element-grou
         PropertySelectionComponent,
         SavePipelineComponent,
         SafeCss,
-        WelcomeTourComponent
+        WelcomeTourComponent,
     ],
-    providers: [
-        SemanticTypeUtilsService,
-        SafeCss,
-    ],
-    exports: [
-        EditorComponent,
-        PipelineComponent,
-        PipelineElementComponent
-    ]
+    providers: [SemanticTypeUtilsService, SafeCss],
+    exports: [EditorComponent, PipelineComponent, PipelineElementComponent],
 })
 export class EditorModule {
-
-  constructor() {
-  }
-
+    constructor() {}
 }

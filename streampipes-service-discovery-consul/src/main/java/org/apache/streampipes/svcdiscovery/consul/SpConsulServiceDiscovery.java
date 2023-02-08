@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
@@ -24,13 +25,10 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationReques
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
-import com.orbitz.consul.AgentClient;
-import com.orbitz.consul.Consul;
-import com.orbitz.consul.model.agent.ImmutableRegCheck;
-import com.orbitz.consul.model.agent.ImmutableRegistration;
-import com.orbitz.consul.model.agent.Registration;
-import com.orbitz.consul.model.health.HealthCheck;
-import com.orbitz.consul.model.health.Service;
+import com.ecwid.consul.v1.Response;
+import com.ecwid.consul.v1.agent.model.Check;
+import com.ecwid.consul.v1.agent.model.NewService;
+import com.ecwid.consul.v1.agent.model.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,9 +47,16 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   private static final String COLON = ":";
   private static final String HEALTH_CHECK_INTERVAL = "10s";
 
+  private ConsulHealthServiceManager healthServiceManager;
+
+  public SpConsulServiceDiscovery(Environment environment) {
+    super(environment);
+    this.healthServiceManager = new ConsulHealthServiceManager(environment);
+  }
+
   @Override
   public void registerService(SpServiceRegistrationRequest req) {
-    consulInstance().agentClient().register((createRegistrationBody(req)));
+    consulInstance().agentServiceRegister(createRegistrationBody(req));
     LOG.info("Successfully registered service at Consul: " + req.getSvcId());
   }
 
@@ -75,30 +80,32 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
 
   @Override
   public List<String> getServiceEndpoints(String svcGroup, boolean restrictToHealthy, List<String> filterByTags) {
-    return ConsulHealthServiceManager.INSTANCE.getServiceEndpoints(svcGroup, restrictToHealthy, filterByTags);
+    return healthServiceManager.getServiceEndpoints(svcGroup, restrictToHealthy, filterByTags);
   }
 
   @Override
   public Map<String, String> getExtensionsServiceGroups() {
     LOG.info("Load pipeline element service status");
-    Consul consul = consulInstance();
-    AgentClient agent = consul.agentClient();
+    var consul = consulInstance();
 
-    Map<String, Service> services = consul.agentClient().getServices();
-    Map<String, HealthCheck> checks = agent.getChecks();
+    Response<Map<String, Service>> servicesResp = consul.getAgentServices();
+    Response<Map<String, Check>> checksResp = consul.getAgentChecks();
 
     Map<String, String> peSvcs = new HashMap<>();
-
-    for (Map.Entry<String, Service> entry : services.entrySet()) {
-      if (hasExtensionsTag(entry.getValue().getTags())) {
-        String serviceId = entry.getValue().getId();
-        String serviceStatus = "critical";
-        if (checks.containsKey("service:" + entry.getKey())) {
-          serviceStatus = checks.get("service:" + entry.getKey()).getStatus();
+    if (servicesResp.getValue() != null) {
+      var services = servicesResp.getValue();
+      var checks = checksResp.getValue();
+      for (Map.Entry<String, Service> entry : services.entrySet()) {
+        if (hasExtensionsTag(entry.getValue().getTags())) {
+          String serviceId = entry.getValue().getId();
+          String serviceStatus = "critical";
+          if (checks.containsKey("service:" + entry.getKey())) {
+            serviceStatus = checks.get("service:" + entry.getKey()).getStatus().name();
+          }
+          LOG.info("Service id: " + serviceId + " service status: " + serviceStatus);
+          String serviceGroup = extractServiceGroup(entry.getValue().getTags());
+          peSvcs.put(serviceGroup, serviceStatus);
         }
-        LOG.info("Service id: " + serviceId + " service status: " + serviceStatus);
-        String serviceGroup = extractServiceGroup(entry.getValue().getTags());
-        peSvcs.put(serviceGroup, serviceStatus);
       }
     }
     return peSvcs;
@@ -117,25 +124,33 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
 
   @Override
   public void deregisterService(String svcId) {
-    Consul consul = consulInstance();
+    var consul = consulInstance();
     LOG.info("Deregister service: " + svcId);
-    consul.agentClient().deregister(svcId);
+    consul.agentServiceDeregister(svcId);
   }
 
-  private Registration createRegistrationBody(SpServiceRegistrationRequest req) {
-    return ImmutableRegistration.builder()
-        .id(req.getSvcId())
-        .name(req.getSvcGroup())
-        .port(req.getPort())
-        .address(HTTP_PROTOCOL + req.getHost())
-        .check(ImmutableRegCheck.builder()
-            .http(HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath())
-            .interval(HEALTH_CHECK_INTERVAL)
-            .deregisterCriticalServiceAfter("120s")
-            .status("passing")
-            .build())
-        .tags(asString(req.getTags()))
-        .enableTagOverride(true)
-        .build();
+  private NewService createRegistrationBody(SpServiceRegistrationRequest req) {
+    var service = new NewService();
+    service.setId(req.getSvcId());
+    service.setName(req.getSvcGroup());
+    service.setPort(req.getPort());
+    service.setAddress(HTTP_PROTOCOL + req.getHost());
+    service.setCheck(createServiceCheck(req));
+
+    service.setTags(asString(req.getTags()));
+    service.setEnableTagOverride(true);
+
+    return service;
+  }
+
+  private NewService.Check createServiceCheck(SpServiceRegistrationRequest req) {
+    var serviceCheck = new NewService.Check();
+
+    serviceCheck.setHttp(HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath());
+    serviceCheck.setInterval(HEALTH_CHECK_INTERVAL);
+    serviceCheck.setDeregisterCriticalServiceAfter("120s");
+    serviceCheck.setStatus("passing");
+
+    return serviceCheck;
   }
 }

@@ -48,4 +48,5 @@ public class SchemaUtils {
     }
     return properties;
   }
+
 }

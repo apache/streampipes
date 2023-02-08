@@ -16,19 +16,21 @@
  *
  */
 
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Output,
+} from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { StaticPropertyAlternatives } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'app-static-alternatives',
+    selector: 'sp-app-static-alternatives',
     templateUrl: './static-alternatives.component.html',
-    styleUrls: ['./static-alternatives.component.css']
+    styleUrls: ['./static-alternatives.component.css'],
 })
-export class StaticAlternativesComponent
-    extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives> implements OnInit {
-
-
+export class StaticAlternativesComponent extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives> {
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     private errorMessage = 'Please select a option';
@@ -37,14 +39,11 @@ export class StaticAlternativesComponent
         super();
     }
 
-    ngOnInit(): void {
-    }
-
     radioSelectionChange(event) {
         this.staticProperty.alternatives.forEach(alternative => {
-            alternative.selected = alternative.elementId === event.value.elementId;
+            alternative.selected =
+                alternative.elementId === event.value.elementId;
         });
         this.changeDetectorRef.detectChanges();
     }
-
 }

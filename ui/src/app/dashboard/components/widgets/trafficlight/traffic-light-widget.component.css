@@ -21,7 +21,7 @@
 
 .tl-container {
     background-color: gray;
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
@@ -29,8 +29,8 @@
 }
 
 .light {
-    background-color:rgba(0, 0, 0, 0.3);
-    border-radius:50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
 }
 
 .light-red {
@@ -49,8 +49,8 @@
 }
 
 .title-panel {
-    font-size:20px;
-    height:30px;
-    margin-top:10px;
+    font-size: 20px;
+    height: 30px;
+    margin-top: 10px;
     margin-bottom: 10px;
 }

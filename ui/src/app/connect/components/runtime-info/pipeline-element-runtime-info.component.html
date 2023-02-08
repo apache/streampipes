@@ -18,30 +18,59 @@
 
 <div *ngIf="!runtimeData && !runtimeDataError">
     <div fxLayout="column">
-        <div fxLayoutAlign="center" >
-            <mat-spinner [diameter]="40" fxLayoutAlign="center" style="margin: 10px 0 5px 0" color="accent">Loading</mat-spinner>
-        </div>
         <div fxLayoutAlign="center">
+            <mat-spinner
+                [diameter]="40"
+                fxLayoutAlign="center"
+                style="margin: 10px 0 5px 0"
+                color="accent"
+                >Loading</mat-spinner
+            >
+        </div>
+        <div
+            fxLayoutAlign="center"
+            data-cy="sp-connect-adapter-gathering-live-preview"
+        >
             <h3>Gathering data for live preview...</h3>
         </div>
     </div>
 </div>
-<div *ngIf="runtimeData" data-cy="sp-connect-adapter-live-preview">
+<div *ngIf="runtimeData" data-cy="sp-connect-adapter-success-live-preview">
     <p>Here is a preview of your data:</p>
     <table class="dataTable row-border hover">
         <thead>
-        <tr>
-            <th>Runtime Name</th>
-            <th>Value</th>
-        </tr>
+            <tr>
+                <th>Runtime Name</th>
+                <th>Value</th>
+            </tr>
         </thead>
         <tbody id="preview-data-rows-id">
-        <tr *ngFor="let property of streamDescription.eventSchema.eventProperties" class="preview-row">
-            <td>{{property.runtimeName}}</td>
-            <td *ngIf="isImage(property)"> <img src="data:image/png;base64,{{runtimeData[property.runtimeName]}}" style="max-width: 150px;" /> </td>
-            <td *ngIf="isTimestamp(property)">{{runtimeData[property.runtimeName] | date:'yyyy-MM-dd HH:mm:ss '}}</td>
-            <td *ngIf="hasNoDomainProperty(property)">{{runtimeData[property.runtimeName]}}</td>
-        </tr>
+            <tr
+                *ngFor="
+                    let property of streamDescription.eventSchema
+                        .eventProperties
+                "
+                class="preview-row"
+            >
+                <td>{{ property.runtimeName }}</td>
+                <td *ngIf="isImage(property)">
+                    <img
+                        src="data:image/png;base64,{{
+                            runtimeData[property.runtimeName]
+                        }}"
+                        style="max-width: 150px"
+                    />
+                </td>
+                <td *ngIf="isTimestamp(property)">
+                    {{
+                        runtimeData[property.runtimeName]
+                            | date : 'yyyy-MM-dd HH:mm:ss '
+                    }}
+                </td>
+                <td *ngIf="hasNoDomainProperty(property)">
+                    {{ runtimeData[property.runtimeName] }}
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

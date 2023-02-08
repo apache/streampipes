@@ -19,72 +19,158 @@
 <mat-toolbar class="md-primary md-hue-2 top-nav toolbar-bg">
     <div class="md-toolbar-tools sp-toolbar">
         <div fxFlex="100" fxLayout fxLayoutAlign="start center">
-            <div class="md-toolbar-tools" style="height:40px;max-height:40px;" fxFlex fxLayout="row" fxLayoutAlign="start center">
-                <div style="padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;">
-                    <img alt="icon" src="../../../../assets/img/sp/logo-navigation.png" style="max-height:30px;max-width: 250px;">
+            <div
+                class="md-toolbar-tools"
+                style="height: 40px; max-height: 40px"
+                fxFlex
+                fxLayout="row"
+                fxLayoutAlign="start center"
+            >
+                <div
+                    style="
+                        padding: 5px;
+                        border-radius: 0px;
+                        margin-right: 15px;
+                        position: relative;
+                        left: 20px;
+                    "
+                >
+                    <img
+                        alt="icon"
+                        src="../../../../assets/img/sp/logo-navigation.png"
+                        style="max-height: 30px; max-width: 250px"
+                    />
                 </div>
             </div>
-        <div fxFlex fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
-            <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
-<!--            <div>-->
-<!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->
-<!--            </div>-->
-            <div [ngClass]="'notifications' === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'"
-                 *ngIf="notificationsVisible" class="h-100">
-                <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar iconbar-size"
+            <div
+                fxFlex
+                fxLayout
+                fxLayoutAlign="end center"
+                *ngIf="authenticated"
+                style="height: 100%"
+            >
+                <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
+                <!--            <div>-->
+                <!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->
+                <!--            </div>-->
+                <div
+                    [ngClass]="
+                        'notifications' === activePage
+                            ? 'sp-navbar-item-selected'
+                            : 'sp-navbar-item'
+                    "
+                    *ngIf="notificationsVisible"
+                    class="h-100"
+                >
+                    <button
+                        mat-button
+                        mat-icon-button
+                        class="md-icon-button button-margin-iconbar iconbar-size"
                         (click)="go('notifications')"
-                        fxLayout fxLayoutAlign="center center"
-                        matTooltip="Notifications" matTooltipPosition="below">
-                    <mat-icon [matBadge]="unreadNotificationCount"
-                              matBadgeColor="accent"
-                              matBadgePosition="below after"
-                              [matBadgeHidden]="unreadNotificationCount == 0"
-                              [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
-                              data-cy="navigation-icon">chat
-
-                    </mat-icon>
-                </button>
-            </div>
-            <div style="height:100%;">
-                <div [ngClass]="accountMenuOpen.menuOpen ? 'sp-navbar-item-selected' : 'sp-navbar-item'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
-                    <button mat-button mat-icon-button
-                            fxLayout fxLayoutAlign="center center"
-                            [ngClass]="accountMenuOpen.menuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" style="min-width:0px;"
-                            [matMenuTriggerFor]="menu"
-                            #accountMenuOpen="matMenuTrigger"
-                            matTooltip="User Preferences" matTooltipPosition="below"
-                            data-cy="sp-user-preferences">
-                        <i [ngClass]="accountMenuOpen.menuOpen ? 'sp-navbar-icon-selected' : 'sp-navbar-icon'" class="material-icons">account_circle</i>
+                        fxLayout
+                        fxLayoutAlign="center center"
+                        matTooltip="Notifications"
+                        matTooltipPosition="below"
+                    >
+                        <mat-icon
+                            [matBadge]="unreadNotificationCount"
+                            matBadgeColor="accent"
+                            matBadgePosition="below after"
+                            [matBadgeHidden]="unreadNotificationCount === 0"
+                            [ngClass]="
+                                'notifications' === activePage
+                                    ? 'sp-navbar-icon-selected'
+                                    : 'sp-navbar-icon'
+                            "
+                            data-cy="navigation-icon"
+                            >chat
+                        </mat-icon>
                     </button>
                 </div>
-            </div>
-            <mat-menu #menu="matMenu" id="account">
-                <div class="current-user">
-                    <span class="user-email">{{userEmail}}</span>
+                <div style="height: 100%">
+                    <div
+                        [ngClass]="
+                            accountMenuOpen.menuOpen
+                                ? 'sp-navbar-item-selected'
+                                : 'sp-navbar-item'
+                        "
+                        fxLayout
+                        fxLayoutAlign="center center"
+                        style="height: 100%"
+                    >
+                        <button
+                            mat-button
+                            mat-icon-button
+                            fxLayout
+                            fxLayoutAlign="center center"
+                            [ngClass]="
+                                accountMenuOpen.menuOpen
+                                    ? 'sp-icon-button-no-hover'
+                                    : 'sp-icon-button'
+                            "
+                            style="min-width: 0px"
+                            [matMenuTriggerFor]="menu"
+                            #accountMenuOpen="matMenuTrigger"
+                            matTooltip="User Preferences"
+                            matTooltipPosition="below"
+                            data-cy="sp-user-preferences"
+                        >
+                            <i
+                                [ngClass]="
+                                    accountMenuOpen.menuOpen
+                                        ? 'sp-navbar-icon-selected'
+                                        : 'sp-navbar-icon'
+                                "
+                                class="material-icons"
+                                >account_circle</i
+                            >
+                        </button>
+                    </div>
                 </div>
-                <mat-divider></mat-divider>
-                <button mat-menu-item (click)="openProfile()" style="min-width:0px;">
-                    <mat-icon aria-label="Info">perm_identity</mat-icon>
-                    Profile
-                </button>
-                <button mat-menu-item (click)="openInfo()" style="min-width:0px;">
-                    <mat-icon aria-label="Info">help</mat-icon>
-                    Info
-                </button>
-                <button mat-menu-item (click)="openDocumentation()"
-                           style="min-width:0px;">
-                    <mat-icon aria-label="Documentation">description</mat-icon>
-                    Documentation
-                </button>
-                <mat-divider></mat-divider>
-                <button mat-menu-item id="sp_logout" (click)="logout()"
-                           style="min-width:0px;"
-                        data-cy="sp-logout">
-                    <mat-icon aria-label="Logout">exit_to_app</mat-icon>
-                    Logout
-                </button>
-            </mat-menu>
-        </div>
+                <mat-menu #menu="matMenu" id="account">
+                    <div class="current-user">
+                        <span class="user-email">{{ userEmail }}</span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <button
+                        mat-menu-item
+                        (click)="openProfile()"
+                        style="min-width: 0px"
+                    >
+                        <mat-icon aria-label="Info">perm_identity</mat-icon>
+                        Profile
+                    </button>
+                    <button
+                        mat-menu-item
+                        (click)="openInfo()"
+                        style="min-width: 0px"
+                    >
+                        <mat-icon aria-label="Info">help</mat-icon>
+                        Info
+                    </button>
+                    <button
+                        mat-menu-item
+                        (click)="openDocumentation()"
+                        style="min-width: 0px"
+                    >
+                        <mat-icon aria-label="Documentation"
+                            >description</mat-icon
+                        >
+                        Documentation
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button
+                        mat-menu-item
+                        id="sp_logout"
+                        (click)="logout()"
+                        style="min-width: 0px"
+                        data-cy="sp-logout"
+                    >
+                        <mat-icon aria-label="Logout">exit_to_app</mat-icon>
+                        Logout
+                    </button>
+                </mat-menu>
+            </div>
         </div>
     </div>
 </mat-toolbar>

@@ -16,40 +16,35 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'sp-edit-correction-value',
-  templateUrl: './edit-correction-value.component.html',
-  styleUrls: ['./edit-correction-value.component.scss']
+    selector: 'sp-edit-correction-value',
+    templateUrl: './edit-correction-value.component.html',
+    styleUrls: ['./edit-correction-value.component.scss'],
 })
-export class EditCorrectionValueComponent implements OnInit {
+export class EditCorrectionValueComponent {
+    @Input() cachedProperty: any;
+    @Output() correctionValueChanged = new EventEmitter<boolean>();
 
-  @Input() cachedProperty: any;
-  @Output() correctionValueChanged = new EventEmitter<boolean>();
+    operators = [
+        { value: 'MULTIPLY', viewValue: 'Multiply' },
+        { value: 'ADD', viewValue: 'Add' },
+        { value: 'SUBSTRACT', viewValue: 'Substract' },
+    ];
 
-  operators = [
-    {value: 'MULTIPLY', viewValue: 'Multiply'},
-    {value: 'ADD', viewValue: 'Add'},
-    {value: 'SUBSTRACT', viewValue: 'Substract'}
-  ];
+    constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  valueChanged() {
-    if (this.cachedProperty.correctionValue) {
-      if (!this.cachedProperty.operator) {
-        this.correctionValueChanged.emit(true);
-      } else {
-        this.correctionValueChanged.emit(false);
-      }
-    } else {
-      this.correctionValueChanged.emit(false);
-      this.cachedProperty.operator = undefined;
+    valueChanged() {
+        if (this.cachedProperty.correctionValue) {
+            if (!this.cachedProperty.operator) {
+                this.correctionValueChanged.emit(true);
+            } else {
+                this.correctionValueChanged.emit(false);
+            }
+        } else {
+            this.correctionValueChanged.emit(false);
+            this.cachedProperty.operator = undefined;
+        }
     }
-  }
-
 }

@@ -18,35 +18,40 @@
 
 import { Injectable } from '@angular/core';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PipelineEditorService {
-
-    constructor() {
-    }
+    constructor() {}
 
     getCoordinates(ui, currentZoomLevel) {
         const newLeft = this.getDropPositionX(ui.helper, currentZoomLevel);
         const newTop = this.getDropPositionY(ui.helper, currentZoomLevel);
         return {
-            'x': newLeft,
-            'y': newTop
+            x: newLeft,
+            y: newTop,
         };
     }
 
     getDropPositionY(helper, currentZoomLevel) {
         const helperPos = helper.offset();
         const divPos = this.getDivPos();
-        return (helperPos.top - divPos.top) + (1 - currentZoomLevel) * ((helperPos.top - divPos.top) * 2);
+        return (
+            helperPos.top -
+            divPos.top +
+            (1 - currentZoomLevel) * ((helperPos.top - divPos.top) * 2)
+        );
     }
 
     getDropPositionX(helper, currentZoomLevel) {
         const helperPos = helper.offset();
         const divPos = this.getDivPos();
-        return (helperPos.left - divPos.left) + (1 - currentZoomLevel) * ((helperPos.left - divPos.left) * 2);
+        return (
+            helperPos.left -
+            divPos.left +
+            (1 - currentZoomLevel) * ((helperPos.left - divPos.left) * 2)
+        );
     }
 
     getDivPos() {
         return $('#assembly').offset();
     }
-
 }

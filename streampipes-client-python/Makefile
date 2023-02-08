@@ -15,8 +15,6 @@
 # limitations under the License.
 #
 
-COMMIT_HASH := $(shell eval git rev-parse HEAD)
-
 .PHONY: check
 check: mypy lint unit-tests
 

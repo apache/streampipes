@@ -17,11 +17,9 @@
  */
 package org.apache.streampipes.model.output;
 
-import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
-
 import java.io.Serializable;
 
-public class PropertyRenameRule extends UnnamedStreamPipesEntity implements Serializable {
+public class PropertyRenameRule implements Serializable {
 
   private String runtimeId;
 
@@ -38,7 +36,6 @@ public class PropertyRenameRule extends UnnamedStreamPipesEntity implements Seri
   }
 
   public PropertyRenameRule(PropertyRenameRule other) {
-    super(other);
     this.runtimeId = other.getRuntimeId();
     this.newRuntimeName = other.getNewRuntimeName();
   }

@@ -29,9 +29,6 @@ from streampipes_client.model.resource.data_stream import DataStream
 
 
 class TestFunction(StreamPipesFunction):
-    def getFunctionId(self) -> Tuple[str, int]:
-        return ("org.test.TestFunction", 1)
-
     def requiredStreamIds(self) -> List[str]:
         return ["urn:streampipes.apache.org:eventstream:uPDKLI"]
 
@@ -47,9 +44,6 @@ class TestFunction(StreamPipesFunction):
 
 
 class TestFunctionTwoStreams(StreamPipesFunction):
-    def getFunctionId(self) -> Tuple[str, int]:
-        return ("org.test.TestFunction2", 1)
-
     def requiredStreamIds(self) -> List[str]:
         return ["urn:streampipes.apache.org:eventstream:uPDKLI", "urn:streampipes.apache.org:eventstream:HHoidJ"]
 
@@ -242,7 +236,7 @@ class TestFunctionHandler(TestCase):
             test_function.context.schema, {self.data_stream["elementId"]: DataStream(**self.data_stream)}
         )
         self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
-        self.assertEqual(test_function.context.function_id, test_function.getFunctionId()[0])
+        self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
 
         self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)

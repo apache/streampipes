@@ -18,22 +18,34 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxFlex="100"
-             fxLayout="column">
-            <pipeline-element-template-config [staticProperties]="configs"
-                                              [template]="template"
-                                              [templateConfigs]="templateConfigs"
-                                              [appId]="appId">
-            </pipeline-element-template-config>
+        <div fxFlex="100" fxLayout="column">
+            <sp-pipeline-element-template-config
+                [staticProperties]="configs"
+                [template]="template"
+                [templateConfigs]="templateConfigs"
+                [appId]="appId"
+            >
+            </sp-pipeline-element-template-config>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="accent"
-                (click)="saveTemplate()"
-                style="margin-right: 10px;">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="saveTemplate()"
+            style="margin-right: 10px"
+        >
             Create template
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="dialogRef.close()">Close</button>
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="dialogRef.close()"
+        >
+            Close
+        </button>
     </div>
 </div>

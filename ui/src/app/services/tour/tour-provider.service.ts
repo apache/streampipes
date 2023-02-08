@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -26,7 +25,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class TourProviderService {
-
     guidedTours: any;
 
     // This is needed to configure the time in cypress test cases
@@ -48,7 +46,7 @@ export class TourProviderService {
 
     getTourById(tourId) {
         return this.guidedTours.find(tour => {
-            return tour.id  === tourId;
+            return tour.id === tourId;
         });
     }
 

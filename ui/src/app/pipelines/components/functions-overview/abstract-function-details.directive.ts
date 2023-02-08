@@ -18,11 +18,11 @@
 
 import { ActivatedRoute } from '@angular/router';
 import {
-  AdapterMonitoringService,
-  FunctionDefinition,
-  FunctionsService,
-  PipelineElementService,
-  SpDataStream
+    AdapterMonitoringService,
+    FunctionDefinition,
+    FunctionsService,
+    PipelineElementService,
+    SpDataStream,
 } from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { Observable, zip } from 'rxjs';
@@ -31,57 +31,77 @@ import { SpPipelineRoutes } from '../../pipelines.routes';
 
 @Directive()
 export abstract class AbstractFunctionDetailsDirective {
+    public activeFunction: FunctionDefinition;
 
-  public activeFunction: FunctionDefinition;
+    contentReady = false;
+    tabs = [];
+    streamNames: Record<string, string> = {};
 
-  contentReady = false;
-  tabs = [];
-  streamNames: Record<string, string> = {};
+    constructor(
+        private route: ActivatedRoute,
+        protected functionsService: FunctionsService,
+        private pipelineElementService: PipelineElementService,
+        private adapterMonitoringService: AdapterMonitoringService,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
-  constructor(private route: ActivatedRoute,
-              protected functionsService: FunctionsService,
-              private pipelineElementService: PipelineElementService,
-              private adapterMonitoringService: AdapterMonitoringService,
-              private breadcrumbService: SpBreadcrumbService) {
-  }
+    onInit() {
+        const functionId = this.route.snapshot.params.functionId;
+        this.breadcrumbService.updateBreadcrumb([
+            SpPipelineRoutes.BASE,
+            { label: functionId },
+            { label: this.getBreadcrumbLabel() },
+        ]);
+        this.tabs = [
+            {
+                itemId: 'metrics',
+                itemTitle: 'Metrics',
+                itemLink: ['pipelines', 'functions', functionId, 'metrics'],
+            },
+            {
+                itemId: 'logs',
+                itemTitle: 'Logs',
+                itemLink: ['pipelines', 'functions', functionId, 'logs'],
+            },
+        ];
+        this.loadFunctions(functionId);
+    }
 
-  onInit() {
-    const functionId = this.route.snapshot.params.functionId;
-    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: functionId}, {label: this.getBreadcrumbLabel()}]);
-    this.tabs = [
-      {itemId: 'metrics', itemTitle: 'Metrics', itemLink: ['pipelines', 'functions', functionId, 'metrics']},
-      {itemId: 'logs', itemTitle: 'Logs', itemLink: ['pipelines', 'functions', functionId, 'logs']}
-    ]
-    this.loadFunctions(functionId);
-  }
+    loadFunctions(functionId: string) {
+        this.functionsService.getActiveFunctions().subscribe(functions => {
+            this.activeFunction = functions.find(
+                f => f.functionId.id === functionId,
+            );
+            this.loadStreams(this.activeFunction.consumedStreams);
+        });
+    }
 
-  loadFunctions(functionId: string) {
-    this.functionsService.getActiveFunctions().subscribe(functions => {
-      this.activeFunction = functions.find(f => f.functionId.id === functionId);
-      this.loadStreams(this.activeFunction.consumedStreams);
-    })
-  }
+    loadStreams(relatedStreams: string[]) {
+        this.streamNames = {};
+        const observables = this.getStreamObservables(relatedStreams);
+        zip(...observables).subscribe(streams => {
+            streams.forEach(
+                stream => (this.streamNames[stream.elementId] = stream.name),
+            );
+            this.afterFunctionLoaded();
+        });
+    }
 
-  loadStreams(relatedStreams: string[]) {
-    this.streamNames = {};
-    const observables = this.getStreamObservables(relatedStreams);
-    zip(...observables).subscribe(streams => {
-      streams.forEach(stream => this.streamNames[stream.elementId] = stream.name);
-      this.afterFunctionLoaded();
-    })
-  }
+    getStreamObservables(relatedStreams: string[]): Observable<SpDataStream>[] {
+        return relatedStreams.map(s =>
+            this.pipelineElementService.getDataStreamByElementId(s),
+        );
+    }
 
-  getStreamObservables(relatedStreams: string[]): Observable<SpDataStream>[] {
-    return relatedStreams.map(s => this.pipelineElementService.getDataStreamByElementId(s));
-  }
+    triggerUpdate() {
+        this.adapterMonitoringService
+            .triggerMonitoringUpdate()
+            .subscribe(() => {
+                this.afterFunctionLoaded();
+            });
+    }
 
-  triggerUpdate() {
-    this.adapterMonitoringService.triggerMonitoringUpdate().subscribe(() => {
-      this.afterFunctionLoaded();
-    });
-  }
+    abstract afterFunctionLoaded(): void;
 
-  abstract afterFunctionLoaded(): void;
-
-  abstract getBreadcrumbLabel(): string;
+    abstract getBreadcrumbLabel(): string;
 }

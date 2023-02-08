@@ -17,42 +17,42 @@
  */
 
 .widget-content {
-  width:100%;
-  height: calc(100% - 40px);
-  overflow-y: auto;
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-y: auto;
 }
 
 .widget-inner-options {
-  background: var(--color-bg-1);
-  border-bottom: 1px solid var(--color-tab-border);
-  padding: 5px;
-  height: 40px;
+    background: var(--color-bg-1);
+    border-bottom: 1px solid var(--color-tab-border);
+    padding: 5px;
+    height: 40px;
 }
 
 .widget-inner-content {
-  width: 100%;
-  height: calc(100% - 40px);
-  align-content: center;
-  align-items: center;
-  display:flex;
-  justify-content: center;
-  overflow-y: auto;
-  overflow-x: auto;
+    width: 100%;
+    height: calc(100% - 40px);
+    align-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 .general-options-panel {
-  margin-top: 4px;
-  margin-bottom: 8px;
-  border: 1px solid var(--color-bg-3);
-  background: var(--color-bg-1);
-  padding: 5px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    border: 1px solid var(--color-bg-3);
+    background: var(--color-bg-1);
+    padding: 5px;
 }
 
 .general-options-header {
-  //margin-right: 10px;
-  margin-bottom: 10px;
-  font-weight: bold;
-  border-left: 4px solid var(--color-primary);
-  padding-left: 5px;
-  font-size: 13pt;
+    //margin-right: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border-left: 4px solid var(--color-primary);
+    padding-left: 5px;
+    font-size: 13pt;
 }

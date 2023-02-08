@@ -16,21 +16,29 @@
   ~
   -->
 
-
 <div fxLayout="column" fxLayoutAlign="stretch" *ngIf="groupingAvailable">
-    <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 10px;margin-right: 0px;">
+    <div
+        fxFlex="100"
+        layout="row"
+        fxLayoutAlign="end center"
+        style="margin-left: 10px; margin-right: 0px"
+    >
         <!--        <mat-slide-toggle [(ngModel)]="groupingActive">Group</mat-slide-toggle>-->
-        <div  class="option" style="margin-left: 5px">
+        <div class="option" style="margin-left: 5px">
             <mat-form-field style="width: 100px">
-                <mat-select [(ngModel)]="groupValue" (ngModelChange)="onModelChange($event,'groupValue')">
-                    <mat-option
-                            style="background-color: #FFFFFF" value="None">
+                <mat-select
+                    [(ngModel)]="groupValue"
+                    (ngModelChange)="onModelChange($event, 'groupValue')"
+                >
+                    <mat-option style="background-color: #ffffff" value="None">
                         None
                     </mat-option>
                     <mat-option
-                            *ngFor="let property of this.dimensionProperties"
-                            style="background-color: #FFFFFF" value="{{property.runtimeName}}">
-                        {{property.runtimeName}}
+                        *ngFor="let property of this.dimensionProperties"
+                        style="background-color: #ffffff"
+                        value="{{ property.runtimeName }}"
+                    >
+                        {{ property.runtimeName }}
                     </mat-option>
                 </mat-select>
                 <mat-label>Dimension</mat-label>
@@ -38,10 +46,11 @@
         </div>
 
         <mat-checkbox
-                (ngModelChange)="onModelChange($event,'showCountValue')"
-                *ngIf="showCountValueCheckbox"
-                [(ngModel)]="showCountValue">
-            Count</mat-checkbox>
-
+            (ngModelChange)="onModelChange($event, 'showCountValue')"
+            *ngIf="showCountValueCheckbox"
+            [(ngModel)]="showCountValue"
+        >
+            Count</mat-checkbox
+        >
     </div>
 </div>

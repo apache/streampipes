@@ -18,13 +18,11 @@
 
 package org.apache.streampipes.extensions.api.declarer;
 
-import org.apache.streampipes.model.function.FunctionId;
-
 import java.util.List;
 
 public interface IStreamPipesFunctionDeclarer {
 
-  FunctionId getFunctionId();
+  IFunctionConfig getFunctionConfig();
 
   List<String> requiredStreamIds();
 

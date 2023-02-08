@@ -22,13 +22,18 @@ import { BaseNgxLineChartsStreamPipesWidget } from '../base/base-ngx-line-charts
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'line-widget',
+    selector: 'sp-line-widget',
     templateUrl: './line-widget.component.html',
-    styleUrls: ['./line-widget.component.css']
+    styleUrls: ['./line-widget.component.css'],
 })
-export class LineWidgetComponent extends BaseNgxLineChartsStreamPipesWidget implements OnInit, OnDestroy {
-
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+export class LineWidgetComponent
+    extends BaseNgxLineChartsStreamPipesWidget
+    implements OnInit, OnDestroy
+{
+    constructor(
+        dataLakeService: DatalakeRestService,
+        resizeService: ResizeService,
+    ) {
         super(dataLakeService, resizeService);
     }
 
@@ -39,5 +44,4 @@ export class LineWidgetComponent extends BaseNgxLineChartsStreamPipesWidget impl
     ngOnDestroy(): void {
         super.ngOnDestroy();
     }
-
 }

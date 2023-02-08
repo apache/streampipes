@@ -23,7 +23,6 @@ import { EpRequirements } from '../../../sdk/ep-requirements';
 import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class ImageConfig extends WidgetConfig {
-
     static readonly TITLE_KEY: string = 'title-key';
     static readonly IMAGE_MAPPING_KEY: string = 'image-mapping';
 
@@ -35,12 +34,17 @@ export class ImageConfig extends WidgetConfig {
         return WidgetConfigBuilder.create('image', 'Image')
             .withDescription('Displays an image (e.g., from a camera)')
             .withIcon('fas fa-image')
-            .requiredSchema(SchemaRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(ImageConfig.IMAGE_MAPPING_KEY, 'Select image field', '', EpRequirements.imageReq())
-                .build())
+            .requiredSchema(
+                SchemaRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                        ImageConfig.IMAGE_MAPPING_KEY,
+                        'Select image field',
+                        '',
+                        EpRequirements.imageReq(),
+                    )
+                    .build(),
+            )
             .requiredTextParameter(ImageConfig.TITLE_KEY, 'Title', 'The title')
             .build();
     }
-
 }

@@ -16,12 +16,16 @@
   ~
   -->
 
-<mat-button-toggle-group name="fontStyle" aria-label="Font Style" #group="matButtonToggleGroup" value="view">
+<mat-button-toggle-group
+    name="fontStyle"
+    aria-label="Font Style"
+    #group="matButtonToggleGroup"
+    value="view"
+>
     <mat-button-toggle value="view">Viewer</mat-button-toggle>
     <mat-button-toggle value="label">Label</mat-button-toggle>
     <mat-button-toggle value="categorize">Categorize</mat-button-toggle>
 </mat-button-toggle-group>
-
 
 <sp-image-viewer *ngIf="group.value === 'view'"></sp-image-viewer>
 <sp-image-labeling *ngIf="group.value === 'label'"></sp-image-labeling>

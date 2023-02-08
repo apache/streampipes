@@ -21,14 +21,24 @@ import {
     ClientDashboardItem,
     Dashboard,
     DashboardService,
-    DashboardWidgetModel, DataLakeMeasure,
-    DatalakeRestService
+    DashboardWidgetModel,
+    DataLakeMeasure,
+    DatalakeRestService,
 } from '@streampipes/platform-services';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import { ConfirmDialogComponent, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
-import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+    ConfirmDialogComponent,
+    DialogService,
+    PanelType,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    RouterStateSnapshot,
+} from '@angular/router';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { AuthService } from '../../../services/auth.service';
 import { SpDashboardRoutes } from '../../dashboard.routes';
@@ -36,43 +46,46 @@ import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-    selector: 'dashboard-panel',
+    selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
-    styleUrls: ['./dashboard-panel.component.css']
+    styleUrls: ['./dashboard-panel.component.css'],
 })
 export class DashboardPanelComponent implements OnInit {
-
     dashboard: Dashboard;
     editMode: boolean;
-    @Output('editModeChange') editModeChange: EventEmitter<boolean> = new EventEmitter();
+    @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
 
     public items: ClientDashboardItem[];
 
     protected subscription: Subscription;
 
     widgetIdsToRemove: string[] = [];
-    widgetsToUpdate: Map<string, DashboardWidgetModel> = new Map<string, DashboardWidgetModel>();
+    widgetsToUpdate: Map<string, DashboardWidgetModel> = new Map<
+        string,
+        DashboardWidgetModel
+    >();
     allMeasurements: DataLakeMeasure[];
 
     headerVisible = true;
 
-    constructor(private dashboardService: DashboardService,
-                private datalakeRestService: DatalakeRestService,
-                private dialogService: DialogService,
-                private dialog: MatDialog,
-                private refreshDashboardService: RefreshDashboardService,
-                private route: ActivatedRoute,
-                private authService: AuthService,
-                private breadcrumbService: SpBreadcrumbService) {
-    }
+    constructor(
+        private dashboardService: DashboardService,
+        private datalakeRestService: DatalakeRestService,
+        private dialogService: DialogService,
+        private dialog: MatDialog,
+        private refreshDashboardService: RefreshDashboardService,
+        private route: ActivatedRoute,
+        private authService: AuthService,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
     public ngOnInit() {
         const params = this.route.snapshot.params;
         const queryParams = this.route.snapshot.queryParams;
 
         this.authService.user$.subscribe(user => {
-             const hasDashboardWritePrivileges = this.authService.hasRole(
-              UserPrivilege.PRIVILEGE_WRITE_DASHBOARD
+            const hasDashboardWritePrivileges = this.authService.hasRole(
+                UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
             if (queryParams.action === 'edit' && hasDashboardWritePrivileges) {
                 this.editMode = true;
@@ -81,28 +94,37 @@ export class DashboardPanelComponent implements OnInit {
 
         this.getDashboard(params.id);
         this.getAllMeasurements();
-
     }
 
     getDashboard(dashboardId: string): void {
         this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
             if (dashboard) {
                 this.dashboard = dashboard;
-                this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.makeRoute([SpDashboardRoutes.BASE], this.dashboard.name));
+                this.breadcrumbService.updateBreadcrumb(
+                    this.breadcrumbService.makeRoute(
+                        [SpDashboardRoutes.BASE],
+                        this.dashboard.name,
+                    ),
+                );
             }
         });
     }
 
     getAllMeasurements(): void {
-        this.datalakeRestService.getAllMeasurementSeries().subscribe(res => this.allMeasurements = res);
+        this.datalakeRestService
+            .getAllMeasurementSeries()
+            .subscribe(res => (this.allMeasurements = res));
     }
 
     addWidget(): void {
-        const dialogRef = this.dialogService.open(AddVisualizationDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Add widget',
-            width: '50vw',
-        });
+        const dialogRef = this.dialogService.open(
+            AddVisualizationDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Add widget',
+                width: '50vw',
+            },
+        );
 
         dialogRef.afterClosed().subscribe(widget => {
             if (widget) {
@@ -125,16 +147,18 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     updateDashboardAndCloseEditMode() {
-        this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
-            if (this.widgetsToUpdate.size > 0) {
-                forkJoin(this.prepareWidgetUpdates()).subscribe(() => {
+        this.dashboardService
+            .updateDashboard(this.dashboard)
+            .subscribe(result => {
+                if (this.widgetsToUpdate.size > 0) {
+                    forkJoin(this.prepareWidgetUpdates()).subscribe(() => {
+                        this.closeEditModeAndReloadDashboard();
+                    });
+                } else {
+                    this.deleteWidgets();
                     this.closeEditModeAndReloadDashboard();
-                });
-            } else {
-                this.deleteWidgets();
-                this.closeEditModeAndReloadDashboard();
-            }
-        });
+                }
+            });
     }
 
     closeEditModeAndReloadDashboard() {
@@ -152,12 +176,15 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     discardChanges() {
-        this.editModeChange.emit(!(this.editMode));
+        this.editModeChange.emit(!this.editMode);
         this.refreshDashboardService.notify(this.dashboard._id);
     }
 
     removeAndQueueItemForDeletion(widget: ClientDashboardItem) {
-        this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
+        this.dashboard.widgets.splice(
+            this.dashboard.widgets.indexOf(widget),
+            1,
+        );
         this.widgetIdsToRemove.push(widget.id);
     }
 
@@ -171,25 +198,30 @@ export class DashboardPanelComponent implements OnInit {
         });
     }
 
-    confirmLeaveDashboard(route: ActivatedRouteSnapshot,
-                          state: RouterStateSnapshot): Observable<boolean> {
+    confirmLeaveDashboard(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ): Observable<boolean> {
         if (this.editMode) {
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',
                 data: {
-                    'title': 'Save changes?',
-                    'subtitle': 'Update all changes to dashboard widgets or discard current changes.',
-                    'cancelTitle': 'Discard changes',
-                    'okTitle': 'Update',
-                    'confirmAndCancel': true
+                    title: 'Save changes?',
+                    subtitle:
+                        'Update all changes to dashboard widgets or discard current changes.',
+                    cancelTitle: 'Discard changes',
+                    okTitle: 'Update',
+                    confirmAndCancel: true,
                 },
             });
-            return dialogRef.afterClosed().pipe(map(shouldUpdate => {
-                if (shouldUpdate) {
-                    this.updateDashboardAndCloseEditMode();
-                }
-                return true;
-            }));
+            return dialogRef.afterClosed().pipe(
+                map(shouldUpdate => {
+                    if (shouldUpdate) {
+                        this.updateDashboardAndCloseEditMode();
+                    }
+                    return true;
+                }),
+            );
         } else {
             return of(true);
         }

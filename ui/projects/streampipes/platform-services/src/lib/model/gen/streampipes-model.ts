@@ -19,12 +19,10 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2022-10-23 22:36:57.
+// Generated using typescript-generator version 3.1.1185 on 2023-01-08 16:02:05.
 
-export class AbstractStreamPipesEntity {
+export class NamedStreamPipesEntity {
     '@class':
-        | 'org.apache.streampipes.model.base.AbstractStreamPipesEntity'
-        | 'org.apache.streampipes.model.base.NamedStreamPipesEntity'
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.connect.adapter.AdapterSetDescription'
         | 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription'
@@ -33,352 +31,19 @@ export class AbstractStreamPipesEntity {
         | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
-        | 'org.apache.streampipes.model.graph.DataSourceDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
-        | 'org.apache.streampipes.model.connect.grounding.FormatDescription'
         | 'org.apache.streampipes.model.SpDataStream'
         | 'org.apache.streampipes.model.SpDataSet'
-        | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
-        | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
-        | 'org.apache.streampipes.model.graph.DataSinkInvocation'
-        | 'org.apache.streampipes.model.base.UnnamedStreamPipesEntity'
-        | 'org.apache.streampipes.model.connect.guess.GuessSchema'
-        | 'org.apache.streampipes.model.connect.rules.TransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription'
-        | 'org.apache.streampipes.model.dashboard.DashboardWidgetSettings'
-        | 'org.apache.streampipes.model.datalake.DataLakeMeasure'
-        | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest'
-        | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse'
-        | 'org.apache.streampipes.model.staticproperty.StaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.DomainStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.FileStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.MatchingStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.SecretStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative'
-        | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives'
-        | 'org.apache.streampipes.model.staticproperty.StaticPropertyGroup'
-        | 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.SelectionStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.AnyStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.OneOfStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.MappingProperty'
-        | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary'
-        | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary'
-        | 'org.apache.streampipes.model.template.PipelineTemplateInvocation'
-        | 'org.apache.streampipes.model.ApplicationLink'
-        | 'org.apache.streampipes.model.grounding.EventGrounding'
-        | 'org.apache.streampipes.model.schema.EventSchema'
-        | 'org.apache.streampipes.model.template.BoundPipelineElement'
-        | 'org.apache.streampipes.model.grounding.TransportProtocol'
-        | 'org.apache.streampipes.model.grounding.JmsTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.NatsTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.TransportFormat'
-        | 'org.apache.streampipes.model.quality.EventStreamQualityRequirement'
-        | 'org.apache.streampipes.model.quality.MeasurementCapability'
-        | 'org.apache.streampipes.model.quality.MeasurementObject'
-        | 'org.apache.streampipes.model.schema.EventProperty'
-        | 'org.apache.streampipes.model.schema.EventPropertyList'
-        | 'org.apache.streampipes.model.schema.EventPropertyNested'
-        | 'org.apache.streampipes.model.schema.EventPropertyPrimitive'
-        | 'org.apache.streampipes.model.output.OutputStrategy'
-        | 'org.apache.streampipes.model.output.AppendOutputStrategy'
-        | 'org.apache.streampipes.model.output.CustomOutputStrategy'
-        | 'org.apache.streampipes.model.output.CustomTransformOutputStrategy'
-        | 'org.apache.streampipes.model.output.FixedOutputStrategy'
-        | 'org.apache.streampipes.model.output.KeepOutputStrategy'
-        | 'org.apache.streampipes.model.output.ListOutputStrategy'
-        | 'org.apache.streampipes.model.output.TransformOutputStrategy'
-        | 'org.apache.streampipes.model.output.UserDefinedOutputStrategy'
-        | 'org.apache.streampipes.model.monitoring.ElementStatusInfoSettings'
-        | 'org.apache.streampipes.model.staticproperty.Option'
-        | 'org.apache.streampipes.model.staticproperty.SupportedProperty'
-        | 'org.apache.streampipes.model.staticproperty.PropertyValueSpecification'
-        | 'org.apache.streampipes.model.grounding.TopicDefinition'
-        | 'org.apache.streampipes.model.grounding.SimpleTopicDefinition'
-        | 'org.apache.streampipes.model.grounding.WildcardTopicDefinition'
-        | 'org.apache.streampipes.model.quality.MeasurementProperty'
-        | 'org.apache.streampipes.model.quality.EventStreamQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Frequency'
-        | 'org.apache.streampipes.model.quality.Latency'
-        | 'org.apache.streampipes.model.quality.EventPropertyQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Accuracy'
-        | 'org.apache.streampipes.model.quality.MeasurementRange'
-        | 'org.apache.streampipes.model.quality.Precision'
-        | 'org.apache.streampipes.model.quality.Resolution'
-        | 'org.apache.streampipes.model.quality.EventPropertyQualityRequirement'
-        | 'org.apache.streampipes.model.output.PropertyRenameRule'
-        | 'org.apache.streampipes.model.schema.ValueSpecification'
-        | 'org.apache.streampipes.model.schema.QuantitativeValue'
-        | 'org.apache.streampipes.model.schema.Enumeration'
-        | 'org.apache.streampipes.model.output.TransformOperation'
-        | 'org.apache.streampipes.model.grounding.WildcardTopicMapping';
-    'elementId': string;
-
-    static 'fromData'(
-        data: AbstractStreamPipesEntity,
-        target?: AbstractStreamPipesEntity,
-    ): AbstractStreamPipesEntity {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new AbstractStreamPipesEntity();
-        instance['@class'] = data['@class'];
-        instance.elementId = data.elementId;
-        return instance;
-    }
-}
-
-export class UnnamedStreamPipesEntity extends AbstractStreamPipesEntity {
-    '@class':
-        | 'org.apache.streampipes.model.base.UnnamedStreamPipesEntity'
-        | 'org.apache.streampipes.model.connect.guess.GuessSchema'
-        | 'org.apache.streampipes.model.connect.rules.TransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription'
-        | 'org.apache.streampipes.model.dashboard.DashboardWidgetSettings'
-        | 'org.apache.streampipes.model.datalake.DataLakeMeasure'
-        | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest'
-        | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse'
-        | 'org.apache.streampipes.model.staticproperty.StaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.DomainStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.FileStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.MatchingStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.SecretStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative'
-        | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives'
-        | 'org.apache.streampipes.model.staticproperty.StaticPropertyGroup'
-        | 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.SelectionStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.AnyStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.OneOfStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.MappingProperty'
-        | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary'
-        | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary'
-        | 'org.apache.streampipes.model.template.PipelineTemplateInvocation'
-        | 'org.apache.streampipes.model.ApplicationLink'
-        | 'org.apache.streampipes.model.grounding.EventGrounding'
-        | 'org.apache.streampipes.model.schema.EventSchema'
-        | 'org.apache.streampipes.model.template.BoundPipelineElement'
-        | 'org.apache.streampipes.model.grounding.TransportProtocol'
-        | 'org.apache.streampipes.model.grounding.JmsTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.NatsTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.TransportFormat'
-        | 'org.apache.streampipes.model.quality.EventStreamQualityRequirement'
-        | 'org.apache.streampipes.model.quality.MeasurementCapability'
-        | 'org.apache.streampipes.model.quality.MeasurementObject'
-        | 'org.apache.streampipes.model.schema.EventProperty'
-        | 'org.apache.streampipes.model.schema.EventPropertyList'
-        | 'org.apache.streampipes.model.schema.EventPropertyNested'
-        | 'org.apache.streampipes.model.schema.EventPropertyPrimitive'
-        | 'org.apache.streampipes.model.output.OutputStrategy'
-        | 'org.apache.streampipes.model.output.AppendOutputStrategy'
-        | 'org.apache.streampipes.model.output.CustomOutputStrategy'
-        | 'org.apache.streampipes.model.output.CustomTransformOutputStrategy'
-        | 'org.apache.streampipes.model.output.FixedOutputStrategy'
-        | 'org.apache.streampipes.model.output.KeepOutputStrategy'
-        | 'org.apache.streampipes.model.output.ListOutputStrategy'
-        | 'org.apache.streampipes.model.output.TransformOutputStrategy'
-        | 'org.apache.streampipes.model.output.UserDefinedOutputStrategy'
-        | 'org.apache.streampipes.model.monitoring.ElementStatusInfoSettings'
-        | 'org.apache.streampipes.model.staticproperty.Option'
-        | 'org.apache.streampipes.model.staticproperty.SupportedProperty'
-        | 'org.apache.streampipes.model.staticproperty.PropertyValueSpecification'
-        | 'org.apache.streampipes.model.grounding.TopicDefinition'
-        | 'org.apache.streampipes.model.grounding.SimpleTopicDefinition'
-        | 'org.apache.streampipes.model.grounding.WildcardTopicDefinition'
-        | 'org.apache.streampipes.model.quality.MeasurementProperty'
-        | 'org.apache.streampipes.model.quality.EventStreamQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Frequency'
-        | 'org.apache.streampipes.model.quality.Latency'
-        | 'org.apache.streampipes.model.quality.EventPropertyQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Accuracy'
-        | 'org.apache.streampipes.model.quality.MeasurementRange'
-        | 'org.apache.streampipes.model.quality.Precision'
-        | 'org.apache.streampipes.model.quality.Resolution'
-        | 'org.apache.streampipes.model.quality.EventPropertyQualityRequirement'
-        | 'org.apache.streampipes.model.output.PropertyRenameRule'
-        | 'org.apache.streampipes.model.schema.ValueSpecification'
-        | 'org.apache.streampipes.model.schema.QuantitativeValue'
-        | 'org.apache.streampipes.model.schema.Enumeration'
-        | 'org.apache.streampipes.model.output.TransformOperation'
-        | 'org.apache.streampipes.model.grounding.WildcardTopicMapping';
-
-    static 'fromData'(
-        data: UnnamedStreamPipesEntity,
-        target?: UnnamedStreamPipesEntity,
-    ): UnnamedStreamPipesEntity {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new UnnamedStreamPipesEntity();
-        super.fromData(data, instance);
-        return instance;
-    }
-}
-
-export class MeasurementProperty extends UnnamedStreamPipesEntity {
-    '@class':
-        | 'org.apache.streampipes.model.quality.MeasurementProperty'
-        | 'org.apache.streampipes.model.quality.EventStreamQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Frequency'
-        | 'org.apache.streampipes.model.quality.Latency'
-        | 'org.apache.streampipes.model.quality.EventPropertyQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Accuracy'
-        | 'org.apache.streampipes.model.quality.MeasurementRange'
-        | 'org.apache.streampipes.model.quality.Precision'
-        | 'org.apache.streampipes.model.quality.Resolution';
-
-    static 'fromData'(
-        data: MeasurementProperty,
-        target?: MeasurementProperty,
-    ): MeasurementProperty {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new MeasurementProperty();
-        super.fromData(data, instance);
-        return instance;
-    }
-
-    static 'fromDataUnion'(
-        data: MeasurementPropertyUnion,
-    ): MeasurementPropertyUnion {
-        if (!data) {
-            return data;
-        }
-        switch (data['@class']) {
-            case 'org.apache.streampipes.model.quality.EventPropertyQualityDefinition':
-                return EventPropertyQualityDefinition.fromData(data);
-            case 'org.apache.streampipes.model.quality.EventStreamQualityDefinition':
-                return EventStreamQualityDefinition.fromData(data);
-        }
-    }
-}
-
-export class EventPropertyQualityDefinition extends MeasurementProperty {
-    '@class':
-        | 'org.apache.streampipes.model.quality.EventPropertyQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Accuracy'
-        | 'org.apache.streampipes.model.quality.MeasurementRange'
-        | 'org.apache.streampipes.model.quality.Precision'
-        | 'org.apache.streampipes.model.quality.Resolution';
-
-    static 'fromData'(
-        data: EventPropertyQualityDefinition,
-        target?: EventPropertyQualityDefinition,
-    ): EventPropertyQualityDefinition {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new EventPropertyQualityDefinition();
-        super.fromData(data, instance);
-        return instance;
-    }
-
-    static 'fromDataUnion'(
-        data: EventPropertyQualityDefinitionUnion,
-    ): EventPropertyQualityDefinitionUnion {
-        if (!data) {
-            return data;
-        }
-        switch (data['@class']) {
-            case 'org.apache.streampipes.model.quality.Accuracy':
-                return Accuracy.fromData(data);
-            case 'org.apache.streampipes.model.quality.MeasurementRange':
-                return MeasurementRange.fromData(data);
-            case 'org.apache.streampipes.model.quality.Precision':
-                return Precision.fromData(data);
-            case 'org.apache.streampipes.model.quality.Resolution':
-                return Resolution.fromData(data);
-        }
-    }
-}
-
-export class Accuracy extends EventPropertyQualityDefinition {
-    '@class': 'org.apache.streampipes.model.quality.Accuracy';
-    'quantityValue': number;
-
-    static 'fromData'(data: Accuracy, target?: Accuracy): Accuracy {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Accuracy();
-        super.fromData(data, instance);
-        instance.quantityValue = data.quantityValue;
-        return instance;
-    }
-}
-
-export class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
-    '@class':
-        | 'org.apache.streampipes.model.base.NamedStreamPipesEntity'
-        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
-        | 'org.apache.streampipes.model.connect.adapter.AdapterSetDescription'
-        | 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription'
-        | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription'
-        | 'org.apache.streampipes.model.connect.adapter.AdapterStreamDescription'
-        | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
-        | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription'
-        | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
-        | 'org.apache.streampipes.model.graph.DataSourceDescription'
-        | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.connect.grounding.FormatDescription'
-        | 'org.apache.streampipes.model.SpDataStream'
-        | 'org.apache.streampipes.model.SpDataSet'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
         | 'org.apache.streampipes.model.graph.DataSinkInvocation';
     '_rev': string;
     'appId': string;
-    'applicationLinks': ApplicationLink[];
     'connectedTo': string[];
     'description': string;
     'dom': string;
+    'elementId': string;
     'iconUrl': string;
     'includedAssets': string[];
     'includedLocales': string[];
@@ -386,6 +51,9 @@ export class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     'includesLocales': boolean;
     'internallyManaged': boolean;
     'name': string;
+    /**
+     * @deprecated
+     */
     'uri': string;
 
     static 'fromData'(
@@ -396,29 +64,27 @@ export class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
             return data;
         }
         const instance = target || new NamedStreamPipesEntity();
-        super.fromData(data, instance);
-        instance.name = data.name;
-        instance.description = data.description;
-        instance.iconUrl = data.iconUrl;
+        instance['@class'] = data['@class'];
+        instance._rev = data._rev;
         instance.appId = data.appId;
-        instance.includesAssets = data.includesAssets;
-        instance.includesLocales = data.includesLocales;
+        instance.connectedTo = __getCopyArrayFn(__identity<string>())(
+            data.connectedTo,
+        );
+        instance.description = data.description;
+        instance.dom = data.dom;
+        instance.elementId = data.elementId;
+        instance.iconUrl = data.iconUrl;
         instance.includedAssets = __getCopyArrayFn(__identity<string>())(
             data.includedAssets,
         );
         instance.includedLocales = __getCopyArrayFn(__identity<string>())(
             data.includedLocales,
         );
-        instance.applicationLinks = __getCopyArrayFn(ApplicationLink.fromData)(
-            data.applicationLinks,
-        );
+        instance.includesAssets = data.includesAssets;
+        instance.includesLocales = data.includesLocales;
         instance.internallyManaged = data.internallyManaged;
-        instance.connectedTo = __getCopyArrayFn(__identity<string>())(
-            data.connectedTo,
-        );
-        instance.dom = data.dom;
+        instance.name = data.name;
         instance.uri = data.uri;
-        instance._rev = data._rev;
         return instance;
     }
 }
@@ -436,6 +102,9 @@ export class AdapterDescription extends NamedStreamPipesEntity {
     'category': string[];
     'config': StaticPropertyUnion[];
     'correspondingDataStreamElementId': string;
+    /**
+     * @deprecated
+     */
     'correspondingServiceGroup': string;
     'createdAt': number;
     'eventGrounding': EventGrounding;
@@ -455,29 +124,29 @@ export class AdapterDescription extends NamedStreamPipesEntity {
         }
         const instance = target || new AdapterDescription();
         super.fromData(data, instance);
-        instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
         instance.adapterType = data.adapterType;
-        instance.icon = data.icon;
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
-        instance.rules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.rules);
         instance.category = __getCopyArrayFn(__identity<string>())(
             data.category,
         );
-        instance.createdAt = data.createdAt;
-        instance.selectedEndpointUrl = data.selectedEndpointUrl;
-        instance.correspondingServiceGroup = data.correspondingServiceGroup;
+        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
+            data.config,
+        );
         instance.correspondingDataStreamElementId =
             data.correspondingDataStreamElementId;
-        instance.streamRules = __getCopyArrayFn(
+        instance.correspondingServiceGroup = data.correspondingServiceGroup;
+        instance.createdAt = data.createdAt;
+        instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
+        instance.icon = data.icon;
+        instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
-        )(data.streamRules);
+        )(data.rules);
         instance.schemaRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.schemaRules);
+        instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        instance.streamRules = __getCopyArrayFn(
+            TransformationRuleDescription.fromDataUnion,
+        )(data.streamRules);
         instance.valueRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.valueRules);
@@ -515,12 +184,12 @@ export class AdapterEventPreview {
             return data;
         }
         const instance = target || new AdapterEventPreview();
-        instance.rules = __getCopyArrayFn(
-            TransformationRuleDescription.fromDataUnion,
-        )(data.rules);
         instance.inputData = __getCopyObjectFn(GuessTypeInfo.fromData)(
             data.inputData,
         );
+        instance.rules = __getCopyArrayFn(
+            TransformationRuleDescription.fromDataUnion,
+        )(data.rules);
         return instance;
     }
 }
@@ -607,16 +276,16 @@ export class AdapterType {
             return data;
         }
         const instance = target || new AdapterType();
-        instance.label = data.label;
-        instance.description = data.description;
         instance.code = data.code;
+        instance.description = data.description;
+        instance.label = data.label;
         return instance;
     }
 }
 
-export class TransformationRuleDescription extends UnnamedStreamPipesEntity {
+export class TransformationRuleDescription {
     '@class':
-        | 'org.apache.streampipes.model.connect.rules.TransformationRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
@@ -641,7 +310,7 @@ export class TransformationRuleDescription extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new TransformationRuleDescription();
-        super.fromData(data, instance);
+        instance['@class'] = data['@class'];
         return instance;
     }
 
@@ -682,6 +351,8 @@ export class TransformationRuleDescription extends UnnamedStreamPipesEntity {
                 return CorrectionValueTransformationRuleDescription.fromData(
                     data,
                 );
+            case 'org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription':
+                return DebugSinkRuleDescription.fromData(data);
         }
     }
 }
@@ -769,9 +440,8 @@ export class AddValueTransformationRuleDescription extends ValueTransformationRu
     }
 }
 
-export class StaticProperty extends UnnamedStreamPipesEntity {
+export class StaticProperty {
     '@class':
-        | 'org.apache.streampipes.model.staticproperty.StaticProperty'
         | 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty'
@@ -809,14 +479,14 @@ export class StaticProperty extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new StaticProperty();
-        super.fromData(data, instance);
-        instance.index = data.index;
-        instance.label = data.label;
+        instance['@class'] = data['@class'];
         instance.description = data.description;
+        instance.index = data.index;
         instance.internalName = data.internalName;
-        instance.valueRequired = data.valueRequired;
+        instance.label = data.label;
         instance.predefined = data.predefined;
         instance.staticPropertyType = data.staticPropertyType;
+        instance.valueRequired = data.valueRequired;
         return instance;
     }
 
@@ -886,8 +556,8 @@ export class SelectionStaticProperty extends StaticProperty {
         }
         const instance = target || new SelectionStaticProperty();
         super.fromData(data, instance);
-        instance.options = __getCopyArrayFn(Option.fromData)(data.options);
         instance.horizontalRendering = data.horizontalRendering;
+        instance.options = __getCopyArrayFn(Option.fromData)(data.options);
         return instance;
     }
 
@@ -924,9 +594,8 @@ export class AnyStaticProperty extends SelectionStaticProperty {
     }
 }
 
-export class OutputStrategy extends UnnamedStreamPipesEntity {
+export class OutputStrategy {
     '@class':
-        | 'org.apache.streampipes.model.output.OutputStrategy'
         | 'org.apache.streampipes.model.output.AppendOutputStrategy'
         | 'org.apache.streampipes.model.output.CustomOutputStrategy'
         | 'org.apache.streampipes.model.output.CustomTransformOutputStrategy'
@@ -946,7 +615,7 @@ export class OutputStrategy extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new OutputStrategy();
-        super.fromData(data, instance);
+        instance['@class'] = data['@class'];
         instance.name = data.name;
         instance.renameRules = __getCopyArrayFn(PropertyRenameRule.fromData)(
             data.renameRules,
@@ -999,32 +668,6 @@ export class AppendOutputStrategy extends OutputStrategy {
     }
 }
 
-export class ApplicationLink extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.ApplicationLink';
-    'applicationDescription': string;
-    'applicationIconUrl': string;
-    'applicationLinkType': string;
-    'applicationName': string;
-    'applicationUrl': string;
-
-    static 'fromData'(
-        data: ApplicationLink,
-        target?: ApplicationLink,
-    ): ApplicationLink {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ApplicationLink();
-        super.fromData(data, instance);
-        instance.applicationName = data.applicationName;
-        instance.applicationDescription = data.applicationDescription;
-        instance.applicationUrl = data.applicationUrl;
-        instance.applicationIconUrl = data.applicationIconUrl;
-        instance.applicationLinkType = data.applicationLinkType;
-        return instance;
-    }
-}
-
 export class AssetExportConfiguration {
     adapters: ExportItem[];
     assetId: string;
@@ -1046,17 +689,14 @@ export class AssetExportConfiguration {
             return data;
         }
         const instance = target || new AssetExportConfiguration();
-        instance.assetId = data.assetId;
-        instance.assetName = data.assetName;
-        instance.assets = __getCopyArrayFn(ExportItem.fromData)(data.assets);
         instance.adapters = __getCopyArrayFn(ExportItem.fromData)(
             data.adapters,
         );
+        instance.assetId = data.assetId;
+        instance.assetName = data.assetName;
+        instance.assets = __getCopyArrayFn(ExportItem.fromData)(data.assets);
         instance.dashboards = __getCopyArrayFn(ExportItem.fromData)(
             data.dashboards,
-        );
-        instance.dataViews = __getCopyArrayFn(ExportItem.fromData)(
-            data.dataViews,
         );
         instance.dataLakeMeasures = __getCopyArrayFn(ExportItem.fromData)(
             data.dataLakeMeasures,
@@ -1064,21 +704,23 @@ export class AssetExportConfiguration {
         instance.dataSources = __getCopyArrayFn(ExportItem.fromData)(
             data.dataSources,
         );
-        instance.pipelines = __getCopyArrayFn(ExportItem.fromData)(
-            data.pipelines,
+        instance.dataViews = __getCopyArrayFn(ExportItem.fromData)(
+            data.dataViews,
         );
         instance.files = __getCopyArrayFn(ExportItem.fromData)(data.files);
         instance.overrideBrokerSettings = data.overrideBrokerSettings;
+        instance.pipelines = __getCopyArrayFn(ExportItem.fromData)(
+            data.pipelines,
+        );
         return instance;
     }
 }
 
-export class BoundPipelineElement extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.template.BoundPipelineElement';
-    'connectedTo': BoundPipelineElement[];
-    'pipelineElementTemplate': InvocableStreamPipesEntity;
+export class BoundPipelineElement {
+    connectedTo: BoundPipelineElement[];
+    pipelineElementTemplate: InvocableStreamPipesEntity;
 
-    static 'fromData'(
+    static fromData(
         data: BoundPipelineElement,
         target?: BoundPipelineElement,
     ): BoundPipelineElement {
@@ -1086,12 +728,11 @@ export class BoundPipelineElement extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new BoundPipelineElement();
-        super.fromData(data, instance);
-        instance.pipelineElementTemplate = InvocableStreamPipesEntity.fromData(
-            data.pipelineElementTemplate,
-        );
         instance.connectedTo = __getCopyArrayFn(BoundPipelineElement.fromData)(
             data.connectedTo,
+        );
+        instance.pipelineElementTemplate = InvocableStreamPipesEntity.fromData(
+            data.pipelineElementTemplate,
         );
         return instance;
     }
@@ -1128,12 +769,12 @@ export class Category {
             return data;
         }
         const instance = target || new Category();
-        instance.name = data.name;
-        instance.internalName = data.internalName;
-        instance.superLabelId = data.superLabelId;
         instance._id = data._id;
         instance._rev = data._rev;
+        instance.internalName = data.internalName;
+        instance.name = data.name;
         instance.superLabel = data.superLabel;
+        instance.superLabelId = data.superLabelId;
         return instance;
     }
 }
@@ -1154,8 +795,8 @@ export class ChangeDatatypeTransformationRuleDescription extends ValueTransforma
         const instance =
             target || new ChangeDatatypeTransformationRuleDescription();
         super.fromData(data, instance);
-        instance.runtimeKey = data.runtimeKey;
         instance.originalDatatypeXsd = data.originalDatatypeXsd;
+        instance.runtimeKey = data.runtimeKey;
         instance.targetDatatypeXsd = data.targetDatatypeXsd;
         return instance;
     }
@@ -1176,8 +817,8 @@ export class CodeInputStaticProperty extends StaticProperty {
         }
         const instance = target || new CodeInputStaticProperty();
         super.fromData(data, instance);
-        instance.language = data.language;
         instance.codeTemplate = data.codeTemplate;
+        instance.language = data.language;
         instance.value = data.value;
         return instance;
     }
@@ -1198,13 +839,13 @@ export class CollectionStaticProperty extends StaticProperty {
         }
         const instance = target || new CollectionStaticProperty();
         super.fromData(data, instance);
-        instance.staticPropertyTemplate = StaticProperty.fromDataUnion(
-            data.staticPropertyTemplate,
-        );
+        instance.memberType = data.memberType;
         instance.members = __getCopyArrayFn(StaticProperty.fromDataUnion)(
             data.members,
         );
-        instance.memberType = data.memberType;
+        instance.staticPropertyTemplate = StaticProperty.fromDataUnion(
+            data.staticPropertyTemplate,
+        );
         return instance;
     }
 }
@@ -1236,8 +877,8 @@ export class MessagesInfo {
             return data;
         }
         const instance = target || new MessagesInfo();
-        instance.topicName = data.topicName;
         instance.groupId = data.groupId;
+        instance.topicName = data.topicName;
         return instance;
     }
 }
@@ -1256,11 +897,11 @@ export class ConsumedMessagesInfo extends MessagesInfo {
         }
         const instance = target || new ConsumedMessagesInfo();
         super.fromData(data, instance);
-        instance.totalMessagesSincePipelineStart =
-            data.totalMessagesSincePipelineStart;
         instance.consumedMessagesSincePipelineStart =
             data.consumedMessagesSincePipelineStart;
         instance.lag = data.lag;
+        instance.totalMessagesSincePipelineStart =
+            data.totalMessagesSincePipelineStart;
         return instance;
     }
 }
@@ -1281,9 +922,9 @@ export class CorrectionValueTransformationRuleDescription extends ValueTransform
         const instance =
             target || new CorrectionValueTransformationRuleDescription();
         super.fromData(data, instance);
-        instance.runtimeKey = data.runtimeKey;
         instance.correctionValue = data.correctionValue;
         instance.operator = data.operator;
+        instance.runtimeKey = data.runtimeKey;
         return instance;
     }
 }
@@ -1342,12 +983,12 @@ export class CustomOutputStrategy extends OutputStrategy {
         }
         const instance = target || new CustomOutputStrategy();
         super.fromData(data, instance);
-        instance.selectedPropertyKeys = __getCopyArrayFn(__identity<string>())(
-            data.selectedPropertyKeys,
-        );
-        instance.outputRight = data.outputRight;
         instance.availablePropertyKeys = __getCopyArrayFn(__identity<string>())(
             data.availablePropertyKeys,
+        );
+        instance.outputRight = data.outputRight;
+        instance.selectedPropertyKeys = __getCopyArrayFn(__identity<string>())(
+            data.selectedPropertyKeys,
         );
         return instance;
     }
@@ -1409,14 +1050,14 @@ export class DashboardItem {
             return data;
         }
         const instance = target || new DashboardItem();
+        instance.cols = data.cols;
+        instance.component = data.component;
         instance.id = data.id;
         instance.name = data.name;
-        instance.component = data.component;
+        instance.rows = data.rows;
         instance.settings = __getCopyArrayFn(__identity<string>())(
             data.settings,
         );
-        instance.cols = data.cols;
-        instance.rows = data.rows;
         instance.x = data.x;
         instance.y = data.y;
         return instance;
@@ -1442,21 +1083,21 @@ export class DashboardModel {
             return data;
         }
         const instance = target || new DashboardModel();
-        instance.id = data.id;
-        instance.name = data.name;
-        instance.description = data.description;
-        instance.displayHeader = data.displayHeader;
-        instance.dashboardTimeSettings = __getCopyObjectFn(__identity<any>())(
-            data.dashboardTimeSettings,
-        );
+        instance._id = data._id;
+        instance._rev = data._rev;
         instance.dashboardGeneralSettings = __getCopyObjectFn(
             __identity<any>(),
         )(data.dashboardGeneralSettings);
+        instance.dashboardTimeSettings = __getCopyObjectFn(__identity<any>())(
+            data.dashboardTimeSettings,
+        );
+        instance.description = data.description;
+        instance.displayHeader = data.displayHeader;
+        instance.id = data.id;
+        instance.name = data.name;
         instance.widgets = __getCopyArrayFn(DashboardItem.fromData)(
             data.widgets,
         );
-        instance._id = data._id;
-        instance._rev = data._rev;
         return instance;
     }
 }
@@ -1477,27 +1118,26 @@ export class DashboardWidgetModel extends DashboardEntity {
         }
         const instance = target || new DashboardWidgetModel();
         super.fromData(data, instance);
-        instance.widgetId = data.widgetId;
-        instance.widgetType = data.widgetType;
         instance.dashboardWidgetSettings = DashboardWidgetSettings.fromData(
             data.dashboardWidgetSettings,
         );
         instance.pipelineId = data.pipelineId;
         instance.visualizationName = data.visualizationName;
+        instance.widgetId = data.widgetId;
+        instance.widgetType = data.widgetType;
         return instance;
     }
 }
 
-export class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.dashboard.DashboardWidgetSettings';
-    'config': StaticPropertyUnion[];
-    'requiredSchema': EventSchema;
-    'widgetDescription': string;
-    'widgetIconName': string;
-    'widgetLabel': string;
-    'widgetName': string;
+export class DashboardWidgetSettings {
+    config: StaticPropertyUnion[];
+    requiredSchema: EventSchema;
+    widgetDescription: string;
+    widgetIconName: string;
+    widgetLabel: string;
+    widgetName: string;
 
-    static 'fromData'(
+    static fromData(
         data: DashboardWidgetSettings,
         target?: DashboardWidgetSettings,
     ): DashboardWidgetSettings {
@@ -1505,15 +1145,14 @@ export class DashboardWidgetSettings extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new DashboardWidgetSettings();
-        super.fromData(data, instance);
-        instance.widgetLabel = data.widgetLabel;
-        instance.widgetName = data.widgetName;
         instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
             data.config,
         );
         instance.requiredSchema = EventSchema.fromData(data.requiredSchema);
-        instance.widgetIconName = data.widgetIconName;
         instance.widgetDescription = data.widgetDescription;
+        instance.widgetIconName = data.widgetIconName;
+        instance.widgetLabel = data.widgetLabel;
+        instance.widgetName = data.widgetName;
         return instance;
     }
 }
@@ -1536,26 +1175,27 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         }
         const instance = target || new DataExplorerWidgetModel();
         super.fromData(data, instance);
-        instance.widgetId = data.widgetId;
-        instance.widgetType = data.widgetType;
         instance.baseAppearanceConfig = __getCopyObjectFn(__identity<any>())(
             data.baseAppearanceConfig,
-        );
-        instance.visualizationConfig = __getCopyObjectFn(__identity<any>())(
-            data.visualizationConfig,
         );
         instance.dataConfig = __getCopyObjectFn(__identity<any>())(
             data.dataConfig,
         );
-        instance.pipelineId = data.pipelineId;
         instance.measureName = data.measureName;
+        instance.pipelineId = data.pipelineId;
+        instance.visualizationConfig = __getCopyObjectFn(__identity<any>())(
+            data.visualizationConfig,
+        );
+        instance.widgetId = data.widgetId;
+        instance.widgetType = data.widgetType;
         return instance;
     }
 }
 
-export class DataLakeMeasure extends UnnamedStreamPipesEntity {
+export class DataLakeMeasure {
     '@class': 'org.apache.streampipes.model.datalake.DataLakeMeasure';
     '_rev': string;
+    'elementId': string;
     'eventSchema': EventSchema;
     'measureName': string;
     'pipelineId': string;
@@ -1572,15 +1212,16 @@ export class DataLakeMeasure extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new DataLakeMeasure();
-        super.fromData(data, instance);
-        instance.measureName = data.measureName;
-        instance.timestampField = data.timestampField;
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineName = data.pipelineName;
-        instance.pipelineIsRunning = data.pipelineIsRunning;
-        instance.schemaVersion = data.schemaVersion;
+        instance['@class'] = data['@class'];
         instance._rev = data._rev;
+        instance.elementId = data.elementId;
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
+        instance.measureName = data.measureName;
+        instance.pipelineId = data.pipelineId;
+        instance.pipelineIsRunning = data.pipelineIsRunning;
+        instance.pipelineName = data.pipelineName;
+        instance.schemaVersion = data.schemaVersion;
+        instance.timestampField = data.timestampField;
         return instance;
     }
 }
@@ -1611,27 +1252,27 @@ export class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
         }
         const instance = target || new InvocableStreamPipesEntity();
         super.fromData(data, instance);
+        instance.belongsTo = data.belongsTo;
+        instance.configured = data.configured;
+        instance.correspondingPipeline = data.correspondingPipeline;
+        instance.correspondingUser = data.correspondingUser;
         instance.inputStreams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
             data.inputStreams,
         );
+        instance.selectedEndpointUrl = data.selectedEndpointUrl;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
-        instance.belongsTo = data.belongsTo;
         instance.statusInfoSettings = ElementStatusInfoSettings.fromData(
             data.statusInfoSettings,
         );
-        instance.supportedGrounding = EventGrounding.fromData(
-            data.supportedGrounding,
-        );
-        instance.correspondingPipeline = data.correspondingPipeline;
-        instance.correspondingUser = data.correspondingUser;
         instance.streamRequirements = __getCopyArrayFn(
             SpDataStream.fromDataUnion,
         )(data.streamRequirements);
-        instance.configured = data.configured;
+        instance.supportedGrounding = EventGrounding.fromData(
+            data.supportedGrounding,
+        );
         instance.uncompleted = data.uncompleted;
-        instance.selectedEndpointUrl = data.selectedEndpointUrl;
         return instance;
     }
 }
@@ -1652,14 +1293,14 @@ export class DataProcessorInvocation extends InvocableStreamPipesEntity {
         }
         const instance = target || new DataProcessorInvocation();
         super.fromData(data, instance);
-        instance.outputStream = SpDataStream.fromDataUnion(data.outputStream);
-        instance.outputStrategies = __getCopyArrayFn(
-            OutputStrategy.fromDataUnion,
-        )(data.outputStrategies);
-        instance.pathName = data.pathName;
         instance.category = __getCopyArrayFn(__identity<string>())(
             data.category,
         );
+        instance.outputStrategies = __getCopyArrayFn(
+            OutputStrategy.fromDataUnion,
+        )(data.outputStrategies);
+        instance.outputStream = SpDataStream.fromDataUnion(data.outputStream);
+        instance.pathName = data.pathName;
         return instance;
     }
 }
@@ -1677,9 +1318,9 @@ export class DataProcessorType {
             return data;
         }
         const instance = target || new DataProcessorType();
-        instance.label = data.label;
-        instance.description = data.description;
         instance.code = data.code;
+        instance.description = data.description;
+        instance.label = data.label;
         return instance;
     }
 }
@@ -1695,12 +1336,12 @@ export class DataSeries {
             return data;
         }
         const instance = target || new DataSeries();
-        instance.total = data.total;
+        instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
         instance.rows = __getCopyArrayFn(__getCopyArrayFn(__identity<any>()))(
             data.rows,
         );
         instance.tags = __getCopyObjectFn(__identity<string>())(data.tags);
-        instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
+        instance.total = data.total;
         return instance;
     }
 }
@@ -1715,11 +1356,11 @@ export class Message {
             return data;
         }
         const instance = target || new Message();
-        instance.success = data.success;
         instance.elementName = data.elementName;
         instance.notifications = __getCopyArrayFn(Notification.fromData)(
             data.notifications,
         );
+        instance.success = data.success;
         return instance;
     }
 }
@@ -1773,31 +1414,25 @@ export class DataSinkType {
             return data;
         }
         const instance = target || new DataSinkType();
-        instance.label = data.label;
-        instance.description = data.description;
         instance.code = data.code;
+        instance.description = data.description;
+        instance.label = data.label;
         return instance;
     }
 }
 
-export class DataSourceDescription extends NamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.graph.DataSourceDescription';
-    'correspondingSourceId': string;
-    'spDataStreams': SpDataStreamUnion[];
+export class DebugSinkRuleDescription extends TransformationRuleDescription {
+    '@class': 'org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription';
 
     static 'fromData'(
-        data: DataSourceDescription,
-        target?: DataSourceDescription,
-    ): DataSourceDescription {
+        data: DebugSinkRuleDescription,
+        target?: DebugSinkRuleDescription,
+    ): DebugSinkRuleDescription {
         if (!data) {
             return data;
         }
-        const instance = target || new DataSourceDescription();
+        const instance = target || new DebugSinkRuleDescription();
         super.fromData(data, instance);
-        instance.spDataStreams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
-            data.spDataStreams,
-        );
-        instance.correspondingSourceId = data.correspondingSourceId;
         return instance;
     }
 }
@@ -1854,10 +1489,10 @@ export class EdgeValidationStatus {
             return data;
         }
         const instance = target || new EdgeValidationStatus();
-        instance.validationStatusType = data.validationStatusType;
         instance.notifications = __getCopyArrayFn(Notification.fromData)(
             data.notifications,
         );
+        instance.validationStatusType = data.validationStatusType;
         return instance;
     }
 }
@@ -1876,27 +1511,26 @@ export class ElementComposition {
             return data;
         }
         const instance = target || new ElementComposition();
+        instance.description = data.description;
+        instance.name = data.name;
         instance.sepas = __getCopyArrayFn(DataProcessorInvocation.fromData)(
             data.sepas,
         );
         instance.streams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
             data.streams,
         );
-        instance.name = data.name;
-        instance.description = data.description;
         return instance;
     }
 }
 
-export class ElementStatusInfoSettings extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.monitoring.ElementStatusInfoSettings';
-    'elementIdentifier': string;
-    'errorTopic': string;
-    'kafkaHost': string;
-    'kafkaPort': number;
-    'statsTopic': string;
+export class ElementStatusInfoSettings {
+    elementIdentifier: string;
+    errorTopic: string;
+    kafkaHost: string;
+    kafkaPort: number;
+    statsTopic: string;
 
-    static 'fromData'(
+    static fromData(
         data: ElementStatusInfoSettings,
         target?: ElementStatusInfoSettings,
     ): ElementStatusInfoSettings {
@@ -1904,19 +1538,17 @@ export class ElementStatusInfoSettings extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new ElementStatusInfoSettings();
-        super.fromData(data, instance);
         instance.elementIdentifier = data.elementIdentifier;
+        instance.errorTopic = data.errorTopic;
         instance.kafkaHost = data.kafkaHost;
         instance.kafkaPort = data.kafkaPort;
-        instance.errorTopic = data.errorTopic;
         instance.statsTopic = data.statsTopic;
         return instance;
     }
 }
 
-export class ValueSpecification extends UnnamedStreamPipesEntity {
+export class ValueSpecification {
     '@class':
-        | 'org.apache.streampipes.model.schema.ValueSpecification'
         | 'org.apache.streampipes.model.schema.QuantitativeValue'
         | 'org.apache.streampipes.model.schema.Enumeration';
 
@@ -1928,7 +1560,7 @@ export class ValueSpecification extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new ValueSpecification();
-        super.fromData(data, instance);
+        instance['@class'] = data['@class'];
         return instance;
     }
 
@@ -1959,8 +1591,8 @@ export class Enumeration extends ValueSpecification {
         }
         const instance = target || new Enumeration();
         super.fromData(data, instance);
-        instance.label = data.label;
         instance.description = data.description;
+        instance.label = data.label;
         instance.runtimeValues = __getCopyArrayFn(__identity<string>())(
             data.runtimeValues,
         );
@@ -1979,12 +1611,11 @@ export class ErrorMessage extends Message {
     }
 }
 
-export class EventGrounding extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.grounding.EventGrounding';
-    'transportFormats': TransportFormat[];
-    'transportProtocols': TransportProtocolUnion[];
+export class EventGrounding {
+    transportFormats: TransportFormat[];
+    transportProtocols: TransportProtocolUnion[];
 
-    static 'fromData'(
+    static fromData(
         data: EventGrounding,
         target?: EventGrounding,
     ): EventGrounding {
@@ -1992,31 +1623,28 @@ export class EventGrounding extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new EventGrounding();
-        super.fromData(data, instance);
-        instance.transportProtocols = __getCopyArrayFn(
-            TransportProtocol.fromDataUnion,
-        )(data.transportProtocols);
         instance.transportFormats = __getCopyArrayFn(TransportFormat.fromData)(
             data.transportFormats,
         );
+        instance.transportProtocols = __getCopyArrayFn(
+            TransportProtocol.fromDataUnion,
+        )(data.transportProtocols);
         return instance;
     }
 }
 
-export class EventProperty extends UnnamedStreamPipesEntity {
+export class EventProperty {
     '@class':
-        | 'org.apache.streampipes.model.schema.EventProperty'
         | 'org.apache.streampipes.model.schema.EventPropertyList'
         | 'org.apache.streampipes.model.schema.EventPropertyNested'
         | 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
     'description': string;
     'domainProperties': string[];
-    'eventPropertyQualities': EventPropertyQualityDefinitionUnion[];
+    'elementId': string;
     'index': number;
     'label': string;
     'propertyScope': string;
     'required': boolean;
-    'requiresEventPropertyQualities': EventPropertyQualityRequirement[];
     'runtimeId': string;
     'runtimeName': string;
 
@@ -2028,23 +1656,18 @@ export class EventProperty extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new EventProperty();
-        super.fromData(data, instance);
-        instance.label = data.label;
+        instance['@class'] = data['@class'];
         instance.description = data.description;
-        instance.runtimeName = data.runtimeName;
-        instance.required = data.required;
         instance.domainProperties = __getCopyArrayFn(__identity<string>())(
             data.domainProperties,
         );
-        instance.eventPropertyQualities = __getCopyArrayFn(
-            EventPropertyQualityDefinition.fromDataUnion,
-        )(data.eventPropertyQualities);
-        instance.requiresEventPropertyQualities = __getCopyArrayFn(
-            EventPropertyQualityRequirement.fromData,
-        )(data.requiresEventPropertyQualities);
-        instance.propertyScope = data.propertyScope;
+        instance.elementId = data.elementId;
         instance.index = data.index;
+        instance.label = data.label;
+        instance.propertyScope = data.propertyScope;
+        instance.required = data.required;
         instance.runtimeId = data.runtimeId;
+        instance.runtimeName = data.runtimeName;
         return instance;
     }
 
@@ -2118,37 +1741,11 @@ export class EventPropertyPrimitive extends EventProperty {
         }
         const instance = target || new EventPropertyPrimitive();
         super.fromData(data, instance);
-        instance.runtimeType = data.runtimeType;
         instance.measurementUnit = data.measurementUnit;
+        instance.runtimeType = data.runtimeType;
         instance.valueSpecification = ValueSpecification.fromDataUnion(
             data.valueSpecification,
         );
-        return instance;
-    }
-}
-
-export class EventPropertyQualityRequirement extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.quality.EventPropertyQualityRequirement';
-    'maximumPropertyQuality': EventPropertyQualityDefinitionUnion;
-    'minimumPropertyQuality': EventPropertyQualityDefinitionUnion;
-
-    static 'fromData'(
-        data: EventPropertyQualityRequirement,
-        target?: EventPropertyQualityRequirement,
-    ): EventPropertyQualityRequirement {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new EventPropertyQualityRequirement();
-        super.fromData(data, instance);
-        instance.minimumPropertyQuality =
-            EventPropertyQualityDefinition.fromDataUnion(
-                data.minimumPropertyQuality,
-            );
-        instance.maximumPropertyQuality =
-            EventPropertyQualityDefinition.fromDataUnion(
-                data.maximumPropertyQuality,
-            );
         return instance;
     }
 }
@@ -2208,78 +1805,17 @@ export class EventRateTransformationRuleDescription extends StreamTransformation
     }
 }
 
-export class EventSchema extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.schema.EventSchema';
-    'eventProperties': EventPropertyUnion[];
+export class EventSchema {
+    eventProperties: EventPropertyUnion[];
 
-    static 'fromData'(data: EventSchema, target?: EventSchema): EventSchema {
+    static fromData(data: EventSchema, target?: EventSchema): EventSchema {
         if (!data) {
             return data;
         }
         const instance = target || new EventSchema();
-        super.fromData(data, instance);
         instance.eventProperties = __getCopyArrayFn(
             EventProperty.fromDataUnion,
         )(data.eventProperties);
-        return instance;
-    }
-}
-
-export class EventStreamQualityDefinition extends MeasurementProperty {
-    '@class':
-        | 'org.apache.streampipes.model.quality.EventStreamQualityDefinition'
-        | 'org.apache.streampipes.model.quality.Frequency'
-        | 'org.apache.streampipes.model.quality.Latency';
-
-    static 'fromData'(
-        data: EventStreamQualityDefinition,
-        target?: EventStreamQualityDefinition,
-    ): EventStreamQualityDefinition {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new EventStreamQualityDefinition();
-        super.fromData(data, instance);
-        return instance;
-    }
-
-    static 'fromDataUnion'(
-        data: EventStreamQualityDefinitionUnion,
-    ): EventStreamQualityDefinitionUnion {
-        if (!data) {
-            return data;
-        }
-        switch (data['@class']) {
-            case 'org.apache.streampipes.model.quality.Frequency':
-                return Frequency.fromData(data);
-            case 'org.apache.streampipes.model.quality.Latency':
-                return Latency.fromData(data);
-        }
-    }
-}
-
-export class EventStreamQualityRequirement extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.quality.EventStreamQualityRequirement';
-    'maximumStreamQuality': EventStreamQualityDefinitionUnion;
-    'minimumStreamQuality': EventStreamQualityDefinitionUnion;
-
-    static 'fromData'(
-        data: EventStreamQualityRequirement,
-        target?: EventStreamQualityRequirement,
-    ): EventStreamQualityRequirement {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new EventStreamQualityRequirement();
-        super.fromData(data, instance);
-        instance.minimumStreamQuality =
-            EventStreamQualityDefinition.fromDataUnion(
-                data.minimumStreamQuality,
-            );
-        instance.maximumStreamQuality =
-            EventStreamQualityDefinition.fromDataUnion(
-                data.maximumStreamQuality,
-            );
         return instance;
     }
 }
@@ -2312,8 +1848,8 @@ export class ExportItem {
             return data;
         }
         const instance = target || new ExportItem();
-        instance.resourceId = data.resourceId;
         instance.label = data.label;
+        instance.resourceId = data.resourceId;
         instance.selected = data.selected;
         return instance;
     }
@@ -2332,9 +1868,9 @@ export class FieldStatusInfo {
             return data;
         }
         const instance = target || new FieldStatusInfo();
-        instance.fieldStatus = data.fieldStatus;
         instance.additionalInfo = data.additionalInfo;
         instance.changesRequired = data.changesRequired;
+        instance.fieldStatus = data.fieldStatus;
         return instance;
     }
 }
@@ -2354,14 +1890,14 @@ export class FileMetadata {
             return data;
         }
         const instance = target || new FileMetadata();
-        instance.fileId = data.fileId;
-        instance.rev = data.rev;
-        instance.internalFilename = data.internalFilename;
-        instance.originalFilename = data.originalFilename;
-        instance.filetype = data.filetype;
         instance.createdAt = data.createdAt;
-        instance.lastModified = data.lastModified;
         instance.createdByUser = data.createdByUser;
+        instance.fileId = data.fileId;
+        instance.filetype = data.filetype;
+        instance.internalFilename = data.internalFilename;
+        instance.lastModified = data.lastModified;
+        instance.originalFilename = data.originalFilename;
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -2453,32 +1989,17 @@ export class FreeTextStaticProperty extends StaticProperty {
         }
         const instance = target || new FreeTextStaticProperty();
         super.fromData(data, instance);
-        instance.value = data.value;
-        instance.requiredDatatype = data.requiredDatatype;
-        instance.requiredDomainProperty = data.requiredDomainProperty;
-        instance.mapsTo = data.mapsTo;
-        instance.multiLine = data.multiLine;
         instance.htmlAllowed = data.htmlAllowed;
         instance.htmlFontFormat = data.htmlFontFormat;
+        instance.mapsTo = data.mapsTo;
+        instance.multiLine = data.multiLine;
         instance.placeholdersSupported = data.placeholdersSupported;
+        instance.requiredDatatype = data.requiredDatatype;
+        instance.requiredDomainProperty = data.requiredDomainProperty;
+        instance.value = data.value;
         instance.valueSpecification = PropertyValueSpecification.fromData(
             data.valueSpecification,
         );
-        return instance;
-    }
-}
-
-export class Frequency extends EventStreamQualityDefinition {
-    '@class': 'org.apache.streampipes.model.quality.Frequency';
-    'quantityValue': number;
-
-    static 'fromData'(data: Frequency, target?: Frequency): Frequency {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Frequency();
-        super.fromData(data, instance);
-        instance.quantityValue = data.quantityValue;
         return instance;
     }
 }
@@ -2495,10 +2016,10 @@ export class FunctionDefinition {
             return data;
         }
         const instance = target || new FunctionDefinition();
-        instance.functionId = FunctionId.fromData(data.functionId);
         instance.consumedStreams = __getCopyArrayFn(__identity<string>())(
             data.consumedStreams,
         );
+        instance.functionId = FunctionId.fromData(data.functionId);
         return instance;
     }
 }
@@ -2543,13 +2064,13 @@ export class GenericAdapterSetDescription
         }
         const instance = target || new GenericAdapterSetDescription();
         super.fromData(data, instance);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.formatDescription = FormatDescription.fromData(
             data.formatDescription,
         );
         instance.protocolDescription = ProtocolDescription.fromData(
             data.protocolDescription,
         );
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         return instance;
     }
 }
@@ -2572,18 +2093,18 @@ export class GenericAdapterStreamDescription
         }
         const instance = target || new GenericAdapterStreamDescription();
         super.fromData(data, instance);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.formatDescription = FormatDescription.fromData(
             data.formatDescription,
         );
         instance.protocolDescription = ProtocolDescription.fromData(
             data.protocolDescription,
         );
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         return instance;
     }
 }
 
-export class GuessSchema extends UnnamedStreamPipesEntity {
+export class GuessSchema {
     '@class': 'org.apache.streampipes.model.connect.guess.GuessSchema';
     'eventPreview': { [index: string]: GuessTypeInfo }[];
     'eventSchema': EventSchema;
@@ -2594,11 +2115,11 @@ export class GuessSchema extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new GuessSchema();
-        super.fromData(data, instance);
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
+        instance['@class'] = data['@class'];
         instance.eventPreview = __getCopyArrayFn(
             __getCopyObjectFn(GuessTypeInfo.fromData),
         )(data.eventPreview);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.fieldStatusInfo = __getCopyObjectFn(FieldStatusInfo.fromData)(
             data.fieldStatusInfo,
         );
@@ -2624,14 +2145,14 @@ export class GuessTypeInfo {
     }
 }
 
-export class TransportProtocol extends UnnamedStreamPipesEntity {
+export class TransportProtocol {
     '@class':
-        | 'org.apache.streampipes.model.grounding.TransportProtocol'
         | 'org.apache.streampipes.model.grounding.JmsTransportProtocol'
         | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
         | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
         | 'org.apache.streampipes.model.grounding.NatsTransportProtocol';
     'brokerHostname': string;
+    'elementId': string;
     'topicDefinition': TopicDefinitionUnion;
 
     static 'fromData'(
@@ -2642,8 +2163,9 @@ export class TransportProtocol extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new TransportProtocol();
-        super.fromData(data, instance);
+        instance['@class'] = data['@class'];
         instance.brokerHostname = data.brokerHostname;
+        instance.elementId = data.elementId;
         instance.topicDefinition = TopicDefinition.fromDataUnion(
             data.topicDefinition,
         );
@@ -2709,16 +2231,16 @@ export class KafkaTransportProtocol extends TransportProtocol {
         }
         const instance = target || new KafkaTransportProtocol();
         super.fromData(data, instance);
-        instance.zookeeperHost = data.zookeeperHost;
-        instance.zookeeperPort = data.zookeeperPort;
-        instance.kafkaPort = data.kafkaPort;
-        instance.lingerMs = data.lingerMs;
-        instance.messageMaxBytes = data.messageMaxBytes;
-        instance.maxRequestSize = data.maxRequestSize;
         instance.acks = data.acks;
         instance.batchSize = data.batchSize;
-        instance.offset = data.offset;
         instance.groupId = data.groupId;
+        instance.kafkaPort = data.kafkaPort;
+        instance.lingerMs = data.lingerMs;
+        instance.maxRequestSize = data.maxRequestSize;
+        instance.messageMaxBytes = data.messageMaxBytes;
+        instance.offset = data.offset;
+        instance.zookeeperHost = data.zookeeperHost;
+        instance.zookeeperPort = data.zookeeperPort;
         return instance;
     }
 }
@@ -2756,27 +2278,12 @@ export class Label {
             return data;
         }
         const instance = target || new Label();
-        instance.name = data.name;
-        instance.color = data.color;
-        instance.internalName = data.internalName;
-        instance.categoryId = data.categoryId;
         instance._id = data._id;
         instance._rev = data._rev;
-        return instance;
-    }
-}
-
-export class Latency extends EventStreamQualityDefinition {
-    '@class': 'org.apache.streampipes.model.quality.Latency';
-    'quantityValue': number;
-
-    static 'fromData'(data: Latency, target?: Latency): Latency {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Latency();
-        super.fromData(data, instance);
-        instance.quantityValue = data.quantityValue;
+        instance.categoryId = data.categoryId;
+        instance.color = data.color;
+        instance.internalName = data.internalName;
+        instance.name = data.name;
         return instance;
     }
 }
@@ -2817,11 +2324,11 @@ export class MappingProperty extends StaticProperty {
         }
         const instance = target || new MappingProperty();
         super.fromData(data, instance);
-        instance.requirementSelector = data.requirementSelector;
         instance.mapsFromOptions = __getCopyArrayFn(__identity<string>())(
             data.mapsFromOptions,
         );
         instance.propertyScope = data.propertyScope;
+        instance.requirementSelector = data.requirementSelector;
         return instance;
     }
 
@@ -2896,62 +2403,6 @@ export class MatchingStaticProperty extends StaticProperty {
     }
 }
 
-export class MeasurementCapability extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.quality.MeasurementCapability';
-    'capability': string;
-
-    static 'fromData'(
-        data: MeasurementCapability,
-        target?: MeasurementCapability,
-    ): MeasurementCapability {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new MeasurementCapability();
-        super.fromData(data, instance);
-        instance.capability = data.capability;
-        return instance;
-    }
-}
-
-export class MeasurementObject extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.quality.MeasurementObject';
-    'measuresObject': string;
-
-    static 'fromData'(
-        data: MeasurementObject,
-        target?: MeasurementObject,
-    ): MeasurementObject {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new MeasurementObject();
-        super.fromData(data, instance);
-        instance.measuresObject = data.measuresObject;
-        return instance;
-    }
-}
-
-export class MeasurementRange extends EventPropertyQualityDefinition {
-    '@class': 'org.apache.streampipes.model.quality.MeasurementRange';
-    'maxValue': number;
-    'minValue': number;
-
-    static 'fromData'(
-        data: MeasurementRange,
-        target?: MeasurementRange,
-    ): MeasurementRange {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new MeasurementRange();
-        super.fromData(data, instance);
-        instance.minValue = data.minValue;
-        instance.maxValue = data.maxValue;
-        return instance;
-    }
-}
-
 export class MessageCounter {
     counter: number;
     lastTimestamp: number;
@@ -2964,8 +2415,8 @@ export class MessageCounter {
             return data;
         }
         const instance = target || new MessageCounter();
-        instance.lastTimestamp = data.lastTimestamp;
         instance.counter = data.counter;
+        instance.lastTimestamp = data.lastTimestamp;
         return instance;
     }
 }
@@ -2984,8 +2435,8 @@ export class MoveRuleDescription extends SchemaTransformationRuleDescription {
         }
         const instance = target || new MoveRuleDescription();
         super.fromData(data, instance);
-        instance.oldRuntimeKey = data.oldRuntimeKey;
         instance.newRuntimeKey = data.newRuntimeKey;
+        instance.oldRuntimeKey = data.oldRuntimeKey;
         return instance;
     }
 }
@@ -3036,9 +2487,9 @@ export class Notification {
             return data;
         }
         const instance = target || new Notification();
-        instance.title = data.title;
-        instance.description = data.description;
         instance.additionalInformation = data.additionalInformation;
+        instance.description = data.description;
+        instance.title = data.title;
         return instance;
     }
 }
@@ -3073,21 +2524,21 @@ export class OneOfStaticProperty extends SelectionStaticProperty {
     }
 }
 
-export class Option extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.staticproperty.Option';
-    'internalName': string;
-    'name': string;
-    'selected': boolean;
+export class Option {
+    elementId: string;
+    internalName: string;
+    name: string;
+    selected: boolean;
 
-    static 'fromData'(data: Option, target?: Option): Option {
+    static fromData(data: Option, target?: Option): Option {
         if (!data) {
             return data;
         }
         const instance = target || new Option();
-        super.fromData(data, instance);
+        instance.elementId = data.elementId;
+        instance.internalName = data.internalName;
         instance.name = data.name;
         instance.selected = data.selected;
-        instance.internalName = data.internalName;
         return instance;
     }
 }
@@ -3122,10 +2573,10 @@ export class PersistedDataStream {
             return data;
         }
         const instance = target || new PersistedDataStream();
+        instance.measureName = data.measureName;
         instance.pipelineId = data.pipelineId;
         instance.pipelineName = data.pipelineName;
         instance.schema = EventSchema.fromData(data.schema);
-        instance.measureName = data.measureName;
         return instance;
     }
 }
@@ -3150,24 +2601,24 @@ export class Pipeline extends ElementComposition {
         }
         const instance = target || new Pipeline();
         super.fromData(data, instance);
+        instance._id = data._id;
+        instance._rev = data._rev;
         instance.actions = __getCopyArrayFn(DataSinkInvocation.fromData)(
             data.actions,
         );
-        instance.running = data.running;
-        instance.restartOnSystemReboot = data.restartOnSystemReboot;
-        instance.startedAt = data.startedAt;
         instance.createdAt = data.createdAt;
-        instance.publicElement = data.publicElement;
         instance.createdByUser = data.createdByUser;
+        instance.healthStatus = data.healthStatus;
         instance.pipelineCategories = __getCopyArrayFn(__identity<string>())(
             data.pipelineCategories,
         );
         instance.pipelineNotifications = __getCopyArrayFn(__identity<string>())(
             data.pipelineNotifications,
         );
-        instance.healthStatus = data.healthStatus;
-        instance._id = data._id;
-        instance._rev = data._rev;
+        instance.publicElement = data.publicElement;
+        instance.restartOnSystemReboot = data.restartOnSystemReboot;
+        instance.running = data.running;
+        instance.startedAt = data.startedAt;
         return instance;
     }
 }
@@ -3205,15 +2656,15 @@ export class PipelineCanvasMetadata {
             return data;
         }
         const instance = target || new PipelineCanvasMetadata();
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineElementMetadata = __getCopyObjectFn(
-            PipelineElementMetadata.fromData,
-        )(data.pipelineElementMetadata);
+        instance._id = data._id;
+        instance._rev = data._rev;
         instance.comments = __getCopyArrayFn(PipelineCanvasComment.fromData)(
             data.comments,
         );
-        instance._id = data._id;
-        instance._rev = data._rev;
+        instance.pipelineElementMetadata = __getCopyObjectFn(
+            PipelineElementMetadata.fromData,
+        )(data.pipelineElementMetadata);
+        instance.pipelineId = data.pipelineId;
         return instance;
     }
 }
@@ -3232,10 +2683,10 @@ export class PipelineCategory {
             return data;
         }
         const instance = target || new PipelineCategory();
-        instance.categoryName = data.categoryName;
-        instance.categoryDescription = data.categoryDescription;
         instance._id = data._id;
         instance._rev = data._rev;
+        instance.categoryDescription = data.categoryDescription;
+        instance.categoryName = data.categoryName;
         return instance;
     }
 }
@@ -3254,8 +2705,8 @@ export class PipelineEdgeValidation {
         }
         const instance = target || new PipelineEdgeValidation();
         instance.sourceId = data.sourceId;
-        instance.targetId = data.targetId;
         instance.status = EdgeValidationStatus.fromData(data.status);
+        instance.targetId = data.targetId;
         return instance;
     }
 }
@@ -3272,8 +2723,8 @@ export class PipelineElementMetadata {
             return data;
         }
         const instance = target || new PipelineElementMetadata();
-        instance.position = CanvasPosition.fromData(data.position);
         instance.customName = data.customName;
+        instance.position = CanvasPosition.fromData(data.position);
         return instance;
     }
 }
@@ -3294,13 +2745,13 @@ export class PipelineElementMonitoringInfo {
             return data;
         }
         const instance = target || new PipelineElementMonitoringInfo();
-        instance.pipelineElementId = data.pipelineElementId;
-        instance.pipelineElementName = data.pipelineElementName;
         instance.consumedMessageInfoExists = data.consumedMessageInfoExists;
-        instance.producedMessageInfoExists = data.producedMessageInfoExists;
         instance.consumedMessagesInfos = __getCopyArrayFn(
             ConsumedMessagesInfo.fromData,
         )(data.consumedMessagesInfos);
+        instance.pipelineElementId = data.pipelineElementId;
+        instance.pipelineElementName = data.pipelineElementName;
+        instance.producedMessageInfoExists = data.producedMessageInfoExists;
         instance.producedMessagesInfo = ProducedMessagesInfo.fromData(
             data.producedMessagesInfo,
         );
@@ -3323,11 +2774,11 @@ export class PipelineElementRecommendation {
             return data;
         }
         const instance = target || new PipelineElementRecommendation();
+        instance.count = data.count;
+        instance.description = data.description;
         instance.elementId = data.elementId;
         instance.name = data.name;
-        instance.description = data.description;
         instance.weight = data.weight;
-        instance.count = data.count;
         return instance;
     }
 }
@@ -3394,14 +2845,14 @@ export class PipelineElementTemplate {
             return data;
         }
         const instance = target || new PipelineElementTemplate();
-        instance.templateName = data.templateName;
-        instance.templateDescription = data.templateDescription;
+        instance._id = data._id;
+        instance._rev = data._rev;
         instance.basePipelineElementAppId = data.basePipelineElementAppId;
         instance.templateConfigs = __getCopyObjectFn(
             PipelineElementTemplateConfig.fromData,
         )(data.templateConfigs);
-        instance._id = data._id;
-        instance._rev = data._rev;
+        instance.templateDescription = data.templateDescription;
+        instance.templateName = data.templateName;
         return instance;
     }
 }
@@ -3419,8 +2870,8 @@ export class PipelineElementTemplateConfig {
             return data;
         }
         const instance = target || new PipelineElementTemplateConfig();
-        instance.editable = data.editable;
         instance.displayed = data.displayed;
+        instance.editable = data.editable;
         instance.value = data.value;
         return instance;
     }
@@ -3464,20 +2915,20 @@ export class PipelineModification {
         const instance = target || new PipelineModification();
         instance.domId = data.domId;
         instance.elementId = data.elementId;
-        instance.pipelineElementValid = data.pipelineElementValid;
-        instance.validationInfos = __getCopyArrayFn(
-            PipelineElementValidationInfo.fromData,
-        )(data.validationInfos);
-        instance.staticProperties = __getCopyArrayFn(
-            StaticProperty.fromDataUnion,
-        )(data.staticProperties);
-        instance.outputStrategies = __getCopyArrayFn(
-            OutputStrategy.fromDataUnion,
-        )(data.outputStrategies);
         instance.inputStreams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
             data.inputStreams,
         );
+        instance.outputStrategies = __getCopyArrayFn(
+            OutputStrategy.fromDataUnion,
+        )(data.outputStrategies);
         instance.outputStream = SpDataStream.fromDataUnion(data.outputStream);
+        instance.pipelineElementValid = data.pipelineElementValid;
+        instance.staticProperties = __getCopyArrayFn(
+            StaticProperty.fromDataUnion,
+        )(data.staticProperties);
+        instance.validationInfos = __getCopyArrayFn(
+            PipelineElementValidationInfo.fromData,
+        )(data.validationInfos);
         return instance;
     }
 }
@@ -3496,13 +2947,13 @@ export class PipelineModificationMessage extends Message {
         }
         const instance = target || new PipelineModificationMessage();
         super.fromData(data, instance);
+        instance.edgeValidations = __getCopyArrayFn(
+            PipelineEdgeValidation.fromData,
+        )(data.edgeValidations);
         instance.pipelineModifications = __getCopyArrayFn(
             PipelineModification.fromData,
         )(data.pipelineModifications);
         instance.pipelineValid = data.pipelineValid;
-        instance.edgeValidations = __getCopyArrayFn(
-            PipelineEdgeValidation.fromData,
-        )(data.edgeValidations);
         return instance;
     }
 }
@@ -3521,12 +2972,12 @@ export class PipelineMonitoringInfo {
             return data;
         }
         const instance = target || new PipelineMonitoringInfo();
-        instance.pipelineId = data.pipelineId;
         instance.createdAt = data.createdAt;
-        instance.startedAt = data.startedAt;
         instance.pipelineElementMonitoringInfo = __getCopyArrayFn(
             PipelineElementMonitoringInfo.fromData,
         )(data.pipelineElementMonitoringInfo);
+        instance.pipelineId = data.pipelineId;
+        instance.startedAt = data.startedAt;
         return instance;
     }
 }
@@ -3546,13 +2997,13 @@ export class PipelineOperationStatus {
             return data;
         }
         const instance = target || new PipelineOperationStatus();
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineName = data.pipelineName;
-        instance.title = data.title;
-        instance.success = data.success;
         instance.elementStatus = __getCopyArrayFn(
             PipelineElementStatus.fromData,
         )(data.elementStatus);
+        instance.pipelineId = data.pipelineId;
+        instance.pipelineName = data.pipelineName;
+        instance.success = data.success;
+        instance.title = data.title;
         return instance;
     }
 }
@@ -3591,10 +3042,10 @@ export class PipelineStatusMessage {
             return data;
         }
         const instance = target || new PipelineStatusMessage();
+        instance.message = data.message;
+        instance.messageType = data.messageType;
         instance.pipelineId = data.pipelineId;
         instance.timestamp = data.timestamp;
-        instance.messageType = data.messageType;
-        instance.message = data.message;
         return instance;
     }
 }
@@ -3618,14 +3069,14 @@ export class PipelineTemplateDescription extends NamedStreamPipesEntity {
         instance.boundTo = __getCopyArrayFn(BoundPipelineElement.fromData)(
             data.boundTo,
         );
-        instance.pipelineTemplateName = data.pipelineTemplateName;
-        instance.pipelineTemplateId = data.pipelineTemplateId;
         instance.pipelineTemplateDescription = data.pipelineTemplateDescription;
+        instance.pipelineTemplateId = data.pipelineTemplateId;
+        instance.pipelineTemplateName = data.pipelineTemplateName;
         return instance;
     }
 }
 
-export class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
+export class PipelineTemplateInvocation {
     '@class': 'org.apache.streampipes.model.template.PipelineTemplateInvocation';
     'dataSetId': string;
     'kviName': string;
@@ -3641,32 +3092,17 @@ export class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new PipelineTemplateInvocation();
-        super.fromData(data, instance);
-        instance.kviName = data.kviName;
+        instance['@class'] = data['@class'];
         instance.dataSetId = data.dataSetId;
-        instance.pipelineTemplateId = data.pipelineTemplateId;
+        instance.kviName = data.kviName;
         instance.pipelineTemplateDescription =
             PipelineTemplateDescription.fromData(
                 data.pipelineTemplateDescription,
             );
+        instance.pipelineTemplateId = data.pipelineTemplateId;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
-        return instance;
-    }
-}
-
-export class Precision extends EventPropertyQualityDefinition {
-    '@class': 'org.apache.streampipes.model.quality.Precision';
-    'quantityValue': number;
-
-    static 'fromData'(data: Precision, target?: Precision): Precision {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Precision();
-        super.fromData(data, instance);
-        instance.quantityValue = data.quantityValue;
         return instance;
     }
 }
@@ -3691,12 +3127,11 @@ export class ProducedMessagesInfo extends MessagesInfo {
     }
 }
 
-export class PropertyRenameRule extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.output.PropertyRenameRule';
-    'newRuntimeName': string;
-    'runtimeId': string;
+export class PropertyRenameRule {
+    newRuntimeName: string;
+    runtimeId: string;
 
-    static 'fromData'(
+    static fromData(
         data: PropertyRenameRule,
         target?: PropertyRenameRule,
     ): PropertyRenameRule {
@@ -3704,20 +3139,18 @@ export class PropertyRenameRule extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new PropertyRenameRule();
-        super.fromData(data, instance);
-        instance.runtimeId = data.runtimeId;
         instance.newRuntimeName = data.newRuntimeName;
+        instance.runtimeId = data.runtimeId;
         return instance;
     }
 }
 
-export class PropertyValueSpecification extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.staticproperty.PropertyValueSpecification';
-    'maxValue': number;
-    'minValue': number;
-    'step': number;
+export class PropertyValueSpecification {
+    maxValue: number;
+    minValue: number;
+    step: number;
 
-    static 'fromData'(
+    static fromData(
         data: PropertyValueSpecification,
         target?: PropertyValueSpecification,
     ): PropertyValueSpecification {
@@ -3725,9 +3158,8 @@ export class PropertyValueSpecification extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new PropertyValueSpecification();
-        super.fromData(data, instance);
-        instance.minValue = data.minValue;
         instance.maxValue = data.maxValue;
+        instance.minValue = data.minValue;
         instance.step = data.step;
         return instance;
     }
@@ -3748,13 +3180,13 @@ export class ProtocolDescription extends NamedStreamPipesEntity {
         }
         const instance = target || new ProtocolDescription();
         super.fromData(data, instance);
-        instance.sourceType = data.sourceType;
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
         instance.category = __getCopyArrayFn(__identity<string>())(
             data.category,
         );
+        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
+            data.config,
+        );
+        instance.sourceType = data.sourceType;
         return instance;
     }
 }
@@ -3774,8 +3206,8 @@ export class QuantitativeValue extends ValueSpecification {
         }
         const instance = target || new QuantitativeValue();
         super.fromData(data, instance);
-        instance.minValue = data.minValue;
         instance.maxValue = data.maxValue;
+        instance.minValue = data.minValue;
         instance.step = data.step;
         return instance;
     }
@@ -3814,28 +3246,13 @@ export class RenameRuleDescription extends SchemaTransformationRuleDescription {
         }
         const instance = target || new RenameRuleDescription();
         super.fromData(data, instance);
-        instance.oldRuntimeKey = data.oldRuntimeKey;
         instance.newRuntimeKey = data.newRuntimeKey;
+        instance.oldRuntimeKey = data.oldRuntimeKey;
         return instance;
     }
 }
 
-export class Resolution extends EventPropertyQualityDefinition {
-    '@class': 'org.apache.streampipes.model.quality.Resolution';
-    'quantityValue': number;
-
-    static 'fromData'(data: Resolution, target?: Resolution): Resolution {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Resolution();
-        super.fromData(data, instance);
-        instance.quantityValue = data.quantityValue;
-        return instance;
-    }
-}
-
-export class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
+export class RuntimeOptionsRequest {
     '@class':
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest'
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
@@ -3853,16 +3270,16 @@ export class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new RuntimeOptionsRequest();
-        super.fromData(data, instance);
-        instance.requestId = data.requestId;
+        instance['@class'] = data['@class'];
         instance.appId = data.appId;
-        instance.staticProperties = __getCopyArrayFn(
-            StaticProperty.fromDataUnion,
-        )(data.staticProperties);
+        instance.belongsTo = data.belongsTo;
         instance.inputStreams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
             data.inputStreams,
         );
-        instance.belongsTo = data.belongsTo;
+        instance.requestId = data.requestId;
+        instance.staticProperties = __getCopyArrayFn(
+            StaticProperty.fromDataUnion,
+        )(data.staticProperties);
         return instance;
     }
 }
@@ -3964,15 +3381,14 @@ export class SecretStaticProperty extends StaticProperty {
         }
         const instance = target || new SecretStaticProperty();
         super.fromData(data, instance);
-        instance.value = data.value;
         instance.encrypted = data.encrypted;
+        instance.value = data.value;
         return instance;
     }
 }
 
-export class TopicDefinition extends UnnamedStreamPipesEntity {
+export class TopicDefinition {
     '@class':
-        | 'org.apache.streampipes.model.grounding.TopicDefinition'
         | 'org.apache.streampipes.model.grounding.SimpleTopicDefinition'
         | 'org.apache.streampipes.model.grounding.WildcardTopicDefinition';
     'actualTopicName': string;
@@ -3985,7 +3401,7 @@ export class TopicDefinition extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new TopicDefinition();
-        super.fromData(data, instance);
+        instance['@class'] = data['@class'];
         instance.actualTopicName = data.actualTopicName;
         return instance;
     }
@@ -4033,8 +3449,8 @@ export class SlideToggleStaticProperty extends StaticProperty {
         }
         const instance = target || new SlideToggleStaticProperty();
         super.fromData(data, instance);
-        instance.selected = data.selected;
         instance.defaultValue = data.defaultValue;
+        instance.selected = data.selected;
         return instance;
     }
 }
@@ -4047,11 +3463,7 @@ export class SpDataStream extends NamedStreamPipesEntity {
     'correspondingAdapterId': string;
     'eventGrounding': EventGrounding;
     'eventSchema': EventSchema;
-    'hasEventStreamQualities': EventStreamQualityDefinitionUnion[];
     'index': number;
-    'measurementCapability': MeasurementCapability[];
-    'measurementObject': MeasurementObject[];
-    'requiresEventStreamQualities': EventStreamQualityRequirement[];
 
     static 'fromData'(data: SpDataStream, target?: SpDataStream): SpDataStream {
         if (!data) {
@@ -4059,25 +3471,13 @@ export class SpDataStream extends NamedStreamPipesEntity {
         }
         const instance = target || new SpDataStream();
         super.fromData(data, instance);
-        instance.hasEventStreamQualities = __getCopyArrayFn(
-            EventStreamQualityDefinition.fromDataUnion,
-        )(data.hasEventStreamQualities);
-        instance.requiresEventStreamQualities = __getCopyArrayFn(
-            EventStreamQualityRequirement.fromData,
-        )(data.requiresEventStreamQualities);
-        instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
-        instance.measurementCapability = __getCopyArrayFn(
-            MeasurementCapability.fromData,
-        )(data.measurementCapability);
-        instance.measurementObject = __getCopyArrayFn(
-            MeasurementObject.fromData,
-        )(data.measurementObject);
-        instance.index = data.index;
-        instance.correspondingAdapterId = data.correspondingAdapterId;
         instance.category = __getCopyArrayFn(__identity<string>())(
             data.category,
         );
+        instance.correspondingAdapterId = data.correspondingAdapterId;
+        instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
+        instance.index = data.index;
         return instance;
     }
 
@@ -4109,14 +3509,32 @@ export class SpDataSet extends SpDataStream {
         }
         const instance = target || new SpDataSet();
         super.fromData(data, instance);
+        instance.actualTopicName = data.actualTopicName;
+        instance.brokerHostname = data.brokerHostname;
+        instance.correspondingPipeline = data.correspondingPipeline;
+        instance.datasetInvocationId = data.datasetInvocationId;
+        instance.selectedEndpointUrl = data.selectedEndpointUrl;
         instance.supportedGrounding = EventGrounding.fromData(
             data.supportedGrounding,
         );
-        instance.datasetInvocationId = data.datasetInvocationId;
-        instance.correspondingPipeline = data.correspondingPipeline;
-        instance.selectedEndpointUrl = data.selectedEndpointUrl;
-        instance.actualTopicName = data.actualTopicName;
-        instance.brokerHostname = data.brokerHostname;
+        return instance;
+    }
+}
+
+export class SpDataStreamContainer {
+    '@class': 'org.apache.streampipes.model.SpDataStreamContainer';
+    'list': SpDataStreamUnion[];
+
+    static 'fromData'(
+        data: SpDataStreamContainer,
+        target?: SpDataStreamContainer,
+    ): SpDataStreamContainer {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpDataStreamContainer();
+        instance['@class'] = data['@class'];
+        instance.list = __getCopyArrayFn(SpDataStream.fromDataUnion)(data.list);
         return instance;
     }
 }
@@ -4130,10 +3548,10 @@ export class SpLogEntry {
             return data;
         }
         const instance = target || new SpLogEntry();
-        instance.timestamp = data.timestamp;
         instance.errorMessage = StreamPipesErrorMessage.fromData(
             data.errorMessage,
         );
+        instance.timestamp = data.timestamp;
         return instance;
     }
 }
@@ -4176,14 +3594,14 @@ export class SpQueryResult {
             return data;
         }
         const instance = target || new SpQueryResult();
-        instance.total = data.total;
-        instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
         instance.allDataSeries = __getCopyArrayFn(DataSeries.fromData)(
             data.allDataSeries,
         );
+        instance.forId = data.forId;
+        instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
         instance.sourceIndex = data.sourceIndex;
         instance.spQueryStatus = data.spQueryStatus;
-        instance.forId = data.forId;
+        instance.total = data.total;
         return instance;
     }
 }
@@ -4222,6 +3640,7 @@ export class SpecificAdapterStreamDescription extends AdapterStreamDescription {
 
 export class StaticPropertyAlternative extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative';
+    'elementId': string;
     'selected': boolean;
     'staticProperty': StaticPropertyUnion;
 
@@ -4234,6 +3653,7 @@ export class StaticPropertyAlternative extends StaticProperty {
         }
         const instance = target || new StaticPropertyAlternative();
         super.fromData(data, instance);
+        instance.elementId = data.elementId;
         instance.selected = data.selected;
         instance.staticProperty = StaticProperty.fromDataUnion(
             data.staticProperty,
@@ -4277,11 +3697,11 @@ export class StaticPropertyGroup extends StaticProperty {
         }
         const instance = target || new StaticPropertyGroup();
         super.fromData(data, instance);
+        instance.horizontalRendering = data.horizontalRendering;
+        instance.showLabel = data.showLabel;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
-        instance.showLabel = data.showLabel;
-        instance.horizontalRendering = data.horizontalRendering;
         return instance;
     }
 }
@@ -4309,30 +3729,15 @@ export class StreamPipesApplicationPackage {
             return data;
         }
         const instance = target || new StreamPipesApplicationPackage();
-        instance.requiredProcessorAppIds = __getCopyArrayFn(
-            __identity<string>(),
-        )(data.requiredProcessorAppIds);
-        instance.requiredDataSinkAppIds = __getCopyArrayFn(
-            __identity<string>(),
-        )(data.requiredDataSinkAppIds);
-        instance.requiredAdapterAppIds = __getCopyArrayFn(__identity<string>())(
-            data.requiredAdapterAppIds,
-        );
-        instance.assets = __getCopyArrayFn(__identity<string>())(data.assets);
         instance.adapters = __getCopyArrayFn(__identity<string>())(
             data.adapters,
         );
-        instance.dashboards = __getCopyArrayFn(__identity<string>())(
-            data.dashboards,
-        );
+        instance.assets = __getCopyArrayFn(__identity<string>())(data.assets);
         instance.dashboardWidgets = __getCopyArrayFn(__identity<string>())(
             data.dashboardWidgets,
         );
-        instance.dataViews = __getCopyArrayFn(__identity<string>())(
-            data.dataViews,
-        );
-        instance.dataViewWidgets = __getCopyArrayFn(__identity<string>())(
-            data.dataViewWidgets,
+        instance.dashboards = __getCopyArrayFn(__identity<string>())(
+            data.dashboards,
         );
         instance.dataLakeMeasures = __getCopyArrayFn(__identity<string>())(
             data.dataLakeMeasures,
@@ -4340,10 +3745,25 @@ export class StreamPipesApplicationPackage {
         instance.dataSources = __getCopyArrayFn(__identity<string>())(
             data.dataSources,
         );
+        instance.dataViewWidgets = __getCopyArrayFn(__identity<string>())(
+            data.dataViewWidgets,
+        );
+        instance.dataViews = __getCopyArrayFn(__identity<string>())(
+            data.dataViews,
+        );
+        instance.files = __getCopyArrayFn(__identity<string>())(data.files);
         instance.pipelines = __getCopyArrayFn(__identity<string>())(
             data.pipelines,
         );
-        instance.files = __getCopyArrayFn(__identity<string>())(data.files);
+        instance.requiredAdapterAppIds = __getCopyArrayFn(__identity<string>())(
+            data.requiredAdapterAppIds,
+        );
+        instance.requiredDataSinkAppIds = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.requiredDataSinkAppIds);
+        instance.requiredProcessorAppIds = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.requiredProcessorAppIds);
         return instance;
     }
 }
@@ -4363,11 +3783,11 @@ export class StreamPipesErrorMessage {
             return data;
         }
         const instance = target || new StreamPipesErrorMessage();
+        instance.cause = data.cause;
+        instance.detail = data.detail;
+        instance.fullStackTrace = data.fullStackTrace;
         instance.level = data.level;
         instance.title = data.title;
-        instance.detail = data.detail;
-        instance.cause = data.cause;
-        instance.fullStackTrace = data.fullStackTrace;
         return instance;
     }
 }
@@ -4386,13 +3806,12 @@ export class SuccessMessage extends Message {
     }
 }
 
-export class SupportedProperty extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.staticproperty.SupportedProperty';
-    'propertyId': string;
-    'value': string;
-    'valueRequired': boolean;
+export class SupportedProperty {
+    propertyId: string;
+    value: string;
+    valueRequired: boolean;
 
-    static 'fromData'(
+    static fromData(
         data: SupportedProperty,
         target?: SupportedProperty,
     ): SupportedProperty {
@@ -4400,10 +3819,9 @@ export class SupportedProperty extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new SupportedProperty();
-        super.fromData(data, instance);
         instance.propertyId = data.propertyId;
-        instance.valueRequired = data.valueRequired;
         instance.value = data.value;
+        instance.valueRequired = data.valueRequired;
         return instance;
     }
 }
@@ -4425,22 +3843,21 @@ export class TimestampTranfsformationRuleDescription extends ValueTransformation
         const instance =
             target || new TimestampTranfsformationRuleDescription();
         super.fromData(data, instance);
-        instance.runtimeKey = data.runtimeKey;
-        instance.mode = data.mode;
         instance.formatString = data.formatString;
+        instance.mode = data.mode;
         instance.multiplier = data.multiplier;
+        instance.runtimeKey = data.runtimeKey;
         return instance;
     }
 }
 
-export class TransformOperation extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.output.TransformOperation';
-    'mappingPropertyInternalName': string;
-    'sourceStaticProperty': string;
-    'targetValue': string;
-    'transformationScope': string;
+export class TransformOperation {
+    mappingPropertyInternalName: string;
+    sourceStaticProperty: string;
+    targetValue: string;
+    transformationScope: string;
 
-    static 'fromData'(
+    static fromData(
         data: TransformOperation,
         target?: TransformOperation,
     ): TransformOperation {
@@ -4448,11 +3865,10 @@ export class TransformOperation extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new TransformOperation();
-        super.fromData(data, instance);
         instance.mappingPropertyInternalName = data.mappingPropertyInternalName;
         instance.sourceStaticProperty = data.sourceStaticProperty;
-        instance.transformationScope = data.transformationScope;
         instance.targetValue = data.targetValue;
+        instance.transformationScope = data.transformationScope;
         return instance;
     }
 }
@@ -4477,11 +3893,10 @@ export class TransformOutputStrategy extends OutputStrategy {
     }
 }
 
-export class TransportFormat extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.grounding.TransportFormat';
-    'rdfType': string[];
+export class TransportFormat {
+    rdfType: string[];
 
-    static 'fromData'(
+    static fromData(
         data: TransportFormat,
         target?: TransportFormat,
     ): TransportFormat {
@@ -4489,7 +3904,6 @@ export class TransportFormat extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new TransportFormat();
-        super.fromData(data, instance);
         instance.rdfType = __getCopyArrayFn(__identity<string>())(data.rdfType);
         return instance;
     }
@@ -4510,13 +3924,13 @@ export class TreeInputNode {
             return data;
         }
         const instance = target || new TreeInputNode();
-        instance.dataNode = data.dataNode;
-        instance.selected = data.selected;
-        instance.nodeName = data.nodeName;
-        instance.internalNodeName = data.internalNodeName;
         instance.children = __getCopyArrayFn(TreeInputNode.fromData)(
             data.children,
         );
+        instance.dataNode = data.dataNode;
+        instance.internalNodeName = data.internalNodeName;
+        instance.nodeName = data.nodeName;
+        instance.selected = data.selected;
         return instance;
     }
 }
@@ -4536,8 +3950,8 @@ export class UnitTransformRuleDescription extends ValueTransformationRuleDescrip
         }
         const instance = target || new UnitTransformRuleDescription();
         super.fromData(data, instance);
-        instance.runtimeKey = data.runtimeKey;
         instance.fromUnitRessourceURL = data.fromUnitRessourceURL;
+        instance.runtimeKey = data.runtimeKey;
         instance.toUnitRessourceURL = data.toUnitRessourceURL;
         return instance;
     }
@@ -4575,11 +3989,11 @@ export class UserInfo {
             return data;
         }
         const instance = target || new UserInfo();
-        instance.username = data.username;
+        instance.darkMode = data.darkMode;
         instance.displayName = data.displayName;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
-        instance.darkMode = data.darkMode;
+        instance.username = data.username;
         return instance;
     }
 }
@@ -4600,10 +4014,10 @@ export class VisualizablePipeline {
         }
         const instance = target || new VisualizablePipeline();
         instance.pipelineId = data.pipelineId;
-        instance.schema = EventSchema.fromData(data.schema);
-        instance.visualizationName = data.visualizationName;
-        instance.topic = data.topic;
         instance.pipelineName = data.pipelineName;
+        instance.schema = EventSchema.fromData(data.schema);
+        instance.topic = data.topic;
+        instance.visualizationName = data.visualizationName;
         return instance;
     }
 }
@@ -4622,22 +4036,21 @@ export class WildcardTopicDefinition extends TopicDefinition {
         }
         const instance = target || new WildcardTopicDefinition();
         super.fromData(data, instance);
-        instance.wildcardTopicName = data.wildcardTopicName;
         instance.wildcardTopicMappings = __getCopyArrayFn(
             WildcardTopicMapping.fromData,
         )(data.wildcardTopicMappings);
+        instance.wildcardTopicName = data.wildcardTopicName;
         return instance;
     }
 }
 
-export class WildcardTopicMapping extends UnnamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.grounding.WildcardTopicMapping';
-    'mappedRuntimeName': string;
-    'mappingId': string;
-    'selectedMapping': string;
-    'topicParameterType': string;
+export class WildcardTopicMapping {
+    mappedRuntimeName: string;
+    mappingId: string;
+    selectedMapping: string;
+    topicParameterType: string;
 
-    static 'fromData'(
+    static fromData(
         data: WildcardTopicMapping,
         target?: WildcardTopicMapping,
     ): WildcardTopicMapping {
@@ -4645,11 +4058,10 @@ export class WildcardTopicMapping extends UnnamedStreamPipesEntity {
             return data;
         }
         const instance = target || new WildcardTopicMapping();
-        super.fromData(data, instance);
-        instance.topicParameterType = data.topicParameterType;
-        instance.mappingId = data.mappingId;
         instance.mappedRuntimeName = data.mappedRuntimeName;
+        instance.mappingId = data.mappingId;
         instance.selectedMapping = data.selectedMapping;
+        instance.topicParameterType = data.topicParameterType;
         return instance;
     }
 }
@@ -4668,26 +4080,14 @@ export type AdapterStreamDescriptionUnion = SpecificAdapterStreamDescription;
 
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';
 
-export type EventPropertyQualityDefinitionUnion =
-    | Accuracy
-    | MeasurementRange
-    | Precision
-    | Resolution;
-
 export type EventPropertyUnion =
     | EventPropertyList
     | EventPropertyNested
     | EventPropertyPrimitive;
 
-export type EventStreamQualityDefinitionUnion = Frequency | Latency;
-
 export type FieldStatus = 'GOOD' | 'BAD' | 'ATTENTION';
 
 export type MappingPropertyUnion = MappingPropertyNary | MappingPropertyUnary;
-
-export type MeasurementPropertyUnion =
-    | EventPropertyQualityDefinition
-    | EventStreamQualityDefinition;
 
 export type OneOfStaticPropertyUnion = RuntimeResolvableOneOfStaticProperty;
 
@@ -4773,7 +4173,8 @@ export type TransformationRuleDescriptionUnion =
     | RenameRuleDescription
     | MoveRuleDescription
     | ChangeDatatypeTransformationRuleDescription
-    | CorrectionValueTransformationRuleDescription;
+    | CorrectionValueTransformationRuleDescription
+    | DebugSinkRuleDescription;
 
 export type TransportProtocolUnion =
     | JmsTransportProtocol

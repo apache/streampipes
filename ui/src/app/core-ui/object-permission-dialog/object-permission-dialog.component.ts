@@ -19,16 +19,21 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
-  PermissionsService,
-  Group,
-  Permission,
-  PermissionEntry,
-  ServiceAccount,
-  UserAccount,
-  UserService,
-  UserGroupService
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+} from '@angular/forms';
+import {
+    PermissionsService,
+    Group,
+    Permission,
+    PermissionEntry,
+    ServiceAccount,
+    UserAccount,
+    UserService,
+    UserGroupService,
 } from '@streampipes/platform-services';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, zip } from 'rxjs';
@@ -36,192 +41,243 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'sp-object-permission-dialog',
-  templateUrl: './object-permission-dialog.component.html',
-  styleUrls: ['./object-permission-dialog.component.scss'],
+    selector: 'sp-object-permission-dialog',
+    templateUrl: './object-permission-dialog.component.html',
+    styleUrls: ['./object-permission-dialog.component.scss'],
 })
 export class ObjectPermissionDialogComponent implements OnInit {
+    separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+    @Input()
+    objectInstanceId: string;
 
-  @Input()
-  objectInstanceId: string;
+    @Input()
+    headerTitle: string;
 
-  @Input()
-  headerTitle: string;
+    parentForm: UntypedFormGroup;
 
-  parentForm: UntypedFormGroup;
+    permission: Permission;
 
-  permission: Permission;
+    owner: UserAccount | ServiceAccount;
+    grantedUserAuthorities: (UserAccount | ServiceAccount)[];
+    grantedGroupAuthorities: Group[];
 
-  owner: UserAccount | ServiceAccount;
-  grantedUserAuthorities: (UserAccount | ServiceAccount)[];
-  grantedGroupAuthorities: Group[];
+    allUsers: (UserAccount | ServiceAccount)[];
+    allGroups: Group[];
 
-  allUsers: (UserAccount | ServiceAccount)[];
-  allGroups: Group[];
+    filteredUsers: Observable<(UserAccount | ServiceAccount)[]>;
+    filteredGroups: Observable<Group[]>;
 
-  filteredUsers: Observable<(UserAccount | ServiceAccount)[]>;
-  filteredGroups: Observable<Group[]>;
+    usersLoaded = false;
 
-  usersLoaded = false;
+    @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
+    @ViewChild('groupInput') groupInput: ElementRef<HTMLInputElement>;
+    userCtrl = new UntypedFormControl();
+    groupCtrl = new UntypedFormControl();
 
-  @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
-  @ViewChild('groupInput') groupInput: ElementRef<HTMLInputElement>;
-  userCtrl = new UntypedFormControl();
-  groupCtrl = new UntypedFormControl();
-
-
-  constructor(
-      private fb: UntypedFormBuilder,
-      private dialogRef: DialogRef<ObjectPermissionDialogComponent>,
-      private permissionsService: PermissionsService,
-      private userService: UserService,
-      private groupService: UserGroupService
-  ) {
-    this.grantedGroupAuthorities = [];
-    this.grantedUserAuthorities = [];
-  }
-
-  ngOnInit(): void {
-    this.loadUsersAndGroups();
-    this.parentForm = this.fb.group({});
-    this.parentForm.valueChanges.subscribe(v => {
-      this.permission.publicElement = v.publicElement;
-      if (v.publicElement) {
-        this.permission.grantedAuthorities = [];
+    constructor(
+        private fb: UntypedFormBuilder,
+        private dialogRef: DialogRef<ObjectPermissionDialogComponent>,
+        private permissionsService: PermissionsService,
+        private userService: UserService,
+        private groupService: UserGroupService,
+    ) {
         this.grantedGroupAuthorities = [];
         this.grantedUserAuthorities = [];
-      }
-      if (v.owner) {
-        this.permission.ownerSid = v.owner;
-      }
-    });
-  }
-
-  loadUsersAndGroups() {
-    zip(this.userService.getAllUserAccounts(),
-        this.userService.getAllServiceAccounts(),
-        this.groupService.getAllUserGroups(),
-        this.permissionsService.getPermissionsForObject(this.objectInstanceId))
-        .subscribe(results => {
-          this.allUsers = results[0];
-          this.allUsers.concat(results[1]);
-          this.allGroups = results[2];
-          this.processPermissions(results[3]);
-          this.usersLoaded = true;
-        });
-  }
-
-  processPermissions(permissions: Permission[]) {
-    if (permissions.length > 0) {
-      this.permission = permissions[0];
-      this.parentForm.addControl('publicElement', new UntypedFormControl(this.permission.publicElement, Validators.required));
-      this.parentForm.addControl('owner', new UntypedFormControl(this.permission.ownerSid, Validators.required));
-      this.filteredUsers = this.userCtrl.valueChanges.pipe(
-          startWith(null),
-          map((username: string | null) => {
-            return username ? this._filter(username) : this.allUsers.filter(u => !this.isOwnerOrAdded(u)).slice();
-          }));
-
-      this.filteredGroups = this.groupCtrl.valueChanges.pipe(
-          startWith(null),
-          map((groupName: string | null) => {
-            return groupName ? this._filterGroup(groupName) : this.allGroups.filter(g => !this.isGroupAdded(g)).slice();
-          }));
-
-      this.permission.grantedAuthorities.forEach(authority => {
-        if (authority.principalType === 'GROUP') {
-          this.addGroupToSelection(authority);
-        } else {
-          this.addUserToSelection(authority);
-        }
-      });
-
-    } else {
-      console.log('No permission entry found for item');
     }
-  }
 
-  save() {
-    this.permission.grantedAuthorities = this.grantedUserAuthorities.map(u => {
-      return {principalType: u.principalType, sid: u.principalId};
-    }).concat(this.grantedGroupAuthorities.map(g => {
-      return {principalType: 'GROUP', sid: g.groupId};
-    }));
-    this.permissionsService.updatePermission(this.permission).subscribe(result => {
-      this.dialogRef.close(true);
-    });
-  }
+    ngOnInit(): void {
+        this.loadUsersAndGroups();
+        this.parentForm = this.fb.group({});
+        this.parentForm.valueChanges.subscribe(v => {
+            this.permission.publicElement = v.publicElement;
+            if (v.publicElement) {
+                this.permission.grantedAuthorities = [];
+                this.grantedGroupAuthorities = [];
+                this.grantedUserAuthorities = [];
+            }
+            if (v.owner) {
+                this.permission.ownerSid = v.owner;
+            }
+        });
+    }
 
-  close(refresh: boolean) {
-    this.dialogRef.close(refresh);
-  }
+    loadUsersAndGroups() {
+        zip(
+            this.userService.getAllUserAccounts(),
+            this.userService.getAllServiceAccounts(),
+            this.groupService.getAllUserGroups(),
+            this.permissionsService.getPermissionsForObject(
+                this.objectInstanceId,
+            ),
+        ).subscribe(results => {
+            this.allUsers = results[0];
+            this.allUsers.concat(results[1]);
+            this.allGroups = results[2];
+            this.processPermissions(results[3]);
+            this.usersLoaded = true;
+        });
+    }
 
-  removeUser(user: UserAccount | ServiceAccount) {
-    const currentIndex = this.grantedUserAuthorities.findIndex(u => u.principalId === user.principalId);
-    this.grantedUserAuthorities.splice(currentIndex, 1);
-  }
+    processPermissions(permissions: Permission[]) {
+        if (permissions.length > 0) {
+            this.permission = permissions[0];
+            this.parentForm.addControl(
+                'publicElement',
+                new UntypedFormControl(
+                    this.permission.publicElement,
+                    Validators.required,
+                ),
+            );
+            this.parentForm.addControl(
+                'owner',
+                new UntypedFormControl(
+                    this.permission.ownerSid,
+                    Validators.required,
+                ),
+            );
+            this.filteredUsers = this.userCtrl.valueChanges.pipe(
+                startWith(null),
+                map((username: string | null) => {
+                    return username
+                        ? this._filter(username)
+                        : this.allUsers
+                              .filter(u => !this.isOwnerOrAdded(u))
+                              .slice();
+                }),
+            );
 
-  removeGroup(group: Group) {
-    const currentIndex = this.grantedGroupAuthorities.findIndex(u => u.groupId === group.groupId);
-    this.grantedGroupAuthorities.splice(currentIndex, 1);
-  }
+            this.filteredGroups = this.groupCtrl.valueChanges.pipe(
+                startWith(null),
+                map((groupName: string | null) => {
+                    return groupName
+                        ? this._filterGroup(groupName)
+                        : this.allGroups
+                              .filter(g => !this.isGroupAdded(g))
+                              .slice();
+                }),
+            );
 
-  addUser(event: MatChipInputEvent) {
-    event.chipInput.clear();
-    this.userCtrl.setValue(null);
-  }
+            this.permission.grantedAuthorities.forEach(authority => {
+                if (authority.principalType === 'GROUP') {
+                    this.addGroupToSelection(authority);
+                } else {
+                    this.addUserToSelection(authority);
+                }
+            });
+        } else {
+            console.log('No permission entry found for item');
+        }
+    }
 
-  addGroup(event: MatChipInputEvent) {
-    event.chipInput.clear();
-    this.groupCtrl.setValue(null);
-  }
+    save() {
+        this.permission.grantedAuthorities = this.grantedUserAuthorities
+            .map(u => {
+                return { principalType: u.principalType, sid: u.principalId };
+            })
+            .concat(
+                this.grantedGroupAuthorities.map(g => {
+                    return { principalType: 'GROUP', sid: g.groupId };
+                }),
+            );
+        this.permissionsService
+            .updatePermission(this.permission)
+            .subscribe(result => {
+                this.dialogRef.close(true);
+            });
+    }
 
-  userSelected(event: MatAutocompleteSelectedEvent) {
-    this.grantedUserAuthorities.push(event.option.value);
-    this.userInput.nativeElement.value = '';
-    this.userCtrl.setValue(null);
-  }
+    close(refresh: boolean) {
+        this.dialogRef.close(refresh);
+    }
 
-  groupSelected(event: MatAutocompleteSelectedEvent) {
-    this.grantedGroupAuthorities.push(event.option.value);
-    this.groupInput.nativeElement.value = '';
-    this.groupCtrl.setValue(null);
-  }
+    removeUser(user: UserAccount | ServiceAccount) {
+        const currentIndex = this.grantedUserAuthorities.findIndex(
+            u => u.principalId === user.principalId,
+        );
+        this.grantedUserAuthorities.splice(currentIndex, 1);
+    }
 
-  private addUserToSelection(authority: PermissionEntry) {
-    const user = this.allUsers.find(u => u.principalId === authority.sid);
-    this.grantedUserAuthorities.push(user);
-  }
+    removeGroup(group: Group) {
+        const currentIndex = this.grantedGroupAuthorities.findIndex(
+            u => u.groupId === group.groupId,
+        );
+        this.grantedGroupAuthorities.splice(currentIndex, 1);
+    }
 
-  private addGroupToSelection(authority: PermissionEntry) {
-    const group = this.allGroups.find(u => u.groupId === authority.sid);
-    this.grantedGroupAuthorities.push(group);
-  }
+    addUser(event: MatChipInputEvent) {
+        event.chipInput.clear();
+        this.userCtrl.setValue(null);
+    }
 
-  private _filter(value: any): (UserAccount | ServiceAccount)[] {
-    const isUserAccount = (value instanceof UserAccount) || value instanceof ServiceAccount;
-    const filterValue = isUserAccount ? value.username.toLowerCase() : value.toLowerCase();
-    return this.allUsers.filter(u => {
-      return u.username.toLowerCase().startsWith(filterValue) && !this.isOwnerOrAdded(u);
-    });
-  }
+    addGroup(event: MatChipInputEvent) {
+        event.chipInput.clear();
+        this.groupCtrl.setValue(null);
+    }
 
-  private _filterGroup(value: any): Group[] {
-    const isGroup = (value instanceof Group);
-    const filterValue = isGroup ? value.groupName.toLowerCase() : value.toLowerCase();
-    return this.allGroups.filter(g => {
-      return g.groupName.toLowerCase().startsWith(filterValue) && !this.isGroupAdded(g);
-    });
-  }
+    userSelected(event: MatAutocompleteSelectedEvent) {
+        this.grantedUserAuthorities.push(event.option.value);
+        this.userInput.nativeElement.value = '';
+        this.userCtrl.setValue(null);
+    }
 
-  private isOwnerOrAdded(user: UserAccount | ServiceAccount): boolean {
-    return this.permission.ownerSid === user.principalId ||
-        this.grantedUserAuthorities.find(authority => authority.principalId === user.principalId) !== undefined;
-  }
+    groupSelected(event: MatAutocompleteSelectedEvent) {
+        this.grantedGroupAuthorities.push(event.option.value);
+        this.groupInput.nativeElement.value = '';
+        this.groupCtrl.setValue(null);
+    }
 
-  private isGroupAdded(group: Group): boolean {
-    return this.grantedGroupAuthorities.find(authority => authority.groupId === group.groupId) !== undefined;
-  }
+    private addUserToSelection(authority: PermissionEntry) {
+        const user = this.allUsers.find(u => u.principalId === authority.sid);
+        this.grantedUserAuthorities.push(user);
+    }
+
+    private addGroupToSelection(authority: PermissionEntry) {
+        const group = this.allGroups.find(u => u.groupId === authority.sid);
+        this.grantedGroupAuthorities.push(group);
+    }
+
+    private _filter(value: any): (UserAccount | ServiceAccount)[] {
+        const isUserAccount =
+            value instanceof UserAccount || value instanceof ServiceAccount;
+        const filterValue = isUserAccount
+            ? value.username.toLowerCase()
+            : value.toLowerCase();
+        return this.allUsers.filter(u => {
+            return (
+                u.username.toLowerCase().startsWith(filterValue) &&
+                !this.isOwnerOrAdded(u)
+            );
+        });
+    }
+
+    private _filterGroup(value: any): Group[] {
+        const isGroup = value instanceof Group;
+        const filterValue = isGroup
+            ? value.groupName.toLowerCase()
+            : value.toLowerCase();
+        return this.allGroups.filter(g => {
+            return (
+                g.groupName.toLowerCase().startsWith(filterValue) &&
+                !this.isGroupAdded(g)
+            );
+        });
+    }
+
+    private isOwnerOrAdded(user: UserAccount | ServiceAccount): boolean {
+        return (
+            this.permission.ownerSid === user.principalId ||
+            this.grantedUserAuthorities.find(
+                authority => authority.principalId === user.principalId,
+            ) !== undefined
+        );
+    }
+
+    private isGroupAdded(group: Group): boolean {
+        return (
+            this.grantedGroupAuthorities.find(
+                authority => authority.groupId === group.groupId,
+            ) !== undefined
+        );
+    }
 }

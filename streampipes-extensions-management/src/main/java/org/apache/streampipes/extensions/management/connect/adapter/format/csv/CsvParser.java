@@ -165,11 +165,6 @@ public class CsvParser extends Parser {
 
           inQuotes = true;
 
-          //Fixed : allow "" in empty quote enclosed
-//                    if (chars[0] != '"' && customQuote == '\"') {
-//                        curVal.append('"');
-//                    }
-
           //double quotes in column will hit this!
           if (startCollectChar) {
             curVal.append('"');

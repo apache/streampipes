@@ -17,62 +17,68 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventPropertyUnion, SemanticTypesService } from '@streampipes/platform-services';
-import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
+import {
+    EventPropertyUnion,
+    SemanticTypesService,
+} from '@streampipes/platform-services';
+import {
+    debounceTime,
+    distinctUntilChanged,
+    startWith,
+    switchMap,
+} from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'sp-edit-schema-transformation',
-  templateUrl: './edit-schema-transformation.component.html',
-  styleUrls: ['./edit-schema-transformation.component.scss']
+    selector: 'sp-edit-schema-transformation',
+    templateUrl: './edit-schema-transformation.component.html',
+    styleUrls: ['./edit-schema-transformation.component.scss'],
 })
 export class EditSchemaTransformationComponent implements OnInit {
+    soTimestamp = 'http://schema.org/DateTime';
 
-  soTimestamp = 'http://schema.org/DateTime';
+    @Input()
+    cachedProperty: any;
 
-  @Input()
-  cachedProperty: any;
+    @Input() isTimestampProperty: boolean;
+    @Input() isNestedProperty: boolean;
+    @Input() isListProperty: boolean;
+    @Input() isPrimitiveProperty: boolean;
 
-  @Input() isTimestampProperty: boolean;
-  @Input() isNestedProperty: boolean;
-  @Input() isListProperty: boolean;
-  @Input() isPrimitiveProperty: boolean;
+    @Output() dataTypeChanged = new EventEmitter<boolean>();
+    @Output() timestampSemanticsChanged = new EventEmitter<boolean>();
 
-  @Output() dataTypeChanged = new EventEmitter<boolean>();
-  @Output() timestampSemanticsChanged = new EventEmitter<boolean>();
+    domainPropertyControl = new UntypedFormControl();
+    semanticTypes: Observable<string[]>;
 
-  domainPropertyControl = new UntypedFormControl();
-  semanticTypes: Observable<string[]>;
+    constructor(private semanticTypesService: SemanticTypesService) {}
 
-  constructor(private semanticTypesService: SemanticTypesService) {
-
-  }
-
-  ngOnInit(): void {
-    this.semanticTypes = this.domainPropertyControl.valueChanges
-      .pipe(
-        startWith(''),
-        debounceTime(400),
-        distinctUntilChanged(),
-        switchMap(val => {
-          return val ? this.semanticTypesService.getSemanticTypes(val) : [];
-        })
-      );
-  }
-
-  editTimestampDomainProperty(checked: boolean) {
-    if (checked) {
-      this.isTimestampProperty = true;
-      this.cachedProperty.domainProperties = [this.soTimestamp];
-      this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-      this.cachedProperty.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
-    } else {
-      this.cachedProperty.domainProperties = [];
-      this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
-      this.isTimestampProperty = false;
+    ngOnInit(): void {
+        this.semanticTypes = this.domainPropertyControl.valueChanges.pipe(
+            startWith(''),
+            debounceTime(400),
+            distinctUntilChanged(),
+            switchMap(val => {
+                return val
+                    ? this.semanticTypesService.getSemanticTypes(val)
+                    : [];
+            }),
+        );
     }
-    this.timestampSemanticsChanged.emit(this.isTimestampProperty);
-  }
 
+    editTimestampDomainProperty(checked: boolean) {
+        if (checked) {
+            this.isTimestampProperty = true;
+            this.cachedProperty.domainProperties = [this.soTimestamp];
+            this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
+            this.cachedProperty.runtimeType =
+                'http://www.w3.org/2001/XMLSchema#long';
+        } else {
+            this.cachedProperty.domainProperties = [];
+            this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
+            this.isTimestampProperty = false;
+        }
+        this.timestampSemanticsChanged.emit(this.isTimestampProperty);
+    }
 }
