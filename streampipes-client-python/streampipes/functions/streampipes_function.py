@@ -15,14 +15,17 @@
 # limitations under the License.
 #
 from abc import ABC, abstractmethod
+from time import time
 from typing import Any, Dict, List, Optional
 
+from streampipes.functions.broker.output_collector import OutputCollector
 from streampipes.functions.utils.function_context import FunctionContext
 from streampipes.model.resource import FunctionDefinition
 
 
 class StreamPipesFunction(ABC):
     """Abstract implementation of a StreamPipesFunction.
+
     A StreamPipesFunction allows users to get the data of a StreamPipes data streams easily.
     It makes it possible to work with the live data in python and enables to use the powerful
     data analytics libraries there.
@@ -35,6 +38,23 @@ class StreamPipesFunction(ABC):
 
     def __init__(self, function_definition: Optional[FunctionDefinition] = None):
         self.function_definition = function_definition or FunctionDefinition()
+        self.output_collectors = {
+            stream_id: OutputCollector(data_stream)
+            for stream_id, data_stream in self.function_definition.output_data_streams.items()
+        }
+
+    def add_output(self, stream_id: str, event: Dict[str, Any]):
+        """Send an event via an output data stream to StreamPipes
+
+        Parameters
+        ----------
+        stream_id: str
+            The id of the output data stream
+        event: Dict[str, Any]
+            The event which should be sended
+        """
+        event["timestamp"] = int(1000 * time())
+        self.output_collectors[stream_id].collect(event)
 
     def getFunctionId(self) -> FunctionDefinition.FunctionId:
         """Returns the id of the function.
@@ -46,6 +66,13 @@ class StreamPipesFunction(ABC):
         """
         return self.function_definition.function_id
 
+    def stop(self) -> None:
+        """Stops the function and disconnects from the output streams"""
+
+        for collector in self.output_collectors.values():
+            collector.disconnect()
+        self.onServiceStopped()
+
     @abstractmethod
     def requiredStreamIds(self) -> List[str]:
         """Get the ids of the streams needed by the function.
@@ -54,7 +81,7 @@ class StreamPipesFunction(ABC):
         -------
         List of the stream ids
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def onServiceStarted(self, context: FunctionContext) -> None:
@@ -69,7 +96,7 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def onEvent(self, event: Dict[str, Any], streamId: str) -> None:
@@ -86,7 +113,7 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def onServiceStopped(self) -> None:
@@ -96,4 +123,4 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

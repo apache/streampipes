@@ -90,7 +90,11 @@ class TestStreamPipesClient(TestCase):
                     )
                 )
             if "streams" in kwargs["url"]:
-                return Response(json.dumps([{"name": "test", "eventGrounding": {"transportProtocols": []}}]))
+                return Response(
+                    json.dumps(
+                        [{"elementId": "test-stream", "name": "test", "eventGrounding": {"transportProtocols": []}}]
+                    )
+                )
 
         make_request.side_effect = simulate_response
         StreamPipesClient.create(

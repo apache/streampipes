@@ -16,7 +16,7 @@
 #
 from typing import List, Optional
 
-from pydantic import StrictBool, StrictInt, StrictStr
+from pydantic import Field, StrictBool, StrictInt, StrictStr
 from streampipes.model.common import (
     ApplicationLink,
     EventGrounding,
@@ -49,6 +49,7 @@ class DataStream(Resource):
         return {
             **self.dict(
                 exclude={
+                    "class_name",
                     "event_grounding",
                     "measurement_capability",
                     "application_links",
@@ -71,7 +72,8 @@ class DataStream(Resource):
             "num_included_locales": len(self.included_locales) if self.included_locales is not None else 0,
         }
 
-    element_id: Optional[StrictStr]
+    class_name: Optional[StrictStr] = Field(alias="@class")
+    element_id: StrictStr
     name: Optional[StrictStr]
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]
@@ -92,3 +94,4 @@ class DataStream(Resource):
     category: Optional[List[Optional[StrictStr]]]
     uri: Optional[StrictStr]
     dom: Optional[StrictStr]
+    rev: Optional[StrictStr] = Field(alias="_rev")

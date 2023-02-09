@@ -55,21 +55,12 @@ class BaseElement(BasicModel):
     element_id: Optional[StrictStr]
 
 
-class EventPropertyQualityRequirement(BasicModel):
-    """
-    Data model of an `EventPropertyQualityRequirement` in compliance to the StreamPipes Backend.
-    """
-
-    element_id: Optional[StrictStr]
-    minimum_property_quality: Optional[BaseElement] = Field(alias="eventPropertyQualityDefinition")
-    maximum_property_quality: Optional[BaseElement] = Field(alias="eventPropertyQualityDefinition")
-
-
 class ValueSpecification(BasicModel):
     """
     Data model of an `ValueSpecification` in compliance to the StreamPipes Backend.
     """
 
+    class_name: Optional[StrictStr] = Field(alias="@class")
     element_id: Optional[StrictStr]
     min_value: Optional[int]
     max_value: Optional[int]
@@ -81,14 +72,13 @@ class EventProperty(BasicModel):
     Data model of an `EventProperty` in compliance to the StreamPipes Backend.
     """
 
+    class_name: Optional[StrictStr] = Field(alias="@class")
     element_id: Optional[StrictStr]
     label: Optional[StrictStr]
     description: Optional[StrictStr]
     runtime_name: StrictStr
     required: StrictBool
     domain_properties: List[StrictStr]
-    event_property_qualities: List[BaseElement] = Field(alias="eventPropertyQualities")
-    requires_event_property_qualities: List[EventPropertyQualityRequirement]
     property_scope: Optional[StrictStr]
     index: StrictInt
     runtime_id: Optional[StrictStr]
@@ -102,7 +92,6 @@ class EventSchema(BasicModel):
     Data model of an `EventSchema` in compliance to the StreamPipes Backend.
     """
 
-    element_id: Optional[StrictStr]
     event_properties: List[EventProperty]
 
 
@@ -111,6 +100,7 @@ class ApplicationLink(BasicModel):
     Data model of an `ApplicationLink` in compliance to the StreamPipes Backend.
     """
 
+    class_name: Optional[StrictStr] = Field(alias="@class")
     element_id: Optional[StrictStr]
     application_name: Optional[StrictStr]
     application_description: Optional[StrictStr]
@@ -124,8 +114,8 @@ class TopicDefinition(BasicModel):
     Data model of a `TopicDefinition` in compliance to the StreamPipes Backend.
     """
 
+    class_name: Optional[StrictStr] = Field(alias="@class")
     actual_topic_name: StrictStr
-    element_id: Optional[StrictStr]
 
 
 class TransportProtocol(BasicModel):
@@ -133,8 +123,9 @@ class TransportProtocol(BasicModel):
     Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
     """
 
-    broker_hostname: StrictStr
+    class_name: StrictStr = Field(alias="@class")
     element_id: Optional[StrictStr]
+    broker_hostname: StrictStr
     topic_definition: TopicDefinition
     port: StrictInt
 
@@ -144,7 +135,6 @@ class TransportFormat(BasicModel):
     Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
     """
 
-    element_id: Optional[StrictStr]
     rdf_type: Optional[List[Optional[StrictStr]]]
 
 
@@ -153,7 +143,6 @@ class EventGrounding(BasicModel):
     Data model of an `EventGrounding` in compliance to the StreamPipes Backend.
     """
 
-    element_id: Optional[StrictStr]
     transport_protocols: List[TransportProtocol]
     transport_formats: Optional[List[Optional[TransportFormat]]]
 

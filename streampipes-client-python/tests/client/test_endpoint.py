@@ -45,17 +45,15 @@ class TestStreamPipesEndpoints(TestCase):
                 "measureName": "test",
                 "timestampField": "s0::timestamp",
                 "eventSchema": {
-                    "elementId": "urn:streampipes.apache.org:spi:eventschema:UDMHXn",
                     "eventProperties": [
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:utvSWg",
                             "label": "Density",
                             "description": "Denotes the current density of the fluid",
                             "runtimeName": "density",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 5,
                             "runtimeId": None,
@@ -64,20 +62,20 @@ class TestStreamPipesEndpoints(TestCase):
                             "valueSpecification": None,
                         },
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:OgBuiz",
                             "label": "Temperature",
                             "description": "Denotes the current temperature in degrees celsius",
                             "runtimeName": "temperature",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 4,
                             "runtimeId": None,
                             "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
                             "measurementUnit": "http://codes.wmo.int/common/unit/degC",
                             "valueSpecification": {
+                                "@class": "org.apache.streampipes.model.schema.QuantitativeValue",
                                 "elementId": "urn:streampipes.apache.org:spi:quantitativevalue:sotOEB",
                                 "minValue": 0,
                                 "maxValue": 100,
@@ -95,6 +93,7 @@ class TestStreamPipesEndpoints(TestCase):
 
         self.data_stream_all: List[Dict] = [
             {
+                "@class": "org.apache.streampipes.model.SpDataStream",
                 "elementId": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "name": "Test",
                 "description": "",
@@ -108,38 +107,35 @@ class TestStreamPipesEndpoints(TestCase):
                 "internallyManaged": True,
                 "connectedTo": None,
                 "eventGrounding": {
-                    "elementId": "urn:streampipes.apache.org:spi:eventgrounding:TwGIQA",
                     "transportProtocols": [
                         {
-                            "brokerHostname": "nats",
+                            "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
                             "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
+                            "brokerHostname": "nats",
                             "topicDefinition": {
+                                "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
                                 "actualTopicName": "org.apache.streampipes.connect."
-                                "fc22b8f6-698a-4127-aa71-e11854dc57c5tr",
-                                "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
+                                "fc22b8f6-698a-4127-aa71-e11854dc57c5",
                             },
                             "port": 4222,
                         }
                     ],
                     "transportFormats": [
                         {
-                            "elementId": "urn:streampipes.apache.org:spi:transportformat:CMGsLP",
                             "rdfType": ["http://sepa.event-processing.org/sepa#json"],
                         }
                     ],
                 },
                 "eventSchema": {
-                    "elementId": "urn:streampipes.apache.org:spi:eventschema:rARlLX",
                     "eventProperties": [
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:yogPNV",
                             "label": "Density",
                             "description": "Denotes the current density of the fluid",
                             "runtimeName": "density",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 5,
                             "runtimeId": None,
@@ -148,20 +144,20 @@ class TestStreamPipesEndpoints(TestCase):
                             "valueSpecification": None,
                         },
                         {
+                            "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
                             "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:GjZgFg",
                             "label": "Temperature",
                             "description": "Denotes the current temperature in degrees celsius",
                             "runtimeName": "temperature",
                             "required": False,
                             "domainProperties": ["http://schema.org/Number"],
-                            "eventPropertyQualities": [],
-                            "requiresEventPropertyQualities": [],
                             "propertyScope": "MEASUREMENT_PROPERTY",
                             "index": 4,
                             "runtimeId": None,
                             "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
                             "measurementUnit": "http://codes.wmo.int/common/unit/degC",
                             "valueSpecification": {
+                                "@class": "org.apache.streampipes.model.schema.QuantitativeValue",
                                 "elementId": "urn:streampipes.apache.org:spi:quantitativevalue:ZQSJfk",
                                 "minValue": 0,
                                 "maxValue": 100,
@@ -178,6 +174,7 @@ class TestStreamPipesEndpoints(TestCase):
                 "category": None,
                 "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "dom": None,
+                "_rev": "1-c01cd6db1ebf6a3e23564951b836ea2b",
             }
         ]
 
@@ -216,6 +213,26 @@ class TestStreamPipesEndpoints(TestCase):
         )
         self.assertTrue(isinstance(result, DataStream))
         self.assertEqual(result.dict(by_alias=True), self.data_stream_get)
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    def test_endpoint_post(self, http_session: MagicMock):
+        http_session_mock = MagicMock()
+        http_session.return_value = http_session_mock
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        client.dataStreamApi.post(DataStream(**self.data_stream_get))
+
+        http_session_mock.post.assert_called_with(
+            url="https://localhost:80/streampipes-backend/api/v2/streams/",
+            data=json.dumps(self.data_stream_get),
+            headers={"Content-type": "application/json"},
+        )
 
     @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_data_stream_happy_path(self, http_session: MagicMock):
@@ -270,6 +287,7 @@ class TestStreamPipesEndpoints(TestCase):
                 "corresponding_adapter_id",
                 "uri",
                 "dom",
+                "rev",
                 "num_transport_protocols",
                 "num_measurement_capability",
                 "num_application_links",

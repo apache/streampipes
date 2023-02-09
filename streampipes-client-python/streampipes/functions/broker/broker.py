@@ -14,17 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
 from abc import ABC, abstractmethod
-from enum import Enum
-from typing import AsyncIterator
+from typing import Any, AsyncIterator, Dict
 
 from streampipes.model.resource.data_stream import DataStream
-
-
-class SupportedBroker(Enum):
-    """Enum for the supported brokers."""
-
-    NATS = "nats"
 
 
 class Broker(ABC):
@@ -32,8 +26,8 @@ class Broker(ABC):
     A broker is used to subscribe to a data stream and to consume the published events.
     """
 
-    async def connect(self, data_stream: DataStream, host_address: str) -> None:
-        """Connects the broker to a server and subscribes to a data stream.
+    async def connect(self, data_stream: DataStream) -> None:
+        """Connects the broker to a server.
 
         Parameters
         ----------
@@ -50,18 +44,20 @@ class Broker(ABC):
         self.stream_id = data_stream.element_id
         transport_protocol = data_stream.event_grounding.transport_protocols[0]
         self.topic_name = transport_protocol.topic_definition.actual_topic_name
-        await self._makeConnection(host_address, transport_protocol.port)
-        await self._createSubscription()
+        hostname = transport_protocol.broker_hostname
+        if "BROKER-HOST" in os.environ.keys():
+            hostname = os.environ["BROKER-HOST"]
+        await self._makeConnection(hostname, transport_protocol.port)
 
     @abstractmethod
-    async def _makeConnection(self, host_address: str, port: int) -> None:
+    async def _makeConnection(self, hostname: str, port: int) -> None:
         """Helper function to connect to a server.
 
         Parameters
         ----------
 
-        host_address: str
-            The host adress of the server, which the broker connects to.
+        hostname: str
+            The hostname of the of the server, which the broker connects to.
 
         port: int
             The port number of the connection.
@@ -70,17 +66,32 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    async def _createSubscription(self) -> None:
-        """Helper function to create a subscription for a data stream.
+    async def createSubscription(self) -> None:
+        """Creates a subscription to a data stream.
 
         Returns
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
+
+    @abstractmethod
+    async def publish_event(self, event: Dict[str, Any]):
+        """Publish an event to a connected data stream.
+
+        Parameters
+        ----------
+         event: Dict[str, Any]
+            The event to be published.
+
+        Returns
+        -------
+        None
+        """
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     async def disconnect(self) -> None:
@@ -90,7 +101,7 @@ class Broker(ABC):
         -------
         None
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_message(self) -> AsyncIterator:
@@ -100,4 +111,4 @@ class Broker(ABC):
         -------
         An async iterator for the messages.
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

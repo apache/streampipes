@@ -24,6 +24,7 @@ from uuid import uuid4
 
 from pydantic import Field, StrictInt, StrictStr
 from streampipes.model.common import BasicModel
+from streampipes.model.resource.data_stream import DataStream
 from streampipes.model.resource.resource import Resource
 
 
@@ -48,6 +49,35 @@ class FunctionDefinition(Resource):
 
         return self.to_dict(use_source_names=False)
 
+    def add_output_data_stream(self, data_stream: DataStream):
+        """Adds an output data stream to the function which makes it possible to write data back to StreamPipes.
+
+        Parameters
+        ----------
+        data_stream: DataStream
+            The schema of the output data stream.
+        """
+        self.output_data_streams[data_stream.element_id] = data_stream
+        return self
+
+    def get_output_data_streams(self) -> Dict[str, DataStream]:
+        """Get the output data streams of the function.
+
+        Returns
+        -------
+        Dictonary with every stream id and the related output stream.
+        """
+        return self.output_data_streams
+
+    def get_output_stream_ids(self) -> List[str]:
+        """Get the stream ids of the output data streams.
+
+        Returns
+        -------
+        List of all stream ids.
+        """
+        return list(self.output_data_streams.keys())
+
     class FunctionId(BasicModel):
         """Identification object for a StreamPipes function.
 
@@ -69,3 +99,4 @@ class FunctionDefinition(Resource):
 
     function_id: FunctionId = Field(default_factory=FunctionId)
     consumed_streams: List[str] = Field(default_factory=list)
+    output_data_streams: Dict[str, DataStream] = Field(default_factory=dict)
