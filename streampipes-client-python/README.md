@@ -45,6 +45,14 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.
 
+You can simply install the StreamPipes library by running the following command
+```bash
+%pip install streampipes
+
+# if you want to have the current development state you can also execute
+%pip install git+https://github.com/apache/streampipes.git#subdirectory=streampipes-client-python
+```
+
 ```python
 >> > from streampipes.client import StreamPipesClient
 >> > from streampipes.client.client_config import StreamPipesClientConfig

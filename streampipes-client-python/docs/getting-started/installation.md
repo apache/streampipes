@@ -22,6 +22,8 @@ The StreamPipes Python library is meant to work with Python 3.8 and above. Insta
 You can install the latest development version from GitHub, as so:
 
 ```bash
+pip install streampipes
+# if you want to have the current development state you can also execute
 pip install git+https://github.com/apache/streampipes.git#subdirectory=streampipes-client-python
 ```
 
