@@ -26,9 +26,9 @@
 <h4 align="center"><a href="[StreamPipes](https://github.com/apache/streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
 
 <br>
-<h3 align="center">Apache StreamPipes client for Python</h3>
+<h3 align="center">Apache StreamPipes for Python</h3>
 
-<p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python-based client to interact with StreamPipes.
+<p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python library to interact with StreamPipes.
 In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
 and the amazing universe of data analytics libraries in Python. </p>
 
@@ -36,7 +36,7 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-**:bulb: The current version of this Python client is still a beta version.**
+**💡The current version of this Python client is still a beta version.**
 <br>
 **This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
 <br>
@@ -50,50 +50,24 @@ As a quick example, we demonstrate how to set up and configure a StreamPipes cli
 >> > from streampipes.client.client_config import StreamPipesClientConfig
 >> > from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
->> > config = StreamPipesClientConfig(
-    ...
-credential_provider = StreamPipesApiKeyCredentials(
-    ...
-username = "test@streampipes.apache.org",
-           ...
-api_key = "DEMO-KEY",
-          ...         ),
-...
-host_address = "localhost",
-               ...
-http_disabled = True,
-                ...
-port = 80
+>>> config = StreamPipesClientConfig(
+...     credential_provider = StreamPipesApiKeyCredentials(
+...         username = "test@streampipes.apache.org",
+...         api_key = "DEMO-KEY",
+...         ),
+...     host_address = "localhost",
+...     http_disabled = True,
+...     port = 80
 ...)
 
->> > client = StreamPipesClient(client_config=config)
->> > client.describe()
+>>> client = StreamPipesClient(client_config=config)
+>>> client.describe()
 
-Hi
-there!
-You
-are
-connected
-to
-a
-StreamPipes
-instance
-running
-at
-http: // localhost: 80.
-The
-following
-StreamPipes
-resources
-are
-available
-with this client:
-    6
-x
-DataStreams
-1
-x
-DataLakeMeasures
+Hi there!
+You are connected to a StreamPipes instance running at http://localhost: 80.
+The following StreamPipes resources are available with this client:
+6x DataStreams
+1x DataLakeMeasures
 ```
 
-For more information about how to use the StreamPipes client visit our [introduction example]().
+For more information about how to use the StreamPipes client visit our [introduction example](https://github.com/apache/streampipes/blob/dev/streampipes-client-python/docs/examples/1-introduction-to-streampipes-python-client.ipynb).

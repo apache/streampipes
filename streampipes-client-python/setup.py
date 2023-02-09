@@ -22,7 +22,7 @@ import setuptools
 
 # Package meta-data.
 NAME = "streampipes"
-DESCRIPTION = "Python client for Apache StreamPipes"
+DESCRIPTION = "Python library for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/apache/streampipes/"
 EMAIL = "dev@streampipes.apache.org"
