@@ -18,10 +18,10 @@ from typing import Any, Dict, List, Tuple
 from unittest import TestCase
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from streampipes_client.client.client import StreamPipesClient, StreamPipesClientConfig
-from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes_client.function_zoo.river_function import OnlineML
-from streampipes_client.functions.utils.data_stream_generator import (
+from streampipes.client.client import StreamPipesClient, StreamPipesClientConfig
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.function_zoo.river_function import OnlineML
+from streampipes.functions.utils.data_stream_generator import (
     RuntimeType,
     create_data_stream,
 )
@@ -67,13 +67,13 @@ class TestRiverFunction(TestCase):
             {"number": 10.6, "bool": False, "timestamp": 1670000005000},
         ]
 
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes_client.functions.streampipes_function.time", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes.functions.streampipes_function.time", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_river_function_unsupervised(
         self,
         http_session: MagicMock,
@@ -130,13 +130,13 @@ class TestRiverFunction(TestCase):
 
         self.assertListEqual(model.data_x, self.test_stream_data)
 
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes_client.functions.streampipes_function.time", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
-    @patch("streampipes_client.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes.functions.streampipes_function.time", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
+    @patch("streampipes.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_river_function_supervised(
         self,
         http_session: MagicMock,

@@ -46,28 +46,54 @@ and the amazing universe of data analytics libraries in Python. </p>
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.
 
 ```python
->>> from streampipes_client.client import StreamPipesClient
->>> from streampipes_client.client.client_config import StreamPipesClientConfig
->>> from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
+>> > from streampipes.client import StreamPipesClient
+>> > from streampipes.client.client_config import StreamPipesClientConfig
+>> > from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
->>> config = StreamPipesClientConfig(
-...    credential_provider=StreamPipesApiKeyCredentials(
-...         username="test@streampipes.apache.org",
-...         api_key="DEMO-KEY",
-...         ),
-...     host_address="localhost",
-...     http_disabled=True,
-...     port=80                  
+>> > config = StreamPipesClientConfig(
+    ...
+credential_provider = StreamPipesApiKeyCredentials(
+    ...
+username = "test@streampipes.apache.org",
+           ...
+api_key = "DEMO-KEY",
+          ...         ),
+...
+host_address = "localhost",
+               ...
+http_disabled = True,
+                ...
+port = 80
 ...)
 
->>> client = StreamPipesClient(client_config=config)
->>> client.describe()
+>> > client = StreamPipesClient(client_config=config)
+>> > client.describe()
 
-Hi there!
-You are connected to a StreamPipes instance running at http://localhost:80.
-The following StreamPipes resources are available with this client:
-6x DataStreams
-1x DataLakeMeasures
+Hi
+there!
+You
+are
+connected
+to
+a
+StreamPipes
+instance
+running
+at
+http: // localhost: 80.
+The
+following
+StreamPipes
+resources
+are
+available
+with this client:
+    6
+x
+DataStreams
+1
+x
+DataLakeMeasures
 ```
 
 For more information about how to use the StreamPipes client visit our [introduction example]().

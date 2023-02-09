@@ -23,20 +23,17 @@ from unittest.mock import MagicMock, call, patch
 
 from pydantic import ValidationError
 from requests import HTTPError
-from streampipes_client.client import StreamPipesClient
-from streampipes_client.client.client_config import StreamPipesClientConfig
-from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes_client.endpoint.endpoint import (
-    MessagingEndpoint,
-    _error_code_to_message,
-)
-from streampipes_client.endpoint.exceptions import MessagingEndpointNotConfiguredError
-from streampipes_client.functions.broker.nats_broker import NatsBroker
-from streampipes_client.model.container.resource_container import (
+from streampipes.client import StreamPipesClient
+from streampipes.client.config import StreamPipesClientConfig
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.endpoint.endpoint import MessagingEndpoint, _error_code_to_message
+from streampipes.endpoint.exceptions import MessagingEndpointNotConfiguredError
+from streampipes.functions.broker.nats_broker import NatsBroker
+from streampipes.model.container.resource_container import (
     StreamPipesDataModelError,
     StreamPipesResourceContainerJSONError,
 )
-from streampipes_client.model.resource import DataStream
+from streampipes.model.resource import DataStream
 
 
 class TestStreamPipesEndpoints(TestCase):
@@ -190,7 +187,7 @@ class TestStreamPipesEndpoints(TestCase):
         self.dlm_all_manipulated[0]["measureName"] = False
         self.data_lake_measure_all_json_validation = json.dumps(self.dlm_all_manipulated)
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_get(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_get
@@ -217,7 +214,7 @@ class TestStreamPipesEndpoints(TestCase):
         self.assertTrue(isinstance(result, DataStream))
         self.assertEqual(result.dict(by_alias=True), self.data_stream_get)
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_post(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session.return_value = http_session_mock
@@ -237,7 +234,7 @@ class TestStreamPipesEndpoints(TestCase):
             headers={"Content-type": "application/json"},
         )
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_data_stream_happy_path(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_stream_all_json
@@ -303,7 +300,7 @@ class TestStreamPipesEndpoints(TestCase):
             list(result_pd.columns),
         )
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_data_lake_measure_happy_path(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_lake_measure_all_json
@@ -352,7 +349,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
         self.assertEqual(2, result_pd["num_event_properties"][0])
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_data_lake_measure_bad_return_code(self, http_session: MagicMock):
         response_mock = MagicMock()
         response_mock.status_code = 405
@@ -378,7 +375,7 @@ class TestStreamPipesEndpoints(TestCase):
             http_error.exception.args[0],
         )
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_data_lake_measure_json_error(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_lake_measure_all_json_error
@@ -394,7 +391,7 @@ class TestStreamPipesEndpoints(TestCase):
         with self.assertRaises(StreamPipesResourceContainerJSONError):
             client.dataLakeMeasureApi.all()
 
-    @patch("streampipes_client.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_data_lake_measure_validation_error(self, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_lake_measure_all_json_validation
