@@ -127,7 +127,7 @@ class TransportProtocol(BasicModel):
     element_id: Optional[StrictStr]
     broker_hostname: StrictStr
     topic_definition: TopicDefinition
-    port: StrictInt
+    port: StrictInt = Field(alias="kafkaPort")
 
 
 class TransportFormat(BasicModel):
