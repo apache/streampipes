@@ -38,7 +38,15 @@ github:
     new_issue: "[I] {title} ({repository})"
     comment_issue: "Re: [I] {title} ({repository})"
     close_issue: "Re: [I] {title} ({repository})"
-    catchall: "[GH] {title} ({repository})"  
+    catchall: "[GH] {title} ({repository})"
+
+  del_branch_on_merge: true
+
+  protected_branches:
+    dev:
+      required_status_checks:
+        strict: true
+
 
 notifications:
   jobs: issues@streampipes.apache.org
