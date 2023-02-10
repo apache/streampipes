@@ -212,7 +212,7 @@ class TestStreamPipesEndpoints(TestCase):
             any_order=True,
         )
         self.assertTrue(isinstance(result, DataStream))
-        self.assertEqual(result.dict(by_alias=True), self.data_stream_get)
+        self.assertEqual(result.to_dict(use_source_names=True), self.data_stream_get)
 
     @patch("streampipes.client.client.Session", autospec=True)
     def test_endpoint_post(self, http_session: MagicMock):
