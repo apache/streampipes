@@ -117,8 +117,11 @@ class DataStream(Resource):
 
         resource_dict = self.dict(by_alias=use_source_names)
 
-        if use_source_names and (transport_protocol_dict := resource_dict["eventGrounding"]["transportProtocols"][0])[
-            "@class"] != "org.apache.streampipes.model.grounding.KafkaTransportProtocol":
+        if (
+            use_source_names
+            and (transport_protocol_dict := resource_dict["eventGrounding"]["transportProtocols"][0])["@class"]
+            != "org.apache.streampipes.model.grounding.KafkaTransportProtocol"
+        ):
             port = transport_protocol_dict.pop("kafkaPort")
             transport_protocol_dict.update({"port": port})
             resource_dict["eventGrounding"]["transportProtocols"][0] = transport_protocol_dict
