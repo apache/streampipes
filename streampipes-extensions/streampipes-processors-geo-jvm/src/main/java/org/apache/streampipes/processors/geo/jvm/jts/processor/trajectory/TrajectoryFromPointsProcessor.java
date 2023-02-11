@@ -51,8 +51,9 @@ public class TrajectoryFromPointsProcessor extends StreamPipesDataProcessor {
   private static final String SUBPOINTS_KEY = "subpoints-key";
   private static final String DESCRIPTION_KEY = "description-key";
   private static final String TRAJECTORY_KEY = "trajectory-key";
-  private static final String TRAJECTORY_RUNTIME = "trajectoryWKT";
-  private static final String DESCRIPTION_RUNTIME = "trajectoryDescription";
+  private static final String TRAJECTORY_GEOMETRY_RUNTIME = "trajectory-geometry";
+  private static final String TRAJECTORY_EPSG_RUNTIME = "trajectory-epsg";
+  private static final String DESCRIPTION_RUNTIME = "trajectory-description";
   private String pointMapper;
   private String epsgMapper;
   private String mValueMapper;
@@ -96,8 +97,12 @@ public class TrajectoryFromPointsProcessor extends StreamPipesDataProcessor {
                     SO.TEXT),
                 EpProperties.stringEp(
                     Labels.withId(TRAJECTORY_KEY),
-                    TRAJECTORY_RUNTIME,
-                    "http://www.opengis.net/ont/geosparql#Geometry")
+                    TRAJECTORY_GEOMETRY_RUNTIME,
+                    "http://www.opengis.net/ont/geosparql#Geometry"),
+                EpProperties.integerEp(
+                    Labels.withId(EPSG_KEY),
+                    TRAJECTORY_EPSG_RUNTIME,
+                "http://data.ign.fr/def/ignf#CartesianCS")
             )
         )
         .build();
@@ -131,7 +136,8 @@ public class TrajectoryFromPointsProcessor extends StreamPipesDataProcessor {
     LineString geom = trajectory.returnAsLineString(eventGeom.getFactory());
     // adds to stream
     event.addField(DESCRIPTION_RUNTIME, trajectory.getDescription());
-    event.addField(TRAJECTORY_RUNTIME, geom.toString());
+    event.addField(TRAJECTORY_GEOMETRY_RUNTIME, geom.toString());
+    event.addField(TRAJECTORY_EPSG_RUNTIME, epsg);
     collector.collect(event);
   }
 

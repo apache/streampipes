@@ -49,7 +49,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geom-key";
   public static final String SOURCE_EPSG_KEY = "source-epsg-key";
   public static final String TARGET_EPSG_KEY = "target-epsg-key";
-  public static final String GEOM_RUNTIME = "geomWKT";
+  public static final String GEOMETRY_RUNTIME = "geometry";
   public static final String EPSG_RUNTIME = "epsg";
   private String geometryMapper;
   private String sourceEpsgMapper;
@@ -134,7 +134,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
 
     if (!reprojected.isEmpty()) {
       event.updateFieldBySelector("s0::" + EPSG_RUNTIME, targetEpsg);
-      event.updateFieldBySelector("s0::" + GEOM_RUNTIME, reprojected.toText());
+      event.updateFieldBySelector("s0::" + GEOMETRY_RUNTIME, reprojected.toText());
 
       collector.collect(event);
     } else {
