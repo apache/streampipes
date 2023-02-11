@@ -169,7 +169,7 @@ public class DataExplorerQueryV4 {
                                     boolean ignoreMissingValues) throws RuntimeException {
     SpQueryResult result = new SpQueryResult();
 
-    if (queryResult.getResults().get(0).getSeries() != null) {
+    if (hasResult(queryResult)) {
       result.setTotal(queryResult.getResults().get(0).getSeries().size());
       queryResult.getResults().get(0).getSeries().forEach(rs -> {
         DataSeries series = convertResult(rs, ignoreMissingValues);
@@ -183,6 +183,12 @@ public class DataExplorerQueryV4 {
     }
 
     return result;
+  }
+
+  private boolean hasResult(QueryResult queryResult) {
+    return queryResult.getResults() != null
+        && queryResult.getResults().size() > 0
+        && queryResult.getResults().get(0).getSeries() != null;
   }
 
   protected List<QueryElement<?>> getQueryElements() {
