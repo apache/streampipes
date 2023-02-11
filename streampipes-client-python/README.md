@@ -47,16 +47,16 @@ As a quick example, we demonstrate how to set up and configure a StreamPipes cli
 
 You can simply install the StreamPipes library by running the following command
 ```bash
-%pip install streampipes
+pip install streampipes
 
 # if you want to have the current development state you can also execute
-%pip install git+https://github.com/apache/streampipes.git#subdirectory=streampipes-client-python
+pip install git+https://github.com/apache/streampipes.git#subdirectory=streampipes-client-python
 ```
 
 ```python
->> > from streampipes.client import StreamPipesClient
->> > from streampipes.client.client_config import StreamPipesClientConfig
->> > from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+>>> from streampipes.client import StreamPipesClient
+>>> from streampipes.client.config import StreamPipesClientConfig
+>>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
 >>> config = StreamPipesClientConfig(
 ...     credential_provider = StreamPipesApiKeyCredentials(
