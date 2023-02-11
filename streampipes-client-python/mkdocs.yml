@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-site_name: Apache StreamPipes Python Client
+site_name: Apache StreamPipes for Python
 repo_url: https://github.com/apache/streampipes
 edit_uri: "https://github.com/apache/streampipes"
 
@@ -83,4 +83,5 @@ nav:
         - Introduction to the StreamPipes Python Client: examples/1-introduction-to-streampipes-python-client.ipynb
         - Extracting Data from the StreamPipes Data Lake: examples/2-extracting-data-from-the-streampipes-data-lake.ipynb
         - Exploring Live Data from a StreamPipes Data Stream: examples/3-getting-live-data-from-the-streampipes-data-stream.ipynb
+        - Applying Online Machine Learning on a StreamPipes Data Stream: examples/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
     - Reference: reference/*

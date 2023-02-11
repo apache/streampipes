@@ -28,7 +28,7 @@
 <br>
 <h3 align="center">Apache StreamPipes for Python</h3>
 
-<p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python-based client to interact with StreamPipes.
+<p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python library to interact with StreamPipes.
 In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
 and the amazing universe of data analytics libraries in Python. </p>
 
@@ -36,7 +36,7 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-**💡 The current version of this Python client is still a beta version.**
+**💡 The current version of this Python library is still a beta version.**
 <br>
 **This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
 <br>
