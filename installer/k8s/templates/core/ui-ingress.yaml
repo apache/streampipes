@@ -18,6 +18,7 @@ kind: Ingress
 metadata:
   name: streampipes
 spec:
+  #ingressClass: {{ .Values.streampipes.ui.ingressClass }}
   rules:
   - http:
       paths:
@@ -27,4 +28,12 @@ spec:
           service: 
             name: {{ .Values.streampipes.ui.appName }}
             port: 
-              number: {{ .Values.streampipes.ui.port }}
+              number: {{ .Values.streampipes.ui.service.port }}
+      - path: /streampipes-backend(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.streampipes.core.appName }}
+            port:
+              number: {{ .Values.streampipes.core.service.port }}
+

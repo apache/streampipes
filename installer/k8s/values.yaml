@@ -25,13 +25,20 @@ streampipes:
   registry: "apachestreampipes"
   core:
     appName: "backend"
-    svcName: "backend"
+    port: 8030
     persistence:
       storageClassName: ""
       claimName: "backend-pvc"
       pvName: "backend-pv"
+    service:
+      name: "backend"
+      port: 8030
   ui:
     appName: "ui"
+    service:
+      type: "LoadBalancer"
+      nodePort: 8088
+      port: 8088
     port: 8088
 
 external:
@@ -69,6 +76,9 @@ external:
       pvNameV1: "influxdb-pv"
   nats:
     appName: "nats"
+    service:
+      type: "LoadBalancer"
+      externalTrafficPolicy: "Local"
     version:
   kafkaVersion: 2.2.0
   zookeeperVersion: 3.4.13

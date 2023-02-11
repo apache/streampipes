@@ -43,7 +43,7 @@ spec:
             - name: SP_PRIORITIZED_PROTOCOL
               value: {{ .Values.preferredBroker }}
           ports:
-            - containerPort: 8030
+            - containerPort: {{ .Values.streampipes.core.port }}
           volumeMounts:
             - mountPath: "/root/.streampipes"
               name: {{ .Values.streampipes.core.persistence.pvName }}
