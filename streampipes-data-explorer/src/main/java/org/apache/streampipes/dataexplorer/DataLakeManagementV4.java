@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.RetentionPolicyQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
@@ -184,12 +185,13 @@ public class DataLakeManagementV4 {
   public Map<String, Object> getTagValues(String measurementId,
                                           String fields) {
     InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
+    String databaseName = getEnvironment().getTsStorageBucket().getValueOrDefault();
     Map<String, Object> tags = new HashMap<>();
     if (fields != null && !("".equals(fields))) {
       List<String> fieldList = Arrays.asList(fields.split(","));
       fieldList.forEach(f -> {
         String q =
-            "SHOW TAG VALUES ON \"" + BackendConfig.INSTANCE.getInfluxDatabaseName() + "\" FROM \"" + measurementId
+            "SHOW TAG VALUES ON \"" + databaseName + "\" FROM \"" + measurementId
                 + "\" WITH KEY = \"" + f + "\"";
         Query query = new Query(q);
         QueryResult queryResult = influxDB.query(query);
@@ -286,5 +288,9 @@ public class DataLakeManagementV4 {
 
   private IDataLakeStorage getDataLakeStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 }

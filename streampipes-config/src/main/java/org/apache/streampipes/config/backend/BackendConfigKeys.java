@@ -35,7 +35,6 @@ public class BackendConfigKeys {
   public static final String IS_SETUP_RUNNING = "SP_IS_SETUP_RUNNING";
   public static final String ASSETS_DIR = "SP_ASSETS_DIR";
   public static final String FILES_DIR = "SP_FILES_DIR";
-  public static final String INFLUX_DATA_BASE = "SP_INFLUX_DATA_BASE";
   public static final String MESSAGING_SETTINGS = "SP_MESSAGING_SETTINGS";
 
   public static final String LOCAL_AUTH_CONFIG = "SP_LOCAL_AUTH_CONFIG";

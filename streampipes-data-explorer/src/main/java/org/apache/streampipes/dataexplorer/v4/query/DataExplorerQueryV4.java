@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.v4.query;
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
 import org.apache.streampipes.dataexplorer.v4.params.FillParams;
@@ -66,9 +67,7 @@ public class DataExplorerQueryV4 {
   private boolean appendId = false;
   private String forId;
 
-  public DataExplorerQueryV4() {
-
-  }
+  private Environment env;
 
   public DataExplorerQueryV4(Map<String, QueryParamsV4> params,
                              String forId) {
@@ -79,11 +78,12 @@ public class DataExplorerQueryV4 {
 
   public DataExplorerQueryV4(Map<String, QueryParamsV4> params) {
     this.params = params;
+    this.env = Environments.getEnvironment();
     this.maximumAmountOfEvents = -1;
   }
 
   public DataExplorerQueryV4(Map<String, QueryParamsV4> params, int maximumAmountOfEvents) {
-    this.params = params;
+    this(params);
     this.maximumAmountOfEvents = maximumAmountOfEvents;
   }
 
@@ -92,7 +92,7 @@ public class DataExplorerQueryV4 {
     List<QueryElement<?>> queryElements = getQueryElements();
 
     if (this.maximumAmountOfEvents != -1) {
-      QueryBuilder countQueryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
+      QueryBuilder countQueryBuilder = QueryBuilder.create(getDatabaseName());
       Query countQuery = countQueryBuilder.build(queryElements, true);
       QueryResult countQueryResult = influxDB.query(countQuery);
       Double amountOfQueryResults = getAmountOfResults(countQueryResult);
@@ -105,7 +105,7 @@ public class DataExplorerQueryV4 {
       }
     }
 
-    QueryBuilder queryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
+    QueryBuilder queryBuilder = QueryBuilder.create(getDatabaseName());
     Query query = queryBuilder.build(queryElements, false);
     LOG.debug("Data Lake Query (database:" + query.getDatabase() + "): " + query.getCommand());
 
@@ -230,5 +230,9 @@ public class DataExplorerQueryV4 {
     }
 
     return queryElements;
+  }
+
+  private String getDatabaseName() {
+    return env.getTsStorageBucket().getValueOrDefault();
   }
 }

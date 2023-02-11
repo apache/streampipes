@@ -160,10 +160,6 @@ public enum BackendConfig {
     return config.getString(BackendConfigKeys.FILES_DIR);
   }
 
-  public String getInfluxDatabaseName() {
-    return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
-  }
-
   public LocalAuthConfig getLocalAuthConfig() {
     return config.getObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.class,
         LocalAuthConfig.fromDefaults(getJwtSecret()));
