@@ -35,7 +35,7 @@ public class EventGroundingProcessor {
   public TransportProtocol applyOverride(TransportProtocol protocol) {
     var protocolOverride = getConfiguredTransportProtocol();
     protocolOverride.setTopicDefinition(protocol.getTopicDefinition());
-    return protocol;
+    return protocolOverride;
   }
 
   private TransportProtocol getConfiguredTransportProtocol() {
