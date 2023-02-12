@@ -55,4 +55,4 @@ jobs:
         with:
           name: streampipes-python-docs
           path: streampipes-client-python/site/**/*
-          retention-days: 10
+          retention-days: 5
