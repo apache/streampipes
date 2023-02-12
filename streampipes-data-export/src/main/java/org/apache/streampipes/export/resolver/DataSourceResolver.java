@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.export.ExportItem;
@@ -58,7 +57,7 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
     var dataStream = deserializeDocument(document);
     if (overrideDocument) {
       if (dataStream.getEventGrounding() != null) {
-        EventGroundingProcessor.applyOverride(dataStream.getEventGrounding().getTransportProtocol());
+        overrideProtocol(dataStream.getEventGrounding());
       }
     }
     getNoSqlStore().getDataStreamStorage().createElement(dataStream);
