@@ -19,9 +19,11 @@
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
+import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -80,4 +82,9 @@ public abstract class AbstractResolver<T> {
   public abstract void writeDocument(String document) throws JsonProcessingException, DocumentConflictException;
 
   protected abstract T deserializeDocument(String document) throws JsonProcessingException;
+
+  protected void overrideProtocol(EventGrounding grounding) {
+    var newProtocol = new EventGroundingProcessor().applyOverride(grounding.getTransportProtocol());
+    grounding.setTransportProtocol(newProtocol);
+  }
 }
