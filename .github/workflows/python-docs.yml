@@ -15,8 +15,9 @@
 
 name: "build-python-docs-and-share-as-artifact"
 
-schedule:
-  - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
+on:
+  schedule:
+    - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
 
 jobs:
   python-docs:
