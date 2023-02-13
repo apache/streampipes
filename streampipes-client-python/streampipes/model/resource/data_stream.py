@@ -95,3 +95,35 @@ class DataStream(Resource):
     uri: Optional[StrictStr]
     dom: Optional[StrictStr]
     rev: Optional[StrictStr] = Field(alias="_rev")
+
+    def to_dict(self, use_source_names=True):
+        """Returns the resource in dictionary representation.
+
+        Parameters
+        ----------
+        use_source_names: bool
+            Indicates if the dictionary keys are in python representation or
+            equally named to the StreamPipes backend
+
+        Returns
+        ------
+        resource: Dict[str, Any]
+            The resource as dictionary representation
+
+        """
+
+        # This serves as a temporary fix for https://github.com/apache/streampipes/issues/1245
+        # should be removed as soon as possible
+
+        resource_dict = self.dict(by_alias=use_source_names)
+
+        if (
+            use_source_names
+            and (transport_protocol_dict := resource_dict["eventGrounding"]["transportProtocols"][0])["@class"]
+            != "org.apache.streampipes.model.grounding.KafkaTransportProtocol"
+        ):
+            port = transport_protocol_dict.pop("kafkaPort")
+            transport_protocol_dict.update({"port": port})
+            resource_dict["eventGrounding"]["transportProtocols"][0] = transport_protocol_dict
+
+        return resource_dict
