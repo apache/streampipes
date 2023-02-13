@@ -55,7 +55,6 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
   public static final String JOIN_KEY = "join-style-key";
   public static final String MITRE_LIMIT_KEY = "mitre-limit-key";
   public static final String SIDE_KEY = "side-key";
-  public static final String IS_SINGLE_SIDE = "is-single-side-key";
   public static final String GEOM_RUNTIME = "geometry-buffer";
   public static final String EPSG_RUNTIME = "epsg-buffer";
   private String geometryMapper;

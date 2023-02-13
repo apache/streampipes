@@ -26,7 +26,7 @@
 
 ## Description
 
-Creates a buffer Polygon Geometry from a geometry
+Creates a buffer polygon geometry from a geometry
 ***
 
 ## Required inputs
@@ -52,7 +52,7 @@ EPSG code value
 
 ### 3rd parameter
 Distance
-the buffer distance around in geometry in meter
+The buffer distance around in geometry in meter
 
 ### 4rd parameter
 Cap Style
@@ -67,9 +67,7 @@ default Quadrant Segments parameter.
 
 ### 6rd parameter
 Quadrant Segments
-The default number of facets into which to divide a fillet of 90 degrees. A value of 8 gives 
-less than 2% max error in the buffer distance. For a max error of < 1%, use QS = 12. 
-For a max error of < 0.1%, use QS = 18.
+The default number of facets into which to divide a fillet of 90 degrees.
 
 ### 7rd parameter
 Join Style
