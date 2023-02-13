@@ -45,12 +45,6 @@
             <groupId>org.boofcv</groupId>
             <artifactId>boofcv-core</artifactId>
         </dependency>
-
-        <!-- Dependency convergence -->
-        <dependency>
-            <groupId>org.ddogleg</groupId>
-            <artifactId>ddogleg</artifactId>
-        </dependency>
     </dependencies>
 
 
