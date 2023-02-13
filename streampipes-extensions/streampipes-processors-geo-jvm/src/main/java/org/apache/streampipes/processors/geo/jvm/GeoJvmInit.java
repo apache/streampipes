@@ -29,6 +29,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry.BufferGeomProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint.BufferPointProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.epsg.EpsgProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint.LatLngToJtsPointProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.ReprojectionProcessor;
@@ -72,7 +73,8 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
             new TrajectoryFromPointsProcessor(),
             new SpeedCalculatorProcessor(),
             new ReprojectionProcessor(),
-            new BufferGeomProcessor())
+            new BufferGeomProcessor(),
+            new BufferPointProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
