@@ -99,7 +99,7 @@
 	<lz4.version>1.8.0</lz4.version>
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
-	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
+	<maven-plugin-annotations.version>3.7.1</maven-plugin-annotations.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
 	<objenesis.version>3.3</objenesis.version>
