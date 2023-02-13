@@ -155,7 +155,6 @@
 	<commons-pool2.version>2.11.1</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
-	<ddogleg.version>0.22</ddogleg.version>
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
 	<google-maps-services.version>0.10.0</google-maps-services.version>
 	<graalvm.js.version>22.3.1</graalvm.js.version>
@@ -1309,11 +1308,6 @@
                 <groupId>org.boofcv</groupId>
                 <artifactId>boofcv-core</artifactId>
                 <version>${boofcv.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ddogleg</groupId>
-                <artifactId>ddogleg</artifactId>
-                <version>${ddogleg.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.ditto</groupId>
