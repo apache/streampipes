@@ -1,0 +1,59 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: "build-python-docs-and-share-as-artifact"
+
+on:
+  schedule:
+    - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
+
+jobs:
+  python-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: |
+          cd ./streampipes-client-python
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install -e ".[docs]"
+
+      - name: Build Python docs
+        run: |
+          cd ./streampipes-client-python
+          make doc
+
+      - name: Publish Python docs as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: streampipes-python-docs
+          path: streampipes-client-python/site/**/*
+          retention-days: 5
