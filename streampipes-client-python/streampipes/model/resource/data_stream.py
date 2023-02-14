@@ -80,7 +80,7 @@ class DataStream(Resource):
 
     class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
     element_id: StrictStr = Field(default_factory=lambda: f"sp:spdatastream:{random_letters(6)}")
-    name: StrictStr
+    name: StrictStr = "Unnamed"
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]
     app_id: Optional[StrictStr]
