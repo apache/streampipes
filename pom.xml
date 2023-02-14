@@ -52,7 +52,7 @@
 	<consul-client.version>1.5.2</consul-client.version>
 	<elasticsearch.version>6.8.17</elasticsearch.version>
 	<file-management.version>3.1.0</file-management.version>
-	<flink.version>1.16.0</flink.version>
+	<flink.version>1.16.1</flink.version>
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
 	<fst.version>2.57</fst.version>
 	<geojson-jackson.version>1.14</geojson-jackson.version>
