@@ -23,6 +23,7 @@ from streampipes.model.common import (
     EventSchema,
     MeasurementCapability,
     MeasurementObject,
+    random_letters,
 )
 from streampipes.model.resource.resource import Resource
 
@@ -72,26 +73,31 @@ class DataStream(Resource):
             "num_included_locales": len(self.included_locales) if self.included_locales is not None else 0,
         }
 
-    class_name: Optional[StrictStr] = Field(alias="@class")
-    element_id: StrictStr
-    name: Optional[StrictStr]
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if not self.uri:
+            self.uri = self.element_id
+
+    class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
+    element_id: StrictStr = Field(default_factory=lambda: f"sp:spdatastream:{random_letters(6)}")
+    name: StrictStr
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]
     app_id: Optional[StrictStr]
-    includes_assets: Optional[StrictBool]
-    includes_locales: Optional[StrictBool]
-    included_assets: Optional[List[Optional[StrictStr]]]
-    included_locales: Optional[List[Optional[StrictStr]]]
-    application_links: Optional[List[Optional[ApplicationLink]]]
-    internally_managed: Optional[StrictBool]
-    connected_to: Optional[List[Optional[StrictStr]]]
-    event_grounding: EventGrounding
+    includes_assets: StrictBool = False
+    includes_locales: StrictBool = False
+    included_assets: List[StrictStr] = []
+    included_locales: List[StrictStr] = []
+    application_links: List[ApplicationLink] = []
+    internally_managed: StrictBool = False
+    connected_to: Optional[List[StrictStr]]
+    event_grounding: EventGrounding = Field(default_factory=EventGrounding)
     event_schema: Optional[EventSchema]
-    measurement_capability: Optional[List[Optional[MeasurementCapability]]]
-    measurement_object: Optional[List[Optional[MeasurementObject]]]
-    index: Optional[StrictInt]
+    measurement_capability: Optional[List[MeasurementCapability]]
+    measurement_object: Optional[List[MeasurementObject]]
+    index: StrictInt = 0
     corresponding_adapter_id: Optional[StrictStr]
-    category: Optional[List[Optional[StrictStr]]]
+    category: Optional[List[StrictStr]]
     uri: Optional[StrictStr]
     dom: Optional[StrictStr]
     rev: Optional[StrictStr] = Field(alias="_rev")
