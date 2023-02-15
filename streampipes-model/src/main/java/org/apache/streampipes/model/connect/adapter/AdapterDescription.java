@@ -25,11 +25,6 @@ import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRul
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -38,7 +33,6 @@ import org.apache.streampipes.model.util.Cloner;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @JsonSubTypes({
@@ -81,13 +75,13 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     this.category = new ArrayList<>();
 
     // TODO move to another place
-    TransportProtocol tpKafka = new KafkaTransportProtocol();
-    TransportProtocol tpJms = new JmsTransportProtocol();
-    TransportProtocol tpMqtt = new MqttTransportProtocol();
-    tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
-    tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
-    tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
-    this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka, tpJms, tpMqtt));
+//    TransportProtocol tpKafka = new KafkaTransportProtocol();
+//    TransportProtocol tpJms = new JmsTransportProtocol();
+//    TransportProtocol tpMqtt = new MqttTransportProtocol();
+//    tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
+//    tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
+//    tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
+//    this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka, tpJms, tpMqtt));
   }
 
   public AdapterDescription(String elementId, String name, String description) {
