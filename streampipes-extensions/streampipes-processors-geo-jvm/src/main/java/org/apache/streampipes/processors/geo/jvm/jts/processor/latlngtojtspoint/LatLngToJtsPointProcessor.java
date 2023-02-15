@@ -101,9 +101,6 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
     Point geom = SpGeometryBuilder.createSPGeom(lng, lat, epsg);
 
     if (!geom.isEmpty()) {
-      // if activated the stream fails at all
-      //event.removeFieldBySelector(latitudeMapper);
-      //event.removeFieldBySelector(longitudeMapper);
       event.addField(GEOMETRY_RUNTIME, geom.toString());
 
       LOG.debug("Created Geometry: " + geom.toString());
