@@ -32,8 +32,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.helpers.SupportedFormats;
-import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
@@ -75,8 +73,6 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
             .build())
         .outputStrategy(OutputStrategies.keep())
         .requiredIntegerParameter(Labels.withId(TARGET_EPSG_KEY), 32632)
-        .supportedFormats(SupportedFormats.jsonFormat())
-        .supportedProtocols(SupportedProtocols.kafka())
         .build();
   }
 
