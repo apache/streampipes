@@ -18,15 +18,15 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 import java.util.ArrayList;
 
 public class Utils {
 
-  public static AdapterStreamDescription getMinimalStreamAdapter() {
-    AdapterStreamDescription result = new GenericAdapterStreamDescription();
+  public static AdapterDescription getMinimalStreamAdapter() {
+    AdapterDescription result = new GenericAdapterStreamDescription();
     String id = "https://t.de/";
     result.setElementId(id);
     result.setRules(new ArrayList<>());

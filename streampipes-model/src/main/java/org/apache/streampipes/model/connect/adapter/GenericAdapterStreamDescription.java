@@ -20,7 +20,6 @@ package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolStreamDescription;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.util.ElementIdGenerator;
@@ -39,7 +38,7 @@ public class GenericAdapterStreamDescription extends AdapterDescription implemen
   }
 
   public GenericAdapterStreamDescription(FormatDescription formatDescription,
-                                         ProtocolStreamDescription protocolDescription) {
+                                         ProtocolDescription protocolDescription) {
     this.formatDescription = formatDescription;
     this.protocolDescription = protocolDescription;
   }
@@ -51,7 +50,7 @@ public class GenericAdapterStreamDescription extends AdapterDescription implemen
       this.formatDescription = new FormatDescription(other.getFormatDescription());
     }
     if (other.getProtocolDescription() != null) {
-      this.protocolDescription = new ProtocolStreamDescription(other.getProtocolDescription());
+      this.protocolDescription = new ProtocolDescription(other.getProtocolDescription());
     }
   }
 

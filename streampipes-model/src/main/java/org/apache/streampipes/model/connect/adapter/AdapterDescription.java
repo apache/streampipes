@@ -44,6 +44,7 @@ import java.util.List;
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
   protected SpDataStream dataStream;
+
   protected boolean running;
   private EventGrounding eventGrounding;
 
