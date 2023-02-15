@@ -18,9 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter;
 
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -32,15 +30,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class GroundingServiceTest {
-
-  @Test
-  public void extractTopicForGenericAdapterSetTest() {
-    AdapterDescription adapterDescription = getGenericAdapterSetDescription();
-
-    String result = GroundingService.extractTopic(adapterDescription);
-
-    assertEquals("test.topic", result);
-  }
 
   @Test
   public void extractTopicForStreamTest() {
@@ -59,14 +48,6 @@ public class GroundingServiceTest {
     return adapterDescription;
   }
 
-  private AdapterDescription getGenericAdapterSetDescription() {
-    GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
-    SpDataSet set = new SpDataSet();
-    adapterDescription.setDataSet(set);
-
-    set.setEventGrounding(getEventGrounding());
-    return adapterDescription;
-  }
 
   private EventGrounding getEventGrounding() {
     EventGrounding eventGrounding = new EventGrounding();

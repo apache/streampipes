@@ -18,9 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 import java.util.ArrayList;
@@ -36,11 +34,4 @@ public class Utils {
     return result;
   }
 
-  public static AdapterSetDescription getMinimalSetAdapter() {
-    AdapterSetDescription result = new GenericAdapterSetDescription();
-    String id = "https://t.de/";
-    result.setElementId(id);
-
-    return result;
-  }
 }

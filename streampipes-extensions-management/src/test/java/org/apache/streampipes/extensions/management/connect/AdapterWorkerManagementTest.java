@@ -18,19 +18,18 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
+import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataSetAdapter;
+import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
@@ -49,61 +48,46 @@ public class AdapterWorkerManagementTest {
 
   }
 
-  @Test
-  public void stopSetAdapterSuccess() throws AdapterException {
-    TestAdapter testAdapter = getTestAdapterInstance();
-
-    RunningAdapterInstances.INSTANCE.addAdapter("https://t.de/", testAdapter, null);
-    AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
-    adapterWorkerManagement.stopSetAdapter(Utils.getMinimalSetAdapter());
-
-    assertTrue(testAdapter.calledStop);
-  }
-
   private TestAdapter getTestAdapterInstance() {
-    SpecificAdapterSetDescription description = new SpecificAdapterSetDescription();
-    description.setRules(new ArrayList<>());
-    return new TestAdapter(description);
+    return new TestAdapter();
   }
 
-  private static class TestAdapter extends SpecificDataSetAdapter {
+  private static class TestAdapter extends SpecificDataStreamAdapter {
 
     public boolean calledStart = false;
     public boolean calledStop = false;
 
-    public TestAdapter(SpecificAdapterSetDescription description) {
-      super(description);
-    }
-
-    @Override
-    public SpecificAdapterSetDescription declareModel() {
-      return null;
-    }
-
-    @Override
-    public void startAdapter() {
-      calledStart = true;
-    }
-
-    @Override
-    public void stopAdapter() {
-      calledStop = true;
-    }
-
-    @Override
-    public Adapter<SpecificAdapterSetDescription> getInstance(SpecificAdapterSetDescription adapterDescription) {
-      return null;
-    }
-
-    @Override
-    public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) {
-      return null;
-    }
 
     @Override
     public String getId() {
       return null;
     }
 
+    @Override
+    public SpecificAdapterStreamDescription declareModel() {
+      return null;
+    }
+
+    @Override
+    public void startAdapter() throws AdapterException {
+
+    }
+
+    @Override
+    public void stopAdapter() throws AdapterException {
+      this.calledStop = true;
+
+    }
+
+    @Override
+    public IAdapter<SpecificAdapterStreamDescription> getInstance(SpecificAdapterStreamDescription adapterDescription) {
+      return null;
+    }
+
+    @Override
+    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+        throws ParseException {
+      return null;
+    }
   }
 }

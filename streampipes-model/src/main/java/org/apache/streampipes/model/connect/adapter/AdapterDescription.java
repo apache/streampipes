@@ -50,8 +50,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
   private EventGrounding eventGrounding;
 
-  private String adapterType;
-
   private String icon;
 
   private List<StaticProperty> config;
@@ -103,7 +101,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     super(other);
     this.config = new Cloner().staticProperties(other.getConfig());
     this.rules = other.getRules();
-    this.adapterType = other.getAdapterType();
     this.icon = other.getIcon();
     this.category = new Cloner().epaTypes(other.getCategory());
     this.createdAt = other.getCreatedAt();
@@ -149,14 +146,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
   public void addConfig(StaticProperty sp) {
     this.config.add(sp);
-  }
-
-  public String getAdapterType() {
-    return adapterType;
-  }
-
-  public void setAdapterType(String adapterType) {
-    this.adapterType = adapterType;
   }
 
   public List<TransformationRuleDescription> getValueRules() {
