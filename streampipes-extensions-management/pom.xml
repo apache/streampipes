@@ -26,8 +26,6 @@
 
     <artifactId>streampipes-extensions-management</artifactId>
 
-    <name>Semantic Event Processing Agents</name>
-
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
