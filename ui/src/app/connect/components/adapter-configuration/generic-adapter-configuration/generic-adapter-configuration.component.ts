@@ -18,7 +18,6 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-    GenericAdapterSetDescription,
     GenericAdapterStreamDescription,
     ProtocolDescription,
     PipelineElementTemplateService,
@@ -60,7 +59,6 @@ export class GenericAdapterConfigurationComponent
     ngOnInit(): void {
         super.onInit();
         if (
-            this.adapterDescription instanceof GenericAdapterSetDescription ||
             this.adapterDescription instanceof GenericAdapterStreamDescription
         ) {
             this.protocolDescription =
@@ -91,7 +89,6 @@ export class GenericAdapterConfigurationComponent
             adapterDescription.protocolDescription,
         );
         if (
-            this.adapterDescription instanceof GenericAdapterSetDescription ||
             this.adapterDescription instanceof GenericAdapterStreamDescription
         ) {
             this.adapterDescription.protocolDescription =

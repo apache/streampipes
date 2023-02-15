@@ -20,7 +20,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     AdapterDescriptionUnion,
     FormatDescription,
-    GenericAdapterSetDescription,
     GenericAdapterStreamDescription,
 } from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
@@ -77,18 +76,9 @@ export class FormatConfigurationComponent implements OnInit {
 
         // ensure that adapter description is a generic adapter
         if (
-            this.adapterDescription instanceof GenericAdapterSetDescription ||
             this.adapterDescription instanceof GenericAdapterStreamDescription
         ) {
             this.selectedFormat = this.adapterDescription.formatDescription;
-        }
-        if (this.adapterDescription instanceof GenericAdapterSetDescription) {
-            if (
-                (this.adapterDescription as GenericAdapterSetDescription)
-                    .formatDescription !== undefined
-            ) {
-                this.formatConfigurationValid = this.formatForm.valid;
-            }
         }
         if (
             this.adapterDescription instanceof GenericAdapterStreamDescription
@@ -106,7 +96,6 @@ export class FormatConfigurationComponent implements OnInit {
 
     formatSelected(selectedFormat) {
         if (
-            this.adapterDescription instanceof GenericAdapterSetDescription ||
             this.adapterDescription instanceof GenericAdapterStreamDescription
         ) {
             this.adapterDescription.formatDescription = selectedFormat;

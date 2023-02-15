@@ -70,7 +70,6 @@ export class ExistingAdaptersComponent implements OnInit {
         'start',
         'name',
         'adapterBase',
-        'adapterType',
         'lastModified',
         'action',
     ];

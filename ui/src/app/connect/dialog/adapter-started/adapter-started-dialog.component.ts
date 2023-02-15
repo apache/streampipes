@@ -21,14 +21,12 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
     AdapterDescriptionUnion,
-    GenericAdapterSetDescription,
     Message,
     PipelineOperationStatus,
     PipelineTemplateService,
     SpDataStream,
     GenericAdapterStreamDescription,
     SpecificAdapterStreamDescription,
-    SpecificAdapterSetDescription,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
@@ -44,7 +42,6 @@ export class AdapterStartedDialog implements OnInit {
     public adapterStatus: Message;
     public streamDescription: SpDataStream;
     pollingActive = false;
-    public isSetAdapter = false;
     public pipelineOperationStatus: PipelineOperationStatus;
 
     adapterSuccessfullyEdited = false;
@@ -131,15 +128,7 @@ export class AdapterStartedDialog implements OnInit {
     showAdapterPreview(status: Message, adapterElementId: string) {
         // Start preview on streams and message for sets
         if (status.success) {
-            if (
-                this.adapter instanceof GenericAdapterSetDescription ||
-                this.adapter instanceof SpecificAdapterSetDescription
-            ) {
-                this.isSetAdapter = true;
-            } else {
-                this.getLiveViewPreview(adapterElementId);
-            }
-
+            this.getLiveViewPreview(adapterElementId);
             this.adapterInstalled = true;
         }
     }

@@ -22,9 +22,7 @@ import { MatStepper } from '@angular/material/stepper';
 import {
     AdapterDescriptionUnion,
     EventSchema,
-    GenericAdapterSetDescription,
     GenericAdapterStreamDescription,
-    SpecificAdapterSetDescription,
     SpecificAdapterStreamDescription,
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
@@ -49,7 +47,6 @@ export class AdapterConfigurationComponent implements OnInit {
     /**
      * Required to render the corresponding components
      */
-    isDataStreamDescription = true;
     isGenericAdapter = false;
 
     myStepper: MatStepper;
@@ -71,8 +68,6 @@ export class AdapterConfigurationComponent implements OnInit {
     ngOnInit() {
         this.parentForm = this._formBuilder.group({});
 
-        this.isDataStreamDescription =
-            this.connectService.isDataStreamDescription(this.adapter);
         this.isGenericAdapter = this.connectService.isGenericDescription(
             this.adapter,
         );
@@ -120,14 +115,7 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     public setSchema() {
-        if (this.adapter instanceof GenericAdapterSetDescription) {
-            (this.adapter as GenericAdapterSetDescription).dataSet.eventSchema =
-                this.eventSchema;
-        } else if (this.adapter instanceof SpecificAdapterSetDescription) {
-            (
-                this.adapter as SpecificAdapterSetDescription
-            ).dataSet.eventSchema = this.eventSchema;
-        } else if (this.adapter instanceof GenericAdapterStreamDescription) {
+        if (this.adapter instanceof GenericAdapterStreamDescription) {
             (
                 this.adapter as GenericAdapterStreamDescription
             ).dataStream.eventSchema = this.eventSchema;

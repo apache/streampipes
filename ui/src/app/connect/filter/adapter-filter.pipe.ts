@@ -44,10 +44,6 @@ export class AdapterFilterPipe implements PipeTransform {
         activeFilters: AdapterFilterSettingsModel,
     ): boolean {
         return (
-            this.meetsFilterTypeCondition(
-                adapterDescription,
-                activeFilters.selectedType,
-            ) &&
             this.meetsFilterCategoryCondition(
                 adapterDescription,
                 activeFilters.selectedCategory,
@@ -57,21 +53,6 @@ export class AdapterFilterPipe implements PipeTransform {
                 activeFilters.textFilter,
             )
         );
-    }
-
-    private meetsFilterTypeCondition(
-        adapterDescription: AdapterDescriptionUnion,
-        selectedType: string,
-    ): boolean {
-        if (selectedType === 'All types') {
-            return true;
-        } else if (selectedType === 'Data Set') {
-            return this.connectService.isDataSetDescription(adapterDescription);
-        } else if (selectedType === 'Data Stream') {
-            return !this.connectService.isDataSetDescription(
-                adapterDescription,
-            );
-        }
     }
 
     private meetsFilterCategoryCondition(

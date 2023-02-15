@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2022-10-19 14:23:28.
+// Generated using typescript-generator version 3.1.1185 on 2023-02-15 09:08:06.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;
@@ -43,20 +42,20 @@ export class ExtensionsServiceEndpointItem {
             return data;
         }
         const instance = target || new ExtensionsServiceEndpointItem();
-        instance.name = data.name;
-        instance.description = data.description;
-        instance.elementId = data.elementId;
-        instance.uri = data.uri;
-        instance.type = data.type;
         instance.appId = data.appId;
-        instance.includesIcon = data.includesIcon;
-        instance.includesDocs = data.includesDocs;
-        instance.installed = data.installed;
-        instance.editable = data.editable;
         instance.available = data.available;
+        instance.description = data.description;
+        instance.editable = data.editable;
+        instance.elementId = data.elementId;
+        instance.includesDocs = data.includesDocs;
+        instance.includesIcon = data.includesIcon;
+        instance.installed = data.installed;
+        instance.name = data.name;
         instance.streams = __getCopyArrayFn(
             ExtensionsServiceEndpointItem.fromData,
         )(data.streams);
+        instance.type = data.type;
+        instance.uri = data.uri;
         return instance;
     }
 }
@@ -73,8 +72,8 @@ export class Group {
         }
         const instance = target || new Group();
         instance.groupId = data.groupId;
-        instance.rev = data.rev;
         instance.groupName = data.groupName;
+        instance.rev = data.rev;
         instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
         return instance;
     }
@@ -96,12 +95,12 @@ export class MatchingResultMessage {
             return data;
         }
         const instance = target || new MatchingResultMessage();
-        instance.matchingSuccessful = data.matchingSuccessful;
-        instance.title = data.title;
         instance.description = data.description;
+        instance.matchingSuccessful = data.matchingSuccessful;
         instance.offerSubject = data.offerSubject;
-        instance.requirementSubject = data.requirementSubject;
         instance.reasonText = data.reasonText;
+        instance.requirementSubject = data.requirementSubject;
+        instance.title = data.title;
         return instance;
     }
 }
@@ -120,15 +119,15 @@ export class Permission {
             return data;
         }
         const instance = target || new Permission();
-        instance.permissionId = data.permissionId;
-        instance.rev = data.rev;
-        instance.objectInstanceId = data.objectInstanceId;
-        instance.objectClassName = data.objectClassName;
-        instance.publicElement = data.publicElement;
-        instance.ownerSid = data.ownerSid;
         instance.grantedAuthorities = __getCopyArrayFn(
             PermissionEntry.fromData,
         )(data.grantedAuthorities);
+        instance.objectClassName = data.objectClassName;
+        instance.objectInstanceId = data.objectInstanceId;
+        instance.ownerSid = data.ownerSid;
+        instance.permissionId = data.permissionId;
+        instance.publicElement = data.publicElement;
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -145,8 +144,8 @@ export class PermissionEntry {
             return data;
         }
         const instance = target || new PermissionEntry();
-        instance.sid = data.sid;
         instance.principalType = data.principalType;
+        instance.sid = data.sid;
         return instance;
     }
 }
@@ -168,18 +167,18 @@ export class Principal {
             return data;
         }
         const instance = target || new Principal();
-        instance.principalId = data.principalId;
-        instance.rev = data.rev;
         instance.accountEnabled = data.accountEnabled;
-        instance.accountLocked = data.accountLocked;
         instance.accountExpired = data.accountExpired;
-        instance.username = data.username;
+        instance.accountLocked = data.accountLocked;
+        instance.groups = __getCopyArrayFn(__identity<string>())(data.groups);
         instance.objectPermissions = __getCopyArrayFn(__identity<string>())(
             data.objectPermissions,
         );
-        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
-        instance.groups = __getCopyArrayFn(__identity<string>())(data.groups);
+        instance.principalId = data.principalId;
         instance.principalType = data.principalType;
+        instance.rev = data.rev;
+        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        instance.username = data.username;
         return instance;
     }
 }
@@ -198,10 +197,10 @@ export class RawUserApiToken {
             return data;
         }
         const instance = target || new RawUserApiToken();
-        instance.rawToken = data.rawToken;
         instance.hashedToken = data.hashedToken;
-        instance.tokenName = data.tokenName;
+        instance.rawToken = data.rawToken;
         instance.tokenId = data.tokenId;
+        instance.tokenName = data.tokenName;
         return instance;
     }
 }
@@ -241,22 +240,22 @@ export class UserAccount extends Principal {
         }
         const instance = target || new UserAccount();
         super.fromData(data, instance);
+        instance.darkMode = data.darkMode;
         instance.fullName = data.fullName;
+        instance.hideTutorial = data.hideTutorial;
         instance.password = data.password;
-        instance.preferredDataStreams = __getCopyArrayFn(__identity<string>())(
-            data.preferredDataStreams,
-        );
         instance.preferredDataProcessors = __getCopyArrayFn(
             __identity<string>(),
         )(data.preferredDataProcessors);
         instance.preferredDataSinks = __getCopyArrayFn(__identity<string>())(
             data.preferredDataSinks,
         );
+        instance.preferredDataStreams = __getCopyArrayFn(__identity<string>())(
+            data.preferredDataStreams,
+        );
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(
             data.userApiTokens,
         );
-        instance.hideTutorial = data.hideTutorial;
-        instance.darkMode = data.darkMode;
         return instance;
     }
 }
@@ -305,7 +304,11 @@ export type Privilege =
     | 'PRIVILEGE_READ_NOTIFICATIONS'
     | 'PRIVILEGE_READ_FILES'
     | 'PRIVILEGE_WRITE_FILES'
-    | 'PRIVILEGE_DELETE_FILES';
+    | 'PRIVILEGE_DELETE_FILES'
+    | 'PRIVILEGE_READ_ASSETS'
+    | 'PRIVILEGE_WRITE_ASSETS'
+    | 'PRIVILEGE_READ_GENERIC_STORAGE'
+    | 'PRIVILEGE_WRITE_GENERIC_STORAGE';
 
 export type Role =
     | 'ROLE_ADMIN'
@@ -317,7 +320,9 @@ export type Role =
     | 'ROLE_DASHBOARD_USER'
     | 'ROLE_DATA_EXPLORER_USER'
     | 'ROLE_PIPELINE_USER'
-    | 'ROLE_APP_USER';
+    | 'ROLE_APP_USER'
+    | 'ROLE_ASSET_USER'
+    | 'ROLE_ASSET_ADMIN';
 
 function __getCopyArrayFn<T>(itemCopyFn: (item: T) => T): (array: T[]) => T[] {
     return (array: T[]) => __copyArray(array, itemCopyFn);
