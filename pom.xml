@@ -17,8 +17,7 @@
 ~
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -29,7 +28,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.91.0-SNAPSHOT</version>
+    <version>0.92.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -100,7 +99,7 @@
 	<lz4.version>1.8.0</lz4.version>
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
-	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
+	<maven-plugin-annotations.version>3.7.1</maven-plugin-annotations.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
 	<objenesis.version>3.3</objenesis.version>
@@ -156,7 +155,6 @@
 	<commons-pool2.version>2.11.1</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
-	<ddogleg.version>0.16</ddogleg.version>
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
 	<google-maps-services.version>0.10.0</google-maps-services.version>
 	<graalvm.js.version>22.3.1</graalvm.js.version>
@@ -213,7 +211,7 @@
 	<formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
 	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
 	<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
-	<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+	<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
 	<maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
 	<maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
 	<maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
@@ -1313,11 +1311,6 @@
                 <version>${boofcv.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.ddogleg</groupId>
-                <artifactId>ddogleg</artifactId>
-                <version>${ddogleg.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse.ditto</groupId>
                 <artifactId>ditto-client</artifactId>
                 <version>${ditto-client.version}</version>
@@ -1569,7 +1562,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>${maven-release-plugin.version}</version>
                     <configuration>
                         <useReleaseProfile>true</useReleaseProfile>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -1675,7 +1667,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <dependencyConvergence/>
+                                <dependencyConvergence />
                             </rules>
                         </configuration>
                     </execution>
@@ -1911,7 +1903,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
         <url>https://github.com/apache/streampipes</url>
-        <tag>dev</tag>
+        <tag>rel/0.91.0</tag>
     </scm>
 
     <issueManagement>

@@ -21,8 +21,8 @@ import os
 import setuptools
 
 # Package meta-data.
-NAME = "streampipes-client"
-DESCRIPTION = "Python client for Apache StreamPipes"
+NAME = "streampipes"
+DESCRIPTION = "Python library for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/apache/streampipes/"
 EMAIL = "dev@streampipes.apache.org"
@@ -74,7 +74,7 @@ with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
 
 # Load the package's __version__.py module as a dictionary.
 about = {}
-with open(os.path.join(here, "streampipes_client", "__version__.py")) as f:
+with open(os.path.join(here, "streampipes", "__version__.py")) as f:
     exec(f.read(), about)
 
 # Where the magic happens:

@@ -19,10 +19,10 @@ from collections import namedtuple
 from unittest import TestCase
 from unittest.mock import MagicMock, call, patch
 
-from streampipes_client.client import StreamPipesClient
-from streampipes_client.client.client_config import StreamPipesClientConfig
-from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes_client.endpoint.api import DataLakeMeasureEndpoint
+from streampipes.client import StreamPipesClient
+from streampipes.client.config import StreamPipesClientConfig
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.endpoint.api import DataLakeMeasureEndpoint
 
 
 class TestStreamPipesClient(TestCase):
@@ -72,7 +72,7 @@ class TestStreamPipesClient(TestCase):
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
 
     @patch("builtins.print")
-    @patch("streampipes_client.endpoint.endpoint.APIEndpoint._make_request", autospec=True)
+    @patch("streampipes.endpoint.endpoint.APIEndpoint._make_request", autospec=True)
     def test_client_describe(self, make_request: MagicMock, mocked_print: MagicMock):
         def simulate_response(*args, **kwargs):
             Response = namedtuple("Response", ["text"])
@@ -90,7 +90,11 @@ class TestStreamPipesClient(TestCase):
                     )
                 )
             if "streams" in kwargs["url"]:
-                return Response(json.dumps([{"name": "test", "eventGrounding": {"transportProtocols": []}}]))
+                return Response(
+                    json.dumps(
+                        [{"elementId": "test-stream", "name": "test", "eventGrounding": {"transportProtocols": []}}]
+                    )
+                )
 
         make_request.side_effect = simulate_response
         StreamPipesClient.create(

@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.91.0-SNAPSHOT</version>
+        <version>0.92.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-extensions</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
@@ -55,47 +55,47 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-influx</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-siddhi</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-brokers-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-databases-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-internal-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-notifications-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-enricher-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-change-detection-jvm</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
         </dependency>
 
         <!-- 3rd party dependencies to avoid convergence errors -->
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters-iiot</artifactId>
-            <version>0.91.0-SNAPSHOT</version>
+            <version>0.92.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
     </dependencies>
