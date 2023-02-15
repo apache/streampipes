@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.extensions.connect;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
@@ -36,6 +36,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 
 @Path("/api/v1/worker")
 public class AdapterWorkerResource extends AbstractSharedRestInterface {
@@ -66,7 +67,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   @Path("/stream/invoke")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) {
+  public Response invokeStreamAdapter(AdapterDescription adapterStreamDescription) {
 
     try {
       adapterManagement.invokeStreamAdapter(adapterStreamDescription);
@@ -84,7 +85,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   @Path("/stream/stop")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) {
+  public Response stopStreamAdapter(AdapterDescription adapterStreamDescription) {
 
     String responseMessage;
     try {

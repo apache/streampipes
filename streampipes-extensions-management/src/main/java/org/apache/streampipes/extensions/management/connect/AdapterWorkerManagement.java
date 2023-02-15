@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,7 @@ public class AdapterWorkerManagement {
     return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
   }
 
-  public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+  public void invokeStreamAdapter(AdapterDescription adapterStreamDescription) throws AdapterException {
 
     IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
 
@@ -47,7 +46,7 @@ public class AdapterWorkerManagement {
     adapter.startAdapter();
   }
 
-  public void stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+  public void stopStreamAdapter(AdapterDescription adapterStreamDescription) throws AdapterException {
     stopAdapter(adapterStreamDescription);
   }
 

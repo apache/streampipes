@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
@@ -42,6 +43,8 @@ import java.util.List;
 @TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
+  protected SpDataStream dataStream;
+  protected boolean running;
   private EventGrounding eventGrounding;
 
   private String icon;
@@ -73,21 +76,14 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     this.eventGrounding = new EventGrounding();
     this.config = new ArrayList<>();
     this.category = new ArrayList<>();
-
-    // TODO move to another place
-//    TransportProtocol tpKafka = new KafkaTransportProtocol();
-//    TransportProtocol tpJms = new JmsTransportProtocol();
-//    TransportProtocol tpMqtt = new MqttTransportProtocol();
-//    tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
-//    tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
-//    tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
-//    this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka, tpJms, tpMqtt));
+    this.dataStream = new SpDataStream();
   }
 
   public AdapterDescription(String elementId, String name, String description) {
     super(elementId, name, description);
     this.rules = new ArrayList<>();
     this.category = new ArrayList<>();
+    this.dataStream = new SpDataStream();
   }
 
 
@@ -104,6 +100,10 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     if (other.getEventGrounding() != null) {
       this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
+    if (other.getDataStream() != null) {
+      this.dataStream = new SpDataStream(other.getDataStream());
+    }
+    this.running = other.isRunning();
   }
 
   public String getRev() {
@@ -236,4 +236,20 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
   }
 
   public abstract EventSchema getEventSchema();
+
+  public SpDataStream getDataStream() {
+    return dataStream;
+  }
+
+  public void setDataStream(SpDataStream dataStream) {
+    this.dataStream = dataStream;
+  }
+
+  public boolean isRunning() {
+    return running;
+  }
+
+  public void setRunning(boolean running) {
+    this.running = running;
+  }
 }

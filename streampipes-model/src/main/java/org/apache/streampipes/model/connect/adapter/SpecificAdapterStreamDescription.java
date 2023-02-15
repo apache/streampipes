@@ -22,12 +22,12 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
-public class SpecificAdapterStreamDescription extends AdapterStreamDescription {
+public class SpecificAdapterStreamDescription extends AdapterDescription {
 
   public SpecificAdapterStreamDescription() {
   }
 
-  public SpecificAdapterStreamDescription(AdapterStreamDescription other) {
+  public SpecificAdapterStreamDescription(AdapterDescription other) {
     super(other);
   }
 

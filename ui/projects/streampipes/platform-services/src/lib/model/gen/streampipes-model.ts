@@ -18,12 +18,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-02-15 14:49:22.
+// Generated using typescript-generator version 3.1.1185 on 2023-02-15 16:22:35.
 
 export class NamedStreamPipesEntity {
     '@class':
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
-        | 'org.apache.streampipes.model.connect.adapter.AdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
@@ -87,7 +86,6 @@ export class NamedStreamPipesEntity {
 export class AdapterDescription extends NamedStreamPipesEntity {
     '@class':
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
-        | 'org.apache.streampipes.model.connect.adapter.AdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription';
     'category': string[];
@@ -98,10 +96,12 @@ export class AdapterDescription extends NamedStreamPipesEntity {
      */
     'correspondingServiceGroup': string;
     'createdAt': number;
+    'dataStream': SpDataStream;
     'eventGrounding': EventGrounding;
     'eventSchema': EventSchema;
     'icon': string;
     'rules': TransformationRuleDescriptionUnion[];
+    'running': boolean;
     'schemaRules': TransformationRuleDescriptionUnion[];
     'selectedEndpointUrl': string;
     'streamRules': TransformationRuleDescriptionUnion[];
@@ -126,12 +126,14 @@ export class AdapterDescription extends NamedStreamPipesEntity {
             data.correspondingDataStreamElementId;
         instance.correspondingServiceGroup = data.correspondingServiceGroup;
         instance.createdAt = data.createdAt;
+        instance.dataStream = SpDataStream.fromData(data.dataStream);
         instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.icon = data.icon;
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
+        instance.running = data.running;
         instance.schemaRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.schemaRules);
@@ -179,43 +181,6 @@ export class AdapterEventPreview {
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
         return instance;
-    }
-}
-
-export class AdapterStreamDescription extends AdapterDescription {
-    '@class':
-        | 'org.apache.streampipes.model.connect.adapter.AdapterStreamDescription'
-        | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
-        | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription';
-    'dataStream': SpDataStream;
-    'running': boolean;
-
-    static 'fromData'(
-        data: AdapterStreamDescription,
-        target?: AdapterStreamDescription,
-    ): AdapterStreamDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new AdapterStreamDescription();
-        super.fromData(data, instance);
-        instance.dataStream = SpDataStream.fromData(data.dataStream);
-        instance.running = data.running;
-        return instance;
-    }
-
-    static 'fromDataUnion'(
-        data: AdapterStreamDescriptionUnion,
-    ): AdapterStreamDescriptionUnion {
-        if (!data) {
-            return data;
-        }
-        switch (data['@class']) {
-            case 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription':
-                return SpecificAdapterStreamDescription.fromData(data);
-            case 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription':
-                return SpecificAdapterStreamDescription.fromData(data);
-        }
     }
 }
 
@@ -2011,7 +1976,7 @@ export interface GenericAdapterDescription {
 }
 
 export class GenericAdapterStreamDescription
-    extends AdapterStreamDescription
+    extends AdapterDescription
     implements GenericAdapterDescription
 {
     '@class': 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
@@ -3498,7 +3463,7 @@ export class SpQueryResult {
     }
 }
 
-export class SpecificAdapterStreamDescription extends AdapterStreamDescription {
+export class SpecificAdapterStreamDescription extends AdapterDescription {
     '@class': 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription';
 
     static 'fromData'(
@@ -3945,8 +3910,6 @@ export class WildcardTopicMapping {
 export type AdapterDescriptionUnion =
     | GenericAdapterStreamDescription
     | SpecificAdapterStreamDescription;
-
-export type AdapterStreamDescriptionUnion = SpecificAdapterStreamDescription;
 
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';
 

@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 
@@ -48,7 +47,7 @@ public class SourcesManagement {
     oldDataStream.setName(adapterDescription.getName());
 
     // Update event schema
-    var newEventSchema = ((AdapterStreamDescription) adapterDescription).getDataStream().getEventSchema();
+    var newEventSchema = adapterDescription.getDataStream().getEventSchema();
     oldDataStream.setEventSchema(newEventSchema);
 
     return oldDataStream;
@@ -57,7 +56,7 @@ public class SourcesManagement {
   public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription,
                                               String dataStreamElementId) {
 
-    var ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
+    var ds = adapterDescription.getDataStream();
     ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
 
     ds.setElementId(dataStreamElementId);

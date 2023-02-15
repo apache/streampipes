@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
@@ -53,18 +52,18 @@ public class WorkerRestClient {
 
   public static void invokeStreamAdapter(String endpointUrl,
                                          String elementId) throws AdapterException {
-    AdapterStreamDescription adapterStreamDescription = (AdapterStreamDescription) getAndDecryptAdapter(elementId);
-    String url = endpointUrl + WorkerPaths.getStreamInvokePath();
+    var adapterStreamDescription = getAndDecryptAdapter(elementId);
+    var url = endpointUrl + WorkerPaths.getStreamInvokePath();
 
     startAdapter(url, adapterStreamDescription);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
   }
 
   public static void stopStreamAdapter(String baseUrl,
-                                       AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+                                       AdapterDescription adapterStreamDescription) throws AdapterException {
     String url = baseUrl + WorkerPaths.getStreamStopPath();
 
-    AdapterDescription ad =
+    var ad =
         getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
 
     stopAdapter(ad, url);
@@ -75,7 +74,7 @@ public class WorkerRestClient {
     try {
       logger.info("Requesting all running adapter description instances: " + url);
 
-      String responseString = Request.Get(url)
+      var responseString = Request.Get(url)
           .connectTimeout(1000)
           .socketTimeout(100000)
           .execute().returnContent().asString();
@@ -227,7 +226,7 @@ public class WorkerRestClient {
 
   private static void updateStreamAdapterStatus(String adapterId,
                                                 boolean running) {
-    AdapterStreamDescription adapter = (AdapterStreamDescription) getAndDecryptAdapter(adapterId);
+    var adapter = getAndDecryptAdapter(adapterId);
     adapter.setRunning(running);
     encryptAndUpdateAdapter(adapter);
   }
