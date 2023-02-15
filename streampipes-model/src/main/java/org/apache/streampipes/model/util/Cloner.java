@@ -22,11 +22,8 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -316,12 +313,8 @@ public class Cloner {
   }
 
   public AdapterDescription adapterDescription(AdapterDescription ad) {
-    if (ad instanceof GenericAdapterSetDescription) {
-      return new GenericAdapterSetDescription((GenericAdapterSetDescription) ad);
-    } else if (ad instanceof GenericAdapterStreamDescription) {
+    if (ad instanceof GenericAdapterStreamDescription) {
       return new GenericAdapterStreamDescription((GenericAdapterStreamDescription) ad);
-    } else if (ad instanceof SpecificAdapterSetDescription) {
-      return new SpecificAdapterSetDescription((AdapterSetDescription) ad);
     } else if (ad instanceof SpecificAdapterStreamDescription) {
       return new SpecificAdapterStreamDescription((AdapterStreamDescription) ad);
     } else {

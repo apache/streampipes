@@ -19,29 +19,13 @@
 package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 
 public class GroundingService {
 
   public static String extractTopic(AdapterDescription adapterDescription) {
-    EventGrounding eventGrounding = getEventGrounding(adapterDescription);
+    EventGrounding eventGrounding = adapterDescription.getEventGrounding();
     return eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
-  }
-
-  private static EventGrounding getEventGrounding(AdapterDescription adapterDescription) {
-    EventGrounding eventGrounding;
-
-    if (adapterDescription instanceof SpecificAdapterSetDescription) {
-      eventGrounding = ((SpecificAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
-    } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-      eventGrounding = ((GenericAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
-    } else {
-      eventGrounding = adapterDescription.getEventGrounding();
-    }
-
-    return eventGrounding;
   }
 
 }

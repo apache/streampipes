@@ -21,11 +21,9 @@ package org.apache.streampipes.extensions.management.connect;
 import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.GenericAdapter;
-import org.apache.streampipes.extensions.management.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.GenericDataStreamAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 import org.slf4j.Logger;
@@ -40,17 +38,9 @@ public class AdapterUtils {
     if (adapterDescription instanceof GenericAdapterStreamDescription) {
       adapter = (IAdapter<?>) new GenericDataStreamAdapter().getInstance(
           (GenericAdapterStreamDescription) adapterDescription);
-    } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-      adapter = new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
     }
 
     IProtocol protocol = null;
-    if (adapterDescription instanceof GenericAdapterSetDescription) {
-      protocol = DeclarersSingleton.getInstance()
-          .getProtocol(((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getAppId());
-      ((GenericAdapter) adapter).setProtocol(protocol);
-    }
-
     if (adapterDescription instanceof GenericAdapterStreamDescription) {
       protocol = DeclarersSingleton.getInstance()
           .getProtocol(((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getAppId());

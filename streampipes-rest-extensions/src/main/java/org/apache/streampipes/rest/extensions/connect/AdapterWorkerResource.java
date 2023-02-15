@@ -21,7 +21,6 @@ package org.apache.streampipes.rest.extensions.connect;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -104,43 +103,4 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
     }
   }
 
-  @POST
-  @JacksonSerialized
-  @Path("/set/invoke")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response invokeSetAdapter(AdapterSetDescription adapterSetDescription) {
-
-    try {
-      adapterManagement.invokeSetAdapter(adapterSetDescription);
-    } catch (AdapterException e) {
-      logger.error("Error while starting adapter with id " + adapterSetDescription.getElementId(), e);
-      return ok(Notifications.error(e.getMessage()));
-    }
-
-    String responseMessage = "Set adapter with id " + adapterSetDescription.getElementId() + " successfully started";
-
-    logger.info(responseMessage);
-    return ok(Notifications.success(responseMessage));
-  }
-
-  @POST
-  @JacksonSerialized
-  @Path("/set/stop")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response stopSetAdapter(AdapterSetDescription adapterSetDescription) {
-
-    try {
-      adapterManagement.stopSetAdapter(adapterSetDescription);
-    } catch (AdapterException e) {
-      logger.error("Error while stopping adapter with id " + adapterSetDescription.getElementId(), e);
-      return ok(Notifications.error(e.getMessage()));
-    }
-
-    String responseMessage = "Set adapter with id " + adapterSetDescription.getElementId() + " successfully stopped";
-
-    logger.info(responseMessage);
-    return ok(Notifications.success(responseMessage));
-  }
 }

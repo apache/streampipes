@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 
 import org.slf4j.Logger;
@@ -50,30 +49,6 @@ public class AdapterWorkerManagement {
 
   public void stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
     stopAdapter(adapterStreamDescription);
-  }
-
-  public void invokeSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
-
-    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
-
-    RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getElementId(), adapter, adapterSetDescription);
-
-    adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
-
-    // Start a thread to start a set adapter
-    Runnable r = () -> {
-      try {
-        adapter.startAdapter();
-      } catch (AdapterException e) {
-        e.printStackTrace();
-      }
-    };
-
-    new Thread(r).start();
-  }
-
-  public void stopSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
-    stopAdapter(adapterSetDescription);
   }
 
   private void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {

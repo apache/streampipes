@@ -42,10 +42,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @JsonSubTypes({
-    @JsonSubTypes.Type(GenericAdapterSetDescription.class),
     @JsonSubTypes.Type(GenericAdapterStreamDescription.class),
     @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
-    @JsonSubTypes.Type(SpecificAdapterSetDescription.class)
 })
 @TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {

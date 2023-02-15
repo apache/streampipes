@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
@@ -70,20 +69,6 @@ public class WorkerRestClient {
 
     stopAdapter(ad, url);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
-  }
-
-  public static void invokeSetAdapter(String endpointUrl,
-                                      AdapterSetDescription adapterSetDescription) throws AdapterException {
-    String url = endpointUrl + WorkerPaths.getSetInvokePath();
-
-    startAdapter(url, adapterSetDescription);
-  }
-
-  public static void stopSetAdapter(String baseUrl,
-                                    AdapterSetDescription adapterSetDescription) throws AdapterException {
-    String url = baseUrl + WorkerPaths.getSetStopPath();
-
-    stopAdapter(adapterSetDescription, url);
   }
 
   public static List<AdapterDescription> getAllRunningAdapterInstanceDescriptions(String url) throws AdapterException {

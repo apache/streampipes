@@ -23,10 +23,8 @@ import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,27 +88,16 @@ public class ConnectWorkerDescriptionProvider {
     for (IProtocol p : allProtocols) {
       ProtocolDescription protocolDescription = (ProtocolDescription) rewrite(p.declareModel());
 
-      if (protocolDescription.getSourceType().equals(AdapterSourceType.STREAM.toString())) {
-        GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
-        desc.setName(protocolDescription.getName());
-        desc.setDescription(protocolDescription.getDescription());
-        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
-        desc.setElementId(protocolDescription.getElementId());
-        desc.setAppId(protocolDescription.getAppId());
-        desc.setProtocolDescription(protocolDescription);
-        desc.setCorrespondingServiceGroup(serviceGroup);
-        result.add(desc);
-      } else if (protocolDescription.getSourceType().equals(AdapterSourceType.SET.toString())) {
-        GenericAdapterSetDescription desc = new GenericAdapterSetDescription();
-        desc.setName(protocolDescription.getName());
-        desc.setDescription(protocolDescription.getDescription());
-        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
-        desc.setElementId(protocolDescription.getElementId());
-        desc.setAppId(protocolDescription.getAppId());
-        desc.setProtocolDescription(protocolDescription);
-        desc.setCorrespondingServiceGroup(serviceGroup);
-        result.add(desc);
-      }
+      GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
+      desc.setName(protocolDescription.getName());
+      desc.setDescription(protocolDescription.getDescription());
+      desc.setIncludedAssets(protocolDescription.getIncludedAssets());
+      desc.setElementId(protocolDescription.getElementId());
+      desc.setAppId(protocolDescription.getAppId());
+      desc.setProtocolDescription(protocolDescription);
+      desc.setCorrespondingServiceGroup(serviceGroup);
+      result.add(desc);
+
     }
 
     return result;

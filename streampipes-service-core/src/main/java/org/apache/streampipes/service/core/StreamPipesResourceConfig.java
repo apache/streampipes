@@ -70,7 +70,6 @@ import org.apache.streampipes.rest.impl.connect.AdapterResource;
 import org.apache.streampipes.rest.impl.connect.DescriptionResource;
 import org.apache.streampipes.rest.impl.connect.GuessResource;
 import org.apache.streampipes.rest.impl.connect.RuntimeResolvableResource;
-import org.apache.streampipes.rest.impl.connect.SourcesResource;
 import org.apache.streampipes.rest.impl.connect.UnitResource;
 import org.apache.streampipes.rest.impl.connect.WorkerAdministrationResource;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
@@ -173,7 +172,6 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         // Connect Master
         AdapterResource.class,
         DescriptionResource.class,
-        SourcesResource.class,
         GuessResource.class,
 
         UnitResource.class,

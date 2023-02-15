@@ -25,9 +25,7 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
@@ -129,12 +127,8 @@ public class GsonSerializer {
             "org.apache.streampipes.model.CorrectionValueTransformationRuleDescription"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
-        .registerSubtype(SpecificAdapterSetDescription.class,
-            "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription")
         .registerSubtype(SpecificAdapterStreamDescription.class,
             "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
-        .registerSubtype(GenericAdapterSetDescription.class,
-            "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription")
         .registerSubtype(GenericAdapterStreamDescription.class,
             "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription"));
 
