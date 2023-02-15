@@ -87,19 +87,17 @@ class EventProperty(BasicModel):
     Data model of an `EventProperty` in compliance to the StreamPipes Backend.
     """
 
-    class_name: StrictStr = Field(
-        alias="@class", default_factory=lambda: "org.apache.streampipes.model.schema.EventPropertyPrimitive"
-    )
+    class_name: StrictStr = Field(alias="@class", default="org.apache.streampipes.model.schema.EventPropertyPrimitive")
     element_id: StrictStr = Field(default_factory=lambda: f"sp:eventproperty:{random_letters(6)}")
     label: Optional[StrictStr]
     description: Optional[StrictStr]
     runtime_name: StrictStr
-    required: StrictBool = False
-    domain_properties: List[StrictStr] = []
-    property_scope: StrictStr = "MEASUREMENT_PROPERTY"
-    index: StrictInt = 0
+    required: StrictBool = Field(default=False)
+    domain_properties: List[StrictStr] = Field(default_factory=list)
+    property_scope: StrictStr = Field(default="MEASUREMENT_PROPERTY")
+    index: StrictInt = Field(default=0)
     runtime_id: Optional[StrictStr]
-    runtime_type: StrictStr = "http://www.w3.org/2001/XMLSchema#string"
+    runtime_type: StrictStr = Field(default="http://www.w3.org/2001/XMLSchema#string")
     measurement_unit: Optional[StrictStr]
     value_specification: Optional[ValueSpecification]
 
@@ -132,7 +130,7 @@ class TopicDefinition(BasicModel):
     """
 
     class_name: Optional[StrictStr] = Field(
-        alias="@class", default_factory=lambda: "org.apache.streampipes.model.grounding.SimpleTopicDefinition"
+        alias="@class", default="org.apache.streampipes.model.grounding.SimpleTopicDefinition"
     )
     actual_topic_name: StrictStr = Field(default_factory=lambda: f"org.apache.streampipes.connect.{uuid4()}")
 
@@ -143,12 +141,12 @@ class TransportProtocol(BasicModel):
     """
 
     class_name: StrictStr = Field(
-        alias="@class", default_factory=lambda: "org.apache.streampipes.model.grounding.NatsTransportProtocol"
+        alias="@class", default="org.apache.streampipes.model.grounding.NatsTransportProtocol"
     )
     element_id: StrictStr = Field(default_factory=lambda: f"sp:transportprotocol:{random_letters(6)}")
-    broker_hostname: StrictStr = "nats"
+    broker_hostname: StrictStr = Field(default="nats")
     topic_definition: TopicDefinition = Field(default_factory=TopicDefinition)
-    port: StrictInt = Field(alias="kafkaPort", default_factory=lambda: 4222)
+    port: StrictInt = Field(alias="kafkaPort", default=4222)
 
 
 class TransportFormat(BasicModel):
@@ -156,7 +154,7 @@ class TransportFormat(BasicModel):
     Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
     """
 
-    rdf_type: List[StrictStr] = ["http://sepa.event-processing.org/sepa#json"]
+    rdf_type: List[StrictStr] = Field(default=["http://sepa.event-processing.org/sepa#json"])
 
 
 class EventGrounding(BasicModel):

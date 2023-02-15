@@ -80,22 +80,22 @@ class DataStream(Resource):
 
     class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
     element_id: StrictStr = Field(default_factory=lambda: f"sp:spdatastream:{random_letters(6)}")
-    name: StrictStr = "Unnamed"
+    name: StrictStr = Field(default="Unnamed")
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]
     app_id: Optional[StrictStr]
-    includes_assets: StrictBool = False
-    includes_locales: StrictBool = False
-    included_assets: List[StrictStr] = []
-    included_locales: List[StrictStr] = []
-    application_links: List[ApplicationLink] = []
-    internally_managed: StrictBool = False
+    includes_assets: StrictBool = Field(default=False)
+    includes_locales: StrictBool = Field(default=False)
+    included_assets: List[StrictStr] = Field(default_factory=list)
+    included_locales: List[StrictStr] = Field(default_factory=list)
+    application_links: List[ApplicationLink] = Field(default_factory=list)
+    internally_managed: StrictBool = Field(default=False)
     connected_to: Optional[List[StrictStr]]
     event_grounding: EventGrounding = Field(default_factory=EventGrounding)
     event_schema: Optional[EventSchema]
     measurement_capability: Optional[List[MeasurementCapability]]
     measurement_object: Optional[List[MeasurementObject]]
-    index: StrictInt = 0
+    index: StrictInt = Field(default=0)
     corresponding_adapter_id: Optional[StrictStr]
     category: Optional[List[StrictStr]]
     uri: Optional[StrictStr]
