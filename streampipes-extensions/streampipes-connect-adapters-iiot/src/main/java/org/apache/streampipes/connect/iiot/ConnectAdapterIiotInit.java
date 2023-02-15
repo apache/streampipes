@@ -23,8 +23,6 @@ import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdap
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataStreamAdapter;
-import org.apache.streampipes.connect.iiot.protocol.set.FileProtocol;
-import org.apache.streampipes.connect.iiot.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.FileStreamProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.HttpServerProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.HttpStreamProtocol;
@@ -54,8 +52,6 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
         .registerAdapter(new OpcUaAdapter())
         .registerAdapter(new Plc4xS7Adapter())
         .registerAdapter(new Plc4xModbusAdapter())
-        .registerAdapter(new FileProtocol())
-        .registerAdapter(new HttpProtocol())
         .registerAdapter(new FileStreamProtocol())
         .registerAdapter(new KafkaProtocol())
         .registerAdapter(new MqttProtocol())
