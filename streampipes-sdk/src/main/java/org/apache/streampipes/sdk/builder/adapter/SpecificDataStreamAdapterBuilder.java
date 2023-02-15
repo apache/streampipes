@@ -18,7 +18,6 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
-import org.apache.streampipes.sdk.builder.DataSetBuilder;
 
 public class SpecificDataStreamAdapterBuilder extends
     AdapterDescriptionBuilder<SpecificDataStreamAdapterBuilder, SpecificAdapterStreamDescription> {
@@ -38,7 +37,7 @@ public class SpecificDataStreamAdapterBuilder extends
    * @param label       A human-readable name of the element.
    *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
-   * @return a new instance of {@link DataSetBuilder}
+   * @return a new instance of {@link SpecificDataStreamAdapterBuilder}
    */
   public static SpecificDataStreamAdapterBuilder create(String appId, String label, String
       description) {
@@ -49,7 +48,7 @@ public class SpecificDataStreamAdapterBuilder extends
    * Creates a new specific data stream adapter using the builder pattern.
    *
    * @param appId A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
-   * @return a new instance of {@link DataSetBuilder}
+   * @return a new instance of {@link SpecificDataStreamAdapterBuilder}
    */
   public static SpecificDataStreamAdapterBuilder create(String appId) {
     return new SpecificDataStreamAdapterBuilder(appId);

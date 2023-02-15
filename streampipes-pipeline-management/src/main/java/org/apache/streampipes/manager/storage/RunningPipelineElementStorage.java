@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.storage;
 
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.HashMap;
@@ -28,7 +27,5 @@ import java.util.Map;
 public class RunningPipelineElementStorage {
 
   public static Map<String, List<InvocableStreamPipesEntity>> runningProcessorsAndSinks = new HashMap<>();
-
-  public static Map<String, List<SpDataSet>> runningDataSets = new HashMap<>();
 
 }

@@ -18,7 +18,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-02-15 10:32:00.
+// Generated using typescript-generator version 3.1.1185 on 2023-02-15 14:49:22.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -29,7 +29,6 @@ export class NamedStreamPipesEntity {
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
-        | 'org.apache.streampipes.model.SpDataSet'
         | 'org.apache.streampipes.model.connect.grounding.FormatDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
@@ -188,7 +187,7 @@ export class AdapterStreamDescription extends AdapterDescription {
         | 'org.apache.streampipes.model.connect.adapter.AdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription';
-    'dataStream': SpDataStreamUnion;
+    'dataStream': SpDataStream;
     'running': boolean;
 
     static 'fromData'(
@@ -200,7 +199,7 @@ export class AdapterStreamDescription extends AdapterDescription {
         }
         const instance = target || new AdapterStreamDescription();
         super.fromData(data, instance);
-        instance.dataStream = SpDataStream.fromDataUnion(data.dataStream);
+        instance.dataStream = SpDataStream.fromData(data.dataStream);
         instance.running = data.running;
         return instance;
     }
@@ -1193,11 +1192,11 @@ export class InvocableStreamPipesEntity
     'correspondingPipeline': string;
     'correspondingUser': string;
     'detachPath': string;
-    'inputStreams': SpDataStreamUnion[];
+    'inputStreams': SpDataStream[];
     'selectedEndpointUrl': string;
     'staticProperties': StaticPropertyUnion[];
     'statusInfoSettings': ElementStatusInfoSettings;
-    'streamRequirements': SpDataStreamUnion[];
+    'streamRequirements': SpDataStream[];
     'supportedGrounding': EventGrounding;
     'uncompleted': boolean;
 
@@ -1215,7 +1214,7 @@ export class InvocableStreamPipesEntity
         instance.correspondingPipeline = data.correspondingPipeline;
         instance.correspondingUser = data.correspondingUser;
         instance.detachPath = data.detachPath;
-        instance.inputStreams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
+        instance.inputStreams = __getCopyArrayFn(SpDataStream.fromData)(
             data.inputStreams,
         );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
@@ -1225,9 +1224,9 @@ export class InvocableStreamPipesEntity
         instance.statusInfoSettings = ElementStatusInfoSettings.fromData(
             data.statusInfoSettings,
         );
-        instance.streamRequirements = __getCopyArrayFn(
-            SpDataStream.fromDataUnion,
-        )(data.streamRequirements);
+        instance.streamRequirements = __getCopyArrayFn(SpDataStream.fromData)(
+            data.streamRequirements,
+        );
         instance.supportedGrounding = EventGrounding.fromData(
             data.supportedGrounding,
         );
@@ -1240,7 +1239,7 @@ export class DataProcessorInvocation extends InvocableStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.graph.DataProcessorInvocation';
     'category': string[];
     'outputStrategies': OutputStrategyUnion[];
-    'outputStream': SpDataStreamUnion;
+    'outputStream': SpDataStream;
     'pathName': string;
 
     static 'fromData'(
@@ -1258,7 +1257,7 @@ export class DataProcessorInvocation extends InvocableStreamPipesEntity {
         instance.outputStrategies = __getCopyArrayFn(
             OutputStrategy.fromDataUnion,
         )(data.outputStrategies);
-        instance.outputStream = SpDataStream.fromDataUnion(data.outputStream);
+        instance.outputStream = SpDataStream.fromData(data.outputStream);
         instance.pathName = data.pathName;
         return instance;
     }
@@ -1460,7 +1459,7 @@ export class ElementComposition {
     description: string;
     name: string;
     sepas: DataProcessorInvocation[];
-    streams: SpDataStreamUnion[];
+    streams: SpDataStream[];
 
     static fromData(
         data: ElementComposition,
@@ -1475,7 +1474,7 @@ export class ElementComposition {
         instance.sepas = __getCopyArrayFn(DataProcessorInvocation.fromData)(
             data.sepas,
         );
-        instance.streams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
+        instance.streams = __getCopyArrayFn(SpDataStream.fromData)(
             data.streams,
         );
         return instance;
@@ -2832,9 +2831,9 @@ export class PipelineElementValidationInfo {
 export class PipelineModification {
     domId: string;
     elementId: string;
-    inputStreams: SpDataStreamUnion[];
+    inputStreams: SpDataStream[];
     outputStrategies: OutputStrategyUnion[];
-    outputStream: SpDataStreamUnion;
+    outputStream: SpDataStream;
     pipelineElementValid: boolean;
     staticProperties: StaticPropertyUnion[];
     validationInfos: PipelineElementValidationInfo[];
@@ -2849,13 +2848,13 @@ export class PipelineModification {
         const instance = target || new PipelineModification();
         instance.domId = data.domId;
         instance.elementId = data.elementId;
-        instance.inputStreams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
+        instance.inputStreams = __getCopyArrayFn(SpDataStream.fromData)(
             data.inputStreams,
         );
         instance.outputStrategies = __getCopyArrayFn(
             OutputStrategy.fromDataUnion,
         )(data.outputStrategies);
-        instance.outputStream = SpDataStream.fromDataUnion(data.outputStream);
+        instance.outputStream = SpDataStream.fromData(data.outputStream);
         instance.pipelineElementValid = data.pipelineElementValid;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
@@ -3192,7 +3191,7 @@ export class RuntimeOptionsRequest {
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
     'appId': string;
     'belongsTo': string;
-    'inputStreams': SpDataStreamUnion[];
+    'inputStreams': SpDataStream[];
     'requestId': string;
     'staticProperties': StaticPropertyUnion[];
 
@@ -3207,7 +3206,7 @@ export class RuntimeOptionsRequest {
         instance['@class'] = data['@class'];
         instance.appId = data.appId;
         instance.belongsTo = data.belongsTo;
-        instance.inputStreams = __getCopyArrayFn(SpDataStream.fromDataUnion)(
+        instance.inputStreams = __getCopyArrayFn(SpDataStream.fromData)(
             data.inputStreams,
         );
         instance.requestId = data.requestId;
@@ -3390,9 +3389,7 @@ export class SlideToggleStaticProperty extends StaticProperty {
 }
 
 export class SpDataStream extends NamedStreamPipesEntity {
-    '@class':
-        | 'org.apache.streampipes.model.SpDataStream'
-        | 'org.apache.streampipes.model.SpDataSet';
+    '@class': 'org.apache.streampipes.model.SpDataStream';
     'category': string[];
     'correspondingAdapterId': string;
     'eventGrounding': EventGrounding;
@@ -3414,52 +3411,11 @@ export class SpDataStream extends NamedStreamPipesEntity {
         instance.index = data.index;
         return instance;
     }
-
-    static 'fromDataUnion'(data: SpDataStreamUnion): SpDataStreamUnion {
-        if (!data) {
-            return data;
-        }
-        switch (data['@class']) {
-            case 'org.apache.streampipes.model.SpDataStream':
-                return SpDataStream.fromData(data);
-            case 'org.apache.streampipes.model.SpDataSet':
-                return SpDataSet.fromData(data);
-        }
-    }
-}
-
-export class SpDataSet extends SpDataStream implements EndpointSelectable {
-    '@class': 'org.apache.streampipes.model.SpDataSet';
-    'actualTopicName': string;
-    'brokerHostname': string;
-    'correspondingPipeline': string;
-    'datasetInvocationId': string;
-    'detachPath': string;
-    'selectedEndpointUrl': string;
-    'supportedGrounding': EventGrounding;
-
-    static 'fromData'(data: SpDataSet, target?: SpDataSet): SpDataSet {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SpDataSet();
-        super.fromData(data, instance);
-        instance.actualTopicName = data.actualTopicName;
-        instance.brokerHostname = data.brokerHostname;
-        instance.correspondingPipeline = data.correspondingPipeline;
-        instance.datasetInvocationId = data.datasetInvocationId;
-        instance.detachPath = data.detachPath;
-        instance.selectedEndpointUrl = data.selectedEndpointUrl;
-        instance.supportedGrounding = EventGrounding.fromData(
-            data.supportedGrounding,
-        );
-        return instance;
-    }
 }
 
 export class SpDataStreamContainer {
     '@class': 'org.apache.streampipes.model.SpDataStreamContainer';
-    'list': SpDataStreamUnion[];
+    'list': SpDataStream[];
 
     static 'fromData'(
         data: SpDataStreamContainer,
@@ -3470,7 +3426,7 @@ export class SpDataStreamContainer {
         }
         const instance = target || new SpDataStreamContainer();
         instance['@class'] = data['@class'];
-        instance.list = __getCopyArrayFn(SpDataStream.fromDataUnion)(data.list);
+        instance.list = __getCopyArrayFn(SpDataStream.fromData)(data.list);
         return instance;
     }
 }
@@ -4020,8 +3976,6 @@ export type PipelineHealthStatus = 'OK' | 'REQUIRES_ATTENTION' | 'FAILURE';
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
-
-export type SpDataStreamUnion = SpDataStream | SpDataSet;
 
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
 

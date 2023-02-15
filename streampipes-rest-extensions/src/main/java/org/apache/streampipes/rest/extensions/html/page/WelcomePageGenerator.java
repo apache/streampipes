@@ -25,7 +25,6 @@ import org.apache.streampipes.extensions.api.declarer.PipelineTemplateDeclarer;
 import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -101,8 +100,6 @@ public class WelcomePageGenerator {
   private String getType(Declarer<?> declarer) {
     if (declarer.declareModel() instanceof DataSinkDescription) {
       return "action";
-    } else if (declarer.declareModel() instanceof SpDataSet) {
-      return "set";
     } else if (declarer.declareModel() instanceof SpDataStream) {
       return "stream";
     } else {

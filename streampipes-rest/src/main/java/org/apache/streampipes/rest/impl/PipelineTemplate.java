@@ -18,7 +18,6 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.SpDataStreamContainer;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -48,28 +47,10 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     List<SpDataStream> datasets = new ArrayList<>();
 
     sources.stream()
-        .filter(stream -> !(stream instanceof SpDataSet))
         .map(SpDataStream::new)
         .forEach(datasets::add);
 
     return ok((new SpDataStreamContainer(datasets)));
-  }
-
-  @GET
-  @Path("/sets")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAvailableDataSets() {
-
-    List<SpDataStream> sources = getPipelineElementRdfStorage().getAllDataStreams();
-    List<SpDataStream> datasets = new ArrayList<>();
-
-    sources
-        .stream()
-        .filter(stream -> stream instanceof SpDataSet)
-        .map(stream -> new SpDataSet((SpDataSet) stream))
-        .forEach(datasets::add);
-
-    return ok(new SpDataStreamContainer(datasets));
   }
 
   @GET

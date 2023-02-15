@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.util;
 
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -201,20 +200,8 @@ public class Cloner {
     }
   }
 
-  public List<SpDataStream> seq(List<SpDataStream> spDataStreams) {
-    return spDataStreams.stream().map(this::mapSequence).collect(Collectors.toList());
-  }
-
   public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
-    return spDataStreams.stream().map(this::mapSequence).collect(Collectors.toList());
-  }
-
-  public SpDataStream mapSequence(SpDataStream seq) {
-    if (seq instanceof SpDataSet) {
-      return new SpDataSet((SpDataSet) seq);
-    } else {
-      return new SpDataStream(seq);
-    }
+    return spDataStreams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList());
   }
 
   public SpDataStream stream(SpDataStream other) {
@@ -291,9 +278,7 @@ public class Cloner {
   }
 
   private NamedStreamPipesEntity cloneDescription(NamedStreamPipesEntity pe) {
-    if (pe instanceof SpDataSet) {
-      return new SpDataSet((SpDataSet) pe);
-    } else if (pe instanceof SpDataStream) {
+    if (pe instanceof SpDataStream) {
       return new SpDataStream((SpDataStream) pe);
     } else if (pe instanceof DataProcessorDescription) {
       return new DataProcessorDescription((DataProcessorDescription) pe);

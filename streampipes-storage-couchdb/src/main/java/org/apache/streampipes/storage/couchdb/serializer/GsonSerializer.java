@@ -21,7 +21,6 @@ package org.apache.streampipes.storage.couchdb.serializer;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -100,10 +99,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(TransformationRuleDescription.class,
         new JsonLdSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
-        .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet")
         .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataSet.class, "sourceType")
-        .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
         .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")

@@ -21,7 +21,6 @@ package org.apache.streampipes.manager.execution.task;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointProvider;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -36,7 +35,6 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
     var processorsAndSinks = executionInfo.getProcessorsAndSinks();
-    var dataSets = executionInfo.getDataSets();
 
     processorsAndSinks.forEach(el -> {
       try {
@@ -44,14 +42,6 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
         applyEndpointAndPipeline(pipeline.getPipelineId(), el, endpointUrl);
       } catch (NoServiceEndpointsAvailableException e) {
         executionInfo.addFailedPipelineElement(el);
-      }
-    });
-    dataSets.forEach(ds -> {
-      try {
-        var endpointUrl = findSelectedDsEndpoint(ds);
-        applyEndpointAndPipeline(pipeline.getPipelineId(), ds, endpointUrl);
-      } catch (NoServiceEndpointsAvailableException e) {
-        executionInfo.addFailedPipelineElement(ds);
       }
     });
 
@@ -82,7 +72,4 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
     return new ExtensionsServiceEndpointProvider().findSelectedEndpoint(pipelineElement);
   }
 
-  private String findSelectedDsEndpoint(SpDataSet dataSet) throws NoServiceEndpointsAvailableException {
-    return new ExtensionsServiceEndpointProvider().findSelectedEndpoint(dataSet);
-  }
 }

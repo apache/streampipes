@@ -21,7 +21,6 @@ package org.apache.streampipes.manager.execution.task;
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.storage.RunningPipelineElementStorage;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.message.PipelineStatusMessage;
 import org.apache.streampipes.model.message.PipelineStatusMessageType;
@@ -46,16 +45,13 @@ public class AfterInvocationTask implements PipelineExecutionTask {
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
     var graphs = executionInfo.getProcessorsAndSinks();
-    var dataSets = executionInfo.getDataSets();
-    storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
+    storeInvocationGraphs(pipeline.getPipelineId(), graphs);
     addPipelineStatus(pipeline);
   }
 
   private void storeInvocationGraphs(String pipelineId,
-                                     List<InvocableStreamPipesEntity> graphs,
-                                     List<SpDataSet> dataSets) {
+                                     List<InvocableStreamPipesEntity> graphs) {
     RunningPipelineElementStorage.runningProcessorsAndSinks.put(pipelineId, graphs);
-    RunningPipelineElementStorage.runningDataSets.put(pipelineId, dataSets);
   }
 
   private void addPipelineStatus(Pipeline pipeline) {

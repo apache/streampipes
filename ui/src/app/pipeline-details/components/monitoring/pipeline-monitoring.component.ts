@@ -23,7 +23,6 @@ import {
     PipelineMonitoringInfo,
     PipelineMonitoringService,
     PipelineService,
-    SpDataSet,
     SpDataStream,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
@@ -48,7 +47,6 @@ export class PipelineMonitoringComponent
     pipelineMonitoringInfoAvailable = false;
 
     allElements: (
-        | SpDataSet
         | SpDataStream
         | DataProcessorInvocation
         | DataSinkInvocation
