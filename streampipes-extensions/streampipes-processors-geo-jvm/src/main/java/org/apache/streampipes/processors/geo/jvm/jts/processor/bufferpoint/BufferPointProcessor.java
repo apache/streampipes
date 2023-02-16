@@ -23,6 +23,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
+import org.apache.streampipes.processors.geo.jvm.jts.helper.SpReprojectionBuilder;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.buffer.CapStyle;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.buffer.SpBufferBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -41,8 +42,10 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
+import org.opengis.util.FactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public class BufferPointProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geometry-key";
@@ -114,6 +117,17 @@ public class BufferPointProcessor extends StreamPipesDataProcessor {
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+
+    try {
+      if (SpReprojectionBuilder.isSisConfigurationValid()){
+        LOG.info("SIS DB Settings successful checked ");
+      } else {
+        LOG.warn("The required EPSG database is not imported");
+        throw new SpRuntimeException("The required EPSG database is not imported");
+      }
+    } catch (FactoryException e) {
+      throw new SpRuntimeException("Something unexpected happened " + e);
+    }
 
     this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);

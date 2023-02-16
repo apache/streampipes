@@ -23,6 +23,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
+import org.apache.streampipes.processors.geo.jvm.jts.helper.SpReprojectionBuilder;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.buffer.BufferSide;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.buffer.CapStyle;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.buffer.JoinStyle;
@@ -42,6 +43,7 @@ import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.locationtech.jts.geom.Geometry;
+import org.opengis.util.FactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,6 +143,17 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
+    try {
+      if (SpReprojectionBuilder.isSisConfigurationValid()){
+        LOG.info("SIS DB Settings successful checked ");
+      } else {
+        LOG.warn("The required EPSG database is not imported");
+        throw new SpRuntimeException("The required EPSG database is not imported");
+      }
+    } catch (FactoryException e) {
+      throw new SpRuntimeException("Something unexpected happened " + e);
+    }
+
     this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
     String readCapStyle = parameters.extractor().selectedSingleValue(CAP_KEY, String.class);
@@ -150,7 +163,6 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
     this.segments = parameters.extractor().singleValueParameter(SEGMENTS_KEY, Integer.class);
     this.simplifyFactor = parameters.extractor().singleValueParameter(SIMPLIFY_FACTOR_KEY, Double.class);
     this.distance = parameters.extractor().singleValueParameter(DISTANCE_KEY, Double.class);
-
     // transform names to numbers
     this.capStyle = 1;
     if (readCapStyle.equals(CapStyle.Square.name())) {
