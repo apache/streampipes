@@ -63,6 +63,7 @@
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-cep</artifactId>
+            <version>${flink.version}</version>
         </dependency>
 
         <!-- Dependency convergence -->

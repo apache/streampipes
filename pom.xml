@@ -595,6 +595,16 @@
 					<version>${flink.version}</version>
 				</dependency>
 				<dependency>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-clients</artifactId>
+					<version>${flink.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-cep</artifactId>
+					<version>${flink.version}</version>
+				</dependency>
+				<dependency>
 					<groupId>org.codehaus.plexus</groupId>
 					<artifactId>plexus-component-annotations</artifactId>
 					<version>${plexus-component-annotations.version}</version>
@@ -974,24 +984,6 @@
 					<version>${rest-assured.version}</version>
 					<scope>test</scope>
 				</dependency>
-
-        <dependency>
-          <groupId>org.apache.flink</groupId>
-          <artifactId>flink-test-utils</artifactId>
-          <version>${flink.version}</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.apache.logging.log4j</groupId>
-              <artifactId>log4j-slf4j-impl</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.flink</groupId>
-          <artifactId>flink-runtime</artifactId>
-          <version>${flink.version}</version>
-          <type>test-jar</type>
-        </dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-aether-provider</artifactId>
@@ -1260,11 +1252,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons-pool2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-cep</artifactId>
-                <version>${flink.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.opennlp</groupId>
