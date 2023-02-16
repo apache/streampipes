@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   jobmanager:
-    image: fogsyio/flink:1.13.5-scala_2.11
+    image: flink:1.16.1
     command: jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager

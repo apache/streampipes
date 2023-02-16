@@ -171,7 +171,7 @@ services:
       spnet:
 
   jobmanager:
-    image: fogsyio/flink:1.13.5-scala_2.11
+    image: flink:1.16.1
     command: jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
@@ -181,7 +181,7 @@ services:
       spnet:
 
   taskmanager:
-    image: fogsyio/flink:1.13.5-scala_2.11
+    image: flink:1.16.1
     depends_on:
       - jobmanager
     command: taskmanager

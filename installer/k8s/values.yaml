@@ -21,13 +21,13 @@ persistentVolumeReclaimPolicy: "Delete"
 persistentVolumeAccessModes: "ReadWriteOnce"
 
 streampipes:
-  version: "0.91.0-SNAPSHOT"
+  version: "0.92.0-SNAPSHOT"
   registry: "apachestreampipes"
 
 external:
   consulVersion: 1.14.3
   couchdbVersion: 3.3.1
-  flinkVersion: 1.13.5-scala_2.11
+  flinkVersion: 1.16.1
   kafkaVersion: 2.2.0
   zookeeperVersion: 3.4.13
   influxdbVersion: 2.6
