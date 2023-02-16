@@ -173,7 +173,7 @@
 	<okhttp.version>3.13.1</okhttp.version>
 	<opennlp.version>2.1.0</opennlp.version>
 	<postgresql.version>42.4.3</postgresql.version>
-	<pulsar.version>2.10.1</pulsar.version>
+	<pulsar.version>2.11.0</pulsar.version>
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
 	<scala-lang.version>2.13.10</scala-lang.version>

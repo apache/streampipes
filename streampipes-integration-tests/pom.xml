@@ -34,7 +34,7 @@
         <owasp.check.skip>true</owasp.check.skip>
         <maven.deploy.skip>false</maven.deploy.skip>
 
-        <pulsar.version>2.10.1</pulsar.version>
+        <pulsar.version>2.11.0</pulsar.version>
     </properties>
 
     <dependencies>
