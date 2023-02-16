@@ -42,7 +42,7 @@
         <module>streampipes-pipeline-elements-data-simulator</module>
         <module>streampipes-pipeline-elements-shared</module>
 
-        <!-- <module>streampipes-processors-aggregation-flink</module> -->
+        <module>streampipes-processors-aggregation-flink</module>
         <module>streampipes-processors-change-detection-jvm</module>
         <module>streampipes-processors-enricher-flink</module>
         <module>streampipes-processors-enricher-jvm</module>

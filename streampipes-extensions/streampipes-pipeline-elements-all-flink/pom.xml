@@ -32,12 +32,12 @@
     </properties>
 
     <dependencies>
-        <!-- <dependency>
+        <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-aggregation-flink</artifactId>
             <version>0.92.0-SNAPSHOT</version>
             <classifier>embed</classifier>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-enricher-flink</artifactId>
