@@ -29,8 +29,30 @@ github:
     issues: true
     projects: false
 
+  custom_subjects:
+    new_pr: "[PR] {title} ({repository})"
+    close_pr: "Re: [PR] {title} ({repository})"
+    comment_pr: "Re: [PR] {title} ({repository})"
+    diffcomment: "Re: [PR] {title} ({repository})"
+    merge_pr: "Re: [PR] {title} ({repository})"
+    new_issue: "[I] {title} ({repository})"
+    comment_issue: "Re: [I] {title} ({repository})"
+    close_issue: "Re: [I] {title} ({repository})"
+    catchall: "[GH] {title} ({repository})"
+
+  del_branch_on_merge: true
+
+  protected_branches:
+    dev:
+      required_status_checks:
+        strict: true
+
+
 notifications:
   jobs: issues@streampipes.apache.org
   commits: commits@streampipes.apache.org
   issues: issues@streampipes.apache.org
   discussions: dev@streampipes.apache.org
+  pullrequests_status:  dev@streampipes.apache.org
+  pullrequests_comment: dev@streampipes.apache.org
+  pullrequests_bot_dependabot: commits@streampipes.apache.org

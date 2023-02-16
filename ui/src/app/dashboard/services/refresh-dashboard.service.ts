@@ -21,7 +21,6 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class RefreshDashboardService {
-
     public refreshSubject: Subject<string> = new Subject<string>();
 
     public notify(currentDashboard: string): void {

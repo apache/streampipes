@@ -17,8 +17,7 @@
 ~
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -29,7 +28,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.91.0-SNAPSHOT</version>
+    <version>0.92.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -41,7 +40,6 @@
 	<!-- project dependencies -->
 	<activemq-client.version>5.17.3</activemq-client.version>
 	<asm.version>9.4</asm.version>
-	<byte-buddy.version>1.12.6</byte-buddy.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
 	<commons-codec.version>1.11</commons-codec.version>
@@ -77,7 +75,6 @@
 	<jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
 	<javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
 	<javax-websocket-api.version>1.1</javax-websocket-api.version>
-	<javapoet.version>1.6.1</javapoet.version>
 	<jakarta-json.version>2.0.1</jakarta-json.version>
 	<jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
 	<jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
@@ -90,7 +87,7 @@
 	<jetty.version>10.0.10</jetty.version>
 	<jgrapht.version>1.5.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
-	<jna.version>5.8.0</jna.version>
+	<jna.version>5.13.0</jna.version>
 	<json-path.version>5.3.0</json-path.version>
 	<json-smart.version>2.4.8</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
@@ -98,10 +95,10 @@
 	<kotlin-stdlib.version>1.8.0</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
 	<log4j.version>2.19.0</log4j.version>
-	<lz4.version>1.7.1</lz4.version>
+	<lz4.version>1.8.0</lz4.version>
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
-	<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
+	<maven-plugin-annotations.version>3.7.1</maven-plugin-annotations.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
 	<objenesis.version>3.3</objenesis.version>
@@ -117,7 +114,7 @@
 	<retrofit.version>2.5.0</retrofit.version>
 	<roaster.version>2.28.0.Final</roaster.version>
 	<siddhi.version>5.1.27</siddhi.version>
-	<simple-java-mail.version>7.6.0</simple-java-mail.version>
+	<simple-java-mail.version>7.8.0</simple-java-mail.version>
 	<slf4j.version>2.0.6</slf4j.version>
 	<snakeyaml.version>1.32</snakeyaml.version>
 	<snappy-java.version>1.1.7.7</snappy-java.version>
@@ -129,6 +126,9 @@
 	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
+			<!-- Geo dependencies -->
+			<jts-core.version>1.19.0</jts-core.version>
+			<apache-sis-referencing.version>1.2</apache-sis-referencing.version>
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
@@ -144,26 +144,24 @@
 	<amqp-client.version>5.16.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
 	<boofcv.version>0.33</boofcv.version>
-	<bcprov.version>1.66</bcprov.version>
+	<bcprov.version>1.70</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
 	<checker-qual.version>3.28.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
-	<commons-compress.version>1.21</commons-compress.version>
+	<commons-compress.version>1.22</commons-compress.version>
 	<commons-text.version>1.10.0</commons-text.version>
 	<commons-pool2.version>2.11.1</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
-	<ddogleg.version>0.16</ddogleg.version>
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
-	<google-maps-services.version>0.10.0</google-maps-services.version>
+	<google-maps-services.version>2.1.2</google-maps-services.version>
 	<graalvm.js.version>22.3.1</graalvm.js.version>
-	<iotdb.version>1.0.0</iotdb.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
 	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
 	<jsrosbridge.version>0.2.0</jsrosbridge.version>
-	<jedis.version>3.3.0</jedis.version>
+	<jedis.version>4.3.1</jedis.version>
 	<j2objc-annotations.version>1.3</j2objc-annotations.version>
 	<language-detector.version>0.6</language-detector.version>
 	<log4j-to-slf4j.version>2.8.2</log4j-to-slf4j.version>
@@ -185,6 +183,7 @@
 	<snakeyaml.version>1.26</snakeyaml.version>
 	<xerces.version>2.12.2</xerces.version>
 	<zstd-jni.version>1.4.3-1</zstd-jni.version>
+	<inlong.version>1.5.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 	<maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -192,30 +191,29 @@
 	<!-- Connect Dependencies-->
 	<animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
 	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
-	<bcprov.version>1.68</bcprov.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<commons-text.version>1.8</commons-text.version>
 	<guice.version>5.1.0</guice.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
-	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
+	<nimbus-jose-jwt.version>9.30.1</nimbus-jose-jwt.version>
 	<opencsv.version>5.5.2</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
-	<proton-j.version>0.30.0</proton-j.version>
+	<proton-j.version>0.34.0</proton-j.version>
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
 	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-	<checkstyle.version>9.2.1</checkstyle.version>
+	<checkstyle.version>10.6.0</checkstyle.version>
 	<extra-enforcer-rules.version>1.6.1</extra-enforcer-rules.version>
 	<formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
 	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-	<maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-	<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+	<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
+	<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
 	<maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
-	<maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
-	<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+	<maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
+	<maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
 	<mave-release-plugin.version>3.0.0-M5</mave-release-plugin.version>
 	<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 	<maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
@@ -369,11 +367,6 @@
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
 					<version>${commons-logging.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.squareup</groupId>
-					<artifactId>javapoet</artifactId>
-					<version>${javapoet.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>de.grundid.opendatalab</groupId>
@@ -958,18 +951,6 @@
 					<scope>test</scope>
 				</dependency>
 				<dependency>
-					<groupId>net.bytebuddy</groupId>
-					<artifactId>byte-buddy</artifactId>
-					<version>${byte-buddy.version}</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>net.bytebuddy</groupId>
-					<artifactId>byte-buddy-agent</artifactId>
-					<version>${byte-buddy.version}</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
 					<groupId>org.mockito</groupId>
 					<artifactId>mockito-core</artifactId>
 					<version>${mockito.version}</version>
@@ -1098,11 +1079,6 @@
 					<groupId>org.apache.commons</groupId>
 					<artifactId>commons-text</artifactId>
 					<version>${commons-text.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk14</artifactId>
-					<version>${bcprov.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.bouncycastle</groupId>
@@ -1290,17 +1266,6 @@
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.iotdb</groupId>
-                <artifactId>iotdb-jdbc</artifactId>
-                <version>${iotdb.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.opennlp</groupId>
                 <artifactId>opennlp-tools</artifactId>
                 <version>${opennlp.version}</version>
@@ -1330,11 +1295,6 @@
                 <groupId>org.boofcv</groupId>
                 <artifactId>boofcv-core</artifactId>
                 <version>${boofcv.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ddogleg</groupId>
-                <artifactId>ddogleg</artifactId>
-                <version>${ddogleg.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.ditto</groupId>
@@ -1376,6 +1336,24 @@
                 <artifactId>quartz</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.inlong</groupId>
+                <artifactId>tubemq-client</artifactId>
+                <version>${inlong.version}</version>
+            </dependency>
+				     <!-- Geo dependencies -->
+				    <dependency>
+							<!-- https://mvnrepository.com/artifact/org.locationtech.jts/jts-core -->
+							<groupId>org.locationtech.jts</groupId>
+							<artifactId>jts-core</artifactId>
+							<version>${jts-core.version}</version>
+						</dependency>
+				    <dependency>
+							<!-- https://mvnrepository.com/artifact/org.apache.sis.core/sis-referencing -->
+							<groupId>org.apache.sis.core</groupId>
+							<artifactId>sis-referencing</artifactId>
+							<version>${apache-sis-referencing.version}</version>
+						</dependency>
 
             <!-- dependency convergence -->
             <dependency>
@@ -1464,6 +1442,7 @@
         <module>streampipes-messaging-nats</module>
         <module>streampipes-integration-tests</module>
 		<module>streampipes-rest-extensions</module>
+        <module>streampipes-extensions/streampipes-connectors-influx</module>
     </modules>
 
     <profiles>
@@ -1569,7 +1548,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>${maven-release-plugin.version}</version>
                     <configuration>
                         <useReleaseProfile>true</useReleaseProfile>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -1675,7 +1653,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <dependencyConvergence/>
+                                <dependencyConvergence />
                             </rules>
                         </configuration>
                     </execution>
@@ -1911,7 +1889,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
         <url>https://github.com/apache/streampipes</url>
-        <tag>dev</tag>
+        <tag>rel/0.91.0</tag>
     </scm>
 
     <issueManagement>

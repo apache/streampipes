@@ -21,25 +21,27 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: './standalone-dashboard.component.html',
-    styleUrls: ['./standalone-dashboard.component.css']
+    styleUrls: ['./standalone-dashboard.component.css'],
 })
 export class StandaloneDashboardComponent implements OnInit {
-
     dashboard: Dashboard;
     dashboardReady = false;
 
-    constructor(private activatedRoute: ActivatedRoute,
-                private dashboardService: DashboardService) {
-    }
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private dashboardService: DashboardService,
+    ) {}
 
     ngOnInit(): void {
         this.activatedRoute.params.subscribe(params => {
             if (params['dashboardId']) {
                 const dashboardId = params['dashboardId'];
-                this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
-                    this.dashboard = dashboard;
-                    this.dashboardReady = true;
-                });
+                this.dashboardService
+                    .getDashboard(dashboardId)
+                    .subscribe(dashboard => {
+                        this.dashboard = dashboard;
+                        this.dashboardReady = true;
+                    });
             }
         });
     }

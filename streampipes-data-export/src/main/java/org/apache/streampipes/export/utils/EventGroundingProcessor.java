@@ -19,19 +19,65 @@
 package org.apache.streampipes.export.utils;
 
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.model.config.SpProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 public class EventGroundingProcessor {
 
-  public static void applyOverride(TransportProtocol protocol) {
-    if (protocol instanceof KafkaTransportProtocol) {
-      protocol.setBrokerHostname(BackendConfig.INSTANCE.getKafkaHost());
-      ((KafkaTransportProtocol) protocol).setKafkaPort(BackendConfig.INSTANCE.getKafkaPort());
-    } else if (protocol instanceof MqttTransportProtocol) {
-      protocol.setBrokerHostname(BackendConfig.INSTANCE.getMqttHost());
-      ((MqttTransportProtocol) protocol).setPort(BackendConfig.INSTANCE.getMqttPort());
+  SpProtocol configuredProtocol;
+  public EventGroundingProcessor() {
+    this.configuredProtocol = BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+  }
+
+  public TransportProtocol applyOverride(TransportProtocol protocol) {
+    var protocolOverride = getConfiguredTransportProtocol();
+    protocolOverride.setTopicDefinition(protocol.getTopicDefinition());
+    return protocolOverride;
+  }
+
+  private TransportProtocol getConfiguredTransportProtocol() {
+    return initializeProtocol(configuredProtocol);
+  }
+
+  private TransportProtocol initializeProtocol(SpProtocol configuredProtocol) {
+    if (isProtocol(configuredProtocol, KafkaTransportProtocol.class)) {
+      return makeKafkaProtocol();
+    } else if (isProtocol(configuredProtocol, MqttTransportProtocol.class)) {
+      return makeMqttProtocol();
+    } else {
+      return makeNatsProtocol();
     }
   }
+
+  private boolean isProtocol(SpProtocol configuredProtocol,
+                             Class<?> actualProtocolClass) {
+    return configuredProtocol.getProtocolClass().equals(actualProtocolClass.getCanonicalName());
+  }
+
+
+  private KafkaTransportProtocol makeKafkaProtocol() {
+    var protocol = new KafkaTransportProtocol();
+    protocol.setBrokerHostname(BackendConfig.INSTANCE.getKafkaHost());
+    protocol.setKafkaPort(BackendConfig.INSTANCE.getKafkaPort());
+    return protocol;
+  }
+
+  private MqttTransportProtocol makeMqttProtocol() {
+    var protocol = new MqttTransportProtocol();
+    protocol.setBrokerHostname(BackendConfig.INSTANCE.getMqttHost());
+    protocol.setPort(BackendConfig.INSTANCE.getMqttPort());
+    return protocol;
+  }
+
+  private NatsTransportProtocol makeNatsProtocol() {
+    var protocol = new NatsTransportProtocol();
+    protocol.setBrokerHostname(BackendConfig.INSTANCE.getNatsHost());
+    protocol.setPort(BackendConfig.INSTANCE.getNatsPort());
+    return protocol;
+  }
+
+
 }

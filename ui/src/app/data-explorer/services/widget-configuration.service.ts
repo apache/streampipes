@@ -22,10 +22,10 @@ import { RefreshMessage } from '../models/dataview-dashboard.model';
 
 @Injectable()
 export class WidgetConfigurationService {
+    public configurationChangedSubject: Subject<RefreshMessage> =
+        new Subject<RefreshMessage>();
 
-  public configurationChangedSubject: Subject<RefreshMessage> = new Subject<RefreshMessage>();
-
-  public notify(refreshMessage: RefreshMessage): void {
-    this.configurationChangedSubject.next(refreshMessage);
-  }
+    public notify(refreshMessage: RefreshMessage): void {
+        this.configurationChangedSubject.next(refreshMessage);
+    }
 }

@@ -27,7 +27,7 @@ import java.util.Map;
 public class ValueEventTransformer implements ValueTransformationRule {
 
   private final List<UnitTransformationRule> unitTransformationRules;
-  private final List<TimestampTranformationRule> timestampTransformationRules;
+  private List<TimestampTranformationRule> timestampTransformationRules;
   private final List<CorrectionValueTransformationRule> correctionValueTransformationRules;
   private final List<DatatypeTransformationRule> datatypeTransformationRules;
 
@@ -70,5 +70,14 @@ public class ValueEventTransformer implements ValueTransformationRule {
     }
 
     return event;
+  }
+
+  public List<TimestampTranformationRule> getTimestampTransformationRules() {
+    return timestampTransformationRules;
+  }
+
+  public void setTimestampTransformationRules(
+      List<TimestampTranformationRule> timestampTransformationRules) {
+    this.timestampTransformationRules = timestampTransformationRules;
   }
 }

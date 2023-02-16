@@ -30,8 +30,10 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -80,6 +82,20 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   public SpDataStream getElement(@PathParam("elementId") String elementId) {
     return getDataStreamResourceManager().findAsInvocation(elementId);
+  }
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  public Response addDataStream(SpDataStream dataStream) {
+    try {
+      getDataStreamResourceManager().add(dataStream, getAuthenticatedUserSid());
+      return ok();
+    } catch (IllegalArgumentException e) {
+      return badRequest(e.getMessage());
+    }
   }
 
   private DataStreamResourceManager getDataStreamResourceManager() {

@@ -17,17 +17,26 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-  <sp-basic-header-title-component [title]="elementName + ' - Logs'"></sp-basic-header-title-component>
-  <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!logs || logs.length === 0">
-    <h5 class="text-center">(no log messages available)</h5>
-  </div>
-  <div fxFlex="100" fxLayout="column" *ngIf="logs && logs.length > 0">
-    <div *ngFor="let logEntry of logs">
-      <sp-exception-message [message]="logEntry.errorMessage"
-                            [messageTimestamp]="logEntry.timestamp"
-                            *ngIf="logEntry.errorMessage"
-                            class="mt-10">
-      </sp-exception-message>
+    <sp-basic-header-title-component
+        [title]="elementName + ' - Logs'"
+    ></sp-basic-header-title-component>
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        *ngIf="!logs || logs.length === 0"
+    >
+        <h5 class="text-center">(no log messages available)</h5>
     </div>
-  </div>
+    <div fxFlex="100" fxLayout="column" *ngIf="logs && logs.length > 0">
+        <div *ngFor="let logEntry of logs">
+            <sp-exception-message
+                [message]="logEntry.errorMessage"
+                [messageTimestamp]="logEntry.timestamp"
+                *ngIf="logEntry.errorMessage"
+                class="mt-10"
+            >
+            </sp-exception-message>
+        </div>
+    </div>
 </div>

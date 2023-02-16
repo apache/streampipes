@@ -37,12 +37,10 @@
 export type FormatExportConfig = JsonFormatExportConfig | CsvFormatExportConfig;
 
 export interface JsonFormatExportConfig {
-  exportFormat: 'json';
+    exportFormat: 'json';
 }
 
 export interface CsvFormatExportConfig {
-  exportFormat: 'csv';
-  delimiter: 'comma' | 'semicolon';
+    exportFormat: 'csv';
+    delimiter: 'comma' | 'semicolon';
 }
-
-

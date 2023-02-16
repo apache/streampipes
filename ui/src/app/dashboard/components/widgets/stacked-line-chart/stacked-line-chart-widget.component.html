@@ -16,13 +16,27 @@
   ~
   -->
 
-<div class="status-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+<div
+    class="status-panel"
+    [ngStyle]="{
+        'background-color': selectedBackgroundColor,
+        'color': selectedPrimaryTextColor
+    }"
+>
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
-        {{selectedTitle}}
+        {{ selectedTitle }}
     </div>
-    <div fxFlex [ngStyle]="{height: currentHeight + 'px'}" *ngIf="configReady">
-        <div echarts [options]="chartOption" [ngStyle]="{'width': '100%', 'height': '100%'}"
-             (chartInit)="onChartInit($event)" [merge]= "dynamicData">
-        </div>
+    <div
+        fxFlex
+        [ngStyle]="{ height: currentHeight + 'px' }"
+        *ngIf="configReady"
+    >
+        <div
+            echarts
+            [options]="chartOption"
+            [ngStyle]="{ width: '100%', height: '100%' }"
+            (chartInit)="onChartInit($event)"
+            [merge]="dynamicData"
+        ></div>
     </div>
 </div>

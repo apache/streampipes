@@ -33,83 +33,89 @@ import * as CodeMirror from 'codemirror';
 (window as any).JSHINT = JSHINT;
 
 @Component({
-  selector: 'sp-static-code-input',
-  templateUrl: './static-code-input.component.html',
-  styleUrls: ['./static-code-input.component.scss']
+    selector: 'sp-static-code-input',
+    templateUrl: './static-code-input.component.html',
+    styleUrls: ['./static-code-input.component.scss'],
 })
 export class StaticCodeInputComponent
-    extends AbstractValidatedStaticPropertyRenderer<CodeInputStaticProperty> implements OnInit, AfterViewInit {
+    extends AbstractValidatedStaticPropertyRenderer<CodeInputStaticProperty>
+    implements OnInit, AfterViewInit
+{
+    editorOptions = {
+        mode: 'javascript',
+        autoRefresh: true,
+        theme: 'dracula',
+        autoCloseBrackets: true,
+        lineNumbers: true,
+        lineWrapping: true,
+        gutters: ['CodeMirror-lint-markers'],
+        lint: true,
+        extraKeys: {
+            'Ctrl-Space': 'autocomplete',
+        },
+    };
 
-  editorOptions = {
-    mode: 'javascript',
-    autoRefresh: true,
-    theme: 'dracula',
-    autoCloseBrackets: true,
-    lineNumbers: true,
-    lineWrapping: true,
-    gutters: ['CodeMirror-lint-markers'],
-    lint: true,
-    extraKeys: {
-      'Ctrl-Space': 'autocomplete'
+    constructor() {
+        super();
     }
-  };
 
-  constructor() {
-    super();
-  }
-
-  ngOnInit() {
-    this.applyLanguage();
-    if (!this.staticProperty.value || this.staticProperty.value === '') {
-      this.staticProperty.value = this.staticProperty.codeTemplate;
-    }
-  }
-
-  applyLanguage() {
-    this.staticProperty.language === 'None' ?
-        this.editorOptions.mode = '' : this.editorOptions.mode = this.staticProperty.language.toLowerCase();
-    console.log(this.editorOptions);
-  }
-
-  ngAfterViewInit() {
-    this.enableCodeHints();
-  }
-
-  onStatusChange(status: any) {
-  }
-
-  onValueChange(value: any) {
-  }
-
-  resetCode() {
-    this.staticProperty.value = this.staticProperty.codeTemplate;
-  }
-
-  cleanCode() {
-    this.staticProperty.value = '';
-  }
-
-
-  enableCodeHints() {
-    if (this.editorOptions.mode === 'javascript') {
-      const jsHint = (CodeMirror as any).hint.javascript;
-      (CodeMirror as any).hint.javascript = (cm) => {
-        const cursor = cm.getCursor();
-        const token = cm.getTokenAt(cursor);
-        let inner = {from: cm.getCursor(), to: cm.getCursor(), list: []};
-        const previousCursor = {line: cursor.line, ch: (cursor.ch - 1), sticky: null};
-        const previousToken = cm.getTokenAt(previousCursor);
-        if (token.string === '.' && previousToken.string === 'event') {
-          this.eventSchemas[0].eventProperties.forEach(ep => {
-            inner.list.unshift(ep.runtimeName);
-          });
-        } else {
-          inner = jsHint(cm);
+    ngOnInit() {
+        this.applyLanguage();
+        if (!this.staticProperty.value || this.staticProperty.value === '') {
+            this.staticProperty.value = this.staticProperty.codeTemplate;
         }
-        return inner;
-      };
     }
-  }
 
+    applyLanguage() {
+        this.staticProperty.language === 'None'
+            ? (this.editorOptions.mode = '')
+            : (this.editorOptions.mode =
+                  this.staticProperty.language.toLowerCase());
+        console.log(this.editorOptions);
+    }
 
+    ngAfterViewInit() {
+        this.enableCodeHints();
+    }
+
+    onStatusChange(status: any) {}
+
+    onValueChange(value: any) {}
+
+    resetCode() {
+        this.staticProperty.value = this.staticProperty.codeTemplate;
+    }
+
+    cleanCode() {
+        this.staticProperty.value = '';
+    }
+
+    enableCodeHints() {
+        if (this.editorOptions.mode === 'javascript') {
+            const jsHint = (CodeMirror as any).hint.javascript;
+            (CodeMirror as any).hint.javascript = cm => {
+                const cursor = cm.getCursor();
+                const token = cm.getTokenAt(cursor);
+                let inner = {
+                    from: cm.getCursor(),
+                    to: cm.getCursor(),
+                    list: [],
+                };
+                const previousCursor = {
+                    line: cursor.line,
+                    ch: cursor.ch - 1,
+                    sticky: null,
+                };
+                const previousToken = cm.getTokenAt(previousCursor);
+                if (token.string === '.' && previousToken.string === 'event') {
+                    this.eventSchemas[0].eventProperties.forEach(ep => {
+                        inner.list.unshift(ep.runtimeName);
+                    });
+                } else {
+                    inner = jsHint(cm);
+                }
+                return inner;
+            };
+        }
+    }
 }

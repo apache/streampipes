@@ -23,66 +23,71 @@ import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
 
 @Component({
-  selector: 'setup',
-  templateUrl: './setup.component.html',
-  styleUrls: ['./setup.component.scss']
+    selector: 'sp-setup',
+    templateUrl: './setup.component.html',
+    styleUrls: ['./setup.component.scss'],
 })
 export class SetupComponent {
+    @ViewChild('scroll') private scrollContainer: ElementRef;
 
-  @ViewChild('scroll') private scrollContainer: ElementRef;
+    installationFinished: boolean;
+    installationSuccessful: boolean;
+    installationResults: any;
+    loading: any;
+    setup: any = {
+        adminEmail: '',
+        adminPassword: '',
+        installPipelineElements: true,
+    };
+    installationRunning: any;
+    nextTaskTitle: any;
 
-  installationFinished: boolean;
-  installationSuccessful: boolean;
-  installationResults: any;
-  loading: any;
-  setup: any = {
-    adminEmail: '',
-    adminPassword: '',
-    installPipelineElements: true
-  };
-  installationRunning: any;
-  nextTaskTitle: any;
+    constructor(
+        private loginService: LoginService,
+        private restApi: RestApi,
+        private router: Router,
+        public appConstants: AppConstants,
+    ) {
+        this.installationFinished = false;
+        this.installationSuccessful = false;
+        this.installationResults = [];
+        this.loading = false;
+    }
 
-  constructor(private loginService: LoginService,
-              private restApi: RestApi,
-              private router: Router,
-              public appConstants: AppConstants) {
+    configure(currentInstallationStep) {
+        this.installationRunning = true;
+        this.loading = true;
 
-    this.installationFinished = false;
-    this.installationSuccessful = false;
-    this.installationResults = [];
-    this.loading = false;
-  }
-
-  configure(currentInstallationStep) {
-    this.installationRunning = true;
-    this.loading = true;
-
-    this.loginService.setupInstall(this.setup, currentInstallationStep).subscribe(data => {
-        this.installationResults = this.installationResults.concat(data.statusMessages);
-        this.nextTaskTitle = data.nextTaskTitle;
-        this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
-        const nextInstallationStep = currentInstallationStep + 1;
-        if (nextInstallationStep > (data.installationStepCount - 1)) {
-            // eslint-disable-next-line no-sequences
-            this.restApi.configured()
-                .subscribe(res => {
-                    if (res.configured) {
-                        this.installationFinished = true;
-                        this.loading = false;
-                    }
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                }), (() => {
-                this.loading = false;
-                // this.showToast("Fatal error, contact administrator");
+        this.loginService
+            .setupInstall(this.setup, currentInstallationStep)
+            .subscribe(data => {
+                this.installationResults = this.installationResults.concat(
+                    data.statusMessages,
+                );
+                this.nextTaskTitle = data.nextTaskTitle;
+                this.scrollContainer.nativeElement.scrollTop =
+                    this.scrollContainer.nativeElement.scrollHeight;
+                const nextInstallationStep = currentInstallationStep + 1;
+                if (nextInstallationStep > data.installationStepCount - 1) {
+                    // eslint-disable-next-line no-sequences
+                    this.restApi.configured().subscribe(res => {
+                        if (res.configured) {
+                            this.installationFinished = true;
+                            this.loading = false;
+                        }
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    }),
+                        () => {
+                            this.loading = false;
+                            // this.showToast("Fatal error, contact administrator");
+                        };
+                } else {
+                    this.configure(nextInstallationStep);
+                }
             });
-        } else {
-            this.configure(nextInstallationStep);
-        }
-    });
-  }
+    }
 
-  openLoginPage() {
-    this.router.navigate(['login']);
-  }
+    openLoginPage() {
+        this.router.navigate(['login']);
+    }
 }

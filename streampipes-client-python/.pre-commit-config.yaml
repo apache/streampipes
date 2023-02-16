@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-files: streampipes_client/|tests/
+files: streampipes/|tests/
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
@@ -58,6 +58,13 @@ repos:
 
       - id: black
         name: black
+        language: python
+        types: [ python ]
+        entry: black --line-length=120
+        verbose: true
+
+      - id: blacken-docks
+        name: blacken-docs
         language: python
         types: [ python ]
         entry: black --line-length=120

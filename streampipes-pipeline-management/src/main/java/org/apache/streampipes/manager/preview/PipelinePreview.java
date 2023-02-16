@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.manager.preview;
 
-import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.execution.http.HttpRequestBuilder;
+import org.apache.streampipes.manager.execution.http.DetachHttpRequest;
+import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
@@ -92,7 +92,7 @@ public class PipelinePreview {
     graphs.forEach(g -> {
       try {
         g.setSelectedEndpointUrl(findSelectedEndpoint(g));
-        new HttpRequestBuilder(g, g.getSelectedEndpointUrl(), null).invoke();
+        new InvokeHttpRequest().execute(g, g.getSelectedEndpointUrl(), null);
       } catch (NoServiceEndpointsAvailableException e) {
         e.printStackTrace();
       }
@@ -101,8 +101,8 @@ public class PipelinePreview {
 
   private void detachGraphs(List<InvocableStreamPipesEntity> graphs) {
     graphs.forEach(g -> {
-      String endpointUrl = g.getSelectedEndpointUrl() + "/" + InstanceIdExtractor.extractId(g.getElementId());
-      new HttpRequestBuilder(g, endpointUrl, null).detach();
+      String endpointUrl = g.getSelectedEndpointUrl() + g.getDetachPath();
+      new DetachHttpRequest().execute(g, endpointUrl, null);
     });
   }
 

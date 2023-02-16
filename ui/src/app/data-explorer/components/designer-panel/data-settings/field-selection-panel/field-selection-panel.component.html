@@ -17,37 +17,56 @@
   -->
 <div fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="start center">
-            <span class="data-explorer-header">Fields </span>
-            <button mat-button mat-raised-button color="accent" class="small-button btn-margin"
-                    data-cy="data-explorer-data-set-field-select-all"
-                    (click)="selectAllFields()">Select all
-            </button>
-            <button mat-button mat-raised-button class="small-button mat-basic btn-margin"
-                    (click)="deselectAllFields()">Deselect all
-            </button>
-            <button mat-button
-                    mat-icon-button
-                    class="pull-btn-right"
-                    matTooltip="Expand More"
-                    (click)="toggleExpandFields()"
-                    *ngIf="!expandFields">
-                <mat-icon>expand_more</mat-icon>
-            </button>
-            <button mat-button
-                    mat-icon-button
-                    class="pull-btn-right"
-                    matTooltip="Expand Less"
-                    (click)="toggleExpandFields()"
-                    *ngIf="expandFields">
-                <mat-icon>expand_less</mat-icon>
-            </button>
+        <span class="data-explorer-header">Fields </span>
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button btn-margin"
+            data-cy="data-explorer-data-set-field-select-all"
+            (click)="selectAllFields()"
+        >
+            Select all
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="small-button mat-basic btn-margin"
+            (click)="deselectAllFields()"
+        >
+            Deselect all
+        </button>
+        <button
+            mat-button
+            mat-icon-button
+            class="pull-btn-right"
+            matTooltip="Expand More"
+            (click)="toggleExpandFields()"
+            *ngIf="!expandFields"
+        >
+            <mat-icon>expand_more</mat-icon>
+        </button>
+        <button
+            mat-button
+            mat-icon-button
+            class="pull-btn-right"
+            matTooltip="Expand Less"
+            (click)="toggleExpandFields()"
+            *ngIf="expandFields"
+        >
+            <mat-icon>expand_less</mat-icon>
+        </button>
     </div>
     <div fxLayout="column" [class.field-scroll-panel]="!expandFields">
-        <div fxLayout="column"
-             *ngFor="let field of sourceConfig.queryConfig.fields">
-            <sp-field-selection [field]="field"
-                                [sourceConfig]="sourceConfig"
-                                [widgetId]="widgetId">
+        <div
+            fxLayout="column"
+            *ngFor="let field of sourceConfig.queryConfig.fields"
+        >
+            <sp-field-selection
+                [field]="field"
+                [sourceConfig]="sourceConfig"
+                [widgetId]="widgetId"
+            >
             </sp-field-selection>
         </div>
     </div>

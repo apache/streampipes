@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.export.ExportItem;
@@ -70,17 +69,17 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     if (overrideDocument) {
       pipeline.setSepas(pipeline.getSepas().stream().peek(processor -> {
         processor.getInputStreams()
-            .forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
-        EventGroundingProcessor.applyOverride(processor.getOutputStream().getEventGrounding().getTransportProtocol());
+            .forEach(is -> overrideProtocol(is.getEventGrounding()));
+        overrideProtocol(processor.getOutputStream().getEventGrounding());
       }).collect(Collectors.toList()));
 
       pipeline.setStreams(pipeline.getStreams().stream().peek(stream -> {
-        EventGroundingProcessor.applyOverride(stream.getEventGrounding().getTransportProtocol());
+        overrideProtocol(stream.getEventGrounding());
       }).collect(Collectors.toList()));
 
       pipeline.setActions(pipeline.getActions().stream().peek(sink -> {
         sink.getInputStreams()
-            .forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
+            .forEach(is -> overrideProtocol(is.getEventGrounding()));
       }).collect(Collectors.toList()));
 
     }

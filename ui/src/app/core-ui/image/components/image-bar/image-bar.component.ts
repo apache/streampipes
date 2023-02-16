@@ -15,73 +15,73 @@
  * limitations under the License.
  */
 
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    Output,
+} from '@angular/core';
 
 @Component({
-  selector: 'sp-image-bar',
-  templateUrl: './image-bar.component.html',
-  styleUrls: ['./image-bar.component.css']
+    selector: 'sp-image-bar',
+    templateUrl: './image-bar.component.html',
+    styleUrls: ['./image-bar.component.css'],
 })
-export class ImageBarComponent implements OnInit {
+export class ImageBarComponent {
+    public _imageRoutes;
 
-  public _imageRoutes;
-
-  @Input()
-  set imagesRoutes(imageRoutes) {
-    this.maxImages = imageRoutes.length;
-    this._imageRoutes = imageRoutes;
-  }
-  @Input() selectedIndex: number;
-  @Input() enableShortCuts: boolean;
-  @Input() imagePreviewHeight = 65;
-
-  @Output() indexChange: EventEmitter<number> = new EventEmitter<number>();
-
-  public maxImages;
-
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  changeImage(index) {
-    this.indexChange.emit(index);
-  }
-
-  goToStart() {
-    this.indexChange.emit(0);
-  }
-
-  previousImage() {
-    if (this.selectedIndex < this._imageRoutes.length - 1) {
-      this.indexChange.emit(this.selectedIndex + 1);
+    @Input()
+    set imagesRoutes(imageRoutes) {
+        this.maxImages = imageRoutes.length;
+        this._imageRoutes = imageRoutes;
     }
-  }
+    @Input() selectedIndex: number;
+    @Input() enableShortCuts: boolean;
+    @Input() imagePreviewHeight = 65;
 
-  nextImage() {
-    if (this.selectedIndex > 0) {
-      this.indexChange.emit(this.selectedIndex - 1);
+    @Output() indexChange: EventEmitter<number> = new EventEmitter<number>();
+
+    public maxImages;
+
+    constructor() {}
+
+    changeImage(index) {
+        this.indexChange.emit(index);
     }
-  }
 
-  goToEnd() {
-    this.indexChange.emit(this.maxImages - 1);
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleShortCuts(event: KeyboardEvent) {
-    if (this.enableShortCuts && !event.repeat) {
-      const key = event.key;
-      switch (key.toLowerCase()) {
-        case 'q':
-          this.nextImage();
-          break;
-        case 'e':
-          this.previousImage();
-          break;
-      }
+    goToStart() {
+        this.indexChange.emit(0);
     }
-  }
 
+    previousImage() {
+        if (this.selectedIndex < this._imageRoutes.length - 1) {
+            this.indexChange.emit(this.selectedIndex + 1);
+        }
+    }
+
+    nextImage() {
+        if (this.selectedIndex > 0) {
+            this.indexChange.emit(this.selectedIndex - 1);
+        }
+    }
+
+    goToEnd() {
+        this.indexChange.emit(this.maxImages - 1);
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    handleShortCuts(event: KeyboardEvent) {
+        if (this.enableShortCuts && !event.repeat) {
+            const key = event.key;
+            switch (key.toLowerCase()) {
+                case 'q':
+                    this.nextImage();
+                    break;
+                case 'e':
+                    this.previousImage();
+                    break;
+            }
+        }
+    }
 }

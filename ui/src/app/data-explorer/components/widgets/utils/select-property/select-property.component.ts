@@ -20,26 +20,25 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-select-property',
-  templateUrl: './select-property.component.html',
-  styleUrls: ['./select-property.component.scss']
+    selector: 'sp-select-property',
+    templateUrl: './select-property.component.html',
+    styleUrls: ['./select-property.component.scss'],
 })
 export class SelectPropertyComponent {
+    @Output() changeSelectedProperty: EventEmitter<DataExplorerField> =
+        new EventEmitter();
 
-  @Output() changeSelectedProperty: EventEmitter<DataExplorerField> = new EventEmitter();
+    @Input() availableProperties: DataExplorerField[];
+    @Input() selectedProperty: DataExplorerField;
+    @Input() label: string;
 
-  @Input() availableProperties: DataExplorerField[];
-  @Input() selectedProperty: DataExplorerField;
-  @Input() label: string;
+    constructor() {}
 
-  constructor() { }
+    triggerSelectedProperty(fields: DataExplorerField) {
+        this.changeSelectedProperty.emit(fields);
+    }
 
-  triggerSelectedProperty(fields: DataExplorerField) {
-    this.changeSelectedProperty.emit(fields);
-  }
-
-  compare(available: DataExplorerField, selected: DataExplorerField) {
-    return (available.fullDbName === selected.fullDbName);
-  }
-
+    compare(available: DataExplorerField, selected: DataExplorerField) {
+        return available.fullDbName === selected.fullDbName;
+    }
 }

@@ -21,9 +21,9 @@ import mkdocs_gen_files
 
 nav = mkdocs_gen_files.Nav()
 
-for path in sorted(Path("streampipes_client").rglob("*.py")):
-    module_path = path.relative_to("streampipes_client").with_suffix("")
-    doc_path = path.relative_to("streampipes_client").with_suffix(".md")
+for path in sorted(Path("streampipes").rglob("*.py")):
+    module_path = path.relative_to("streampipes").with_suffix("")
+    doc_path = path.relative_to("streampipes").with_suffix(".md")
     full_doc_path = Path("reference", doc_path)
 
     parts = list(module_path.parts)
@@ -42,7 +42,7 @@ for path in sorted(Path("streampipes_client").rglob("*.py")):
 
     with mkdocs_gen_files.open(full_doc_path, "w+") as fd:
         identifier = ".".join(parts)
-        print(f"::: streampipes_client.{identifier}", file=fd)
+        print(f"::: streampipes.{identifier}", file=fd)
 
     mkdocs_gen_files.set_edit_path(full_doc_path, path)
 

@@ -186,7 +186,7 @@ const navigateToFormatSelection = () => {
 
     ConnectUtils.goToNewAdapterPage();
 
-    ConnectUtils.selectAdapter('File_Set');
+    ConnectUtils.selectAdapter('File_Stream');
 
     ConnectUtils.configureAdapter([]);
 };

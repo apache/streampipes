@@ -19,15 +19,39 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayout="column">
-            <div *ngFor="let possibleElement of possibleElements; index as i" (click)="create(possibleElement)">
-                <div fxLayout="row" class="m-10" fxLayoutAlign="start center" [style]="styles[i]" (mouseenter)="changeStyle(i, true)" (mouseleave)="changeStyle(i, false)"
-                     [attr.data-cy]="'sp-compatible-elements-' + possibleElement.name.toLowerCase().replaceAll(' ', '_')">
-                    <div class="draggable-icon-preview {{isDataProcessor(possibleElement) ? 'sepa' : 'action'}}">
-                        <pipeline-element [pipelineElement]="possibleElement" [iconSize]="true"></pipeline-element>
+            <div
+                *ngFor="let possibleElement of possibleElements; index as i"
+                (click)="create(possibleElement)"
+            >
+                <div
+                    fxLayout="row"
+                    class="m-10"
+                    fxLayoutAlign="start center"
+                    [style]="styles[i]"
+                    (mouseenter)="changeStyle(i, true)"
+                    (mouseleave)="changeStyle(i, false)"
+                    [attr.data-cy]="
+                        'sp-compatible-elements-' +
+                        possibleElement.name.toLowerCase().replaceAll(' ', '_')
+                    "
+                >
+                    <div
+                        class="draggable-icon-preview {{
+                            isDataProcessor(possibleElement) ? 'sepa' : 'action'
+                        }}"
+                    >
+                        <sp-pipeline-element
+                            [pipelineElement]="possibleElement"
+                            [iconSize]="true"
+                        ></sp-pipeline-element>
                     </div>
                     <div fxLayout="column" fxLayoutAlign="center start">
-                        <div class="element-name">{{ possibleElement.name }}</div>
-                        <div class="element-description">{{ possibleElement.description }}</div>
+                        <div class="element-name">
+                            {{ possibleElement.name }}
+                        </div>
+                        <div class="element-description">
+                            {{ possibleElement.description }}
+                        </div>
                     </div>
                 </div>
                 <mat-divider></mat-divider>
@@ -36,7 +60,6 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-
         <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
             Cancel
         </button>

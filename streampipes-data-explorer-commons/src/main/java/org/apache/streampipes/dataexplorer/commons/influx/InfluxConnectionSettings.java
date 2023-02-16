@@ -18,38 +18,80 @@
 
 package org.apache.streampipes.dataexplorer.commons.influx;
 
-import org.apache.streampipes.dataexplorer.commons.configs.DataExplorerEnvKeys;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
+import org.apache.streampipes.commons.environment.Environment;
 
 public class InfluxConnectionSettings {
 
   private final Integer influxDbPort;
+
+  private final String influxDbProtocol;
   private final String influxDbHost;
   private final String databaseName;
-  private final String user;
-  private final String password;
 
-  private InfluxConnectionSettings(String influxDbHost,
+  private String username;
+  private String password;
+  private String token;
+
+  private InfluxAuthMode authMode;
+
+
+  private InfluxConnectionSettings(String influxDbProtocol,
+                                   String influxDbHost,
                                    Integer influxDbPort,
-                                   String databaseName,
-                                   String user,
-                                   String password) {
+                                   String databaseName) {
+    this.influxDbProtocol = influxDbProtocol;
     this.influxDbHost = influxDbHost;
     this.influxDbPort = influxDbPort;
     this.databaseName = databaseName;
-    this.user = user;
-    this.password = password;
   }
 
-  public static InfluxConnectionSettings from(SpConfig configStore) {
+  private InfluxConnectionSettings(String influxDbProtocol,
+                                   String influxDbHost,
+                                   Integer influxDbPort,
+                                   String databaseName,
+                                   String token) {
+    this(influxDbProtocol, influxDbHost, influxDbPort, databaseName);
+    this.token = token;
+    this.authMode = InfluxAuthMode.TOKEN;
+  }
+
+  private InfluxConnectionSettings(String influxDbProtocol,
+                                   String influxDbHost,
+                                   Integer influxDbPort,
+                                   String databaseName,
+                                   String username,
+                                   String password) {
+    this(influxDbProtocol, influxDbHost, influxDbPort, databaseName);
+    this.username = username;
+    this.password = password;
+    this.authMode = InfluxAuthMode.USERNAME_PASSWORD;
+  }
+
+  public static InfluxConnectionSettings from(String influxDbProtocol,
+                                              String influxDbHost,
+                                              int influxDbPort,
+                                              String databaseName,
+                                              String username,
+                                              String password) {
+    return new InfluxConnectionSettings(influxDbProtocol, influxDbHost, influxDbPort, databaseName, username, password);
+  }
+
+  public static InfluxConnectionSettings from(String influxDbProtocol,
+                                              String influxDbHost,
+                                              int influxDbPort,
+                                              String databaseName,
+                                              String token) {
+    return new InfluxConnectionSettings(influxDbProtocol, influxDbHost, influxDbPort, databaseName, token);
+  }
+
+  public static InfluxConnectionSettings from(Environment environment) {
 
     return new InfluxConnectionSettings(
-        configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL) + "://"
-            + configStore.getString(DataExplorerEnvKeys.DATA_LAKE_HOST),
-        configStore.getInteger(DataExplorerEnvKeys.DATA_LAKE_PORT),
-        configStore.getString(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME),
-        configStore.getString(DataExplorerEnvKeys.DATA_LAKE_USERNAME),
-        configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PASSWORD));
+        environment.getTsStorageProtocol().getValueOrDefault(),
+        environment.getTsStorageHost().getValueOrDefault(),
+        environment.getTsStoragePort().getValueOrDefault(),
+        environment.getTsStorageBucket().getValueOrDefault(),
+        environment.getTsStorageToken().getValueOrDefault());
   }
 
   public Integer getInfluxDbPort() {
@@ -64,11 +106,23 @@ public class InfluxConnectionSettings {
     return databaseName;
   }
 
-  public String getUser() {
-    return user;
+  public String getToken() {
+    return token;
+  }
+
+  public InfluxAuthMode getAuthMode() {
+    return authMode;
+  }
+
+  public String getUsername() {
+    return username;
   }
 
   public String getPassword() {
     return password;
+  }
+
+  public String getConnectionUrl() {
+    return  influxDbProtocol + "://" + influxDbHost + ":" + influxDbPort;
   }
 }

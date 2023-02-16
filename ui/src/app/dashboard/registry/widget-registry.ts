@@ -29,9 +29,9 @@ import { TableConfig } from '../components/widgets/table/table-config';
 import { TrafficLightConfig } from '../components/widgets/trafficlight/traffic-light-config';
 import { SchemaMatch } from '../sdk/matching/schema-match';
 import {
-    DashboardWidgetSettings, DataLakeMeasure,
+    DashboardWidgetSettings,
+    DataLakeMeasure,
     EventSchema,
-    VisualizablePipeline
 } from '@streampipes/platform-services';
 import { WordCloudConfig } from '../components/widgets/wordcloud/wordcloud-config';
 import { StatusWidgetConfig } from '../components/widgets/status/status-config';
@@ -39,7 +39,6 @@ import { BarRaceConfig } from '../components/widgets/bar-race/bar-race-config';
 import { StackedLineChartConfig } from '../components/widgets/stacked-line-chart/stacked-line-chart-config';
 
 export class WidgetRegistry {
-
     private static availableWidgets: WidgetConfig[] = [
         new BarRaceConfig(),
         new NumberConfig(),
@@ -54,21 +53,28 @@ export class WidgetRegistry {
         new HtmlConfig(),
         new StatusWidgetConfig(),
         new TrafficLightConfig(),
-        new WordCloudConfig()
+        new WordCloudConfig(),
     ];
 
     static getAvailableWidgetTemplates(): DashboardWidgetSettings[] {
         const widgetTemplates = new Array<DashboardWidgetSettings>();
-        this.availableWidgets.forEach(widget => widgetTemplates.push(widget.getConfig()));
+        this.availableWidgets.forEach(widget =>
+            widgetTemplates.push(widget.getConfig()),
+        );
         return widgetTemplates;
     }
 
     static getCompatibleWidgetTemplates(dataLakeMeasure: DataLakeMeasure) {
         const inputSchema: EventSchema = dataLakeMeasure.eventSchema;
-        return this.getAvailableWidgetTemplates().filter(widget => WidgetRegistry.isCompatible(widget, inputSchema));
+        return this.getAvailableWidgetTemplates().filter(widget =>
+            WidgetRegistry.isCompatible(widget, inputSchema),
+        );
     }
 
-    static isCompatible(widget: DashboardWidgetSettings, inputSchema: EventSchema) {
+    static isCompatible(
+        widget: DashboardWidgetSettings,
+        inputSchema: EventSchema,
+    ) {
         return new SchemaMatch().match(widget.requiredSchema, inputSchema);
     }
 }

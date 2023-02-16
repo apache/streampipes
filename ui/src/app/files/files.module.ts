@@ -43,45 +43,45 @@ import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    CoreUiModule,
-    FlexLayoutModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatDividerModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatTableModule,
-    MatTabsModule,
-    MatTooltipModule,
-    PlatformServicesModule,
-    ServicesModule,
-    SharedUiModule,
-    RouterModule.forChild([
-      {
-        path: 'files',
-        children: [
-          {
-            path: '',
-            component: FilesComponent
-          }]
-      }])
-
-  ],
-  declarations: [
-    FilesComponent,
-    FileOverviewComponent,
-    FileUploadDialogComponent
-  ],
-  providers: []
+    imports: [
+        CommonModule,
+        CoreUiModule,
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatFormFieldModule,
+        MatGridListModule,
+        MatIconModule,
+        MatInputModule,
+        MatDividerModule,
+        MatListModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatTableModule,
+        MatTabsModule,
+        MatTooltipModule,
+        PlatformServicesModule,
+        ServicesModule,
+        SharedUiModule,
+        RouterModule.forChild([
+            {
+                path: 'files',
+                children: [
+                    {
+                        path: '',
+                        component: FilesComponent,
+                    },
+                ],
+            },
+        ]),
+    ],
+    declarations: [
+        FilesComponent,
+        FileOverviewComponent,
+        FileUploadDialogComponent,
+    ],
+    providers: [],
 })
-export class FilesModule {
-}
+export class FilesModule {}

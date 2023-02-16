@@ -21,38 +21,43 @@ import { AccountActivationService } from '../../services/account-activation.serv
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'sp-activate-account',
-  templateUrl: './activate-account.component.html',
-  styleUrls: ['../login/login.component.scss']
+    selector: 'sp-activate-account',
+    templateUrl: './activate-account.component.html',
+    styleUrls: ['../login/login.component.scss'],
 })
 export class ActivateAccountComponent implements OnInit {
+    activationCode: string;
+    activationSuccess: boolean;
+    activationPerformed = false;
 
-  activationCode: string;
-  activationSuccess: boolean;
-  activationPerformed = false;
+    constructor(
+        private accountActivationService: AccountActivationService,
+        private route: ActivatedRoute,
+        private router: Router,
+    ) {}
 
-  constructor(private accountActivationService: AccountActivationService,
-              private route: ActivatedRoute,
-              private router: Router) {}
-
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.activationCode = params['activationCode'];
-      if (this.activationCode) {
-        this.accountActivationService.activateAccount(this.activationCode).subscribe(success => {
-          this.activationPerformed = true;
-          this.activationSuccess = true;
-        }, error => {
-          this.activationPerformed = true;
+    ngOnInit(): void {
+        this.route.queryParams.subscribe(params => {
+            this.activationCode = params['activationCode'];
+            if (this.activationCode) {
+                this.accountActivationService
+                    .activateAccount(this.activationCode)
+                    .subscribe(
+                        success => {
+                            this.activationPerformed = true;
+                            this.activationSuccess = true;
+                        },
+                        error => {
+                            this.activationPerformed = true;
+                        },
+                    );
+            } else {
+                this.activationPerformed = true;
+            }
         });
-      } else {
-        this.activationPerformed = true;
-      }
-    });
-  }
+    }
 
-  navigateToLoginPage() {
-    this.router.navigate(['/login']);
-  }
-
+    navigateToLoginPage() {
+        this.router.navigate(['/login']);
+    }
 }

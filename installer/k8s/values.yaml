@@ -25,12 +25,23 @@ streampipes:
   registry: "apachestreampipes"
 
 external:
-  consulVersion: 1.9.6
-  couchdbVersion: 2.3.1
+  consulVersion: 1.14.3
+  couchdbVersion: 3.3.1
   flinkVersion: 1.13.5-scala_2.11
   kafkaVersion: 2.2.0
   zookeeperVersion: 3.4.13
-  influxdbVersion: 1.7
+  influxdbVersion: 2.6
+
+# For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
+
+influxdb:
+  username: "admin"
+  password: "sp-admin"
+  adminToken: "sp-admin"
+  initOrg: "sp"
+  initBucket: "sp"
+  initMode: "setup"
+
 
 
 # NOTE: Local testing only!

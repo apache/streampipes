@@ -16,27 +16,55 @@
   ~
   -->
 <div fxLayout="column" fxLayoutAlign="space-around center">
-
     <h2>Labels</h2>
     <div *ngIf="noCategories">There are no labels available!</div>
     <div *ngIf="!noCategories">
-        <div style="padding-left: 5px; padding-right: 5px; border-radius: 50px; font-size: 20px;">
+        <div
+            style="
+                padding-left: 5px;
+                padding-right: 5px;
+                border-radius: 50px;
+                font-size: 20px;
+            "
+        >
             <mat-form-field style="margin-top: -15px; margin-bottom: -10px">
-                <mat-select (selectionChange)="changeCategory($event.value)" [(value)]="selectedCategory">
-                    <mat-option *ngFor="let category of categories" [value]="category">
-                        {{category.name}}
+                <mat-select
+                    (selectionChange)="changeCategory($event.value)"
+                    [(value)]="selectedCategory"
+                >
+                    <mat-option
+                        *ngFor="let category of categories"
+                        [value]="category"
+                    >
+                        {{ category.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <mat-list>
-            <mat-list-item *ngFor="let label of labels; index as i"
-                           [style.background-color]="selectedLabel.name == label.name ? 'lightgrey' : 'white'"
-                           style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
-                           (click)="selectLabel(label)">
-
-                <mat-icon matListIcon [style.color]="label.color" style="margin-top: -8px;">color_lens</mat-icon>
-                <h4 style="margin-top: -3px;"> {{label.name}} <label *ngIf="i < 10"> #{{i+1}}</label> </h4>
+            <mat-list-item
+                *ngFor="let label of labels; index as i"
+                [style.background-color]="
+                    selectedLabel.name === label.name ? 'lightgrey' : 'white'
+                "
+                style="
+                    height: 30px;
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                    border-radius: 50px;
+                    margin-bottom: 5px;
+                "
+                (click)="selectLabel(label)"
+            >
+                <mat-icon
+                    matListIcon
+                    [style.color]="label.color"
+                    style="margin-top: -8px"
+                    >color_lens</mat-icon
+                >
+                <h4 style="margin-top: -3px">
+                    {{ label.name }} <label *ngIf="i < 10"> #{{ i + 1 }}</label>
+                </h4>
             </mat-list-item>
         </mat-list>
     </div>

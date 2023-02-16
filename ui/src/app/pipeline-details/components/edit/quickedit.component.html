@@ -62,7 +62,7 @@
 
                         <div fxFlex="100" fxLayout="column" *ngIf="isInvocable">
                             <form [formGroup]="parentForm" fxFlex="100">
-                                <app-static-property
+                                <sp-app-static-property
                                     *ngFor="
                                         let config of _selectedElement.staticProperties
                                     "
@@ -75,7 +75,7 @@
                                     [parentForm]="parentForm"
                                     [fieldName]="config.internalName"
                                 >
-                                </app-static-property>
+                                </sp-app-static-property>
                             </form>
                         </div>
                     </div>

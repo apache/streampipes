@@ -21,8 +21,10 @@ package org.apache.streampipes.wrapper.standalone.function;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FunctionContextGenerator {
@@ -31,19 +33,23 @@ public class FunctionContextGenerator {
   private final String functionId;
   private final String serviceGroup;
 
+  private final Map<String, SpOutputCollector> outputCollectors;
+
   public FunctionContextGenerator(String functionId,
                                   String serviceGroup,
-                                  List<String> streamIds) {
+                                  List<String> streamIds,
+                                  Map<String, SpOutputCollector> outputCollectors) {
     this.streamIds = streamIds;
     this.serviceGroup = serviceGroup;
     this.functionId = functionId;
+    this.outputCollectors = outputCollectors;
   }
 
   public FunctionContext generate() {
     var client = makeClient();
     var streams = receiveStreams(client);
 
-    return new FunctionContext(functionId, serviceGroup, streams, client);
+    return new FunctionContext(functionId, serviceGroup, streams, outputCollectors, client);
   }
 
   private StreamPipesClient makeClient() {

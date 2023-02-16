@@ -16,8 +16,8 @@
  */
 
 export enum LabelingMode {
-  ReactLabeling,
-  PolygonLabeling,
-  BrushLabeling,
-  NoneLabeling,
+    ReactLabeling,
+    PolygonLabeling,
+    BrushLabeling,
+    NoneLabeling,
 }

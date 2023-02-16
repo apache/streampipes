@@ -22,21 +22,19 @@ import { DataExplorerDataConfig } from '@streampipes/platform-services';
 import { DataExportConfig } from '../../model/data-export-config.model';
 
 @Component({
-  selector: 'sp-select-data',
-  templateUrl: './select-data.component.html',
-  styleUrls: ['./select-data.component.scss']
+    selector: 'sp-select-data',
+    templateUrl: './select-data.component.html',
+    styleUrls: ['./select-data.component.scss'],
 })
 export class SelectDataComponent {
+    /**
+     * Contains the measurement and date range for a selected data widget
+     * This value is not required
+     */
+    @Input() dataExplorerDataConfig: DataExplorerDataConfig;
 
-  /**
-   * Contains the measurement and date range for a selected data widget
-   * This value is not required
-   */
-  @Input() dataExplorerDataConfig: DataExplorerDataConfig;
-
-  /**
-   * Represents the user configurations for the download
-   */
-  @Input() dataExportConfig: DataExportConfig;
-
+    /**
+     * Represents the user configurations for the download
+     */
+    @Input() dataExportConfig: DataExportConfig;
 }

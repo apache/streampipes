@@ -16,57 +16,127 @@
   ~
   -->
 <div>
-    <div  [ngStyle]="currentMouseOverElement==pipelineElement.payload.dom ? {opacity: 1} : {opacity: 1}" class="sp-fade-options">
-        <span class="options-button customize-button" *ngIf="pipelineElement.type!='stream'" style="z-index:10">
-            <button class="options-icon-button" mat-button mat-icon-button matTooltip="Configure Element"
-                    [matTooltipPosition]="'above'"
-                    (click)="customizeElement(pipelineElement)">
-                <i class="material-icons options-icon-size">settings</i>
-                </button>
-        </span>
-        <span class="options-button customize-button"
-              *ngIf="pipelineElement.type=='stream' && isWildcardTopic()"
-              style="z-index:10">
-            <button class="options-icon-button" mat-button mat-icon-button matTooltip="Configure Element" [matTooltipPosition]="'above'"
-                    (click)="openCustomizeStreamDialog()">
+    <div
+        [ngStyle]="
+            currentMouseOverElement === pipelineElement.payload.dom
+                ? { opacity: 1 }
+                : { opacity: 1 }
+        "
+        class="sp-fade-options"
+    >
+        <span
+            class="options-button customize-button"
+            *ngIf="pipelineElement.type !== 'stream'"
+            style="z-index: 10"
+        >
+            <button
+                class="options-icon-button"
+                mat-button
+                mat-icon-button
+                matTooltip="Configure Element"
+                [matTooltipPosition]="'above'"
+                (click)="customizeElement(pipelineElement)"
+            >
                 <i class="material-icons options-icon-size">settings</i>
             </button>
         </span>
-        <span class="options-button delete-button" style="z-index:10">
-            <button class="options-icon-button" mat-button mat-icon-button matTooltip="Delete Element" [matTooltipPosition]="'above'"
-                    (click)="removeElement(pipelineElement)">
+        <span
+            class="options-button customize-button"
+            *ngIf="pipelineElement.type === 'stream' && isWildcardTopic()"
+            style="z-index: 10"
+        >
+            <button
+                class="options-icon-button"
+                mat-button
+                mat-icon-button
+                matTooltip="Configure Element"
+                [matTooltipPosition]="'above'"
+                (click)="openCustomizeStreamDialog()"
+            >
+                <i class="material-icons options-icon-size">settings</i>
+            </button>
+        </span>
+        <span class="options-button delete-button" style="z-index: 10">
+            <button
+                class="options-icon-button"
+                mat-button
+                mat-icon-button
+                matTooltip="Delete Element"
+                [matTooltipPosition]="'above'"
+                (click)="removeElement(pipelineElement)"
+            >
                 <i class="material-icons options-icon-size">clear</i>
             </button>
         </span>
-        <span class="options-button possible-button" *ngIf="pipelineElement.type!='action'" style="z-index:10">
-            <button class="options-icon-button" mat-button mat-icon-button matTooltip="Compatible Elements" [matTooltipPosition]="'below'"
-                    [disabled]="!possibleElements || possibleElements.length == 0"
-                    (click)="openPossibleElementsDialog()"
-                    [attr.data-cy]="'sp-possible-elements-' + pipelineElement.payload.name.toLowerCase().replaceAll(' ', '_')"_>
+        <span
+            class="options-button possible-button"
+            *ngIf="pipelineElement.type !== 'action'"
+            style="z-index: 10"
+        >
+            <button
+                class="options-icon-button"
+                mat-button
+                mat-icon-button
+                matTooltip="Compatible Elements"
+                [matTooltipPosition]="'below'"
+                [disabled]="!possibleElements || possibleElements.length === 0"
+                (click)="openPossibleElementsDialog()"
+                [attr.data-cy]="
+                    'sp-possible-elements-' +
+                    pipelineElement.payload.name
+                        .toLowerCase()
+                        .replaceAll(' ', '_')
+                "
+                _
+            >
                 <i class="material-icons options-icon-size">account_tree</i>
-        </button>
+            </button>
         </span>
-        <span class="options-button recommended-button"
-              *ngIf="pipelineElement.type!='action' && (recommendationsAvailable) && recommendedElements.length > 0"
-              style="z-index:10">
-            <button class="options-icon-button" mat-button mat-icon-button matTooltip="Recommended Elements" [matTooltipPosition]="'below'"
-                    (click)="showRecommendations($event)"
-                    [disabled]="!recommendationsAvailable">
+        <span
+            class="options-button recommended-button"
+            *ngIf="
+                pipelineElement.type !== 'action' &&
+                recommendationsAvailable &&
+                recommendedElements.length > 0
+            "
+            style="z-index: 10"
+        >
+            <button
+                class="options-icon-button"
+                mat-button
+                mat-icon-button
+                matTooltip="Recommended Elements"
+                [matTooltipPosition]="'below'"
+                (click)="showRecommendations($event)"
+                [disabled]="!recommendationsAvailable"
+            >
                 <i class="material-icons options-icon-size">add</i>
             </button>
         </span>
-        <span class="options-button help-button" style="z-index:10">
-            <button class="options-icon-button" matTooltip="Help" [matTooltipPosition]="'below'"
-                    mat-button mat-icon-button (click)="openHelpDialog()">
+        <span class="options-button help-button" style="z-index: 10">
+            <button
+                class="options-icon-button"
+                matTooltip="Help"
+                [matTooltipPosition]="'below'"
+                mat-button
+                mat-icon-button
+                (click)="openHelpDialog()"
+            >
                 <i class="material-icons options-icon-size">help</i>
-                </button>
+            </button>
         </span>
-        <div class="editor-pe-info" [ngClass]="'pe-info-' + pipelineElementCssType">
-            {{pipelineElement.payload.name}}
+        <div
+            class="editor-pe-info"
+            [ngClass]="'pe-info-' + pipelineElementCssType"
+        >
+            {{ pipelineElement.payload.name }}
         </div>
     </div>
-    <pipeline-element-recommendation [rawPipelineModel]="rawPipelineModel"
-                                 [pipelineElementDomId]="pipelineElement.payload.dom"
-                                 [recommendedElements]="recommendedElements"
-                                 [recommendationsShown]="recommendationsShown" *ngIf="recommendationsAvailable"></pipeline-element-recommendation>
+    <sp-pipeline-element-recommendation
+        [rawPipelineModel]="rawPipelineModel"
+        [pipelineElementDomId]="pipelineElement.payload.dom"
+        [recommendedElements]="recommendedElements"
+        [recommendationsShown]="recommendationsShown"
+        *ngIf="recommendationsAvailable"
+    ></sp-pipeline-element-recommendation>
 </div>

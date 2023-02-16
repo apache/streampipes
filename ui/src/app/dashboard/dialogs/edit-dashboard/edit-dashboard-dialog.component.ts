@@ -21,12 +21,11 @@ import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
-    selector: 'edit-dashboard-dialog-component',
+    selector: 'sp-edit-dashboard-dialog-component',
     templateUrl: './edit-dashboard-dialog.component.html',
-    styleUrls: ['./edit-dashboard-dialog.component.scss']
+    styleUrls: ['./edit-dashboard-dialog.component.scss'],
 })
 export class EditDashboardDialogComponent {
-
     @Input()
     createMode: boolean;
 
@@ -35,8 +34,8 @@ export class EditDashboardDialogComponent {
 
     constructor(
         public dialogRef: DialogRef<EditDashboardDialogComponent>,
-        private dashboardService: DashboardService) {
-    }
+        private dashboardService: DashboardService,
+    ) {}
 
     onCancel(): void {
         this.dialogRef.close();
@@ -44,9 +43,13 @@ export class EditDashboardDialogComponent {
 
     onSave(): void {
         if (this.createMode) {
-            this.dashboardService.saveDashboard(this.dashboard).subscribe(result => this.onCancel());
+            this.dashboardService
+                .saveDashboard(this.dashboard)
+                .subscribe(result => this.onCancel());
         } else {
-            this.dashboardService.updateDashboard(this.dashboard).subscribe(result => this.onCancel());
+            this.dashboardService
+                .updateDashboard(this.dashboard)
+                .subscribe(result => this.onCancel());
         }
     }
 }

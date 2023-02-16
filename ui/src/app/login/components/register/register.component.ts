@@ -18,60 +18,71 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
 } from '@angular/forms';
 import { RegistrationModel } from './registration.model';
 import { LoginService } from '../../services/login.service';
 import { checkPasswords } from '../../utils/check-password';
 
 @Component({
-  selector: 'sp-register-user',
-  templateUrl: './register.component.html',
-  styleUrls: ['../login/login.component.scss']
+    selector: 'sp-register-user',
+    templateUrl: './register.component.html',
+    styleUrls: ['../login/login.component.scss'],
 })
 export class RegisterComponent implements OnInit {
+    parentForm: UntypedFormGroup;
 
-  parentForm: UntypedFormGroup;
+    registrationData: RegistrationModel;
 
-  registrationData: RegistrationModel;
+    registrationInProcess = false;
+    registrationSuccess = false;
+    registrationError: string;
 
-  registrationInProcess = false;
-  registrationSuccess = false;
-  registrationError: string;
+    constructor(
+        private fb: UntypedFormBuilder,
+        private loginService: LoginService,
+    ) {}
 
-  constructor(private fb: UntypedFormBuilder,
-              private loginService: LoginService) {
-  }
+    ngOnInit(): void {
+        this.parentForm = this.fb.group({});
+        this.parentForm.addControl(
+            'username',
+            new UntypedFormControl('', [Validators.required, Validators.email]),
+        );
+        this.parentForm.addControl(
+            'password',
+            new UntypedFormControl('', Validators.required),
+        );
+        this.parentForm.addControl(
+            'repeatPassword',
+            new UntypedFormControl('', Validators.required),
+        );
+        this.parentForm.setValidators(checkPasswords);
 
-  ngOnInit(): void {
-    this.parentForm = this.fb.group({});
-    this.parentForm.addControl('username', new UntypedFormControl('', [Validators.required, Validators.email]));
-    this.parentForm.addControl('password', new UntypedFormControl('', Validators.required));
-    this.parentForm.addControl('repeatPassword', new UntypedFormControl('', Validators.required));
-    this.parentForm.setValidators(checkPasswords);
+        this.parentForm.valueChanges.subscribe(v => {
+            this.registrationData = {
+                username: v.username,
+                password: v.password,
+            };
+        });
+    }
 
-    this.parentForm.valueChanges.subscribe(v => {
-      this.registrationData = {
-        username: v.username,
-        password: v.password
-      };
-    });
-  }
-
-  registerUser() {
-    this.registrationError = undefined;
-    this.registrationInProcess = true;
-    this.loginService.registerUser(this.registrationData).subscribe(response => {
-      this.registrationInProcess = false;
-      this.registrationSuccess = true;
-    }, error => {
-      this.registrationInProcess = false;
-      this.registrationSuccess = false;
-      this.registrationError = error.error.notifications[0].title;
-    });
-  }
+    registerUser() {
+        this.registrationError = undefined;
+        this.registrationInProcess = true;
+        this.loginService.registerUser(this.registrationData).subscribe(
+            response => {
+                this.registrationInProcess = false;
+                this.registrationSuccess = true;
+            },
+            error => {
+                this.registrationInProcess = false;
+                this.registrationSuccess = false;
+                this.registrationError = error.error.notifications[0].title;
+            },
+        );
+    }
 }
-

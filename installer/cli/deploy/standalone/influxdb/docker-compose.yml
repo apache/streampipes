@@ -16,13 +16,20 @@
 version: "3.4"
 services:
   influxdb:
-    image: fogsyio/influxdb:1.7
+    image: influxdb:2.6
     environment:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
       - INFLUXDB_ADMIN_ENABLED=true
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=sp-admin
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=sp-admin
+      - DOCKER_INFLUXDB_INIT_ORG=sp
+      - DOCKER_INFLUXDB_INIT_BUCKET=sp
+      - DOCKER_INFLUXDB_INIT_MODE=${SP_INFLUX_INIT_MODE}
     volumes:
       - influxdb:/var/lib/influxdb
+      - influxdb2:/var/lib/influxdb2
     logging:
       driver: "json-file"
       options:
@@ -33,6 +40,7 @@ services:
 
 volumes:
   influxdb:
+  influxdb2:
 
 networks:
   spnet:

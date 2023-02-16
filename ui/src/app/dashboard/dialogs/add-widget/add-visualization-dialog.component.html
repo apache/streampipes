@@ -19,74 +19,112 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
-            <div fxFlex="100" style="margin:5px;width:100%">
-                <div *ngIf="page == 'select-pipeline'">
-                    <h4>{{pages[0].description}}</h4>
+            <div fxFlex="100" style="margin: 5px; width: 100%">
+                <div *ngIf="page === 'select-pipeline'">
+                    <h4>{{ pages[0].description }}</h4>
                     <mat-list>
-                        <mat-list-item *ngFor="let pipeline of visualizablePipelines"
-                                       (click)="selectPipeline(pipeline)"
-                                       class="list-item"
-                                        [attr.data-cy]="'dashboard-visualize-pipeline-' + pipeline.pipelineName.replaceAll(' ', '_')">
-                            <div mat-list-avatar
-                                 class="pipeline-avatar sp-accent-bg">{{iconText(pipeline.measureName)}}
+                        <mat-list-item
+                            *ngFor="let pipeline of visualizablePipelines"
+                            (click)="selectPipeline(pipeline)"
+                            class="list-item"
+                            [attr.data-cy]="
+                                'dashboard-visualize-pipeline-' +
+                                pipeline.pipelineName.replaceAll(' ', '_')
+                            "
+                        >
+                            <div
+                                mat-list-avatar
+                                class="pipeline-avatar sp-accent-bg"
+                            >
+                                {{ iconText(pipeline.measureName) }}
                             </div>
-                            <h4 mat-line>{{pipeline.pipelineName}}</h4>
-                            <p mat-line>{{pipeline.measureName}} </p>
+                            <h4 mat-line>{{ pipeline.pipelineName }}</h4>
+                            <p mat-line>{{ pipeline.measureName }}</p>
                         </mat-list-item>
                     </mat-list>
                 </div>
 
                 <!-- Select Type -->
-                <div *ngIf="page == 'select-widget'" fxLayout="column">
-                    <h4>{{pages[1].description}}</h4>
+                <div *ngIf="page === 'select-widget'" fxLayout="column">
+                    <h4>{{ pages[1].description }}</h4>
                     <mat-list>
-                        <mat-list-item *ngFor="let widget of availableWidgets"
-                                       (click)="selectWidget(widget)"
-                                       class="list-item"
-                                       [attr.data-cy]="'dashboard-select-widget-' + widget.widgetName">
-                            <div mat-list-avatar
-                                 class="pipeline-avatar sp-accent-bg">
-                                <span *ngIf="!widget.widgetIconName">{{iconText(widget.widgetLabel)}}</span>
-                                <span *ngIf="widget.widgetIconName"><i class="{{widget.widgetIconName}}"></i></span>
+                        <mat-list-item
+                            *ngFor="let widget of availableWidgets"
+                            (click)="selectWidget(widget)"
+                            class="list-item"
+                            [attr.data-cy]="
+                                'dashboard-select-widget-' + widget.widgetName
+                            "
+                        >
+                            <div
+                                mat-list-avatar
+                                class="pipeline-avatar sp-accent-bg"
+                            >
+                                <span *ngIf="!widget.widgetIconName">{{
+                                    iconText(widget.widgetLabel)
+                                }}</span>
+                                <span *ngIf="widget.widgetIconName"
+                                    ><i class="{{ widget.widgetIconName }}"></i
+                                ></span>
                             </div>
-                            <h4 mat-line>{{widget.widgetLabel}}</h4>
-                            <p mat-line>{{widget.widgetDescription}}</p>
+                            <h4 mat-line>{{ widget.widgetLabel }}</h4>
+                            <p mat-line>{{ widget.widgetDescription }}</p>
                         </mat-list-item>
                     </mat-list>
                 </div>
 
                 <!-- Select Scheme -->
-                <div *ngIf="page == 'configure-widget'" fxLayout="column">
-                    <b><h4>{{pages[2].description}}</h4></b>
+                <div *ngIf="page === 'configure-widget'" fxLayout="column">
+                    <b
+                        ><h4>{{ pages[2].description }}</h4></b
+                    >
                     <div fxFlex="100" fxLayout="column">
-                        <app-static-property *ngFor="let config of selectedWidget.config" [staticProperty]="config"
-                                             [staticProperties]="selectedWidget.config"
-                                             [eventSchemas]="[selectedPipeline.eventSchema]"
-                                             [fieldName]="config.internalName"
-                                             [parentForm]="parentForm">
-                        </app-static-property>
+                        <sp-app-static-property
+                            *ngFor="let config of selectedWidget.config"
+                            [staticProperty]="config"
+                            [staticProperties]="selectedWidget.config"
+                            [eventSchemas]="[selectedPipeline.eventSchema]"
+                            [fieldName]="config.internalName"
+                            [parentForm]="parentForm"
+                        >
+                        </sp-app-static-property>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button class="mat-basic mr-10" (click)="onCancel()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="onCancel()"
+        >
             Cancel
         </button>
-        <button mat-button mat-raised-button class="mat-basic mr-10" (click)="back()" *ngIf="(!('select-pipeline'===page))">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic mr-10"
+            (click)="back()"
+            *ngIf="!('select-pipeline' === page)"
+        >
             Back
         </button>
-        <button mat-button mat-raised-button color="accent"
-                (click)="next()"
-                [disabled]="'configure-widget' === page && !formValid"
-                data-cy="dashboard-new-widget-next-btn">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="next()"
+            [disabled]="'configure-widget' === page && !formValid"
+            data-cy="dashboard-new-widget-next-btn"
+        >
             <span *ngIf="!editMode && 'configure-widget' === page">Create</span>
             <span *ngIf="editMode && 'configure-widget' === page">Save</span>
-            <span *ngIf="editMode == null && !('configure-widget' === page)">Next</span>
+            <span *ngIf="editMode === null && !('configure-widget' === page)"
+                >Next</span
+            >
         </button>
     </div>
 </div>

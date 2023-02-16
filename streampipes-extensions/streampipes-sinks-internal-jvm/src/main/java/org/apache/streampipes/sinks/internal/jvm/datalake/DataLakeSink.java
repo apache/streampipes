@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.TimeSeriesStore;
 import org.apache.streampipes.model.DataSinkType;
@@ -69,7 +70,7 @@ public class DataLakeSink extends StreamPipesDataSink {
 
     DataLakeMeasure measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
 
-    this.timeSeriesStore = new TimeSeriesStore(runtimeContext.getConfigStore().getConfig(),
+    this.timeSeriesStore = new TimeSeriesStore(Environments.getEnvironment(),
         runtimeContext.getStreamPipesClient(),
         measure,
         true);

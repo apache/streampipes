@@ -19,45 +19,47 @@
 import { Injectable } from '@angular/core';
 import { JsplumbConfigService } from './jsplumb-config.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class JsplumbEndpointService {
+    constructor(private jsplumbConfigService: JsplumbConfigService) {}
 
-  constructor(private jsplumbConfigService: JsplumbConfigService) {
+    getJsplumbConfig(preview): any {
+        return preview
+            ? this.jsplumbConfigService.getPreviewConfig()
+            : this.jsplumbConfigService.getEditorConfig();
+    }
 
-  }
+    getStreamEndpoint(preview: boolean, pipelineElementDomId: string) {
+        const jsplumbConfig = this.getJsplumbConfig(preview);
+        const config = jsplumbConfig.streamEndpointOptions;
+        config.uuid = 'out-' + pipelineElementDomId;
+        return config;
+    }
 
-  getJsplumbConfig(preview): any {
-    return preview ? this.jsplumbConfigService.getPreviewConfig() : this.jsplumbConfigService.getEditorConfig();
-  }
+    getInputEndpoint(preview, pipelineElementDomId, index): any {
+        const jsplumbConfig = this.getJsplumbConfig(preview);
+        const inConfig = jsplumbConfig.leftTargetPointOptions;
+        inConfig.uuid = 'in-' + index + '-' + pipelineElementDomId;
+        return inConfig;
+    }
 
-  getStreamEndpoint(preview: boolean,
-                    pipelineElementDomId: string) {
-    const jsplumbConfig = this.getJsplumbConfig(preview);
-    const config = jsplumbConfig.streamEndpointOptions;
-    config.uuid = 'out-' + pipelineElementDomId;
-    return config;
-  }
+    getOutputEndpoint(preview, pipelineElementDomId): any {
+        const jsplumbConfig = this.getJsplumbConfig(preview);
+        const outConfig = jsplumbConfig.sepaEndpointOptions;
+        outConfig.uuid = 'out-' + pipelineElementDomId;
+        return outConfig;
+    }
 
-  getInputEndpoint(preview, pipelineElementDomId, index): any {
-    const jsplumbConfig = this.getJsplumbConfig(preview);
-    const inConfig = jsplumbConfig.leftTargetPointOptions;
-    inConfig.uuid = 'in-' + index + '-' + pipelineElementDomId;
-    return inConfig;
-  }
+    getNewTargetPoint(preview, x, y, pipelineElementDomId, index): any {
+        const inConfig = this.getInputEndpoint(
+            preview,
+            pipelineElementDomId,
+            index,
+        );
+        inConfig.type = 'empty';
+        inConfig.anchor = [x, y, -1, 0];
+        inConfig.isTarget = true;
 
-  getOutputEndpoint(preview, pipelineElementDomId): any {
-    const jsplumbConfig = this.getJsplumbConfig(preview);
-    const outConfig = jsplumbConfig.sepaEndpointOptions;
-    outConfig.uuid = 'out-' + pipelineElementDomId;
-    return outConfig;
-  }
-
-  getNewTargetPoint(preview, x, y, pipelineElementDomId, index): any {
-    const inConfig = this.getInputEndpoint(preview, pipelineElementDomId, index);
-    inConfig.type = 'empty';
-    inConfig.anchor = [x, y, -1, 0];
-    inConfig.isTarget = true;
-
-    return inConfig;
-  }
+        return inConfig;
+    }
 }

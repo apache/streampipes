@@ -18,84 +18,83 @@
 
 import { EditorConstants } from '../constants/editor.constants';
 import {
-  PipelineElementIdentifier,
-  PipelineElementType,
-  PipelineElementUnion
+    PipelineElementIdentifier,
+    PipelineElementType,
+    PipelineElementUnion,
 } from '../model/editor.model';
 import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  SpDataSet,
-  SpDataStream
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataSet,
+    SpDataStream,
 } from '@streampipes/platform-services';
 
 export class PipelineElementTypeUtils {
-
-  static toClassName(element: PipelineElementType): string {
-    if (element === PipelineElementType.DataSet) {
-      return EditorConstants.DATA_SET_IDENTIFIER;
-    } else if (element === PipelineElementType.DataStream) {
-      return EditorConstants.DATA_STREAM_IDENTIFIER;
-    } else if (element === PipelineElementType.DataProcessor) {
-      return EditorConstants.DATA_PROCESSOR_IDENTIFIER;
-    } else {
-      return EditorConstants.DATA_SINK_IDENTIFIER;
+    static toClassName(element: PipelineElementType): string {
+        if (element === PipelineElementType.DataSet) {
+            return EditorConstants.DATA_SET_IDENTIFIER;
+        } else if (element === PipelineElementType.DataStream) {
+            return EditorConstants.DATA_STREAM_IDENTIFIER;
+        } else if (element === PipelineElementType.DataProcessor) {
+            return EditorConstants.DATA_PROCESSOR_IDENTIFIER;
+        } else {
+            return EditorConstants.DATA_SINK_IDENTIFIER;
+        }
     }
-  }
 
-  static fromClassName(className: string): PipelineElementType {
-    if (className === EditorConstants.DATA_SET_IDENTIFIER) {
-      return PipelineElementType.DataSet;
-    } else if (className === EditorConstants.DATA_STREAM_IDENTIFIER) {
-      return PipelineElementType.DataStream;
-    } else if (className === EditorConstants.DATA_PROCESSOR_IDENTIFIER) {
-      return PipelineElementType.DataProcessor;
-    } else {
-      return PipelineElementType.DataSink;
+    static fromClassName(className: string): PipelineElementType {
+        if (className === EditorConstants.DATA_SET_IDENTIFIER) {
+            return PipelineElementType.DataSet;
+        } else if (className === EditorConstants.DATA_STREAM_IDENTIFIER) {
+            return PipelineElementType.DataStream;
+        } else if (className === EditorConstants.DATA_PROCESSOR_IDENTIFIER) {
+            return PipelineElementType.DataProcessor;
+        } else {
+            return PipelineElementType.DataSink;
+        }
     }
-  }
 
-  static toCssShortHand(elementType: PipelineElementType) {
-    if (PipelineElementType.DataStream === elementType) {
-      return 'stream';
-    } else if (PipelineElementType.DataSet === elementType) {
-      return 'set';
-    } else if (PipelineElementType.DataProcessor === elementType) {
-      return 'sepa';
-    } else {
-      return 'action';
+    static toCssShortHand(elementType: PipelineElementType) {
+        if (PipelineElementType.DataStream === elementType) {
+            return 'stream';
+        } else if (PipelineElementType.DataSet === elementType) {
+            return 'set';
+        } else if (PipelineElementType.DataProcessor === elementType) {
+            return 'sepa';
+        } else {
+            return 'action';
+        }
     }
-  }
 
-  static fromType(pipelineElement: PipelineElementUnion) {
-    if (pipelineElement instanceof SpDataSet) {
-      return PipelineElementType.DataSet;
-    } else if (pipelineElement instanceof SpDataStream) {
-      return PipelineElementType.DataStream;
-    } else if (pipelineElement instanceof DataProcessorInvocation) {
-      return PipelineElementType.DataProcessor;
-    } else {
-      return PipelineElementType.DataSink;
+    static fromType(pipelineElement: PipelineElementUnion) {
+        if (pipelineElement instanceof SpDataSet) {
+            return PipelineElementType.DataSet;
+        } else if (pipelineElement instanceof SpDataStream) {
+            return PipelineElementType.DataStream;
+        } else if (pipelineElement instanceof DataProcessorInvocation) {
+            return PipelineElementType.DataProcessor;
+        } else {
+            return PipelineElementType.DataSink;
+        }
     }
-  }
 
-  static toType(elementType: PipelineElementType) {
-    if (PipelineElementType.DataStream === elementType) {
-      return SpDataStream;
-    } else if (PipelineElementType.DataSet === elementType) {
-      return SpDataSet;
-    } else if (PipelineElementType.DataProcessor === elementType) {
-      return DataProcessorInvocation;
-    } else {
-      return DataSinkInvocation;
+    static toType(elementType: PipelineElementType) {
+        if (PipelineElementType.DataStream === elementType) {
+            return SpDataStream;
+        } else if (PipelineElementType.DataSet === elementType) {
+            return SpDataSet;
+        } else if (PipelineElementType.DataProcessor === elementType) {
+            return DataProcessorInvocation;
+        } else {
+            return DataSinkInvocation;
+        }
     }
-  }
 
-  static toString(pipelineElement: PipelineElementType): string {
-    return PipelineElementType[pipelineElement];
-  }
+    static toString(pipelineElement: PipelineElementType): string {
+        return PipelineElementType[pipelineElement];
+    }
 
-  static parse(pipelineElement: string): PipelineElementType {
-    return PipelineElementType[pipelineElement];
-  }
+    static parse(pipelineElement: string): PipelineElementType {
+        return PipelineElementType[pipelineElement];
+    }
 }

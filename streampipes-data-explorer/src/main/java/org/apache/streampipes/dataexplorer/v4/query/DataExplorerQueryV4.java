@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.v4.query;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
 import org.apache.streampipes.dataexplorer.v4.params.FillParams;
 import org.apache.streampipes.dataexplorer.v4.params.GroupingByTagsParams;
@@ -88,7 +88,7 @@ public class DataExplorerQueryV4 {
   }
 
   public SpQueryResult executeQuery(boolean ignoreMissingValues) throws RuntimeException {
-    InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+    InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
     List<QueryElement<?>> queryElements = getQueryElements();
 
     if (this.maximumAmountOfEvents != -1) {
@@ -119,7 +119,7 @@ public class DataExplorerQueryV4 {
   }
 
   public SpQueryResult executeQuery(Query query, boolean ignoreMissingValues) {
-    InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+    InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
     var dataResult = executeQuery(influxDB, query, ignoreMissingValues);
     influxDB.close();
 
@@ -169,7 +169,7 @@ public class DataExplorerQueryV4 {
                                     boolean ignoreMissingValues) throws RuntimeException {
     SpQueryResult result = new SpQueryResult();
 
-    if (queryResult.getResults().get(0).getSeries() != null) {
+    if (hasResult(queryResult)) {
       result.setTotal(queryResult.getResults().get(0).getSeries().size());
       queryResult.getResults().get(0).getSeries().forEach(rs -> {
         DataSeries series = convertResult(rs, ignoreMissingValues);
@@ -183,6 +183,12 @@ public class DataExplorerQueryV4 {
     }
 
     return result;
+  }
+
+  private boolean hasResult(QueryResult queryResult) {
+    return queryResult.getResults() != null
+        && queryResult.getResults().size() > 0
+        && queryResult.getResults().get(0).getSeries() != null;
   }
 
   protected List<QueryElement<?>> getQueryElements() {

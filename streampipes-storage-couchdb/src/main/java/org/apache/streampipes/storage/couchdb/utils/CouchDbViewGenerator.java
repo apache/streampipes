@@ -37,7 +37,12 @@ public class CouchDbViewGenerator {
 
     try {
       int status =
-          Request.Put(Utils.getDatabaseRoute(DB_NAME)).execute().returnResponse().getStatusLine().getStatusCode();
+          Utils.append(
+                  Request.Put(Utils.getDatabaseRoute(DB_NAME)))
+              .execute()
+              .returnResponse()
+              .getStatusLine()
+              .getStatusCode();
 
       if (status == 201) {
         LOG.info("Database {} successfully created", DB_NAME);

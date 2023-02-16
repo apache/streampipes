@@ -19,26 +19,27 @@
 import { EventEmitter } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import {
-  DashboardItem,
-  DataExplorerWidgetModel,
-  StreamPipesErrorMessage,
-  TimeSettings } from '@streampipes/platform-services';
+    DashboardItem,
+    DataExplorerWidgetModel,
+    StreamPipesErrorMessage,
+    TimeSettings,
+} from '@streampipes/platform-services';
 
 export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
-  removeWidgetCallback: EventEmitter<boolean>;
-  timerCallback: EventEmitter<boolean>;
-  errorCallback: EventEmitter<StreamPipesErrorMessage>;
+    removeWidgetCallback: EventEmitter<boolean>;
+    timerCallback: EventEmitter<boolean>;
+    errorCallback: EventEmitter<StreamPipesErrorMessage>;
 
-  gridsterItem: GridsterItem;
-  gridsterItemComponent: GridsterItemComponent;
-  editMode: boolean;
+    gridsterItem: GridsterItem;
+    gridsterItemComponent: GridsterItemComponent;
+    editMode: boolean;
 
-  timeSettings: TimeSettings;
+    timeSettings: TimeSettings;
 
-  dataViewDashboardItem: DashboardItem;
-  dataExplorerWidget: T;
-  previewMode: boolean;
-  gridMode: boolean;
+    dataViewDashboardItem: DashboardItem;
+    dataExplorerWidget: T;
+    previewMode: boolean;
+    gridMode: boolean;
 
-  cleanupSubscriptions();
+    cleanupSubscriptions();
 }

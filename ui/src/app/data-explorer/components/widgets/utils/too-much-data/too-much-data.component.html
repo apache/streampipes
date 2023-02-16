@@ -16,22 +16,33 @@
   ~
   -->
 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-
-    <div  fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayout="row" fxLayoutAlign="center center">
         <i class="material-icons" style="margin-top: 8px">warning</i>
         <h2>&nbsp;Warning</h2>
     </div>
-    <div fxLayout="column" fxLayoutAlign="center center" style="margin-top: 10px">
-        <div class="default-text">This widget tries to load too much data (#Events: {{amountOfEvents}})</div>
-        <div class="default-text date-range-text">Please change the widget settings or decrease the time range</div>
+    <div
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        style="margin-top: 10px"
+    >
+        <div class="default-text">
+            This widget tries to load too much data (#Events:
+            {{ amountOfEvents }})
+        </div>
+        <div class="default-text date-range-text">
+            Please change the widget settings or decrease the time range
+        </div>
 
-
-        <button mat-button
-                color="accent"
-                style="margin-top: 30px"
-                (click)="loadDataWithTooManyEvents()">
+        <button
+            mat-button
+            color="accent"
+            style="margin-top: 30px"
+            (click)="loadDataWithTooManyEvents()"
+        >
             <label>Load anyway</label>
         </button>
-        <div class="default-text warning-text">(This might crash the browser)</div>
+        <div class="default-text warning-text">
+            (This might crash the browser)
+        </div>
     </div>
 </div>

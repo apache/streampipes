@@ -17,10 +17,13 @@
  */
 package org.apache.streampipes.model;
 
+import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.schema.EventSchema;
 
-public class SpDataSet extends SpDataStream {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class SpDataSet extends SpDataStream implements EndpointSelectable {
 
   private EventGrounding supportedGrounding;
 
@@ -90,18 +93,28 @@ public class SpDataSet extends SpDataStream {
     this.datasetInvocationId = datasetInvocationId;
   }
 
+  @Override
   public String getCorrespondingPipeline() {
     return correspondingPipeline;
   }
 
+  @Override
   public void setCorrespondingPipeline(String correspondingPipeline) {
     this.correspondingPipeline = correspondingPipeline;
   }
 
+  @Override
+  @JsonIgnore
+  public String getDetachPath() {
+    return "/" + getCorrespondingAdapterId() + "/" + getDatasetInvocationId();
+  }
+
+  @Override
   public String getSelectedEndpointUrl() {
     return selectedEndpointUrl;
   }
 
+  @Override
   public void setSelectedEndpointUrl(String selectedEndpointUrl) {
     this.selectedEndpointUrl = selectedEndpointUrl;
   }

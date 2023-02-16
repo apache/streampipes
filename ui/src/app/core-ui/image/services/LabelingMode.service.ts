@@ -20,60 +20,58 @@ import { LabelingMode } from '../model/labeling-mode';
 
 @Injectable()
 export class LabelingModeService {
+    private labelingMode: LabelingMode;
+    private lastLabelingMode: LabelingMode;
 
-  private labelingMode: LabelingMode;
-  private lastLabelingMode: LabelingMode;
-
-  constructor() {
-    this.labelingMode = LabelingMode.ReactLabeling;
-    this.lastLabelingMode = LabelingMode.ReactLabeling;
-  }
-
-  isReactMode() {
-    return this.labelingMode === LabelingMode.ReactLabeling;
-  }
-
-  setReactMode() {
-    this.labelingMode = LabelingMode.ReactLabeling;
-    this.lastLabelingMode = LabelingMode.ReactLabeling;
-  }
-
-  isPolygonMode() {
-    return this.labelingMode === LabelingMode.PolygonLabeling;
-  }
-
-  setPolygonMode() {
-    this.labelingMode = LabelingMode.PolygonLabeling;
-    this.lastLabelingMode = LabelingMode.PolygonLabeling;
-  }
-
-  isBrushMode() {
-    return this.labelingMode === LabelingMode.BrushLabeling;
-  }
-
-  setBrushMode() {
-    this.labelingMode = LabelingMode.BrushLabeling;
-    this.lastLabelingMode = LabelingMode.BrushLabeling;
-  }
-
-  isNoneMode() {
-    return this.labelingMode === LabelingMode.NoneLabeling;
-  }
-
-  setNoneMode() {
-    this.labelingMode = LabelingMode.NoneLabeling;
-  }
-
-  getMode() {
-    return this.labelingMode;
-  }
-
-  toggleNoneMode() {
-    if (this.labelingMode === LabelingMode.NoneLabeling) {
-      this.labelingMode = this.lastLabelingMode;
-    } else {
-      this.labelingMode = LabelingMode.NoneLabeling;
+    constructor() {
+        this.labelingMode = LabelingMode.ReactLabeling;
+        this.lastLabelingMode = LabelingMode.ReactLabeling;
     }
-  }
 
+    isReactMode() {
+        return this.labelingMode === LabelingMode.ReactLabeling;
+    }
+
+    setReactMode() {
+        this.labelingMode = LabelingMode.ReactLabeling;
+        this.lastLabelingMode = LabelingMode.ReactLabeling;
+    }
+
+    isPolygonMode() {
+        return this.labelingMode === LabelingMode.PolygonLabeling;
+    }
+
+    setPolygonMode() {
+        this.labelingMode = LabelingMode.PolygonLabeling;
+        this.lastLabelingMode = LabelingMode.PolygonLabeling;
+    }
+
+    isBrushMode() {
+        return this.labelingMode === LabelingMode.BrushLabeling;
+    }
+
+    setBrushMode() {
+        this.labelingMode = LabelingMode.BrushLabeling;
+        this.lastLabelingMode = LabelingMode.BrushLabeling;
+    }
+
+    isNoneMode() {
+        return this.labelingMode === LabelingMode.NoneLabeling;
+    }
+
+    setNoneMode() {
+        this.labelingMode = LabelingMode.NoneLabeling;
+    }
+
+    getMode() {
+        return this.labelingMode;
+    }
+
+    toggleNoneMode() {
+        if (this.labelingMode === LabelingMode.NoneLabeling) {
+            this.labelingMode = this.lastLabelingMode;
+        } else {
+            this.labelingMode = LabelingMode.NoneLabeling;
+        }
+    }
 }

@@ -16,77 +16,75 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FilesService } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'sp-file-upload-dialog-component',
-  templateUrl: './file-upload-dialog.component.html',
-  styleUrls: ['./file-upload-dialog.component.scss']
+    selector: 'sp-file-upload-dialog-component',
+    templateUrl: './file-upload-dialog.component.html',
+    styleUrls: ['./file-upload-dialog.component.scss'],
 })
-export class FileUploadDialogComponent implements OnInit {
+export class FileUploadDialogComponent {
+    inputValue: string;
+    fileNames: string[] = [];
 
-  inputValue: string;
-  fileNames: string[] = [];
+    selectedUploadFiles: FileList;
 
-  selectedUploadFiles: FileList;
+    hasInput: boolean;
+    errorMessage = 'Please enter a value';
 
-  hasInput: boolean;
-  errorMessage = 'Please enter a value';
+    uploadStatus = 0;
 
-  uploadStatus = 0;
+    constructor(
+        private dialogRef: DialogRef<FileUploadDialogComponent>,
+        private filesService: FilesService,
+    ) {}
 
-  constructor(private dialogRef: DialogRef<FileUploadDialogComponent>,
-              private filesService: FilesService) {
-
-  }
-
-  ngOnInit(): void {
-  }
-
-  handleFileInput(files: FileList) {
-    this.selectedUploadFiles = files;
-    for (let i = 0; i < files.length; i++) {
-      this.fileNames.push(files.item(i).name);
-    }
-    this.uploadStatus = 0;
-  }
-
-  removeFilesFromUpload(): void {
-    this.selectedUploadFiles = undefined;
-    this.fileNames = [];
-  }
-
-  store() {
-    this.uploadStatus = 0;
-    if (this.selectedUploadFiles.length > 0) {
-      this.uploadFile(0);
-    }
-  }
-
-  uploadFile(index: number): void {
-    this.filesService.uploadFile(this.selectedUploadFiles.item(index)).subscribe(
-      event => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.uploadStatus = Math.round(100 * event.loaded / event.total);
-        } else if (event instanceof HttpResponse) {
-          index++;
-          if (index === (this.selectedUploadFiles.length)) {
-            this.dialogRef.close();
-          } else {
-            this.uploadFile(index);
-          }
+    handleFileInput(files: FileList) {
+        this.selectedUploadFiles = files;
+        for (let i = 0; i < files.length; i++) {
+            this.fileNames.push(files.item(i).name);
         }
-      },
-      error => {
-      },
-    );
-  }
+        this.uploadStatus = 0;
+    }
 
-  cancel() {
-    this.dialogRef.close();
-  }
+    removeFilesFromUpload(): void {
+        this.selectedUploadFiles = undefined;
+        this.fileNames = [];
+    }
 
+    store() {
+        this.uploadStatus = 0;
+        if (this.selectedUploadFiles.length > 0) {
+            this.uploadFile(0);
+        }
+    }
+
+    uploadFile(index: number): void {
+        this.filesService
+            .uploadFile(this.selectedUploadFiles.item(index))
+            .subscribe(
+                event => {
+                    if (event.type === HttpEventType.UploadProgress) {
+                        this.uploadStatus = Math.round(
+                            (100 * event.loaded) / event.total,
+                        );
+                    } else if (event instanceof HttpResponse) {
+                        index++;
+                        if (index === this.selectedUploadFiles.length) {
+                            this.dialogRef.close();
+                        } else {
+                            this.uploadFile(index);
+                        }
+                    }
+                },
+                error => {},
+            );
+    }
+
+    cancel() {
+        this.dialogRef.close();
+    }
 }

@@ -18,56 +18,75 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { DistributionChartVisConfig, DistributionChartWidgetModel } from '../model/distribution-chart-widget.model';
+import {
+    DistributionChartVisConfig,
+    DistributionChartWidgetModel,
+} from '../model/distribution-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-distribution-chart-widget-config',
-  templateUrl: './distribution-chart-widget-config.component.html',
-  styleUrls: ['./distribution-chart-widget-config.component.scss']
+    selector: 'sp-data-explorer-distribution-chart-widget-config',
+    templateUrl: './distribution-chart-widget-config.component.html',
+    styleUrls: ['./distribution-chart-widget-config.component.scss'],
 })
 export class DistributionWidgetConfigComponent
-       extends BaseWidgetConfig<DistributionChartWidgetModel, DistributionChartVisConfig> implements OnInit {
-
-  ngOnInit(): void {
-    super.onInit();
-  }
-
-  setSelectedProperty(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedProperty = field;
-    this.triggerDataRefresh();
-  }
-
-  updateDisplayType(selectedType: string) {
-    this.currentlyConfiguredWidget.visualizationConfig.displayType = selectedType;
-    if (this.fieldProvider.numericFields.find(field => field === this.currentlyConfiguredWidget.visualizationConfig.selectedProperty) === undefined) {
-      this.currentlyConfiguredWidget.visualizationConfig.selectedProperty = this.fieldProvider.numericFields[0];
+    extends BaseWidgetConfig<
+        DistributionChartWidgetModel,
+        DistributionChartVisConfig
+    >
+    implements OnInit
+{
+    ngOnInit(): void {
+        super.onInit();
     }
-    this.triggerDataRefresh();
-  }
 
-  updateRoundingValue(selectedType: number) {
-    this.currentlyConfiguredWidget.visualizationConfig.roundingValue = selectedType;
-    this.triggerDataRefresh();
-  }
+    setSelectedProperty(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
+            field;
+        this.triggerDataRefresh();
+    }
 
-  onResolutionChange(resolution: number): void {
-    this.currentlyConfiguredWidget.visualizationConfig.resolution = resolution;
-    this.triggerDataRefresh();
-  }
+    updateDisplayType(selectedType: string) {
+        this.currentlyConfiguredWidget.visualizationConfig.displayType =
+            selectedType;
+        if (
+            this.fieldProvider.numericFields.find(
+                field =>
+                    field ===
+                    this.currentlyConfiguredWidget.visualizationConfig
+                        .selectedProperty,
+            ) === undefined
+        ) {
+            this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
+                this.fieldProvider.numericFields[0];
+        }
+        this.triggerDataRefresh();
+    }
 
-  protected getWidgetType(): WidgetType {
-    return WidgetType.DistributionChart;
-  }
+    updateRoundingValue(selectedType: number) {
+        this.currentlyConfiguredWidget.visualizationConfig.roundingValue =
+            selectedType;
+        this.triggerDataRefresh();
+    }
 
-  protected initWidgetConfig(): DistributionChartVisConfig {
-    return {
-      forType: this.getWidgetType(),
-      selectedProperty: this.fieldProvider.nonNumericFields[0],
-      displayType: 'histogram',
-      roundingValue: 0.1,
-      resolution: 1
-    };
-  }
+    onResolutionChange(resolution: number): void {
+        this.currentlyConfiguredWidget.visualizationConfig.resolution =
+            resolution;
+        this.triggerDataRefresh();
+    }
+
+    protected getWidgetType(): WidgetType {
+        return WidgetType.DistributionChart;
+    }
+
+    protected initWidgetConfig(): DistributionChartVisConfig {
+        return {
+            forType: this.getWidgetType(),
+            selectedProperty: this.fieldProvider.nonNumericFields[0],
+            displayType: 'histogram',
+            roundingValue: 0.1,
+            resolution: 1,
+        };
+    }
 }

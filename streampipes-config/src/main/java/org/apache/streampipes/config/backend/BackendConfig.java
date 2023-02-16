@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.random.TokenGenerator;
 import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.config.backend.model.GeneralConfig;
 import org.apache.streampipes.config.backend.model.LocalAuthConfig;
+import org.apache.streampipes.model.config.MessagingSettings;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
@@ -76,7 +77,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.INFLUX_HOST, "influxdb", "The host of the influx data base");
     config.register(BackendConfigKeys.INFLUX_PORT, 8086, "The hist of the influx data base");
     config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
-    config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
+    config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, DefaultMessagingSettings.make(),
         "Default Messaging Settings");
 
     config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()),
@@ -238,10 +239,6 @@ public enum BackendConfig {
 
   public int getInfluxPort() {
     return config.getInteger(BackendConfigKeys.INFLUX_PORT);
-  }
-
-  public String getInfluxUrl() {
-    return "http://" + getInfluxHost() + ":" + getInfluxPort();
   }
 
   public String getInfluxDatabaseName() {

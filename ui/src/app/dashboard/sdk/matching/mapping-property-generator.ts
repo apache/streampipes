@@ -20,22 +20,21 @@ import { PropertyMatch } from './property-match';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 
 export class MappingPropertyGenerator {
-
     private selector = 's0';
     private separator = '::';
 
-    constructor(private requiredEventProperty: EventPropertyUnion,
-                private providedEventProperties: EventPropertyUnion[]) {
-
-    }
+    constructor(
+        private requiredEventProperty: EventPropertyUnion,
+        private providedEventProperties: EventPropertyUnion[],
+    ) {}
 
     computeMatchingProperties(): string[] {
         const mapsFromOptions: string[] = [];
 
         this.providedEventProperties.forEach(ep => {
-           if (new PropertyMatch().match(this.requiredEventProperty, ep)) {
-               mapsFromOptions.push(this.makeSelector(ep.runtimeName));
-           }
+            if (new PropertyMatch().match(this.requiredEventProperty, ep)) {
+                mapsFromOptions.push(this.makeSelector(ep.runtimeName));
+            }
         });
 
         return mapsFromOptions;
