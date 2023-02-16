@@ -36,19 +36,20 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcessor {
 
-
   private static final String SDT_TIMESTAMP_FIELD_KEY = "sdt-timestamp-field";
   private static final String SDT_VALUE_FIELD_KEY = "sdt-value-field";
   private static final String SDT_COMPRESSION_DEVIATION_KEY = "sdt-compression-deviation";
   private static final String SDT_COMPRESSION_MIN_INTERVAL_KEY = "sdt-compression-min-interval";
   private static final String SDT_COMPRESSION_MAX_INTERVAL_KEY = "sdt-compression-max-interval";
 
+  private String sdtTimestampField;
+  private String sdtValueField;
+
   private float sdtCompressionDeviation = Float.MAX_VALUE;
   private long sdtCompressionMinTimeInterval = 0L;
   private long sdtCompressionMaxTimeInterval = Long.MAX_VALUE;
 
-  private String sdtTimestampField;
-  private String sdtValueField;
+  private SwingingDoorTrendingFilter sdtFilter;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -82,6 +83,9 @@ public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcesso
     sdtCompressionMaxTimeInterval =
         parameters.extractor().singleValueParameter(SDT_COMPRESSION_MAX_INTERVAL_KEY, Long.class);
     checkSdtCompressionParams();
+
+    sdtFilter = new SwingingDoorTrendingFilter(sdtCompressionDeviation, sdtCompressionMinTimeInterval,
+        sdtCompressionMaxTimeInterval);
   }
 
   /**
@@ -112,7 +116,12 @@ public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcesso
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    final long timestamp = event.getFieldBySelector(sdtTimestampField).getAsPrimitive().getAsLong();
+    final double value = event.getFieldBySelector(sdtValueField).getAsPrimitive().getAsDouble();
 
+    if (sdtFilter.filter(timestamp, value, event)) {
+      sdtFilter.forward(collector);
+    }
   }
 
   @Override
