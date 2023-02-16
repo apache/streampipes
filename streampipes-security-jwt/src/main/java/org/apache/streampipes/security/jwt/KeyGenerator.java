@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.security.jwt;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environments;
 
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -66,7 +66,8 @@ public class KeyGenerator {
   }
 
   public String readKey() throws IOException {
-    return Files.readString(Paths.get(Envs.SP_JWT_PUBLIC_KEY_LOC.getValue()), Charset.defaultCharset());
+    var publicKeyLoc = Environments.getEnvironment().getJwtPublicKeyLoc().getValue();
+    return Files.readString(Paths.get(publicKeyLoc), Charset.defaultCharset());
   }
 
   public Key makeKeyForRsa(String key) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {

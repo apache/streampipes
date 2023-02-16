@@ -20,8 +20,8 @@ package org.apache.streampipes.extensions.management.client;
 import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.client.credentials.StreamPipesTokenCredentials;
 import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
-import org.apache.streampipes.commons.constants.DefaultEnvValues;
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.networking.Networking;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
@@ -38,9 +38,10 @@ import java.util.List;
 public class StreamPipesClientRuntimeConnectionResolver implements ClientConnectionUrlResolver {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesClientRuntimeConnectionResolver.class);
+  private Environment env;
 
   public StreamPipesClientRuntimeConnectionResolver() {
-
+    this.env = Environments.getEnvironment();
   }
 
   @Override
@@ -52,7 +53,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
   public String getBaseUrl() throws SpRuntimeException {
     List<String> baseUrls = findClientServices();
     if (baseUrls.size() > 0) {
-      if (Envs.SP_DEBUG.exists()) {
+      if (env.getSpDebug().getValueOrDefault()) {
         try {
           return "http://" + Networking.getHostname() + ":" + 8030;
         } catch (UnknownHostException e) {
@@ -67,19 +68,11 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
   }
 
   private String getClientApiUser() {
-    if (Envs.SP_CLIENT_USER.exists()) {
-      return Envs.SP_CLIENT_USER.getValue();
-    } else {
-      return DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT;
-    }
+    return env.getClientUser().getValueOrDefault();
   }
 
   private String getClientApiSecret() {
-    if (Envs.SP_CLIENT_SECRET.exists()) {
-      return Envs.SP_CLIENT_SECRET.getValue();
-    } else {
-      return DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT;
-    }
+    return env.getClientSecret().getValueOrDefault();
   }
 
   private List<String> findClientServices() {

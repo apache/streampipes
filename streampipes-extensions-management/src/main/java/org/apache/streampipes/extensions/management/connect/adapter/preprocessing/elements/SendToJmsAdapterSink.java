@@ -30,7 +30,7 @@ public class SendToJmsAdapterSink extends SendToBrokerAdapterSink<JmsTransportPr
   }
 
   @Override
-  public void modifyProtocolForDebugging() {
-    this.protocol.setBrokerHostname("localhost");
+  public void modifyProtocolForDebugging(JmsTransportProtocol protocol) {
+    protocol.setBrokerHostname("localhost");
   }
 }

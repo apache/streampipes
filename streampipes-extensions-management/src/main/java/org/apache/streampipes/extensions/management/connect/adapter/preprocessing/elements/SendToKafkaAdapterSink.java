@@ -30,8 +30,8 @@ public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTranspo
   }
 
   @Override
-  public void modifyProtocolForDebugging() {
-    this.protocol.setBrokerHostname("localhost");
-    this.protocol.setKafkaPort(9094);
+  public void modifyProtocolForDebugging(KafkaTransportProtocol protocol) {
+    protocol.setBrokerHostname("localhost");
+    protocol.setKafkaPort(9094);
   }
 }

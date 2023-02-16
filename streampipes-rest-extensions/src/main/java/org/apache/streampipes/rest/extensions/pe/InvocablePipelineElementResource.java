@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
@@ -197,7 +197,7 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   protected abstract K createGroundingDebugInformation(K graph);
 
   private Boolean isDebug() {
-    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean();
+    return Environments.getEnvironment().getSpDebug().getValueOrDefault();
   }
 
   private String getServiceGroup() {

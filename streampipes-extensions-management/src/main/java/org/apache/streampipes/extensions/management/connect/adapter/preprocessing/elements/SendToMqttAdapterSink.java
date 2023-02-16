@@ -30,7 +30,7 @@ public class SendToMqttAdapterSink extends SendToBrokerAdapterSink<MqttTransport
   }
 
   @Override
-  public void modifyProtocolForDebugging() {
-    this.protocol.setBrokerHostname("localhost");
+  public void modifyProtocolForDebugging(MqttTransportProtocol transportProtocol) {
+    protocol.setBrokerHostname("localhost");
   }
 }

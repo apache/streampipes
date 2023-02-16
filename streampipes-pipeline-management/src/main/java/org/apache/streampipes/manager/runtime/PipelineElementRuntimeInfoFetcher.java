@@ -17,7 +17,8 @@
  */
 package org.apache.streampipes.manager.runtime;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
@@ -43,15 +44,17 @@ public enum PipelineElementRuntimeInfoFetcher {
 
   private static final int FETCH_INTERVAL_MS = 300;
   private final Map<String, SpDataFormatConverter> converterMap;
+  private Environment env;
 
   PipelineElementRuntimeInfoFetcher() {
     this.converterMap = new HashMap<>();
+    this.env = Environments.getEnvironment();
   }
 
   public String getCurrentData(SpDataStream spDataStream) throws SpRuntimeException {
     var topic = getOutputTopic(spDataStream);
     var protocol = spDataStream.getEventGrounding().getTransportProtocol();
-    if (Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()) {
+    if (env.getSpDebug().getValueOrDefault()) {
       protocol.setBrokerHostname("localhost");
     }
     if (!converterMap.containsKey(topic)) {
@@ -143,7 +146,7 @@ public enum PipelineElementRuntimeInfoFetcher {
                                          String topic) throws SpRuntimeException {
     final String[] result = {null};
     // Change kafka config when running in development mode
-    if ("true".equals(System.getenv("SP_DEBUG"))) {
+    if (getEnvironment().getSpDebug().getValueOrDefault()) {
       protocol.setKafkaPort(9094);
     }
 
@@ -159,6 +162,10 @@ public enum PipelineElementRuntimeInfoFetcher {
     kafkaConsumer.disconnect();
 
     return result[0];
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 
 }

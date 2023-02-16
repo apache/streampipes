@@ -31,7 +31,7 @@ public class SendToNatsAdapterSink extends SendToBrokerAdapterSink<NatsTransport
   }
 
   @Override
-  public void modifyProtocolForDebugging() {
-    this.protocol.setBrokerHostname("localhost");
+  public void modifyProtocolForDebugging(NatsTransportProtocol protocol) {
+    protocol.setBrokerHostname("localhost");
   }
 }

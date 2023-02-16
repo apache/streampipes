@@ -48,33 +48,17 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
 
   @Override
   public void changeEventGrounding(TransportProtocol transportProtocol) {
-
     if (transportProtocol instanceof JmsTransportProtocol) {
       SendToJmsAdapterSink sink = (SendToJmsAdapterSink) this.adapterPipeline.getPipelineSink();
-      if ("true".equals(System.getenv("SP_DEBUG"))) {
-        transportProtocol.setBrokerHostname("localhost");
-        //((JmsTransportProtocol) transportProtocol).setPort(61616);
-      }
       sink.changeTransportProtocol((JmsTransportProtocol) transportProtocol);
     } else if (transportProtocol instanceof KafkaTransportProtocol) {
       SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) this.adapterPipeline.getPipelineSink();
-      if ("true".equals(System.getenv("SP_DEBUG"))) {
-        transportProtocol.setBrokerHostname("localhost");
-        ((KafkaTransportProtocol) transportProtocol).setKafkaPort(9094);
-      }
       sink.changeTransportProtocol((KafkaTransportProtocol) transportProtocol);
     } else if (transportProtocol instanceof MqttTransportProtocol) {
       SendToMqttAdapterSink sink = (SendToMqttAdapterSink) this.adapterPipeline.getPipelineSink();
-      if ("true".equals(System.getenv("SP_DEBUG"))) {
-        transportProtocol.setBrokerHostname("localhost");
-        //((MqttTransportProtocol) transportProtocol).setPort(1883);
-      }
       sink.changeTransportProtocol((MqttTransportProtocol) transportProtocol);
     } else if (transportProtocol instanceof NatsTransportProtocol) {
       SendToNatsAdapterSink sink = (SendToNatsAdapterSink) this.adapterPipeline.getPipelineSink();
-      if ("true".equals(System.getenv("SP_DEBUG"))) {
-        transportProtocol.setBrokerHostname("localhost");
-      }
       sink.changeTransportProtocol((NatsTransportProtocol) transportProtocol);
     }
   }
