@@ -17,14 +17,16 @@
  */
 package org.apache.streampipes.commons.constants;
 
+import java.util.Map;
+
 public class CustomEnvs {
 
   public static boolean exists(String envVariable) {
-    return System.getenv().containsKey(envVariable);
+    return AllEnvs.INSTANCE.getEnvs().containsKey(envVariable);
   }
 
   public static String getEnv(String envVariable) {
-    return System.getenv(envVariable);
+    return AllEnvs.INSTANCE.getEnvs().get(envVariable);
   }
 
   public static Integer getEnvAsInt(String envVariable) {
@@ -33,5 +35,19 @@ public class CustomEnvs {
 
   public static Boolean getEnvAsBoolean(String envVariable) {
     return Boolean.parseBoolean(getEnv(envVariable));
+  }
+
+  private enum AllEnvs {
+    INSTANCE;
+
+    private final Map<String, String> envs;
+
+    AllEnvs() {
+      this.envs = System.getenv();
+    }
+
+    public Map<String, String> getEnvs() {
+      return envs;
+    }
   }
 }

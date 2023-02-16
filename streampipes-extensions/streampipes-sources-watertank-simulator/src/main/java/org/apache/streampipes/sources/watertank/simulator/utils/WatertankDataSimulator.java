@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.sources.watertank.simulator.utils;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.pe.simulator.StreamPipesSimulationRunner;
@@ -36,6 +37,12 @@ import java.util.Map;
 public class WatertankDataSimulator implements Runnable {
 
   private static final String EXAMPLES_CONFIG_FILE = "streampipesDemoConfig.json";
+
+  private Environment env;
+
+  public WatertankDataSimulator() {
+    this.env = Environments.getEnvironment();
+  }
 
   private void initSimulation() {
     try {
@@ -61,12 +68,12 @@ public class WatertankDataSimulator implements Runnable {
   }
 
   private String getKafkaHost(ConfigExtractor configExtractor) {
-    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()
+    return env.getSpDebug().getValueOrDefault()
         ? "localhost" : configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
   }
 
   private Integer getKafkaPort(ConfigExtractor configExtractor) {
-    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()
+    return env.getSpDebug().getValueOrDefault()
         ? 9094 : configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
   }
 

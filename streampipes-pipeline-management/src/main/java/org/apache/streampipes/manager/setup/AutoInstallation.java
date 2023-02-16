@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.commons.constants.CustomEnvs;
-import org.apache.streampipes.commons.constants.DefaultEnvValues;
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 
@@ -32,6 +32,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AutoInstallation {
 
   private static final Logger LOG = LoggerFactory.getLogger(AutoInstallation.class);
+
+  private Environment env;
+
+  public AutoInstallation() {
+    this.env = Environments.getEnvironment();
+  }
 
   public void startAutoInstallation() {
     InitialSettings settings = collectInitialSettings();
@@ -64,57 +70,37 @@ public class AutoInstallation {
   }
 
   private boolean autoInstallPipelineElements() {
-    if (Envs.SP_SETUP_INSTALL_PIPELINE_ELEMENTS.exists()) {
-      return Envs.SP_SETUP_INSTALL_PIPELINE_ELEMENTS.getValueAsBoolean();
-    } else {
-      return DefaultEnvValues.INSTALL_PIPELINE_ELEMENTS;
-    }
+    return env.getSetupInstallPipelineElements().getValueOrDefault();
   }
 
   private String findServiceAccountSecret() {
-    return getStringOrDefault(
-        Envs.SP_INITIAL_SERVICE_USER_SECRET.getEnvVariableName(),
-        DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT
-    );
+    return env.getInitialServiceUserSecret().getValueOrDefault();
   }
 
   private String findServiceAccountName() {
-    return getStringOrDefault(
-        Envs.SP_INITIAL_SERVICE_USER.getEnvVariableName(),
-        DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT
-    );
+    return env.getInitialServiceUser().getValueOrDefault();
   }
 
   private String findAdminUser() {
     return getStringOrDefault(
-        Envs.SP_INITIAL_ADMIN_EMAIL.getEnvVariableName(),
-        DefaultEnvValues.INITIAL_ADMIN_EMAIL_DEFAULT
+        env.getInitialAdminEmail()
     );
   }
 
   private String findAdminPassword() {
     return getStringOrDefault(
-        Envs.SP_INITIAL_ADMIN_PASSWORD.getEnvVariableName(),
-        DefaultEnvValues.INITIAL_ADMIN_PW_DEFAULT
+        env.getInitialAdminPassword()
     );
   }
 
-  private String getStringOrDefault(String envVariable, String defaultValue) {
-    boolean exists = exists(envVariable);
-    if (exists) {
-      LOG.info("Using provided environment variable {}", envVariable);
-      return getString(envVariable);
+  private String getStringOrDefault(StringEnvironmentVariable variable) {
+    String name = variable.getEnvVariableName();
+    if (variable.exists()) {
+      LOG.info("Using provided environment variable {}", name);
+      return variable.getValue();
     } else {
-      LOG.info("Environment variable {} not found, using default value {}", envVariable, defaultValue);
-      return defaultValue;
+      LOG.info("Environment variable {} not found, using default value {}", name, variable.getDefault());
+      return variable.getDefault();
     }
-  }
-
-  private boolean exists(String envVariable) {
-    return CustomEnvs.exists(envVariable);
-  }
-
-  private String getString(String envVariable) {
-    return CustomEnvs.getEnv(envVariable);
   }
 }
