@@ -40,7 +40,6 @@
 	<!-- project dependencies -->
 	<activemq-client.version>5.17.3</activemq-client.version>
 	<asm.version>9.4</asm.version>
-	<byte-buddy.version>1.12.6</byte-buddy.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
 	<commons-codec.version>1.11</commons-codec.version>
@@ -156,7 +155,7 @@
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
 	<errorprone-annotations.version>2.2.0</errorprone-annotations.version>
-	<google-maps-services.version>0.10.0</google-maps-services.version>
+	<google-maps-services.version>2.1.2</google-maps-services.version>
 	<graalvm.js.version>22.3.1</graalvm.js.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
@@ -949,18 +948,6 @@
 					<groupId>junit</groupId>
 					<artifactId>junit</artifactId>
 					<version>${junit.version}</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>net.bytebuddy</groupId>
-					<artifactId>byte-buddy</artifactId>
-					<version>${byte-buddy.version}</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>net.bytebuddy</groupId>
-					<artifactId>byte-buddy-agent</artifactId>
-					<version>${byte-buddy.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
