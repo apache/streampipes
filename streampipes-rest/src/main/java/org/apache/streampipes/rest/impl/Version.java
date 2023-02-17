@@ -21,6 +21,8 @@ import org.apache.streampipes.manager.info.SystemInfoProvider;
 import org.apache.streampipes.manager.info.VersionInfoProvider;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -33,6 +35,7 @@ public class Version extends AbstractAuthGuardedRestResource {
   @GET
   @Path("/versions")
   @Produces(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Provides health-check and information about current backend version.", tags = {"Version"})
   public Response getVersionInfo() {
     return ok(new VersionInfoProvider().makeVersionInfo());
   }
