@@ -103,8 +103,8 @@ public class SpBufferBuilder {
           internal.getSRID());
 
 
-      // if geometry wasn't metric, transformation took place. to get the result in the same coordinate system like input, it will
-      // be back transformed
+      // If the geometry is not in a metric system, an automatic transformation takes place. To get the
+      // original CRS, it must be back-transformed
       if (result.getSRID() != geom.getSRID()) {
         result = SpReprojectionBuilder.reprojectSpGeometry(result, geom.getSRID());
       }
