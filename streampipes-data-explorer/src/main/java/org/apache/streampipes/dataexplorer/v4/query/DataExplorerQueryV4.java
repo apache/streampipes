@@ -69,6 +69,10 @@ public class DataExplorerQueryV4 {
 
   private Environment env;
 
+  public DataExplorerQueryV4() {
+
+  }
+
   public DataExplorerQueryV4(Map<String, QueryParamsV4> params,
                              String forId) {
     this(params);
