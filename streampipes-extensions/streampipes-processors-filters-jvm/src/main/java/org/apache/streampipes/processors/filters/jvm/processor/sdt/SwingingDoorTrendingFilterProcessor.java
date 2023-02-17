@@ -28,6 +28,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
@@ -66,6 +67,7 @@ public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcesso
         .requiredFloatParameter(Labels.withId(SDT_COMPRESSION_DEVIATION_KEY))
         .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MIN_INTERVAL_KEY), 0L)
         .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MAX_INTERVAL_KEY), Long.MAX_VALUE)
+        .outputStrategy(OutputStrategies.keep())
         .build();
   }
 
