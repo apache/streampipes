@@ -83,6 +83,14 @@ public class SwingingDoorTrendingFilter {
     this.compressionMaxTimeInterval = compressionMaxTimeInterval;
   }
 
+  /**
+   * input a newly arrived event and output whether a new characteristic event is filtered
+   *
+   * @param time  the timestamp extracted from the newly arrived event
+   * @param value the value extracted from the newly arrived event
+   * @param event the newly arrived event
+   * @return true if a new characteristic event is filtered
+   */
   public boolean filter(long time, double value, Event event) {
     // store the first time and value pair
     if (isFirstValue) {
@@ -146,6 +154,11 @@ public class SwingingDoorTrendingFilter {
     return false;
   }
 
+  /**
+   * output the recently filtered characteristic event to the collector
+   *
+   * @param collector the event collector
+   */
   public void forward(SpOutputCollector collector) {
     collector.collect(lastStoredEvent);
   }
