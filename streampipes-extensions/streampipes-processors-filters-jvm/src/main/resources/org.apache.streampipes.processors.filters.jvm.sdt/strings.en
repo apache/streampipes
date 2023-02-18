@@ -16,7 +16,7 @@
 #
 
 org.apache.streampipes.processors.filters.jvm.sdt.title = Swinging Door Trending (SDT) Filter Processor
-org.apache.streampipes.processors.filters.jvm.sdt.description = The Swinging Door Trending (SDT) Filter Processor can extract and forward the characteristic events of the original stream. In general, this filter can also be used to reduce the frequency of original data in a lossy way.
+org.apache.streampipes.processors.filters.jvm.sdt.description = The processor can extract and forward the characteristic events of the original stream. In general, this filter can be used to reduce the frequency of original data in a lossy way.
 
 sdt-timestamp-field.title = Timestamp Field
 sdt-timestamp-field.description = Specifies the timestamp field name where the SDT algorithm should be applied on.
@@ -25,10 +25,10 @@ sdt-value-field.title = Value Field
 sdt-value-field.description = Specifies the value field name where the SDT algorithm should be applied on.
 
 sdt-compression-deviation.title = Compression Deviation
-sdt-compression-deviation.description = Compression Deviation is the most important parameter in SDT that represents the maximum difference between the current sample and the current linear trend. Compression Deviation needs to be greater than 0 to perform compression.
+sdt-compression-deviation.description = Compression Deviation represents the maximum difference between the current sample and the current linear trend. (Compression Deviation > 0)
 
 sdt-compression-min-interval.title = Compression Minimum Time Interval
-sdt-compression-min-interval.description = Compression Minimum Time Interval is a parameter measures the time distance between two stored data points, which is used for noisy reduction. If the time interval between the current point and the last stored point is less than or equal to its value, current point will NOT be stored regardless of compression deviation. The default value is 0 with time unit ms.
+sdt-compression-min-interval.description = If the time interval between the current point and the last stored point is less than or equal to its value, current point will NOT be stored. (default = 0, time unit: ms)
 
 sdt-compression-max-interval.title = Compression Maximum Time Interval
-sdt-compression-max-interval.description = Compression Maximum Time Interval is a parameter measure the time distance between two stored data points. If the time interval between the current point and the last stored point is greater than or equal to its value, current point will be stored regardless of compression deviation. The default value is 9,223,372,036,854,775,807(Long.MAX_VALUE) with time unit ms.
+sdt-compression-max-interval.description = If the time interval between the current point and the last stored point is greater than or equal to its value, current point will be stored. (default = 9,223,372,036,854,775,807, time unit: ms)
