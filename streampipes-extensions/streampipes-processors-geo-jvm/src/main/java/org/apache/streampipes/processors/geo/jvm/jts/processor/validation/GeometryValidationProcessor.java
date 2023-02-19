@@ -79,7 +79,7 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
                 ValidationOutput.INVALID.name()
             )
         )
-        .requiredMultiValueSelection(
+        .requiredSingleValueSelection(
             Labels.withId(VALIDATION_TYPE_KEY),
             Options.from(
                 ValidationType.IsEmpty.name(),
@@ -109,9 +109,9 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
     if (readValidationType.equals(ValidationType.IsEmpty.name())) {
       this.validationType = ValidationType.IsEmpty.getNumber(); // 1
     } else if (readValidationType.equals(ValidationType.IsValid.name())) {
-      this.validationType = ValidationType.IsValid.getNumber(); // 2
+      this.validationType = ValidationType.IsSimple.getNumber(); // 2
     } else {
-      this.validationType = ValidationType.IsSimple.getNumber(); // 3
+      this.validationType = ValidationType.IsValid.getNumber(); // 3
     }
   }
 
@@ -126,7 +126,7 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
 
     switch (validationType) {
       case 1:
-        itIsValid = geometry.isEmpty();
+        itIsValid = !geometry.isEmpty();
         break;
       case 2:
         itIsValid = geometry.isSimple();
@@ -135,7 +135,7 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
         IsValidOp validater = new IsValidOp(geometry);
         validater.setSelfTouchingRingFormingHoleValid(true);
         itIsValid = validater.isValid();
-        if (itIsValid = false) {
+        if (!itIsValid) {
           validater.getValidationError();
         }
     }
