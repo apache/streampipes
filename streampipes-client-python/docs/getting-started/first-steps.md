@@ -53,7 +53,7 @@ Otherwise, you need to start docker first.
 
 Please read the full guide on how to start StreamPipes with `docker compose` [here](https://github.com/apache/streampipes/blob/dev/installer/compose/README.md).
 So in our scenario, we will go with `docker-compose.nats.yml` to use NATS as messaging backend. 
-Thereby, when running locally, we need to add the following port mapping entry to `nats.ports`:
+Thereby, when running locally, we need to add the following port mapping entry to `services.nats.ports`:
 ```yaml
 - 4222:4222
 ```
