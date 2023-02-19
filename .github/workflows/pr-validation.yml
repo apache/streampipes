@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: validate-pr
+name: PR validation
 
 on:
   pull_request:
@@ -30,6 +30,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
       - name: Validate java code
         run: mvn clean verify
@@ -44,13 +45,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
 
       - name: Install dependencies
         working-directory: ./ui
         run: |
-          NODE_PATH=/cache/node_modules
-          NODE_OPTIONS=--max_old_space_size=6096
-          npm install --unsafe-perm --legacy-peer-deps
+          npm install
 
       - name: Format and Lint all files
         working-directory: ./ui
@@ -70,18 +71,23 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install NPM dependencies
+        working-directory: ./ui
+        run: |
+          npm install
 
       - name: Build UI
         working-directory: ./ui
         run: |
-          NODE_PATH=/cache/node_modules
-          NODE_OPTIONS=--max_old_space_size=6096
-          npm install --unsafe-perm --legacy-peer-deps
           npm run build
 
       - name: Build with Maven
@@ -112,25 +118,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
-
-      - name: Cache Python dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache: 'pip'
 
       - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           python -m pip install --upgrade pip
           pip install wheel
           pip install -e ".[dev]"
 
       - name: Run style & code checks
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           make pre-commit
           make mypy
           make lint
@@ -150,25 +149,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
-
-      - name: Cache Python dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~~.cache/pip
-          key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('**/setup.py') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.python }}-pip-
+          cache: 'pip'
 
       - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           python -m pip install --upgrade pip
           pip install wheel
           pip install -e ".[dev]"
 
       - name: Run unit-tests
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           make unit-tests
 
   python-doc-checks:
@@ -181,22 +173,22 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Cache Python dependencies
+      - name: Cache Python doc dependencies
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
+          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/setup.py') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-doc-
 
       - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           python -m pip install --upgrade pip
           pip install wheel
           pip install -e ".[docs]"
 
       - name: Build MkDocs
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           make doc
