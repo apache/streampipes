@@ -77,6 +77,22 @@ Whenever possible, please try to develop the API of the Python library the same 
 By doing so, we would like to provide a consistent developer experience and the basis for automated testing in the future.
 
 ---
+## 🚀 Roadmap
+
+Broadly speaking, we plan to expand or add new aspects/functionality to the library where we are focusing on the following:
+
+- increase coverage of StreamPipes API 🔗
+- build a comprehensive function zoo 🐘
+- support more messaging broker 📬
+- possibility to build pipeline elements 🔧
+
+In case you want to have a more detailed look on what we are currently planning, have a look at our [open issues](https://github.com/apache/streampipes/labels/python)(more short-term driven).
+
+Of course, contributions are always highly appreciated 🔮
+
+Stay tuned!
+
+---
 ## 👨‍💻 Contributing
 *Before opening a pull request*, review the [Get Involved](https://streampipes.apache.org/getinvolved.html) page.
 It lists information that is required for contributing to StreamPipes.
