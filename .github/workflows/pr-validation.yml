@@ -32,7 +32,7 @@ jobs:
           java-version: '17'
 
       - name: Validate java code
-        run: mvn clean install
+        run: mvn clean verify
 
   run-format-and-lint-ui:
     runs-on: ubuntu-latest
