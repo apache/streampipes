@@ -17,9 +17,12 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImagePropertyConstants;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImageTransformer;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -28,12 +31,25 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.BOX_ARRAY_PROPERTY;
 import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
 
-public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer<ImageEnrichmentParameters> {
+public class ImageEnrichmentController extends StreamPipesDataProcessor {
+  private String imageProperty;
+  private String boxArray;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -43,24 +59,77 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
         .category(DataProcessorType.IMAGE_PROCESSING)
         .requiredStream(RequiredBoxStream.getBoxStream())
         .outputStrategy(OutputStrategies.fixed(
-            EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
+            EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(), "https://image.com")
         ))
         .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ImageEnrichmentParameters> onInvocation(
-      DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
-    String imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
-    String boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    ProcessingElementParameterExtractor extractor = parameters.extractor();
+    this.imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
+    this.boxArray = extractor.mappingPropertyValue(BOX_ARRAY_PROPERTY);
+  }
 
-    ImageEnrichmentParameters params = new ImageEnrichmentParameters(dataProcessorInvocation, imageProperty,
-        boxArray, "box_width", "box_height", "box_x", "box_y", "score", "classesindex");
+  @Override
+  public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
+    ImageTransformer imageTransformer = new ImageTransformer(in);
 
-    return new ConfiguredEventProcessor<>(params, ImageEnricher::new);
+    Optional<BufferedImage> imageOpt =
+        imageTransformer.getImage(imageProperty);
 
+
+    if (imageOpt.isPresent()) {
+      BufferedImage image = imageOpt.get();
+      List<Map<String, Object>> allBoxesMap = imageTransformer.getAllBoxCoordinates(boxArray);
+
+      for (Map<String, Object> box : allBoxesMap) {
+
+        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinatesWithAnnotations(image, box);
+
+        Graphics2D graph = image.createGraphics();
+
+        //set color
+        Color color = ColorUtil.getColor(boxCoordinates.getClassesindex().hashCode());
+        graph.setColor(color);
+
+        //Box
+        graph.setStroke(new BasicStroke(5));
+        graph.draw(new Rectangle(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
+            boxCoordinates.getHeight()));
+
+        //Label
+        String str = boxCoordinates.getClassesindex() + ": " + boxCoordinates.getScore();
+
+        FontMetrics fm = graph.getFontMetrics();
+        Rectangle2D rect = fm.getStringBounds(str, graph);
+
+        graph.fillRect(boxCoordinates.getX(),
+            boxCoordinates.getY() - fm.getAscent(),
+            (int) rect.getWidth(),
+            (int) rect.getHeight());
+
+        graph.setColor(Color.white);
+        graph.drawString(str, boxCoordinates.getX(), boxCoordinates.getY());
+
+        graph.dispose();
+
+      }
+
+      Optional<byte[]> finalImage = imageTransformer.makeImage(image);
+
+      if (finalImage.isPresent()) {
+        org.apache.streampipes.model.runtime.Event event = new org.apache.streampipes.model.runtime.Event();
+        event.addField(ImagePropertyConstants.IMAGE.getProperty(), Base64.getEncoder().encodeToString(finalImage.get()));
+        out.collect(event);
+      }
+    }
 
   }
 
+  @Override
+  public void onDetach() throws SpRuntimeException {
 
+  }
 }

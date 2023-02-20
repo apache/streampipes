@@ -17,10 +17,20 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification;
 
+import boofcv.abst.scene.ImageClassifier;
+import boofcv.factory.scene.ClassifierAndSource;
+import boofcv.factory.scene.FactoryImageClassifier;
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayF32;
+import boofcv.struct.image.Planar;
+import deepboof.io.DeepBoofDataBaseOps;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImagePropertyConstants;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -30,13 +40,27 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class GenericImageClassificationController
-    extends StandaloneEventProcessingDeclarer<GenericImageClassificationParameters> {
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
-  private static final String IMAGE = "image-mapping";
+public class GenericImageClassificationController extends StreamPipesDataProcessor {
+
+  private String imagePropertyName;
+
+  private ClassifierAndSource cs;
+
+  private ImageClassifier<Planar<GrayF32>> classifier;
+
+  private List<String> categories;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -48,7 +72,7 @@ public class GenericImageClassificationController
         .requiredStream(StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements
-                    .domainPropertyReq("https://image.com"), Labels.withId(IMAGE),
+                    .domainPropertyReq("https://image.com"), Labels.withId(ImagePropertyConstants.IMAGE_MAPPING.getProperty()),
                 PropertyScope.NONE)
             .build())
         .outputStrategy(OutputStrategies.append(
@@ -60,14 +84,57 @@ public class GenericImageClassificationController
   }
 
   @Override
-  public ConfiguredEventProcessor<GenericImageClassificationParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    ProcessingElementParameterExtractor extractor = parameters.extractor();
 
-    String imageProperty = extractor.mappingPropertyValue(IMAGE);
+    imagePropertyName = extractor.mappingPropertyValue(ImagePropertyConstants.IMAGE_MAPPING.getProperty());
+    //this.cs = FactoryImageClassifier.vgg_cifar10();  // Test set 89.9% for 10 categories
+    ClassifierAndSource cs = FactoryImageClassifier.nin_imagenet(); // Test set 62.6% for 1000 categories
 
-    GenericImageClassificationParameters staticParam = new GenericImageClassificationParameters(graph, imageProperty);
+    File path = DeepBoofDataBaseOps.downloadModel(cs.getSource(), new File("download_data"));
 
-    return new ConfiguredEventProcessor<>(staticParam, GenericImageClassification::new);
+    this.classifier = cs.getClassifier();
+    try {
+      this.classifier.loadModel(path);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    this.categories = classifier.getCategories();
+  }
+
+  @Override
+  public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
+    PlainImageTransformer imageTransformer = new PlainImageTransformer(in);
+
+
+    Optional<BufferedImage> imageOpt = imageTransformer.getImage(imagePropertyName);
+    if (imageOpt.isPresent()) {
+      BufferedImage buffered = imageOpt.get();
+      Planar<GrayF32> image = new Planar<>(GrayF32.class, buffered.getWidth(), buffered.getHeight(), 3);
+      ConvertBufferedImage.convertFromPlanar(buffered, image, true, GrayF32.class);
+
+      classifier.classify(image);
+      List<ImageClassifier.Score> scores = classifier.getAllResults();
+      scores.sort(new Comparator<ImageClassifier.Score>() {
+        @Override
+        public int compare(ImageClassifier.Score o1, ImageClassifier.Score o2) {
+          return (o1.score - o2.score) >= 0 ? -1 : 1;
+        }
+      });
+      //Collections.reverse(scores);
+
+      if (scores.size() > 0) {
+        System.out.println(scores.get(0).score + ":" + categories.get(scores.get(0).category));
+        //scores.forEach(score -> System.out.println(score.category +":" +categories.get(score.category) +":" +score));
+        in.addField("score", scores.get(0).score);
+        in.addField("category", categories.get(scores.get(0).category));
+        out.collect(in);
+      }
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }

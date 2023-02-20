@@ -17,10 +17,17 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader;
 
+import boofcv.abst.fiducial.QrCodeDetector;
+import boofcv.alg.fiducial.qrcode.QrCode;
+import boofcv.factory.fiducial.FactoryFiducial;
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayU8;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -31,16 +38,29 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Optional;
 
 import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
 
-public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<QrCodeReaderParameters> {
+public class QrCodeReaderController extends StreamPipesDataProcessor {
+
+  private String imagePropertyName;
+  private String placeholderValue;
+  private Boolean sendIfNoResult;
 
   private static final String PLACEHOLDER_VALUE = "placeholder-value";
   private static final String SEND_IF_NO_RESULT = "send-if-no-result";
   private static final String QR_VALUE = "qr-value";
+  private static final Logger LOG = LoggerFactory.getLogger(QrCodeReaderController.class);
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -61,17 +81,53 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
   }
 
   @Override
-  public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation,
-                                                                       ProcessingElementParameterExtractor extractor) {
-    String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
-    String placeholderValue = extractor.singleValueParameter(PLACEHOLDER_VALUE, String.class);
-    Boolean sendIfNoResult = extractor.selectedSingleValue(SEND_IF_NO_RESULT, String.class)
-        .equals("Yes");
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    ProcessingElementParameterExtractor extractor = parameters.extractor();
 
-    QrCodeReaderParameters params = new QrCodeReaderParameters(dataProcessorInvocation,
-        imagePropertyName, placeholderValue, sendIfNoResult);
-
-    return new ConfiguredEventProcessor<>(params, QrCodeReader::new);
+    imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
+    placeholderValue = extractor.singleValueParameter(PLACEHOLDER_VALUE, String.class);
+    sendIfNoResult = extractor.selectedSingleValue(SEND_IF_NO_RESULT, String.class).equals("Yes");
   }
 
+  @Override
+  public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
+    PlainImageTransformer imageTransformer = new PlainImageTransformer(in);
+    Optional<BufferedImage> imageOpt = imageTransformer.getImage(imagePropertyName);
+
+    if (imageOpt.isPresent()) {
+      BufferedImage input = imageOpt.get();
+
+      GrayU8 gray = ConvertBufferedImage.convertFrom(input, (GrayU8) null);
+
+      QrCodeDetector<GrayU8> detector = FactoryFiducial.qrcode(null, GrayU8.class);
+
+      detector.process(gray);
+      List<QrCode> detections = detector.getDetections();
+      List<QrCode> failures = detector.getFailures();
+
+      if (detections.size() > 0) {
+        LOG.info(detections.get(0).message);
+        Event event = makeEvent(detections.get(0).message);
+        out.collect(event);
+      } else {
+        LOG.info("Could not find any QR code");
+        if (sendIfNoResult) {
+          Event event = makeEvent(placeholderValue);
+          out.collect(event);
+        }
+      }
+    }
+  }
+
+  private Event makeEvent(String qrCodeValue) {
+    Event event = new Event();
+    event.addField("qrvalue", qrCodeValue);
+    event.addField("timestamp", System.currentTimeMillis());
+    return event;
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
 }
