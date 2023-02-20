@@ -24,10 +24,19 @@ Please make sure you have a recent version of [node](https://nodejs.org/en/) and
 
 To build the ui, perform the following steps:
 
-```
+```bash
     npm install
     npm run build
 ```
+
+To test your local version of the UI execute the following commands:
+
+```bash
+    npm install
+    npm start
+```
+
+(be aware that this requires a StreamPipes instance that runs without the UI, read more [here](https://cwiki.apache.org/confluence/display/STREAMPIPES/UI))
 
 ### Formatting and Linting
 
