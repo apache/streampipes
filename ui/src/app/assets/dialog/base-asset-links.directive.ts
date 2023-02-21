@@ -65,7 +65,7 @@ export abstract class BaseAssetLinksDirective {
 
     getAllResources() {
         zip(
-            this.pipelineService.getOwnPipelines(),
+            this.pipelineService.getPipelines(),
             this.dataViewService.getDataViews(),
             this.dashboardService.getDashboards(),
             this.pipelineElementService.getDataStreams(),
