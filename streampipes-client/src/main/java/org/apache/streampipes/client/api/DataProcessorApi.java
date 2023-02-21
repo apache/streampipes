@@ -39,8 +39,7 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("sepas")
-        .addToPath("own");
+        .addToPath("sepas");
   }
 
   @Override

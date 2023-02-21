@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.pe;
 
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.NotificationType;
@@ -56,7 +57,6 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
   }
 
   @GET
-  @Path("/own")
   @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
@@ -66,7 +66,7 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
   }
 
   @DELETE
-  @Path("/own/{elementId}")
+  @Path("/{elementId}")
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
@@ -80,8 +80,12 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  public DataSinkInvocation getElement(@PathParam("elementId") String elementId) {
-    return getDataSinkResourceManager().findAsInvocation(elementId);
+  public Response getElement(@PathParam("elementId") String elementId) {
+    try {
+      return ok(getDataSinkResourceManager().findAsInvocation(elementId));
+    } catch (IllegalArgumentException e) {
+      return badRequest(StreamPipesErrorMessage.from(e));
+    }
   }
 
   private DataSinkResourceManager getDataSinkResourceManager() {
