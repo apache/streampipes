@@ -19,10 +19,12 @@ services:
     image: ${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}
     depends_on:
       - consul
-      - backend
       - couchdb  
     volumes:
       - files:/spImages
+# Set SP_HOST to an IP or hostname that can be resolved from the Docker container and local-running backend
+#    environment:
+#      - SP_HOST=host.docker.internal
     logging:
       driver: "json-file"
       options:

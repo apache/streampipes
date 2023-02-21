@@ -13,11 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[environment:backend]
-kafka
-consul
-zookeeper
-couchdb
-influxdb
-extensions-all-jvm
-ui-custom-conf
+version: "3.4"
+services:
+  ui-custom-conf:
+    image: ${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}
+    ports:
+      - "80:80"
+    depends_on:
+      - couchdb
+      - consul
+    volumes:
+      - "../ui-custom-conf/default.conf:/etc/nginx/conf.d/default.conf"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true
