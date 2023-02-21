@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -80,8 +81,12 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  public SpDataStream getElement(@PathParam("elementId") String elementId) {
-    return getDataStreamResourceManager().findAsInvocation(elementId);
+  public Response getElement(@PathParam("elementId") String elementId) {
+    try {
+      return ok(getDataStreamResourceManager().findAsInvocation(elementId));
+    } catch (IllegalArgumentException e) {
+      return badRequest(StreamPipesErrorMessage.from(e));
+    }
   }
 
   @POST
