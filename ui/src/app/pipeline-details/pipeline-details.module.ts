@@ -17,13 +17,13 @@
  */
 
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
 import { EditorModule } from '../editor/editor.module';
 import { PipelineActionsComponent } from './components/actions/pipeline-actions.component';

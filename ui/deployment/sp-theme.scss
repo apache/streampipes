@@ -23,10 +23,13 @@
  *
  */
 
+@use '@angular/material' as mat;
+
 @import '@angular/material/theming';
 @import '../variables';
 
-@include mat-core();
+@include mat.core();
+@include mat.legacy-core();
 
 $mat-streampipes-primary: (
     50: #ffebee,
@@ -127,27 +130,38 @@ $mat-streampipes-accent-dark: (
     ),
 );
 
-$custom-theme-primary: mat-palette($mat-streampipes-primary);
-$custom-theme-accent-dark: mat-palette($mat-streampipes-accent-dark);
-$custom-theme-accent: mat-palette($mat-streampipes-accent);
-$custom-theme-warn: mat-palette($mat-red);
+$custom-theme-primary: mat.define-palette($mat-streampipes-primary);
+$custom-theme-accent-dark: mat.define-palette($mat-streampipes-accent-dark);
+$custom-theme-accent: mat.define-palette($mat-streampipes-accent);
+$custom-theme-warn: mat.define-palette($mat-red);
 
-$custom-theme-light: mat-light-theme(
-    $custom-theme-primary,
-    $custom-theme-accent,
-    $custom-theme-warn
-);
-$custom-theme-dark: mat-dark-theme(
-    $custom-theme-primary,
-    $custom-theme-accent-dark,
-    $custom-theme-warn
-);
-
-$custom-typography: mat-typography-config(
+$custom-typography: mat.define-typography-config(
     $font-family: 'Roboto, Arial',
 );
 
-@include angular-material-typography($custom-typography);
+$custom-theme-light: mat.define-light-theme(
+    (
+        color: (
+            primary: $custom-theme-primary,
+            accent: $custom-theme-accent,
+            warn: $custom-theme-warn,
+        ),
+        typography: $custom-typography,
+        density: -2,
+    )
+);
+
+$custom-theme-dark: mat.define-light-theme(
+    (
+        color: (
+            primary: $custom-theme-primary,
+            accent: $custom-theme-accent-dark,
+            warn: $custom-theme-warn,
+        ),
+        typography: $custom-typography,
+        density: -2,
+    )
+);
 
 $primary: map-get($custom-theme-light, primary);
 $accent-dark: map-get($custom-theme-dark, accent);
@@ -178,7 +192,9 @@ $accent: map-get($custom-theme-light, accent);
 }
 
 .dark-mode {
-    @include angular-material-theme($custom-theme-dark);
+    //@include angular-material-theme($custom-theme-dark);
+    @include mat.all-component-themes($custom-theme-dark);
+    @include mat.all-legacy-component-themes($custom-theme-dark);
 
     .base-style {
         color: rgba(255, 255, 255, 0.87);
@@ -240,7 +256,11 @@ $accent: map-get($custom-theme-light, accent);
 }
 
 .light-mode {
-    @include angular-material-theme($custom-theme-light);
+    //@include angular-material-theme($custom-theme-light);
+    @include mat.core-theme($custom-theme-light);
+    @include mat.all-component-typographies();
+    @include mat.all-component-themes($custom-theme-light);
+    @include mat.all-legacy-component-themes($custom-theme-light);
 
     .base-style {
         color: #121212;

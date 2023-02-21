@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 
 @Component({
     selector: 'sp-data-export-item',

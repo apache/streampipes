@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AdapterService } from '@streampipes/platform-services';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 
 @Component({

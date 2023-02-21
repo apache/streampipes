@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { TreeNode } from '@circlon/angular-tree-component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import {
     EventProperty,
     EventPropertyList,

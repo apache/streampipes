@@ -43,7 +43,7 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { AuthService } from '../../../services/auth.service';
 import { SpDashboardRoutes } from '../../dashboard.routes';
 import { map } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
     selector: 'sp-dashboard-panel',

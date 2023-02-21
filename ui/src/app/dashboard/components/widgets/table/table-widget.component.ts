@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { TableConfig } from './table-config';
 import { SemanticTypeUtilsService } from '../../../../core-services/semantic-type/semantic-type-utils.service';
 import { ResizeService } from '../../../services/resize.service';

@@ -18,10 +18,10 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FilesService, FileMetadata } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
     selector: 'sp-file-overview',

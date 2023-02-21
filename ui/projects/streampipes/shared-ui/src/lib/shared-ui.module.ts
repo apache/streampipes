@@ -22,14 +22,14 @@ import { PanelDialogComponent } from './dialog/panel-dialog/panel-dialog.compone
 import { StandardDialogComponent } from './dialog/standard-dialog/standard-dialog.component';
 import { CommonModule } from '@angular/common';
 import { PortalModule } from '@angular/cdk/portal';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { SpBasicViewComponent } from './components/basic-view/basic-view.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { SpBasicNavTabsComponent } from './components/basic-nav-tabs/basic-nav-tabs.component';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { SpBasicInnerPanelComponent } from './components/basic-inner-panel/basic-inner-panel.component';
 import { SpBasicHeaderTitleComponent } from './components/basic-header-title/header-title.component';
 import { SpExceptionMessageComponent } from './components/sp-exception-message/sp-exception-message.component';

@@ -35,9 +35,9 @@ import {
     UserService,
     UserGroupService,
 } from '@streampipes/platform-services';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { Observable, zip } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({

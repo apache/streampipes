@@ -18,14 +18,14 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTabsModule } from '@angular/material/tabs';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FormsModule } from '@angular/forms';
 import { NotificationsComponent } from './notifications.component';
 import { NotificationItemComponent } from './components/notification-item.component';
 import { NotificationsService } from './service/notifications.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({

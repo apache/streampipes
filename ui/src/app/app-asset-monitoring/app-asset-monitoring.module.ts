@@ -17,7 +17,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 
 import { AppAssetMonitoringComponent } from './app-asset-monitoring.component';
@@ -28,9 +28,9 @@ import { ViewAssetComponent } from './components/view-asset/view-asset.component
 import { CreateAssetComponent } from './components/create-asset/create-asset.component';
 import { AddPipelineDialogComponent } from './dialog/add-pipeline/add-pipeline-dialog.component';
 import { RestService } from './services/rest.service';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { ElementIconText } from '../services/get-element-icon-text.service';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';

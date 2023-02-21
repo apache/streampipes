@@ -17,14 +17,14 @@
  */
 
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule } from '@angular/forms';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { AddComponent } from './add.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
 import { EndpointItemComponent } from './components/endpoint-item/endpoint-item.component';
 import { AddService } from './services/add.service';

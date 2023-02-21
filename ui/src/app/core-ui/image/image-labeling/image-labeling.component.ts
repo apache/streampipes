@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import Konva from 'konva';
 import { Annotation } from '../../../core-model/coco/Annotation';
 import { CocoFormat } from '../../../core-model/coco/Coco.format';

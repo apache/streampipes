@@ -18,9 +18,9 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { GridsterModule } from 'angular-gridster2';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
@@ -34,12 +34,12 @@ import { PipelineComponent } from './components/pipeline/pipeline.component';
 import { PipelineElementOptionsComponent } from './components/pipeline-element-options/pipeline-element-options.component';
 import { PipelineElementRecommendationService } from './services/pipeline-element-recommendation.service';
 import { CustomizeComponent } from './dialog/customize/customize.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { SavePipelineComponent } from './dialog/save-pipeline/save-pipeline.component';
 import { PipelineElementRecommendationComponent } from './components/pipeline-element-recommendation/pipeline-element-recommendation.component';
 import { CompatibleElementsComponent } from './dialog/compatible-elements/compatible-elements.component';
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { HelpComponent } from './dialog/help/help.component';
 import { PipelineElementDocumentationComponent } from './components/pipeline-element-documentation/pipeline-element-documentation.component';
 import { ShowdownModule } from 'ngx-showdown';

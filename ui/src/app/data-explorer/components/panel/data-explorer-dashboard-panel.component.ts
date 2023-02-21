@@ -44,7 +44,7 @@ import {
     ConfirmDialogComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { map } from 'rxjs/operators';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 

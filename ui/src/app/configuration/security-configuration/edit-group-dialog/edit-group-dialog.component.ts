@@ -25,7 +25,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { DialogRef } from '@streampipes/shared-ui';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 

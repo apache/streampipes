@@ -38,7 +38,7 @@ import {
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 
 @Component({

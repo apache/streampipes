@@ -18,18 +18,18 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 
 import { CdkTableModule } from '@angular/cdk/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
-import { MatChipsModule } from '@angular/material/chips';
-import { MatSliderModule } from '@angular/material/slider';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacySliderModule as MatSliderModule } from '@angular/material/legacy-slider';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ImageAnnotationsComponent } from './image/components/image-annotations/image-annotations.component';
 import { ImageBarComponent } from './image/components/image-bar/image-bar.component';
@@ -66,7 +66,7 @@ import { DisplayRecommendedPipe } from './static-properties/filter/display-recom
 import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
 import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -76,7 +76,7 @@ import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-stat
 import { SplitSectionComponent } from './split-section/split-section.component';
 import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';

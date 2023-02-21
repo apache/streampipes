@@ -18,13 +18,13 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConnectService } from '../../../services/connect.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 import { DialogService } from '@streampipes/shared-ui';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Component({
     selector: 'sp-adapter-description',
