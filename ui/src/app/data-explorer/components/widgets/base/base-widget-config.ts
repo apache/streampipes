@@ -128,7 +128,7 @@ export abstract class BaseWidgetConfig<
         const b = new EventPropertyPrimitive();
         b['@class'] =
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-        b.runtimeType = 'https://www.w3.org/2001/XMLSchema#string';
+        b.runtimeType = 'http://www.w3.org/2001/XMLSchema#string';
         b.runtimeName = '';
 
         result.push(b);
