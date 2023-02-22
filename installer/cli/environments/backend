@@ -19,6 +19,5 @@ consul
 zookeeper
 couchdb
 influxdb
-connect-adapters-iiot
-pipeline-elements-all-jvm
+extensions-all-jvm
 ui

@@ -37,6 +37,7 @@ import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.N
 import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.schema.MergeBySchemaProcessor;
+import org.apache.streampipes.processors.filters.jvm.processor.sdt.SwingingDoorTrendingFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.threshold.ThresholdDetectionProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.throughputmon.ThroughputMonitorProcessor;
@@ -67,7 +68,8 @@ public class FiltersJvmInit extends ExtensionsModelSubmitter {
             new ComposeProcessor(),
             new NumericalTextFilterProcessor(),
             new RateLimitProcessor(),
-            new MovingAverageProcessor())
+            new MovingAverageProcessor(),
+            new SwingingDoorTrendingFilterProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

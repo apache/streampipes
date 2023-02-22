@@ -124,7 +124,7 @@ export class PipelinesComponent implements OnInit {
 
     getPipelines() {
         this.pipelines = [];
-        this.pipelineService.getOwnPipelines().subscribe(pipelines => {
+        this.pipelineService.getPipelines().subscribe(pipelines => {
             this.pipelines = pipelines;
             this.checkForImmediateStart(pipelines);
             this.pipelinesReady = true;

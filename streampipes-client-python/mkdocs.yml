@@ -78,7 +78,8 @@ extra_css:
 nav:
     - Home: index.md
     - Getting Started:
-        - Installation: getting-started/installation.md
+        - First Steps: getting-started/first-steps.md
+        - Developing & Contributing: getting-started/developing.md
         - Quickstart: getting-started/quickstart.md
     - Examples:
         - Introduction to the StreamPipes Python Client: examples/1-introduction-to-streampipes-python-client.ipynb
