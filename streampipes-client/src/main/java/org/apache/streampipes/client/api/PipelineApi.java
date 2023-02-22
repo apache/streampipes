@@ -43,7 +43,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
    */
   @Override
   public List<Pipeline> all() {
-    return getAll(getBaseResourcePath().addToPath("own"));
+    return getAll(getBaseResourcePath());
   }
 
   @Override

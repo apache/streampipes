@@ -100,7 +100,6 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("actions")
-        .addToPath("own");
+        .addToPath("actions");
   }
 }

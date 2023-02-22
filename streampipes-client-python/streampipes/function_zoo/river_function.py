@@ -151,7 +151,7 @@ class OnlineML:
     ):
         self.client = client
 
-        attributes = {"learning": "boolean", "prediction": prediction_type}
+        attributes = {"learning": RuntimeType.BOOLEAN.value, "prediction": prediction_type}
         if supervised:
             attributes["truth"] = prediction_type
             if target_label is None:

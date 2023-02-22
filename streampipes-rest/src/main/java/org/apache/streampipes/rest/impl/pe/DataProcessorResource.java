@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.pe;
 
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.message.NotificationType;
@@ -55,7 +56,6 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
   }
 
   @GET
-  @Path("/own")
   @JacksonSerialized
   @Produces({MediaType.APPLICATION_JSON})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
@@ -65,7 +65,7 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
   }
 
   @DELETE
-  @Path("/own/{elementId}")
+  @Path("/{elementId}")
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
@@ -79,8 +79,12 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  public DataProcessorInvocation getElement(@PathParam("elementId") String elementId) {
-    return getDataProcessorResourceManager().findAsInvocation(elementId);
+  public Response getElement(@PathParam("elementId") String elementId) {
+    try {
+      return ok(getDataProcessorResourceManager().findAsInvocation(elementId));
+    } catch (IllegalArgumentException e) {
+      return badRequest(StreamPipesErrorMessage.from(e));
+    }
   }
 
   private DataProcessorResourceManager getDataProcessorResourceManager() {

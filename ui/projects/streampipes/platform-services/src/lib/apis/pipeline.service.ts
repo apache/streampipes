@@ -116,8 +116,8 @@ export class PipelineService {
             );
     }
 
-    getOwnPipelines(): Observable<Pipeline[]> {
-        return this.http.get(`${this.apiBasePath}/pipelines/own`).pipe(
+    getPipelines(): Observable<Pipeline[]> {
+        return this.http.get(`${this.apiBasePath}/pipelines`).pipe(
             map(response => {
                 return (response as any[]).map(p => Pipeline.fromData(p));
             }),
@@ -126,14 +126,6 @@ export class PipelineService {
 
     deleteOwnPipeline(pipelineId): Observable<any> {
         return this.http.delete(`${this.apiBasePath}/pipelines/${pipelineId}`);
-    }
-
-    getSystemPipelines(): Observable<Pipeline[]> {
-        return this.http.get(`${this.apiBasePath}/pipelines/system`).pipe(
-            map(response => {
-                return (response as any[]).map(p => Pipeline.fromData(p));
-            }),
-        );
     }
 
     getPipelineStatusById(pipelineId): Observable<PipelineStatusMessage[]> {
