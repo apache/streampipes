@@ -18,11 +18,11 @@
 org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.title=Geo CRS Reprojection
 org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.description=Coordinate reprojection from source to target CRS
 
-wkt-key=WKT.title=WKT
-wkt-key=WKT.description=Geometry
+geom-key.title=WKT
+geom-key.description=Geometry
 
 source-epsg-key.title=CRS of Input Geometry
 source-epsg-key.description=EPSG-Code of input point
 
-target_epsg-key.title=Target CRS
-target_epsg-key.description=EPSG-Code of target CRS
+target-epsg-key.title=Target CRS
+target-epsg-key.description=EPSG-Code of target CRS

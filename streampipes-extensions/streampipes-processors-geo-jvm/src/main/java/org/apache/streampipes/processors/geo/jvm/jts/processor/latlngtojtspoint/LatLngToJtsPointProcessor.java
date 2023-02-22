@@ -47,7 +47,7 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
   private static final String LAT_KEY = "latitude-key";
   private static final String LNG_KEY = "longitude-key";
   private static final String EPSG_KEY = "epsg-key";
-  private static final String WKT_RUNTIME = "geomWKT";
+  private static final String GEOMETRY_RUNTIME = "geometry";
   private String latitudeMapper;
   private String longitudeMapper;
   private String epsgMapper;
@@ -76,7 +76,7 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
         .outputStrategy(
             OutputStrategies.append(
                 PrimitivePropertyBuilder
-                    .create(Datatypes.String, WKT_RUNTIME)
+                    .create(Datatypes.String, GEOMETRY_RUNTIME)
                     .domainProperty("http://www.opengis.net/ont/geosparql#Geometry")
                     .build()
             )
@@ -101,7 +101,8 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
     Point geom = SpGeometryBuilder.createSPGeom(lng, lat, epsg);
 
     if (!geom.isEmpty()) {
-      event.addField(WKT_RUNTIME, geom.toString());
+      event.addField(GEOMETRY_RUNTIME, geom.toString());
+
       LOG.debug("Created Geometry: " + geom.toString());
       collector.collect(event);
     } else {
