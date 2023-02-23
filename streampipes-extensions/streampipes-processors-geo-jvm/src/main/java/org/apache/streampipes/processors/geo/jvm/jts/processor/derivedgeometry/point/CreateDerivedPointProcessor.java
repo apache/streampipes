@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.interior;
+package org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.point;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
@@ -30,6 +30,7 @@ import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
@@ -42,22 +43,23 @@ import org.locationtech.jts.geom.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateInteriorPointProcessor extends StreamPipesDataProcessor {
-  public static final String GEOM_KEY = "geom-key";
+public class CreateDerivedPointProcessor extends StreamPipesDataProcessor {
+  public static final String GEOM_KEY = "geometry-key";
   public static final String EPSG_KEY = "epsg-key";
-  // OUTPUT RUNTIME NAME
+  public static final String POINT_OUTPUT_TYPE_KEY = "point-output-type-key";
   public static final String INTERIOR_GEOM_KEY = "interior-geom-key";
   public static final String INTERIOR_EPSG_KEY = "interior-epsg-key";
   public static final String INTERIOR_GEOM_RUNTIME = "interior-point";
   public static final String INTERIOR_EPSG_RUNTIME = "epsg-interior-point";
   private String geometryMapper;
   private String epsgMapper;
-  private static final Logger LOG = LoggerFactory.getLogger(CreateInteriorPointProcessor.class);
+  private String outputType;
+  private static final Logger LOG = LoggerFactory.getLogger(CreateDerivedPointProcessor.class);
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create(
-        "org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.interior")
+            "org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.point")
         .category(DataProcessorType.GEO)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
@@ -72,7 +74,8 @@ public class CreateInteriorPointProcessor extends StreamPipesDataProcessor {
                 Labels.withId(EPSG_KEY),
                 PropertyScope.MEASUREMENT_PROPERTY)
             .build())
-        // adjust output method
+        .requiredSingleValueSelection(Labels.withId(POINT_OUTPUT_TYPE_KEY),
+            Options.from("Centroid Point", "Interior Point"))
         .outputStrategy(OutputStrategies.append(
                 EpProperties.stringEp(
                     Labels.withId(INTERIOR_GEOM_KEY),
@@ -93,8 +96,10 @@ public class CreateInteriorPointProcessor extends StreamPipesDataProcessor {
 
     this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
+    this.outputType = parameters.extractor().selectedSingleValue(POINT_OUTPUT_TYPE_KEY, String.class);
 
   }
+
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
     String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
@@ -104,9 +109,17 @@ public class CreateInteriorPointProcessor extends StreamPipesDataProcessor {
       // TODO remove check after harmonized semantic types and multiple tpes
       LOG.debug("geom is already a point");
     } else {
-      Point cendroidPoint = (Point) SpGeometryBuilder.createSPGeom(geometry.getCentroid(), geometry.getSRID());
-      event.addField(INTERIOR_GEOM_RUNTIME, cendroidPoint.toText());
-      event.addField(INTERIOR_EPSG_RUNTIME, cendroidPoint.getSRID());
+      Point derivedPointOutput = null;
+      switch (this.outputType) {
+        case "Interior Point":
+          derivedPointOutput = (Point) SpGeometryBuilder.createSPGeom(geometry.getInteriorPoint(), geometry.getSRID());
+          break;
+        case "Centroid Point":
+          derivedPointOutput = (Point) SpGeometryBuilder.createSPGeom(geometry.getCentroid(), geometry.getSRID());
+          break;
+      }
+      event.addField(INTERIOR_GEOM_RUNTIME, derivedPointOutput.toText());
+      event.addField(INTERIOR_EPSG_RUNTIME, derivedPointOutput.getSRID());
       collector.collect(event);
     }
   }

@@ -25,17 +25,15 @@
 ***
 
 ## Description
+Creates a Point of every other Geometry (not included a Point itself).
 
-Creates an interior point from a geometry other than a Point itself.
-An interior point is guaranteed to lie in the interior of the input geometry, if 
-it possible to calculate such a point exactly. Otherwise, the point may 
-lie on the boundary of the geometry.
 ***
 
 ## Required inputs
 
 * JTS Geometry
 * EPSG Code
+* Point Output Type
 ***
 
 ## Configuration
@@ -46,10 +44,19 @@ Input Geometry
 ### EPSG field
 Integer value representing EPSG code
 
+### Point Output Type
+Chose between 
+* Interior Point
+  *  An interior point is guaranteed to lie in the interior of the Geometry, 
+  if it is possible to calculate such a point exactly. Otherwise, the point may lie on 
+  the boundary of the geometry.
+* Centroid Point
+  * Computes the centroid of a Geometry 
+
 ***
 
 ## Output
-A point geometry with EPSG code. Location is based on 
+A point geometry with EPSG code.
 
 
 ### Example

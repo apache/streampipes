@@ -15,11 +15,14 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.interior.title=Geo Create Interior Point
-org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.interior.description=Creates a Point from other Geometries greater than point
+org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.point.title=Geo Derived Point Creation
+org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.point.description=Creates a Point from other Geometries greater than point
 
 geometry-key.title=JTS Geometry Event
 geometry-key.description=Single Geometry
 
 epsg-key.title=EPSG
 epsg-key.description=EPSG
+
+point-output-type-key.title=Point Type
+point-output-type-key.description=Choose Output Type

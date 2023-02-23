@@ -30,6 +30,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry.BufferGeomProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint.BufferPointProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.point.CreateDerivedPointProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.epsg.EpsgProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint.LatLngToJtsPointProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.ReprojectionProcessor;
@@ -78,7 +79,9 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
             new GeometryValidationProcessor(),
             new TopologyValidationProcessor(),
             new BufferGeomProcessor(),
-            new BufferPointProcessor())
+            new BufferPointProcessor(),
+            new ReprojectionProcessor(),
+            new CreateDerivedPointProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
@@ -97,7 +100,7 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
     PGSimpleDataSource ds = new PGSimpleDataSource();
     String[] serverAddresses = {"localhost"};
     ds.setServerNames(serverAddresses);
-    int[] portNumbers = {54320};
+    int [] portNumbers = {54320};
     ds.setPortNumbers(portNumbers);
     ds.setDatabaseName("EPSG");
     ds.setUser("streampipes");
