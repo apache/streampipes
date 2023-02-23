@@ -25,8 +25,8 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 import { StatusComponent } from './components/status.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({

@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
     DataExplorerDataConfig,
@@ -30,7 +30,7 @@ import {
     FieldConfig,
     SpQueryResult,
 } from '@streampipes/platform-services';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {
     DialogRef,

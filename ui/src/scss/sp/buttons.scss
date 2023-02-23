@@ -18,15 +18,15 @@
 
 @import '../_variables';
 
-.mat-button.mat-accent,
-.mat-icon-button.mat-accent,
-.mat-stroked-button.mat-accent {
+.mat-mdc-button.mat-accent,
+.mat-mdc-icon-button.mat-accent,
+.mat-mdc-stroked-button.mat-accent {
     color: var(--color-accent);
 }
 
-.mat-button,
-.mat-raised-button,
-.mat-flat-button {
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-flat-button {
     display: inline-block;
     vertical-align: middle;
     border: 0;
@@ -63,42 +63,42 @@
     color: rgba(255, 255, 255, 0.75);
 }
 
-.mat-raised-button.mat-primary:enabled {
+.mat-mdc-raised-button.mat-primary:enabled {
     background: var(--color-primary);
     color: rgba(255, 255, 255, 0.75);
 }
 
-.mat-raised-button.mat-accent:hover:enabled {
+.mat-mdc-raised-button.mat-accent:hover:enabled {
     background: $sp-color-accent-light-blue;
     -webkit-transition: all 0.75s ease;
     transition: all 0.75s ease;
 }
 
-.mat-raised-button.mat-accent:disabled {
+.mat-mdc-raised-button.mat-accent:disabled {
     background: #ebebeb;
     color: #cdcdcd;
 }
 
-.mat-raised-button.mat-accent:enabled {
+.mat-mdc-raised-button.mat-accent:enabled {
     background: var(--color-accent);
     color: rgba(255, 255, 255, 0.75);
 }
 
-.mat-raised-button.small-button {
+.mdc-button.small-button {
     padding: 0.25em 0.75em;
     font-size: 0.8em;
     max-height: 20px;
     line-height: 10px;
 }
 
-.mat-raised-button.small-button-add {
+.mdc-button.small-button-add {
     padding: 0.25em 0.75em;
     font-size: 0.8em;
     max-height: 75px;
     line-height: 25px;
 }
 
-.mat-raised-button.small-button-add-inverted {
+.mat-mdc-raised-button.small-button-add-inverted {
     padding: 0.25em 0.75em;
     font-size: 0.8em;
     max-height: 75px;
@@ -108,29 +108,29 @@
     color: $sp-color-accent;
 }
 
-.mat-raised-button.mat-accent:hover:enabled {
+.mat-mdc-raised-button.mat-accent:hover:enabled {
     background: $sp-color-accent-light-blue;
     -webkit-transition: all 0.75s ease;
     transition: all 0.75s ease;
 }
 
-.mat-raised-button.mat-accent:disabled {
+.mat-mdc-raised-button.mat-accent:disabled {
     background: #ebebeb;
     color: #cdcdcd;
 }
 
-.mat-raised-button.mat-basic:enabled {
+.mat-mdc-raised-button.mat-basic:enabled {
     background: #e5e5e5;
     color: rgba(0, 0, 0, 0.67);
 }
 
-.mat-raised-button.mat-basic:hover:enabled {
+.mat-mdc-raised-button.mat-basic:hover:enabled {
     background: #cbcbcb;
     -webkit-transition: all 0.75s ease;
     transition: all 0.75s ease;
 }
 
-.mat-raised-button.mat-basic:disabled {
+.mat-mdc-raised-button.mat-basic:disabled {
     background: #ebebeb;
     color: #cdcdcd;
 }

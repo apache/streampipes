@@ -30,8 +30,7 @@
                 </div>
                 <sp-split-section title="Basic" subtitle="Basic settings">
                     <div class="subsection-title">App Name</div>
-                    <mat-form-field color="accent" class="ml-10">
-                        <mat-label>App Name</mat-label>
+                    <mat-form-field color="accent" appearance="outline">
                         <input
                             formControlName="appName"
                             fxFlex
@@ -56,7 +55,11 @@
                                     >
                                 </mat-button-toggle-group>
                             </div>
-                            <mat-form-field color="accent" class="ml-10">
+                            <mat-form-field
+                                color="accent"
+                                class="ml-10"
+                                appearance="outline"
+                            >
                                 <mat-label>Host</mat-label>
                                 <input
                                     formControlName="hostname"

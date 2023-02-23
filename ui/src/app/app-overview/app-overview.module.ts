@@ -22,9 +22,9 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { FormsModule } from '@angular/forms';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { AppAssetMonitoringModule } from '../app-asset-monitoring/app-asset-monitoring.module';
 import { AppOverviewComponent } from './app-overview.component';
 import { RouterModule } from '@angular/router';

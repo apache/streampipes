@@ -18,9 +18,9 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Group, UserGroupService } from '@streampipes/platform-services';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { PanelType, DialogService } from '@streampipes/shared-ui';
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
 

@@ -22,9 +22,9 @@
         fxFlex="100"
         fxLayoutAlign="start center"
         fxLayout="row"
-        class="pl-10"
+        class="pl-10 form-field-small"
     >
-        <div fxFlex="100" fxLayout="row">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button
                 mat-button
                 mat-raised-button
@@ -48,7 +48,6 @@
                 &nbsp;Uninstall selected
             </button>
             <button
-                mat-button
                 mat-icon-button
                 color="accent"
                 class="mr-10"
@@ -59,7 +58,6 @@
                 <i class="material-icons">queue</i>
             </button>
             <button
-                mat-button
                 mat-icon-button
                 color="accent"
                 class="mr-10"
@@ -86,8 +84,6 @@
             </mat-form-field>
         </div>
         <div class="ml-10" fxLayoutAlign="start center" fxLayout="row">
-            <mat-icon>search</mat-icon>
-
             <mat-form-field
                 class="form-style"
                 color="accent"
@@ -100,6 +96,7 @@
                     [(ngModel)]="filterTerm"
                     name="something"
                 />
+                <mat-icon matPrefix>search</mat-icon>
             </mat-form-field>
         </div>
         <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
@@ -115,7 +112,6 @@
         </div>
         <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
             <button
-                mat-button
                 mat-icon-button
                 color="accent"
                 (click)="getEndpointItems()"
@@ -126,7 +122,6 @@
             </button>
         </div>
         <button
-            mat-button
             mat-icon-button
             color="accent"
             (click)="showManageRdfEndpointsDialog()"

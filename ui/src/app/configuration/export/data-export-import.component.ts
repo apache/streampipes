@@ -28,7 +28,7 @@ import {
     AssetManagementService,
     SpAsset,
 } from '@streampipes/platform-services';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
 

@@ -29,7 +29,19 @@
 @import '../variables';
 
 @include mat.core();
+/*
+ TODO(mdc-migration): Remove legacy-core once all legacy components are migrated
+ */
 @include mat.legacy-core();
+@include mat.core();
+
+.nav-input {
+    @include mat.input-density(-3);
+}
+
+.nav-form-field {
+    @include mat.form-field-density(-2);
+}
 
 $mat-streampipes-primary: (
     50: #ffebee,
@@ -147,7 +159,7 @@ $custom-theme-light: mat.define-light-theme(
             warn: $custom-theme-warn,
         ),
         typography: $custom-typography,
-        density: -2,
+        density: -1,
     )
 );
 
@@ -159,7 +171,7 @@ $custom-theme-dark: mat.define-light-theme(
             warn: $custom-theme-warn,
         ),
         typography: $custom-typography,
-        density: -2,
+        density: -1,
     )
 );
 
@@ -194,7 +206,11 @@ $accent: map-get($custom-theme-light, accent);
 .dark-mode {
     //@include angular-material-theme($custom-theme-dark);
     @include mat.all-component-themes($custom-theme-dark);
+    /*
+ TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated
+ */
     @include mat.all-legacy-component-themes($custom-theme-dark);
+    @include mat.all-component-themes($custom-theme-dark);
 
     .base-style {
         color: rgba(255, 255, 255, 0.87);
@@ -260,7 +276,11 @@ $accent: map-get($custom-theme-light, accent);
     @include mat.core-theme($custom-theme-light);
     @include mat.all-component-typographies();
     @include mat.all-component-themes($custom-theme-light);
+    /*
+ TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated
+ */
     @include mat.all-legacy-component-themes($custom-theme-light);
+    @include mat.all-component-themes($custom-theme-light);
 
     .base-style {
         color: #121212;

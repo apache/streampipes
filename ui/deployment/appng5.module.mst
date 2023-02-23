@@ -52,6 +52,8 @@ import { ApidocsModule } from './apidocs/apidocs.module';
 import { HttpInterceptorProvider } from './http-interceptor';
 import { AvailableRolesService } from './services/available-roles.service';
 
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+
 import * as $ from 'jquery';
 
 @NgModule({
@@ -89,6 +91,7 @@ import * as $ from 'jquery';
         AuthService,
         AvailableRolesService,
         NotificationCountService,
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' }},
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
     ],

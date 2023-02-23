@@ -20,7 +20,7 @@ mat-form-field.mat-form-field.form-field-size {
     font-size: 12px;
 }
 
-mat-form-field.mat-form-field.form-field-size-smaller {
+mat-mdc-form-field.mat-mdc-form-field.form-field-size-smaller {
     font-size: 10px;
 }
 
@@ -29,18 +29,91 @@ mat-form-field.mat-form-field.form-field-size-smaller {
     padding-bottom: 1.25em;
 }
 
-.smaller-button-font-size.mat-raised-button {
+.smaller-button-font-size.mat-mdc-raised-button {
     font-size: 0.8em;
     letter-spacing: 0.05em;
 }
 
-.icon-button-font-size.mat-button {
+.icon-button-font-size.mat-mdc-button {
     font-size: 0.8em;
     letter-spacing: 0.05em;
 }
 
-.button-icon.mat-button {
+.button-icon.mat-mdc-button {
     min-width: 0;
     border-radius: 0;
     padding: 0 4px;
+}
+
+.form-field-small {
+    .mat-mdc-input-element {
+        font-size: 11pt;
+    }
+
+    .mat-mdc-form-field-flex {
+        max-height: 30px;
+    }
+
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+        .mat-mdc-form-field-infix {
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 30px;
+        font-size: 11pt;
+    }
+
+    .mdc-text-field__input.smaller-font-size {
+        font-size: 10pt;
+    }
+
+    .mat-mdc-text-field-wrapper {
+        max-height: 30px;
+        background: var(--color-bg-0);
+    }
+
+    .mat-mdc-form-field {
+        max-height: 30px;
+    }
+
+    .mat-mdc-select-value-text {
+        font-size: 11pt;
+    }
+}
+
+.form-field-medium {
+    .mat-mdc-input-element {
+        font-size: 11pt;
+    }
+
+    .mat-mdc-form-field-flex {
+        max-height: 40px;
+    }
+
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+        .mat-mdc-form-field-infix {
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 40px;
+        font-size: 11pt;
+    }
+
+    .mat-mdc-text-field-wrapper {
+        max-height: 40px;
+        background: var(--color-bg-0);
+    }
+
+    .mat-mdc-form-field {
+        max-height: 40px;
+    }
+
+    .mat-mdc-select-value-text {
+        font-size: 11pt;
+    }
+
+    .mat-mdc-text-field-wrapper
+        .mat-mdc-form-field-flex
+        .mat-mdc-floating-label {
+        top: 20px;
+        font-size: 11pt;
+    }
 }

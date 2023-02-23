@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxLayout="row" fxLayoutAlign="start center">
+<div fxLayout="row" fxLayoutAlign="start center" class="form-field-small">
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
         <button
             mat-button
@@ -39,11 +39,9 @@
             <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
         </button>
         <mat-form-field
-            appearance="standard"
-            class="start-date form-field-margin form-field-size-smaller"
+            class="start-date form-field-margin smaller-font-size"
             color="accent"
         >
-            <mat-label>From</mat-label>
             <input
                 matInput
                 data-cy="time-range-from"
@@ -55,11 +53,9 @@
             <owl-date-time #dt1></owl-date-time>
         </mat-form-field>
         <mat-form-field
-            appearance="standard"
             class="end-date form-field-margin form-field-size-smaller"
             color="accent"
         >
-            <mat-label>To</mat-label>
             <input
                 matInput
                 data-cy="time-range-to"

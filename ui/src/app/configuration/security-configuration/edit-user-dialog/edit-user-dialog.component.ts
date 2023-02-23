@@ -37,7 +37,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { AuthService } from '../../../services/auth.service';

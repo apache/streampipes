@@ -44,7 +44,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SavePipelineComponent } from '../../dialog/save-pipeline/save-pipeline.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { EditorService } from '../../services/editor.service';
 import {
     PipelineCanvasMetadata,

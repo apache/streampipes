@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BasicProfileSettings } from '../basic-profile-settings';
 import { RawUserApiToken, UserApiToken } from '@streampipes/platform-services';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'sp-token-management-settings',

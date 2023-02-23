@@ -32,8 +32,9 @@
 
 .button-margin {
     border-radius: 0 !important;
-    padding-left: 4px !important;
-    padding-right: 4px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0;
     border-right: 1px solid #cccccc !important;
 }
 
@@ -43,7 +44,7 @@
 
 .time-range-wrapper {
     border: 1px solid var(--color-accent);
-    background: var(--color-accent);
+    //background: var(--color-accent);
 }
 
 .time-wrapper {

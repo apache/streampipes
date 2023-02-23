@@ -22,14 +22,14 @@ import { PanelDialogComponent } from './dialog/panel-dialog/panel-dialog.compone
 import { StandardDialogComponent } from './dialog/standard-dialog/standard-dialog.component';
 import { CommonModule } from '@angular/common';
 import { PortalModule } from '@angular/cdk/portal';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { SpBasicViewComponent } from './components/basic-view/basic-view.component';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpBasicNavTabsComponent } from './components/basic-nav-tabs/basic-nav-tabs.component';
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { SpBasicInnerPanelComponent } from './components/basic-inner-panel/basic-inner-panel.component';
 import { SpBasicHeaderTitleComponent } from './components/basic-header-title/header-title.component';
 import { SpExceptionMessageComponent } from './components/sp-exception-message/sp-exception-message.component';

@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FunctionId } from '@streampipes/platform-services';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
 @Component({

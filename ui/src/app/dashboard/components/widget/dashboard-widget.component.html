@@ -23,20 +23,10 @@
             *ngIf="editMode && headerVisible"
         >
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                <button
-                    mat-button
-                    mat-icon-button
-                    color="white"
-                    (click)="editWidget()"
-                >
+                <button mat-icon-button color="white" (click)="editWidget()">
                     <i class="material-icons">settings</i>
                 </button>
-                <button
-                    mat-button
-                    mat-icon-button
-                    color="white"
-                    (click)="removeWidget()"
-                >
+                <button mat-icon-button color="white" (click)="removeWidget()">
                     <i class="material-icons">clear</i>
                 </button>
             </div>

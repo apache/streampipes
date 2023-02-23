@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100" fxLayout="column" class="form-field-medium">
     <mat-accordion fxFlex="100" class="data-source-selection-panel">
         <mat-expansion-panel
             [expanded]="step === 0"
@@ -35,7 +35,6 @@
                     </div>
                     <div fxFlex fxLayoutAlign="end center">
                         <button
-                            mat-button
                             mat-icon-button
                             color="accent"
                             matTooltip="Clone Data Source"
@@ -47,7 +46,6 @@
                             >
                         </button>
                         <button
-                            mat-button
                             mat-icon-button
                             color="accent"
                             matTooltip="Delete Data Source"
@@ -89,6 +87,7 @@
                     <mat-form-field
                         color="accent"
                         fxFlex="100"
+                        class="mr-5"
                         *ngIf="sourceConfig.sourceType === 'pipeline'"
                     >
                         <mat-label>Select data explorer sink</mat-label>
@@ -168,6 +167,7 @@
                     <div
                         fxLayout="column"
                         fxFlex="100"
+                        class="mr-5"
                         *ngIf="sourceConfig.queryType === 'raw'"
                     >
                         <mat-form-field fxFlex="100" color="accent">

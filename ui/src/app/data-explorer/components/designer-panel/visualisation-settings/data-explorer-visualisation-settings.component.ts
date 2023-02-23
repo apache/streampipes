@@ -19,7 +19,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { WidgetTypeService } from '../../../services/widget-type.service';
-import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatSelectChange } from '@angular/material/select';
 import { IWidget } from '../../../models/dataview-dashboard.model';
 import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
 

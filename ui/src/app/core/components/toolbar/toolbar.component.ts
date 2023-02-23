@@ -20,7 +20,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
 import { Router } from '@angular/router';
 import { RestApi } from '../../../services/rest-api.service';
-import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { UntypedFormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';

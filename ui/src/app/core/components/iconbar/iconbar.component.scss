@@ -16,6 +16,11 @@
  *
  */
 
-.iconbar-size {
+.mat-mdc-icon-button.iconbar-size {
     width: 35px;
+    height: 40px;
+}
+
+.mat-mdc-icon-button.iconbar-size mat-icon {
+    margin-top: 5px;
 }

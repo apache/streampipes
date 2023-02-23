@@ -19,8 +19,8 @@
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile.component';

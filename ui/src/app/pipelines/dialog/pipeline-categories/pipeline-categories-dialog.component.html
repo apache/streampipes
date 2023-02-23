@@ -87,7 +87,6 @@
                                         fxLayoutAlign="center end"
                                     >
                                         <button
-                                            mat-button
                                             mat-icon-button
                                             (click)="
                                                 addPipelineToCategory(
@@ -105,7 +104,6 @@
                                         fxLayoutAlign="center end"
                                     >
                                         <button
-                                            mat-button
                                             mat-icon-button
                                             (click)="
                                                 showAddToCategoryInput(
@@ -141,7 +139,6 @@
                                     fxLayoutAlign="end center"
                                 >
                                     <button
-                                        mat-button
                                         mat-icon-button
                                         (click)="
                                             removePipelineFromCategory(
@@ -166,7 +163,6 @@
                         fxLayoutAlign="center start"
                     >
                         <button
-                            mat-button
                             mat-icon-button
                             *ngIf="categoryDetailsVisible[pipelineCategory._id]"
                             (click)="
@@ -181,7 +177,6 @@
                             <mat-icon>expand_less</mat-icon>
                         </button>
                         <button
-                            mat-button
                             mat-icon-button
                             *ngIf="
                                 !categoryDetailsVisible[pipelineCategory._id]
@@ -205,7 +200,6 @@
                         fxLayoutAlign="center start"
                     >
                         <button
-                            mat-button
                             mat-icon-button
                             (click)="
                                 showAddToCategoryInput(
@@ -227,7 +221,6 @@
                         layout-align="center start"
                     >
                         <button
-                            mat-button
                             mat-icon-button
                             (click)="
                                 deletePipelineCategory(pipelineCategory._id)
@@ -262,7 +255,6 @@
             </div>
             <div class="md-list-item-text" fxFlex="20" fxLayout="column">
                 <button
-                    mat-button
                     mat-icon-button
                     (click)="addPipelineCategory()"
                     color="accent"

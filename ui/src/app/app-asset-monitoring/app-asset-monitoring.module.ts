@@ -28,9 +28,9 @@ import { ViewAssetComponent } from './components/view-asset/view-asset.component
 import { CreateAssetComponent } from './components/create-asset/create-asset.component';
 import { AddPipelineDialogComponent } from './dialog/add-pipeline/add-pipeline-dialog.component';
 import { RestService } from './services/rest.service';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { ElementIconText } from '../services/get-element-icon-text.service';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';

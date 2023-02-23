@@ -20,9 +20,9 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AdapterConfigurationComponent } from './components/adapter-configuration/adapter-configuration.component';
 import { EventSchemaComponent } from './components/adapter-configuration/schema-editor/event-schema/event-schema.component';
@@ -31,7 +31,7 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { RestService } from './services/rest.service';
 
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
 import { DataTypesService } from './services/data-type.service';
 import { StaticPropertyUtilService } from '../core-ui/static-properties/static-property-util.service';
@@ -45,8 +45,8 @@ import { UnitProviderService } from './services/unit-provider.service';
 
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { TimestampPipe } from './filter/timestamp.pipe';
-import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
-import { MatLegacySliderModule as MatSliderModule } from '@angular/material/legacy-slider';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { XsService } from '../NS/xs.service';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
@@ -79,7 +79,7 @@ import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/compo
 import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AdapterConfigurationHeaderComponent } from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';

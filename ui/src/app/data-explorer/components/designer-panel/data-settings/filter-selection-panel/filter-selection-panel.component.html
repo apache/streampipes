@@ -39,7 +39,7 @@
         fxFlex="100"
         fxLayout="column"
     >
-        <div fxFlex="100" fxLayout="column">
+        <div fxFlex="100" fxLayout="column" class="form-field-medium">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                 <mat-form-field color="accent" class="w-140-px mr-5">
                     <mat-label>Field</mat-label>
@@ -58,7 +58,7 @@
                         >
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field color="accent" class="w-50-px mr-5">
+                <mat-form-field color="accent" class="w-60-px mr-5">
                     <mat-select
                         [(value)]="filter.operator"
                         (selectionChange)="updateWidget()"
