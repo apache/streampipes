@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.v4.query;
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
 import org.apache.streampipes.dataexplorer.v4.params.FillParams;
@@ -66,6 +67,8 @@ public class DataExplorerQueryV4 {
   private boolean appendId = false;
   private String forId;
 
+  private Environment env;
+
   public DataExplorerQueryV4() {
 
   }
@@ -79,11 +82,12 @@ public class DataExplorerQueryV4 {
 
   public DataExplorerQueryV4(Map<String, QueryParamsV4> params) {
     this.params = params;
+    this.env = Environments.getEnvironment();
     this.maximumAmountOfEvents = -1;
   }
 
   public DataExplorerQueryV4(Map<String, QueryParamsV4> params, int maximumAmountOfEvents) {
-    this.params = params;
+    this(params);
     this.maximumAmountOfEvents = maximumAmountOfEvents;
   }
 
@@ -92,7 +96,7 @@ public class DataExplorerQueryV4 {
     List<QueryElement<?>> queryElements = getQueryElements();
 
     if (this.maximumAmountOfEvents != -1) {
-      QueryBuilder countQueryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
+      QueryBuilder countQueryBuilder = QueryBuilder.create(getDatabaseName());
       Query countQuery = countQueryBuilder.build(queryElements, true);
       QueryResult countQueryResult = influxDB.query(countQuery);
       Double amountOfQueryResults = getAmountOfResults(countQueryResult);
@@ -105,7 +109,7 @@ public class DataExplorerQueryV4 {
       }
     }
 
-    QueryBuilder queryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
+    QueryBuilder queryBuilder = QueryBuilder.create(getDatabaseName());
     Query query = queryBuilder.build(queryElements, false);
     LOG.debug("Data Lake Query (database:" + query.getDatabase() + "): " + query.getCommand());
 
@@ -169,7 +173,7 @@ public class DataExplorerQueryV4 {
                                     boolean ignoreMissingValues) throws RuntimeException {
     SpQueryResult result = new SpQueryResult();
 
-    if (queryResult.getResults().get(0).getSeries() != null) {
+    if (hasResult(queryResult)) {
       result.setTotal(queryResult.getResults().get(0).getSeries().size());
       queryResult.getResults().get(0).getSeries().forEach(rs -> {
         DataSeries series = convertResult(rs, ignoreMissingValues);
@@ -183,6 +187,12 @@ public class DataExplorerQueryV4 {
     }
 
     return result;
+  }
+
+  private boolean hasResult(QueryResult queryResult) {
+    return queryResult.getResults() != null
+        && queryResult.getResults().size() > 0
+        && queryResult.getResults().get(0).getSeries() != null;
   }
 
   protected List<QueryElement<?>> getQueryElements() {
@@ -230,5 +240,9 @@ public class DataExplorerQueryV4 {
     }
 
     return queryElements;
+  }
+
+  private String getDatabaseName() {
+    return env.getTsStorageBucket().getValueOrDefault();
   }
 }

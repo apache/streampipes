@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.messaging.kafka;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
@@ -49,7 +49,6 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
 
   private static final String COLON = ":";
-  private static final String SP_KAFKA_RETENTION_MS_DEFAULT = "600000";
 
   private String brokerUrl;
   private String topic;
@@ -125,8 +124,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
     if (!topicExists(topics)) {
       Map<String, String> topicConfig = new HashMap<>();
-      String retentionTime = Envs.SP_KAFKA_RETENTION_MS.exists()
-          ? Envs.SP_KAFKA_RETENTION_MS.getValue() : SP_KAFKA_RETENTION_MS_DEFAULT;
+      String retentionTime = Environments.getEnvironment().getKafkaRetentionTimeMs().getValueOrDefault();
       topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, retentionTime);
 
       final NewTopic newTopic = new NewTopic(topic, 1, (short) 1);

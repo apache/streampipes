@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.commons.constants.DefaultEnvValues;
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.mail.MailSender;
@@ -65,8 +65,9 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public Principal getServiceAdmin() {
+    var env = getEnvironment();
     return db.getServiceAccount(
-        Envs.SP_INITIAL_SERVICE_USER.getValueOrDefault(DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT)
+        env.getInitialServiceUser().getValueOrDefault()
     );
   }
 
@@ -158,6 +159,10 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   private IUserActivationTokenStorage getUserActivationTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getUserActivationTokenStorage();
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 
 

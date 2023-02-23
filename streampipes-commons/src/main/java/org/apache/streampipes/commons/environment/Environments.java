@@ -21,6 +21,20 @@ package org.apache.streampipes.commons.environment;
 public class Environments {
 
   public static Environment getEnvironment() {
-    return new DefaultEnvironment();
+    return Env.DEFAULT.getEnvironment();
+  }
+
+  private enum Env {
+    DEFAULT(new DefaultEnvironment());
+
+    private final Environment environment;
+
+    Env(Environment env) {
+      this.environment = env;
+    }
+
+    public Environment getEnvironment() {
+      return environment;
+    }
   }
 }

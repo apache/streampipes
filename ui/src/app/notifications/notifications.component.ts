@@ -167,7 +167,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     getPipelinesWithNotifications() {
         this.notificationsLoading = true;
-        this.pipelineService.getOwnPipelines().subscribe(pipelines => {
+        this.pipelineService.getPipelines().subscribe(pipelines => {
             this.existingNotifications =
                 this.getAllExistingNotifications(pipelines);
             this.notificationsLoading = false;

@@ -33,6 +33,9 @@ documentation:
 gh-actions:
   - ".github/**/*"
 
+helm:
+  - "installer/k8s/**/*.yaml"
+
 installer:
   - "installer/**/*"
 

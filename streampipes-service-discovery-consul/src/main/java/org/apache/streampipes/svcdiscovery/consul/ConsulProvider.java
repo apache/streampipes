@@ -97,7 +97,7 @@ public enum ConsulProvider {
       return environment.getConsulLocation().getValue();
     } else {
       if (environment.getSpDebug().getValueOrReturn(false)) {
-        return DefaultEnvValues.CONSUL_HOST_LOCAL;
+        return DefaultEnvValues.LOCALHOST;
       } else {
         return environment.getConsulHost().getValueOrDefault();
       }

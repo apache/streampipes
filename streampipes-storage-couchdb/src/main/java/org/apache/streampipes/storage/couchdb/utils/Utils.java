@@ -63,16 +63,8 @@ public class Utils {
     return getCouchDbGsonClient("label");
   }
 
-  public static CouchDbClient getCouchDbConnectWorkerContainerClient() {
-    return getCouchDbGsonClient("connectworkercontainer");
-  }
-
   public static CouchDbClient getCouchDbFileMetadataClient() {
     return getCouchDbGsonClient("filemetadata");
-  }
-
-  public static CouchDbClient getCouchDbAdapterTemplateClient() {
-    return getCouchDbAdapterClient("adaptertemplate");
   }
 
   public static CouchDbClient getCouchDbAssetDashboardClient() {
@@ -89,14 +81,6 @@ public class Utils {
 
   public static CouchDbClient getCouchDbPipelineClient() {
     return getCouchDbGsonClient("pipeline");
-  }
-
-  public static CouchDbClient getCouchDbUserGroupStorage() {
-    return getCouchDbGsonClient("usergroup");
-  }
-
-  public static CouchDbClient getCouchDbSepaInvocationClient() {
-    return getCouchDbGsonClient("invocation");
   }
 
   public static CouchDbClient getCouchDbConnectionClient() {
@@ -157,10 +141,6 @@ public class Utils {
     return getCouchDbStandardSerializerClient("pipelinecategories");
   }
 
-  public static CouchDbClient getCouchDbElasticsearchFilesEndppointClient() {
-    return getCouchDbStandardSerializerClient("file-export-endpoints-elasticsearch");
-  }
-
   public static CouchDbClient getCouchDbDataLakeClient() {
     return getCouchDbGsonClient("data-lake");
   }
@@ -208,9 +188,10 @@ public class Utils {
   }
 
   private static String toUrl() {
-    return CouchDbConfig.INSTANCE.getProtocol()
-        + "://" + CouchDbConfig.INSTANCE.getHost()
-        + ":" + CouchDbConfig.INSTANCE.getPort();
+    var env = getEnvironment();
+    return env.getCouchDbProtocol().getValueOrDefault()
+        + "://" + env.getCouchDbHost().getValueOrDefault()
+        + ":" + env.getCouchDbPort().getValueOrDefault();
   }
 
   public static Request getRequest(String route) {

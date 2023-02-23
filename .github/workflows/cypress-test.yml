@@ -34,7 +34,7 @@ jobs:
           java-version: '17'
 
       - name: Set up Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
 
@@ -57,7 +57,7 @@ jobs:
         run: sleep 70
 
       - name: 'UI Tests'
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v5
         with:
           install: false
           wait-on: 'http://localhost/#/login'

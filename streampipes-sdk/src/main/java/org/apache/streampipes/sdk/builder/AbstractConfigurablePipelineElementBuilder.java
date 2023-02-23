@@ -535,6 +535,24 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   /**
+   * Defines a number-based configuration parameter of type long provided by pipeline developers at pipeline
+   * authoring time and initializes the parameter with a default value.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in a user-friendly manner.
+   * @param defaultValue The default long value.
+   * @return this
+   */
+  public K requiredLongParameter(Label label,
+                                 Long defaultValue) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label,
+        XSD.LONG.toString());
+    fsp.setValue(String.valueOf(defaultValue));
+    this.staticProperties.add(fsp);
+    return me();
+  }
+
+  /**
    * @deprecated Use {@link #requiredFloatParameter(Label)} instead.
    * @param internalId
    * @param label

@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.sdk;
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.v4.params.ColumnFunction;
 
 import org.influxdb.dto.Query;
@@ -48,11 +49,14 @@ public class DataLakeQueryBuilder {
   private int limit = Integer.MIN_VALUE;
   private int offset = Integer.MIN_VALUE;
 
+  private Environment env;
+
   private DataLakeQueryBuilder(String measurementId) {
     this.measurementId = measurementId;
     this.selectionQuery = select();
     this.whereClauses = new ArrayList<>();
     this.groupByClauses = new ArrayList<>();
+    this.env = Environments.getEnvironment();
   }
 
   public static DataLakeQueryBuilder create(String measurementId) {
@@ -195,7 +199,7 @@ public class DataLakeQueryBuilder {
 
   public Query build() {
     var selectQuery =
-        this.selectionQuery.from(BackendConfig.INSTANCE.getInfluxDatabaseName(), "\"" + measurementId + "\"");
+        this.selectionQuery.from(env.getTsStorageBucket().getValueOrDefault(), "\"" + measurementId + "\"");
     this.whereClauses.forEach(selectQuery::where);
 
     if (this.groupByClauses.size() > 0) {

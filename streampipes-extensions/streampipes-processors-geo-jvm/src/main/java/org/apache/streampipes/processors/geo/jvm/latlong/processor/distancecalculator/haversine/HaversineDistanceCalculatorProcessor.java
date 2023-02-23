@@ -24,14 +24,15 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.latlong.helper.HaversineDistanceUtil;
+import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
@@ -39,12 +40,14 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.net.URI;
+
 public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcessor {
   private static final String LAT_1_KEY = "lat1";
   private static final String LONG_1_KEY = "long1";
   private static final String LAT_2_KEY = "lat2";
   private static final String LONG_2_KEY = "long2";
-  private static final String CALCULATED_DISTANCE_KEY = "calculatedDistance";
+  private static final String DISTANCE_RUNTIME_NAME = "distance";
   String lat1FieldMapper;
   String long1FieldMapper;
   String lat2FieldMapper;
@@ -69,12 +72,12 @@ public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcess
                 Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
             .build()
         )
-        .outputStrategy(OutputStrategies
-            .append(EpProperties.numberEp(
-                Labels.withId(CALCULATED_DISTANCE_KEY),
-                "distance",
-                SO.NUMBER))
-        )
+        .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
+                .create(Datatypes.Float, DISTANCE_RUNTIME_NAME)
+                .domainProperty(SO.NUMBER)
+                .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilometer"))
+                .build())
+            )
         .build();
   }
 
@@ -99,7 +102,7 @@ public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcess
 
     double resultDist = HaversineDistanceUtil.dist(lat1, long1, lat2, long2);
 
-    event.addField("distance", resultDist);
+    event.addField(DISTANCE_RUNTIME_NAME, resultDist);
 
     collector.collect(event);
   }

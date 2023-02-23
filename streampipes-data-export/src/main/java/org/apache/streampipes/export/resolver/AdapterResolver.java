@@ -19,7 +19,6 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
@@ -64,7 +63,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
                             boolean overrideDocument) throws JsonProcessingException {
     var adapterDescription = deserializeDocument(document);
     if (overrideDocument) {
-      EventGroundingProcessor.applyOverride(adapterDescription.getEventGrounding().getTransportProtocol());
+      overrideProtocol(adapterDescription.getEventGrounding());
     }
     getNoSqlStore().getAdapterInstanceStorage().storeAdapter(adapterDescription);
   }
