@@ -15,8 +15,6 @@
 
 version: "3.4"
 services:
-  extensions-all-jvm:
+  ui-custom-conf:
     labels:
-      org.apache.streampipes.dev.extensions-all-jvm.service.description: "Dev extensions-all-jvm service"
-    ports:
-      - "8090:8090"
+      org.apache.streampipes.dev.ui.service.description: "Dev UI service"

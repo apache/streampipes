@@ -15,8 +15,23 @@
 
 version: "3.4"
 services:
-  extensions-all-jvm:
-    labels:
-      org.apache.streampipes.dev.extensions-all-jvm.service.description: "Dev extensions-all-jvm service"
+  ui-custom-conf:
+    image: ${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}
     ports:
-      - "8090:8090"
+      - "80:80"
+    depends_on:
+      - couchdb
+      - consul
+    volumes:
+      - "../ui-custom-conf/default.conf:/etc/nginx/conf.d/default.conf"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true
