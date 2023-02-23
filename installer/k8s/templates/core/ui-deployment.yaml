@@ -30,7 +30,7 @@ spec:
       volumes:
         - name: nginx-conf
           configMap:
-            name: nginx-conf # place ConfigMap `nginx-conf` on /etc/nginx
+            name: nginx-conf
       containers:
         - name: {{ .Values.streampipes.ui.appName }}
           image: {{ .Values.streampipes.registry }}/ui:{{ .Values.streampipes.version }}
@@ -41,13 +41,3 @@ spec:
             - name: nginx-conf
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
-        # This is necessary because a custom dns resolver is set in nginx default conf
-        - name: dnsmasq
-          image: fogsyio/go-dnsmasq:1.0.7
-          args:
-            - --listen
-            - "127.0.0.11:53"
-            - --default-resolver
-            - --append-search-domains
-            - --hostsfile=/etc/hosts
-            - --verbose

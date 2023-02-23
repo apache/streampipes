@@ -13,21 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if .Values.streampipes.ingress.active }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: streampipes
+  {{- with .Values.streampipes.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  #ingressClass: {{ .Values.streampipes.ui.ingressClass }}
+  ingressClassName: {{ .Values.streampipes.ingress.className}}
   rules:
-  - http:
+  - host: {{ .Values.streampipes.ingress.host }}
+    http:
       paths:
       - path: /
         pathType: Prefix
         backend:
-          service: 
+          service:
             name: {{ .Values.streampipes.ui.appName }}
-            port: 
+            port:
               number: {{ .Values.streampipes.ui.service.port }}
       - path: /streampipes-backend(/|$)(.*)
         pathType: Prefix
@@ -36,4 +42,4 @@ spec:
             name: {{ .Values.streampipes.core.appName }}
             port:
               number: {{ .Values.streampipes.core.service.port }}
-
+{{- end }}

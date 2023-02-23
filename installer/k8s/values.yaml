@@ -35,11 +35,30 @@ streampipes:
       port: 8030
   ui:
     appName: "ui"
+    resolverActive: true
+    # DNS resolver when using the Nginx proxy
+    resolver: "kube-dns.kube-system.svc.cluster.local"
     service:
-      type: "LoadBalancer"
+      name: "ui"
+      type: "ClusterIP"
       nodePort: 8088
       port: 8088
     port: 8088
+  ingress:
+    active: false
+    annotations: {}
+    #className: ""
+    host: ""
+  # Ingressroute for running StreamPipes behind Traefik
+  ingressroute:
+    active: false
+    annotations: {}
+    entryPoints:
+      - web
+      - websecure
+    host: ""
+    certResolverActive: true
+    certResolver: ""
 
 external:
   consul:
@@ -77,7 +96,7 @@ external:
   nats:
     appName: "nats"
     service:
-      type: "LoadBalancer"
+      type: "NodePort"
       externalTrafficPolicy: "Local"
     version:
   kafkaVersion: 2.2.0

@@ -21,8 +21,9 @@ data:
   default.conf: |
     server {
       listen {{ .Values.streampipes.ui.port }} default_server;
-      resolver 127.0.0.11;
-      
+      {{- if .Values.streampipes.ui.resolver }}
+      resolver {{ .Values.streampipes.ui.resolver }};
+      {{- end }}
       root /usr/share/nginx/html;
     
       # Enable gzip compression
@@ -36,7 +37,7 @@ data:
       gzip_http_version 1.1;    
     
       location /streampipes-backend {
-      set $upstream {{ .Values.streampipes.core.svcName }}:8030;
+      set $upstream backend.sp-helmfile.svc.cluster.local:8030;
   
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
