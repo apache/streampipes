@@ -20,7 +20,7 @@ on:
     - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
 
 jobs:
-  python-docs:
+  python-docs-artifact-building:
     runs-on: ubuntu-latest
     steps:
       - name: clone
@@ -35,20 +35,20 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
+          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/setup.py') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-doc-
 
       - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           python -m pip install --upgrade pip
           pip install wheel
           pip install -e ".[docs]"
 
       - name: Build Python docs
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           make doc
 
       - name: Publish Python docs as artifact
