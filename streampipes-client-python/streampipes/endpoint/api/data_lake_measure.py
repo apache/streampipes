@@ -20,7 +20,7 @@ Specific implementation of the StreamPipes API's data lake measure endpoints.
 This endpoint allows to consume data stored in StreamPipes' data lake
 """
 from datetime import datetime
-from typing import Any, Dict, Optional, Tuple, Type, Literal
+from typing import Any, Dict, Literal, Optional, Tuple, Type
 
 from pydantic import BaseModel, Extra, Field, StrictInt, ValidationError, validator
 from streampipes.endpoint.endpoint import APIEndpoint
@@ -121,17 +121,19 @@ class MeasurementGetQueryConfig(BaseModel):
         """
 
         if not isinstance(dt, datetime) or dt is None:
-            raise StreamPipesQueryValidationError(f"The passed value for either `start_date` or `end_date` "
-                                                  f"is not a datetime object: '{dt}'.")
+            raise StreamPipesQueryValidationError(
+                f"The passed value for either `start_date` or `end_date` " f"is not a datetime object: '{dt}'."
+            )
         try:
             unix_timestamp = int(datetime.timestamp(dt) * 1000)
             return unix_timestamp
         except ValueError as ve:  # pragma: no cover
-            raise ValueError(f"Your datetime object is off, it could not be parsed"
-                             f"This should not occur, but unfortunately did.\n"
-                             f"Therefore, it would be great if you could report this problem as an issue at "
-                             f"github.com/apache/streampipes.\n"
-                             ) from ve
+            raise ValueError(
+                "Your datetime object is off, it could not be parsed"
+                "This should not occur, but unfortunately did.\n"
+                "Therefore, it would be great if you could report this problem as an issue at "
+                "github.com/apache/streampipes.\n"
+            ) from ve
 
     def build_query_string(self) -> str:
         """Builds a HTTP query string for the config.
@@ -221,7 +223,8 @@ class DataLakeMeasureEndpoint(APIEndpoint):
                 f"Validation error log: {ve.json()}\n\n"
                 f"In case you assess your query configuration to be correct feel free to file us an issue via "
                 f"github.com/apache/streampipes.\n"
-                f"Please don't forget to include the following validation log from above.")
+                f"Please don't forget to include the following validation log from above."
+            )
 
         return config
 

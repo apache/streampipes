@@ -1,6 +1,6 @@
 from datetime import datetime
 from unittest import TestCase
-from streampipes.endpoint.api.data_lake_measure import DataLakeMeasureEndpoint
+from streampipes.endpoint.api.data_lake_measure import DataLakeMeasureEndpoint, StreamPipesQueryValidationError
 
 
 class TestMeasurementGetQueryConfig(TestCase):
@@ -27,7 +27,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             "foo": "bar"
         }
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(StreamPipesQueryValidationError):
             DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
 
     def test_alias_as_query_param(self):
@@ -60,7 +60,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             "start_date": "test"
         }
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(StreamPipesQueryValidationError):
             DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
 
     def test_columns_validation(self):
@@ -81,9 +81,9 @@ class TestMeasurementGetQueryConfig(TestCase):
             query_params=config_dict_one_col).build_query_string())
         self.assertEqual("?columns=col1,col2,col3&limit=1000", DataLakeMeasureEndpoint._validate_query_params(
             query_params=config_dict_mul_col).build_query_string())
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(StreamPipesQueryValidationError):
             DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_semicolon)
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(StreamPipesQueryValidationError):
             DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_whitespace_ending)
 
     def test_minium_parameter_values(self):
@@ -105,10 +105,10 @@ class TestMeasurementGetQueryConfig(TestCase):
 
         self.assertEqual("?limit=15&page=3", result_happy)
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(StreamPipesQueryValidationError):
             DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_limit_too_low)
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(StreamPipesQueryValidationError):
             DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_page_no_too_low)
 
     def test_literal_validation(self):
@@ -117,5 +117,5 @@ class TestMeasurementGetQueryConfig(TestCase):
             "order": "UP"
         }
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(StreamPipesQueryValidationError):
             DataLakeMeasureEndpoint._validate_query_params(query_params=config_invalid_order)
