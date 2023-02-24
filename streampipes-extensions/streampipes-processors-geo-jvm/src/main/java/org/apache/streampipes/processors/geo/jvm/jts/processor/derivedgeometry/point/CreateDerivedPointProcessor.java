@@ -19,10 +19,14 @@
 package org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.point;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -54,6 +58,7 @@ public class CreateDerivedPointProcessor extends StreamPipesDataProcessor {
   private String geometryMapper;
   private String epsgMapper;
   private String outputType;
+  ProcessorParams params;
   private static final Logger LOG = LoggerFactory.getLogger(CreateDerivedPointProcessor.class);
 
   @Override
@@ -61,7 +66,7 @@ public class CreateDerivedPointProcessor extends StreamPipesDataProcessor {
     return ProcessingElementBuilder.create(
             "org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.point")
         .category(DataProcessorType.GEO)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON, "derivedPoint.png")
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
@@ -97,17 +102,19 @@ public class CreateDerivedPointProcessor extends StreamPipesDataProcessor {
     this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
     this.outputType = parameters.extractor().selectedSingleValue(POINT_OUTPUT_TYPE_KEY, String.class);
-
+    this.params = parameters;
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
     String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
-    Integer sourceEpsg = event.getFieldBySelector(epsgMapper).getAsPrimitive().getAsInt();
-    Geometry geometry = SpGeometryBuilder.createSPGeom(geom, sourceEpsg);
+    Integer epsg = event.getFieldBySelector(epsgMapper).getAsPrimitive().getAsInt();
+    Geometry geometry = SpGeometryBuilder.createSPGeom(geom, epsg);
     if (geometry instanceof Point) {
-      // TODO remove check after harmonized semantic types and multiple tpes
-      LOG.debug("geom is already a point");
+      SpMonitoringManager.INSTANCE.addErrorMessage(params.getGraph().getElementId(),
+          SpLogEntry.from(System.currentTimeMillis(),
+              StreamPipesErrorMessage.from(new SpNotSupportedGeometryException(
+                  "Point Geometry is not supported"))));
     } else {
       Point derivedPointOutput = null;
       switch (this.outputType) {

@@ -25,7 +25,8 @@
 ***
 
 ## Description
-Creates a Point of every other Geometry (not included a Point itself).
+A single point geometry is derived from any geometry (except a
+point itself)
 
 ***
 
@@ -46,12 +47,11 @@ Integer value representing EPSG code
 
 ### Point Output Type
 Chose between 
-* Interior Point
-  *  An interior point is guaranteed to lie in the interior of the Geometry, 
+* **Interior Point:**  An interior point is guaranteed to lie in the interior of the Geometry, 
   if it is possible to calculate such a point exactly. Otherwise, the point may lie on 
   the boundary of the geometry.
-* Centroid Point
-  * Computes the centroid of a Geometry 
+* **Centroid Point**: A centroid point represents the geometric center of a simple geometry. For multi-geometries the
+    center of mass is calculated
 
 ***
 
@@ -61,3 +61,6 @@ A point geometry with EPSG code.
 
 ### Example
 
+<p align="center">
+    <img src="derivedPoint.png" width="500;" class="pe-image-documentation"/>
+</p>
