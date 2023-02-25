@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.processors.geo.jvm.jts.processor.validation.title=Geo Geometry Validation
-org.apache.streampipes.processors.geo.jvm.jts.processor.validation.description=Validates the geometry using different validation categories.
+org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple.title=Geo Geometry Validation Filter
+org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple.description=Validates the geometry of emptiness or simple geometry.
 
 geom-key.title=JTS Geometry Event
 geom-key.description=Input Geometry
@@ -25,7 +25,7 @@ epsg-key.title=CRS of Input Geometry
 epsg-key.description=EPSG-Code of input point
 
 validation-output-key.title=Filter Output Type
-validation-output-key.description=The selected output takes into account
+validation-output-key.description=Consider the output type
 
 validation-type-key.title= Validation Type
 validation-type-key.description=The selected output takes into account

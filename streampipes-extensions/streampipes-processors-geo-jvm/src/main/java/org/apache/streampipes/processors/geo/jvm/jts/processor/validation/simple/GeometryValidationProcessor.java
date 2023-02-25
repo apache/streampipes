@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.validation;
+package org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
@@ -24,6 +24,8 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.ValidationOutput;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.ValidationType;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
@@ -38,9 +40,10 @@ import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.operation.valid.IsValidOp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class GeometryValidationProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geom-key";
@@ -49,14 +52,16 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
   public static final String VALIDATION_TYPE_KEY = "validation-type-key";
   private String geometryMapper;
   private String epsgMapper;
-  private Integer validationOutput;
-  private Integer validationType;
+  private String outputChoice;
+  private boolean isEmptySelected;
+  private boolean isSimpleSelected;
+  private boolean isMultiSelected = false;
 
   private static final Logger LOG = LoggerFactory.getLogger(GeometryValidationProcessor.class);
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple")
         .category(DataProcessorType.GEO)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
@@ -79,12 +84,11 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
                 ValidationOutput.INVALID.name()
             )
         )
-        .requiredSingleValueSelection(
+        .requiredMultiValueSelection(
             Labels.withId(VALIDATION_TYPE_KEY),
             Options.from(
                 ValidationType.IsEmpty.name(),
-                ValidationType.IsSimple.name(),
-                ValidationType.IsValid.name()
+                ValidationType.IsSimple.name()
             )
         )
         .build();
@@ -98,20 +102,24 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
 
     String readValidationOutput = parameters.extractor().selectedSingleValue(VALIDATION_OUTPUT_KEY, String.class);
-    String readValidationType = parameters.extractor().selectedSingleValue(VALIDATION_TYPE_KEY, String.class);
+    List<String> readValidationType = parameters.extractor().selectedMultiValues(VALIDATION_TYPE_KEY, String.class);
 
     if (readValidationOutput.equals(ValidationOutput.VALID.name())) {
-      this.validationOutput = ValidationOutput.VALID.getNumber(); // 1
+      this.outputChoice = ValidationOutput.VALID.name();
     } else {
-      this.validationOutput = 2;
+      this.outputChoice = ValidationOutput.INVALID.name();
     }
 
-    if (readValidationType.equals(ValidationType.IsEmpty.name())) {
-      this.validationType = ValidationType.IsEmpty.getNumber(); // 1
-    } else if (readValidationType.equals(ValidationType.IsValid.name())) {
-      this.validationType = ValidationType.IsSimple.getNumber(); // 2
-    } else {
-      this.validationType = ValidationType.IsValid.getNumber(); // 3
+    if (readValidationType.size() == 2) {
+      this.isEmptySelected = true;
+      this.isSimpleSelected = true;
+      this.isMultiSelected = true;
+    } else if (readValidationType.get(0).equals(ValidationType.IsEmpty.name())) {
+      this.isEmptySelected = true;
+      this.isSimpleSelected = false;
+    } else if (readValidationType.get(0).equals(ValidationType.IsSimple.name())) {
+      this.isEmptySelected = false;
+      this.isSimpleSelected = true;
     }
   }
 
@@ -122,40 +130,26 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
 
     Geometry geometry = SpGeometryBuilder.createSPGeom(geom, sourceEpsg);
 
-    boolean itIsValid = false;
+    boolean itIsNotValid = false;
 
-    switch (validationType) {
-      case 1:
-        itIsValid = !geometry.isEmpty();
-        break;
-      case 2:
-        itIsValid = geometry.isSimple();
-        break;
-      case 3:
-        IsValidOp validater = new IsValidOp(geometry);
-        validater.setSelfTouchingRingFormingHoleValid(true);
-        itIsValid = validater.isValid();
-        if (!itIsValid) {
-          validater.getValidationError();
-        }
+    if (isMultiSelected) {
+      itIsNotValid = geometry.isEmpty() || !geometry.isSimple();
+    } else if (isEmptySelected) {
+      itIsNotValid = geometry.isEmpty();
+    } else if (isSimpleSelected) {
+      itIsNotValid = !geometry.isSimple();
     }
 
-
-    switch (validationOutput) {
-      case 1:
-        if (itIsValid) {
-          collector.collect(event);
-        }
-        break;
-      case 2:
-        if (!itIsValid) {
-          collector.collect(event);
-        }
-        break;
+    if (outputChoice.equals(ValidationOutput.VALID.name())) {
+      if (!itIsNotValid) {
+        collector.collect(event);
+      }
+    } else if (outputChoice.equals(ValidationOutput.INVALID.name())) {
+      if (itIsNotValid) {
+        collector.collect(event);
+      }
     }
   }
-
-
 
   @Override
   public void onDetach() throws SpRuntimeException {

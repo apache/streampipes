@@ -15,10 +15,27 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.processors.geo.jvm.jts.exceptions;
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.validation;
+public class SpJtsGeoemtryException extends Exception {
 
-public enum ValidationOutput {
-  VALID, INVALID;
+  public SpJtsGeoemtryException() {
+  }
+
+  public SpJtsGeoemtryException(String message) {
+    super(message);
+  }
+
+  public SpJtsGeoemtryException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public SpJtsGeoemtryException(Throwable cause) {
+    super(cause);
+  }
+
+  public SpJtsGeoemtryException(String message, Throwable cause, boolean enableSuppression,
+                                boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }
-

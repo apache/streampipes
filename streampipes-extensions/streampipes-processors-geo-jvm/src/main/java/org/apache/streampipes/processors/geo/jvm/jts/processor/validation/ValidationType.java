@@ -18,13 +18,5 @@
 
 package org.apache.streampipes.processors.geo.jvm.jts.processor.validation;
 public enum ValidationType {
-  IsEmpty(1), IsValid(2), IsSimple(3);
-  private final int number;
-  ValidationType(int i) {
-    this.number = i;
-  }
-
-  public int getNumber() {
-    return number;
-  }
+  IsEmpty, IsValid, IsSimple;
 }

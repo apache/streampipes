@@ -32,7 +32,8 @@ import org.apache.streampipes.processors.geo.jvm.jts.processor.epsg.EpsgProcesso
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint.LatLngToJtsPointProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.ReprojectionProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.TrajectoryFromPointsProcessor;
-import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.GeometryValidationProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex.TopologyValidationProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple.GeometryValidationProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine.HaversineDistanceCalculatorProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversinestatic.HaversineStaticDistanceCalculatorProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps.GoogleMapsGeocoderProcessor;
@@ -72,7 +73,8 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
             new TrajectoryFromPointsProcessor(),
             new SpeedCalculatorProcessor(),
             new ReprojectionProcessor(),
-            new GeometryValidationProcessor())
+            new GeometryValidationProcessor(),
+            new TopologyValidationProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

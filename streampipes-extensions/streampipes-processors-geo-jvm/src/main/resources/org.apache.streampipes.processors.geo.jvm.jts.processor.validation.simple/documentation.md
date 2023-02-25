@@ -26,7 +26,7 @@
 
 ## Description
 
-
+Checks the geometry event if the geometry is simple and / or empty.
 
 ***
 
@@ -58,8 +58,7 @@ Integer value representing EPSG code
   * Linear rings have the same semantics.
   * Linear geometries are simple if they do not self-intersect at points other than boundary points.
   * Zero-dimensional geometries (points) are simple if they have no repeated points.
-  * Empty Geometrys are always simple!
-* IsValid - Tests whether this Geometry is topologically valid, according to the OGC SFS specification.
+  * Empty Geometries are always simple!
 
 ### Validation Output
 Chose the output result of the filter.
@@ -70,6 +69,6 @@ Chose the output result of the filter.
 
 ## Output
 
-All events of the validation output.
+All events that match the validation output.
 
 ### Example
