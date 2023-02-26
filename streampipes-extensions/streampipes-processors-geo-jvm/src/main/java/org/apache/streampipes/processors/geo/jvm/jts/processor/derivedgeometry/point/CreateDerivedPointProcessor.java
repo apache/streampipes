@@ -51,10 +51,10 @@ public class CreateDerivedPointProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geometry-key";
   public static final String EPSG_KEY = "epsg-key";
   public static final String POINT_OUTPUT_TYPE_KEY = "point-output-type-key";
-  public static final String INTERIOR_GEOM_KEY = "interior-geom-key";
-  public static final String INTERIOR_EPSG_KEY = "interior-epsg-key";
-  public static final String INTERIOR_GEOM_RUNTIME = "interior-point";
-  public static final String INTERIOR_EPSG_RUNTIME = "epsg-interior-point";
+  public static final String DERIVED_GEOM_KEY = "derived-point-geom-key";
+  public static final String DERIVED_EPSG_KEY = "derived-point-epsg-key";
+  public static final String DERIVED_GEOM_RUNTIME = "derived-point";
+  public static final String DERIVED_EPSG_RUNTIME = "epsg-derived-point";
   private String geometryMapper;
   private String epsgMapper;
   private String outputType;
@@ -83,12 +83,12 @@ public class CreateDerivedPointProcessor extends StreamPipesDataProcessor {
             Options.from("Centroid Point", "Interior Point"))
         .outputStrategy(OutputStrategies.append(
                 EpProperties.stringEp(
-                    Labels.withId(INTERIOR_GEOM_KEY),
-                    INTERIOR_GEOM_RUNTIME,
+                    Labels.withId(DERIVED_GEOM_KEY),
+                    DERIVED_GEOM_RUNTIME,
                     "http://www.opengis.net/ont/geosparql#Geometry"),
                 EpProperties.integerEp(
-                    Labels.withId(INTERIOR_EPSG_KEY),
-                    INTERIOR_EPSG_RUNTIME,
+                    Labels.withId(DERIVED_EPSG_KEY),
+                    DERIVED_EPSG_RUNTIME,
                     "http://data.ign.fr/def/ignf#CartesianCS")
             )
         )
@@ -125,8 +125,8 @@ public class CreateDerivedPointProcessor extends StreamPipesDataProcessor {
           derivedPointOutput = (Point) SpGeometryBuilder.createSPGeom(geometry.getCentroid(), geometry.getSRID());
           break;
       }
-      event.addField(INTERIOR_GEOM_RUNTIME, derivedPointOutput.toText());
-      event.addField(INTERIOR_EPSG_RUNTIME, derivedPointOutput.getSRID());
+      event.addField(DERIVED_GEOM_RUNTIME, derivedPointOutput.toText());
+      event.addField(DERIVED_EPSG_RUNTIME, derivedPointOutput.getSRID());
       collector.collect(event);
     }
   }
