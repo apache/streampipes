@@ -68,5 +68,9 @@ The default number of facets into which to divide a fillet of 90 degrees.
 ## Output
 A polygon geometry with EPSG code. Shape is defined by input parameters.
 
+<p align="center">
+    <img src="output.png" width="400px;" class="pe-image-documentation"/>
+</p>
+
 ### Example
 
