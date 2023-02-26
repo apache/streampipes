@@ -36,11 +36,6 @@ __all__ = [
 class StreamPipesQueryValidationError(Exception):
     """A custom exception to be raised when the validation of query parameter
     causes an error.
-
-    Parameters
-    ----------
-    validation_error: ValidationError
-        The validation error thrown by Pydantic during parsing.
     """
 
 
@@ -60,16 +55,16 @@ class MeasurementGetQueryConfig(BaseModel):
         Restricts queried data to be younger than the specified time.
     limit: Optional[int]
         Amount of records returned at maximum (default: `1000`) <br>
-        This needs to at least `1`
+        This needs to be at least `1`
     offset: Optional[int]
         Offset to be applied to returned data <br>
-        This needs to at least `0`
+        This needs to be at least `0`
     order: Optional[str]
         Ordering of query results <br>
         Allowed values: `ASC` and `DESC` (default: `ASC`)
     page_no: Optional[int]
         Page number used for paging operation <br>
-        This needs to at least `1`
+        This needs to be at least `1`
     start_date: Optional[datetime]
         Restricts queried data to be older than the specified time
 
