@@ -72,7 +72,7 @@ pip install git+https://github.com/apache/streampipes.git#subdirectory=streampip
 >>> client.describe()
 
 Hi there!
-You are connected to a StreamPipes instance running at http://localhost: 80.
+You are connected to a StreamPipes instance running at http://localhost:80.
 The following StreamPipes resources are available with this client:
 6x DataStreams
 1x DataLakeMeasures
