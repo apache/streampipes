@@ -221,7 +221,8 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     1  2023-02-24T16:19:41.482Z  47.186588
     2  2023-02-24T16:19:41.493Z  46.735321
 
-    This is only a subset of the available query parameters, find all of them at [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
+    This is only a subset of the available query parameters,
+    find them at [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
     """
 
     @staticmethod
