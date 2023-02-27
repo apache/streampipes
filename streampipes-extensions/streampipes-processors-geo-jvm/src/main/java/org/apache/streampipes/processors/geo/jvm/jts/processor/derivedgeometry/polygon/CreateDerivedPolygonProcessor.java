@@ -51,11 +51,11 @@ import org.slf4j.LoggerFactory;
 public class CreateDerivedPolygonProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geometry-key";
   public static final String EPSG_KEY = "epsg-key";
-  public static final String POINT_OUTPUT_TYPE_KEY = "point-output-type-key";
+  public static final String POLYGON_OUTPUT_TYPE_KEY = "polygon-output-type-key";
   public static final String DERIVED_GEOM_KEY = "derived-point-geom-key";
   public static final String DERIVED_EPSG_KEY = "derived-point-epsg-key";
-  public static final String DERIVED_GEOM_RUNTIME = "derived-point";
-  public static final String DERIVED_EPSG_RUNTIME = "epsg-derived-point";
+  public static final String DERIVED_GEOM_RUNTIME = "derived-polygon";
+  public static final String DERIVED_EPSG_RUNTIME = "epsg-derived-polygon";
   private String geometryMapper;
   private String epsgMapper;
   private String outputType;
@@ -67,7 +67,7 @@ public class CreateDerivedPolygonProcessor extends StreamPipesDataProcessor {
     return ProcessingElementBuilder.create(
             "org.apache.streampipes.processors.geo.jvm.jts.processor.derivedgeometry.polygon")
         .category(DataProcessorType.GEO)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON, "derivedPoint.png")
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON, "derivedPolygon.png")
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
@@ -80,7 +80,7 @@ public class CreateDerivedPolygonProcessor extends StreamPipesDataProcessor {
                 Labels.withId(EPSG_KEY),
                 PropertyScope.MEASUREMENT_PROPERTY)
             .build())
-        .requiredSingleValueSelection(Labels.withId(POINT_OUTPUT_TYPE_KEY),
+        .requiredSingleValueSelection(Labels.withId(POLYGON_OUTPUT_TYPE_KEY),
             Options.from("Bounding Box", "Convex Hull"))
         .outputStrategy(OutputStrategies.append(
                 EpProperties.stringEp(
@@ -102,7 +102,7 @@ public class CreateDerivedPolygonProcessor extends StreamPipesDataProcessor {
 
     this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
-    this.outputType = parameters.extractor().selectedSingleValue(POINT_OUTPUT_TYPE_KEY, String.class);
+    this.outputType = parameters.extractor().selectedSingleValue(POLYGON_OUTPUT_TYPE_KEY, String.class);
     this.params = parameters;
   }
 

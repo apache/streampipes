@@ -56,9 +56,9 @@ Chose between
 ## Output
 A polygon geometry with EPSG code.
 
+<p align="center">
+    <img src="derived_polygon.png.png" width="500;" class="pe-image-documentation"/>
+</p>
 
 ### Example
 
-<p align="center">
-    <img src="derivedPoint.png" width="500;" class="pe-image-documentation"/>
-</p>
