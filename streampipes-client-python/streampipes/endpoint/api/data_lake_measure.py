@@ -25,13 +25,12 @@ from typing import Any, Dict, Literal, Optional, Tuple, Type
 from pydantic import BaseModel, Extra, Field, StrictInt, ValidationError, validator
 from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.container import DataLakeMeasures
+from streampipes.model.resource.query_result import QueryResult
 from streampipes.model.container.resource_container import ResourceContainer
 
 __all__ = [
     "DataLakeMeasureEndpoint",
 ]
-
-from streampipes.model.resource.query_result import QueryResult
 
 
 class StreamPipesQueryValidationError(Exception):
@@ -159,9 +158,9 @@ class MeasurementGetQueryConfig(BaseModel):
 class DataLakeMeasureEndpoint(APIEndpoint):
     """Implementation of the DataLakeMeasure endpoint.
 
-    This endpoint provides an interfact to all data stored in the StreamPipes data lake.
+    This endpoint provides an interface to all data stored in the StreamPipes data lake.
 
-    Consequently, it allows uerying metadata about available data sets (see `all()` method).
+    Consequently, it allows querying metadata about available data sets (see `all()` method).
     The metadata is returned as an instance of [`DataLakeMeasures`][streampipes.model.container.DataLakeMeasures].
 
     In addition, the endpoint provides direct access to the data stored in the data laka by querying a
