@@ -193,7 +193,7 @@ class APIEndpoint(Endpoint):
         )
         return self._container_cls.from_json(json_string=response.text)
 
-    def get(self, identifier: str) -> Resource:
+    def get(self, identifier: str, **kwargs) -> Resource:
         """Queries the specified resource from the API endpoint.
 
         Parameters
