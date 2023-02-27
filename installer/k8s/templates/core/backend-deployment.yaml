@@ -16,43 +16,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: {{ .Values.streampipes.core.appName }}
 spec:
   selector:
     matchLabels:
-      app: backend
+      app: {{ .Values.streampipes.core.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: backend
+        app: {{ .Values.streampipes.core.appName }}
     spec:
       hostAliases:
       - ip: "127.0.0.1"
         hostnames:
         - "backend"
       volumes:
-        - name: backend-pv
+        - name: {{ .Values.streampipes.core.persistence.pvName }}
           persistentVolumeClaim:
-            claimName: backend-pvc
-        # - name: files-pv
-        #   persistentVolumeClaim:
-        #     claimName: files-pvc        
+            claimName: {{ .Values.streampipes.core.persistence.claimName }}
       containers:
-        - name: backend
+        - name: {{ .Values.streampipes.core.appName }}
           image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: SP_PRIORITIZED_PROTOCOL
-              {{ if (eq .Values.preferredBroker "nats") }}
-              value: "nats"
-              {{ else }}
-              value: "kafka"
-              {{ end }}
+              value: {{ .Values.preferredBroker }}
           ports:
-            - containerPort: 8030
+            - containerPort: {{ .Values.streampipes.core.port }}
           volumeMounts:
             - mountPath: "/root/.streampipes"
-              name: backend-pv
-            # - mountPath: "/spImages"
-            #   name: files-pv
+              name: {{ .Values.streampipes.core.persistence.pvName }}

@@ -13,23 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: apps/v1
-kind: Deployment
+
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: extensions-all-jvm
+  labels:
+    app: {{ .Values.streampipes.core.appName }}
+  name: {{ .Values.streampipes.core.persistence.claimName }}
 spec:
-  selector:
-    matchLabels:
-      app: extensions-all-jvm
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: extensions-all-jvm
-    spec:
-      containers:
-        - name: extensions-all-jvm
-          image: {{ .Values.streampipes.registry }}/extensions-all-jvm:{{ .Values.streampipes.version }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
-          ports:
-            - containerPort: 8090
+  storageClassName: {{ .Values.streampipes.core.persistence.storageClassName }}
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  resources:
+    requests:
+      storage: 50Mi

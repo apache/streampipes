@@ -16,10 +16,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: couchdb
+  name: {{ .Values.external.couchdb.appName }}
 spec:
   selector:
-    app: couchdb
+    app: {{ .Values.external.couchdb.appName }}
   ports:
     - name: main
       protocol: TCP

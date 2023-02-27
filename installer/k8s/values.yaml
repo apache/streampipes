@@ -16,35 +16,91 @@
 # lite or full (default: lite)
 deployment: lite
 preferredBroker: "nats"
-pullPolicy: "IfNotPresent"
+pullPolicy: "Always"
 persistentVolumeReclaimPolicy: "Delete"
 persistentVolumeAccessModes: "ReadWriteOnce"
 
 streampipes:
   version: "0.92.0-SNAPSHOT"
   registry: "apachestreampipes"
+  core:
+    appName: "backend"
+    port: 8030
+    persistence:
+      storageClassName: ""
+      claimName: "backend-pvc"
+      pvName: "backend-pv"
+    service:
+      name: "backend"
+      port: 8030
+  ui:
+    appName: "ui"
+    resolverActive: true
+    # DNS resolver when using the Nginx proxy
+    resolver: "kube-dns.kube-system.svc.cluster.local"
+    service:
+      name: "ui"
+      type: "ClusterIP"
+      nodePort: 8088
+      port: 8088
+    port: 8088
+  ingress:
+    active: false
+    annotations: {}
+    #className: ""
+    host: ""
+  # Ingressroute for running StreamPipes behind Traefik
+  ingressroute:
+    active: false
+    annotations: {}
+    entryPoints:
+      - web
+      - websecure
+    host: ""
+    certResolverActive: true
+    certResolver: ""
 
 external:
-  consulVersion: 1.14.3
-  couchdbVersion: 3.3.1
-  flinkVersion: 1.13.5-scala_2.11
+  consul:
+    appName: "consul"
+    version: 1.14.3
+    persistence:
+      storageClassName: ""
+      claimName: "consul-pvc"
+      pvName: "consul-pv"
+  couchdb:
+    appName: "couchdb"
+    version: 3.3.1
+    user: "admin"
+    password: "admin"
+    persistence:
+      storageClassName: ""
+      claimName: "couchdb-pvc"
+      pvName: "couchdb-pv"
+  influxdb:
+    appName: "influxdb"
+    version: 2.6
+    username: "admin"
+    password: "sp-admin"
+    adminToken: "sp-admin"
+    initOrg: "sp"
+    initBucket: "sp"
+    # For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
+    initMode: "setup"
+    persistence:
+      storageClassName: ""
+      claimName: "influxdb2-pvc"
+      claimNameV1: "influxdb-pvc"
+      pvName: "influxdb2-pv"
+      pvNameV1: "influxdb-pv"
+  nats:
+    appName: "nats"
+    service:
+      type: "NodePort"
+      externalTrafficPolicy: "Local"
+    version:
   kafkaVersion: 2.2.0
   zookeeperVersion: 3.4.13
-  influxdbVersion: 2.6
-
-# For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
-
-influxdb:
-  username: "admin"
-  password: "sp-admin"
-  adminToken: "sp-admin"
-  initOrg: "sp"
-  initBucket: "sp"
-  initMode: "setup"
 
 
 
-# NOTE: Local testing only!
-# minikube start --mount-string ${HOME}/streampipes-k8s:/streampipes-k8s --mount --memory=4g --cpus=4
-# Specify minikube directory:
-hostPath: "/streampipes-k8s"
