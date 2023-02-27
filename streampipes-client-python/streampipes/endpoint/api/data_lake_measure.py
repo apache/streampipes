@@ -50,7 +50,8 @@ class MeasurementGetQueryConfig(BaseModel):
     ----------
     columns: Optional[str]
         A comma separated list of column names (e.g., `time,value`)<br>
-        If provided, the returned data only consists of the given columns.
+        If provided, the returned data only consists of the given columns.<br>
+        Please be aware that the column `time` as an index is always included.
     end_date: Optional[datetime]
         Restricts queried data to be younger than the specified time.
     limit: Optional[int]
@@ -67,7 +68,6 @@ class MeasurementGetQueryConfig(BaseModel):
         This needs to be at least `1`
     start_date: Optional[datetime]
         Restricts queried data to be older than the specified time
-
     """
 
     _regex_comma_separated_string = r"^[0-9a-zA-Z\_]+(,[0-9a-zA-Z\_]+)*$"
@@ -190,6 +190,38 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
     >>> len(data_lake_measures)
     5
+
+    Retrieve a specific data lake measure as a pandas DataFrame
+    >>> flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate").to_pandas()
+    >>> flow_rate_pd
+                             time    density  mass_flow    sensorId  sensor_fault_flags  temperature  volume_flow
+    0    2023-02-24T16:19:41.472Z  50.872730   3.309556  flowrate02               False    44.448483     5.793138
+    1    2023-02-24T16:19:41.482Z  47.186588   5.608580  flowrate02               False    40.322033     0.058015
+    2    2023-02-24T16:19:41.493Z  46.735321   7.692881  flowrate02               False    49.239639    10.283526
+    3    2023-02-24T16:19:41.503Z  40.169796   3.632898  flowrate02               False    49.933754     6.893441
+    4    2023-02-24T16:19:41.513Z  49.635124   0.711260  flowrate02               False    50.106617     2.999871
+    ..                        ...        ...        ...         ...                 ...          ...          ...
+    995  2023-02-24T16:19:52.927Z  50.057495   1.740114  flowrate02               False    46.558231     1.818237
+    996  2023-02-24T16:19:52.94Z   41.038895   7.211723  flowrate02               False    48.048622     2.127493
+    997  2023-02-24T16:19:52.952Z  45.837013   7.770180  flowrate02               False    48.188026     7.892062
+    998  2023-02-24T16:19:52.965Z  43.389065   4.458602  flowrate02               False    48.280899     5.733892
+    999  2023-02-24T16:19:52.977Z  44.056030   2.592060  flowrate02               False    47.505951     4.260697
+
+    As you can see, the returned amount of rows per default is `1000`.
+    We can modify this behavior by passing the `limit` paramter.
+    >>> flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
+    >>> len(flow_rate_pd)
+
+    If we are only interested in the values for `density`,
+    `columns` allows us to select the columns to be returned:
+    >>> flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", columns='density', limit=3).to_pandas()
+    >>> flow_rate_pd
+                           time    density
+    0  2023-02-24T16:19:41.472Z  50.872730
+    1  2023-02-24T16:19:41.482Z  47.186588
+    2  2023-02-24T16:19:41.493Z  46.735321
+
+    This is only a subset of the available query parameters, find all of them at [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
     """
 
     @staticmethod
@@ -277,6 +309,10 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         -------
         measurement: DataLakeMeasures
             the specified data lake measure
+
+        Examples
+        --------
+        see directly at [DataLakeMeasureEndpoint][streampipes.endpoint.api.data_lake_measure.DataLakeMeasureEndpoint].
         """
 
         # bild base URL for resource
