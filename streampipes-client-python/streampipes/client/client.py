@@ -29,7 +29,11 @@ from typing import Dict, Optional
 
 from requests import Session
 from streampipes.client.config import StreamPipesClientConfig
-from streampipes.endpoint.api import DataLakeMeasureEndpoint, DataStreamEndpoint
+from streampipes.endpoint.api import (
+    DataLakeMeasureEndpoint,
+    DataStreamEndpoint,
+    VersionEndpoint,
+)
 from streampipes.endpoint.endpoint import APIEndpoint
 
 logger = logging.getLogger(__name__)
@@ -126,6 +130,7 @@ class StreamPipesClient:
         # name of the endpoint needs to be consistent with the Java client
         self.dataLakeMeasureApi = DataLakeMeasureEndpoint(parent_client=self)
         self.dataStreamApi = DataStreamEndpoint(parent_client=self)
+        self.versionApi = VersionEndpoint(parent_client=self)
 
     @staticmethod
     def _set_up_logging(logging_level: int) -> None:
