@@ -45,7 +45,7 @@ class DataStreamEndpoint(APIEndpoint):
     --------
 
     >>> from streampipes.client import StreamPipesClient
-    >>> from streampipes.client.client_config import StreamPipesClientConfig
+    >>> from streampipes.client.config import StreamPipesClientConfig
     >>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
     >>> client_config = StreamPipesClientConfig(
