@@ -54,23 +54,26 @@ pip install git+https://github.com/apache/streampipes.git#subdirectory=streampip
 ```
 
 ```python
->>> from streampipes.client import StreamPipesClient
->>> from streampipes.client.config import StreamPipesClientConfig
->>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.client import StreamPipesClient
+from streampipes.client.config import StreamPipesClientConfig
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
->>> config = StreamPipesClientConfig(
-...     credential_provider = StreamPipesApiKeyCredentials(
-...         username = "test@streampipes.apache.org",
-...         api_key = "DEMO-KEY",
-...         ),
-...     host_address = "localhost",
-...     https_disabled = True,
-...     port = 80
-...)
+config = StreamPipesClientConfig(
+    credential_provider = StreamPipesApiKeyCredentials(
+        username = "test@streampipes.apache.org",
+        api_key = "DEMO-KEY",
+    ),
+    host_address = "localhost",
+    https_disabled = True,
+    port = 80
+)
 
->>> client = StreamPipesClient(client_config=config)
->>> client.describe()
+client = StreamPipesClient(client_config=config)
+client.describe()
+```
 
+Output:
+```
 Hi there!
 You are connected to a StreamPipes instance running at http://localhost:80.
 The following StreamPipes resources are available with this client:
