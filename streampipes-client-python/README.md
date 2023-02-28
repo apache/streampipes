@@ -64,7 +64,7 @@ pip install git+https://github.com/apache/streampipes.git#subdirectory=streampip
 ...         api_key = "DEMO-KEY",
 ...         ),
 ...     host_address = "localhost",
-...     http_disabled = True,
+...     https_disabled = True,
 ...     port = 80
 ...)
 
