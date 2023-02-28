@@ -44,10 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.BOX_ARRAY_PROPERTY;
-import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
-
-
 public class ImageCropperController extends StreamPipesDataProcessor {
 
   private String imageProperty;
@@ -61,7 +57,7 @@ public class ImageCropperController extends StreamPipesDataProcessor {
         .category(DataProcessorType.IMAGE_PROCESSING)
         .requiredStream(RequiredBoxStream.getBoxStream())
         .outputStrategy(OutputStrategies.append(EpProperties.integerEp(Labels.empty(),
-            ImagePropertyConstants.CLASS_NAME.getProperty(), "https://streampipes.org/classname"),
+                ImagePropertyConstants.CLASS_NAME.getProperty(), "https://streampipes.org/classname"),
             EpProperties.doubleEp(Labels.empty(), ImagePropertyConstants.SCORE.getProperty(),
                 "https://streampipes.org/Label")))
         .build();
@@ -71,8 +67,8 @@ public class ImageCropperController extends StreamPipesDataProcessor {
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
-    this.imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
-    this.boxArray = extractor.mappingPropertyValue(BOX_ARRAY_PROPERTY);
+    this.imageProperty = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
+    this.boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
   }
 
   @Override
@@ -87,8 +83,8 @@ public class ImageCropperController extends StreamPipesDataProcessor {
       for (Map<String, Object> box : allBoxCoordinates) {
         BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, box);
 
-        BufferedImage dest = image.getSubimage(boxCoordinates.getX(), boxCoordinates.getY(),
-            boxCoordinates.getWidth(), boxCoordinates.getHeight());
+        BufferedImage dest = image.getSubimage(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
+            boxCoordinates.getHeight());
 
         Optional<byte[]> finalImage = imageTransformer.makeImage(dest);
 

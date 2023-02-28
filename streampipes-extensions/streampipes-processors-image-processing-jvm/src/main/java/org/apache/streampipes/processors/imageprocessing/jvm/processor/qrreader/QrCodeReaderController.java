@@ -17,17 +17,13 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader;
 
-import boofcv.abst.fiducial.QrCodeDetector;
-import boofcv.alg.fiducial.qrcode.QrCode;
-import boofcv.factory.fiducial.FactoryFiducial;
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.GrayU8;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -42,6 +38,12 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
+
+import boofcv.abst.fiducial.QrCodeDetector;
+import boofcv.alg.fiducial.qrcode.QrCode;
+import boofcv.factory.fiducial.FactoryFiducial;
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayU8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,18 +51,15 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
-
 public class QrCodeReaderController extends StreamPipesDataProcessor {
-
-  private String imagePropertyName;
-  private String placeholderValue;
-  private Boolean sendIfNoResult;
 
   private static final String PLACEHOLDER_VALUE = "placeholder-value";
   private static final String SEND_IF_NO_RESULT = "send-if-no-result";
   private static final String QR_VALUE = "qr-value";
   private static final Logger LOG = LoggerFactory.getLogger(QrCodeReaderController.class);
+  private String imagePropertyName;
+  private String placeholderValue;
+  private Boolean sendIfNoResult;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -68,23 +67,24 @@ public class QrCodeReaderController extends StreamPipesDataProcessor {
         .category(DataProcessorType.IMAGE_PROCESSING)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
-                .domainPropertyReq("https://image.com"), Labels
-                .withId(IMAGE_PROPERTY),
-            PropertyScope.NONE).build())
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"),
+                Labels.withId(RequiredBoxStream.IMAGE_PROPERTY), PropertyScope.NONE)
+            .build())
         .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
         .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
-        .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
-            EpProperties.stringEp(Labels.withId(QR_VALUE),
-                "qrvalue", "http://schema.org/text")))
+        .outputStrategy(OutputStrategies.fixed(
+            EpProperties.timestampProperty("timestamp"),
+            EpProperties.stringEp(Labels.withId(QR_VALUE), "qrvalue", "http://schema.org/text")))
         .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
 
-    imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
+    imagePropertyName = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
     placeholderValue = extractor.singleValueParameter(PLACEHOLDER_VALUE, String.class);
     sendIfNoResult = extractor.selectedSingleValue(SEND_IF_NO_RESULT, String.class).equals("Yes");
   }
