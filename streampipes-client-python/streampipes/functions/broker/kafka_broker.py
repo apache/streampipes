@@ -18,7 +18,7 @@
 import logging
 from typing import Any, AsyncIterator, Dict
 
-from confluent_kafka import Consumer
+from confluent_kafka import Consumer  # type: ignore
 from streampipes.functions.broker.broker import Broker
 from streampipes.functions.broker.kafka_message_fetcher import KafkaMessageFetcher
 from streampipes.model.common import random_letters
@@ -45,11 +45,9 @@ class KafkaBroker(Broker):
         -------
         None
         """
-        self.kafka_consumer = Consumer({
-            'bootstrap.servers': f"{hostname}:{port}",
-            'group.id': random_letters(6),
-            'auto.offset.reset': 'latest'
-        })
+        self.kafka_consumer = Consumer(
+            {"bootstrap.servers": f"{hostname}:{port}", "group.id": random_letters(6), "auto.offset.reset": "latest"}
+        )
 
     async def createSubscription(self) -> None:
         """Creates a subscription to a data stream.
@@ -75,7 +73,7 @@ class KafkaBroker(Broker):
         None
         """
 
-        #await self.publish(subject=self.topic_name, payload=json.dumps(event).encode("utf-8"))
+        # await self.publish(subject=self.topic_name, payload=json.dumps(event).encode("utf-8"))
 
     async def disconnect(self) -> None:
         """Closes the connection to the server.
