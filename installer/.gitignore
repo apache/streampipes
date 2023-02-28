@@ -24,3 +24,5 @@
 
 # track env file in compose dir
 !*/compose/.env
+
+./default.conf
