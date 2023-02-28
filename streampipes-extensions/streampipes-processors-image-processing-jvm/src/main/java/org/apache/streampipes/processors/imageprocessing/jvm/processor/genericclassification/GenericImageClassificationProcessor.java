@@ -52,7 +52,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class GenericImageClassificationController extends StreamPipesDataProcessor {
+public class GenericImageClassificationProcessor extends StreamPipesDataProcessor {
 
   private String imagePropertyName;
 

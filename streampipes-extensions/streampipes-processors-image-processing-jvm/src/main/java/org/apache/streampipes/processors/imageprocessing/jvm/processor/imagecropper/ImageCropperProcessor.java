@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
+package org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
+
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
@@ -24,6 +25,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImagePropertyConstants;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImageTransformer;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
@@ -36,39 +38,34 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ImageEnrichmentController extends StreamPipesDataProcessor {
+public class ImageCropperProcessor extends StreamPipesDataProcessor {
+
   private String imageProperty;
   private String boxArray;
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-enricher")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper")
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.IMAGE_PROCESSING)
         .requiredStream(RequiredBoxStream.getBoxStream())
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(),
-                "https://image.com")
-        ))
+        .outputStrategy(OutputStrategies.append(EpProperties.integerEp(Labels.empty(),
+                ImagePropertyConstants.CLASS_NAME.getProperty(), "https://streampipes.org/classname"),
+            EpProperties.doubleEp(Labels.empty(), ImagePropertyConstants.SCORE.getProperty(),
+                "https://streampipes.org/Label")))
         .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+                           EventProcessorRuntimeContext runtimeContext) {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.imageProperty = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
     this.boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
@@ -81,46 +78,33 @@ public class ImageEnrichmentController extends StreamPipesDataProcessor {
 
     if (imageOpt.isPresent()) {
       BufferedImage image = imageOpt.get();
-      List<Map<String, Object>> allBoxesMap = imageTransformer.getAllBoxCoordinates(boxArray);
+      List<Map<String, Object>> allBoxCoordinates = imageTransformer.getAllBoxCoordinates(boxArray);
 
-      for (Map<String, Object> box : allBoxesMap) {
-        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinatesWithAnnotations(image, box);
+      for (Map<String, Object> box : allBoxCoordinates) {
+        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, box);
 
-        Graphics2D graph = image.createGraphics();
+        BufferedImage dest = image.getSubimage(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
+            boxCoordinates.getHeight());
 
-        // set color
-        Color color = ColorUtil.getColor(boxCoordinates.getClassesindex().hashCode());
-        graph.setColor(color);
+        Optional<byte[]> finalImage = imageTransformer.makeImage(dest);
 
-        // Box
-        graph.setStroke(new BasicStroke(5));
-        graph.draw(new Rectangle(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
-            boxCoordinates.getHeight()));
+        if (finalImage.isPresent()) {
+          Event outEvent = new Event();
 
-        // Label
-        String str = boxCoordinates.getClassesindex() + ": " + boxCoordinates.getScore();
+          outEvent.addField(ImagePropertyConstants.TIMESTAMP.getProperty(),
+              in.getFieldByRuntimeName(ImagePropertyConstants.TIMESTAMP.getProperty()).getAsPrimitive().getAsLong());
 
-        FontMetrics fm = graph.getFontMetrics();
-        Rectangle2D rect = fm.getStringBounds(str, graph);
+          outEvent.addField(ImagePropertyConstants.IMAGE.getProperty(),
+              Base64.getEncoder().encodeToString(finalImage.get()));
 
-        graph.fillRect(boxCoordinates.getX(),
-            boxCoordinates.getY() - fm.getAscent(),
-            (int) rect.getWidth(),
-            (int) rect.getHeight());
+          outEvent.addField(ImagePropertyConstants.CLASS_NAME.getProperty(),
+              box.get(ImagePropertyConstants.CLASS_NAME.getProperty()));
 
-        graph.setColor(Color.white);
-        graph.drawString(str, boxCoordinates.getX(), boxCoordinates.getY());
+          outEvent.addField(ImagePropertyConstants.SCORE.getProperty(),
+              box.get(ImagePropertyConstants.SCORE.getProperty()));
 
-        graph.dispose();
-      }
-
-      Optional<byte[]> finalImage = imageTransformer.makeImage(image);
-
-      if (finalImage.isPresent()) {
-        Event outEvent = new Event();
-        outEvent.addField(ImagePropertyConstants.IMAGE.getProperty(),
-            Base64.getEncoder().encodeToString(finalImage.get()));
-        out.collect(outEvent);
+          out.collect(outEvent);
+        }
       }
     }
   }

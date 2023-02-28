@@ -51,12 +51,12 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Optional;
 
-public class QrCodeReaderController extends StreamPipesDataProcessor {
+public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
 
   private static final String PLACEHOLDER_VALUE = "placeholder-value";
   private static final String SEND_IF_NO_RESULT = "send-if-no-result";
   private static final String QR_VALUE = "qr-value";
-  private static final Logger LOG = LoggerFactory.getLogger(QrCodeReaderController.class);
+  private static final Logger LOG = LoggerFactory.getLogger(QrCodeReaderProcessor.class);
   private String imagePropertyName;
   private String placeholderValue;
   private Boolean sendIfNoResult;
