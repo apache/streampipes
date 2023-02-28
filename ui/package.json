@@ -88,7 +88,7 @@
     "shepherd.js": "^11.0.1",
     "showdown": "1.9.1",
     "stream-browserify": "3.0.0",
-    "swagger-ui": "4.15.5",
+    "swagger-ui": "4.16.1",
     "tslib": "^2.5.0",
     "zone.js": "~0.12.0"
   },
