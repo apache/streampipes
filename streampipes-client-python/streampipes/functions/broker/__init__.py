@@ -16,11 +16,13 @@
 #
 from .broker import Broker
 from .nats_broker import NatsBroker
+from .kafka_broker import KafkaBroker
 
 from .broker_handler import SupportedBroker, get_broker  # isort: skip
 
 __all__ = [
     "Broker",
+    "KafkaBroker",
     "NatsBroker",
     "SupportedBroker",
     "get_broker",
