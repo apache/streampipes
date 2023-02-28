@@ -52,4 +52,4 @@ class DataLakeMeasure(Resource):
     pipeline_id: Optional[StrictStr]
     pipeline_name: Optional[StrictStr]
     pipeline_is_running: StrictBool
-    schema_version: StrictStr
+    schema_version: Optional[StrictStr]
