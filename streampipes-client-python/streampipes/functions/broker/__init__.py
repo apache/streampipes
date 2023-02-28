@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 from .broker import Broker
-from .nats_broker import NatsBroker
 from .kafka_broker import KafkaBroker
+from .nats_broker import NatsBroker
 
 from .broker_handler import SupportedBroker, get_broker  # isort: skip
 
