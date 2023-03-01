@@ -20,7 +20,6 @@ package org.apache.streampipes.processors.imageprocessing.jvm.processor.commons;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentParameters;
 
 import javax.imageio.ImageIO;
 
@@ -33,19 +32,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParameters> {
+public class ImageTransformer extends PlainImageTransformer {
 
-  public ImageTransformer(Event in, ImageEnrichmentParameters params) {
-    super(in, params);
+  public ImageTransformer(Event in) {
+    super(in);
   }
 
-  public Optional<BufferedImage> getImage() {
+  public Optional<BufferedImage> getImage(String imageProperty) {
 
-    return getImage(params.getImageProperty());
+    return getImage(imageProperty);
   }
 
-  public List<Map<String, Object>> getAllBoxCoordinates() {
-    List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(params.getBoxArray())
+  public List<Map<String, Object>> getAllBoxCoordinates(String boxArrayProperty) {
+    List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(boxArrayProperty)
         .getAsList()
         .parseAsCustomType(value -> value.getAsComposite().getRawValue());
 
@@ -60,22 +59,22 @@ public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParam
   }
 
   public BoxCoordinates getBoxCoordinates(BufferedImage image, Map<String, Object> box) {
-    Float x = toFloat(box.get(params.getBoxX()));
-    Float y = toFloat(box.get(params.getBoxY()));
-    Float width = toFloat(box.get(params.getBoxWidth()));
-    Float height = toFloat(box.get(params.getBoxHeight()));
+    Float x = toFloat(box.get(ImagePropertyConstants.BOX_X.getProperty()));
+    Float y = toFloat(box.get(ImagePropertyConstants.BOX_Y.getProperty()));
+    Float width = toFloat(box.get(ImagePropertyConstants.BOX_WIDTH.getProperty()));
+    Float height = toFloat(box.get(ImagePropertyConstants.BOX_HEIGHT.getProperty()));
 
 
     return BoxCoordinates.make(width, height, x, y);
   }
 
   public BoxCoordinates getBoxCoordinatesWithAnnotations(BufferedImage image, Map<String, Object> box) {
-    Float x = toFloat(box.get(params.getBoxX()));
-    Float y = toFloat(box.get(params.getBoxY()));
-    Float width = toFloat(box.get(params.getBoxWidth()));
-    Float height = toFloat(box.get(params.getBoxHeight()));
-    Float score = toFloat(box.get(params.getScore()));
-    String classesindex = toString(box.get(params.getClassesindex()));
+    Float x = toFloat(box.get(ImagePropertyConstants.BOX_X.getProperty()));
+    Float y = toFloat(box.get(ImagePropertyConstants.BOX_Y.getProperty()));
+    Float width = toFloat(box.get(ImagePropertyConstants.BOX_WIDTH.getProperty()));
+    Float height = toFloat(box.get(ImagePropertyConstants.BOX_WIDTH.getProperty()));
+    Float score = toFloat(box.get(ImagePropertyConstants.SCORE.getProperty()));
+    String classesindex = toString(box.get(ImagePropertyConstants.CLASS_INDEX.getProperty()));
 
     return BoxCoordinates.make(width, height, x, y, score, classesindex);
   }
