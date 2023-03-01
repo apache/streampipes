@@ -25,7 +25,7 @@ from pydantic import StrictInt, StrictStr
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
-    "DataLakeSeries",
+    "DataSeries",
 ]
 
 
@@ -41,7 +41,7 @@ class StreamPipesUnsupportedDataLakeSeries(Exception):
         )
 
 
-class DataLakeSeries(Resource):
+class DataSeries(Resource):
     """Implementation of a resource for data lake series.
     This resource defines the data model used by its resource container(`model.container.DataLakeMeasures`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
@@ -54,7 +54,7 @@ class DataLakeSeries(Resource):
     """
 
     @classmethod
-    def from_json(cls, json_string: str) -> DataLakeSeries:
+    def from_json(cls, json_string: str) -> DataSeries:
         """Creates an instance of `DataLakeSeries` from a given JSON string.
 
         This method is used by the resource container to parse the JSON response of
@@ -68,7 +68,7 @@ class DataLakeSeries(Resource):
 
         Returns
         -------
-        DataLakeSeries
+        DataSeries
             Instance of `DataLakeSeries` that is created based on the given JSON string.
 
         Raises
