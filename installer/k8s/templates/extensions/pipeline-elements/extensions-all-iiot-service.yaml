@@ -13,31 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.deployment "full" }}
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: taskmanager
+  name: extensions-all-iiot
+  labels:
+    name: extensions-all-iiot
 spec:
   selector:
-    matchLabels:
-      app: taskmanager
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: taskmanager
-    spec:
-      containers:
-        - name: taskmanager
-          image: fogsyio/flink:{{ .Values.external.flinkVersion }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
-          args: ["taskmanager"]
-          ports:
-            - containerPort: 8099
-          env:
-            - name: TASK_MANAGER_NUMBER_OF_TASK_SLOTS
-              value: "20"
-            - name: JOB_MANAGER_RPC_ADDRESS
-              value: jobmanager
-{{- end }}
+    app: extensions-all-iiot
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090

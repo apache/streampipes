@@ -13,22 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.deployment "full" }}
+
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: jobmanager
+  labels:
+    app: {{ .Values.streampipes.core.appName }}
+  name: {{ .Values.streampipes.core.persistence.claimName }}
 spec:
-  selector:
-    app: jobmanager
-  ports:
-    - name: webui
-      port: 8081
-      targetPort: 8081
-    - name: rpc
-      port: 6123
-      targetPort: 6123
-    - name: blob-server
-      port: 6124
-      targetPort: 6124  
-{{- end }}
+  storageClassName: {{ .Values.streampipes.core.persistence.storageClassName }}
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  resources:
+    requests:
+      storage: 50Mi

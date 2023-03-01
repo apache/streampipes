@@ -27,6 +27,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.vocabulary.XSD;
 
@@ -217,7 +218,7 @@ public class EpProperties {
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive numberEp(Label label, String runtimeName, String domainProperty) {
-    return ep(label, "http://schema.org/Number", runtimeName, domainProperty);
+    return ep(label, SO.NUMBER, runtimeName, domainProperty);
   }
 
   /**

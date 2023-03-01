@@ -32,14 +32,14 @@ jobs:
           python-version: 3.8
 
       - name: Install dependencies
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           python -m pip install --upgrade pip 
           pip install build twine
 
       - name: Build package
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           python -m build
           twine check --strict dist/*
 

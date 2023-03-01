@@ -24,7 +24,7 @@ import setuptools
 NAME = "streampipes"
 DESCRIPTION = "Python library for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
-URL = "https://github.com/apache/streampipes/"
+URL = "https://github.com/apache/streampipes/tree/dev/streampipes-client-python"
 EMAIL = "dev@streampipes.apache.org"
 AUTHOR = "Apache Software Foundation"
 REQUIRES_PYTHON = ">=3.8.0"
@@ -46,7 +46,7 @@ dev_packages = base_packages + [
     "isort==5.12.0",
     "mypy==1.0.0",
     "pandas-stubs==1.5.2.230105",
-    "pre-commit==3.0.0",
+    "pre-commit==3.1.0",
     "pytest==7.2.1",
     "pytest-cov==4.0.0",
     "pyupgrade==3.3.1",

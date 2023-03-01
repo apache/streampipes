@@ -16,13 +16,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ui
+  name: {{ .Values.streampipes.ui.service.name }}
 spec:
   selector:
-    app: ui
-  type: NodePort
+    app: {{ .Values.streampipes.ui.appName }}
+  type: {{ .Values.streampipes.ui.service.type }}
   ports:
     - name: main
       protocol: TCP
-      port: 80
-      targetPort: 80
+      port: {{ .Values.streampipes.ui.service.port }}
+      targetPort: {{ .Values.streampipes.ui.port }}

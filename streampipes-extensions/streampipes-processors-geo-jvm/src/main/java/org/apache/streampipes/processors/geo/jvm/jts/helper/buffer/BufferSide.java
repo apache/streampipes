@@ -15,15 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
+package org.apache.streampipes.processors.geo.jvm.jts.helper.buffer;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentParameters;
+public enum BufferSide {
+  Left(-1), Both(0), Right(1);
 
-public class ImageCropperParameters extends ImageEnrichmentParameters {
+  private final int number;
 
-  public ImageCropperParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth,
-                                String boxHeight, String boxX, String boxY) {
-    super(graph, imageProperty, boxArray, boxWidth, boxHeight, boxX, boxY);
+  BufferSide(int number) {
+    this.number = number;
+  }
+
+  public int getNumber() {
+    return number;
   }
 }

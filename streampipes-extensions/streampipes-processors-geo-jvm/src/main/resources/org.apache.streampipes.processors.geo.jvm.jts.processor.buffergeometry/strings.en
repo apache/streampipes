@@ -1,0 +1,49 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry.title=Geo Buffer Geometry
+org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry.description=Creates a polygon buffer from a geometry
+
+geometry-key.title=JTS Geometry Event
+geometry-key.description=Single Geometry
+
+epsg-key.title=EPSG
+epsg-key.description=EPSG
+
+cap-style-key.title=Cap Style Parameter
+cap-style-key.description= Cap style
+
+segments-key.title=Segment Value
+segments-key.description=Set the parameter
+
+simplify-factor-key.title=Simplify factor
+simplify-factor-key.description=Simplify factor
+
+distance-key.title=Distance
+distance-key.description=Distance in meters with radius of the buffer
+
+join-style-key.title=Join Style Parameter
+join-style-key.description=Join Style Parameter
+
+mitre-limit-key.title=Mitre Limit
+mitre-limit-key.description=Mitre Limit
+
+side-key.title= Side Choice
+side-key.description= Side Choice
+
+is-single-side-key.title=Is Single Sided
+is-single-side-key.description=Value for options single sided

@@ -13,17 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: extensions-all-jvm
-  labels:
-    name: extensions-all-jvm
-spec:
-  selector:
-    app: extensions-all-jvm
-  ports:
-    - name: main
-      protocol: TCP
-      port: 8090
-      targetPort: 8090
+version: "3.4"
+services:
+  ui-custom-conf:
+    image: ${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}
+    ports:
+      - "80:80"
+    depends_on:
+      - couchdb
+      - consul
+    volumes:
+      - "../ui-custom-conf/default.conf:/etc/nginx/conf.d/default.conf"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true

@@ -13,30 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: backend-pv
-spec:
-  storageClassName: local-storage-backend
-  capacity:
-    storage: 50Mi
-  accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
-  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
-  hostPath:
-    path: {{ .Values.hostPath }}/backend
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app: backend
-  name: backend-pvc
-spec:
-  storageClassName: local-storage-backend
-  accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
-  resources:
-    requests:
-      storage: 50Mi
+version: "3.4"
+services:
+  ui-custom-conf:
+    labels:
+      org.apache.streampipes.dev.ui.service.description: "Dev UI service"

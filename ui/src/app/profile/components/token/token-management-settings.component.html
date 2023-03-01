@@ -32,13 +32,34 @@
                 <div class="subsection-title">New API key</div>
                 <mat-form-field fxFlex color="accent">
                     <mat-label>Name</mat-label>
-                    <input [(ngModel)]="newTokenName" matInput />
+                    <input
+                        [(ngModel)]="newTokenName"
+                        matInput
+                        [formControl]="tokenNameFormControl"
+                    />
+                    <mat-error
+                        *ngIf="tokenNameFormControl.hasError('required')"
+                    >
+                        Token name is required.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                            tokenNameFormControl.hasError('minlength') ||
+                            tokenNameFormControl.hasError('pattern')
+                        "
+                    >
+                        Token name must be at least 3 characters long and
+                        contain only alphanumeric characters, hyphens, or
+                        underscores.
+                    </mat-error>
                 </mat-form-field>
                 <div>
                     <button
+                        class="mt-5"
                         mat-button
                         mat-raised-button
                         color="accent"
+                        [disabled]="!tokenNameFormControl.valid"
                         (click)="requestNewKey()"
                     >
                         Create new API key

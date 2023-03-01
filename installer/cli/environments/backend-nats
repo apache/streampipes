@@ -18,5 +18,4 @@ consul
 couchdb
 influxdb
 nats
-extensions-all-jvm
-ui
+ui-custom-conf

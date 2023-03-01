@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,26 +13,4 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-{{- if (eq .Values.deployment "full") }}
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: pipeline-elements-all-flink
-spec:
-  selector:
-    matchLabels:
-      app: pipeline-elements-all-flink
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: pipeline-elements-all-flink
-    spec:
-      containers:
-        - name: pipeline-elements-all-flink
-          image: {{ .Values.streampipes.registry }}/pipeline-elements-all-flink:{{ .Values.streampipes.version }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
-          ports:
-            - containerPort: 8090
-{{- end }}
+#

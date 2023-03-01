@@ -14,27 +14,13 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: consul-pv
-spec:
-  storageClassName: local-storage-consul
-  capacity:
-    storage: 20M
-  accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
-  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
-  hostPath:
-    path: {{ .Values.hostPath }}/consul
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: consul
-  name: consul-pvc
+    app: {{ .Values.external.consul.appName }}
+  name: {{ .Values.external.consul.persistence.claimName }}
 spec:
-  storageClassName: local-storage-consul
+  storageClassName: {{ .Values.external.consul.persistence.storageClassName }}
   accessModes:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:

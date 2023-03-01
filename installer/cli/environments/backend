@@ -19,5 +19,4 @@ consul
 zookeeper
 couchdb
 influxdb
-extensions-all-jvm
-ui
+ui-custom-conf

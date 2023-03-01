@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,24 +13,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: extensions-all-jvm
-spec:
-  selector:
-    matchLabels:
-      app: extensions-all-jvm
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: extensions-all-jvm
-    spec:
-      containers:
-        - name: extensions-all-jvm
-          image: {{ .Values.streampipes.registry }}/extensions-all-jvm:{{ .Values.streampipes.version }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
-          ports:
-            - containerPort: 8090
+org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint.title=Geo Buffer Point
+org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint.description=Creates a polygon buffer from a point
+
+geometry-key.title=JTS Point Event
+geometry-key.description=Single Point Event which will be added to the trajectory
+
+epsg-key.title=JTS Point
+epsg-key.description=JTS Point
+
+cap-style-key.title=Cap Style Parameter
+cap-style-key.description= Cap style
+
+segments-key.title=Quadrant segments
+segments-key.description= Accuracy of approximation for circular arcs
+
+simplify-factor-key.title=Simplify factor
+simplify-factor-key.description=Simplify factor
+
+distance-key.title=Distance
+distance-key.description=Distance in meters with radius of the buffer

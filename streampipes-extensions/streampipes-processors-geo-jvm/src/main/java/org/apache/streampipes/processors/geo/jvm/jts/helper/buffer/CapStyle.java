@@ -15,21 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification;
+package org.apache.streampipes.processors.geo.jvm.jts.helper.buffer;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+public enum CapStyle {
+  Round(1), Flat(2), Square(3);
 
-public class GenericImageClassificationParameters extends EventProcessorBindingParams {
+  private int number;
 
-  private String imagePropertyName;
-
-  public GenericImageClassificationParameters(DataProcessorInvocation graph, String imagePropertyName) {
-    super(graph);
-    this.imagePropertyName = imagePropertyName;
+  CapStyle(int number) {
+    this.number = number;
   }
 
-  public String getImagePropertyName() {
-    return imagePropertyName;
+  public int getNumber() {
+    return number;
   }
 }
