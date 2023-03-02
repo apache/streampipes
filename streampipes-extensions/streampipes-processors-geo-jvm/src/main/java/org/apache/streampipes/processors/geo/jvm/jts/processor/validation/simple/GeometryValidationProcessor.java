@@ -109,8 +109,9 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
     } else {
       this.outputChoice = ValidationOutput.INVALID.name();
     }
-
-    if (readValidationType.size() == 2) {
+    if (readValidationType.size() == 0) {
+      throw new SpRuntimeException("You have to chose at least one validation type");
+    } else if (readValidationType.size() == 2) {
       this.isEmptySelected = true;
       this.isSimpleSelected = true;
       this.isMultiSelected = true;
