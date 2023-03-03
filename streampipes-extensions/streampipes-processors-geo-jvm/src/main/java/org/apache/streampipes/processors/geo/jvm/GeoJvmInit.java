@@ -77,7 +77,6 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
             new SpeedCalculatorProcessor(),
             new CreateDerivedPolygonProcessor(),
             new ReprojectionProcessor(),
-            new ReprojectionProcessor(),
             new GeometryValidationProcessor(),
             new TopologyValidationProcessor(),
             new BufferGeomProcessor(),
