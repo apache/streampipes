@@ -17,25 +17,37 @@
  */
 package org.apache.streampipes.dataexplorer.query;
 
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
+import org.influxdb.InfluxDB;
+import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 
-public class DeleteDataQuery extends DataExplorerQuery<QueryResult> {
+public class DeleteDataQuery {
 
-  private DataLakeMeasure measure;
+  private final DataLakeMeasure measure;
 
   public DeleteDataQuery(DataLakeMeasure measure) {
     this.measure = measure;
   }
 
-  @Override
-  protected void getQuery(DataExplorerQueryBuilder queryBuilder) {
-    queryBuilder.add("DROP MEASUREMENT \"" + measure.getMeasureName() + "\"");
+  private String getQuery() {
+    return "DROP MEASUREMENT \"" + measure.getMeasureName() + "\"";
   }
 
-  @Override
-  protected QueryResult postQuery(QueryResult result) {
-    return result;
+  public QueryResult executeQuery() throws RuntimeException {
+    try (final InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient()) {
+      var databaseName = getEnvironment().getTsStorageBucket().getValueOrDefault();
+
+      var query = new Query(getQuery(), databaseName);
+      return influxDB.query(query);
+    }
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 }

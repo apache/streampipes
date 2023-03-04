@@ -18,7 +18,7 @@
 package org.apache.streampipes.dataexplorer.v4;
 
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
-import org.apache.streampipes.dataexplorer.model.Order;
+import org.apache.streampipes.dataexplorer.sdk.DataLakeQueryOrdering;
 import org.apache.streampipes.dataexplorer.v4.params.SelectColumn;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
@@ -61,8 +61,8 @@ public class AutoAggregationHandler {
   public ProvidedQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
     //checkAllArgumentsPresent();
     try {
-      SpQueryResult newest = getSingleRecord(Order.DESC);
-      SpQueryResult oldest = getSingleRecord(Order.ASC);
+      SpQueryResult newest = getSingleRecord(DataLakeQueryOrdering.DESC);
+      SpQueryResult oldest = getSingleRecord(DataLakeQueryOrdering.ASC);
       if (newest.getTotal() > 0) {
         String sampleField = getSampleField(newest);
         Integer count = getCount(sampleField);
@@ -120,11 +120,11 @@ public class AutoAggregationHandler {
     return Double.valueOf(v).intValue();
   }
 
-  private SpQueryResult getSingleRecord(Order order) throws ParseException {
+  private SpQueryResult getSingleRecord(DataLakeQueryOrdering order) throws ParseException {
     ProvidedQueryParams singleEvent = disableAutoAgg(new ProvidedQueryParams(queryParams));
     singleEvent.remove(QP_AGGREGATION_FUNCTION);
     singleEvent.update(QP_LIMIT, 1);
-    singleEvent.update(QP_ORDER, order.toValue());
+    singleEvent.update(QP_ORDER, order.name());
     singleEvent.update(QP_COLUMNS, transformColumns(singleEvent.getAsString(QP_COLUMNS)));
 
     return fireQuery(singleEvent);

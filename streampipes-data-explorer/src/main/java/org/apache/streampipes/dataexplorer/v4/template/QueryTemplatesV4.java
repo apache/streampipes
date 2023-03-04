@@ -17,33 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.v4.template;
 
-import java.util.StringJoiner;
-
 public class QueryTemplatesV4 {
-
-  public static String selectFrom(String index, String columns) {
-    return "SELECT " + columns + " FROM " + index;
-  }
-
-  public static String selectCountFrom(String index, String selectedColumns) {
-    return selectAggregationFrom(index, selectedColumns, "COUNT");
-  }
-
-  public static String selectAggregationFrom(String index, String columns, String aggregationFunction) {
-    String[] cols = columns.split(",");
-    StringJoiner joiner = new StringJoiner(", ");
-    //StringBuilder statement = new StringBuilder(aggregationFunction + "(" + cols[0] + ")");
-
-    for (int i = 0; i < cols.length; i++) {
-      String builder = aggregationFunction
-          + "("
-          + cols[i]
-          + ")" + " AS " + cols[i];
-      joiner.add(builder);
-    }
-
-    return "SELECT " + joiner + " FROM \"" + index + "\"";
-  }
 
   public static String deleteFrom(String index) {
     return "DELETE FROM \"" + index + "\"";
