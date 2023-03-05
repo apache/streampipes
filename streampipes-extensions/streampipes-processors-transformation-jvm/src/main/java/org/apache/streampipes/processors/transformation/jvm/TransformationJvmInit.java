@@ -31,7 +31,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.array.coun
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
@@ -71,7 +71,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new ChangedValueDetectionController(),
             new TimestampExtractorController(),
             new BooleanCounterController(),
-            new BooleanInverterController(),
+            new BooleanInverterProcessor(),
             new BooleanTimekeepingController(),
             new BooleanTimerController(),
             new CsvMetadataEnrichmentController(),

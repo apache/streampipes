@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -30,13 +32,15 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class BooleanInverterController extends StandaloneEventProcessingDeclarer<BooleanInverterParameters> {
-
+public class BooleanInverterProcessor extends StreamPipesDataProcessor {
   public static final String INVERT_FIELD_ID = "invert-field";
-
+  private static Logger log;
+  private String invertFieldName;
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.inverter")
@@ -54,13 +58,23 @@ public class BooleanInverterController extends StandaloneEventProcessingDeclarer
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanInverterParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    ProcessingElementParameterExtractor extractor = parameters.extractor();
+    log = parameters.getGraph().getLogger(BooleanInverterProcessor.class);
+    this.invertFieldName = extractor.mappingPropertyValue(INVERT_FIELD_ID);
+  }
 
-    String invertFieldName = extractor.mappingPropertyValue(INVERT_FIELD_ID);
-    BooleanInverterParameters params = new BooleanInverterParameters(graph, invertFieldName);
+  @Override
+  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
+    boolean field = inputEvent.getFieldBySelector(invertFieldName).getAsPrimitive().getAsBoolean();
+    inputEvent.updateFieldBySelector(invertFieldName, !field);
+    collector.collect(inputEvent);
+  }
 
-    return new ConfiguredEventProcessor<>(params, BooleanInverter::new);
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }
