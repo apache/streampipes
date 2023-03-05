@@ -29,7 +29,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
@@ -70,7 +70,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new CalculateDurationController(),
             new ChangedValueDetectionController(),
             new TimestampExtractorController(),
-            new BooleanCounterController(),
+            new BooleanCounterProcessor(),
             new BooleanInverterController(),
             new BooleanTimekeepingController(),
             new BooleanTimerController(),
