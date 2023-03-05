@@ -15,34 +15,18 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.processors.geo.jvm.jts.helper.buffer;
 
-package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter;
+public enum BufferSide {
+  Left(-1), Both(0), Right(1);
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+  private final int number;
 
-public class BooleanCounterParameters extends EventProcessorBindingParams {
-  private String invertFieldName;
-
-  /**
-   * Defines which boolean changes should be counted
-   * 0: BOTH
-   * 1: TRUE -> FALSE
-   * 2: FALSE -> TRUE
-   */
-  private int flankUp;
-
-  public BooleanCounterParameters(DataProcessorInvocation graph, String invertFieldName, int flankUp) {
-    super(graph);
-    this.invertFieldName = invertFieldName;
-    this.flankUp = flankUp;
+  BufferSide(int number) {
+    this.number = number;
   }
 
-  public String getInvertFieldName() {
-    return invertFieldName;
-  }
-
-  public int getFlankUp() {
-    return flankUp;
+  public int getNumber() {
+    return number;
   }
 }

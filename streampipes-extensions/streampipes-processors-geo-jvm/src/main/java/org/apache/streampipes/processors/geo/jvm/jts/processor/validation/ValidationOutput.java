@@ -15,15 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentParameters;
+package org.apache.streampipes.processors.geo.jvm.jts.processor.validation;
 
-public class ImageCropperParameters extends ImageEnrichmentParameters {
-
-  public ImageCropperParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth,
-                                String boxHeight, String boxX, String boxY) {
-    super(graph, imageProperty, boxArray, boxWidth, boxHeight, boxX, boxY);
-  }
+public enum ValidationOutput {
+  VALID, INVALID;
 }
+

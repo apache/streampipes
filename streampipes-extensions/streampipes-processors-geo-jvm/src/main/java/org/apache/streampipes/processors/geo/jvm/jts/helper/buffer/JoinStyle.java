@@ -15,42 +15,19 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.processors.geo.jvm.jts.helper.buffer;
 
-package org.apache.streampipes.model.datalake;
+public enum JoinStyle {
+  Round(1), Mitre(2), Bevel(3);
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+  private int number;
 
-import java.util.List;
-import java.util.Map;
-
-@TsModel
-@Deprecated(forRemoval = true, since = "0.92.0")
-public class PageResult extends DataSeries {
-
-  private int page;
-
-  private int pageSum;
-
-  public PageResult(int total, List<String> headers, List<List<Object>> rows, int page, int pageSum,
-                    Map<String, String> tags) {
-    super(total, rows, headers, tags);
-    this.page = page;
-    this.pageSum = pageSum;
+  JoinStyle(int number) {
+    this.number = number;
   }
 
-  public int getPage() {
-    return page;
-  }
-
-  public void setPage(int page) {
-    this.page = page;
-  }
-
-  public int getPageSum() {
-    return pageSum;
-  }
-
-  public void setPageSum(int pageSum) {
-    this.pageSum = pageSum;
+  public int getNumber() {
+    return number;
   }
 }
+

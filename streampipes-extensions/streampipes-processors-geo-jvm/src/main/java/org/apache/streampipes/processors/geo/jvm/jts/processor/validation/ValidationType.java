@@ -15,21 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-
-public class GenericImageClassificationParameters extends EventProcessorBindingParams {
-
-  private String imagePropertyName;
-
-  public GenericImageClassificationParameters(DataProcessorInvocation graph, String imagePropertyName) {
-    super(graph);
-    this.imagePropertyName = imagePropertyName;
-  }
-
-  public String getImagePropertyName() {
-    return imagePropertyName;
-  }
+package org.apache.streampipes.processors.geo.jvm.jts.processor.validation;
+public enum ValidationType {
+  IsEmpty, IsValid, IsSimple;
 }

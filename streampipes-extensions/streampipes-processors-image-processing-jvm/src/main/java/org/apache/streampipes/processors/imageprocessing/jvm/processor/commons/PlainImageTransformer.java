@@ -18,7 +18,6 @@
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.commons;
 
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import javax.imageio.ImageIO;
 
@@ -29,14 +28,12 @@ import java.io.InputStream;
 import java.util.Base64;
 import java.util.Optional;
 
-public class PlainImageTransformer<T extends EventProcessorBindingParams> {
+public class PlainImageTransformer {
 
   protected Event in;
-  protected T params;
 
-  public PlainImageTransformer(Event in, T params) {
+  public PlainImageTransformer(Event in) {
     this.in = in;
-    this.params = params;
   }
 
   public Optional<BufferedImage> getImage(String imagePropertyName) {

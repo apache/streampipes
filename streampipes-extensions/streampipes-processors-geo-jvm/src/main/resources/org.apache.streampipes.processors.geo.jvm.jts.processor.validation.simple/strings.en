@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,17 +13,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-# IntelliJ
-.idea/
+org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple.title=Geo Geometry Validation Filter
+org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple.description=Validates the geometry of emptiness or simple geometry.
 
-# Mac stuff
-.DS_Store
+geom-key.title=JTS Geometry Event
+geom-key.description=Input Geometry
 
-# hidden files in cli
-.spenv
+epsg-key.title=CRS of Input Geometry
+epsg-key.description=EPSG-Code of input point
 
-# track env file in compose dir
-!*/compose/.env
+validation-output-key.title=Filter Output Type
+validation-output-key.description=Consider the output type
 
-./default.conf
+validation-type-key.title= Validation Type
+validation-type-key.description=The selected output takes into account

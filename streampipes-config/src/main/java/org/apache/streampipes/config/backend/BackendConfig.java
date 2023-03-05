@@ -85,10 +85,17 @@ public enum BackendConfig {
   }
 
   private String makeStreamPipesHomeLocation() {
-    return System.getProperty("user.home")
-        + File.separator
-        + ".streampipes"
-        + File.separator;
+    var userDefinedAssetDir = getEnvironment().getCoreAssetBaseDir();
+    var assetDirAppendix = getSpAssetDirAppendix();
+    if (userDefinedAssetDir.exists()) {
+      return userDefinedAssetDir.getValue() + assetDirAppendix;
+    } else {
+      return System.getProperty("user.home") + assetDirAppendix;
+    }
+  }
+
+  private String getSpAssetDirAppendix() {
+    return File.separator + ".streampipes" + File.separator;
   }
 
   public String getJmsHost() {

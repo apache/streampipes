@@ -15,42 +15,27 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.processors.geo.jvm.jts.exceptions;
 
-package org.apache.streampipes.model.datalake;
+public class SpJtsGeoemtryException extends Exception {
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
-
-import java.util.List;
-import java.util.Map;
-
-@TsModel
-@Deprecated(forRemoval = true, since = "0.92.0")
-public class PageResult extends DataSeries {
-
-  private int page;
-
-  private int pageSum;
-
-  public PageResult(int total, List<String> headers, List<List<Object>> rows, int page, int pageSum,
-                    Map<String, String> tags) {
-    super(total, rows, headers, tags);
-    this.page = page;
-    this.pageSum = pageSum;
+  public SpJtsGeoemtryException() {
   }
 
-  public int getPage() {
-    return page;
+  public SpJtsGeoemtryException(String message) {
+    super(message);
   }
 
-  public void setPage(int page) {
-    this.page = page;
+  public SpJtsGeoemtryException(String message, Throwable cause) {
+    super(message, cause);
   }
 
-  public int getPageSum() {
-    return pageSum;
+  public SpJtsGeoemtryException(Throwable cause) {
+    super(cause);
   }
 
-  public void setPageSum(int pageSum) {
-    this.pageSum = pageSum;
+  public SpJtsGeoemtryException(String message, Throwable cause, boolean enableSuppression,
+                                boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
   }
 }

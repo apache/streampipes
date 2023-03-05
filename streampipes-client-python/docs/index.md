@@ -36,10 +36,16 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-**💡 The current version of this Python library is still a beta version.**
-<br>
-**This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
-<br>
+<p align="center"><b>💡 The current version of this Python library is still a beta version.<br>
+This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.</b>
+</p>
+---
+
+**🚧 Currently, we do not already version our Python documentation.
+Therefore, the provided docs always represent the development state.
+Please read our [getting started guide](./getting-started/first-steps.md) to find out how to install the development version of StreamPipes python.
+We will provide a versioned documentation as soon as possible. Stay tuned!**
+---
 
 ## ⚡️ Quickstart
 
@@ -47,31 +53,41 @@ As a quick example, we demonstrate how to set up and configure a StreamPipes cli
 In addition, we will get the available data lake measures out of StreamPipes.
 
 ```python
->>> from streampipes.client import StreamPipesClient
->>> from streampipes.client.config import StreamPipesClientConfig
->>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.client import StreamPipesClient
+from streampipes.client.config import StreamPipesClientConfig
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
->>> config = StreamPipesClientConfig(
-...     credential_provider = StreamPipesApiKeyCredentials(
-...         username = "test@streampipes.apache.org",
-...         api_key = "DEMO-KEY",
-...         ),
-...     host_address = "localhost",
-...     http_disabled = True,
-...     port = 80
-...)
+config = StreamPipesClientConfig(
+    credential_provider = StreamPipesApiKeyCredentials(
+        username = "test@streampipes.apache.org",
+        api_key = "DEMO-KEY",
+        ),
+    host_address = "localhost",
+    http_disabled = True,
+    port = 80
+)
 
->>> client = StreamPipesClient(client_config=config)
+client = StreamPipesClient(client_config=config)
 
 # get all available datat lake measures
->>> measures = client.dataLakeMeasureApi.all()
+measures = client.dataLakeMeasureApi.all()
 
 # get amount of retrieved measures
->>> len(measures)
+len(measures)
+```
+Output:
+```
 1
+```
+<br>
 
+```
 # inspect the data lake measures as pandas dataframe
->>> measures.to_pandas()
+measures.to_pandas()
+```
+
+Output:
+```
 measure_name timestamp_field ... pipeline_is_running num_event_properties
 0 test s0::timestamp ... False 2
 [1 rows x 6 columns]
