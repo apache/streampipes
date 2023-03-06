@@ -59,7 +59,6 @@ public class AutoAggregationHandler {
   }
 
   public ProvidedQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
-    //checkAllArgumentsPresent();
     try {
       SpQueryResult newest = getSingleRecord(DataLakeQueryOrdering.DESC);
       SpQueryResult oldest = getSingleRecord(DataLakeQueryOrdering.ASC);
@@ -84,13 +83,6 @@ public class AutoAggregationHandler {
       e.printStackTrace();
     }
     return null;
-  }
-
-  private void checkAllArgumentsPresent() throws IllegalArgumentException {
-    if (!this.queryParams.has(QP_AGGREGATION_FUNCTION)) {
-      throw new IllegalArgumentException(
-          "Auto-Aggregate must provide one of the aggregationFunction parameters MEAN, FIRST, LAST.");
-    }
   }
 
   private ProvidedQueryParams disableAutoAgg(ProvidedQueryParams params) {
