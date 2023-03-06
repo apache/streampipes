@@ -26,6 +26,12 @@ jobs:
       - name: clone
         uses: actions/checkout@v3
 
+      - name: create working branch & set GitHub config
+        run: |
+          git checkout -b build-python-docs-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -49,11 +55,12 @@ jobs:
       - name: Build Python docs
         working-directory: ./streampipes-client-python
         run: |
-          make doc
+          mike deploy dev --deploy-prefix ./streampipes-client-python/docs-tmp -b build-python-docs-${{ github.run_id }}
+          git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
         uses: actions/upload-artifact@v3
         with:
           name: streampipes-python-docs
-          path: streampipes-client-python/site/**/*
+          path: streampipes-client-python/docs-tmp/**/*
           retention-days: 5
