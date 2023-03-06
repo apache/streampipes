@@ -21,10 +21,7 @@ package org.apache.streampipes.dataexplorer;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.param.RetentionPolicyQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
-import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
-import org.apache.streampipes.dataexplorer.query.ShowRetentionPolicyQuery;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
@@ -33,9 +30,7 @@ import org.apache.streampipes.dataexplorer.v4.query.QueryResultProvider;
 import org.apache.streampipes.dataexplorer.v4.query.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.v4.query.writer.OutputFormat;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
-import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
@@ -108,56 +103,10 @@ public class DataLakeManagementV4 {
     return false;
   }
 
-  public SpQueryResult deleteData(String measurementID) {
-    return this.deleteData(measurementID, null, null);
-  }
-
   public SpQueryResult deleteData(String measurementID, Long startDate, Long endDate) {
     Map<String, QueryParamsV4> queryParts =
         DataLakeManagementUtils.getDeleteQueryParams(measurementID, startDate, endDate);
     return new DataExplorerQueryV4(queryParts).executeQuery(true);
-  }
-
-  public DataLakeConfiguration getDataLakeConfiguration() {
-    List<DataLakeRetentionPolicy> retentionPolicies = getAllExistingRetentionPolicies();
-    return new DataLakeConfiguration(retentionPolicies);
-  }
-
-  public String editMeasurementConfiguration(DataLakeConfiguration config, boolean resetToDefault) {
-
-    List<DataLakeRetentionPolicy> existingRetentionPolicies = getAllExistingRetentionPolicies();
-
-    if (resetToDefault) {
-      if (existingRetentionPolicies.size() > 1) {
-        String drop =
-            new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("custom", "0s"), "DROP").executeQuery();
-      }
-      return new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("autogen", "0s"), "DEFAULT").executeQuery();
-    } else {
-
-      Integer batchSize = config.getBatchSize();
-      Integer flushDuration = config.getFlushDuration();
-
-      //
-      // TODO:
-      // - Implementation of parameter update for batchSize and flushDuration
-      // - Updating multiple retention policies
-      //
-
-      String operation = "CREATE";
-      if (existingRetentionPolicies.size() > 1) {
-        operation = "ALTER";
-      }
-      return new EditRetentionPolicyQuery(RetentionPolicyQueryParams.from("custom", "1d"), operation).executeQuery();
-    }
-  }
-
-  public List<DataLakeRetentionPolicy> getAllExistingRetentionPolicies() {
-    //
-    // TODO:
-    // - Implementation of parameter return for batchSize and flushDuration
-    //
-    return new ShowRetentionPolicyQuery(RetentionPolicyQueryParams.from("", "0s")).executeQuery();
   }
 
   public boolean removeEventProperty(String measurementID) {
