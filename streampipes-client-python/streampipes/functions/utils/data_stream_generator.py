@@ -49,7 +49,7 @@ def create_data_stream(name: str, attributes: Dict[str, str], stream_id: Optiona
 
     event_schema = EventSchema(
         event_properties=[
-            EventProperty(
+            EventProperty(  # type: ignore
                 label="timestamp",
                 runtime_name="timestamp",
                 domain_properties=["http://schema.org/DateTime"],
@@ -58,7 +58,7 @@ def create_data_stream(name: str, attributes: Dict[str, str], stream_id: Optiona
             )
         ]
         + [
-            EventProperty(
+            EventProperty(  # type: ignore
                 label=attribute_name,
                 runtime_name=attribute_name,
                 index=i,
