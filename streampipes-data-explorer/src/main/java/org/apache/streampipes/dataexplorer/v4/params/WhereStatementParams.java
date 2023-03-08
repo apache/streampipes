@@ -103,14 +103,17 @@ public class WhereStatementParams extends QueryParamsV4 {
   }
 
   private String returnCondition(String inputCondition) {
-    if (NumberUtils.isCreatable(inputCondition) || Boolean.parseBoolean(inputCondition)) {
+    if (NumberUtils.isCreatable(inputCondition) || isBoolean(inputCondition)) {
       return inputCondition;
     } else if (inputCondition.equals("\"\"")) {
       return inputCondition;
     } else {
       return "'" + inputCondition + "'";
     }
+  }
 
+  private boolean isBoolean(String input) {
+    return "true".equalsIgnoreCase(input) || "false".equalsIgnoreCase(input);
   }
 
   public List<WhereCondition> getWhereConditions() {
