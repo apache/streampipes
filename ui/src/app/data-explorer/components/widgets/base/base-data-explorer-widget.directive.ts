@@ -131,9 +131,11 @@ export abstract class BaseDataExplorerWidgetDirective<
                 results.forEach(
                     (result, index) => (result.sourceIndex = index),
                 );
-                this.validateReceivedData(results);
-                this.refreshView();
                 this.timerCallback.emit(false);
+                setTimeout(() => {
+                    this.validateReceivedData(results);
+                    this.refreshView();
+                });
             });
 
         this.widgetConfigurationSub =

@@ -25,6 +25,7 @@ import {
     DataExplorerField,
     SpQueryResult,
 } from '@streampipes/platform-services';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'sp-data-explorer-table-widget',
@@ -35,7 +36,8 @@ export class TableWidgetComponent
     extends BaseDataExplorerWidgetDirective<TableWidgetModel>
     implements OnInit, OnDestroy
 {
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, {static: true}) sort: MatSort;
+    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
     dataSource = new MatTableDataSource();
     columnNames: string[];
@@ -43,31 +45,24 @@ export class TableWidgetComponent
     ngOnInit(): void {
         super.ngOnInit();
         this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
         this.columnNames = ['time'].concat(
-            this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
-                c => c.fullDbName,
-            ),
+          this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
+            c => c.fullDbName,
+          ),
         );
     }
 
     transformData(spQueryResult: SpQueryResult) {
-        const result = [];
-        spQueryResult.allDataSeries.forEach(series => {
-            series.rows.forEach(row =>
-                result.push(this.createTableObject(spQueryResult.headers, row)),
-            );
-        });
-
-        this.setShownComponents(false, true, false, false);
-        return result;
+        return spQueryResult.allDataSeries.flatMap(series =>
+          series.rows.map(row => this.createTableObject(spQueryResult.headers, row)));
     }
 
     createTableObject(keys, values) {
-        const object = {};
-        keys.forEach((key, index) => {
+        return keys.reduce((object, key, index) => {
             object[key] = values[index];
-        });
-        return object;
+            return object;
+        }, {});
     }
 
     ngOnDestroy(): void {
@@ -115,20 +110,18 @@ export class TableWidgetComponent
 
     beforeDataFetched() {
         this.setShownComponents(false, false, true, false);
+        this.dataSource.data = [];
     }
 
     onDataReceived(spQueryResults: SpQueryResult[]) {
         this.columnNames = ['time'].concat(
-            this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
-                c => c.fullDbName,
-            ),
+          this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
+            c => c.fullDbName,
+          ),
         );
-        this.dataSource.data = [];
-        spQueryResults.forEach(spQueryResult => {
-            this.dataSource.data = this.dataSource.data.concat(
-                this.transformData(spQueryResult),
-            );
-        });
+        const transformedData = spQueryResults.map(spQueryResult => this.transformData(spQueryResult)).flat();
+        this.dataSource.data = [...transformedData];
+        this.setShownComponents(false, true, false, false);
     }
 
     handleUpdatedFields(
