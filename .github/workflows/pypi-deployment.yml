@@ -17,11 +17,6 @@ name: Deploy Python Package to PyPI & update docs
 
 on:
   workflow_dispatch:
-    inputs:
-      sp-version:
-        description: 'StreamPipes version to be released'
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -59,7 +54,7 @@ jobs:
       - name: Publish new doc version and update alias
         working-directory: ./streampipes-client-python
         run: |
-          mike deploy ${{ inputs.sp-version }} latest -u --deploy-prefix ./streampipes-client-python/docs-tmp -b real/${{ inputs.sp-version }} 
+          mike deploy ${GITHUB_REF##*/} latest -u --deploy-prefix ./streampipes-client-python/docs-tmp -b ${GITHUB_REF}
           git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
