@@ -156,7 +156,9 @@ export class TimeSeriesChartWidgetComponent
 
         let maxValue = -Infinity;
 
-        const selectedFields = this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties;
+        const selectedFields =
+            this.dataExplorerWidget.visualizationConfig
+                .selectedTimeSeriesChartProperties;
         data.allDataSeries.forEach(group => {
             group.rows.forEach(row => {
                 selectedFields.forEach(field => {
@@ -176,14 +178,22 @@ export class TimeSeriesChartWidgetComponent
                         const columnIndex = this.getColumnIndex(field, data);
                         const name = field.fullDbName + sourceIndex.toString();
                         let value = row[columnIndex];
-                        const fullDbNameAndIndex = field.fullDbName + field.sourceIndex.toString();
-                        if (!this.orderedSelectedProperties.includes(fullDbNameAndIndex)) {
-                            this.orderedSelectedProperties.push(fullDbNameAndIndex);
+                        const fullDbNameAndIndex =
+                            field.fullDbName + field.sourceIndex.toString();
+                        if (
+                            !this.orderedSelectedProperties.includes(
+                                fullDbNameAndIndex,
+                            )
+                        ) {
+                            this.orderedSelectedProperties.push(
+                                fullDbNameAndIndex,
+                            );
                         }
 
-                        const {tags} = group;
+                        const { tags } = group;
                         if (tags != null) {
-                            const groupValues = this.groupKeeper[name] ?? new Set();
+                            const groupValues =
+                                this.groupKeeper[name] ?? new Set();
                             for (const [key, val] of Object.entries(tags)) {
                                 groupValues.add(val);
                             }
@@ -191,11 +201,11 @@ export class TimeSeriesChartWidgetComponent
                         }
 
                         if (
-                          this.fieldProvider.booleanFields.find(
-                            f =>
-                              field.fullDbName === f.fullDbName &&
-                              f.sourceIndex === data.sourceIndex,
-                          ) !== undefined
+                            this.fieldProvider.booleanFields.find(
+                                f =>
+                                    field.fullDbName === f.fullDbName &&
+                                    f.sourceIndex === data.sourceIndex,
+                            ) !== undefined
                         ) {
                             value = value === true ? this.maxValue + 2 : 0;
                         }
@@ -204,13 +214,8 @@ export class TimeSeriesChartWidgetComponent
                         const traceExists = traceKey in tmpLineChartTraces;
 
                         if (!traceExists) {
-                            const headerName =
-                              data.headers[
-                                columnIndex
-                                ];
-                            tmpLineChartTraces[
-                              traceKey
-                              ] = {
+                            const headerName = data.headers[columnIndex];
+                            tmpLineChartTraces[traceKey] = {
                                 type: 'scatter',
                                 mode: 'Line',
                                 name: headerName,
@@ -220,12 +225,10 @@ export class TimeSeriesChartWidgetComponent
                             };
                         }
 
-                        tmpLineChartTraces[
-                          traceKey
-                          ].x.push(new Date(row[indexXkey]));
-                        tmpLineChartTraces[
-                          traceKey
-                          ].y.push(value);
+                        tmpLineChartTraces[traceKey].x.push(
+                            new Date(row[indexXkey]),
+                        );
+                        tmpLineChartTraces[traceKey].y.push(value);
                     }
                 }
             }
@@ -516,8 +519,8 @@ export class TimeSeriesChartWidgetComponent
 
         this.orderedSelectedProperties = [];
 
-        this.data = spQueryResults.flatMap((spQueryResult) =>
-          this.transformData(spQueryResult, spQueryResult.sourceIndex)
+        this.data = spQueryResults.flatMap(spQueryResult =>
+            this.transformData(spQueryResult, spQueryResult.sourceIndex),
         );
 
         this.setShownComponents(false, true, false, false);

@@ -36,8 +36,8 @@ export class TableWidgetComponent
     extends BaseDataExplorerWidgetDirective<TableWidgetModel>
     implements OnInit, OnDestroy
 {
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
     dataSource = new MatTableDataSource();
     columnNames: string[];
@@ -47,15 +47,18 @@ export class TableWidgetComponent
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.columnNames = ['time'].concat(
-          this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
-            c => c.fullDbName,
-          ),
+            this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
+                c => c.fullDbName,
+            ),
         );
     }
 
     transformData(spQueryResult: SpQueryResult) {
         return spQueryResult.allDataSeries.flatMap(series =>
-          series.rows.map(row => this.createTableObject(spQueryResult.headers, row)));
+            series.rows.map(row =>
+                this.createTableObject(spQueryResult.headers, row),
+            ),
+        );
     }
 
     createTableObject(keys, values) {
@@ -115,11 +118,13 @@ export class TableWidgetComponent
 
     onDataReceived(spQueryResults: SpQueryResult[]) {
         this.columnNames = ['time'].concat(
-          this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
-            c => c.fullDbName,
-          ),
+            this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
+                c => c.fullDbName,
+            ),
         );
-        const transformedData = spQueryResults.map(spQueryResult => this.transformData(spQueryResult)).flat();
+        const transformedData = spQueryResults
+            .map(spQueryResult => this.transformData(spQueryResult))
+            .flat();
         this.dataSource.data = [...transformedData];
         this.setShownComponents(false, true, false, false);
     }

@@ -119,10 +119,12 @@
             ></tr>
             <tr mat-row *matRowDef="let row; columns: columnNames"></tr>
         </table>
-        <mat-paginator [length]="100"
-                       [pageSize]="500"
-                       [pageSizeOptions]="[10, 20, 50, 100, 500, 1000]"
-                       aria-label="Select page">
+        <mat-paginator
+            [length]="100"
+            [pageSize]="500"
+            [pageSizeOptions]="[10, 20, 50, 100, 500, 1000]"
+            aria-label="Select page"
+        >
         </mat-paginator>
     </div>
 </div>
