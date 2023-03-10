@@ -38,6 +38,9 @@ extra:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/apache/streampipes
 
+  version:
+    provider: mike
+
 # Extensions
 markdown_extensions:
   - admonition
@@ -51,8 +54,8 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.highlight:
-        use_pygments: true
-        pygments_lang_class: true
+      use_pygments: true
+      pygments_lang_class: true
 
 plugins:
   - awesome-pages
@@ -71,18 +74,24 @@ plugins:
             docstring_section_style: spacy
             show_source: False
             merge_init_into_class: True
+  - mike:
+      canonical_version: 'latest'
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
 
 extra_css:
   - stylesheets/extra.css
 
 nav:
-    - Home: index.md
-    - Getting Started:
-        - Installation: getting-started/installation.md
-        - Quickstart: getting-started/quickstart.md
-    - Examples:
-        - Introduction to the StreamPipes Python Client: examples/1-introduction-to-streampipes-python-client.ipynb
-        - Extracting Data from the StreamPipes Data Lake: examples/2-extracting-data-from-the-streampipes-data-lake.ipynb
-        - Exploring Live Data from a StreamPipes Data Stream: examples/3-getting-live-data-from-the-streampipes-data-stream.ipynb
-        - Applying Online Machine Learning on a StreamPipes Data Stream: examples/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
-    - Reference: reference/*
+  - Home: index.md
+  - Getting Started:
+      - First Steps: getting-started/first-steps.md
+      - Developing & Contributing: getting-started/developing.md
+      - Quickstart: getting-started/quickstart.md
+  - Examples:
+      - Introduction to the StreamPipes Python Client: examples/1-introduction-to-streampipes-python-client.ipynb
+      - Extracting Data from the StreamPipes Data Lake: examples/2-extracting-data-from-the-streampipes-data-lake.ipynb
+      - Exploring Live Data from a StreamPipes Data Stream: examples/3-getting-live-data-from-the-streampipes-data-stream.ipynb
+      - Applying Online Machine Learning on a StreamPipes Data Stream: examples/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
+  - Reference: reference/*

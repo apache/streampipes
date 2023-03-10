@@ -13,48 +13,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Deploy Python Package to PyPI & update docs
+name: "build-python-docs-and-share-as-artifact"
 
 on:
-  workflow_dispatch:
-
-permissions:
-  contents: read
+  schedule:
+    - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
 
 jobs:
-  deploy:
+  python-docs-artifact-building:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: clone
+        uses: actions/checkout@v3
+
+      - name: create working branch & set GitHub config
+        run: |
+          git checkout -b build-python-docs-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
 
-      - name: Install dependencies
-        run: |
-          cd ./streampipes-client-python
-          python -m pip install --upgrade pip 
-          pip install build twine
-          pip install -e ".[docs]"
-
-      - name: Build package
-        run: |
-          cd ./streampipes-client-python
-          python -m build
-          twine check --strict dist/*
-
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-doc-
 
-      - name: Publish new doc version and update alias
+      - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |
-          mike deploy ${GITHUB_REF##*/} latest -u --deploy-prefix ./streampipes-client-python/docs-tmp -b ${GITHUB_REF}
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install -e ".[docs]"
+
+      - name: Build Python docs
+        working-directory: ./streampipes-client-python
+        run: |
+          mike deploy dev --deploy-prefix ./streampipes-client-python/docs-tmp -b build-python-docs-${{ github.run_id }}
           git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
@@ -62,4 +63,4 @@ jobs:
         with:
           name: streampipes-python-docs
           path: streampipes-client-python/docs-tmp/**/*
-          retention-days: 2
+          retention-days: 5
