@@ -39,3 +39,6 @@ changelog:
     - title: Dependency Updates 📦
       labels:
         - dependencies
+    - title: Python 🐍
+      labels:
+        - python
