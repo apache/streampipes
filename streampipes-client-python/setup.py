@@ -63,7 +63,8 @@ docs_packages = [
     "mkdocs-gen-files==0.4.0",
     "mkdocs-literate-nav==0.6.0",
     "numpydoc==1.5.0",
-    "mkdocs-jupyter==0.22.0 "
+    "mkdocs-jupyter==0.22.0",
+    "mike @ git+https://github.com/jimporter/mike.git@872f72def32f588908f8251fe512189e0c41f4e2"
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
