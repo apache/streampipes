@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.sinks.internal.jvm;
 
-import org.apache.streampipes.dataexplorer.commons.configs.CouchDbConfigurations;
-import org.apache.streampipes.dataexplorer.commons.configs.DataExplorerConfigurations;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -53,8 +51,6 @@ public class SinksInternalJvmInit extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory())
-        .addConfigs(DataExplorerConfigurations.getDefaults())
-        .addConfigs(CouchDbConfigurations.getDefaults())
         .build();
 
 

@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
+import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.query.writer.OutputFormat;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
@@ -81,14 +82,17 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
   private static final Logger logger = LoggerFactory.getLogger(DataLakeResourceV4.class);
 
-  private DataLakeManagementV4 dataLakeManagement;
+  private DataExplorerQueryManagement dataLakeManagement;
+  private final DataExplorerSchemaManagement dataExplorerSchemaManagement;
 
   public DataLakeResourceV4() {
-    this.dataLakeManagement = new DataLakeManagementV4();
+    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement();
+    this.dataLakeManagement = new DataExplorerQueryManagement(dataExplorerSchemaManagement);
   }
 
-  public DataLakeResourceV4(DataLakeManagementV4 dataLakeManagement) {
+  public DataLakeResourceV4(DataExplorerQueryManagement dataLakeManagement) {
     this.dataLakeManagement = dataLakeManagement;
+    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement();
   }
 
 
@@ -127,10 +131,10 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathParam("measurementID") String measurementID) {
 
-    boolean isSuccessDataLake = this.dataLakeManagement.removeMeasurement(measurementID);
+    boolean isSuccessDataLake = this.dataLakeManagement.deleteData(measurementID);
 
     if (isSuccessDataLake) {
-      boolean isSuccessEventProperty = this.dataLakeManagement.removeEventProperty(measurementID);
+      boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measurementID);
       if (isSuccessEventProperty) {
         return ok();
       } else {
@@ -152,7 +156,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
               description = "array of stored measurement series",
               content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))})
   public Response getAll() {
-    List<DataLakeMeasure> allMeasurements = this.dataLakeManagement.getAllMeasurements();
+    List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
     return ok(allMeasurements);
   }
 
@@ -341,7 +345,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       responses = {
           @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")})
   public Response removeAll() {
-    boolean isSuccess = this.dataLakeManagement.removeAllMeasurements();
+    boolean isSuccess = this.dataLakeManagement.deleteAllData();
     return Response.ok(isSuccess).build();
   }
 

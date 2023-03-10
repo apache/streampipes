@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.dataexplorer.v4;
 
-import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
+import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.sdk.DataLakeQueryOrdering;
 import org.apache.streampipes.dataexplorer.v4.params.SelectColumn;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -50,12 +52,16 @@ public class AutoAggregationHandler {
   private final SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
   private final SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-  private final DataLakeManagementV4 dataLakeManagement;
+  private final IDataExplorerQueryManagement dataLakeQueryManagement;
   private final ProvidedQueryParams queryParams;
 
   public AutoAggregationHandler(ProvidedQueryParams params) {
     this.queryParams = params;
-    this.dataLakeManagement = new DataLakeManagementV4();
+    this.dataLakeQueryManagement = getDataLakeQueryManagement();
+  }
+
+  private IDataExplorerQueryManagement getDataLakeQueryManagement() {
+    return new DataExplorerQueryManagement(new DataExplorerSchemaManagement());
   }
 
   public ProvidedQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
@@ -97,13 +103,13 @@ public class AutoAggregationHandler {
     countParams.update(QP_COUNT_ONLY, true);
     countParams.update(QP_COLUMNS, fieldName);
 
-    SpQueryResult result = new DataLakeManagementV4().getData(countParams, true);
+    SpQueryResult result = dataLakeQueryManagement.getData(countParams, true);
 
     return result.getTotal() > 0 ? ((Double) result.getAllDataSeries().get(0).getRows().get(0).get(1)).intValue() : 0;
   }
 
   private SpQueryResult fireQuery(ProvidedQueryParams params) {
-    return dataLakeManagement.getData(params, true);
+    return dataLakeQueryManagement.getData(params, true);
   }
 
   private int getAggregationValue(SpQueryResult newest, SpQueryResult oldest) throws ParseException {

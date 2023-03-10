@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
+import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -37,10 +38,10 @@ import jakarta.ws.rs.core.Response;
 @Path("/v4/datalake/measure")
 public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
 
-  private DataLakeManagementV4 dataLakeManagement;
+  private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 
   public DataLakeMeasureResourceV4() {
-    this.dataLakeManagement = new DataLakeManagementV4();
+    this.dataLakeMeasureManagement = new DataExplorerSchemaManagement();
   }
 
   @POST
@@ -48,7 +49,7 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addDataLake(DataLakeMeasure dataLakeMeasure) {
-    DataLakeMeasure result = this.dataLakeManagement.addDataLake(dataLakeMeasure);
+    DataLakeMeasure result = this.dataLakeMeasureManagement.createMeasurement(dataLakeMeasure);
     return ok(result);
   }
 
@@ -56,8 +57,8 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{id}")
-  public Response getDataLakeMeasure(@PathParam("id") String measureId) {
-    return ok(this.dataLakeManagement.getById(measureId));
+  public Response getDataLakeMeasure(@PathParam("id") String elementId) {
+    return ok(this.dataLakeMeasureManagement.getById(elementId));
   }
 
   @PUT
@@ -65,11 +66,11 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("{id}")
-  public Response updateDataLakeMeasure(@PathParam("id") String measureId,
+  public Response updateDataLakeMeasure(@PathParam("id") String elementId,
                                         DataLakeMeasure measure) {
-    if (measureId.equals(measure.getElementId())) {
+    if (elementId.equals(measure.getElementId())) {
       try {
-        this.dataLakeManagement.updateDataLake(measure);
+        this.dataLakeMeasureManagement.updateMeasurement(measure);
         return ok();
       } catch (IllegalArgumentException e) {
         return badRequest(e.getMessage());
@@ -81,9 +82,9 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   @DELETE
   @JacksonSerialized
   @Path("{id}")
-  public Response deleteDataLakeMeasure(@PathParam("id") String measureId) {
+  public Response deleteDataLakeMeasure(@PathParam("id") String elementId) {
     try {
-      this.dataLakeManagement.deleteDataLakeMeasure(measureId);
+      this.dataLakeMeasureManagement.deleteMeasurement(elementId);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());

@@ -18,41 +18,104 @@
 
 package org.apache.streampipes.dataexplorer;
 
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import com.google.gson.JsonObject;
+import org.lightcouch.CouchDbClient;
+
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
-@Deprecated
-public class DataLakeNoUserManagementV3 {
+  @Override
+  public List<DataLakeMeasure> getAllMeasurements() {
+    return DataExplorerUtils.getInfos();
+  }
 
+  @Override
+  public DataLakeMeasure getById(String elementId) {
+    return getDataLakeStorage().findOne(elementId);
+  }
 
-  @Deprecated
-  public boolean addDataLake(String measure, EventSchema eventSchema) {
+  @Override
+  public DataLakeMeasure createMeasurement(DataLakeMeasure measure) {
     List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
     Optional<DataLakeMeasure> optional =
-        dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure)).findFirst();
+        dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure.getMeasureName()))
+            .findFirst();
 
     if (optional.isPresent()) {
-      if (!compareEventProperties(optional.get().getEventSchema().getEventProperties(),
-          eventSchema.getEventProperties())) {
-        return false;
+      DataLakeMeasure oldEntry = optional.get();
+      if (!compareEventProperties(oldEntry.getEventSchema().getEventProperties(),
+          measure.getEventSchema().getEventProperties())) {
+        return oldEntry;
       }
     } else {
-      DataLakeMeasure dataLakeMeasure = new DataLakeMeasure(measure, eventSchema);
-      dataLakeMeasure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
-      getDataLakeStorage().storeDataLakeMeasure(dataLakeMeasure);
+      measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+      getDataLakeStorage().storeDataLakeMeasure(measure);
+      return measure;
     }
-    return true;
+
+    return measure;
+  }
+
+  @Override
+  public void deleteMeasurement(String elementId) {
+    if (getDataLakeStorage().findOne(elementId) != null) {
+      getDataLakeStorage().deleteDataLakeMeasure(elementId);
+    } else {
+      throw new IllegalArgumentException("Could not find measure with this ID");
+    }
+  }
+
+  @Override
+  public boolean deleteMeasurementByName(String measureName) {
+    boolean isSuccess = false;
+    CouchDbClient couchDbClient = Utils.getCouchDbDataLakeClient();
+    List<JsonObject> docs = couchDbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+
+    for (JsonObject document : docs) {
+      if (document.get("measureName").toString().replace("\"", "").equals(measureName)) {
+        couchDbClient.remove(document.get("_id").toString().replace("\"", ""),
+            document.get("_rev").toString().replace("\"", ""));
+        isSuccess = true;
+        break;
+      }
+    }
+
+    try {
+      couchDbClient.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return isSuccess;
+  }
+
+  @Override
+  public void updateMeasurement(DataLakeMeasure measure) {
+    var existingMeasure = getDataLakeStorage().findOne(measure.getElementId());
+    if (existingMeasure != null) {
+      measure.setRev(existingMeasure.getRev());
+      getDataLakeStorage().updateDataLakeMeasure(measure);
+    } else {
+      getDataLakeStorage().storeDataLakeMeasure(measure);
+    }
+  }
+
+  private IDataLakeStorage getDataLakeStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
   }
 
   private boolean compareEventProperties(List<EventProperty> prop1, List<EventProperty> prop2) {
@@ -88,9 +151,5 @@ public class DataLakeNoUserManagementV3 {
       return false;
 
     });
-  }
-
-  private IDataLakeStorage getDataLakeStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
   }
 }

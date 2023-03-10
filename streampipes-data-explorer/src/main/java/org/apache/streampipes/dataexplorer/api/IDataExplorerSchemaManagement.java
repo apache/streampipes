@@ -16,10 +16,23 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.commons.configs;
+package org.apache.streampipes.dataexplorer.api;
 
-public class CouchDbEnvKeys {
-  public static final String COUCHDB_HOST = "SP_COUCHDB_HOST";
-  public static final String COUCHDB_PORT = "SP_COUCHDB_PORT";
-  public static final String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+
+import java.util.List;
+
+public interface IDataExplorerSchemaManagement {
+
+  List<DataLakeMeasure> getAllMeasurements();
+
+  DataLakeMeasure getById(String elementId);
+
+  DataLakeMeasure createMeasurement(DataLakeMeasure measure);
+
+  void deleteMeasurement(String elementId);
+
+  boolean deleteMeasurementByName(String measureName);
+
+  void updateMeasurement(DataLakeMeasure measure);
 }
