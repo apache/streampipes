@@ -37,6 +37,9 @@ extra:
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/apache/streampipes
+  analytics:
+    provider: matomo
+
   version:
     provider: mike
 
