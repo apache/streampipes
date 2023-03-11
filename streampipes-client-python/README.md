@@ -47,6 +47,11 @@ Please visit our documentation: https://streampipes.apache.org/docs/docs/python/
 There you can find information about how to [get started](https://streampipes.apache.org/docs/docs/python/latest/getting-started/first-steps/),
 follow some [examples](https://streampipes.apache.org/docs/docs/python/latest/examples/1-introduction-to-streampipes-python-client/),
 or discover the library via our [references](https://streampipes.apache.org/docs/docs/python/latest/reference/client/client/).
+<br>
+
+In case you want to access the documentation of the current development state, you can go here:
+
+👉 [development docs 🤓](https://streampipes.apache.org/docs/docs/python/dev/)
 
 ## ⚡️ Quickstart
 

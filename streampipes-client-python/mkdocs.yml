@@ -28,6 +28,7 @@ theme:
   custom_dir: docs/overrides
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
