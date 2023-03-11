@@ -16,7 +16,7 @@
 #
 from enum import Enum
 
-from streampipes.functions.broker import Broker, NatsBroker
+from streampipes.functions.broker import Broker, KafkaBroker, NatsBroker
 from streampipes.model.resource.data_stream import DataStream
 
 
@@ -24,6 +24,7 @@ class SupportedBroker(Enum):
     """Enum for the supported brokers."""
 
     NATS = "NatsTransportProtocol"
+    KAFKA = "KafkaTransportProtocol"
 
 
 # TODO Exception should be removed once all brokers are implemented.
@@ -49,5 +50,7 @@ def get_broker(data_stream: DataStream) -> Broker:  # TODO implementation for mo
     broker_name = data_stream.event_grounding.transport_protocols[0].class_name
     if SupportedBroker.NATS.value in broker_name:
         return NatsBroker()
+    elif SupportedBroker.KAFKA.value in broker_name:
+        return KafkaBroker()
     else:
         raise UnsupportedBroker(f'The python client doesn\'t include the broker: "{broker_name}" yet')
