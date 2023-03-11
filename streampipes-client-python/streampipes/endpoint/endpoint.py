@@ -54,7 +54,7 @@ _error_code_to_message = {
         "\nOops, there seems to be an issue with the Python Client calling the API inappropriately.\n"
         "This should not happen, but unfortunately did.\n"
         "If you don't mind, it would be awesome to let us know by creating an issue"
-        " at github.com/apache/streampipes.\n"
+        " at https://github.com/apache/streampipes.\n"
         "Please paste the following information to the issue description:\n\n",
     ),
 }
