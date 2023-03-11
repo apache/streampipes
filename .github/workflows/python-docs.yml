@@ -16,6 +16,7 @@
 name: "build-python-docs-and-share-as-artifact"
 
 on:
+  workflow_dispatch:
   schedule:
     - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
 
@@ -56,6 +57,7 @@ jobs:
         working-directory: ./streampipes-client-python
         run: |
           mike deploy dev --deploy-prefix ./streampipes-client-python/docs-tmp -b build-python-docs-${{ github.run_id }}
+          mike set-default latest --deploy-prefix ./streampipes-client-python/docs-tmp -b build-python-docs-${{ github.run_id }}
           git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
