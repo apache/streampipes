@@ -41,6 +41,18 @@ and the amazing universe of data analytics libraries in Python. </p>
 **This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
 <br>
 
+
+## 📚 Documentation
+Please visit our documentation: https://streampipes.apache.org/docs/docs/python/latest/
+There you can find information about how to [get started](https://streampipes.apache.org/docs/docs/python/latest/getting-started/first-steps/),
+follow some [examples](https://streampipes.apache.org/docs/docs/python/latest/examples/1-introduction-to-streampipes-python-client/),
+or discover the library via our [references](https://streampipes.apache.org/docs/docs/python/latest/reference/client/client/).
+<br>
+
+In case you want to access the documentation of the current development state, you can go here:
+
+👉 [development docs 🤓](https://streampipes.apache.org/docs/docs/python/dev/)
+
 ## ⚡️ Quickstart
 
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.
@@ -81,4 +93,4 @@ The following StreamPipes resources are available with this client:
 1x DataLakeMeasures
 ```
 
-For more information about how to use the StreamPipes client visit our [introduction example](https://github.com/apache/streampipes/blob/dev/streampipes-client-python/docs/examples/1-introduction-to-streampipes-python-client.ipynb).
+For more information about how to use the StreamPipes client visit our [introduction example](https://streampipes.apache.org/docs/docs/python/latest/examples/1-introduction-to-streampipes-python-client/).

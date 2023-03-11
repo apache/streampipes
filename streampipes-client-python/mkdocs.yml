@@ -17,7 +17,7 @@
 
 site_name: Apache StreamPipes for Python
 repo_url: https://github.com/apache/streampipes
-edit_uri: "https://github.com/apache/streampipes"
+edit_uri: streampipes-client-python/docs
 
 copyright: "Apache License 2.0"
 
@@ -28,6 +28,7 @@ theme:
   custom_dir: docs/overrides
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
@@ -39,7 +40,7 @@ extra:
       link: https://github.com/apache/streampipes
   analytics:
     provider: matomo
-
+  homepage: https://streampipes.apache.org/
   version:
     provider: mike
 

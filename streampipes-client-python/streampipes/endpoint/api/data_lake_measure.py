@@ -127,7 +127,7 @@ class MeasurementGetQueryConfig(BaseModel):
                 "Your datetime object is off, it could not be parsed"
                 "This should not occur, but unfortunately did.\n"
                 "Therefore, it would be great if you could report this problem as an issue at "
-                "github.com/apache/streampipes.\n"
+                "https://github.com/apache/streampipes.\n"
             ) from ve
 
     def build_query_string(self) -> str:
@@ -250,7 +250,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
                 f"Some of them are not provided as expected. Please see the detailed output below:\n\n"
                 f"Validation error log: {ve.json()}\n\n"
                 f"In case you assess your query configuration to be correct feel free to file us an issue via "
-                f"github.com/apache/streampipes.\n"
+                f"https://github.com/apache/streampipes.\n"
                 f"Please don't forget to include the following validation log from above."
             )
 
