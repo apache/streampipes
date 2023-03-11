@@ -24,7 +24,7 @@ import setuptools
 NAME = "streampipes"
 DESCRIPTION = "Python library for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
-URL = "https://github.com/apache/streampipes/tree/dev/streampipes-client-python"
+URL = "https://streampipes.apache.org/docs/docs/python/latest/"
 EMAIL = "dev@streampipes.apache.org"
 AUTHOR = "Apache Software Foundation"
 REQUIRES_PYTHON = ">=3.8.0"
@@ -103,7 +103,7 @@ setuptools.setup(
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
