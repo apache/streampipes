@@ -24,7 +24,7 @@ import setuptools
 NAME = "streampipes"
 DESCRIPTION = "Python library for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
-URL = "https://github.com/apache/streampipes/tree/dev/streampipes-client-python"
+URL = "https://streampipes.apache.org/docs/docs/python/latest/"
 EMAIL = "dev@streampipes.apache.org"
 AUTHOR = "Apache Software Foundation"
 REQUIRES_PYTHON = ">=3.8.0"
