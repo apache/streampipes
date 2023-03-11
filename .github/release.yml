@@ -23,6 +23,9 @@ changelog:
     - title: New Features 🚀
       labels:
         - enhancement
+    - title: Python 🐍
+      labels:
+        - python
     - title: Bug fixes 🧰
       labels:
         - bug
