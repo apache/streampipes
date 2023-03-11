@@ -14,16 +14,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .broker import Broker
-from .kafka_broker import KafkaBroker
-from .nats_broker import NatsBroker
+from confluent_kafka import Consumer  # type: ignore
 
-from .broker_handler import SupportedBroker, get_broker  # isort: skip
 
-__all__ = [
-    "Broker",
-    "KafkaBroker",
-    "NatsBroker",
-    "SupportedBroker",
-    "get_broker",
-]
+class KafkaMsg:
+    """An internal representation of a Kafka message
+
+    Parameters
+    ----------
+    data: Byte Array
+        The received Kafka message as byte array
+    """
+
+    def __init__(self, data):
+        self.data = data
+
+
+class KafkaMessageFetcher:
+    """Fetches the next message from Kafka
+
+    Parameters
+    ----------
+    consumer: Consumer
+        The Kafka consumer
+    """
+
+    def __init__(self, consumer: Consumer):
+        self.consumer = consumer
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        msg = self.consumer.poll(0.1)
+        return KafkaMsg(msg.value())
