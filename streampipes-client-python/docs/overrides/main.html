@@ -21,27 +21,38 @@
 
 <!-- More minimal footer -->
 {% block footer %}
-<footer class="md-footer">
-    <div class="md-footer-meta md-typeset">
-        <div class="md-footer-meta__inner md-grid">
-            <!-- Copyright and theme information -->
-            <div class="md-footer-copyright">
-                {% if config.copyright %}
-                <div class="md-footer-copyright__highlight">
-                    {{ config.copyright }}
-                </div>
-                {% endif %}
-                powered by
-                <a href="https://www.mkdocs.org" title="MkDocs">MkDocs</a>
-                and
-                <a href="https://squidfunk.github.io/mkdocs-material/"
-                   title="Material for MkDocs">
-                    Material for MkDocs</a>
-            </div>
-            {% block social %}
-            {% include "partials/social.html" %}
-            {% endblock %}
-        </div>
-    </div>
-</footer>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>404 Page Not Found</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #333;
+        background-color: #f7f7f7;
+        text-align: center;
+      }
+      h1 {
+        margin-top: 40px;
+        font-size: 48px;
+      }
+      p {
+        margin-top: 20px;
+        font-size: 24px;
+      }
+      a {
+        color: #007bff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>404 Error: Page Not Found</h1>
+    <p>Looks like you've stumbled into the digital equivalent of Narnia's wardrobe.</p>
+    <p>Don't worry, we're working on finding the page and bringing it back to its rightful place.</p>
+    <p>In the meantime, let's go back to our <a href="/">homepage</a> and start again.</p>
+    <img src="https://media.giphy.com/media/3o7TKzX9W7aMVyB17i/giphy.gif" alt="404 error page humor" width="400" height="225">
+  </body>
+</html>
