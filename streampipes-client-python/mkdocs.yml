@@ -85,7 +85,6 @@ plugins:
   - search:
       lang:
         - en
-      seperator: '[\s\-,:_!=\[\]()"/]+'
 
 extra_css:
   - stylesheets/extra.css
