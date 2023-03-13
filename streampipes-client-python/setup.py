@@ -58,13 +58,13 @@ dev_packages = base_packages + [
 docs_packages = [
     "mkdocs==1.4.2",
     "mkdocs-awesome-pages-plugin==2.8.0",
-    "mkdocs-material==8.5.11",  # < 9.x.y is required by mkdocs-jupyter
+    "mkdocs-material==9.0.8",
     "mkdocstrings[python]==0.20.0",
     "pytkdocs[numpy-style]>=0.16.1",
     "mkdocs-gen-files==0.4.0",
     "mkdocs-literate-nav==0.6.0",
     "numpydoc==1.5.0",
-    "mkdocs-jupyter==0.22.0",
+    "mkdocs-jupyter==0.23.0",
     "mike @ git+https://github.com/jimporter/mike.git@872f72def32f588908f8251fe512189e0c41f4e2"
 ]
 
