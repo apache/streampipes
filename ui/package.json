@@ -98,7 +98,7 @@
     "@angular-eslint/builder": "15.1.0",
     "@angular-eslint/eslint-plugin": "^15.2.0",
     "@angular-eslint/eslint-plugin-template": "^15.2.0",
-    "@angular-eslint/schematics": "^14.4.0",
+    "@angular-eslint/schematics": "^15.2.1",
     "@angular-eslint/template-parser": "^15.2.0",
     "@angular/cli": "^14.2.10",
     "@angular/compiler-cli": "^14.2.12",
