@@ -17,6 +17,7 @@
 
 """
 General and abstract implementation for a resource.
+
 A resource defines the data model that is used by a resource container (`model.container.resourceContainer`).
 """
 from abc import ABC, abstractmethod
@@ -36,11 +37,19 @@ class Resource(ABC, BasicModel):
     It inherits from Pydantic's BaseModel to get all its superpowers,
     which are used to parse, validate the API response and to easily switch between
     the Python representation (both serialized and deserialized) and Java representation (serialized only).
+
     """
 
     @abstractmethod
     def convert_to_pandas_representation(self) -> Dict:
-        """Returns a dictionary representation to be used when creating a pandas Dataframe."""
+        """Returns a dictionary representation to be used when creating a pandas Dataframe.
+
+        Returns
+        -------
+        pandas_repr: Dict[str, Any]
+            Pandas representation of the resource as a dictionary, which is then used by the respource container
+            to create a data frame from a collection of resources.
+        """
         raise NotImplementedError  # pragma: no cover
 
     def to_dict(self, use_source_names=True):

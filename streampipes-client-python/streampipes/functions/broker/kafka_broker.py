@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 class KafkaBroker(Broker):
-    """Implementation of the NatsBroker"""
+    """Implementation of the broker for Kafka"""
 
     async def _makeConnection(self, hostname: str, port: int) -> None:
         """Helper function to connect to a server.
@@ -36,7 +36,7 @@ class KafkaBroker(Broker):
         ----------
 
         hostname: str
-            The hostname of the of the server, which the broker connects to.
+            The hostname of the server, which the broker connects to.
 
         port: int
             The port number of the connection.
@@ -65,7 +65,7 @@ class KafkaBroker(Broker):
 
         Parameters
         ----------
-         event: Dict[str, Any]
+        event: Dict[str, Any]
             The event to be published.
 
         Returns
@@ -90,7 +90,8 @@ class KafkaBroker(Broker):
 
         Returns
         -------
-        An async iterator for the messages.
+        iterator: AsyncIterator
+            An async iterator for the messages.
         """
 
         return KafkaMessageFetcher(self.kafka_consumer)
