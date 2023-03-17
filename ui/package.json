@@ -113,7 +113,7 @@
     "@types/node": "^18.14.0",
     "@types/rx": "^4.1.2",
     "@types/showdown": "1.9.4",
-    "@typescript-eslint/eslint-plugin": "5.53.0",
+    "@typescript-eslint/eslint-plugin": "5.55.0",
     "@typescript-eslint/parser": "5.54.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.0.0",
