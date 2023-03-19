@@ -42,7 +42,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.hasher.Fie
 import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
@@ -85,7 +85,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new BooleanToStateController(),
             new NumberLabelerController(),
             new StringToStateController(),
-            new StringCounterController(),
+            new StringCounterProcessor(),
             new BooleanOperatorProcessor(),
             new FiledRenameProcessor())
         .registerMessagingFormats(
