@@ -96,7 +96,8 @@ public class ResetManagement {
 
     // Remove all data in data lake
     IDataExplorerSchemaManagement dataLakeMeasureManagement = new DataExplorerSchemaManagement();
-    DataExplorerQueryManagement dataExplorerQueryManagement = new DataExplorerQueryManagement(dataLakeMeasureManagement);
+    DataExplorerQueryManagement dataExplorerQueryManagement =
+        new DataExplorerQueryManagement(dataLakeMeasureManagement);
     List<DataLakeMeasure> allMeasurements = dataLakeMeasureManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
       boolean isSuccessDataLake = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
