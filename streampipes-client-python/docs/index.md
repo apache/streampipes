@@ -23,13 +23,13 @@
    alt="StreamPipes Logo with Python" title="Apache StreamPipes Logo with Python" width="75%"/>
   <br>
 </h1>
-<h4 align="center"><a href="[StreamPipes](https://github.com/apache/streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
+<h4 align="center"><a href="https://github.com/apache/streampipes">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore IoT data streams.</h4>
 
 <br>
-<h3 align="center">Apache StreamPipes for Python</h3>
+<h3 align="center">Apache StreamPipes for Python 🐍</h3>
 
 <p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python library to interact with StreamPipes.
-In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
+In this way, we would like to unite the power of StreamPipes to easily connect to and read from different data sources, especially in the IoT domain,
 and the amazing universe of data analytics libraries in Python. </p>
 
 ---
@@ -39,12 +39,6 @@ and the amazing universe of data analytics libraries in Python. </p>
 <p align="center"><b>💡 The current version of this Python library is still a beta version.<br>
 This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.</b>
 </p>
----
-
-**🚧 Currently, we do not already version our Python documentation.
-Therefore, the provided docs always represent the development state.
-Please read our [getting started guide](./getting-started/first-steps.md) to find out how to install the development version of StreamPipes python.
-We will provide a versioned documentation as soon as possible. Stay tuned!**
 ---
 
 ## ⚡️ Quickstart
@@ -63,7 +57,7 @@ config = StreamPipesClientConfig(
         api_key = "DEMO-KEY",
         ),
     host_address = "localhost",
-    http_disabled = True,
+    https_disabled = True,
     port = 80
 )
 
@@ -97,7 +91,7 @@ Alternatively, you can provide your credentials via environment variables.
 Simply define your credential provider as follows:
 
 ```python
->>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
 StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="API-KEY")
 ```
@@ -106,4 +100,4 @@ StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="API-KEY"
 `username` is always the username that is used to log in into StreamPipes. <br>
 The `api_key` can be generated within the UI as demonstrated below:
 
-![Howto API Key](https://raw.githubusercontent.com/apache/streampipes/dev/streampipes-client-python/docs/img/how-to-get-api-key.gif)
+![Howto API Key](/img/how-to-get-api-key.gif)

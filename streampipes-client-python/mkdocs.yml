@@ -15,9 +15,14 @@
 # limitations under the License.
 #
 
-site_name: Apache StreamPipes for Python
+site_name: Apache StreamPipes Python
+site_description: Python library for Apache StreamPipes
+site_author: Apache Software Foundation (ASF)
+site_url: https://streampipes.apache.org/docs/docs/python/latest/
+
+repo_name: apache/streampipes
 repo_url: https://github.com/apache/streampipes
-edit_uri: streampipes-client-python/docs
+edit_uri: blob/dev/streampipes-client-python/docs
 
 copyright: "Apache License 2.0"
 
@@ -90,14 +95,14 @@ extra_css:
   - stylesheets/extra.css
 
 nav:
-  - Home: index.md
-  - Getting Started:
+  - 🏡 Home: index.md
+  - 🚀 Getting Started:
       - First Steps: getting-started/first-steps.md
       - Developing & Contributing: getting-started/developing.md
       - Quickstart: getting-started/quickstart.md
-  - Examples:
-      - Introduction to the StreamPipes Python Client: examples/1-introduction-to-streampipes-python-client.ipynb
-      - Extracting Data from the StreamPipes Data Lake: examples/2-extracting-data-from-the-streampipes-data-lake.ipynb
-      - Exploring Live Data from a StreamPipes Data Stream: examples/3-getting-live-data-from-the-streampipes-data-stream.ipynb
-      - Applying Online Machine Learning on a StreamPipes Data Stream: examples/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
-  - Reference: reference/*
+  - 🤓 Tutorials:
+      - Introduction to the StreamPipes Python Client: tutorials/1-introduction-to-streampipes-python-client.ipynb
+      - Extracting Data from the StreamPipes Data Lake: tutorials/2-extracting-data-from-the-streampipes-data-lake.ipynb
+      - Exploring Live Data from a StreamPipes Data Stream: tutorials/3-getting-live-data-from-the-streampipes-data-stream.ipynb
+      - Applying Online Machine Learning on a StreamPipes Data Stream: tutorials/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
+  - 📚 Reference: reference/*

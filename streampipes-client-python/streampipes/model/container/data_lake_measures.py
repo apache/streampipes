@@ -31,14 +31,10 @@ __all__ = [
 
 class DataLakeMeasures(ResourceContainer):
     """Implementation of the resource container for the data lake measures endpoint.
+
     This resource container is a collection of data lake measures returned by the StreamPipes API.
     It is capable of parsing the response content directly into a list of queried `DataLakeMeasure`.
     Furthermore, the resource container makes them accessible in a pythonic manner.
-
-    Parameters
-    ----------
-    resources: List[DataLakeMeasure]
-        A list of resources (`model.resource.DataLakeMeasure`) to be contained in the `ResourceContainer`.
 
     """
 
@@ -48,6 +44,7 @@ class DataLakeMeasures(ResourceContainer):
 
         Returns
         -------
-        DataLakeMeasure
+        type: DataLakeMeasure
+            class that describes an individual resource
         """
         return DataLakeMeasure

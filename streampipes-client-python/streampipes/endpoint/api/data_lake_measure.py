@@ -17,7 +17,7 @@
 
 """
 Specific implementation of the StreamPipes API's data lake measure endpoints.
-This endpoint allows to consume data stored in StreamPipes' data lake
+This endpoint allows to consume data stored in StreamPipes' data lake.
 """
 from datetime import datetime
 from typing import Any, Dict, Literal, Optional, Tuple, Type
@@ -40,11 +40,12 @@ class StreamPipesQueryValidationError(Exception):
 
 
 class MeasurementGetQueryConfig(BaseModel):
-    """Config class describing the parameters of the GET endpoint for measurements.
+    """Config class describing the parameters of the `get()` method for measurements.
 
     This config class is used to validate the provided query parameters for the GET endpoint of measurements.
     Additionally, it takes care of the conversion to a proper HTTP query string.
-    Thereby, parameter names are adapted to the naming of the StreamPipes API, for which Pydantic aliases are used.
+    Thereby, parameter names are adapted to the naming of the StreamPipes API,
+    for which [Pydantic aliases](https://docs.pydantic.dev/usage/model_config/#options) are used.
 
     Attributes
     ----------
@@ -160,40 +161,47 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     This endpoint provides an interfact to all data stored in the StreamPipes data lake.
 
     Consequently, it allows uerying metadata about available data sets (see `all()` method).
-    The metadata is returned as an instance of `model.container.DataLakeMeasures`.
+    The metadata is returned as an instance of [`DataLakeMeasures`][streampipes.model.container.DataLakeMeasures].
 
     In addition, the endpoint provides direct access to the data stored in the data laka by querying a
     specific data lake measure using the `get()` method.
 
-    Parameters
-    ----------
-    parent_client: StreamPipesClient
-        The instance of `client.StreamPipesClient` the endpoint is attached to.
-
     Examples
     --------
 
-    >>> from streampipes.client import StreamPipesClient
-    >>> from streampipes.client.config import StreamPipesClientConfig
-    >>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+    ```python
+    from streampipes.client import StreamPipesClient
+    from streampipes.client.config import StreamPipesClientConfig
+    from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+    ```
 
-    >>> client_config = StreamPipesClientConfig(
-    ...     credential_provider=StreamPipesApiKeyCredentials(username="test-user", api_key="api-key"),
-    ...     host_address="localhost",
-    ...     port=8082,
-    ...     https_disabled=True
-    ... )
+    ```python
+    client_config = StreamPipesClientConfig(
+        credential_provider=StreamPipesApiKeyCredentials(username="test-user", api_key="api-key"),
+        host_address="localhost",
+        port=8082,
+        https_disabled=True
+    )
+    client = StreamPipesClient.create(client_config=client_config)
+    ```
 
-    >>> client = StreamPipesClient.create(client_config=client_config)
+    ```
+    # get all existing data lake measures from StreamPipes
+    data_lake_measures = client.dataLakeMeasureApi.all()
 
-    >>> data_lake_measures = client.dataLakeMeasureApi.all()
-
-    >>> len(data_lake_measures)
+    # let's take a look how many we got
+    len(data_lake_measures)
+    ```
+    ```
     5
+    ```
 
-    Retrieve a specific data lake measure as a pandas DataFrame
-    >>> flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate").to_pandas()
-    >>> flow_rate_pd
+    ```python
+    # Retrieve a specific data lake measure as a pandas DataFrame
+    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate").to_pandas()
+    flow_rate_pd
+    ```
+    ```
                              time    density  mass_flow    sensorId  sensor_fault_flags  temperature  volume_flow
     0    2023-02-24T16:19:41.472Z  50.872730   3.309556  flowrate02               False    44.448483     5.793138
     1    2023-02-24T16:19:41.482Z  47.186588   5.608580  flowrate02               False    40.322033     0.058015
@@ -206,20 +214,30 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     997  2023-02-24T16:19:52.952Z  45.837013   7.770180  flowrate02               False    48.188026     7.892062
     998  2023-02-24T16:19:52.965Z  43.389065   4.458602  flowrate02               False    48.280899     5.733892
     999  2023-02-24T16:19:52.977Z  44.056030   2.592060  flowrate02               False    47.505951     4.260697
+    ```
 
     As you can see, the returned amount of rows per default is `1000`.
     We can modify this behavior by passing the `limit` paramter.
-    >>> flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
-    >>> len(flow_rate_pd)
+    ```python
+    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
+    len(flow_rate_pd)
+    ```
+    ```
+    10
+    ```
 
     If we are only interested in the values for `density`,
     `columns` allows us to select the columns to be returned:
-    >>> flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", columns='density', limit=3).to_pandas()
-    >>> flow_rate_pd
+    ```python
+    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", columns='density', limit=3).to_pandas()
+    flow_rate_pd
+    ```
+    ```
                            time    density
     0  2023-02-24T16:19:41.472Z  50.872730
     1  2023-02-24T16:19:41.482Z  47.186588
     2  2023-02-24T16:19:41.493Z  46.735321
+    ```
 
     This is only a subset of the available query parameters,
     find them at [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
@@ -269,23 +287,13 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
     @property
     def _container_cls(self) -> Type[ResourceContainer]:
-        """Defines the model container class the endpoint refers to.
-
-
-        Returns
-        -------
-        `model.container.DataLakeMeasures`
-        """
+        """Defines the model container class the endpoint refers to."""
         return DataLakeMeasures
 
     @property
     def _relative_api_path(self) -> Tuple[str, ...]:
         """Defines the relative api path to the DataLakeMeasurement endpoint.
         Each path within the URL is defined as an own string.
-
-        Returns
-        -------
-        A tuple of strings of which every represents a path value of the endpoint's API URL.
         """
 
         return "api", "v4", "datalake", "measurements"
@@ -294,7 +302,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         """Queries the specified data lake measure from the API.
 
         By default, the maximum number of returned records is 1000.
-        This behaviour can be influences by passing the parameter `limit` with a different value
+        This behaviour can be influenced by passing the parameter `limit` with a different value
         (see [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig]).
 
         Parameters

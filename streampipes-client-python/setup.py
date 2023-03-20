@@ -29,6 +29,12 @@ EMAIL = "dev@streampipes.apache.org"
 AUTHOR = "Apache Software Foundation"
 REQUIRES_PYTHON = ">=3.8.0"
 
+PROJECT_URLS = {
+    "Documentation": "https://streampipes.apache.org/docs/docs/python/latest/",
+    "Bug Tracker": "https://github.com/apache/streampipes/issues",
+    "Source Code": "https://github.com/apache/streampipes",
+}
+
 # Package requirements.
 base_packages = [
     "pandas>=1.5.1",
@@ -90,6 +96,7 @@ setuptools.setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
+    project_urls=PROJECT_URLS,
     packages=setuptools.find_packages(exclude=("tests",)),
     install_requires=base_packages,
     extras_require={
