@@ -33,19 +33,36 @@ __all__ = [
 ]
 
 
-def random_letters(n: int):
-    """Generates n random letters.
+def random_letters(n: int) -> str:
+    """Generates a string consisting of random letters.
 
     Parameters
     ----------
     n: int
         number of letters
+
+    Returns
+    -------
+    rand_str: str
+        String consisting of `n` random letters
     """
     return "".join(random.choice(string.ascii_letters) for _ in range(n))
 
 
 def _snake_to_camel_case(snake_case_string: str) -> str:
-    """Converts a string in snake_case format to camelCase style."""
+    """Converts a string in snake_case format to camelCase style.
+
+    Parameters
+    ----------
+    snake_case_string: str
+        string in snake_case format
+
+    Returns
+    -------
+    camel_case: str
+        The exact same string formatted as camelCase
+
+    """
 
     tokens = snake_case_string.split("_")
 

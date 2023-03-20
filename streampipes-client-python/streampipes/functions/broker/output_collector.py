@@ -22,13 +22,19 @@ from streampipes.model.resource.data_stream import DataStream
 
 
 class OutputCollector:
-    """Collector for output events.The events are published to an output data stream.
-    Therefore the output collector establishes a connection to the broker.
+    """Collector for output events. The events are published to an output data stream.
+    Therefore, the output collector establishes a connection to the broker.
 
     Parameters
     ----------
-        data_stream: DataStream
-            The output data stream that will receive the events.
+    data_stream: DataStream
+        The output data stream that will receive the events.
+
+    Attributes
+    ----------
+    broker: Broker
+        The broker instance that sends the data to StreamPipes
+
     """
 
     def __init__(self, data_stream: DataStream) -> None:
@@ -42,14 +48,24 @@ class OutputCollector:
         ----------
         event: Dict[str, Any]
             The event to be published.
+
+        Returns
+        -------
+        None
         """
         self._run_coroutine(self.broker.publish_event(event))
 
     def disconnect(self) -> None:
-        """Disconnects the broker of the output collector."""
+        """Disconnects the broker of the output collector.
+
+        Returns
+        -------
+        None
+        """
         self._run_coroutine(self.broker.disconnect())
 
-    def _run_coroutine(self, coroutine: Coroutine) -> None:
+    @staticmethod
+    def _run_coroutine(coroutine: Coroutine) -> None:
         """Run a coroutine in the event loop or create a new one if there is a running event loop.
 
         Parameters

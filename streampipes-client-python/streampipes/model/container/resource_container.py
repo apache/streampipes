@@ -17,6 +17,7 @@
 
 """
 General and abstract implementation for a resource container.
+
 A resource container is a collection of resources returned by the StreamPipes API.
 It is capable of parsing the response content directly into a list of queried resources.
 Furthermore, the resource container makes them accessible in a pythonic manner.
@@ -116,6 +117,7 @@ class StreamPipesResourceContainerJSONError(Exception):
 
 class ResourceContainer(ABC):
     """General and abstract implementation for a resource container.
+
     A resource container is a collection of resources returned by the StreamPipes API.
     It is capable of parsing the response content directly into a list of queried resources.
     Furthermore, the resource container makes them accessible in a pythonic manner.
@@ -123,7 +125,7 @@ class ResourceContainer(ABC):
     Parameters
     ----------
     resources: List[Resource]
-        A list of resources (`model.resource.Resource`) to be contained in the `ResourceContainer`.
+        A list of resources to be contained in the `ResourceContainer`.
 
     """
 
@@ -147,7 +149,8 @@ class ResourceContainer(ABC):
 
         Returns
         -------
-        model.resource.Resource
+        cls: Resource
+            class that defines the resource type contained by the container
         """
         raise NotImplementedError  # pragma: no cover
 
@@ -162,7 +165,8 @@ class ResourceContainer(ABC):
 
         Returns
         -------
-        ResourceContainer
+        container: ResourceContainer
+            instance of the container derived from the JSON definition
 
         Raises
         ------
@@ -209,7 +213,7 @@ class ResourceContainer(ABC):
 
         Returns
         -------
-        JSON string: str
+         json_string: str
             JSON representation of the resource container where key names are equal to
             keys used in the StreamPipes backend
         """
@@ -222,6 +226,7 @@ class ResourceContainer(ABC):
         Returns
         -------
         resource_container_df: pd.DataFrame
+            Representation of the resource container as pandas DataFrame
         """
         return pd.DataFrame.from_records(
             # ResourceContainer is iterable itself via __get_item__

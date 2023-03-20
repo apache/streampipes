@@ -23,6 +23,7 @@ You can install the latest development version from GitHub, as so:
 
 ```bash
 pip install streampipes
+
 # if you want to have the current development state you can also execute
 pip install git+https://github.com/apache/streampipes.git#subdirectory=streampipes-client-python
 # the corresponding documentation can be found here: https://streampipes.apache.org/docs/docs/python/dev/
@@ -32,12 +33,8 @@ pip install git+https://github.com/apache/streampipes.git#subdirectory=streampip
 When working with the StreamPipes Python library it is inevitable to have a running StreamPipes instance to connect and interact with.
 In case you don't have a running instance at hand, you can easily set up one on your local machine.
 Hereby you need to consider that StreamPipes supports different message broker (e.g., Kafka, NATS).
-Although the Python library aims to support all of them equally, we encourage you to run StreamPipes with the NATS protocol as the messaging layer.
-If you are using a different messaging broker and experience a problem, please do not hesitate to contact us.
-In case you are unsure if it is indeed a bug, please feel free to start a [discussion](https://github.com/apache/streampipes/discussions) on GitHub.
-Alternatively, file us a bug in form of a GitHub [issue](https://github.com/apache/streampipes/issues/new/choose).
+We will demonstrate below how you can easily set up StreamPipes for both supported message brokers.
 <br>
-The following shows how you can set up a StreamPipes instance that uses [NATS](https://docs.nats.io/) as messaging layer.
 
 ### 🐳 Start StreamPipes via Docker Compose
 The easiest and therefore recommend way to get StreamPipes started is by using [docker compose](https://docs.docker.com/compose/).
@@ -51,9 +48,11 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 ...            ...       ...       ...       ...       ...       ...
 ```
 Otherwise, you need to start docker first.
+Please read the full guide on how to start StreamPipes with `docker compose` [here](https://streampipes.apache.org/docs/docs/deploy-docker.html).
 
-Please read the full guide on how to start StreamPipes with `docker compose` [here](https://github.com/apache/streampipes/blob/dev/installer/compose/README.md).
-So in our scenario, we will go with `docker-compose.nats.yml` to use NATS as messaging backend. 
+#### Setup StreamPipes with NATS as message broker
+The following shows how you can set up a StreamPipes instance that uses [NATS](https://docs.nats.io/) as messaging layer.
+So in this scenario, we will go with `docker-compose.nats.yml`. 
 Thereby, when running locally, we need to add the following port mapping entry to `services.nats.ports`:
 ```yaml
 - 4222:4222
@@ -64,6 +63,18 @@ After this modification is applied, StreamPipes can simply be started with this 
 docker-compose -f docker-compose.nats.yml up -d
 ```
 
-Once all services are started, you can access StreamPipes via  `http://localhost`.
+Once all services are started, you can access StreamPipes via `http://localhost`.
+
+#### Setup StreamPipes with Kafka as message broker
+Alternatively, you can use `docker-compose.yml` to start StreamPipes with Kafka as messaging layer.
+Therefore, you onyl need to execute the following command:
+```bash
+docker-compose -f docker-compose.yml up -d
+```
+
+Once all services are started, you can access StreamPipes via `http://localhost`.
+
+In case you want to have more control over your StreamPipes setup,
+you might take a look at our [deployment CLI](https://streampipes.apache.org/docs/docs/extend-cli.html).
 
 Have fun discovering StreamPipes and our Python library 🚀

@@ -17,12 +17,12 @@
 from confluent_kafka import Consumer  # type: ignore
 
 
-class KafkaMsg:
+class KafkaMessage:
     """An internal representation of a Kafka message
 
     Parameters
     ----------
-    data: Byte Array
+    data: bytes
         The received Kafka message as byte array
     """
 
@@ -47,4 +47,4 @@ class KafkaMessageFetcher:
 
     async def __anext__(self):
         msg = self.consumer.poll(0.1)
-        return KafkaMsg(msg.value())
+        return KafkaMessage(msg.value())
