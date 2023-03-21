@@ -37,26 +37,26 @@ import ${package}.pe.${packageName}.${classNamePrefix}DataSink;
 
 public class Init extends ExtensionsModelSubmitter {
 
-  public static void main (String[] args) {
+  public static void main(String[] args) {
     new Init().init();
   }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("${package}",
-                    "human-readable service name",
-                    "human-readable service description", 8090)
-            .registerPipelineElement(new ${classNamePrefix}DataProcessor())
-            .registerPipelineElement(new ${classNamePrefix}DataSink())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+            "human-readable service name",
+            "human-readable service description", 8090)
+        .registerPipelineElement(new ${classNamePrefix}DataProcessor())
+        .registerPipelineElement(new ${classNamePrefix}DataSink())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }
