@@ -21,36 +21,48 @@
 #set( $symbol_escape = '\' )
 package ${package};
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
+import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
-import ${package}.config.Config;
+import ${package}.config.ConfigKeys;
 import ${package}.pe.sink.${packageName}.${classNamePrefix}Controller;
 
-public class Init extends StandaloneModelSubmitter {
+public class Init extends ExtensionsModelSubmitter {
 
-  public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new ${classNamePrefix}Controller());
+  public static void main(String[] args) throws Exception {
+    new Init().init();
+  }
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("${package}",
+            "Apache Flink sink",
+            "",
+            8090)
+        .registerPipelineElement(new ${classNamePrefix}Controller())
+      .registerMessagingFormats(
+        new JsonDataFormatFactory(),
+        new CborDataFormatFactory(),
+        new SmileDataFormatFactory(),
+        new FstDataFormatFactory())
+        .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new Init().init(Config.INSTANCE);
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+        .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+        .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+        .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+        .addConfig(ConfigKeys.SERVICE_NAME, "sp fft stream analytics metrics", "Data processor service name")
+        .addConfig(ConfigKeys.HOST, "${artifactId}", "Data processor host")
+        .build();
   }
 }

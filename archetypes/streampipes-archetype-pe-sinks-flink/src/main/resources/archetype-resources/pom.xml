@@ -31,22 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
-            <version>${sp.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.kafka</groupId>
-                    <artifactId>kafka_2.10</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.kafka</groupId>
-                    <artifactId>kafka-clients</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-commons</artifactId>
+            <artifactId>streampipes-service-extensions</artifactId>
             <version>${sp.version}</version>
             <exclusions>
                 <exclusion>
@@ -81,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
+            <artifactId>streampipes-sdk-bundle</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
@@ -92,46 +77,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.24</version>
+            <version>2.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-cbor</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-smile</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-fst</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-jms</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-mqtt</artifactId>
             <version>${sp.version}</version>
         </dependency>
     </dependencies>
