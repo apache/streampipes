@@ -36,6 +36,7 @@ import {
     SpExceptionDetailsDialogComponent,
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
+import { StartAllAdaptersDialogComponent } from '../../dialog/start-all-adapters/start-all-adapters-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
@@ -129,6 +130,25 @@ export class ExistingAdaptersComponent implements OnInit {
                 );
             },
         );
+    }
+
+    startAllAdapters(action: boolean) {
+        const dialogRef: DialogRef<StartAllAdaptersDialogComponent> =
+            this.dialogService.open(StartAllAdaptersDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: (action ? 'Start' : 'Stop') + ' all adapters',
+                width: '70vw',
+                data: {
+                    adapters: this.existingAdapters,
+                    action: action,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.getAdaptersRunning();
+            }
+        });
     }
 
     openAdapterStatusErrorDialog(
