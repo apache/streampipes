@@ -21,6 +21,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 import {
     AdapterDescriptionUnion,
     AdapterService,
+    AdapterStreamDescription,
 } from '@streampipes/platform-services';
 
 @Component({
@@ -33,11 +34,11 @@ export class StartAllAdaptersDialogComponent implements OnInit {
     adapters: AdapterDescriptionUnion[];
 
     adaptersToModify: AdapterDescriptionUnion[];
-    installationStatus: any;
-    installationFinished: boolean;
+    actionStatus: any;
+    actionFinished: boolean;
     page: string;
     nextButton: string;
-    installationRunning: boolean;
+    actionRunning: boolean;
 
     @Input()
     action: boolean;
@@ -47,11 +48,11 @@ export class StartAllAdaptersDialogComponent implements OnInit {
         private adapterService: AdapterService,
     ) {
         this.adaptersToModify = [];
-        this.installationStatus = [];
-        this.installationFinished = false;
+        this.actionStatus = [];
+        this.actionFinished = false;
         this.page = 'preview';
         this.nextButton = 'Next';
-        this.installationRunning = false;
+        this.actionRunning = false;
     }
 
     ngOnInit() {
@@ -71,70 +72,48 @@ export class StartAllAdaptersDialogComponent implements OnInit {
             this.close(true);
         } else {
             this.page = 'installation';
-            this.initiateInstallation(this.adaptersToModify[0], 0);
+            this.initiateAction(this.adaptersToModify[0], 0);
         }
     }
 
     getAdaptersToModify() {
         this.adapters.forEach(adapter => {
-            this.adaptersToModify.push(adapter);
+            if (
+                adapter instanceof AdapterStreamDescription &&
+                adapter.running != this.action
+            ) {
+                this.adaptersToModify.push(adapter);
+            }
         });
     }
 
-    initiateInstallation(adapter: AdapterDescriptionUnion, index) {
-        this.installationRunning = true;
-        this.installationStatus.push({
+    initiateAction(adapter: AdapterDescriptionUnion, index) {
+        this.actionRunning = true;
+        this.actionStatus.push({
             name: adapter.name,
             id: index,
             status: 'waiting',
         });
-        if (this.action) {
-            this.startAdapter(adapter, index);
-        } else {
-            this.stopAdapter(adapter, index);
-        }
+        this.runAdapterAction(adapter, index);
     }
 
-    startAdapter(adapter: AdapterDescriptionUnion, index) {
-        this.adapterService
-            .startAdapter(adapter)
+    runAdapterAction(adapter: AdapterDescriptionUnion, index) {
+        const observable = this.action
+            ? this.adapterService.startAdapter(adapter)
+            : this.adapterService.stopAdapter(adapter);
+        observable
             .subscribe(data => {
-                this.installationStatus[index].status = data.success
+                this.actionStatus[index].status = data.success
                     ? 'success'
                     : 'error';
             })
             .add(() => {
                 if (index < this.adaptersToModify.length - 1) {
                     index++;
-                    this.initiateInstallation(
-                        this.adaptersToModify[index],
-                        index,
-                    );
+                    this.initiateAction(this.adaptersToModify[index], index);
                 } else {
                     this.nextButton = 'Close';
-                    this.installationRunning = false;
-                }
-            });
-    }
-
-    stopAdapter(adapter: AdapterDescriptionUnion, index) {
-        this.adapterService
-            .stopAdapter(adapter)
-            .subscribe(data => {
-                this.installationStatus[index].status = data.success
-                    ? 'success'
-                    : 'error';
-            })
-            .add(() => {
-                if (index < this.adaptersToModify.length - 1) {
-                    index++;
-                    this.initiateInstallation(
-                        this.adaptersToModify[index],
-                        index,
-                    );
-                } else {
-                    this.nextButton = 'Close';
-                    this.installationRunning = false;
+                    this.actionRunning = false;
                 }
             });
     }

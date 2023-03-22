@@ -25,6 +25,7 @@ import {
     SpMetricsEntry,
     StreamPipesErrorMessage,
     PipelineService,
+    AdapterStreamDescription,
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
@@ -130,6 +131,19 @@ export class ExistingAdaptersComponent implements OnInit {
                 );
             },
         );
+    }
+
+    checkCurrentSelectionStatus(status) {
+        let active = true;
+        this.existingAdapters.forEach(adapter => {
+            if (
+                adapter instanceof AdapterStreamDescription &&
+                adapter.running == status
+            ) {
+                active = false;
+            }
+        });
+        return active;
     }
 
     startAllAdapters(action: boolean) {

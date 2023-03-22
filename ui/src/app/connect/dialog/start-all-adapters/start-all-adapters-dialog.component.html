@@ -40,7 +40,7 @@
                 style="padding: 20px"
                 *ngIf="page === 'installation'"
             >
-                <div *ngFor="let status of installationStatus">
+                <div *ngFor="let status of actionStatus">
                     <h4>
                         {{ action ? 'Starting adapter ' : 'Stopping adapter' }}
                         {{ status.id + 1 }} of {{ adaptersToModify.length }} ({{
@@ -72,7 +72,7 @@
             mat-button
             mat-raised-button
             color="accent"
-            [disabled]="installationRunning"
+            [disabled]="actionRunning"
             (click)="next()"
         >
             {{ nextButton }}

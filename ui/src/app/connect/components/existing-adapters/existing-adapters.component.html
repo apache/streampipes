@@ -36,11 +36,17 @@
             class="mr-10"
             mat-button
             color="accent"
+            [disabled]="checkCurrentSelectionStatus(false)"
             (click)="startAllAdapters(true)"
         >
             <mat-icon>play_arrow</mat-icon><span>Start all adapters</span>
         </button>
-        <button mat-button color="accent" (click)="startAllAdapters(false)">
+        <button
+            mat-button
+            color="accent"
+            [disabled]="checkCurrentSelectionStatus(true)"
+            (click)="startAllAdapters(false)"
+        >
             <mat-icon>stop</mat-icon>
             <span>Stop all adapters</span>
         </button>
