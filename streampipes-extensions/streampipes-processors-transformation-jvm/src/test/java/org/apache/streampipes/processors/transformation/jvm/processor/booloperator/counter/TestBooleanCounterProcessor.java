@@ -135,12 +135,12 @@ public class TestBooleanCounterProcessor {
     assertEquals(expectedBooleanCount, counter);
   }
 
-
   private Integer sendEvents(BooleanCounterProcessor booleanCounter, SpOutputCollector spOut) {
     int counter = 0;
     List<Event> events = makeEvents();
     for (Event event : events) {
-      LOG.info("Sending event with value " + event.getFieldBySelector("s0::" + invertFieldName));
+      LOG.info("Sending event with value "
+          + event.getFieldBySelector("s0::" + invertFieldName).getAsPrimitive().getAsBoolean());
       booleanCounter.onEvent(event, spOut);
       try {
         Thread.sleep(100);
