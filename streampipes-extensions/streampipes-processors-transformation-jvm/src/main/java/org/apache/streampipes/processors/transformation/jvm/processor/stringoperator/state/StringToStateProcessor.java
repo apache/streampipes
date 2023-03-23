@@ -69,11 +69,12 @@ public class StringToStateProcessor extends StreamPipesDataProcessor {
         ))
         .build();
   }
+
   @Override
   public void onInvocation(ProcessorParams parameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    log = parameters.getGraph().getLogger(StringToState.class);
+    log = parameters.getGraph().getLogger(StringToStateProcessor.class);
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.stateFields = extractor.mappingPropertyValues(STRING_STATE_FIELD);
   }
