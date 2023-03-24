@@ -124,12 +124,12 @@ public class TestBooleanInverterProcessor {
     assertEquals(expectedBooleanCount, result);
   }
 
-
   private boolean sendEvents(BooleanInverterProcessor trend, SpOutputCollector spOut) {
     boolean result = false;
     List<Event> events = makeEvents();
     for (Event event : events) {
-      LOG.info("Sending event with value " + event.getFieldBySelector("s0::" + invertFieldName));
+      LOG.info("Sending event with value "
+          + event.getFieldBySelector("s0::" + invertFieldName).getAsPrimitive().getAsBoolean());
       trend.onEvent(event, spOut);
       try {
         Thread.sleep(100);
