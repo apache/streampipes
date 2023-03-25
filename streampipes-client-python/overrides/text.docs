@@ -1,4 +1,3 @@
-├─ .icons/                             # Bundled icon sets
 ├─ assets/
 │  ├─ images/                          # Images and icons
 │  ├─ javascripts/                     # JavaScript files
