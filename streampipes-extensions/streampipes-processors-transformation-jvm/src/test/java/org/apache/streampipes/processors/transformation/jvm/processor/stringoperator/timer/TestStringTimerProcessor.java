@@ -60,9 +60,13 @@ public class TestStringTimerProcessor {
   @org.junit.runners.Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][] {
+        {"select_field", "On Input Event", "Milliseconds", List.of(""), ""},
+        {"select_field", "On Input Event", "Milliseconds", List.of("t1"), ""},
         {"select_field", "On Input Event", "Milliseconds", List.of("t1", "t1"), "t1"},
         {"select_field", "On Input Event", "Seconds", List.of("t1", "t1", "t2"), "t1"},
         {"select_field", "On Input Event", "Minutes", List.of("t1", "t2", "t3"), "t2"},
+        {"select_field", "When String Value Changes", "Milliseconds", List.of(""), ""},
+        {"select_field", "When String Value Changes", "Milliseconds", List.of("t1"), ""},
         {"select_field", "When String Value Changes", "Milliseconds", List.of("t1", "t2"), "t1"},
         {"select_field", "When String Value Changes", "Seconds", List.of("t1", "t1", "t2"), "t1"},
         {"select_field", "When String Value Changes", "Minutes", List.of("t1", "t2", "t3"), "t2"}
