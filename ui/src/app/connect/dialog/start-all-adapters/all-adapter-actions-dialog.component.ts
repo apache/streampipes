@@ -26,10 +26,10 @@ import {
 
 @Component({
     selector: 'sp-start-all-adapters-dialog',
-    templateUrl: './start-all-adapters-dialog.component.html',
-    styleUrls: ['./start-all-adapters-dialog.component.scss'],
+    templateUrl: './all-adapter-actions-dialog.component.html',
+    styleUrls: ['./all-adapter-actions-dialog.component.scss'],
 })
-export class StartAllAdaptersDialogComponent implements OnInit {
+export class AllAdapterActionsComponent implements OnInit {
     @Input()
     adapters: AdapterDescriptionUnion[];
 
@@ -44,7 +44,7 @@ export class StartAllAdaptersDialogComponent implements OnInit {
     action: boolean;
 
     constructor(
-        private dialogRef: DialogRef<StartAllAdaptersDialogComponent>,
+        private dialogRef: DialogRef<AllAdapterActionsComponent>,
         private adapterService: AdapterService,
     ) {
         this.adaptersToModify = [];
@@ -59,7 +59,7 @@ export class StartAllAdaptersDialogComponent implements OnInit {
         this.getAdaptersToModify();
         if (this.adaptersToModify.length === 0) {
             this.nextButton = 'Close';
-            this.page = 'installation';
+            this.page = 'running';
         }
     }
 
@@ -68,10 +68,10 @@ export class StartAllAdaptersDialogComponent implements OnInit {
     }
 
     next() {
-        if (this.page === 'installation') {
+        if (this.page === 'running') {
             this.close(true);
         } else {
-            this.page = 'installation';
+            this.page = 'running';
             this.initiateAction(this.adaptersToModify[0], 0);
         }
     }
