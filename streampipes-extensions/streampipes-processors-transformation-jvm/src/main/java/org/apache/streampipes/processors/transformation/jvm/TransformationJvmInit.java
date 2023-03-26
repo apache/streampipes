@@ -43,7 +43,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.mapper.Fie
 import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateController;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
 import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
@@ -84,7 +84,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new SignalEdgeFilterController(),
             new BooleanToStateController(),
             new NumberLabelerController(),
-            new StringToStateController(),
+            new StringToStateProcessor(),
             new StringCounterProcessor(),
             new BooleanOperatorProcessor(),
             new FiledRenameProcessor())
