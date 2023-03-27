@@ -114,7 +114,7 @@
     "@types/rx": "^4.1.2",
     "@types/showdown": "1.9.4",
     "@typescript-eslint/eslint-plugin": "5.55.0",
-    "@typescript-eslint/parser": "5.54.0",
+    "@typescript-eslint/parser": "5.56.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.0.0",
     "compression-webpack-plugin": "^10.0.0",
