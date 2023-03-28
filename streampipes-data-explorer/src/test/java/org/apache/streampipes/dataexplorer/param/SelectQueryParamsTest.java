@@ -137,7 +137,7 @@ public class SelectQueryParamsTest {
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0 AND"
-        +" p2 < 2.0);", query);
+        + " p2 < 2.0);", query);
   }
 
   @Test
@@ -168,7 +168,7 @@ public class SelectQueryParamsTest {
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        +" time > 1000000);", query);
+        + " time > 1000000);", query);
   }
 
   @Test
@@ -185,7 +185,7 @@ public class SelectQueryParamsTest {
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        +" time > 1000000) GROUP BY sensorId;", query);
+        + " time > 1000000) GROUP BY sensorId;", query);
   }
 
   @Test
@@ -202,7 +202,7 @@ public class SelectQueryParamsTest {
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        +" time > 1000000) GROUP BY sensorId,sensorId2;", query);
+        + " time > 1000000) GROUP BY sensorId,sensorId2;", query);
   }
 
 }
