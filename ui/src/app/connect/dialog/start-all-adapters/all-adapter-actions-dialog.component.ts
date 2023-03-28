@@ -21,7 +21,6 @@ import { DialogRef } from '@streampipes/shared-ui';
 import {
     AdapterDescriptionUnion,
     AdapterService,
-    AdapterStreamDescription,
 } from '@streampipes/platform-services';
 
 @Component({
@@ -78,10 +77,7 @@ export class AllAdapterActionsComponent implements OnInit {
 
     getAdaptersToModify() {
         this.adapters.forEach(adapter => {
-            if (
-                adapter instanceof AdapterStreamDescription &&
-                adapter.running != this.action
-            ) {
+            if (adapter.running != this.action) {
                 this.adaptersToModify.push(adapter);
             }
         });
