@@ -23,14 +23,14 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
+import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
+import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
+import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
-import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
-import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
-import org.apache.streampipes.dataexplorer.v4.query.DataExplorerQueryV4;
-import org.apache.streampipes.dataexplorer.v4.query.QueryResultProvider;
-import org.apache.streampipes.dataexplorer.v4.query.StreamedQueryResultProvider;
-import org.apache.streampipes.dataexplorer.v4.query.writer.OutputFormat;
-import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
+import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
+import org.apache.streampipes.dataexplorer.query.QueryResultProvider;
+import org.apache.streampipes.dataexplorer.query.StreamedQueryResultProvider;
+import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
@@ -55,13 +55,13 @@ public class DataExplorerQueryManagement implements IDataExplorerQueryManagement
   }
 
   @Override
-  public SpQueryResult getData(ProvidedQueryParams queryParams,
+  public SpQueryResult getData(ProvidedRestQueryParams queryParams,
                                boolean ignoreMissingData) throws IllegalArgumentException {
     return new QueryResultProvider(queryParams, ignoreMissingData).getData();
   }
 
   @Override
-  public void getDataAsStream(ProvidedQueryParams params,
+  public void getDataAsStream(ProvidedRestQueryParams params,
                               OutputFormat format,
                               boolean ignoreMissingValues,
                               OutputStream outputStream) throws IOException {
@@ -97,9 +97,9 @@ public class DataExplorerQueryManagement implements IDataExplorerQueryManagement
 
   @Override
   public SpQueryResult deleteData(String measurementID, Long startDate, Long endDate) {
-    Map<String, QueryParamsV4> queryParts =
-        DataLakeManagementUtils.getDeleteQueryParams(measurementID, startDate, endDate);
-    return new DataExplorerQueryV4(queryParts).executeQuery(true);
+    DeleteQueryParams params =
+        ProvidedRestQueryParamConverter.getDeleteQueryParams(measurementID, startDate, endDate);
+    return new DataExplorerInfluxQueryExecutor().executeQuery(params);
   }
 
   @Override

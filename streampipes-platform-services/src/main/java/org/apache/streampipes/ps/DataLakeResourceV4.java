@@ -20,8 +20,8 @@ package org.apache.streampipes.ps;
 
 import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
-import org.apache.streampipes.dataexplorer.v4.query.writer.OutputFormat;
+import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
+import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
@@ -58,24 +58,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_AGGREGATION_FUNCTION;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_AUTO_AGGREGATE;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_COLUMNS;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_COUNT_ONLY;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_CSV_DELIMITER;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_END_DATE;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_FILTER;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_FORMAT;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_GROUP_BY;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_LIMIT;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_MAXIMUM_AMOUNT_OF_EVENTS;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_MISSING_VALUE_BEHAVIOUR;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_OFFSET;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_ORDER;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_PAGE;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_START_DATE;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_TIME_INTERVAL;
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.SUPPORTED_PARAMS;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_COLUMNS;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_COUNT_ONLY;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_FILTER;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_FORMAT;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_GROUP_BY;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_OFFSET;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_PAGE;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_START_DATE;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
+import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
 
 @Path("v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
@@ -235,7 +235,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     if (!(checkProvidedQueryParams(queryParams))) {
       return badRequest();
     } else {
-      ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
+      ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
       try {
         SpQueryResult result =
             this.dataLakeManagement.getData(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
@@ -253,7 +253,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
   public Response getData(List<Map<String, String>> queryParams) {
     var results = queryParams
         .stream()
-        .map(qp -> new ProvidedQueryParams(qp.get("measureName"), qp))
+        .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))
         .map(params -> this.dataLakeManagement.getData(params, true))
         .collect(Collectors.toList());
 
@@ -321,7 +321,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     if (!(checkProvidedQueryParams(queryParams))) {
       return badRequest();
     } else {
-      ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
+      ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
       if (format == null) {
         format = "csv";
       }
@@ -353,11 +353,11 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
   }
 
-  private ProvidedQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {
+  private ProvidedRestQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();
     rawParams.forEach((key, value) -> queryParamMap.put(key, String.join(",", value)));
 
-    return new ProvidedQueryParams(measurementId, queryParamMap);
+    return new ProvidedRestQueryParams(measurementId, queryParamMap);
   }
 
   // Checks if the parameter for missing value behaviour is set

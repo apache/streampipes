@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.api;
 
-import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
-import org.apache.streampipes.dataexplorer.v4.query.writer.OutputFormat;
+import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
+import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
 import java.io.IOException;
@@ -28,10 +28,10 @@ import java.util.Map;
 
 public interface IDataExplorerQueryManagement {
 
-  SpQueryResult getData(ProvidedQueryParams queryParams,
+  SpQueryResult getData(ProvidedRestQueryParams queryParams,
                         boolean ignoreMissingData) throws IllegalArgumentException;
 
-  void getDataAsStream(ProvidedQueryParams params,
+  void getDataAsStream(ProvidedRestQueryParams params,
                        OutputFormat format,
                        boolean ignoreMissingValues,
                        OutputStream outputStream) throws IOException;
