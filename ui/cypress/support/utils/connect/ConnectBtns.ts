@@ -91,5 +91,13 @@ export class ConnectBtns {
         return cy.dataCy('start-adapter-now-checkbox');
     }
 
+    public static startAllAdapters() {
+        return cy.dataCy('start-all-adapters-btn');
+    }
+
+    public static stopAllAdapters() {
+        return cy.dataCy('stop-all-adapters-btn');
+    }
+
     // ========================================================================
 }
