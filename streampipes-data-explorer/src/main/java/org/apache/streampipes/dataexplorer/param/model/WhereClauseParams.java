@@ -18,9 +18,9 @@
 package org.apache.streampipes.dataexplorer.param.model;
 
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
+import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.querybuilder.FilterCondition;
 import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -32,7 +32,7 @@ public class WhereClauseParams implements IQueryStatement {
   private static final String GT = ">";
   private static final String LT = "<";
 
-  private List<FilterCondition> filterConditions;
+  private final List<FilterCondition> filterConditions;
 
   private WhereClauseParams(Long startTime,
                             Long endTime,

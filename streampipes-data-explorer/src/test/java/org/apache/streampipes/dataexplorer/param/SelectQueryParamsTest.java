@@ -24,6 +24,7 @@ import org.apache.streampipes.dataexplorer.utils.ProvidedQueryParameterBuilder;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -135,7 +136,8 @@ public class SelectQueryParamsTest {
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
-    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0 AND p2 < 2.0);", query);
+    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0 AND"
+        +" p2 < 2.0);", query);
   }
 
   @Test
@@ -143,7 +145,7 @@ public class SelectQueryParamsTest {
     var params = ProvidedQueryParameterBuilder.create("abc")
         .withStartDate(1)
         .withEndDate(2)
-        .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]"))
+        .withQueryColumns(List.of("[p1;MEAN;p1_mean]"))
         .build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
@@ -165,7 +167,8 @@ public class SelectQueryParamsTest {
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
-    assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND time > 1000000);", query);
+    assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
+        +" time > 1000000);", query);
   }
 
   @Test
@@ -174,14 +177,15 @@ public class SelectQueryParamsTest {
         .withStartDate(1)
         .withEndDate(2)
         .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]"))
-        .withGroupBy(Arrays.asList("sensorId"))
+        .withGroupBy(List.of("sensorId"))
         .build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
-    assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) GROUP BY sensorId;", query);
+    assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
+        +" time > 1000000) GROUP BY sensorId;", query);
   }
 
   @Test
@@ -197,7 +201,8 @@ public class SelectQueryParamsTest {
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
-    assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) GROUP BY sensorId,sensorId2;", query);
+    assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
+        +" time > 1000000) GROUP BY sensorId,sensorId2;", query);
   }
 
 }

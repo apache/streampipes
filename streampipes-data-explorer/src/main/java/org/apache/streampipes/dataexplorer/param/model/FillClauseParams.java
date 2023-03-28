@@ -31,10 +31,6 @@ public class FillClauseParams implements IQueryStatement {
     return new FillClauseParams();
   }
 
-  public String getFill() {
-    return fill;
-  }
-
   @Override
   public void buildStatement(IDataLakeQueryBuilder<?> builder) {
     builder.withFill(fill);

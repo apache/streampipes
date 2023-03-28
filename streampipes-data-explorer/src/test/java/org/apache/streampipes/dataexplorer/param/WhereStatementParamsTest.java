@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.param;
 
-import org.apache.streampipes.dataexplorer.querybuilder.FilterCondition;
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
+import org.apache.streampipes.dataexplorer.querybuilder.FilterCondition;
 
 import org.junit.Test;
 

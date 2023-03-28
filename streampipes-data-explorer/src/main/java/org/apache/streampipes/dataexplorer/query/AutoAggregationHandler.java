@@ -21,8 +21,8 @@ import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.querybuilder.DataLakeQueryOrdering;
 import org.apache.streampipes.dataexplorer.param.model.SelectColumn;
+import org.apache.streampipes.dataexplorer.querybuilder.DataLakeQueryOrdering;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
 import org.slf4j.Logger;

@@ -20,9 +20,9 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams;
-import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.dataexplorer.query.writer.ConfiguredOutputWriter;
 import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
+import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 

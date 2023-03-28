@@ -20,10 +20,10 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.dataexplorer.param.model.AggregationFunction;
 import org.apache.streampipes.dataexplorer.querybuilder.DataLakeQueryOrdering;
 import org.apache.streampipes.dataexplorer.querybuilder.FilterCondition;
 import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
-import org.apache.streampipes.dataexplorer.param.model.AggregationFunction;
 
 import org.influxdb.dto.Query;
 import org.influxdb.querybuilder.Ordering;
