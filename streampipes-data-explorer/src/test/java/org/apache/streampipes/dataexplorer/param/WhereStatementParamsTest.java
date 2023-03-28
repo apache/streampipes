@@ -29,7 +29,7 @@ public class WhereStatementParamsTest {
   @Test
   public void filterNumber() {
     WhereClauseParams result = WhereClauseParams.from("[fieldName;=;6]");
-    FilterCondition expected = new FilterCondition("fieldName", "=", "6");
+    FilterCondition expected = new FilterCondition("fieldName", "=", 6.0);
 
     assertWhereCondition(result, expected);
   }
@@ -37,7 +37,7 @@ public class WhereStatementParamsTest {
   @Test
   public void filterBoolean() {
     WhereClauseParams result = WhereClauseParams.from("[fieldName;=;true]");
-    FilterCondition expected = new FilterCondition("fieldName", "=", "true");
+    FilterCondition expected = new FilterCondition("fieldName", "=", true);
 
     assertWhereCondition(result, expected);
   }
@@ -45,7 +45,7 @@ public class WhereStatementParamsTest {
   @Test
   public void filterString() {
     WhereClauseParams result = WhereClauseParams.from("[fieldName;=;a]");
-    FilterCondition expected = new FilterCondition("fieldName", "=", "'a'");
+    FilterCondition expected = new FilterCondition("fieldName", "=", "a");
 
     assertWhereCondition(result, expected);
   }
