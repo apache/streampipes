@@ -23,6 +23,7 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import com.google.gson.JsonObject;
+import io.swagger.v3.oas.annotations.Operation;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -36,6 +37,8 @@ public class Setup extends AbstractRestResource {
   @GET
   @Path("/configured")
   @Produces(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Endpoint is used by UI to determine whether the core is running upon startup",
+      tags = {"Configurated"})
   public Response isConfigured() {
     JsonObject obj = new JsonObject();
     if (BackendConfig.INSTANCE.isConfigured()) {

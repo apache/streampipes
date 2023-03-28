@@ -53,7 +53,7 @@ export class StatusComponent implements OnInit {
     }
 
     getPipelines() {
-        this.pipelineService.getOwnPipelines().subscribe(pipelines => {
+        this.pipelineService.getPipelines().subscribe(pipelines => {
             this.pipelines = pipelines.length;
             this.runningPipelines = pipelines.filter(p => p.running).length;
         });

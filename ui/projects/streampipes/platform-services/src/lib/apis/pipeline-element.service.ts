@@ -37,7 +37,7 @@ export class PipelineElementService {
     ) {}
 
     getDataProcessors(): Observable<DataProcessorInvocation[]> {
-        return this.http.get(this.dataProcessorsUrl + '/own').pipe(
+        return this.http.get(this.dataProcessorsUrl).pipe(
             map(data => {
                 return (data as []).map(dpi =>
                     DataProcessorInvocation.fromData(dpi),
@@ -47,7 +47,7 @@ export class PipelineElementService {
     }
 
     getDataSinks(): Observable<DataSinkInvocation[]> {
-        return this.http.get(this.dataSinksUrl + '/own').pipe(
+        return this.http.get(this.dataSinksUrl).pipe(
             map(data => {
                 return (data as []).map(dpi =>
                     DataSinkInvocation.fromData(dpi),
@@ -57,7 +57,7 @@ export class PipelineElementService {
     }
 
     getDataStreams(): Observable<SpDataStream[]> {
-        return this.http.get(this.dataStreamsUrl + '/own').pipe(
+        return this.http.get(this.dataStreamsUrl).pipe(
             map(data => {
                 return (data as []).map(dpi => {
                     return SpDataStream.fromData(dpi);

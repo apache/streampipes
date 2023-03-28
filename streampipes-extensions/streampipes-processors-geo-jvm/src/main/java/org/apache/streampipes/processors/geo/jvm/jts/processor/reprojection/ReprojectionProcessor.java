@@ -32,8 +32,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.helpers.SupportedFormats;
-import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
@@ -49,7 +47,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geom-key";
   public static final String SOURCE_EPSG_KEY = "source-epsg-key";
   public static final String TARGET_EPSG_KEY = "target-epsg-key";
-  public static final String GEOM_RUNTIME = "geomWKT";
+  public static final String GEOMETRY_RUNTIME = "geometry";
   public static final String EPSG_RUNTIME = "epsg";
   private String geometryMapper;
   private String sourceEpsgMapper;
@@ -75,8 +73,6 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
             .build())
         .outputStrategy(OutputStrategies.keep())
         .requiredIntegerParameter(Labels.withId(TARGET_EPSG_KEY), 32632)
-        .supportedFormats(SupportedFormats.jsonFormat())
-        .supportedProtocols(SupportedProtocols.kafka())
         .build();
   }
 
@@ -134,7 +130,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
 
     if (!reprojected.isEmpty()) {
       event.updateFieldBySelector("s0::" + EPSG_RUNTIME, targetEpsg);
-      event.updateFieldBySelector("s0::" + GEOM_RUNTIME, reprojected.toText());
+      event.updateFieldBySelector("s0::" + GEOMETRY_RUNTIME, reprojected.toText());
 
       collector.collect(event);
     } else {

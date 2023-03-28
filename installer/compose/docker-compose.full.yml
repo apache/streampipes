@@ -69,7 +69,7 @@ services:
   ui:
     image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
     ports:
-      - "80:80"
+      - "80:8088"
     depends_on:
       - couchdb
       - consul

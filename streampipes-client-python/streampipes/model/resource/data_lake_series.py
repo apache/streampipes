@@ -48,9 +48,11 @@ class DataLakeSeries(Resource):
     which are used to parse, validate the API response and to easily switch between
     the Python representation (both serialized and deserialized) and Java representation (serialized only).
 
-    NOTE:
+    Notes
+    ------
         This class will only exist temporarily it its current appearance since
         there are some inconsistencies in the StreamPipes API.
+
     """
 
     @classmethod
@@ -76,6 +78,7 @@ class DataLakeSeries(Resource):
         StreamPipesUnsupportedDataLakeSeries
             If the data lake series returned by the StreamPipes API cannot be parsed
             with the current version of the Python client.
+
         """
 
         # deserialize JSON string
@@ -99,7 +102,7 @@ class DataLakeSeries(Resource):
 
         Returns
         -------
-        Dictionary
+        pandas_repr: dict[str, Any]
             Dictionary with the keys `headers` and `rows`
 
         """
@@ -115,7 +118,8 @@ class DataLakeSeries(Resource):
 
         Returns
         -------
-        pd.DataFrame
+        pd: pd.DataFrame
+            The data lake series in form of a pandas dataframe
         """
 
         pandas_representation = self.convert_to_pandas_representation()

@@ -41,6 +41,16 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getServiceHost() {
+    return new StringEnvironmentVariable(Envs.SP_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getServicePort() {
+    return new IntEnvironmentVariable(Envs.SP_PORT);
+  }
+
+  @Override
   public StringEnvironmentVariable getTsStorageProtocol() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_PROTOCOL);
   }
@@ -92,6 +102,81 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getCouchDbPassword() {
     return new StringEnvironmentVariable(Envs.SP_COUCHDB_PASSWORD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getClientUser() {
+    return new StringEnvironmentVariable(Envs.SP_CLIENT_USER);
+  }
+
+  @Override
+  public StringEnvironmentVariable getClientSecret() {
+    return new StringEnvironmentVariable(Envs.SP_CLIENT_SECRET);
+  }
+
+  @Override
+  public StringEnvironmentVariable getJwtSecret() {
+    return new StringEnvironmentVariable(Envs.SP_JWT_SECRET);
+  }
+
+  @Override
+  public StringEnvironmentVariable getJwtPublicKeyLoc() {
+    return new StringEnvironmentVariable(Envs.SP_JWT_PUBLIC_KEY_LOC);
+  }
+
+  @Override
+  public StringEnvironmentVariable getJwtPrivateKeyLoc() {
+    return new StringEnvironmentVariable(Envs.SP_JWT_PRIVATE_KEY_LOC);
+  }
+
+  @Override
+  public StringEnvironmentVariable getJwtSigningMode() {
+    return new StringEnvironmentVariable(Envs.SP_JWT_SIGNING_MODE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getExtensionsAuthMode() {
+    return new StringEnvironmentVariable(Envs.SP_EXT_AUTH_MODE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getEncryptionPasscode() {
+    return new StringEnvironmentVariable(Envs.SP_ENCRYPTION_PASSCODE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getKafkaRetentionTimeMs() {
+    return new StringEnvironmentVariable(Envs.SP_KAFKA_RETENTION_MS);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getSetupInstallPipelineElements() {
+    return new BooleanEnvironmentVariable(Envs.SP_SETUP_INSTALL_PIPELINE_ELEMENTS);
+  }
+
+  @Override
+  public StringEnvironmentVariable getInitialServiceUserSecret() {
+    return new StringEnvironmentVariable(Envs.SP_INITIAL_SERVICE_USER_SECRET);
+  }
+
+  @Override
+  public StringEnvironmentVariable getInitialServiceUser() {
+    return new StringEnvironmentVariable(Envs.SP_INITIAL_SERVICE_USER);
+  }
+
+  @Override
+  public StringEnvironmentVariable getInitialAdminEmail() {
+    return new StringEnvironmentVariable(Envs.SP_INITIAL_ADMIN_EMAIL);
+  }
+
+  @Override
+  public StringEnvironmentVariable getInitialAdminPassword() {
+    return new StringEnvironmentVariable(Envs.SP_INITIAL_ADMIN_PASSWORD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCoreAssetBaseDir() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_ASSET_BASE_DIR);
   }
 
   @Override

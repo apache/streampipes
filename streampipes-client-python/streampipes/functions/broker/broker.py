@@ -23,19 +23,17 @@ from streampipes.model.resource.data_stream import DataStream
 
 class Broker(ABC):
     """Abstract implementation of a broker.
-    A broker is used to subscribe to a data stream and to consume the published events.
+
+    A broker allows both to subscribe to a data stream and to publish events to a data stream.
     """
 
     async def connect(self, data_stream: DataStream) -> None:
-        """Connects the broker to a server.
+        """Connects to the broker running in StreamPipes.
 
         Parameters
         ----------
-         data_stream: DataStream
+        data_stream: DataStream
             Contains the meta information (resources) for a data stream.
-
-        host_address: str
-            The host address of the server, which the broker connects to.
 
         Returns
         -------
@@ -55,10 +53,8 @@ class Broker(ABC):
 
         Parameters
         ----------
-
         hostname: str
-            The hostname of the of the server, which the broker connects to.
-
+            The hostname of the server, which the broker connects to.
         port: int
             The port number of the connection.
 
@@ -79,12 +75,12 @@ class Broker(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    async def publish_event(self, event: Dict[str, Any]):
+    async def publish_event(self, event: Dict[str, Any]) -> None:
         """Publish an event to a connected data stream.
 
         Parameters
         ----------
-         event: Dict[str, Any]
+        event: Dict[str, Any]
             The event to be published.
 
         Returns
@@ -109,6 +105,7 @@ class Broker(ABC):
 
         Returns
         -------
-        An async iterator for the messages.
+        iterator: AsyncIterator
+            An async iterator for the messages.
         """
         raise NotImplementedError  # pragma: no cover

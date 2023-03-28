@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.user.management.jwt;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.JwtSigningMode;
 import org.apache.streampipes.config.backend.model.LocalAuthConfig;
@@ -51,9 +52,11 @@ public class JwtTokenProvider {
   public static final String CLAIM_USER = "user";
   private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
   private BackendConfig config;
+  private Environment env;
 
   public JwtTokenProvider() {
     this.config = BackendConfig.INSTANCE;
+    this.env = Environments.getEnvironment();
   }
 
   public String createToken(Authentication authentication) {
@@ -117,7 +120,7 @@ public class JwtTokenProvider {
   }
 
   private Path getKeyFilePath() {
-    return Paths.get(Envs.SP_JWT_PRIVATE_KEY_LOC.getValue());
+    return Paths.get(env.getJwtPrivateKeyLoc().getValue());
   }
 
   private LocalAuthConfig authConfig() {

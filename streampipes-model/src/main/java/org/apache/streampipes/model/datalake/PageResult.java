@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @TsModel
+@Deprecated(forRemoval = true, since = "0.92.0")
 public class PageResult extends DataSeries {
 
   private int page;

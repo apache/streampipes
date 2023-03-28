@@ -52,15 +52,9 @@ export class TimeSeriesChartWidgetComponent
         '#D466A1',
     ];
 
-    groupKeeper: {} = {};
+    groupKeeper = {};
 
     data: any[] = undefined;
-    advancedSettingsActive = false;
-    showBackgroundColorProperty = true;
-
-    selectedStartX = undefined;
-    selectedEndX = undefined;
-    n_selected_points = undefined;
 
     // this can be set to scale the line chart according to the layout
     offsetRightLineChart = 10;
@@ -160,131 +154,87 @@ export class TimeSeriesChartWidgetComponent
 
         const tmpLineChartTraces: any[] = [];
 
-        data.allDataSeries.map((group, index) => {
-            group.rows.forEach(row => {
-                this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
-                    field => {
-                        if (field.sourceIndex === data.sourceIndex) {
-                            const columnIndex = this.getColumnIndex(
-                                field,
-                                data,
-                            );
-                            const value = row[columnIndex];
-                            this.maxValue =
-                                value > this.maxValue ? value : this.maxValue;
+        let maxValue = -Infinity;
 
-                            if (
-                                !this.orderedSelectedProperties.includes(
-                                    field.fullDbName +
-                                        field.sourceIndex.toString(),
-                                )
-                            ) {
-                                this.orderedSelectedProperties.push(
-                                    field.fullDbName +
-                                        field.sourceIndex.toString(),
-                                );
-                            }
-                        }
-                    },
-                );
+        const selectedFields =
+            this.dataExplorerWidget.visualizationConfig
+                .selectedTimeSeriesChartProperties;
+        data.allDataSeries.forEach(group => {
+            group.rows.forEach(row => {
+                selectedFields.forEach(field => {
+                    if (field.sourceIndex === data.sourceIndex) {
+                        const columnIndex = this.getColumnIndex(field, data);
+                        const value = row[columnIndex];
+                        maxValue = value > maxValue ? value : maxValue;
+                    }
+                });
             });
         });
 
-        data.allDataSeries.map((group, index) => {
-            group.rows.forEach(row => {
-                this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
-                    field => {
-                        if (field.sourceIndex === data.sourceIndex) {
-                            const name =
-                                field.fullDbName + sourceIndex.toString();
-
-                            if (group['tags'] != null) {
-                                Object.entries(group['tags']).forEach(
-                                    ([key, val]) => {
-                                        if (name in this.groupKeeper) {
-                                            if (
-                                                this.groupKeeper[name].indexOf(
-                                                    val,
-                                                ) === -1
-                                            ) {
-                                                this.groupKeeper[name].push(
-                                                    val,
-                                                );
-                                            }
-                                        } else {
-                                            this.groupKeeper[name] = [val];
-                                        }
-                                    },
-                                );
-                            }
-
-                            const columnIndex = this.getColumnIndex(
-                                field,
-                                data,
+        data.allDataSeries.forEach((group, index) => {
+            for (const row of group.rows) {
+                for (const field of selectedFields) {
+                    if (field.sourceIndex === data.sourceIndex) {
+                        const columnIndex = this.getColumnIndex(field, data);
+                        const name = field.fullDbName + sourceIndex.toString();
+                        let value = row[columnIndex];
+                        const fullDbNameAndIndex =
+                            field.fullDbName + field.sourceIndex.toString();
+                        if (
+                            !this.orderedSelectedProperties.includes(
+                                fullDbNameAndIndex,
+                            )
+                        ) {
+                            this.orderedSelectedProperties.push(
+                                fullDbNameAndIndex,
                             );
-
-                            let value = row[columnIndex];
-                            if (
-                                this.fieldProvider.booleanFields.find(
-                                    f =>
-                                        field.fullDbName === f.fullDbName &&
-                                        f.sourceIndex === data.sourceIndex,
-                                ) !== undefined
-                            ) {
-                                value = value === true ? this.maxValue + 2 : 0;
-                            }
-
-                            if (
-                                !(
-                                    field.fullDbName +
-                                        sourceIndex.toString() +
-                                        index.toString() in
-                                    tmpLineChartTraces
-                                )
-                            ) {
-                                const headerName =
-                                    data.headers[
-                                        this.getColumnIndex(field, data)
-                                    ];
-                                tmpLineChartTraces[
-                                    field.fullDbName +
-                                        sourceIndex.toString() +
-                                        index.toString()
-                                ] = {
-                                    type: 'scatter',
-                                    mode: 'Line',
-                                    name: headerName,
-                                    connectgaps: false,
-                                    x: [],
-                                    y: [],
-                                };
-                            }
-
-                            tmpLineChartTraces[
-                                field.fullDbName +
-                                    sourceIndex.toString() +
-                                    index.toString()
-                            ].x.push(new Date(row[indexXkey]));
-                            tmpLineChartTraces[
-                                field.fullDbName +
-                                    sourceIndex.toString() +
-                                    index.toString()
-                            ].y.push(value);
                         }
-                    },
-                );
-            });
+
+                        const { tags } = group;
+                        if (tags != null) {
+                            const groupValues =
+                                this.groupKeeper[name] ?? new Set();
+                            for (const [key, val] of Object.entries(tags)) {
+                                groupValues.add(val);
+                            }
+                            this.groupKeeper[name] = groupValues;
+                        }
+
+                        if (
+                            this.fieldProvider.booleanFields.find(
+                                f =>
+                                    field.fullDbName === f.fullDbName &&
+                                    f.sourceIndex === data.sourceIndex,
+                            ) !== undefined
+                        ) {
+                            value = value === true ? this.maxValue + 2 : 0;
+                        }
+
+                        const traceKey = name + index.toString();
+                        const traceExists = traceKey in tmpLineChartTraces;
+
+                        if (!traceExists) {
+                            const headerName = data.headers[columnIndex];
+                            tmpLineChartTraces[traceKey] = {
+                                type: 'scatter',
+                                mode: 'Line',
+                                name: headerName,
+                                connectgaps: false,
+                                x: [],
+                                y: [],
+                            };
+                        }
+
+                        tmpLineChartTraces[traceKey].x.push(
+                            new Date(row[indexXkey]),
+                        );
+                        tmpLineChartTraces[traceKey].y.push(value);
+                    }
+                }
+            }
         });
 
         return Object.values(tmpLineChartTraces);
-    }
-
-    setStartX(startX: string) {
-        this.selectedStartX = startX;
-    }
-
-    setEndX(endX: string) {
-        this.selectedEndX = endX;
     }
 
     updateAppearance() {
@@ -565,21 +515,13 @@ export class TimeSeriesChartWidgetComponent
 
     onDataReceived(spQueryResults: SpQueryResult[]) {
         this.data = [];
-
-        // this.setShownComponents(true, false, false, false);
         this.groupKeeper = {};
 
         this.orderedSelectedProperties = [];
 
-        spQueryResults.map((spQueryResult, index) => {
-            const res = this.transformData(
-                spQueryResult,
-                spQueryResult.sourceIndex,
-            );
-            res.forEach(item => {
-                this.data = this.data.concat(item);
-            });
-        });
+        this.data = spQueryResults.flatMap(spQueryResult =>
+            this.transformData(spQueryResult, spQueryResult.sourceIndex),
+        );
 
         this.setShownComponents(false, true, false, false);
     }

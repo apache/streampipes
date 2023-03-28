@@ -14,27 +14,13 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: influx-pv
-spec:
-  storageClassName: local-storage-influx
-  capacity:
-    storage: 250Mi
-  accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
-  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
-  hostPath:
-    path: {{ .Values.hostPath }}/influxdb
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: influxdb
-  name: influxdb-pvc
+    app: {{ .Values.external.influxdb.appName }}
+  name: {{ .Values.external.influxdb.persistence.claimNameV1 }}
 spec:
-  storageClassName: local-storage-influx
+  storageClassName: {{ .Values.external.influxdb.persistence.storageClassName }}
   accessModes:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:

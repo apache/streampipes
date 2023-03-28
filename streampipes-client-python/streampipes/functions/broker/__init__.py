@@ -15,12 +15,14 @@
 # limitations under the License.
 #
 from .broker import Broker
+from .kafka_broker import KafkaBroker
 from .nats_broker import NatsBroker
 
 from .broker_handler import SupportedBroker, get_broker  # isort: skip
 
 __all__ = [
     "Broker",
+    "KafkaBroker",
     "NatsBroker",
     "SupportedBroker",
     "get_broker",

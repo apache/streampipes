@@ -89,43 +89,6 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     return PipelineManager.getAllPipelines();
   }
 
-  /**
-   * @deprecated use {@link #get()} instead.
-   */
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/own")
-  @JacksonSerialized
-  @Operation(summary = "Get all pipelines assigned to the current user",
-      tags = {"Pipeline"},
-      responses = {
-          @ApiResponse(content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
-          })})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public List<Pipeline> getOwn() {
-    return PipelineManager.getAllPipelines();
-  }
-
-  /**
-   * @deprecated use {@link #get()} instead.
-   */
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/system")
-  @JacksonSerialized
-  @Operation(summary = "Get all system pipelines assigned to the current user",
-      tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public Response getSystemPipelines() {
-    return ok(getPipelineStorage().getSystemPipelines());
-  }
-
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{pipelineId}/status")

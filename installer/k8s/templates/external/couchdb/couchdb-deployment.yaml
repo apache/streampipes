@@ -16,32 +16,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: couchdb
+  name: {{ .Values.external.couchdb.appName }}
 spec:
   selector:
     matchLabels:
-      app: couchdb
+      app: {{ .Values.external.couchdb.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: couchdb
+        app: {{ .Values.external.couchdb.appName }}
     spec:
       volumes:
-        - name: couchdb-pv
+        - name: {{ .Values.external.couchdb.persistence.pvName }}
           persistentVolumeClaim:
-            claimName: couchdb-pvc
+            claimName: {{ .Values.external.couchdb.persistence.claimName }}
       containers:
-        - name: couchdb
-          image: couchdb:{{ .Values.external.couchdbVersion }}
+        - name: {{ .Values.external.couchdb.appName }}
+          image: couchdb:{{ .Values.external.couchdb.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: COUCHDB_USER
-              value: "admin"
+              value: {{ .Values.external.couchdb.user }}
             - name: COUCHDB_PASSWORD
-              value: "admin"
+              value: {{ .Values.external.couchdb.password }}
           ports:
             - containerPort: 5984
           volumeMounts:
             - mountPath: "/opt/couchdb/data"
-              name: couchdb-pv
+              name: {{ .Values.external.couchdb.persistence.pvName }}

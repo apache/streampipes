@@ -16,24 +16,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consul
+  name: {{ .Values.external.consul.appName }}
 spec:
   selector:
     matchLabels:
-      app: consul
+      app: {{ .Values.external.consul.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: consul
+        app: {{ .Values.external.consul.appName }}
     spec:
       volumes:
-        - name: consul-pv
+        - name: {{ .Values.external.consul.persistence.pvName }}
           persistentVolumeClaim:
-            claimName: consul-pvc
+            claimName: {{ .Values.external.consul.persistence.claimName }}
       containers:
-        - name: consul
-          image: consul:{{ .Values.external.consulVersion }}
+        - name: {{ .Values.external.consul.appName }}
+          image: consul:{{ .Values.external.consul.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           command:
             - "/bin/sh"
@@ -60,4 +60,4 @@ spec:
             - containerPort: 8600
           volumeMounts:
             - mountPath: "/consul/data"
-              name: consul-pv
+              name: {{ .Values.external.consul.persistence.pvName }}

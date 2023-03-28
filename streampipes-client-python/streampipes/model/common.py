@@ -19,7 +19,10 @@
 Classes of the StreamPipes data model that are commonly shared.
 """
 
+import random
+import string
 from typing import List, Optional
+from uuid import uuid4
 
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
@@ -30,8 +33,36 @@ __all__ = [
 ]
 
 
+def random_letters(n: int) -> str:
+    """Generates a string consisting of random letters.
+
+    Parameters
+    ----------
+    n: int
+        number of letters
+
+    Returns
+    -------
+    rand_str: str
+        String consisting of `n` random letters
+    """
+    return "".join(random.choice(string.ascii_letters) for _ in range(n))
+
+
 def _snake_to_camel_case(snake_case_string: str) -> str:
-    """Converts a string in snake_case format to camelCase style."""
+    """Converts a string in snake_case format to camelCase style.
+
+    Parameters
+    ----------
+    snake_case_string: str
+        string in snake_case format
+
+    Returns
+    -------
+    camel_case: str
+        The exact same string formatted as camelCase
+
+    """
 
     tokens = snake_case_string.split("_")
 
@@ -73,17 +104,17 @@ class EventProperty(BasicModel):
     Data model of an `EventProperty` in compliance to the StreamPipes Backend.
     """
 
-    class_name: Optional[StrictStr] = Field(alias="@class")
-    element_id: Optional[StrictStr]
+    class_name: StrictStr = Field(alias="@class", default="org.apache.streampipes.model.schema.EventPropertyPrimitive")
+    element_id: StrictStr = Field(default_factory=lambda: f"sp:eventproperty:{random_letters(6)}")
     label: Optional[StrictStr]
     description: Optional[StrictStr]
     runtime_name: StrictStr
-    required: StrictBool
-    domain_properties: List[StrictStr]
-    property_scope: Optional[StrictStr]
-    index: StrictInt
+    required: StrictBool = Field(default=False)
+    domain_properties: Optional[List[StrictStr]] = Field(default_factory=list)
+    property_scope: Optional[StrictStr] = Field(default="MEASUREMENT_PROPERTY")
+    index: StrictInt = Field(default=0)
     runtime_id: Optional[StrictStr]
-    runtime_type: Optional[StrictStr]
+    runtime_type: StrictStr = Field(default="http://www.w3.org/2001/XMLSchema#string")
     measurement_unit: Optional[StrictStr]
     value_specification: Optional[ValueSpecification]
 
@@ -115,8 +146,10 @@ class TopicDefinition(BasicModel):
     Data model of a `TopicDefinition` in compliance to the StreamPipes Backend.
     """
 
-    class_name: Optional[StrictStr] = Field(alias="@class")
-    actual_topic_name: StrictStr
+    class_name: Optional[StrictStr] = Field(
+        alias="@class", default="org.apache.streampipes.model.grounding.SimpleTopicDefinition"
+    )
+    actual_topic_name: StrictStr = Field(default_factory=lambda: f"org.apache.streampipes.connect.{uuid4()}")
 
 
 class TransportProtocol(BasicModel):
@@ -124,11 +157,13 @@ class TransportProtocol(BasicModel):
     Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
     """
 
-    class_name: StrictStr = Field(alias="@class")
-    element_id: Optional[StrictStr]
-    broker_hostname: StrictStr
-    topic_definition: TopicDefinition
-    port: StrictInt = Field(alias="kafkaPort")
+    class_name: StrictStr = Field(
+        alias="@class", default="org.apache.streampipes.model.grounding.NatsTransportProtocol"
+    )
+    element_id: StrictStr = Field(default_factory=lambda: f"sp:transportprotocol:{random_letters(6)}")
+    broker_hostname: StrictStr = Field(default="nats")
+    topic_definition: TopicDefinition = Field(default_factory=TopicDefinition)
+    port: StrictInt = Field(alias="kafkaPort", default=4222)
 
 
 class TransportFormat(BasicModel):
@@ -136,7 +171,7 @@ class TransportFormat(BasicModel):
     Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
     """
 
-    rdf_type: Optional[List[Optional[StrictStr]]]
+    rdf_type: List[StrictStr] = Field(default=["http://sepa.event-processing.org/sepa#json"])
 
 
 class EventGrounding(BasicModel):
@@ -144,8 +179,8 @@ class EventGrounding(BasicModel):
     Data model of an `EventGrounding` in compliance to the StreamPipes Backend.
     """
 
-    transport_protocols: List[TransportProtocol]
-    transport_formats: Optional[List[Optional[TransportFormat]]]
+    transport_protocols: List[TransportProtocol] = Field(default_factory=lambda: [TransportProtocol()])
+    transport_formats: List[TransportFormat] = Field(default_factory=lambda: [TransportFormat()])
 
 
 class MeasurementCapability(BasicModel):

@@ -30,7 +30,7 @@ from streampipes.model.resource.function_definition import FunctionDefinition
 
 class RiverFunction(StreamPipesFunction):
     """Implementation of a StreamPipesFunction to enable an easy usage
-    for Online Machine Learning models of the River library.
+    for Online Machine Learning models of the [River library](https://riverml.xyz/).
 
     The function trains the model with the incoming events and publishes the prediction to an output data stream.
 
@@ -78,15 +78,46 @@ class RiverFunction(StreamPipesFunction):
         self.learning = True
 
     def requiredStreamIds(self) -> List[str]:
-        """Returns the the stream ids."""
+        """Returns the stream ids required by this function.
+
+        Returns
+        -------
+        stream_ids: List[str]
+            List of stream ids required by the function
+
+        """
         return self.stream_ids
 
     def onServiceStarted(self, context: FunctionContext):
-        """Executes the `on_start` function."""
+        """Executes the `on_start` method of the function.
+
+        Parameters
+        ----------
+        context: FunctionContext
+            The functions' context
+
+        Returns
+        -------
+        None
+
+        """
         self.on_start(self, context)
 
     def onEvent(self, event: Dict[str, Any], streamId: str):
-        """Trains the model with the incoming events and sends the prediction back to StreamPipes."""
+        """Trains the model with the incoming events and sends the prediction back to StreamPipes.
+
+        Parameters
+        ----------
+        event: Dict[str, Any]
+            The incoming event that serves as input for the function
+        streamId: str
+            Identifier of the corresponding data stream
+
+        Returns
+        -------
+        None
+
+        """
         self.on_event(self, event, streamId)
         output_event = {}
         if self.supervised:
@@ -111,7 +142,7 @@ class OnlineML:
     """Wrapper class to enable an easy usage for Online Machine Learning models of the River library.
 
     It creates a StreamPipesFunction to train a model with the incoming events of a data stream and
-    creates an output data stream to publishes the prediction to StreamPipes.
+    creates an output data stream that publishes the prediction to StreamPipes.
 
     Parameters
     ----------
@@ -151,7 +182,7 @@ class OnlineML:
     ):
         self.client = client
 
-        attributes = {"learning": "boolean", "prediction": prediction_type}
+        attributes = {"learning": RuntimeType.BOOLEAN.value, "prediction": prediction_type}
         if supervised:
             attributes["truth"] = prediction_type
             if target_label is None:
@@ -180,5 +211,5 @@ class OnlineML:
         self.sp_function.learning = learning
 
     def stop(self):
-        """Stops the function and ends the training for ever."""
+        """Stops the function and ends the training forever."""
         self.function_handler.disconnect()

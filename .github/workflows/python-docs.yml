@@ -16,15 +16,22 @@
 name: "build-python-docs-and-share-as-artifact"
 
 on:
+  workflow_dispatch:
   schedule:
     - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
 
 jobs:
-  python-docs:
+  python-docs-artifact-building:
     runs-on: ubuntu-latest
     steps:
       - name: clone
         uses: actions/checkout@v3
+
+      - name: create working branch & set GitHub config
+        run: |
+          git checkout -b build-python-docs-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -35,25 +42,27 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip${{ hashFiles('**/setup.py') }}
+          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/setup.py') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-doc-
 
       - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
           python -m pip install --upgrade pip
           pip install wheel
           pip install -e ".[docs]"
 
       - name: Build Python docs
+        working-directory: ./streampipes-client-python
         run: |
-          cd ./streampipes-client-python
-          make doc
+          mike deploy dev latest -u --deploy-prefix ./streampipes-client-python/docs-tmp -b build-python-docs-${{ github.run_id }}
+          mike set-default latest --deploy-prefix ./streampipes-client-python/docs-tmp -b build-python-docs-${{ github.run_id }}
+          git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
         uses: actions/upload-artifact@v3
         with:
           name: streampipes-python-docs
-          path: streampipes-client-python/site/**/*
+          path: streampipes-client-python/docs-tmp/**/*
           retention-days: 5

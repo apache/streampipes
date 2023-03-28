@@ -26,6 +26,7 @@ import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.influxdb.InfluxDB;
@@ -188,18 +189,20 @@ public class InfluxStore {
         } catch (NumberFormatException ef) {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
         }
-      } else if (XSD.FLOAT.toString().equals(runtimeType)) {
-        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
-      } else if (XSD.DOUBLE.toString().equals(runtimeType)) {
-        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
-      } else if (XSD.BOOLEAN.toString().equals(runtimeType)) {
-        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
       } else if (XSD.LONG.toString().equals(runtimeType)) {
         try {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
         } catch (NumberFormatException ef) {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
         }
+      } else if (XSD.FLOAT.toString().equals(runtimeType)) {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+      } else if (XSD.DOUBLE.toString().equals(runtimeType)) {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
+      } else if (XSD.BOOLEAN.toString().equals(runtimeType)) {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
+      } else if (SO.NUMBER.equals(runtimeType)) {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
       } else {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
       }
@@ -220,5 +223,4 @@ public class InfluxStore {
     }
     influxDb.close();
   }
-
 }

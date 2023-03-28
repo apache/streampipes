@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.service.extensions.security;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
 
 import org.slf4j.Logger;
@@ -45,9 +46,11 @@ public class WebSecurityConfig {
   private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
 
   private final UserDetailsService userDetailsService;
+  private Environment env;
 
   public WebSecurityConfig() {
     this.userDetailsService = username -> null;
+    this.env = Environments.getEnvironment();
   }
 
   @Autowired
@@ -91,14 +94,15 @@ public class WebSecurityConfig {
   }
 
   private boolean isAnonymousAccess() {
-    if (Envs.SP_EXT_AUTH_MODE.exists() && Envs.SP_EXT_AUTH_MODE.getValue().equals("AUTH")) {
-      if (Envs.SP_JWT_PUBLIC_KEY_LOC.exists()) {
+    var extAuthMode = env.getExtensionsAuthMode();
+    if (extAuthMode.exists() && extAuthMode.getValue().equals("AUTH")) {
+      if (env.getJwtPublicKeyLoc().exists()) {
         LOG.info("Configured service for authenticated access mode");
         return false;
       } else {
         LOG.warn(
             "No env variable {} provided, which is required for authenticated access. Defaulting to anonymous access.",
-            Envs.SP_JWT_PUBLIC_KEY_LOC.getEnvVariableName());
+            env.getJwtPublicKeyLoc().getEnvVariableName());
         return true;
       }
     } else {

@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
@@ -48,8 +50,8 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
         .getEventGrounding()
         .getTransportProtocol());
 
-    if ("true".equals(System.getenv("SP_DEBUG"))) {
-      modifyProtocolForDebugging();
+    if (getEnvironment().getSpDebug().getValueOrDefault()) {
+      modifyProtocolForDebugging(this.protocol);
     }
 
     TransportFormat transportFormat = adapterDescription
@@ -88,17 +90,20 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
     producer.publish(event);
   }
 
-  protected void modifyProtocolForDebugging() {
-
-  }
+  public abstract void modifyProtocolForDebugging(T transportProtocol);
 
   public void changeTransportProtocol(T transportProtocol) {
     try {
+      modifyProtocolForDebugging(transportProtocol);
       producer.disconnect();
       producer.connect(transportProtocol);
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 
 }

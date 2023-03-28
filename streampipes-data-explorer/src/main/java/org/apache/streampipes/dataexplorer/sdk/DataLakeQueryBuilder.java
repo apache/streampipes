@@ -18,12 +18,14 @@
 
 package org.apache.streampipes.dataexplorer.sdk;
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.v4.params.ColumnFunction;
 
 import org.influxdb.dto.Query;
 import org.influxdb.querybuilder.Ordering;
 import org.influxdb.querybuilder.SelectionQueryImpl;
+import org.influxdb.querybuilder.clauses.AndConjunction;
 import org.influxdb.querybuilder.clauses.Clause;
 import org.influxdb.querybuilder.clauses.ConjunctionClause;
 import org.influxdb.querybuilder.clauses.NestedClause;
@@ -38,7 +40,7 @@ import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.asc;
 import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.desc;
 import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.select;
 
-public class DataLakeQueryBuilder {
+public class DataLakeQueryBuilder implements IDataLakeQueryBuilder<Query> {
 
   private final String measurementId;
   private final SelectionQueryImpl selectionQuery;
@@ -48,29 +50,35 @@ public class DataLakeQueryBuilder {
   private int limit = Integer.MIN_VALUE;
   private int offset = Integer.MIN_VALUE;
 
+  private Environment env;
+
   private DataLakeQueryBuilder(String measurementId) {
     this.measurementId = measurementId;
     this.selectionQuery = select();
     this.whereClauses = new ArrayList<>();
     this.groupByClauses = new ArrayList<>();
+    this.env = Environments.getEnvironment();
   }
 
   public static DataLakeQueryBuilder create(String measurementId) {
     return new DataLakeQueryBuilder(measurementId);
   }
 
+  @Override
   public DataLakeQueryBuilder withSimpleColumn(String columnName) {
     this.selectionQuery.column(columnName);
 
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withSimpleColumns(List<String> columnNames) {
     columnNames.forEach(this.selectionQuery::column);
 
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withAggregatedColumn(String columnName,
                                                    ColumnFunction columnFunction,
                                                    String targetName) {
@@ -93,16 +101,19 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withStartTime(long startTime) {
     this.whereClauses.add(new SimpleClause("time", ">=", startTime * 1000000));
     return this;
   }
 
 
+  @Override
   public DataLakeQueryBuilder withEndTime(long endTime) {
     return withEndTime(endTime, true);
   }
 
+  @Override
   public DataLakeQueryBuilder withEndTime(long endTime,
                                           boolean includeEndTime) {
     String operator = includeEndTime ? "<=" : "<";
@@ -110,6 +121,7 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withTimeBoundary(long startTime,
                                                long endTime) {
     this.withStartTime(startTime);
@@ -118,6 +130,7 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withFilter(String field,
                                          String operator,
                                          Object value) {
@@ -125,26 +138,36 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withExclusiveFilter(String field,
                                                   String operator,
                                                   List<?> values) {
     List<ConjunctionClause> or = new ArrayList<>();
-    values.forEach(value -> {
-      or.add(new OrConjunction(new SimpleClause(field, operator, value)));
-    });
+    values.forEach(value -> or.add(new OrConjunction(new SimpleClause(field, operator, value))));
 
-    NestedClause nestedClause = new NestedClause(or);
-    this.whereClauses.add(nestedClause);
-
+    addNestedWhereClause(or);
     return this;
   }
 
+  @Override
+  public DataLakeQueryBuilder withInclusiveFilter(String field,
+                                                  String operator,
+                                                  List<?> values) {
+    List<ConjunctionClause> and = new ArrayList<>();
+    values.forEach(value -> and.add(new AndConjunction(new SimpleClause(field, operator, value))));
+
+    addNestedWhereClause(and);
+    return this;
+  }
+
+  @Override
   public DataLakeQueryBuilder withFilter(NestedClause clause) {
     this.whereClauses.add(clause);
 
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withGroupByTime(String timeInterval) {
 
     this.groupByClauses.add(new RawTextClause("time(" + timeInterval + ")"));
@@ -152,6 +175,7 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withGroupByTime(String timeInterval,
                                               String offsetInterval) {
 
@@ -164,6 +188,7 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withGroupBy(String column) {
 
     this.groupByClauses.add(new RawTextClause(column));
@@ -171,6 +196,7 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
     if (DataLakeQueryOrdering.ASC.equals(ordering)) {
       this.ordering = asc();
@@ -181,21 +207,24 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withLimit(int limit) {
     this.limit = limit;
 
     return this;
   }
 
+  @Override
   public DataLakeQueryBuilder withOffset(int offset) {
     this.offset = offset;
 
     return this;
   }
 
+  @Override
   public Query build() {
     var selectQuery =
-        this.selectionQuery.from(BackendConfig.INSTANCE.getInfluxDatabaseName(), "\"" + measurementId + "\"");
+        this.selectionQuery.from(env.getTsStorageBucket().getValueOrDefault(), "\"" + measurementId + "\"");
     this.whereClauses.forEach(selectQuery::where);
 
     if (this.groupByClauses.size() > 0) {
@@ -215,5 +244,10 @@ public class DataLakeQueryBuilder {
     }
 
     return selectQuery;
+  }
+
+  private void addNestedWhereClause(List<ConjunctionClause> clauses) {
+    NestedClause nestedClause = new NestedClause(clauses);
+    this.whereClauses.add(nestedClause);
   }
 }

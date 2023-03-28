@@ -103,7 +103,6 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("streams")
-        .addToPath("own");
+        .addToPath("streams");
   }
 }

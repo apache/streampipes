@@ -15,28 +15,25 @@
 # limitations under the License.
 #
 
-import random
-import string
 from enum import Enum
 from typing import Dict, Optional
-from uuid import uuid4
 
+from streampipes.model.common import EventProperty, EventSchema
 from streampipes.model.resource.data_stream import DataStream
 
 
-def random_letters(n: int):
-    """Generates n random letters.
-
-    Parameters
-    ----------
-    n: int
-        number of letters
-    """
-    return "".join(random.choice(string.ascii_letters) for _ in range(n))
-
-
 class RuntimeType(Enum):
-    """Runtime types for the attributes of a data stream."""
+    """Runtime type names for the attributes of a data stream.
+
+    Attributes
+    ----------
+    STRING
+    BOOLEAN
+    DOUBLE
+    FLOAT
+    INTEGER
+    LONG
+    """
 
     STRING = "string"
     BOOLEAN = "boolean"
@@ -58,80 +55,34 @@ def create_data_stream(name: str, attributes: Dict[str, str], stream_id: Optiona
         Name and types of the attributes.
     stream_id: str
         The id of this data stream.
+
+    Returns
+    -------
+    data_stream: DataStream
+        The created data stream
     """
-    if not stream_id:
-        stream_id = f"sp:spdatastream:{random_letters(6)}"
-    return DataStream(
-        **{
-            "@class": "org.apache.streampipes.model.SpDataStream",
-            "elementId": stream_id,
-            "dom": None,
-            "connectedTo": None,
-            "name": name,
-            "description": "",
-            "iconUrl": None,
-            "appId": None,
-            "includesAssets": False,
-            "includesLocales": False,
-            "includedAssets": [],
-            "includedLocales": [],
-            "internallyManaged": False,
-            "eventGrounding": {
-                "transportProtocols": [
-                    {
-                        "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-                        "elementId": f"sp:transportprotocol:{random_letters(6)}",
-                        "brokerHostname": "nats",
-                        "topicDefinition": {
-                            "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                            "actualTopicName": f"org.apache.streampipes.connect.{uuid4()}",
-                        },
-                        "port": 4222,
-                    }
-                ],
-                "transportFormats": [{"rdfType": ["http://sepa.event-processing.org/sepa#json"]}],
-            },
-            "eventSchema": {
-                "eventProperties": [
-                    {
-                        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
-                        "elementId": f"sp:eventproperty:{random_letters(6)}",
-                        "label": "timestamp",
-                        "description": None,
-                        "runtimeName": "timestamp",
-                        "required": False,
-                        "domainProperties": ["http://schema.org/DateTime"],
-                        "propertyScope": "HEADER_PROPERTY",
-                        "index": 0,
-                        "runtimeId": None,
-                        "runtimeType": "http://www.w3.org/2001/XMLSchema#long",
-                        "measurementUnit": None,
-                        "valueSpecification": None,
-                    }
-                ]
-                + [
-                    {
-                        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
-                        "elementId": f"sp:eventproperty:{random_letters(6)}",
-                        "label": attribute_name,
-                        "description": None,
-                        "runtimeName": attribute_name,
-                        "required": False,
-                        "domainProperties": [],
-                        "propertyScope": "MEASUREMENT_PROPERTY",
-                        "index": i,
-                        "runtimeId": None,
-                        "runtimeType": f"http://www.w3.org/2001/XMLSchema#{attribute_type}",
-                        "measurementUnit": None,
-                        "valueSpecification": None,
-                    }
-                    for i, (attribute_name, attribute_type) in enumerate(attributes.items(), start=1)
-                ]
-            },
-            "category": None,
-            "index": 0,
-            "correspondingAdapterId": None,
-            "uri": stream_id,
-            "_rev": None,
-        }
+
+    event_schema = EventSchema(
+        event_properties=[
+            EventProperty(  # type: ignore
+                label="timestamp",
+                runtime_name="timestamp",
+                domain_properties=["http://schema.org/DateTime"],
+                property_scope="HEADER_PROPERTY",
+                runtime_type="http://www.w3.org/2001/XMLSchema#long",
+            )
+        ]
+        + [
+            EventProperty(  # type: ignore
+                label=attribute_name,
+                runtime_name=attribute_name,
+                index=i,
+                runtime_type=f"http://www.w3.org/2001/XMLSchema#{attribute_type}",
+            )
+            for i, (attribute_name, attribute_type) in enumerate(attributes.items(), start=1)
+        ]
     )
+
+    if not stream_id:
+        return DataStream(name=name, event_schema=event_schema)
+    return DataStream(element_id=stream_id, name=name, event_schema=event_schema)

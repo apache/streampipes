@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.user.management.encryption;
 
-import org.apache.streampipes.commons.constants.DefaultEnvValues;
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environments;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
@@ -36,11 +35,11 @@ public class SecretEncryptionManager {
   }
 
   private static StringEncryptor getEncryptor() {
+    var env = Environments.getEnvironment();
     StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-    encryptor.setPassword(Envs.SP_ENCRYPTION_PASSCODE.getValueOrDefault(DefaultEnvValues.DEFAULT_ENCRYPTION_PASSCODE));
+    encryptor.setPassword(env.getEncryptionPasscode().getValueOrDefault());
     encryptor.setIvGenerator(new RandomIvGenerator());
 
     return encryptor;
-
   }
 }

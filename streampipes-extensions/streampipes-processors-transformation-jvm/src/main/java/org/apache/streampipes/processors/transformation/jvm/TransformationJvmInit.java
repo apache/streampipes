@@ -29,9 +29,9 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
@@ -42,9 +42,9 @@ import org.apache.streampipes.processors.transformation.jvm.processor.hasher.Fie
 import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateController;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerController;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
 import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
 import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanController;
@@ -70,8 +70,8 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new CalculateDurationController(),
             new ChangedValueDetectionController(),
             new TimestampExtractorController(),
-            new BooleanCounterController(),
-            new BooleanInverterController(),
+            new BooleanCounterProcessor(),
+            new BooleanInverterProcessor(),
             new BooleanTimekeepingController(),
             new BooleanTimerController(),
             new CsvMetadataEnrichmentController(),
@@ -80,12 +80,12 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new MeasurementUnitConverterProcessor(),
             new TaskDurationController(),
             new TransformToBooleanController(),
-            new StringTimerController(),
+            new StringTimerProcessor(),
             new SignalEdgeFilterController(),
             new BooleanToStateController(),
             new NumberLabelerController(),
-            new StringToStateController(),
-            new StringCounterController(),
+            new StringToStateProcessor(),
+            new StringCounterProcessor(),
             new BooleanOperatorProcessor(),
             new FiledRenameProcessor())
         .registerMessagingFormats(

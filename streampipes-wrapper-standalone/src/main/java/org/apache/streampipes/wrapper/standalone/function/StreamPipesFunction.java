@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.wrapper.standalone.function;
 
-import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.declarer.IFunctionConfig;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
@@ -158,8 +159,9 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
 
   private Map<String, SpInputCollector> getInputCollectors(Collection<SpDataStream> streams) throws SpRuntimeException {
     Map<String, SpInputCollector> inputCollectors = new HashMap<>();
+    var env = getEnvironment();
     for (SpDataStream is : streams) {
-      if (Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()) {
+      if (env.getSpDebug().getValueOrDefault()) {
         GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
       }
       inputCollectors.put(is.getElementId(), ProtocolManager.findInputCollector(is.getEventGrounding()
@@ -191,6 +193,10 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
 
   private SchemaInfo createSchemaInfo(EventSchema eventSchema) {
     return new SchemaInfo(eventSchema, new ArrayList<>());
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 
   public abstract IFunctionConfig getFunctionConfig();
