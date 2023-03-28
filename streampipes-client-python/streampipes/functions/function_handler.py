@@ -31,7 +31,8 @@ logger = logging.getLogger(__name__)
 
 
 class FunctionHandler:
-    """The function handler manages the StreamPipesFunctions.
+    """The function handler manages the StreamPipes Functions.
+
     It controls the connection to the brokers, starts the functions, manages the broadcast of the live data
     and is able to stop the connection to the brokers and functions.
 
@@ -41,6 +42,13 @@ class FunctionHandler:
         The registration, that contains the StreamPipesFunctions.
     client: StreamPipesClient
         The client to interact with the API.
+
+    Attributes
+    ----------
+    stream_contexts: Dict[str, DataStreamContext]
+        Map of all data stream contexts
+    brokers: List[Broker]
+        List of all registered brokers
     """
 
     def __init__(self, registration: Registration, client: StreamPipesClient) -> None:
@@ -50,7 +58,7 @@ class FunctionHandler:
         self.brokers: List[Broker] = []
 
     def initializeFunctions(self) -> None:
-        """Creates the context for every data stream and starts the event loop to manage the StreamPipesFunctions.
+        """Creates the context for every data stream and starts the event loop to manage the StreamPipes Functions.
 
         Returns
         -------
@@ -149,7 +157,7 @@ class FunctionHandler:
         -------
         None
 
-        Raises
+        Warns
         ------
         UserWarning
             If there is a running event loop and the functions should be stopped by disconnecting from the broker.
@@ -164,7 +172,7 @@ class FunctionHandler:
             )
 
     def disconnect(self) -> None:
-        """Disconnects from the brokers and stops the functions.
+        """Disconnects from the brokers and stops all functions.
 
         Returns
         -------

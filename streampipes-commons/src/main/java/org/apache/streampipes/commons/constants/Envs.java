@@ -22,6 +22,8 @@ public enum Envs {
   SP_HOST("SP_HOST"),
   SP_PORT("SP_PORT"),
 
+  SP_CORE_ASSET_BASE_DIR("SP_CORE_ASSET_BASE_DIR"),
+
   @Deprecated(since = "0.90.0", forRemoval = true)
   SP_CONSUL_LOCATION("CONSUL_LOCATION",
       DefaultEnvValues.CONSUL_HOST_DEFAULT,

@@ -17,6 +17,7 @@
 
 """
 General and abstract implementation for a resource container.
+
 A resource container is a collection of resources returned by the StreamPipes API.
 It is capable of parsing the response content directly into a list of queried resources.
 Furthermore, the resource container makes them accessible in a pythonic manner.
@@ -67,7 +68,7 @@ class StreamPipesDataModelError(Exception):
             f"\nOops, there seems to be a problem with our internal StreamPipes data model.\n"
             f"This should not occur, but unfortunately did.\n"
             f"Therefore, it would be great if you could report this problem as an issue at "
-            f"github.com/apache/streampipes.\n"
+            f"https://github.com/apache/streampipes.\n"
             f"Please don't forget to include the following information:\n\n"
             f"Affected Model class: {str(self.validation_error.model)}\n"
             f"Validation error log: {self.validation_error.json()}"
@@ -107,7 +108,7 @@ class StreamPipesResourceContainerJSONError(Exception):
             f"\nOops, there seems to be a problem when parsing the response of the StreamPipes API."
             f"This should not occur, but unfortunately did.\n"
             f"Therefore, it would be great if you could report this problem as an issue at "
-            f"github.com/apache/streampipes.\n"
+            f"https://github.com/apache/streampipes.\n"
             f"Please don't forget to include the following information:\n\n"
             f"Affected container class: {str(self.container_name)}\n"
             f"JSON string: {self.json_string}"
@@ -116,6 +117,7 @@ class StreamPipesResourceContainerJSONError(Exception):
 
 class ResourceContainer(ABC):
     """General and abstract implementation for a resource container.
+
     A resource container is a collection of resources returned by the StreamPipes API.
     It is capable of parsing the response content directly into a list of queried resources.
     Furthermore, the resource container makes them accessible in a pythonic manner.
@@ -123,7 +125,7 @@ class ResourceContainer(ABC):
     Parameters
     ----------
     resources: List[Resource]
-        A list of resources (`model.resource.Resource`) to be contained in the `ResourceContainer`.
+        A list of resources to be contained in the `ResourceContainer`.
 
     """
 
@@ -147,7 +149,8 @@ class ResourceContainer(ABC):
 
         Returns
         -------
-        model.resource.Resource
+        cls: Resource
+            class that defines the resource type contained by the container
         """
         raise NotImplementedError  # pragma: no cover
 
@@ -162,7 +165,8 @@ class ResourceContainer(ABC):
 
         Returns
         -------
-        ResourceContainer
+        container: ResourceContainer
+            instance of the container derived from the JSON definition
 
         Raises
         ------
@@ -209,7 +213,7 @@ class ResourceContainer(ABC):
 
         Returns
         -------
-        JSON string: str
+         json_string: str
             JSON representation of the resource container where key names are equal to
             keys used in the StreamPipes backend
         """
@@ -222,6 +226,7 @@ class ResourceContainer(ABC):
         Returns
         -------
         resource_container_df: pd.DataFrame
+            Representation of the resource container as pandas DataFrame
         """
         return pd.DataFrame.from_records(
             # ResourceContainer is iterable itself via __get_item__

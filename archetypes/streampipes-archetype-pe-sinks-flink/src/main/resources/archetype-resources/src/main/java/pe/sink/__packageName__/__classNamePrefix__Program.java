@@ -21,12 +21,16 @@
 #set( $symbol_escape = '\' )
 package ${package}.pe.sink.${packageName};
 
-import ${package}.config.Config;
+import ${package}.config.ConfigKeys;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
+
+import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.io.Serializable;
 
@@ -36,15 +40,20 @@ implements Serializable {
   private static final long serialVersionUID = 1L;
   private final ${classNamePrefix}Parameters params;
 
-  public ${classNamePrefix}Program(${classNamePrefix}Parameters params, boolean debug) {
-    super(params, debug);
+  public ${classNamePrefix}Program(${classNamePrefix}Parameters params,
+                                  ConfigExtractor configExtractor,
+                                  StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
     this.params = params;
   }
 
   @Override
-  protected FlinkDeploymentConfig getDeploymentConfig() {
-    return new FlinkDeploymentConfig(Config.JAR_FILE,
-            Config.INSTANCE.getFlinkHost(), Config.INSTANCE.getFlinkPort());
+  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
+    SpConfig config = configExtractor.getConfig();
+    return new FlinkDeploymentConfig(config.getString(ConfigKeys.FLINK_JAR_FILE_LOC),
+    config.getString(ConfigKeys.FLINK_HOST),
+    config.getInteger(ConfigKeys.FLINK_PORT),
+    config.getBoolean(ConfigKeys.DEBUG));
   }
 
   @Override

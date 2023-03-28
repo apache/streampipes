@@ -37,53 +37,73 @@ logger = logging.getLogger(__name__)
 
 class StreamPipesClient:
     """The client to connect to StreamPipes.
+
     This is the central point of contact with StreamPipes and
     provides all the functionalities to interact with it.
 
     The client provides so-called "endpoints" each of which refers to
     an endpoint of the StreamPipes API, e.g. `.dataLakeMeasureApi`.
-    An endpoint provides the actual methods to interact with StreamPipes
-    API (see endpoint.endpoint.APIEndpoint).
+    An [endpoint][streampipes.endpoint.endpoint] provides the actual methods to interact with StreamPipes
+    API.
 
     Parameters
     ----------
     client_config: StreamPipesClientConfig
         Configures the client to connect properly to the StreamPipes instance.
     logging_level: Optional[int]
-        Influences the log messages emitted by the `StreamPipesClient`.
+        Influences the log messages emitted by the `StreamPipesClient`
+
+    Attributes
+    ----------
+    dataLakeMeasureApi: DataLakeMeasureEndpoint
+        Instance of the data lake measure endpoint
+    dataStreamApi: DataStreamEndpoint
+        Instance of the data stream endpoint
 
     Examples
     --------
 
-    >>> from streampipes.client import StreamPipesClient
-    >>> from streampipes.client.config import StreamPipesClientConfig
-    >>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+    ```python
+    from streampipes.client import StreamPipesClient
+    from streampipes.client.config import StreamPipesClientConfig
+    from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+    ```
 
-    >>> client_config = StreamPipesClientConfig(
-    ...     credential_provider=StreamPipesApiKeyCredentials(
-    ...         username="test-user",
-    ...         api_key="api-key"
-    ...     ),
-    ...     host_address="localhost",
-    ...     https_disabled=True
-    ... )
+    ```python
+    client_config = StreamPipesClientConfig(
+        credential_provider=StreamPipesApiKeyCredentials(
+             username="test-user",
+             api_key="api-key"
+         ),
+         host_address="localhost",
+         https_disabled=True
+    )
+    ```
 
     The following way of instantiating a client instance is
     intended to be consistent with the StreamPipes Java client.
-    >>> client = StreamPipesClient.create(client_config=client_config)
+    ```python
+    client = StreamPipesClient.create(client_config=client_config)
+    ```
 
     If you prefer a more pythonic way, you can simply write:
-    >>> client = StreamPipesClient(client_config=client_config)
+    ```python
+    client = StreamPipesClient(client_config=client_config)
+    ```
 
     To interact with an endpoint:
-    >>> data_lake_measures = client.dataLakeMeasureApi.all()
+    ```python
+    data_lake_measures = client.dataLakeMeasureApi.all()
+    ```
 
     To inspect returned data as a pandas dataframe:
-    >>> data_lake_measures.to_pandas()
+    ```python
+    data_lake_measures.to_pandas()
     #
     #     measure_name timestamp_field  ... pipeline_is_running num_event_properties
     # 0           test   s0::timestamp  ...               False                    2
     # [1 rows x 6 columns]
+    ```
 
     """
 
@@ -99,7 +119,8 @@ class StreamPipesClient:
         self.request_session = Session()
         self.request_session.headers.update(self.http_headers)
 
-        self._set_up_logging(logging_level=logging_level)  # type: ignore
+        self.logging_level = logging_level
+        self._set_up_logging(logging_level=self.logging_level)  # type: ignore
 
         # provide all available endpoints here
         # name of the endpoint needs to be consistent with the Java client
@@ -134,7 +155,8 @@ class StreamPipesClient:
         logging_level: int = logging.INFO,
     ) -> StreamPipesClient:
         """Returns an instance of the `StreamPipesPythonClient`.
-        Provides consistency to the Java client.
+
+        Provides consistency to the StreamPipes Java client.
 
         Parameters
         ----------
@@ -151,13 +173,15 @@ class StreamPipesClient:
 
     @property
     def http_headers(self) -> Dict[str, str]:
-        """Returns the HTTP headers required for all requests.
+        """Returns the HTTP headers used for all requests.
+
         The HTTP headers are composed of the authentication headers supplied by the credential
         provider and additional required headers (currently this is only the application header).
 
         Returns
         -------
-        Dictionary with header information as string key-value pairs.
+        http_headers: Dict[str, str]
+            header information for HTTP requests as string key-value pairs.
         """
 
         # create HTTP headers from credential provider and add additional headers needed
@@ -171,7 +195,8 @@ class StreamPipesClient:
 
         Returns
         -------
-        str of the basic API URL
+        base_api_path: str
+            basic API path of the connected StreamPipes instance
         """
         return (
             f"{'http://' if self.client_config.https_disabled else 'https://'}"
@@ -180,11 +205,26 @@ class StreamPipesClient:
         )
 
     def describe(self) -> None:
-        """Prints short description of the connected StreamPipes instance and the available resources to the console.
+        """Prints a short description of the connected StreamPipes instance and the available resources to the console.
 
         Returns
         -------
             None
+
+        Examples
+        --------
+
+        ```python
+        client.describe()
+        ```
+        Output:
+        ```
+        Hi there!
+        You are connected to a StreamPipes instance running at http://localhost:80.
+        The following StreamPipes resources are available with this client:
+        6x DataStreams
+        1x DataLakeMeasures
+        ```
         """
 
         # get all endpoints of this client

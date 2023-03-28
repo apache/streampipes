@@ -100,4 +100,6 @@ public interface Environment {
   StringEnvironmentVariable getInitialAdminEmail();
 
   StringEnvironmentVariable getInitialAdminPassword();
+
+  StringEnvironmentVariable getCoreAssetBaseDir();
 }

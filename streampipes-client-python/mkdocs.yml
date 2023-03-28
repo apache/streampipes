@@ -15,9 +15,14 @@
 # limitations under the License.
 #
 
-site_name: Apache StreamPipes for Python
+site_name: Apache StreamPipes Python
+site_description: Python library for Apache StreamPipes
+site_author: Apache Software Foundation (ASF)
+site_url: https://streampipes.apache.org/docs/docs/python/latest/
+
+repo_name: apache/streampipes
 repo_url: https://github.com/apache/streampipes
-edit_uri: "https://github.com/apache/streampipes"
+edit_uri: blob/dev/streampipes-client-python/docs
 
 copyright: "Apache License 2.0"
 
@@ -28,15 +33,34 @@ theme:
   custom_dir: docs/overrides
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
   font: false
+  palette:
+
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 extra:
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/apache/streampipes
+  analytics:
+    provider: matomo
+  homepage: https://streampipes.apache.org/
+  version:
+    provider: mike
 
 # Extensions
 markdown_extensions:
@@ -51,8 +75,8 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.highlight:
-        use_pygments: true
-        pygments_lang_class: true
+      use_pygments: true
+      pygments_lang_class: true
 
 plugins:
   - awesome-pages
@@ -71,19 +95,27 @@ plugins:
             docstring_section_style: spacy
             show_source: False
             merge_init_into_class: True
+  - mike:
+      canonical_version: 'latest'
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
+  - search:
+      lang:
+        - en
 
 extra_css:
   - stylesheets/extra.css
 
 nav:
-    - Home: index.md
-    - Getting Started:
-        - First Steps: getting-started/first-steps.md
-        - Developing & Contributing: getting-started/developing.md
-        - Quickstart: getting-started/quickstart.md
-    - Examples:
-        - Introduction to the StreamPipes Python Client: examples/1-introduction-to-streampipes-python-client.ipynb
-        - Extracting Data from the StreamPipes Data Lake: examples/2-extracting-data-from-the-streampipes-data-lake.ipynb
-        - Exploring Live Data from a StreamPipes Data Stream: examples/3-getting-live-data-from-the-streampipes-data-stream.ipynb
-        - Applying Online Machine Learning on a StreamPipes Data Stream: examples/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
-    - Reference: reference/*
+  - 🏡 Home: index.md
+  - 🚀 Getting Started:
+      - First Steps: getting-started/first-steps.md
+      - Developing & Contributing: getting-started/developing.md
+      - Quickstart: getting-started/quickstart.md
+  - 🤓 Tutorials:
+      - Introduction to the StreamPipes Python Client: tutorials/1-introduction-to-streampipes-python-client.ipynb
+      - Extracting Data from the StreamPipes Data Lake: tutorials/2-extracting-data-from-the-streampipes-data-lake.ipynb
+      - Exploring Live Data from a StreamPipes Data Stream: tutorials/3-getting-live-data-from-the-streampipes-data-stream.ipynb
+      - Applying Online Machine Learning on a StreamPipes Data Stream: tutorials/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
+  - 📚 Reference: reference/*

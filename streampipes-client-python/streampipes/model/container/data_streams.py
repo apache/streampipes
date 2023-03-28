@@ -31,14 +31,10 @@ __all__ = [
 
 class DataStreams(ResourceContainer):
     """Implementation of the resource container for the data stream endpoint.
+
     This resource container is a collection of data streams returned by the StreamPipes API.
     It is capable of parsing the response content directly into a list of queried `DataStream`.
     Furthermore, the resource container makes them accessible in a pythonic manner.
-
-    Parameters
-    ----------
-    resources: List[DataStream]
-        A list of resources (`model.resource.DataStream`) to be contained in the `ResourceContainer`.
 
     """
 
@@ -48,6 +44,7 @@ class DataStreams(ResourceContainer):
 
         Returns
         -------
-        DataStream
+        type: DataStream
+            class that defines the contained resource
         """
         return DataStream

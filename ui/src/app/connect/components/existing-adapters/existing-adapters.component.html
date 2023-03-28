@@ -32,12 +32,32 @@
         >
             <i class="material-icons">add</i>&nbsp;New adapter
         </button>
-        <sp-connect-filter-toolbar
-            class="filter-bar-margin"
-            (filterChangedEmitter)="applyFilter($event)"
+        <button
+            class="mr-10"
+            mat-button
+            color="accent"
+            data-cy="start-all-adapters-btn"
+            [disabled]="checkCurrentSelectionStatus(false)"
+            (click)="startAllAdapters(true)"
         >
-        </sp-connect-filter-toolbar>
+            <mat-icon>play_arrow</mat-icon><span>Start all adapters</span>
+        </button>
+        <button
+            mat-button
+            color="accent"
+            data-cy="stop-all-adapters-btn"
+            [disabled]="checkCurrentSelectionStatus(true)"
+            (click)="startAllAdapters(false)"
+        >
+            <mat-icon>stop</mat-icon>
+            <span>Stop all adapters</span>
+        </button>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+            <sp-connect-filter-toolbar
+                class="filter-bar-margin"
+                (filterChangedEmitter)="applyFilter($event)"
+            >
+            </sp-connect-filter-toolbar>
             <button
                 mat-button
                 mat-icon-button

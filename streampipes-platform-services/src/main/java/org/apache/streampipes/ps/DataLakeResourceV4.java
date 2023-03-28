@@ -22,7 +22,6 @@ import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.query.writer.OutputFormat;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
-import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -40,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -93,18 +91,6 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     this.dataLakeManagement = dataLakeManagement;
   }
 
-
-  @POST
-  @Path("/configuration")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Configure the parameters of the data lake", tags = {"Data Lake"},
-      responses = {@ApiResponse(responseCode = "200", description = "Configuration was successful")})
-  public Response configureMeasurement(
-      @Parameter(in = ParameterIn.QUERY, description = "should any parameter be reset to its default value?")
-      @DefaultValue("false") @QueryParam("resetToDefault") boolean resetToDefault,
-      @Parameter(in = ParameterIn.DEFAULT, description = "the configuration parameters") DataLakeConfiguration config) {
-    return ok(this.dataLakeManagement.editMeasurementConfiguration(config, resetToDefault));
-  }
 
   @DELETE
   @Path("/measurements/{measurementID}")
@@ -347,22 +333,6 @@ public class DataLakeResourceV4 extends AbstractRestResource {
           header("Content-Disposition", "attachment; filename=\"datalake." + outputFormat + "\"")
           .build();
     }
-  }
-
-
-  @GET
-  @Path("/configuration")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Get the configuration parameters of the data lake", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "configuration parameters",
-              content = @Content(schema = @Schema(implementation = DataLakeConfiguration.class)))})
-  public Response getMeasurementConfiguration(
-      @Parameter(in = ParameterIn.QUERY, description = "the id of a specific configuration parameter")
-      @QueryParam("parameterID") String parameterID) {
-    return ok(this.dataLakeManagement.getDataLakeConfiguration());
   }
 
   @DELETE

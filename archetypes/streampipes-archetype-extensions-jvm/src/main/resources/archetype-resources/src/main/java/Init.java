@@ -21,42 +21,42 @@
 #set( $symbol_escape = '\' )
 package ${package};
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 import ${package}.pe.${packageName}.${classNamePrefix}DataProcessor;
 import ${package}.pe.${packageName}.${classNamePrefix}DataSink;
 
 public class Init extends ExtensionsModelSubmitter {
 
-  public static void main (String[] args) {
+  public static void main(String[] args) {
     new Init().init();
   }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("${package}",
-                    "human-readable service name",
-                    "human-readable service description", 8090)
-            .registerPipelineElement(new ${classNamePrefix}DataProcessor())
-            .registerPipelineElement(new ${classNamePrefix}DataSink())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+            "human-readable service name",
+            "human-readable service description", 8090)
+        .registerPipelineElement(new ${classNamePrefix}DataProcessor())
+        .registerPipelineElement(new ${classNamePrefix}DataSink())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

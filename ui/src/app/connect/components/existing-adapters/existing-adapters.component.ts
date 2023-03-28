@@ -25,6 +25,7 @@ import {
     SpMetricsEntry,
     StreamPipesErrorMessage,
     PipelineService,
+    AdapterStreamDescription,
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
@@ -36,6 +37,7 @@ import {
     SpExceptionDetailsDialogComponent,
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
+import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
@@ -129,6 +131,38 @@ export class ExistingAdaptersComponent implements OnInit {
                 );
             },
         );
+    }
+
+    checkCurrentSelectionStatus(status) {
+        let active = true;
+        this.existingAdapters.forEach(adapter => {
+            if (
+                adapter instanceof AdapterStreamDescription &&
+                adapter.running == status
+            ) {
+                active = false;
+            }
+        });
+        return active;
+    }
+
+    startAllAdapters(action: boolean) {
+        const dialogRef: DialogRef<AllAdapterActionsComponent> =
+            this.dialogService.open(AllAdapterActionsComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: (action ? 'Start' : 'Stop') + ' all adapters',
+                width: '70vw',
+                data: {
+                    adapters: this.existingAdapters,
+                    action: action,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.getAdaptersRunning();
+            }
+        });
     }
 
     openAdapterStatusErrorDialog(

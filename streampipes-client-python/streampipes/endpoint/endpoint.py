@@ -18,7 +18,7 @@
 """
 General implementation for an endpoint.
 Provided classes and assets are aimed to be used for developing endpoints.
-An endpoint is provides all options to communicate with a central endpoint of the StreamPipes API in a handy way.
+An endpoint provides all options to communicate with ad dedicated part of StreamPipes in a handy way.
 """
 
 import json
@@ -54,14 +54,14 @@ _error_code_to_message = {
         "\nOops, there seems to be an issue with the Python Client calling the API inappropriately.\n"
         "This should not happen, but unfortunately did.\n"
         "If you don't mind, it would be awesome to let us know by creating an issue"
-        " at github.com/apache/streampipes.\n"
+        " at https://github.com/apache/streampipes.\n"
         "Please paste the following information to the issue description:\n\n",
     ),
 }
 
 
 class Endpoint(ABC):
-    """Abstract implementation of an StreamPipes endpoint.
+    """Abstract implementation of a StreamPipes endpoint.
 
     Serves as template for all endpoints used for interaction with a StreamPipes instance.
     By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
@@ -69,7 +69,7 @@ class Endpoint(ABC):
     Parameters
     ----------
     parent_client: StreamPipesClient
-        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
+        This parameter expects the instance of `StreamPipesClient` the endpoint is attached to.
 
     """
 
@@ -80,13 +80,8 @@ class Endpoint(ABC):
 class APIEndpoint(Endpoint):
     """Abstract implementation of an API endpoint.
 
-    Serves as template for all endpoints for the StreamPipes API.
+    Serves as template for all endpoints of the StreamPipes API.
     By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
-
-    Parameters
-    ----------
-    parent_client: StreamPipesClient
-        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
     """
 
     @property
@@ -169,22 +164,25 @@ class APIEndpoint(Endpoint):
         return response
 
     def build_url(self) -> str:
-        """Creates the URL of the API path for the endpoint.
+        """Builds the endpoint's URL of the API path.
 
         Returns
         -------
-        The URL of the Endpoint
+        url: str
+            The URL of the endpoint
         """
         return f"{self._parent_client.base_api_path}" f"{'/'.join(api_path for api_path in self._relative_api_path)}"
 
     def all(self) -> ResourceContainer:
         """Get all resources of this endpoint provided by the StreamPipes API.
-        Results are provided as an instance of a `model.container.ResourceContainer` that
+
+        Results are provided as an instance of a `ResourceContainer` that
         allows to handle the returned resources in a comfortable and pythonic way.
 
         Returns
         -------
-        A model container instance (`model.container.ResourceContainer`) bundling the resources returned.
+        container: ResourceContainer
+             container element that bundles the returned resources
         """
 
         response = self._make_request(
@@ -203,7 +201,8 @@ class APIEndpoint(Endpoint):
 
         Returns
         -------
-        The specified resource as an instance of the corresponding model class (`model.Resource`).
+        resource: Resource
+            The specified resource as an instance of the corresponding model class.
         """
 
         response = self._make_request(
@@ -213,7 +212,7 @@ class APIEndpoint(Endpoint):
         return self._container_cls._resource_cls()(**response.json())
 
     def post(self, resource: Resource) -> None:
-        """Post a resource to the StreamPipes API.
+        """Allows to post a resource to the StreamPipes API.
 
         Parameters
         ----------
@@ -235,14 +234,10 @@ class APIEndpoint(Endpoint):
 
 class MessagingEndpoint(Endpoint):
     """Abstract implementation of a StreamPipes messaging endpoint.
+
     Serves as template for all endpoints used for interacting with the StreamPipes messaging layer directly.
     Therefore, they need to provide the functionality to talk with the broker system running in StreamPipes.
     By design, endpoints are only instantiated within the `__init__` method of the StreamPipesClient.
-
-    Parameters
-    ----------
-    parent_client: StreamPipesClient
-        This parameter expects the instance of the `client.StreamPipesClient` the endpoint is attached to.
 
     """
 
@@ -264,8 +259,8 @@ class MessagingEndpoint(Endpoint):
 
         Returns
         -------
-        The broker instance to be used to communicate with
-        StreamPipes' messaging layer.
+        broker: Broker
+            The broker instance to be used to communicate with StreamPipes' messaging layer.
         """
 
         if self._broker is not None:
@@ -286,8 +281,13 @@ class MessagingEndpoint(Endpoint):
         This configuration step is required before the endpoint can be actually used.
         The based `broker` instance is passed to an internal property
 
+        Parameters
+        ----------
+        broker: Broker
+            Broker instance that should be used for this endpoint
+
         Returns
-        _______
+        -------
         None
 
         """

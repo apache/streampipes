@@ -21,6 +21,8 @@
 package ${package}.pe.sink.${packageName};
 
 import ${package}.config.Config;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -29,8 +31,6 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.SupportedFormats;
-import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.apache.streampipes.sdk.helpers.*;
@@ -59,13 +59,16 @@ public class ${classNamePrefix}Controller extends FlinkDataSinkDeclarer<${classN
 	}
 
 	@Override
-	public FlinkDataSinkRuntime<${classNamePrefix}Parameters> getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+	public FlinkDataSinkRuntime<${classNamePrefix}Parameters> getRuntime(DataSinkInvocation graph,
+																																			DataSinkParameterExtractor extractor,
+																																			ConfigExtractor configExtractor,
+																																			StreamPipesClient streamPipesClient) {
 
 		String host = extractor.singleValueParameter(HOST_KEY, String.class);
 		int port = extractor.singleValueParameter(PORT_KEY, Integer.class);
 		String password = extractor.secretValue(PASSWORD_KEY);
 		${classNamePrefix}Parameters params = new ${classNamePrefix}Parameters(graph, host, port, password);
 
-		return new ${classNamePrefix}Program(params, Config.INSTANCE.getFlinkDebug());
+		return new ${classNamePrefix}Program(params, configExtractor, streamPipesClient);
 	}
 }

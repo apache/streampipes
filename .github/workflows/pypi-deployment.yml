@@ -13,9 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Deploy Python Package to PyPI
+name: Deploy Python Package to PyPI & update docs
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -36,6 +37,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip 
           pip install build twine
+          pip install -e ".[docs]"
 
       - name: Build package
         working-directory: ./streampipes-client-python
@@ -48,3 +50,16 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish new doc version and update alias
+        working-directory: ./streampipes-client-python
+        run: |
+          mike deploy ${GITHUB_REF##*/} latest -u --deploy-prefix ./streampipes-client-python/docs-tmp -b ${GITHUB_REF}
+          git reset --hard  # undo local changes that delete generated doc files
+
+      - name: Publish Python docs as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: streampipes-python-docs
+          path: streampipes-client-python/docs-tmp/**/*
+          retention-days: 2

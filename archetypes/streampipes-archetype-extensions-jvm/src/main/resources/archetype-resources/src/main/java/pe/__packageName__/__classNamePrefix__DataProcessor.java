@@ -49,33 +49,34 @@ public class ${classNamePrefix}DataProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("${package}.pe.${packageName}.processor")
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.AGGREGATE)
-            .requiredStream(StreamRequirementsBuilder
-              .create()
-              .requiredProperty(EpRequirements.anyProperty())
-              .build())
-            .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
-            .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder.create(Datatypes.String, "appendedText").build()))
-            .build();
-  }
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.AGGREGATE)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
+        .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder.create(Datatypes.String, "appendedText").build()))
+        .build();
+    }
 
   @Override
   public void onInvocation(ProcessorParams processorParams,
-                            SpOutputCollector out,
-                            EventProcessorRuntimeContext ctx) throws SpRuntimeException  {
-    this.exampleText = processorParams.extractor().singleValueParameter(EXAMPLE_KEY,String.class);
+                           SpOutputCollector out,
+                           EventProcessorRuntimeContext ctx) throws SpRuntimeException {
+
+    this.exampleText = processorParams.extractor().singleValueParameter(EXAMPLE_KEY, String.class);
   }
 
   @Override
-  public void onEvent(Event event,SpOutputCollector out){
-      event.addField("appendedText", exampleText);
-      out.collect(event);
+  public void onEvent(Event event, SpOutputCollector out) {
+    event.addField("appendedText", exampleText);
+    out.collect(event);
   }
 
   @Override
-  public void onDetach(){
-  }
+  public void onDetach() {
 
+  }
 }
