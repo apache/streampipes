@@ -89,6 +89,7 @@ import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adap
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 import { SpecificAdapterConfigurationComponent } from './components/adapter-configuration/specific-adapter-configuration/specific-adapter-configuration.component';
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
+import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adapter-actions-dialog.component';
 
 @NgModule({
     imports: [
@@ -191,6 +192,7 @@ import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/ca
         EditAdapterComponent,
         EventSchemaErrorHintsComponent,
         CanNotEditAdapterDialog,
+        AllAdapterActionsComponent,
     ],
     providers: [
         RestService,

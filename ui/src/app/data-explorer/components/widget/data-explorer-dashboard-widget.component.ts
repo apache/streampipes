@@ -236,10 +236,10 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     startLoadingTimer() {
         this.timerActive = true;
-        this.intervalSubscription = interval(10)
+        this.intervalSubscription = interval(100)
             .pipe(takeWhile(() => this.timerActive))
             .subscribe(value => {
-                this.loadingTime = (value * 10) / 1000;
+                this.loadingTime = (value * 100) / 1000;
             });
     }
 

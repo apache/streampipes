@@ -18,5 +18,5 @@ services:
   extensions-all-jvm:
     labels:
       org.apache.streampipes.dev.extensions-all-jvm.service.description: "Dev extensions-all-jvm service"
-#    ports:
-#      - "8098:8090"
+    ports:
+      - "8090:8090"

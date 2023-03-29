@@ -34,33 +34,34 @@ class DataStreamEndpoint(APIEndpoint):
     """Implementation of the DataStream endpoint.
 
     Consequently, it allows querying metadata about available data streams (see `all()` method).
-    The metadata is returned as an instance of `model.container.DataStreams`.
-
-    Parameters
-    ----------
-    parent_client: StreamPipesClient
-        The instance of `client.StreamPipesClient` the endpoint is attached to.
+    The metadata is returned as an instance of [`DataStreams`][streampipes.model.container.DataStreams].
 
     Examples
     --------
 
-    >>> from streampipes.client import StreamPipesClient
-    >>> from streampipes.client.client_config import StreamPipesClientConfig
-    >>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+    ```python
+    from streampipes.client import StreamPipesClient
+    from streampipes.client.config import StreamPipesClientConfig
+    from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
-    >>> client_config = StreamPipesClientConfig(
-    ...     credential_provider=StreamPipesApiKeyCredentials(username="test-user", api_key="api-key"),
-    ...     host_address="localhost",
-    ...     port=8082,
-    ...     https_disabled=True
-    ... )
+    client_config = StreamPipesClientConfig(
+        credential_provider=StreamPipesApiKeyCredentials(username="test-user", api_key="api-key"),
+        host_address="localhost",
+        port=8082,
+        https_disabled=True
+    )
+    client = StreamPipesClient.create(client_config=client_config)
+    ```
 
-    >>> client = StreamPipesClient.create(client_config=client_config)
-
-    >>> data_streams = client.DataStreamEndpoint.all()
-
-    >>> len(data_streams)
+    ```python
+    # let's get all existing data streams in StreamPipes
+    data_streams = client.dataStreamApi.all()
+    len(data_streams)
+    ```
+    ```
     2
+    ```
+
     """
 
     @property

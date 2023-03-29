@@ -308,4 +308,13 @@ export class ConnectUtils {
             ignoreTime,
         );
     }
+
+    public static allAdapterActionsDialog() {
+        // Click next
+        cy.get('button').contains('Next').parent().click();
+        // Wait for the adapters to start/stop
+        cy.wait(2000);
+        // Close dialog
+        cy.get('button').contains('Close').parent().click();
+    }
 }

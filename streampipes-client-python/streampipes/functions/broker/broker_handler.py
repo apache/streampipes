@@ -16,7 +16,7 @@
 #
 from enum import Enum
 
-from streampipes.functions.broker import Broker, NatsBroker
+from streampipes.functions.broker import Broker, KafkaBroker, NatsBroker
 from streampipes.model.resource.data_stream import DataStream
 
 
@@ -24,10 +24,11 @@ class SupportedBroker(Enum):
     """Enum for the supported brokers."""
 
     NATS = "NatsTransportProtocol"
+    KAFKA = "KafkaTransportProtocol"
 
 
 # TODO Exception should be removed once all brokers are implemented.
-class UnsupportedBroker(Exception):
+class UnsupportedBrokerError(Exception):
     """Exception if a broker isn't implemented yet."""
 
     def __init__(self, message):
@@ -35,19 +36,27 @@ class UnsupportedBroker(Exception):
 
 
 def get_broker(data_stream: DataStream) -> Broker:  # TODO implementation for more transport_protocols
-    """Get a broker by a name.
+    """Derive the broker for the given data stream.
 
     Parameters
     ----------
-    broker_name: str
-        A string that represents a broker.
+    data_stream: DataStream
+        Data stream instance from which the broker is inferred
 
     Returns
     -------
-    The broker which belongs to the name.
+    broker: Broker
+        The corresponding broker instance derived from data stream.
+
+    Raises
+    ------
+    UnsupportedBrokerError
+        Is raised when the given data stream belongs to a broker that is currently not supported by StreamPipes Python.
     """
     broker_name = data_stream.event_grounding.transport_protocols[0].class_name
     if SupportedBroker.NATS.value in broker_name:
         return NatsBroker()
+    elif SupportedBroker.KAFKA.value in broker_name:
+        return KafkaBroker()
     else:
-        raise UnsupportedBroker(f'The python client doesn\'t include the broker: "{broker_name}" yet')
+        raise UnsupportedBrokerError(f'The python client doesn\'t include the broker: "{broker_name}" yet')

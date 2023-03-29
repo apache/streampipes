@@ -55,7 +55,7 @@ services:
       dockerfile: Dockerfile
     image: streampipes_ui:release-validation
     ports:
-      - "80:80"
+      - "80:8088"
     depends_on:
       - couchdb
       - consul

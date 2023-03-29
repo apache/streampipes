@@ -60,4 +60,19 @@ public class DataSeries {
     return rows;
   }
 
+  public void setTotal(int total) {
+    this.total = total;
+  }
+
+  public void setRows(List<List<Object>> rows) {
+    this.rows = rows;
+  }
+
+  public void setTags(Map<String, String> tags) {
+    this.tags = tags;
+  }
+
+  public void setHeaders(List<String> headers) {
+    this.headers = headers;
+  }
 }

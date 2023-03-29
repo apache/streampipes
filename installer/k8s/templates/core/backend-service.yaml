@@ -16,12 +16,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: {{ .Values.streampipes.core.service.name }}
 spec:
   selector:
-    app: backend
+    app: {{ .Values.streampipes.core.appName }}
   ports:
     - name: main
       protocol: TCP
-      port: 8030
-      targetPort: 8030
+      port: {{ .Values.streampipes.core.service.port }}
+      targetPort: {{ .Values.streampipes.core.port }}

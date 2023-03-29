@@ -20,6 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BasicProfileSettings } from '../basic-profile-settings';
 import { RawUserApiToken, UserApiToken } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
     selector: 'sp-token-management-settings',
@@ -33,6 +34,12 @@ export class TokenManagementSettingsComponent
     newTokenName: string;
     newTokenCreated = false;
     newlyCreatedToken: RawUserApiToken;
+
+    tokenNameFormControl = new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(/^[a-zA-Z0-9_-]+$/),
+    ]);
 
     displayedColumns: string[] = ['name', 'action'];
     apiKeyDataSource: MatTableDataSource<UserApiToken>;
@@ -49,6 +56,7 @@ export class TokenManagementSettingsComponent
                 this.newlyCreatedToken = result;
                 this.newTokenCreated = true;
                 this.newTokenName = '';
+                this.tokenNameFormControl.reset();
                 this.receiveUserData();
             });
     }

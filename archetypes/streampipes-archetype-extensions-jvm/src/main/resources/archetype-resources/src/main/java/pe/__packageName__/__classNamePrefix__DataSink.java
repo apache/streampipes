@@ -45,23 +45,23 @@ private static final String EXAMPLE_KEY = "example-key";
 
   @Override
   public DataSinkDescription declareModel(){
-          return DataSinkBuilder.create("${package}.pe.${packageName}.sink")
-          .withAssets(Assets.DOCUMENTATION,Assets.ICON)
-          .withLocales(Locales.EN)
-          .category(DataSinkType.UNCATEGORIZED)
-          .requiredStream(StreamRequirementsBuilder
-          .create()
-          .requiredProperty(EpRequirements.anyProperty())
-          .build())
-          .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
-          .build();
+    return DataSinkBuilder.create("${package}.pe.${packageName}.sink")
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataSinkType.UNCATEGORIZED)
+        .requiredStream(StreamRequirementsBuilder
+        .create()
+        .requiredProperty(EpRequirements.anyProperty())
+        .build())
+        .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
+        .build();
   }
 
   @Override
   public void onInvocation(SinkParams sinkParams,
-                           EventSinkRuntimeContext ctx) throws SpRuntimeException{
+                           EventSinkRuntimeContext ctx) throws SpRuntimeException {
 
-    this.exampleText = sinkParams.extractor().singleValueParameter(EXAMPLE_KEY,String.class);
+    this.exampleText = sinkParams.extractor().singleValueParameter(EXAMPLE_KEY, String.class);
   }
 
   @Override
@@ -73,5 +73,4 @@ private static final String EXAMPLE_KEY = "example-key";
   public void onDetach(){
 
   }
-
 }

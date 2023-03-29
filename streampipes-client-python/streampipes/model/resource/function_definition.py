@@ -28,6 +28,27 @@ from streampipes.model.resource.data_stream import DataStream
 from streampipes.model.resource.resource import Resource
 
 
+class FunctionId(BasicModel):
+    """Identification object for a StreamPipes function.
+
+    Maps to the `FunctionId` class defined in the StreamPipes model.
+
+    Parameters
+    ----------
+    id: str
+        unique identifier of the function instance
+    version: int
+        version of the corresponding function
+
+    """
+
+    id: StrictStr = Field(default_factory=lambda: str(uuid4()))
+    version: StrictInt = Field(default=1)
+
+    def __hash__(self):
+        return hash((self.id, self.version))
+
+
 class FunctionDefinition(Resource):
     """Configuration for a StreamPipes Function.
 
@@ -36,15 +57,31 @@ class FunctionDefinition(Resource):
 
     Parameters
     ----------
+    consumed_streams: List[str]
+        List of data streams the function is consuming from
     function_id: FunctionId
         identifier object of a StreamPipes function
-    consumed_streams: List[str]
-        list of data streams the function is consuming from
+
+    Attributes
+    ----------
+    output_data_streams: Dict[str, DataStream]
+        Map off all output data streams added to the function definition
+
     """
+
+    function_id: FunctionId = Field(default_factory=FunctionId)
+    consumed_streams: List[str] = Field(default_factory=list)
+    output_data_streams: Dict[str, DataStream] = Field(default_factory=dict)
 
     def convert_to_pandas_representation(self) -> Dict:
         """Returns the dictionary representation of a function definition
         to be used when creating a pandas Dataframe.
+
+        Returns
+        -------
+        pandas_repr: Dict[str, Any]
+            Pandas representation of the resource as a dictionary, which is then used by the respource container
+            to create a data frame from a collection of resources.
         """
 
         return self.to_dict(use_source_names=False)
@@ -56,7 +93,14 @@ class FunctionDefinition(Resource):
         ----------
         data_stream: DataStream
             The schema of the output data stream.
+
+        Returns
+        -------
+        self: FunctionDefinition
+            Instance of the function definition that is extended by the provided `DataStream`
+
         """
+
         self.output_data_streams[data_stream.element_id] = data_stream
         return self
 
@@ -65,8 +109,11 @@ class FunctionDefinition(Resource):
 
         Returns
         -------
-        Dictonary with every stream id and the related output stream.
+        output_streams: Dict[str, DataStream]
+            Dictionary with every known stream id and the related output stream.
+
         """
+
         return self.output_data_streams
 
     def get_output_stream_ids(self) -> List[str]:
@@ -74,29 +121,9 @@ class FunctionDefinition(Resource):
 
         Returns
         -------
-        List of all stream ids.
+        output_stream_ids: List[str]
+            List of all stream ids
+
         """
+
         return list(self.output_data_streams.keys())
-
-    class FunctionId(BasicModel):
-        """Identification object for a StreamPipes function.
-
-        Maps to the `FunctionId` class defined in the StreamPipes model.
-
-        Parameters
-        ----------
-        id: str
-            unique identifier of the function instance
-        version: int
-            version of the corresponding function
-        """
-
-        id: StrictStr = Field(default_factory=lambda: str(uuid4()))
-        version: StrictInt = Field(default=1)
-
-        def __hash__(self):
-            return hash((self.id, self.version))
-
-    function_id: FunctionId = Field(default_factory=FunctionId)
-    consumed_streams: List[str] = Field(default_factory=list)
-    output_data_streams: Dict[str, DataStream] = Field(default_factory=dict)

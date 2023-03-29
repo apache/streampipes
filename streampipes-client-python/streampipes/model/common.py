@@ -33,19 +33,36 @@ __all__ = [
 ]
 
 
-def random_letters(n: int):
-    """Generates n random letters.
+def random_letters(n: int) -> str:
+    """Generates a string consisting of random letters.
 
     Parameters
     ----------
     n: int
         number of letters
+
+    Returns
+    -------
+    rand_str: str
+        String consisting of `n` random letters
     """
     return "".join(random.choice(string.ascii_letters) for _ in range(n))
 
 
 def _snake_to_camel_case(snake_case_string: str) -> str:
-    """Converts a string in snake_case format to camelCase style."""
+    """Converts a string in snake_case format to camelCase style.
+
+    Parameters
+    ----------
+    snake_case_string: str
+        string in snake_case format
+
+    Returns
+    -------
+    camel_case: str
+        The exact same string formatted as camelCase
+
+    """
 
     tokens = snake_case_string.split("_")
 
@@ -93,8 +110,8 @@ class EventProperty(BasicModel):
     description: Optional[StrictStr]
     runtime_name: StrictStr
     required: StrictBool = Field(default=False)
-    domain_properties: List[StrictStr] = Field(default_factory=list)
-    property_scope: StrictStr = Field(default="MEASUREMENT_PROPERTY")
+    domain_properties: Optional[List[StrictStr]] = Field(default_factory=list)
+    property_scope: Optional[StrictStr] = Field(default="MEASUREMENT_PROPERTY")
     index: StrictInt = Field(default=0)
     runtime_id: Optional[StrictStr]
     runtime_type: StrictStr = Field(default="http://www.w3.org/2001/XMLSchema#string")

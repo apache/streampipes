@@ -20,7 +20,14 @@ from streampipes.functions.streampipes_function import StreamPipesFunction
 
 
 class Registration:
-    """Manages the existing StreamPipesFunctions and registers them."""
+    """Manages the existing StreamPipesFunctions and registers them.
+
+    Attributes
+    ----------
+    functions: List[StreamPipesFunction]
+        List of all registered StreamPipesFunction
+
+    """
 
     def __init__(self) -> None:
         self.functions: List[StreamPipesFunction] = []
@@ -35,7 +42,8 @@ class Registration:
 
         Returns
         -------
-        Registration
+        self: Registration
+            The updated Registration instance
         """
         self.functions.append(streampipes_function)  # TODO register function to AdminAPI + consul
         return self
@@ -43,8 +51,11 @@ class Registration:
     def getFunctions(self) -> List[StreamPipesFunction]:
         """Get all registered functions.
 
+        This method exists to be consistent with the Java client.
+
         Returns
         -------
-        List of the functions.
+        functions: List[StreamPipesFunction]
+            List of all registered functions.
         """
         return self.functions

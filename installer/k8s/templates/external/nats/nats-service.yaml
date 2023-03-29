@@ -23,6 +23,8 @@ metadata:
 spec:
   selector:
     app: nats
+  type: {{ .Values.external.nats.service.type }}
+  externalTrafficPolicy: {{ .Values.external.nats.service.externalTrafficPolicy }}
   ports:
     - name: main
       protocol: TCP

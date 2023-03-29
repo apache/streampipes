@@ -24,10 +24,16 @@ import setuptools
 NAME = "streampipes"
 DESCRIPTION = "Python library for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
-URL = "https://github.com/apache/streampipes/"
+URL = "https://streampipes.apache.org/docs/docs/python/latest/"
 EMAIL = "dev@streampipes.apache.org"
 AUTHOR = "Apache Software Foundation"
 REQUIRES_PYTHON = ">=3.8.0"
+
+PROJECT_URLS = {
+    "Documentation": "https://streampipes.apache.org/docs/docs/python/latest/",
+    "Bug Tracker": "https://github.com/apache/streampipes/issues",
+    "Source Code": "https://github.com/apache/streampipes",
+}
 
 # Package requirements.
 base_packages = [
@@ -35,18 +41,19 @@ base_packages = [
     "pydantic>=1.10.2",
     "requests>=2.28.1",
     "nats-py>=2.2.0",
+    "confluent-kafka>=2.0.2"
 ]
 
 dev_packages = base_packages + [
     "autoflake==2.0.0",
-    "black==23.1.0",
+    "black==23.3.0",
     "blacken-docs==1.13.0",
     "flake8==6.0.0",
     "interrogate==1.5.0",
     "isort==5.12.0",
-    "mypy==1.0.0",
+    "mypy==1.1.1",
     "pandas-stubs==1.5.2.230105",
-    "pre-commit==3.0.0",
+    "pre-commit==3.2.0",
     "pytest==7.2.1",
     "pytest-cov==4.0.0",
     "pyupgrade==3.3.1",
@@ -57,13 +64,14 @@ dev_packages = base_packages + [
 docs_packages = [
     "mkdocs==1.4.2",
     "mkdocs-awesome-pages-plugin==2.8.0",
-    "mkdocs-material==8.5.11",  # < 9.x.y is required by mkdocs-jupyter
+    "mkdocs-material==9.1.3",
     "mkdocstrings[python]==0.20.0",
     "pytkdocs[numpy-style]>=0.16.1",
     "mkdocs-gen-files==0.4.0",
     "mkdocs-literate-nav==0.6.0",
     "numpydoc==1.5.0",
-    "mkdocs-jupyter==0.22.0 "
+    "mkdocs-jupyter==0.24.0",
+    "mike @ git+https://github.com/jimporter/mike.git@872f72def32f588908f8251fe512189e0c41f4e2"
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -88,6 +96,7 @@ setuptools.setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
+    project_urls=PROJECT_URLS,
     packages=setuptools.find_packages(exclude=("tests",)),
     install_requires=base_packages,
     extras_require={
@@ -101,7 +110,7 @@ setuptools.setup(
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",

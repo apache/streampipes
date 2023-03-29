@@ -27,7 +27,7 @@ class DataStreamContext:
     Parameters
     ----------
     functions: List[StreamPipesFunction]
-        StreamPipesFunctions which require the data of this data stream.
+        StreamPipes Functions which require the data of this data stream.
     schema: DataStream
         The schema of this data stream.
     broker: Broker
@@ -40,7 +40,7 @@ class DataStreamContext:
         self.broker = broker
 
     def add_function(self, function: StreamPipesFunction):
-        """Adds a new StreamPipesFunction.
+        """Adds a new StreamPipes Function.
 
         Parameters
         ----------

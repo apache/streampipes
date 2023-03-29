@@ -28,10 +28,14 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry.BufferGeomProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint.BufferPointProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.epsg.EpsgProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint.LatLngToJtsPointProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.ReprojectionProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.TrajectoryFromPointsProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex.TopologyValidationProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple.GeometryValidationProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine.HaversineDistanceCalculatorProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversinestatic.HaversineStaticDistanceCalculatorProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps.GoogleMapsGeocoderProcessor;
@@ -70,7 +74,11 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
             new LatLngToJtsPointProcessor(),
             new TrajectoryFromPointsProcessor(),
             new SpeedCalculatorProcessor(),
-            new ReprojectionProcessor())
+            new ReprojectionProcessor(),
+            new GeometryValidationProcessor(),
+            new TopologyValidationProcessor(),
+            new BufferGeomProcessor(),
+            new BufferPointProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
@@ -89,7 +97,7 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
     PGSimpleDataSource ds = new PGSimpleDataSource();
     String[] serverAddresses = {"localhost"};
     ds.setServerNames(serverAddresses);
-    int [] portNumbers = {54320};
+    int[] portNumbers = {54320};
     ds.setPortNumbers(portNumbers);
     ds.setDatabaseName("EPSG");
     ds.setUser("streampipes");

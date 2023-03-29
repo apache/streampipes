@@ -175,6 +175,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getCoreAssetBaseDir() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_ASSET_BASE_DIR);
+  }
+
+  @Override
   public StringEnvironmentVariable getConsulLocation() {
     return new StringEnvironmentVariable(Envs.SP_CONSUL_LOCATION);
   }

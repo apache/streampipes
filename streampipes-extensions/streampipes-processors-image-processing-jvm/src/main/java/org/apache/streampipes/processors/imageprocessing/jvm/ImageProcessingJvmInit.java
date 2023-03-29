@@ -27,10 +27,10 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationController;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperController;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentController;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderController;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationProcessor;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperProcessor;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentProcessor;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderProcessor;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class ImageProcessingJvmInit extends ExtensionsModelSubmitter {
@@ -42,10 +42,10 @@ public class ImageProcessingJvmInit extends ExtensionsModelSubmitter {
             "",
             8090)
         .registerPipelineElements(
-            new ImageEnrichmentController(),
-            new ImageCropperController(),
-            new QrCodeReaderController(),
-            new GenericImageClassificationController())
+            new ImageEnrichmentProcessor(),
+            new ImageCropperProcessor(),
+            new QrCodeReaderProcessor(),
+            new GenericImageClassificationProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

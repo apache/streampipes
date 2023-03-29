@@ -33,11 +33,14 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
 
       - name: Build with Maven
         run: mvn clean verify
@@ -70,9 +73,7 @@ jobs:
       - name: Build UI
         working-directory: ./ui
         run: |
-          NODE_PATH=/cache/node_modules
-          NODE_OPTIONS=--max_old_space_size=6096
-          npm install --unsafe-perm --legacy-peer-deps
+          npm install
           npm run build
 
       - name: Build and Push Docker UI Image
@@ -138,4 +139,3 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/sources-watertank-simulator:${{ env.MVN_VERSION }}
-

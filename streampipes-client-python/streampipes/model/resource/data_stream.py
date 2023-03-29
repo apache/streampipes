@@ -34,10 +34,12 @@ __all__ = [
 
 class DataStream(Resource):
     """Implementation of a resource for data streams.
+
     This resource defines the data model used by resource container (`model.container.DataStreams`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
     which are used to parse, validate the API response and to easily switch between
     the Python representation (both serialized and deserialized) and Java representation (serialized only).
+
     """
 
     def convert_to_pandas_representation(self):
@@ -45,7 +47,10 @@ class DataStream(Resource):
 
         Returns
         -------
-        Dictionary
+        pandas_repr: Dict[str, Any]
+            Pandas representation of the resource as a dictionary, which is then used by the respource container
+            to create a data frame from a collection of resources.
+
         """
         return {
             **self.dict(

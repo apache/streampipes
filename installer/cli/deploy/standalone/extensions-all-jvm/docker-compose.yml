@@ -19,7 +19,6 @@ services:
     image: ${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}
     depends_on:
       - consul
-      - backend
       - couchdb  
     volumes:
       - files:/spImages
