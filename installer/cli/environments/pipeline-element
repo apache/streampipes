@@ -16,10 +16,8 @@
 [environment:pipeline-element]
 backend
 consul
-extensions-all-jvm
 couchdb
 kafka
 ui
-sources-watertank-simulator
 zookeeper
 influxdb
