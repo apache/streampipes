@@ -118,7 +118,7 @@
 
 .page-container-nav {
     line-height: 24px;
-    height: 50px;
+    height: 44px;
     border-bottom: 1px solid var(--color-bg-3);
 }
 
@@ -189,32 +189,32 @@ img {
     padding: 0 !important;
 }
 
-.small-select mat-select {
+.small-select .mat-mdc-select {
     background-color: rgba(58, 40, 8, 0.12);
     padding: 6px 10px 6px 10px;
     box-sizing: border-box;
     border-radius: 5px;
 }
 
-.small-select .mat-select-value {
+.small-select .mat-mdc-select-value {
     font-size: 16px;
     color: var(--color-accent);
 }
 
-.small-select .mat-form-field-underline {
+.small-select .mat-mdc-form-field-underline {
     display: none;
 }
 
-.small-select mat-select-trigger div > i {
+.small-select .mat-mdc-select-trigger div > i {
     margin-right: 8px;
 }
 
-.small-select .mat-form-field-infix {
+.small-select .mat-mdc-form-field-infix {
     padding: 0;
     border-top: 0;
 }
 
-.small-select .mat-form-field-wrapper {
+.small-select .mat-mdc-form-field-wrapper {
     padding-bottom: 0;
 }
 

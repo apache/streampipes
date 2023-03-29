@@ -16,15 +16,15 @@
  *
  */
 
-mat-form-field.mat-form-field.form-field-size {
+mat-form-field.mat-mdc-form-field.form-field-size {
     font-size: 12px;
 }
 
-mat-mdc-form-field.mat-mdc-form-field.form-field-size-smaller {
-    font-size: 10px;
+mat-form-field.mat-mdc-form-field.form-field-size-smaller {
+    font-size: 8pt;
 }
 
-.form-field-margin .mat-form-field-wrapper {
+.form-field-margin .mat-mdc-form-field-wrapper {
     margin-bottom: -1.25em;
     padding-bottom: 1.25em;
 }

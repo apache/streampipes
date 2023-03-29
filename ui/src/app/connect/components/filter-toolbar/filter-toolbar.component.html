@@ -23,7 +23,12 @@
         fxLayout="row"
     >
         <div class="form-field-small">
-            <mat-form-field class="form-style" color="accent" floatLabel="auto">
+            <mat-form-field
+                class="form-style"
+                color="accent"
+                floatLabel="auto"
+                appearance="outline"
+            >
                 <input
                     matInput
                     placeholder="Find Element"
@@ -37,7 +42,7 @@
     </div>
     <div class="data-marketplace-options-item">
         <div class="form-field-small">
-            <mat-form-field color="accent">
+            <mat-form-field color="accent" appearance="outline">
                 <mat-select
                     [(value)]="currentFilter.selectedType"
                     (selectionChange)="filterAdapter($event)"
@@ -54,7 +59,7 @@
     </div>
     <div class="data-marketplace-options-item">
         <div class="form-field-small">
-            <mat-form-field color="accent">
+            <mat-form-field color="accent" appearance="outline">
                 <mat-select
                     [(value)]="currentFilter.selectedCategory"
                     (selectionChange)="filterAdapter($event)"

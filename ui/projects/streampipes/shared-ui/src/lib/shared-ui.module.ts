@@ -35,6 +35,7 @@ import { SpBasicHeaderTitleComponent } from './components/basic-header-title/hea
 import { SpExceptionMessageComponent } from './components/sp-exception-message/sp-exception-message.component';
 import { SpExceptionDetailsDialogComponent } from './components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     declarations: [
@@ -58,6 +59,7 @@ import { MatDividerModule } from '@angular/material/divider';
         MatTooltipModule,
         PortalModule,
         OverlayModule,
+        MatDialogModule,
     ],
     exports: [
         ConfirmDialogComponent,

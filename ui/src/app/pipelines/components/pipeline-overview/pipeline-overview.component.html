@@ -32,46 +32,55 @@
         <ng-container matColumnDef="status">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>Status</th>
             <td mat-cell *matCellDef="let pipeline">
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100px">
+                <div>
                     <div
-                        *ngIf="
-                            pipeline.running && pipeline.healthStatus === 'OK'
-                        "
-                        class="light light-green"
-                    ></div>
-                    <div
-                        *ngIf="
-                            pipeline.running &&
-                            pipeline.healthStatus === 'REQUIRES_ATTENTION'
-                        "
-                        class="light light-yellow"
-                    ></div>
-                    <div
-                        *ngIf="
-                            pipeline.running &&
-                            pipeline.healthStatus === 'FAILURE'
-                        "
-                        class="light light-red"
-                    ></div>
-                    <div
-                        *ngIf="!pipeline.running"
-                        class="light light-neutral"
-                        [matTooltip]="'Stopped'"
-                    ></div>
-                    <button
-                        class="ml-10"
-                        mat-icon-button
-                        [disabled]="!hasPipelineWritePrivileges"
-                        (click)="openPipelineNotificationsDialog(pipeline)"
-                        *ngIf="pipeline.pipelineNotifications.length > 0"
-                        matTooltip="{{
-                            pipeline.pipelineNotifications.length
-                        }} notification{{
-                            pipeline.pipelineNotifications.length > 1 ? 's' : ''
-                        }}"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxFlex="100px"
                     >
-                        <mat-icon color="warn">warning</mat-icon>
-                    </button>
+                        <div
+                            *ngIf="
+                                pipeline.running &&
+                                pipeline.healthStatus === 'OK'
+                            "
+                            class="light light-green"
+                        ></div>
+                        <div
+                            *ngIf="
+                                pipeline.running &&
+                                pipeline.healthStatus === 'REQUIRES_ATTENTION'
+                            "
+                            class="light light-yellow"
+                        ></div>
+                        <div
+                            *ngIf="
+                                pipeline.running &&
+                                pipeline.healthStatus === 'FAILURE'
+                            "
+                            class="light light-red"
+                        ></div>
+                        <div
+                            *ngIf="!pipeline.running"
+                            class="light light-neutral"
+                            [matTooltip]="'Stopped'"
+                        ></div>
+                        <button
+                            class="ml-10"
+                            mat-icon-button
+                            [disabled]="!hasPipelineWritePrivileges"
+                            (click)="openPipelineNotificationsDialog(pipeline)"
+                            *ngIf="pipeline.pipelineNotifications.length > 0"
+                            matTooltip="{{
+                                pipeline.pipelineNotifications.length
+                            }} notification{{
+                                pipeline.pipelineNotifications.length > 1
+                                    ? 's'
+                                    : ''
+                            }}"
+                        >
+                            <mat-icon color="warn">warning</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </td>
         </ng-container>

@@ -36,14 +36,14 @@
                     <mat-icon>arrow_back</mat-icon>
                 </button>
             </div>
-            <nav mat-tab-nav-bar color="accent">
+            <nav mat-tab-nav-bar color="accent" class="w-100">
                 <a
                     mat-tab-link
                     *ngFor="let item of spNavigationItems"
                     (click)="navigateTo(item)"
                     [active]="activeLink === item.itemId"
                 >
-                    <span class="upper-case">{{ item.itemTitle }}</span>
+                    <span>{{ item.itemTitle }}</span>
                 </a>
             </nav>
             <span fxFlex></span>

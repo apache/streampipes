@@ -17,21 +17,29 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <div>
-        <h4>{{ data.title }}</h4>
-        <h5>{{ data.subtitle }}</h5>
-    </div>
-    <div fxFlex="100" fxLayoutAlign="end center" class="footer">
-        <button mat-button (click)="onCancel()" *ngIf="data.confirmAndCancel">
-            {{ data.cancelTitle }}
-        </button>
-        <button
-            mat-button
-            (click)="onOk()"
-            cdkFocusInitial
-            data-cy="confirm-delete"
-        >
-            {{ data.okTitle }}
-        </button>
-    </div>
+    <mat-dialog-content>
+        <div>
+            <h4>{{ data.title }}</h4>
+            <h5>{{ data.subtitle }}</h5>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <div fxFlex="100" fxLayoutAlign="end center" class="footer">
+            <button
+                mat-button
+                (click)="onCancel()"
+                *ngIf="data.confirmAndCancel"
+            >
+                {{ data.cancelTitle }}
+            </button>
+            <button
+                mat-button
+                (click)="onOk()"
+                cdkFocusInitial
+                data-cy="confirm-delete"
+            >
+                {{ data.okTitle }}
+            </button>
+        </div>
+    </mat-dialog-actions>
 </div>
