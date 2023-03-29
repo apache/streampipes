@@ -119,7 +119,7 @@
 	<snakeyaml.version>1.33</snakeyaml.version>
 	<snappy-java.version>1.1.7.7</snappy-java.version>
 	<spring.version>6.0.7</spring.version>
-	<spring-boot.version>3.0.1</spring-boot.version>
+	<spring-boot.version>3.0.5</spring-boot.version>
 	<spring-security.version>6.0.1</spring-security.version>
 	<swagger.version>2.2.7</swagger.version>
 	<type-parser.version>0.7.0</type-parser.version>
