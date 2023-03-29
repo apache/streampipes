@@ -16,7 +16,7 @@
 #
 
 """
-Implementation of a config class for the StreamPipes client.
+Configuration class for the StreamPipes client.
 """
 
 
@@ -34,6 +34,7 @@ from streampipes.client.credential_provider import CredentialProvider
 @dataclass
 class StreamPipesClientConfig:
     """Configure the StreamPipes client in accordance to the actual StreamPipes instance to connect to.
+
     An instance is provided to the `StreamPipesClient` to configure it properly.
 
     Parameters
@@ -46,11 +47,14 @@ class StreamPipesClientConfig:
     https_disabled: Optional[bool]
         Determines whether https is used to connect to StreamPipes.
     port: Optional[int]
-        Specifies the port under which the StreamPipes API is available, e.g., `80` (with http) or `443` (with https)
+        Specifies the port under which the StreamPipes API is available,
+        e.g., `80` (with http) or `443` (with https)
 
     Examples
     --------
-    see `StreamPipesClient`
+
+    see [StreamPipesClient][streampipes.client.StreamPipesClient]
+
     """
 
     credential_provider: CredentialProvider

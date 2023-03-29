@@ -40,6 +40,7 @@ class CredentialProvider(ABC):
 
     def make_headers(self, http_headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
         """Creates the HTTP headers for the specific credential provider.
+
         Concrete authentication headers must be defined in the implementation of a credential provider.
 
         Parameters
@@ -49,7 +50,10 @@ class CredentialProvider(ABC):
 
         Returns
         -------
-        Dictionary with header information as string key-value pairs.
+        https_headers: Dict[str, str]
+            Dictionary with header information as string key-value pairs. <br>
+            Contains all pairs given as parameter plus the header pairs for authentication
+            determined by the credential provider.
 
         """
         if http_headers is None:
@@ -73,8 +77,9 @@ class CredentialProvider(ABC):
 
 
 class StreamPipesApiKeyCredentials(CredentialProvider):
-    """A Credential provider that allows authentication via a StreamPipes API Token.
-    This token can be generated via the StreamPipes UI (see how in the project's README).
+    """A credential provider that allows authentication via a StreamPipes API Token.
+
+    The required token can be generated via the StreamPipes UI (see the description on our [start-page](../../../).
 
     Parameters
     ----------
@@ -85,12 +90,8 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
 
     Examples
     --------
-    see `StreamPipesClient`
+    see [StreamPipesClient][streampipes.client.StreamPipesClient]
 
-    References
-    ----------
-    [^1]: [StreamPipes Python Client README]
-    (https://github.com/apache/streampipes/blob/dev/streampipes-client-python/README.md#%EF%B8%8F-quickstart)
     """
 
     @classmethod

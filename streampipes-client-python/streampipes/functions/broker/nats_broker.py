@@ -34,7 +34,7 @@ class NatsBroker(Broker):
         ----------
 
         hostname: str
-            The hostname of the of the server, which the broker connects to.
+            The hostname of the server, which the broker connects to.
 
         port: int
             The port number of the connection.
@@ -42,6 +42,7 @@ class NatsBroker(Broker):
         Returns
         -------
         None
+
         """
         self.nats_client = await connect(f"nats://{hostname}:{port}")
         if self.nats_client.connected_url is not None:
@@ -53,6 +54,7 @@ class NatsBroker(Broker):
         Returns
         -------
         None
+
         """
         self.subscription = await self.nats_client.subscribe(self.topic_name)
         logger.info(f"Subscribed to stream: {self.stream_id}")
@@ -62,12 +64,13 @@ class NatsBroker(Broker):
 
         Parameters
         ----------
-         event: Dict[str, Any]
+        event: Dict[str, Any]
             The event to be published.
 
         Returns
         -------
         None
+
         """
         await self.nats_client.publish(subject=self.topic_name, payload=json.dumps(event).encode("utf-8"))
 
@@ -86,6 +89,7 @@ class NatsBroker(Broker):
 
         Returns
         -------
-        An async iterator for the messages.
+        message_iterator: AsyncIterator
+            An async iterator for the messages.
         """
         return self.subscription.messages

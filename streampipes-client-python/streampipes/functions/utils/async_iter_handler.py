@@ -19,24 +19,23 @@ from typing import Any, AsyncGenerator, AsyncIterator, Dict, Tuple
 
 
 class AsyncIterHandler:
-    """Handels asyncrone iterators to get every message after an other in parallel."""
+    """Handles asynchronous iterators to get every message after another in parallel."""
 
     @staticmethod
     async def anext(stream_id: str, message: AsyncIterator) -> Tuple[str, Any]:
-        """Gets the next message from an AsncIterator.
+        """Gets the next message from an AsyncIterator.
 
         Parameters
         ----------
-
         stream_id: str
             The id of the data stream which the message belongs to.
-
         message: AsyncIterator
-            An asyncrone iterator that contains the messages.
+            An asynchronous iterator that contains the messages.
 
         Returns
         -------
-        Tuple of the stream id und next message or ("stop", None) if no message is left.
+        result: Tuple[str, Optional[Any]]
+            Tuple of the stream id und next message or `("stop", None)` if no message is left.
         """
         try:
             return stream_id, await message.__anext__()
@@ -45,17 +44,17 @@ class AsyncIterHandler:
 
     @staticmethod
     async def combine_async_messages(messages: Dict[str, AsyncIterator]) -> AsyncGenerator:
-        """Continuously gets the next published message from multiple AsncIterators in parallel.
+        """Continuously gets the next published message from multiple AsyncIterators in parallel.
 
         Parameters
         ----------
-
         messages: Dict[str, AsyncIterator]
-            A dictonary with an asyncrone iterator for every stream id.
+            A dictionary with an asynchronous iterator for every stream id.
 
-        Returns
-        -------
-        Generator that returns all recieved messages continuously.
+        Yields
+        ------
+        message: Tuple[str, Any]
+            Description of the anonymous integer return value.
         """
         pending = {AsyncIterHandler.anext(stream_id, message) for stream_id, message in messages.items()}
         while pending:

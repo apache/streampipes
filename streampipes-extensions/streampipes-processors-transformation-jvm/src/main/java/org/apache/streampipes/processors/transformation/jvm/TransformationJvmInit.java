@@ -42,9 +42,9 @@ import org.apache.streampipes.processors.transformation.jvm.processor.hasher.Fie
 import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateController;
-import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerController;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
 import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
 import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanController;
@@ -80,12 +80,12 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new MeasurementUnitConverterProcessor(),
             new TaskDurationController(),
             new TransformToBooleanController(),
-            new StringTimerController(),
+            new StringTimerProcessor(),
             new SignalEdgeFilterController(),
             new BooleanToStateController(),
             new NumberLabelerController(),
-            new StringToStateController(),
-            new StringCounterController(),
+            new StringToStateProcessor(),
+            new StringCounterProcessor(),
             new BooleanOperatorProcessor(),
             new FiledRenameProcessor())
         .registerMessagingFormats(

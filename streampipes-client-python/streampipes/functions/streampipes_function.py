@@ -21,6 +21,7 @@ from typing import Any, Dict, List, Optional
 from streampipes.functions.broker.output_collector import OutputCollector
 from streampipes.functions.utils.function_context import FunctionContext
 from streampipes.model.resource import FunctionDefinition
+from streampipes.model.resource.function_definition import FunctionId
 
 
 class StreamPipesFunction(ABC):
@@ -34,6 +35,11 @@ class StreamPipesFunction(ABC):
     ----------
     function_definition: FunctionDefinition
         the definition of the function that contains metadata about the connected function
+
+    Attributes
+    ----------
+    output_collectors: Dict[str, OutputCollector]
+        List of all output collectors which are created based on the provided function definitions.
     """
 
     def __init__(self, function_definition: Optional[FunctionDefinition] = None):
@@ -51,17 +57,21 @@ class StreamPipesFunction(ABC):
         stream_id: str
             The id of the output data stream
         event: Dict[str, Any]
-            The event which should be sended
+            The event which should be sent
+
+        Returns
+        -------
+        None
         """
         event["timestamp"] = int(1000 * time())
         self.output_collectors[stream_id].collect(event)
 
-    def getFunctionId(self) -> FunctionDefinition.FunctionId:
+    def getFunctionId(self) -> FunctionId:
         """Returns the id of the function.
 
         Returns
         -------
-        FunctionId: FunctionDefinition.FunctionId
+        function_id: FunctionId
             Identification object of the StreamPipes function
         """
         return self.function_definition.function_id
@@ -79,7 +89,8 @@ class StreamPipesFunction(ABC):
 
         Returns
         -------
-        List of the stream ids
+        stream_ids: List[str]
+            List of the stream ids
         """
         raise NotImplementedError  # pragma: no cover
 

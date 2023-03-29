@@ -28,22 +28,20 @@ class FunctionContext:
     function_id: str
         The id of this function.
     schema: Dict[str, DataStream]
-        A dictonary which contains the schema of a data stream for each stream id.
+        A dictionary which contains the schema of a data stream for each stream id.
     client: StreamPipesClient
         The client to interact with the API.
     streams: List[str]
         The ids of the streams needed by this function.
     """
 
-    def __init__(
-        self, function_id: str, schema: Dict[str, DataStream], client: StreamPipesClient, streams: List[str]
-    ) -> None:
+    def __init__(self, function_id: str, schema: Dict[str, DataStream], client: StreamPipesClient, streams: List[str]):
         self.function_id = function_id
         self.schema = schema
         self.client = client
         self.streams = streams
 
-    def add_data_stream_schema(self, stream_id: str, data_stream: DataStream):
+    def add_data_stream_schema(self, stream_id: str, data_stream: DataStream) -> None:
         """Adds a new data stream for a new stream id.
 
         Parameters
@@ -56,5 +54,6 @@ class FunctionContext:
         Returns
         -------
         None
+
         """
         self.schema[stream_id] = data_stream

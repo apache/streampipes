@@ -23,7 +23,17 @@ from streampipes.model.resource.data_stream import DataStream
 
 
 class RuntimeType(Enum):
-    """Runtime types for the attributes of a data stream."""
+    """Runtime type names for the attributes of a data stream.
+
+    Attributes
+    ----------
+    STRING
+    BOOLEAN
+    DOUBLE
+    FLOAT
+    INTEGER
+    LONG
+    """
 
     STRING = "string"
     BOOLEAN = "boolean"
@@ -45,6 +55,11 @@ def create_data_stream(name: str, attributes: Dict[str, str], stream_id: Optiona
         Name and types of the attributes.
     stream_id: str
         The id of this data stream.
+
+    Returns
+    -------
+    data_stream: DataStream
+        The created data stream
     """
 
     event_schema = EventSchema(

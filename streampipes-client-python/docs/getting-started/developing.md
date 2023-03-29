@@ -17,8 +17,7 @@
 -->
 
 ## 📖 Development Guide
-This document describes how to easily set up your local dev environment to work on the
-StreamPipes Python client 🐍.
+This document describes how to easily set up your local dev environment to work on StreamPipes Python 🐍.
 <br>
 
 ### 🚀 First Steps
@@ -43,26 +42,27 @@ pip install ."[dev]"
 The pre-commit hook is run before every commit and takes care about code style,
 linting, type hints, import sorting, etc. It will stop your commit in case the changes do not apply the expected format.
 Always check to have the recent version of the pre-commit hook installed otherwise the CI build might fail. 
-If you are interested you can have a deeper look on the underlying library: [pre-commit](https://pre-commit.com/).
+If you are interested, you can have a deeper look on the underlying library: [pre-commit](https://pre-commit.com/).
 
 ```bash
 pre-commit install
 ```
-The definition of the pre-commit hook can be found in [.pre-commit-config.yaml](.pre-commit-config.yaml).
+The definition of the pre-commit hook can be found in [.pre-commit-config.yaml](https://github.com/apache/streampipes/blob/dev/streampipes-client-python/.pre-commit-config.yaml).
 
 <br>
 
 ### 👏 Conventions
-Below we list some conventions that we have agreed on for creating the StreamPipes Python client.
+Below we list some conventions that we have agreed on for creating StreamPipes Python.
 Please comply to them when you plan to contribute to this project.
-If you have any other suggestions or would like to discuss them, we would be happy to hear from you on our mailing list [dev@streampipes.apache.org](mailto:dev@streampipes.apache.org).
+If you have any other suggestions or would like to discuss them, we would be happy to hear from you on our mailing list [dev@streampipes.apache.org](mailto:dev@streampipes.apache.org)
+or in our [discussions](https://github.com/apache/streampipes/discussions) on GitHub.
 
 1) **Use `numpy` style for Python docstrings** 📄 <br>
-Please stick to the `numpy` style when writing docstrings, as we require this for generating our documentation.
+Please stick to the `numpy` [style](https://numpydoc.readthedocs.io/en/latest/format.html) when writing docstrings, as we require this for generating our documentation.
 
 
 2) **Provide tests** ✅ <br>
-We are aiming for broad test coverage for the Python client and
+We are aiming for broad test coverage for the Python package and
 have therefore set a requirement of at least 90% unit test coverage.
 Therefore, please remember to write (unit) tests already during development. 
 If you have problems with writing tests, don't hesitate to ask us for help directly in the PR or
@@ -73,7 +73,7 @@ even before that via our mailing list (see above).
 TODO: replace link to java file by link to documentation
 --->
 3) **Build a similar API as the Java client provides** 🔄 <br>
-Whenever possible, please try to develop the API of the Python library the same as the [Java client](../streampipes-client/src/main/java/org/apache/streampipes/client/StreamPipesClient.java) or Java SDK.
+Whenever possible, please try to develop the API of the Python library the same as the [Java client](https://github.com/apache/streampipes/blob/dev/streampipes-client/src/main/java/org/apache/streampipes/client/StreamPipesClient.java) or Java SDK.
 By doing so, we would like to provide a consistent developer experience and the basis for automated testing in the future.
 
 ---

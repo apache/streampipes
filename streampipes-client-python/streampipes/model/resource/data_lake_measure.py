@@ -27,19 +27,29 @@ __all__ = [
 
 class DataLakeMeasure(Resource):
     """Implementation of a resource for data lake measures.
+
     This resource defines the data model used by resource container (`model.container.DataLakeMeasures`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
-    which are used to parse, validate the API response and to easily switch between
+    which are used to parse, validate the API response, and to easily switch between
     the Python representation (both serialized and deserialized) and Java representation (serialized only).
     """
 
     def convert_to_pandas_representation(self):
         """Returns the dictionary representation of a data lake measure
         to be used when creating a pandas Dataframe.
+
         It excludes the following fields: `element_id`, `event_schema`, `schema_version`.
         Instead of the whole event schema the number of event properties contained
         is returned with the column name `num_event_properties`.
+
+        Returns
+        -------
+        pandas_repr: Dict[str, Any]
+            Pandas representation of the resource as a dictionary, which is then used by the respource container
+            to create a data frame from a collection of resources.
+
         """
+
         return {
             **self.dict(exclude={"element_id", "event_schema", "schema_version"}),
             "num_event_properties": len(self.event_schema.event_properties),
@@ -52,4 +62,4 @@ class DataLakeMeasure(Resource):
     pipeline_id: Optional[StrictStr]
     pipeline_name: Optional[StrictStr]
     pipeline_is_running: StrictBool
-    schema_version: StrictStr
+    schema_version: Optional[StrictStr]

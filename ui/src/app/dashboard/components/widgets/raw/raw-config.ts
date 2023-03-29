@@ -31,7 +31,6 @@ export class RawConfig extends WidgetConfig {
             'Raw',
         )
             .withIcon('fas fa-terminal')
-            .withNumberOfPastEvents()
             .withDescription(
                 'Displays the raw message as it comes in for testing purposes',
             )
