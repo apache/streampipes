@@ -107,7 +107,6 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   @Override
   protected QueryResult executeQuery(Query query) {
     try (final InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient()) {
-      System.out.println(query.getCommand());
       return influxDB.query(query);
     }
   }
