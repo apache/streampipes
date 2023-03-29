@@ -46,7 +46,7 @@ base_packages = [
 
 dev_packages = base_packages + [
     "autoflake==2.0.0",
-    "black==23.1.0",
+    "black==23.3.0",
     "blacken-docs==1.13.0",
     "flake8==6.0.0",
     "interrogate==1.5.0",
