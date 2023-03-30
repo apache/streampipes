@@ -33,7 +33,7 @@
   "dependencies": {
     "@angular-architects/module-federation": "^14.3.14",
     "@angular/animations": "^14.2.12",
-    "@angular/cdk": "^14.2.7",
+    "@angular/cdk": "^15.2.5",
     "@angular/common": "^14.2.12",
     "@angular/compiler": "^14.2.12",
     "@angular/core": "^14.2.12",
