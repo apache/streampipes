@@ -41,7 +41,7 @@ import java.util.List;
     @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
 })
 @TsModel
-public abstract class AdapterDescription extends NamedStreamPipesEntity {
+public class AdapterDescription extends NamedStreamPipesEntity {
 
   protected SpDataStream dataStream;
 
@@ -236,7 +236,9 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     this.correspondingDataStreamElementId = correspondingDataStreamElementId;
   }
 
-  public abstract EventSchema getEventSchema();
+  public EventSchema getEventSchema() {
+    return this.getDataStream().getEventSchema();
+  }
 
   public SpDataStream getDataStream() {
     return dataStream;
@@ -253,4 +255,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
   public void setRunning(boolean running) {
     this.running = running;
   }
+
+  // TODO dummy class that can soon be removed
+
 }

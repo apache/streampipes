@@ -24,6 +24,7 @@ import org.apache.streampipes.model.connect.grounding.FormatDescription;
 
 import java.util.Map;
 
+@Deprecated
 public interface IFormat {
 
   IFormat getInstance(FormatDescription formatDescription);

@@ -29,6 +29,7 @@ import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclar
 import org.apache.streampipes.extensions.api.declarer.PipelineTemplateDeclarer;
 import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
@@ -38,12 +39,11 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,8 +69,12 @@ public class DeclarersSingleton {
   private Map<String, TransportProtocol> supportedProtocols;
   private Map<String, TransportFormat> supportedFormats;
 
+  @Deprecated
   private Map<String, IProtocol> allProtocols;
+  @Deprecated
   private Map<String, IAdapter> allAdapters;
+
+  private List<AdapterInterface> adapters;
 
   private String serviceId;
 
@@ -88,6 +92,7 @@ public class DeclarersSingleton {
     this.supportedFormats = new HashMap<>();
     this.allProtocols = new HashMap<>();
     this.allAdapters = new HashMap<>();
+    this.adapters = new ArrayList<>();
     this.functions = new HashMap<>();
     this.route = "/";
   }
@@ -111,8 +116,8 @@ public class DeclarersSingleton {
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.allAdapters = serviceDef.getSpecificAdapters();
     this.allProtocols = serviceDef.getAdapterProtocols();
+    this.adapters = serviceDef.getAdapters();
     serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
-
   }
 
   private void registerConfigs(String serviceGroup,
@@ -155,35 +160,10 @@ public class DeclarersSingleton {
     return result;
   }
 
-  public void supportedProtocols(TransportProtocol... protocols) {
-    Arrays.asList(protocols).forEach(protocol ->
-        this.supportedProtocols.put(protocol.getClass().getCanonicalName(), protocol));
-  }
-
-  public void supportedFormats(TransportFormat... formats) {
-    Arrays.asList(formats).forEach(format ->
-        this.supportedFormats.put(getFormatUri(format), format));
-  }
-
-  private String getFormatUri(TransportFormat format) {
-    return format
-        .getRdfType()
-        .stream()
-        .map(URI::toString)
-        .filter(t -> !t.equals("http://www.w3.org/2000/01/rdf-schema#"))
-        .filter(t -> !t.equals(StreamPipes.TRANSPORT_FORMAT))
-        .findFirst()
-        .get();
-  }
-
   public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
     SpProtocolManager.INSTANCE.register(protocol);
     this.supportedProtocols.put(protocol.getTransportProtocolClass(),
         protocol.getTransportProtocol());
-  }
-
-  public void registerProtocols(SpProtocolDefinitionFactory<?>... protocols) {
-    registerProtocols(Arrays.asList(protocols));
   }
 
   public void registerProtocols(List<SpProtocolDefinitionFactory<?>> protocols) {
@@ -324,6 +304,10 @@ public class DeclarersSingleton {
 
   public Map<String, IStreamPipesFunctionDeclarer> getFunctions() {
     return functions;
+  }
+
+  public List<AdapterInterface> getAdapters() {
+    return adapters;
   }
 
   private void checkAndStartExecutableStreams(DataStreamDeclarer declarer) {

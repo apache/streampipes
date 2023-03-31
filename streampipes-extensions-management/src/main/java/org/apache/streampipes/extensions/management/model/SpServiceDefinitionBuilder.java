@@ -18,6 +18,7 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.api.connect.Connector;
 import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.IProtocol;
@@ -98,6 +99,13 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
+  public SpServiceDefinitionBuilder registerAdapter(AdapterInterface adapter) {
+    this.serviceDefinition.addAdapter(adapter);
+    return this;
+  }
+
+
+  @Deprecated
   public SpServiceDefinitionBuilder registerAdapter(Connector protocolOrAdapter) {
     if (protocolOrAdapter instanceof IProtocol) {
       this.serviceDefinition.addAdapterProtocol((IProtocol) protocolOrAdapter);
@@ -107,6 +115,7 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
+  @Deprecated
   public SpServiceDefinitionBuilder registerAdapters(Connector... protocolOrAdapter) {
     Arrays.asList(protocolOrAdapter).forEach(this::registerAdapter);
     return this;

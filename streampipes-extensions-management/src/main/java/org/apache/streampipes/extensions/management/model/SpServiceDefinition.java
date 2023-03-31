@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
@@ -44,7 +45,11 @@ public class SpServiceDefinition {
   private List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories;
   private List<IStreamPipesFunctionDeclarer> functions;
 
+  private List<AdapterInterface> adapters;
+
+  @Deprecated
   private Map<String, IProtocol> adapterProtocols;
+  @Deprecated
   private Map<String, IAdapter> specificAdapters;
   private Map<String, ConfigItem> kvConfigs;
 
@@ -57,6 +62,7 @@ public class SpServiceDefinition {
     this.specificAdapters = new HashMap<>();
     this.kvConfigs = new HashMap<>();
     this.functions = new ArrayList<>();
+    this.adapters = new ArrayList<>();
   }
 
   public String getServiceGroup() {
@@ -135,6 +141,10 @@ public class SpServiceDefinition {
     this.kvConfigs.put(configItem.getKey(), configItem);
   }
 
+  public void addAdapter(AdapterInterface adapter) {
+    this.adapters.add(adapter);
+  }
+
   public void addSpecificAdapter(IAdapter<?> adapter) {
     this.specificAdapters.put(adapter.getId(), adapter);
   }
@@ -185,5 +195,9 @@ public class SpServiceDefinition {
 
   public List<IStreamPipesFunctionDeclarer> getFunctions() {
     return functions;
+  }
+
+  public List<AdapterInterface> getAdapters() {
+    return adapters;
   }
 }

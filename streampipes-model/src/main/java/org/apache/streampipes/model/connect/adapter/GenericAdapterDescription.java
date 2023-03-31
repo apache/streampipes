@@ -24,6 +24,7 @@ import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
 import java.util.List;
 
+@Deprecated
 public interface GenericAdapterDescription {
 
   ProtocolDescription getProtocolDescription();

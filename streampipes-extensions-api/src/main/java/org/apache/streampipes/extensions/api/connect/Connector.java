@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.api.connect;
 
+@Deprecated
 public interface Connector {
 
   String getId();

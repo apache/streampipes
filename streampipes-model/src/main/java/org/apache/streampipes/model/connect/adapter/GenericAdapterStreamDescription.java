@@ -25,6 +25,7 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 
 @TsModel
+@Deprecated
 public class GenericAdapterStreamDescription extends AdapterDescription implements GenericAdapterDescription {
 
   public static final String ID = ElementIdGenerator.makeFixedElementId(GenericAdapterStreamDescription.class);

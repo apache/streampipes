@@ -23,6 +23,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
+@Deprecated
 public interface IAdapter<T extends AdapterDescription> extends Connector {
 
   T declareModel();

@@ -18,20 +18,7 @@
 
 package org.apache.streampipes.connect.iiot;
 
-import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaAdapter;
-import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdapter;
-import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
-import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
-import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataStreamAdapter;
-import org.apache.streampipes.connect.iiot.protocol.stream.FileStreamProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.HttpServerProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.HttpStreamProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.KafkaProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.MqttProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.NatsProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.TubeMQProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.RocketMQProtocol;
+import org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.NewMachineDataSimulatorAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
@@ -47,20 +34,21 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
             "StreamPipes connect worker containing adapters relevant for the IIoT",
             "",
             8001)
-        .registerAdapter(new MachineDataStreamAdapter())
-        .registerAdapter(new RosBridgeAdapter())
-        .registerAdapter(new OpcUaAdapter())
-        .registerAdapter(new Plc4xS7Adapter())
-        .registerAdapter(new Plc4xModbusAdapter())
-        .registerAdapter(new FileStreamProtocol())
-        .registerAdapter(new KafkaProtocol())
-        .registerAdapter(new MqttProtocol())
-        .registerAdapter(new NatsProtocol())
-        .registerAdapter(new HttpStreamProtocol())
-        .registerAdapter(new PulsarProtocol())
-        .registerAdapter(new RocketMQProtocol())
-        .registerAdapter(new HttpServerProtocol())
-        .registerAdapter(new TubeMQProtocol())
+        .registerAdapter(new NewMachineDataSimulatorAdapter())
+//        .registerAdapter(new MachineDataStreamAdapter())
+//        .registerAdapter(new RosBridgeAdapter())
+//        .registerAdapter(new OpcUaAdapter())
+//        .registerAdapter(new Plc4xS7Adapter())
+//        .registerAdapter(new Plc4xModbusAdapter())
+//        .registerAdapter(new FileStreamProtocol())
+//        .registerAdapter(new KafkaProtocol())
+//        .registerAdapter(new MqttProtocol())
+//        .registerAdapter(new NatsProtocol())
+//        .registerAdapter(new HttpStreamProtocol())
+//        .registerAdapter(new PulsarProtocol())
+//        .registerAdapter(new RocketMQProtocol())
+//        .registerAdapter(new HttpServerProtocol())
+//        .registerAdapter(new TubeMQProtocol())
         .build();
   }
 }

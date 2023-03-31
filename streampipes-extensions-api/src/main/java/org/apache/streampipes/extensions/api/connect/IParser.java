@@ -25,6 +25,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import java.io.InputStream;
 import java.util.List;
 
+@Deprecated
 public interface IParser {
 
   IParser getInstance(FormatDescription formatDescription);

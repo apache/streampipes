@@ -26,6 +26,7 @@ import org.apache.streampipes.model.util.Cloner;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class FormatDescription extends NamedStreamPipesEntity {
 
   private List<StaticProperty> config;

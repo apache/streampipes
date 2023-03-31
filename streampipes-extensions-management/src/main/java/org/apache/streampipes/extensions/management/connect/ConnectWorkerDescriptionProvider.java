@@ -39,6 +39,27 @@ public class ConnectWorkerDescriptionProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerDescriptionProvider.class);
 
+  /**
+   * Retrieves a list of all adapter descriptions that are currently registered.
+   *  @return a list of {@link AdapterDescription} objects representing the registered adapters
+   */
+  public List<AdapterDescription> getAdapterDescriptions() {
+    var adapters = getRegisteredAdapters()
+        .stream()
+        .map(adapter -> adapter.declareConfig().getAdapterDescription())
+        .toList();
+    return adapters;
+  }
+
+  /**
+   * This is a helper method to mock the Declarer Singleton in unit tests
+   * @return the registered adapters from the DeclarerSingleton
+   */
+  public List<AdapterInterface> getRegisteredAdapters() {
+    return DeclarersSingleton.getInstance().getAdapters();
+  }
+
+  @Deprecated
   public List<AdapterDescription> getContainerDescription(String serviceGroup) {
 
     List<AdapterDescription> allAdapterDescriptions = new ArrayList<>();
@@ -48,6 +69,7 @@ public class ConnectWorkerDescriptionProvider {
     return allAdapterDescriptions;
   }
 
+  @Deprecated
   public Optional<AdapterDescription> getAdapterDescription(String appId) {
     List<AdapterDescription> allAdapterDescriptions = getContainerDescription("");
     return allAdapterDescriptions

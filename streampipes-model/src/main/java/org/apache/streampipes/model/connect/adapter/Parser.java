@@ -16,9 +16,19 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.connect;
+package org.apache.streampipes.model.connect.adapter;
 
-@Deprecated
-public interface EmitBinaryEvent {
-  Boolean emit(byte[] event);
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+
+import java.io.InputStream;
+
+public class Parser {
+
+  public AdapterGuessInfo getAdapterGuessInfo(InputStream inputStream) {
+    return null;
+  }
+
+  public void parse(InputStream inputStream, IEventCollector collector) {
+  }
+
 }

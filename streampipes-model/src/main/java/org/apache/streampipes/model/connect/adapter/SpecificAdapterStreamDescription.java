@@ -22,6 +22,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
+@Deprecated
 public class SpecificAdapterStreamDescription extends AdapterDescription {
 
   public SpecificAdapterStreamDescription() {

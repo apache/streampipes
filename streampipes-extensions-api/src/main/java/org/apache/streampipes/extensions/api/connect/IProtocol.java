@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
+@Deprecated
 public interface IProtocol extends Connector {
 
   IProtocol getInstance(ProtocolDescription protocolDescription,

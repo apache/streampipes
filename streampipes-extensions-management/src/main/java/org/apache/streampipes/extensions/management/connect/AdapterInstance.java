@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.connect;
+package org.apache.streampipes.extensions.management.connect;
 
-@Deprecated
-public interface EmitBinaryEvent {
-  Boolean emit(byte[] event);
+
+// TODO rename to `Adapter` once the old class can be deleted
+public abstract class AdapterInstance implements AdapterInterface {
 }

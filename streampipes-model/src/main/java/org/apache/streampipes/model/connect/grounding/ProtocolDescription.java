@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TsModel
+@Deprecated
 public class ProtocolDescription extends NamedStreamPipesEntity {
 
   @Deprecated

@@ -16,9 +16,20 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.connect;
+package org.apache.streampipes.sdk.extractor;
 
-@Deprecated
-public interface EmitBinaryEvent {
-  Boolean emit(byte[] event);
+import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.sdk.builder.adapter.JsonParser;
+
+// TODO only provisional implementation
+public class AdapterParameterExtractor extends StaticPropertyExtractor {
+  public AdapterParameterExtractor(DataSinkInvocation sepaElement) {
+    super(sepaElement);
+  }
+
+  public Parser selectedParser() {
+    // TODO implement
+    return new JsonParser();
+  }
 }
