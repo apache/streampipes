@@ -19,9 +19,6 @@
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 public class AdapterTemplateHandler extends AbstractTemplateHandler<AdapterDescription> {
@@ -34,12 +31,7 @@ public class AdapterTemplateHandler extends AbstractTemplateHandler<AdapterDescr
 
   @Override
   protected void visitStaticProperties(PipelineElementTemplateVisitor visitor) {
-    if (element instanceof SpecificAdapterStreamDescription) {
-      element.getConfig().forEach(config -> config.accept(visitor));
-    } else if (element instanceof GenericAdapterStreamDescription) {
-      ((GenericAdapterDescription) element).getProtocolDescription().getConfig()
-          .forEach(config -> config.accept(visitor));
-    }
+    element.getConfig().forEach(config -> config.accept(visitor));
   }
 
   @Override

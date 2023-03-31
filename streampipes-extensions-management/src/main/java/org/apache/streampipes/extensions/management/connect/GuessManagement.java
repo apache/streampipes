@@ -37,7 +37,8 @@ public class GuessManagement {
   public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
 
     logger.info("Start guessing schema for: " + adapterDescription.getAppId());
-    IAdapter adapter = AdapterUtils.setAdapter(adapterDescription);
+//    IAdapter adapter = AdapterUtils.setAdapter(adapterDescription);
+    IAdapter adapter = null;
 
     GuessSchema guessSchema;
     try {

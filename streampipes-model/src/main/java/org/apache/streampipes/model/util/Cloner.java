@@ -21,8 +21,6 @@ package org.apache.streampipes.model.util;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
@@ -297,13 +295,6 @@ public class Cloner {
   }
 
   public AdapterDescription adapterDescription(AdapterDescription ad) {
-    if (ad instanceof GenericAdapterStreamDescription) {
-      return new GenericAdapterStreamDescription((GenericAdapterStreamDescription) ad);
-    } else if (ad instanceof SpecificAdapterStreamDescription) {
-      return new SpecificAdapterStreamDescription(ad);
-    } else {
-      logger.error("Could not clone adapter description of type: " + ad.getClass().getCanonicalName());
-      return ad;
-    }
+    return new AdapterDescription(ad);
   }
 }

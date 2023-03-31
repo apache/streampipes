@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -35,8 +36,33 @@ public class ConnectWorkerDescriptionProviderTest {
 
   @Test
   public void getAdapterDescriptions() {
-    var provider = spy(new ConnectWorkerDescriptionProvider());
     var expected = new AdapterDescription();
+
+    var provider = setUpTest(expected);
+
+    var result = provider.getAdapterDescriptions();
+
+    assertEquals(1, result.size());
+    assertEquals(expected, result.get(0));
+  }
+
+  @Test
+  public void getAdapterDescription() {
+    var expectedId = "id";
+    var expected = new AdapterDescription();
+    expected.setElementId(expectedId);
+
+    var provider = setUpTest(expected);
+
+    var result = provider.getAdapterDescription(expectedId);
+
+    assertTrue(result.isPresent());
+    assertEquals(expectedId, result.get().getElementId());
+  }
+
+  private ConnectWorkerDescriptionProvider setUpTest(AdapterDescription expected) {
+
+    var provider = spy(new ConnectWorkerDescriptionProvider());
 
     var testAdapter = mock(AdapterInterface.class);
     doAnswer(invocation ->
@@ -50,10 +76,8 @@ public class ConnectWorkerDescriptionProviderTest {
     List<AdapterInterface> adapters = List.of(testAdapter);
     doReturn(adapters).when(provider).getRegisteredAdapters();
 
-    var result = provider.getAdapterDescriptions();
-
-    assertEquals(1, result.size());
-    assertEquals(expected, result.get(0));
+    return provider;
   }
+
 
 }

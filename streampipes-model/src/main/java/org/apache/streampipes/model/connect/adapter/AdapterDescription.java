@@ -31,15 +31,9 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(GenericAdapterStreamDescription.class),
-    @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
-})
 @TsModel
 public class AdapterDescription extends NamedStreamPipesEntity {
 

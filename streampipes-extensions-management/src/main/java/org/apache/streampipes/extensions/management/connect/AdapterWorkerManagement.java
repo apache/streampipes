@@ -39,7 +39,8 @@ public class AdapterWorkerManagement {
 
   public void invokeStreamAdapter(AdapterDescription adapterStreamDescription) throws AdapterException {
 
-    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
+//    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
+    IAdapter<?> adapter = null;
 
     RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter,
         adapterStreamDescription);

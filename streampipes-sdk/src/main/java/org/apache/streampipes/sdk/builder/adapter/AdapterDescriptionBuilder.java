@@ -24,20 +24,29 @@ import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBui
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public abstract class AdapterDescriptionBuilder<V extends
-    AdapterDescriptionBuilder<V, T>, T extends AdapterDescription> extends
-    AbstractConfigurablePipelineElementBuilder<V, T> {
+public class AdapterDescriptionBuilder extends
+    AbstractConfigurablePipelineElementBuilder<AdapterDescriptionBuilder, AdapterDescription> {
 
-  protected AdapterDescriptionBuilder(String id, T element) {
+  private AdapterDescriptionBuilder(String id, AdapterDescription element) {
     super(id, element);
   }
 
+  @Override
+  protected AdapterDescriptionBuilder me() {
+    return new AdapterDescriptionBuilder("", null);
+  }
+
+  @Override
+  protected void prepareBuild() {
+
+  }
+
   protected AdapterDescriptionBuilder(String id, String label, String description,
-                                      T adapterTypeInstance) {
+                                      AdapterDescription adapterTypeInstance) {
     super(id, label, description, adapterTypeInstance);
   }
 
-  public V category(AdapterType... categories) {
+  public AdapterDescriptionBuilder category(AdapterType... categories) {
     this.elementDescription
         .setCategory(Arrays
             .stream(categories)
@@ -46,7 +55,7 @@ public abstract class AdapterDescriptionBuilder<V extends
     return me();
   }
 
-  public AdapterDescriptionBuilder<V, T> elementId(String elementId) {
+  public AdapterDescriptionBuilder elementId(String elementId) {
     this.elementDescription.setElementId(elementId);
     return me();
   }

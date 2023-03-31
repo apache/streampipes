@@ -22,7 +22,6 @@ import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
-import org.apache.streampipes.extensions.connectors.influx.adapter.InfluxDbStreamAdapter;
 import org.apache.streampipes.extensions.connectors.influx.sink.InfluxDbSink;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
@@ -45,8 +44,8 @@ public class InfluxConnectorsInit extends ExtensionsModelSubmitter {
             8090)
         .registerPipelineElements(
             new InfluxDbSink())
-        .registerAdapters(
-            new InfluxDbStreamAdapter())
+//        .registerAdapters(
+//            new InfluxDbStreamAdapter())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

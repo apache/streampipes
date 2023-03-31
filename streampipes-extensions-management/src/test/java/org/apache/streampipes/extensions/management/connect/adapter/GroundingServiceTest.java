@@ -19,7 +19,6 @@
 package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
@@ -41,7 +40,7 @@ public class GroundingServiceTest {
   }
 
   private AdapterDescription getAdapterStreamDescription() {
-    AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
+    AdapterDescription adapterDescription = new AdapterDescription();
 
     adapterDescription.setEventGrounding(getEventGrounding());
 
