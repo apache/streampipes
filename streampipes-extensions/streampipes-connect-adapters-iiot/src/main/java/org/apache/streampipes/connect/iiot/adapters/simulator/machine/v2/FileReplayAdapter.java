@@ -22,13 +22,22 @@ import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
+import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.AdapterDescriptionBuilder;
 import org.apache.streampipes.sdk.builder.adapter.CsvParser;
 import org.apache.streampipes.sdk.builder.adapter.JsonParser;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.Filetypes;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.utils.Assets;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,19 +61,19 @@ public class FileReplayAdapter implements AdapterInterface {
   public AdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create().withSupportedParsers(new JsonParser(), new CsvParser())
         // TODO write new builder
-//        .withAdapterDescription(
-//            DataStreamAdapterBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
-//                .withAssets(Assets.DOCUMENTATION, Assets.ICON).withLocales(Locales.EN)
-////                .sourceType(AdapterSourceType.STREAM)
-//                .category(AdapterType.Generic)
-//                .requiredFile(Labels.withId(FILE_PATH), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
-//                .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
-//                .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
-//                .requiredAlternatives(Labels.withId(SPEED),
-//                Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
-//                    Alternatives.from(Labels.withId(FASTEST)), Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
-//                        StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
-//                            StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP))))).build())
+        .withAdapterDescription(
+            AdapterDescriptionBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
+                .category(AdapterType.Generic)
+                .requiredFile(Labels.withId(FILE_PATH), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
+                .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
+                .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
+                .requiredAlternatives(Labels.withId(SPEED),
+                Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
+                    Alternatives.from(Labels.withId(FASTEST)), Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
+                        StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
+                            StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP))))).build())
         .build();
   }
 

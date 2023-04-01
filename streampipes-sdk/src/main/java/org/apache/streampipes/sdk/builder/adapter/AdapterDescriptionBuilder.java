@@ -27,23 +27,12 @@ import java.util.stream.Collectors;
 public class AdapterDescriptionBuilder extends
     AbstractConfigurablePipelineElementBuilder<AdapterDescriptionBuilder, AdapterDescription> {
 
-  private AdapterDescriptionBuilder(String id, AdapterDescription element) {
-    super(id, element);
+  private AdapterDescriptionBuilder(String appId) {
+    super(appId, new AdapterDescription());
   }
 
-  @Override
-  protected AdapterDescriptionBuilder me() {
-    return new AdapterDescriptionBuilder("", null);
-  }
-
-  @Override
-  protected void prepareBuild() {
-
-  }
-
-  protected AdapterDescriptionBuilder(String id, String label, String description,
-                                      AdapterDescription adapterTypeInstance) {
-    super(id, label, description, adapterTypeInstance);
+  public static AdapterDescriptionBuilder create(String appId) {
+    return new AdapterDescriptionBuilder(appId);
   }
 
   public AdapterDescriptionBuilder category(AdapterType... categories) {
@@ -58,6 +47,15 @@ public class AdapterDescriptionBuilder extends
   public AdapterDescriptionBuilder elementId(String elementId) {
     this.elementDescription.setElementId(elementId);
     return me();
+  }
+  @Override
+  protected AdapterDescriptionBuilder me() {
+    return this;
+  }
+
+  @Override
+  protected void prepareBuild() {
+    this.elementDescription.setConfig(getStaticProperties());
   }
 
 
