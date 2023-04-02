@@ -16,27 +16,23 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.dataexplorer.param.model;
 
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IQueryStatement;
+import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
 
-import org.junit.Test;
+public class FillClauseParams implements IQueryStatement {
+  String fill = "none";
 
-import java.util.List;
+  protected FillClauseParams() {
+  }
 
-import static org.junit.Assert.assertEquals;
+  public static FillClauseParams from() {
+    return new FillClauseParams();
+  }
 
-public class DataLakeQueryBuilderTest {
-
-  private static final String MEASUREMENT = "measurement";
-  @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
-
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+  @Override
+  public void buildStatement(IDataLakeQueryBuilder<?> builder) {
+    builder.withFill(fill);
   }
 }

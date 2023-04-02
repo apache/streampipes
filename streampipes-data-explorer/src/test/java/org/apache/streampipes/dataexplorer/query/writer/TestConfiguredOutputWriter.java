@@ -16,27 +16,27 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.dataexplorer.query.writer;
 
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+import org.junit.Before;
 
-import org.junit.Test;
-
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+public abstract class TestConfiguredOutputWriter {
 
-public class DataLakeQueryBuilderTest {
+  protected List<List<Object>> rows;
+  protected List<String> columns;
 
-  private static final String MEASUREMENT = "measurement";
-  @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
+  @Before
+  public void before() {
+    this.rows = Arrays.asList(
+        Arrays.asList("2022-11-16T05:54:37.051Z", "test", 1),
+        Arrays.asList("2022-11-16T05:55:27.05Z", "test2", 2)
+    );
 
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+    this.columns = Arrays.asList("time", "string", "number");
   }
+
+
 }
