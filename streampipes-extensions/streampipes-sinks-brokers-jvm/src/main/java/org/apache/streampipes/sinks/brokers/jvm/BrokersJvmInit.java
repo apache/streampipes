@@ -30,7 +30,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
-import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
+import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaPublishSink;
 import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.nats.NatsController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink;
@@ -53,7 +53,7 @@ public class BrokersJvmInit extends ExtensionsModelSubmitter {
             "",
             8096)
         .registerPipelineElements(
-            new KafkaController(),
+            new KafkaPublishSink(),
             new JmsController(),
             new RestController(),
             new BufferRestController(),
