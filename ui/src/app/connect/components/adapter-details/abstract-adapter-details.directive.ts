@@ -19,7 +19,7 @@
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterService,
     AdapterMonitoringService,
 } from '@streampipes/platform-services';
@@ -30,7 +30,7 @@ import { SpBreadcrumbService } from '../../../../../projects/streampipes/shared-
 export abstract class SpAbstractAdapterDetailsDirective {
     currentAdapterId: string;
     tabs: SpNavigationItem[] = [];
-    adapter: AdapterDescriptionUnion;
+    adapter: AdapterDescription;
 
     constructor(
         protected authService: AuthService,

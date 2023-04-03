@@ -19,7 +19,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 
@@ -30,9 +30,9 @@ import {
 })
 export class AllAdapterActionsComponent implements OnInit {
     @Input()
-    adapters: AdapterDescriptionUnion[];
+    adapters: AdapterDescription[];
 
-    adaptersToModify: AdapterDescriptionUnion[];
+    adaptersToModify: AdapterDescription[];
     actionStatus: any;
     actionFinished: boolean;
     page: string;
@@ -83,7 +83,7 @@ export class AllAdapterActionsComponent implements OnInit {
         });
     }
 
-    initiateAction(adapter: AdapterDescriptionUnion, index) {
+    initiateAction(adapter: AdapterDescription, index) {
         this.actionRunning = true;
         this.actionStatus.push({
             name: adapter.name,
@@ -93,7 +93,7 @@ export class AllAdapterActionsComponent implements OnInit {
         this.runAdapterAction(adapter, index);
     }
 
-    runAdapterAction(adapter: AdapterDescriptionUnion, index) {
+    runAdapterAction(adapter: AdapterDescription, index) {
         const observable = this.action
             ? this.adapterService.startAdapter(adapter)
             : this.adapterService.stopAdapter(adapter);

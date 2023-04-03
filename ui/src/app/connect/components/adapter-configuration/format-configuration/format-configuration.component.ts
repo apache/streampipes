@@ -17,11 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-    AdapterDescriptionUnion,
-    FormatDescription,
-    GenericAdapterStreamDescription,
-} from '@streampipes/platform-services';
+import { AdapterDescription } from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { RestService } from '../../../services/rest.service';
 import { MatStepper } from '@angular/material/stepper';
@@ -31,90 +27,90 @@ import { MatStepper } from '@angular/material/stepper';
     templateUrl: './format-configuration.component.html',
     styleUrls: ['./format-configuration.component.scss'],
 })
-export class FormatConfigurationComponent implements OnInit {
+export class FormatConfigurationComponent {
     /**
-     * Adapter description the selected format is added to
-     */
-    @Input() adapterDescription: AdapterDescriptionUnion;
-
-    @Output() goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
-
-    /**
-     * Cancels the adapter configuration process
-     */
-    @Output() removeSelectionEmitter: EventEmitter<boolean> =
-        new EventEmitter();
-
-    /**
-     * Go to next configuration step when this is complete
-     */
-    @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
-
-    formatConfigurationValid: boolean;
-
-    /**
-     * Local reference of the format description from the adapter description
-     */
-    selectedFormat: FormatDescription;
-
-    /**
-     * The form group to validate the configuration for the format
-     */
-    formatForm: UntypedFormGroup;
-
-    constructor(
-        private restService: RestService,
-        private _formBuilder: UntypedFormBuilder,
-    ) {}
-
-    ngOnInit(): void {
-        // initialize form for validation
-        this.formatForm = this._formBuilder.group({});
-        this.formatForm.statusChanges.subscribe(status => {
-            this.formatConfigurationValid = this.formatForm.valid;
-        });
-
-        // ensure that adapter description is a generic adapter
-        if (
-            this.adapterDescription instanceof GenericAdapterStreamDescription
-        ) {
-            this.selectedFormat = this.adapterDescription.formatDescription;
-        }
-        if (
-            this.adapterDescription instanceof GenericAdapterStreamDescription
-        ) {
-            if (
-                (this.adapterDescription as GenericAdapterStreamDescription)
-                    .formatDescription !== undefined
-            ) {
-                this.formatConfigurationValid = this.formatForm.valid;
-            }
-        }
-
-        this.formatConfigurationValid = false;
-    }
-
-    formatSelected(selectedFormat) {
-        if (
-            this.adapterDescription instanceof GenericAdapterStreamDescription
-        ) {
-            this.adapterDescription.formatDescription = selectedFormat;
-            this.selectedFormat = selectedFormat;
-            if (selectedFormat.config.length === 0) {
-                this.formatConfigurationValid = this.formatForm.valid;
-            }
-        }
-    }
-
-    public removeSelection() {
-        this.removeSelectionEmitter.emit();
-    }
-
-    public clickNext() {
-        this.clickNextEmitter.emit();
-    }
-
-    public goBack() {
-        this.goBackEmitter.emit();
-    }
+    //  * Adapter description the selected format is added to
+    //  */
+    // @Input() adapterDescription: AdapterDescription;
+    //
+    // @Output() goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
+    //
+    // /**
+    //  * Cancels the adapter configuration process
+    //  */
+    // @Output() removeSelectionEmitter: EventEmitter<boolean> =
+    //     new EventEmitter();
+    //
+    // /**
+    //  * Go to next configuration step when this is complete
+    //  */
+    // @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+    //
+    // formatConfigurationValid: boolean;
+    //
+    // /**
+    //  * Local reference of the format description from the adapter description
+    //  */
+    // selectedFormat: FormatDescription;
+    //
+    // /**
+    //  * The form group to validate the configuration for the format
+    //  */
+    // formatForm: UntypedFormGroup;
+    //
+    // constructor(
+    //     private restService: RestService,
+    //     private _formBuilder: UntypedFormBuilder,
+    // ) {}
+    //
+    // ngOnInit(): void {
+    //     // initialize form for validation
+    //     this.formatForm = this._formBuilder.group({});
+    //     this.formatForm.statusChanges.subscribe(status => {
+    //         this.formatConfigurationValid = this.formatForm.valid;
+    //     });
+    //
+    //     // ensure that adapter description is a generic adapter
+    //     if (
+    //         this.adapterDescription instanceof GenericAdapterStreamDescription
+    //     ) {
+    //         this.selectedFormat = this.adapterDescription.formatDescription;
+    //     }
+    //     if (
+    //         this.adapterDescription instanceof GenericAdapterStreamDescription
+    //     ) {
+    //         if (
+    //             (this.adapterDescription as GenericAdapterStreamDescription)
+    //                 .formatDescription !== undefined
+    //         ) {
+    //             this.formatConfigurationValid = this.formatForm.valid;
+    //         }
+    //     }
+    //
+    //     this.formatConfigurationValid = false;
+    // }
+    //
+    // formatSelected(selectedFormat) {
+    //     if (
+    //         this.adapterDescription instanceof GenericAdapterStreamDescription
+    //     ) {
+    //         this.adapterDescription.formatDescription = selectedFormat;
+    //         this.selectedFormat = selectedFormat;
+    //         if (selectedFormat.config.length === 0) {
+    //             this.formatConfigurationValid = this.formatForm.valid;
+    //         }
+    //     }
+    // }
+    //
+    // public removeSelection() {
+    //     this.removeSelectionEmitter.emit();
+    // }
+    //
+    // public clickNext() {
+    //     this.clickNextEmitter.emit();
+    // }
+    //
+    // public goBack() {
+    //     this.goBackEmitter.emit();
+    // }
 }

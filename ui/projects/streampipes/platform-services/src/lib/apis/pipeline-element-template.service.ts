@@ -21,7 +21,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
     AdapterDescription,
-    AdapterDescriptionUnion,
     DataProcessorInvocation,
     DataSinkInvocation,
     PipelineElementTemplate,
@@ -106,7 +105,7 @@ export class PipelineElementTemplateService {
 
     getConfiguredAdapterForTemplate(
         templateId: string,
-        adapter: AdapterDescriptionUnion,
+        adapter: AdapterDescription,
     ): Observable<any> {
         return this.http.post(
             this.platformServicesCommons.apiBasePath +

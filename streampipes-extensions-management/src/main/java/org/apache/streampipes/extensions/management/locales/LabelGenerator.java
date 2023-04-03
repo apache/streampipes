@@ -30,6 +30,9 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -38,6 +41,8 @@ import java.util.Properties;
 import static org.apache.streampipes.extensions.management.util.LocalesUtil.makePath;
 
 public class LabelGenerator {
+
+  private static final Logger LOG = LoggerFactory.getLogger(LabelGenerator.class);
 
   private static final String Delimiter = ".";
   private static final String Title = "title";
@@ -91,6 +96,8 @@ public class LabelGenerator {
           }
         });
       }
+    } else {
+      LOG.error("Could not find assets directory to generate labels for app id:" + desc.getAppId());
     }
 
     return desc;

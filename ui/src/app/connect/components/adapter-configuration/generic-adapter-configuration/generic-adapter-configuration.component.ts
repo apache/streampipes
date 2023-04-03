@@ -18,7 +18,6 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-    GenericAdapterStreamDescription,
     ProtocolDescription,
     PipelineElementTemplateService,
 } from '@streampipes/platform-services';
@@ -58,12 +57,12 @@ export class GenericAdapterConfigurationComponent
 
     ngOnInit(): void {
         super.onInit();
-        if (
-            this.adapterDescription instanceof GenericAdapterStreamDescription
-        ) {
-            this.protocolDescription =
-                this.adapterDescription.protocolDescription;
-        }
+        // if (
+        //     this.adapterDescription instanceof GenericAdapterStreamDescription
+        // ) {
+        // this.protocolDescription =
+        //     this.adapterDescription.protocolDescription;
+        // }
 
         // initialize form for validation
         this.genericAdapterForm = this._formBuilder.group({});
@@ -88,12 +87,5 @@ export class GenericAdapterConfigurationComponent
         this.protocolDescription = ProtocolDescription.fromData(
             adapterDescription.protocolDescription,
         );
-        if (
-            this.adapterDescription instanceof GenericAdapterStreamDescription
-        ) {
-            this.adapterDescription.protocolDescription =
-                this.protocolDescription;
-            this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
-        }
     }
 }

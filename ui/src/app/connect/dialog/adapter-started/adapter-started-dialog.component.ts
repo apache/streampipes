@@ -20,13 +20,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     Message,
     PipelineOperationStatus,
     PipelineTemplateService,
     SpDataStream,
-    GenericAdapterStreamDescription,
-    SpecificAdapterStreamDescription,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
@@ -47,9 +45,9 @@ export class AdapterStartedDialog implements OnInit {
     adapterSuccessfullyEdited = false;
 
     /**
-     * AdapterDescriptionUnion that should be persisted and started
+     * AdapterDescription that should be persisted and started
      */
-    @Input() adapter: AdapterDescriptionUnion;
+    @Input() adapter: AdapterDescription;
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -62,7 +60,7 @@ export class AdapterStartedDialog implements OnInit {
     @Input() dataLakeTimestampField: string;
 
     /**
-     * When true a user edited an existing AdapterDescriptionUnion
+     * When true a user edited an existing AdapterDescription
      */
     @Input() editMode = false;
 
@@ -111,10 +109,7 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     startAdapter(status: Message, adapterElementId: string) {
-        const isStreamAdapter =
-            this.adapter instanceof GenericAdapterStreamDescription ||
-            this.adapter instanceof SpecificAdapterStreamDescription;
-        if (this.startAdapterNow && isStreamAdapter) {
+        if (this.startAdapterNow) {
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
                 .subscribe(startStatus => {

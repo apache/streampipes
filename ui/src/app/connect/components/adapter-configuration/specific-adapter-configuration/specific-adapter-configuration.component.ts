@@ -81,8 +81,7 @@ export class SpecificAdapterConfigurationComponent
     }
 
     afterTemplateReceived(adapterDescription: any) {
-        this.adapterDescription =
-            AdapterDescription.fromDataUnion(adapterDescription);
+        this.adapterDescription = adapterDescription;
         this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
     }
 }

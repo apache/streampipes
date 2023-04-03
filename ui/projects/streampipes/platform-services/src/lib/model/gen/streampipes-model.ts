@@ -19,17 +19,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-03-28 22:07:26.
+// Generated using typescript-generator version 3.1.1185 on 2023-04-03 09:05:07.
 
 export class NamedStreamPipesEntity {
     '@class':
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
-        | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
-        | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription'
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
-        | 'org.apache.streampipes.model.connect.grounding.FormatDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
         | 'org.apache.streampipes.model.graph.DataSinkInvocation';
@@ -85,10 +82,7 @@ export class NamedStreamPipesEntity {
 }
 
 export class AdapterDescription extends NamedStreamPipesEntity {
-    '@class':
-        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
-        | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription'
-        | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription';
+    '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
     'category': string[];
     'config': StaticPropertyUnion[];
     'correspondingDataStreamElementId': string;
@@ -146,20 +140,6 @@ export class AdapterDescription extends NamedStreamPipesEntity {
             TransformationRuleDescription.fromDataUnion,
         )(data.valueRules);
         return instance;
-    }
-
-    static 'fromDataUnion'(
-        data: AdapterDescriptionUnion,
-    ): AdapterDescriptionUnion {
-        if (!data) {
-            return data;
-        }
-        switch (data['@class']) {
-            case 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription':
-                return GenericAdapterStreamDescription.fromData(data);
-            case 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription':
-                return SpecificAdapterStreamDescription.fromData(data);
-        }
     }
 }
 
@@ -1877,28 +1857,6 @@ export class FixedOutputStrategy extends OutputStrategy {
     }
 }
 
-export class FormatDescription extends NamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.connect.grounding.FormatDescription';
-    'config': StaticPropertyUnion[];
-    'formatType': string;
-
-    static 'fromData'(
-        data: FormatDescription,
-        target?: FormatDescription,
-    ): FormatDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new FormatDescription();
-        super.fromData(data, instance);
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
-        instance.formatType = data.formatType;
-        return instance;
-    }
-}
-
 export class FreeTextStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty';
     'htmlAllowed': boolean;
@@ -1966,39 +1924,6 @@ export class FunctionId {
         const instance = target || new FunctionId();
         instance.id = data.id;
         instance.version = data.version;
-        return instance;
-    }
-}
-
-export interface GenericAdapterDescription {
-    formatDescription: FormatDescription;
-    protocolDescription: ProtocolDescription;
-    rules: TransformationRuleDescriptionUnion[];
-}
-
-export class GenericAdapterStreamDescription
-    extends AdapterDescription
-    implements GenericAdapterDescription
-{
-    '@class': 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
-    'formatDescription': FormatDescription;
-    'protocolDescription': ProtocolDescription;
-
-    static 'fromData'(
-        data: GenericAdapterStreamDescription,
-        target?: GenericAdapterStreamDescription,
-    ): GenericAdapterStreamDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new GenericAdapterStreamDescription();
-        super.fromData(data, instance);
-        instance.formatDescription = FormatDescription.fromData(
-            data.formatDescription,
-        );
-        instance.protocolDescription = ProtocolDescription.fromData(
-            data.protocolDescription,
-        );
         return instance;
     }
 }
@@ -3067,6 +2992,9 @@ export class PropertyValueSpecification {
     }
 }
 
+/**
+ * @deprecated
+ */
 export class ProtocolDescription extends NamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.grounding.ProtocolDescription';
     'category': string[];
@@ -3463,22 +3391,6 @@ export class SpQueryResult {
         instance.sourceIndex = data.sourceIndex;
         instance.spQueryStatus = data.spQueryStatus;
         instance.total = data.total;
-        return instance;
-    }
-}
-
-export class SpecificAdapterStreamDescription extends AdapterDescription {
-    '@class': 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription';
-
-    static 'fromData'(
-        data: SpecificAdapterStreamDescription,
-        target?: SpecificAdapterStreamDescription,
-    ): SpecificAdapterStreamDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SpecificAdapterStreamDescription();
-        super.fromData(data, instance);
         return instance;
     }
 }
@@ -3910,10 +3822,6 @@ export class WildcardTopicMapping {
         return instance;
     }
 }
-
-export type AdapterDescriptionUnion =
-    | GenericAdapterStreamDescription
-    | SpecificAdapterStreamDescription;
 
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';
 

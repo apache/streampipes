@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
@@ -34,7 +34,7 @@ import { SpConnectRoutes } from '../../connect.routes';
 export class EditAdapterComponent implements OnInit {
     initialized = false;
     adapterName = '';
-    adapter: AdapterDescriptionUnion = undefined;
+    adapter: AdapterDescription = undefined;
 
     constructor(
         private adapterService: AdapterService,

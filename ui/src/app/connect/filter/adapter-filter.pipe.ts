@@ -17,7 +17,7 @@
  */
 
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
-import { AdapterDescriptionUnion } from '@streampipes/platform-services';
+import { AdapterDescription } from '@streampipes/platform-services';
 import { AdapterFilterSettingsModel } from '../model/adapter-filter-settings.model';
 import { ConnectService } from '../services/connect.service';
 
@@ -27,9 +27,9 @@ export class AdapterFilterPipe implements PipeTransform {
     constructor(private connectService: ConnectService) {}
 
     transform(
-        adapterDescriptions: AdapterDescriptionUnion[],
+        adapterDescriptions: AdapterDescription[],
         activeFilters: AdapterFilterSettingsModel,
-    ): AdapterDescriptionUnion[] {
+    ): AdapterDescription[] {
         if (!activeFilters) {
             return adapterDescriptions;
         } else {
@@ -40,7 +40,7 @@ export class AdapterFilterPipe implements PipeTransform {
     }
 
     private meetsFilterCondition(
-        adapterDescription: AdapterDescriptionUnion,
+        adapterDescription: AdapterDescription,
         activeFilters: AdapterFilterSettingsModel,
     ): boolean {
         return (
@@ -56,7 +56,7 @@ export class AdapterFilterPipe implements PipeTransform {
     }
 
     private meetsFilterCategoryCondition(
-        adapterDescription: AdapterDescriptionUnion,
+        adapterDescription: AdapterDescription,
         selectedCategory: string,
     ): boolean {
         if (selectedCategory === 'All') {
@@ -67,7 +67,7 @@ export class AdapterFilterPipe implements PipeTransform {
     }
 
     private meetsFilterTextCondition(
-        adapterDescription: AdapterDescriptionUnion,
+        adapterDescription: AdapterDescription,
         filterTerm: string,
     ): boolean {
         if (filterTerm === undefined || filterTerm === '') {

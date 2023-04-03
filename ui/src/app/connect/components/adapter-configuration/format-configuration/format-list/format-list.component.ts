@@ -17,7 +17,6 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormatDescription } from '@streampipes/platform-services';
 import { RestService } from '../../../../services/rest.service';
 
 @Component({
@@ -25,70 +24,71 @@ import { RestService } from '../../../../services/rest.service';
     templateUrl: './format-list.component.html',
     styleUrls: ['./format-list.component.scss'],
 })
-export class FormatListComponent implements OnInit {
-    @Input() public selectedFormat: FormatDescription;
+export class FormatListComponent {
+    // @Input() public selectedFormat: FormatDescription;
 
     @Output() validateEmitter = new EventEmitter();
-    @Output() public selectedFormatEmitter =
-        new EventEmitter<FormatDescription>();
+    // @Output() public selectedFormatEmitter =
+    //     new EventEmitter<FormatDescription>();
 
     /**
      * Contains all the available formats that a user can select from
      */
-    allFormats: FormatDescription[] = [];
+    // allFormats: FormatDescription[] = [];
+    //
+    // allJsonFormats: FormatDescription[] = [];
+    // showJsonFormats: FormatDescription[] = [];
+    //
+    // jsonFormatDescription = new FormatDescription();
+    // selectJsonFormats = false;
 
-    allJsonFormats: FormatDescription[] = [];
-    showJsonFormats: FormatDescription[] = [];
+    // constructor(private restService: RestService) {
+    //     this.jsonFormatDescription.name = 'Json';
+    // }
 
-    jsonFormatDescription = new FormatDescription();
-    selectJsonFormats = false;
+    // ngOnInit(): void {
+    // fetch all available formats from backend
+    // TODO fix format problem
+    // this.restService.getFormats().subscribe(res => {
+    //     // this.allFormats.push(jsonFormatDescription);
+    //     // split resulting formats up to only show one button for Json Formats
+    //     res.forEach(format => {
+    //         if (format.formatType !== 'json') {
+    //             this.allFormats.push(format);
+    //         } else {
+    //             this.allJsonFormats.push(format);
+    //         }
+    //     });
+    // });
+    // }
 
-    constructor(private restService: RestService) {
-        this.jsonFormatDescription.name = 'Json';
-    }
-
-    ngOnInit(): void {
-        // fetch all available formats from backend
-        this.restService.getFormats().subscribe(res => {
-            // this.allFormats.push(jsonFormatDescription);
-            // split resulting formats up to only show one button for Json Formats
-            res.forEach(format => {
-                if (format.formatType !== 'json') {
-                    this.allFormats.push(format);
-                } else {
-                    this.allJsonFormats.push(format);
-                }
-            });
-        });
-    }
-
-    formatEditable(selectedFormat) {
-        this.allFormats.forEach(format => {
-            if (format !== selectedFormat) {
-                (format as any).edit = false;
-            }
-        });
-    }
-
-    formatSelected(selectedFormat: FormatDescription) {
-        if (selectedFormat.formatType !== 'json') {
-            this.showJsonFormats = [];
-            this.selectJsonFormats = false;
-        }
-
-        this.selectedFormat = selectedFormat;
-        this.selectedFormatEmitter.emit(this.selectedFormat);
-    }
-
-    selectJsonFormat() {
-        this.showJsonFormats = this.allJsonFormats;
-        this.selectJsonFormats = true;
-
-        this.selectedFormat = this.allJsonFormats[2];
-        this.selectedFormatEmitter.emit(this.selectedFormat);
-    }
-
-    validateAll(allValid) {
-        this.validateEmitter.emit(allValid);
-    }
+    // formatEditable(selectedFormat) {
+    //     this.allFormats.forEach(format => {
+    //         if (format !== selectedFormat) {
+    //             (format as any).edit = false;
+    //         }
+    //     });
+    // }
+    //
+    // formatSelected(selectedFormat: FormatDescription) {
+    //     if (selectedFormat.formatType !== 'json') {
+    //         this.showJsonFormats = [];
+    //         this.selectJsonFormats = false;
+    //     }
+    //
+    //     this.selectedFormat = selectedFormat;
+    //     this.selectedFormatEmitter.emit(this.selectedFormat);
+    // }
+    //
+    // selectJsonFormat() {
+    //     this.showJsonFormats = this.allJsonFormats;
+    //     this.selectJsonFormats = true;
+    //
+    //     this.selectedFormat = this.allJsonFormats[2];
+    //     this.selectedFormatEmitter.emit(this.selectedFormat);
+    // }
+    //
+    // validateAll(allValid) {
+    //     this.validateEmitter.emit(allValid);
+    // }
 }

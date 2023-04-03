@@ -17,66 +17,36 @@
  */
 
 import { Injectable } from '@angular/core';
-import {
-    AdapterDescription,
-    EventSchema,
-    GenericAdapterStreamDescription,
-    SpecificAdapterStreamDescription,
-    AdapterDescriptionUnion,
-} from '@streampipes/platform-services';
 
 @Injectable()
 export class ConnectService {
-    isGenericDescription(adapter: AdapterDescription): boolean {
-        return adapter instanceof GenericAdapterStreamDescription;
-    }
-
-    getEventSchema(adapter: AdapterDescription): EventSchema {
-        let eventSchema: EventSchema;
-
-        if (adapter instanceof GenericAdapterStreamDescription) {
-            eventSchema =
-                (adapter as GenericAdapterStreamDescription).dataStream
-                    .eventSchema || new EventSchema();
-        } else if (adapter instanceof SpecificAdapterStreamDescription) {
-            eventSchema =
-                (adapter as SpecificAdapterStreamDescription).dataStream
-                    .eventSchema || new EventSchema();
-        } else {
-            eventSchema = new EventSchema();
-        }
-
-        if (
-            eventSchema &&
-            eventSchema.eventProperties &&
-            eventSchema.eventProperties.length > 0
-        ) {
-            return eventSchema;
-        } else {
-            eventSchema.eventProperties = [];
-            return eventSchema;
-        }
-    }
-
-    cloneAdapterDescription(
-        toClone: AdapterDescriptionUnion,
-    ): AdapterDescriptionUnion {
-        let result: AdapterDescriptionUnion;
-
-        if (toClone instanceof GenericAdapterStreamDescription) {
-            result = GenericAdapterStreamDescription.fromData(
-                toClone,
-                new GenericAdapterStreamDescription(),
-            );
-        } else {
-            if (toClone instanceof SpecificAdapterStreamDescription) {
-                result = SpecificAdapterStreamDescription.fromData(
-                    toClone,
-                    new SpecificAdapterStreamDescription(),
-                );
-            }
-        }
-
-        return result;
-    }
+    // isGenericDescription(adapter: AdapterDescription): boolean {
+    //     return adapter instanceof GenericAdapterStreamDescription;
+    // }
+    // getEventSchema(adapter: AdapterDescription): EventSchema {
+    //     let eventSchema: EventSchema;
+    //
+    //     if (adapter instanceof GenericAdapterStreamDescription) {
+    //         eventSchema =
+    //             (adapter as GenericAdapterStreamDescription).dataStream
+    //                 .eventSchema || new EventSchema();
+    //     } else if (adapter instanceof SpecificAdapterStreamDescription) {
+    //         eventSchema =
+    //             (adapter as SpecificAdapterStreamDescription).dataStream
+    //                 .eventSchema || new EventSchema();
+    //     } else {
+    //         eventSchema = new EventSchema();
+    //     }
+    //
+    //     if (
+    //         eventSchema &&
+    //         eventSchema.eventProperties &&
+    //         eventSchema.eventProperties.length > 0
+    //     ) {
+    //         return eventSchema;
+    //     } else {
+    //         eventSchema.eventProperties = [];
+    //         return eventSchema;
+    //     }
+    // }
 }

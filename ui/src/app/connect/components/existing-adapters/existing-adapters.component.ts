@@ -19,7 +19,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     AdapterService,
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterMonitoringService,
     PipelineElementService,
     SpMetricsEntry,
@@ -56,8 +56,8 @@ import { zip } from 'rxjs';
     styleUrls: ['./existing-adapters.component.scss'],
 })
 export class ExistingAdaptersComponent implements OnInit {
-    existingAdapters: AdapterDescriptionUnion[] = [];
-    filteredAdapters: AdapterDescriptionUnion[] = [];
+    existingAdapters: AdapterDescription[] = [];
+    filteredAdapters: AdapterDescription[] = [];
 
     currentFilter: AdapterFilterSettingsModel;
 
@@ -75,7 +75,7 @@ export class ExistingAdaptersComponent implements OnInit {
         'action',
     ];
 
-    dataSource: MatTableDataSource<AdapterDescriptionUnion>;
+    dataSource: MatTableDataSource<AdapterDescription>;
     isAdmin = false;
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
@@ -103,7 +103,7 @@ export class ExistingAdaptersComponent implements OnInit {
         });
     }
 
-    startAdapter(adapter: AdapterDescriptionUnion) {
+    startAdapter(adapter: AdapterDescription) {
         this.adapterService.startAdapter(adapter).subscribe(
             _ => {
                 this.getAdaptersRunning();
@@ -117,7 +117,7 @@ export class ExistingAdaptersComponent implements OnInit {
         );
     }
 
-    stopAdapter(adapter: AdapterDescriptionUnion) {
+    stopAdapter(adapter: AdapterDescription) {
         this.adapterService.stopAdapter(adapter).subscribe(
             _ => {
                 this.getAdaptersRunning();
@@ -175,7 +175,7 @@ export class ExistingAdaptersComponent implements OnInit {
         });
     }
 
-    getMonitoringInfos(adapters: AdapterDescriptionUnion[]) {
+    getMonitoringInfos(adapters: AdapterDescription[]) {
         const observables = adapters
             .map(adapter => adapter.elementId)
             .map(elementId =>
@@ -195,7 +195,7 @@ export class ExistingAdaptersComponent implements OnInit {
             });
     }
 
-    getIconUrl(adapter: AdapterDescriptionUnion) {
+    getIconUrl(adapter: AdapterDescription) {
         if (adapter.includedAssets.length > 0) {
             return this.adapterService.getAssetUrl(adapter.appId) + '/icon';
         } else {
@@ -203,7 +203,7 @@ export class ExistingAdaptersComponent implements OnInit {
         }
     }
 
-    showPermissionsDialog(adapter: AdapterDescriptionUnion) {
+    showPermissionsDialog(adapter: AdapterDescription) {
         const dialogRef = this.dialogService.open(
             ObjectPermissionDialogComponent,
             {
@@ -229,7 +229,7 @@ export class ExistingAdaptersComponent implements OnInit {
      * Start edit mode when adapter is not used within a pipeline, otherwise shows warning dialog
      * @param adapter
      */
-    editAdapter(adapter: AdapterDescriptionUnion) {
+    editAdapter(adapter: AdapterDescription) {
         this.pipelineService
             .getPipelinesContainingElementId(
                 adapter.correspondingDataStreamElementId,
@@ -254,7 +254,7 @@ export class ExistingAdaptersComponent implements OnInit {
             });
     }
 
-    deleteAdapter(adapter: AdapterDescriptionUnion): void {
+    deleteAdapter(adapter: AdapterDescription): void {
         const dialogRef: DialogRef<DeleteAdapterDialogComponent> =
             this.dialogService.open(DeleteAdapterDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -272,7 +272,7 @@ export class ExistingAdaptersComponent implements OnInit {
         });
     }
 
-    openHelpDialog(adapter: AdapterDescriptionUnion) {
+    openHelpDialog(adapter: AdapterDescription) {
         const streamId = adapter.correspondingDataStreamElementId;
 
         this.pipelineElementService
@@ -322,7 +322,7 @@ export class ExistingAdaptersComponent implements OnInit {
         }
     }
 
-    navigateToDetailsOverviewPage(adapter: AdapterDescriptionUnion): void {
+    navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
         this.router.navigate([
             'connect',
             'details',

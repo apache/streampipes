@@ -18,12 +18,19 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public class ConnectWorkerDescriptionProvider {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerDescriptionProvider.class);
 
   /**
    *  Retrieves a list of all adapter descriptions that are currently registered.
@@ -32,7 +39,7 @@ public class ConnectWorkerDescriptionProvider {
   public List<AdapterDescription> getAdapterDescriptions() {
     return getRegisteredAdapters()
         .stream()
-        .map(adapter -> adapter.declareConfig().getAdapterDescription())
+        .map(adapter -> rewrite(adapter.declareConfig().getAdapterDescription()))
         .toList();
   }
 
@@ -52,4 +59,22 @@ public class ConnectWorkerDescriptionProvider {
     return DeclarersSingleton.getInstance().getAdapters();
   }
 
+
+  // TODO check how to change it
+  private AdapterDescription rewrite(AdapterDescription entity) {
+    // TODO remove after full internationalization support has been implemented
+    if (entity.isIncludesLocales()) {
+      LabelGenerator lg = new LabelGenerator(entity);
+      try {
+        entity = (AdapterDescription) lg.generateLabels();
+      } catch (IOException e) {
+        LOG.error("Could not load labels for: " + entity.getAppId());
+      }
+    } else {
+      LOG.error(
+          "The adapter configuration of %s is missing the locales configurations. Add it to the declareConfig method"
+              .formatted(entity.getAppId()));
+    }
+    return entity;
+  }
 }
