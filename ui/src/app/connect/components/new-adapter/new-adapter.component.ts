@@ -49,7 +49,7 @@ export class NewAdapterComponent implements OnInit {
                 a => a.appId === this.route.snapshot.params.appId,
             );
             this.adapterTypeName = adapter.name;
-            AdapterDescription.fromData(adapter);
+            this.adapter = AdapterDescription.fromData(adapter);
 
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(
