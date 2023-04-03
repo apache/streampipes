@@ -17,9 +17,8 @@
  */
 package org.apache.streampipes.extensions.management.util;
 
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -52,17 +51,15 @@ public class ServiceDefinitionUtil {
     }
   }
 
-  public static List<SpServiceTag> extractAppIdsFromAdapters(Collection<IAdapter> adapters) {
+  public static List<SpServiceTag> extractAppIdsFromAdapters(Collection<AdapterInterface> adapters) {
     return adapters
         .stream()
-        .map(d -> SpServiceTag.create(SpServiceTagPrefix.ADAPTER, d.declareModel().getAppId()))
+        .map(d -> SpServiceTag.create(
+                SpServiceTagPrefix.ADAPTER,
+                d.declareConfig().getAdapterDescription().getAppId()
+            )
+        )
         .collect(Collectors.toList());
   }
 
-  public static List<SpServiceTag> extractAppIdsFromProtocols(Collection<IProtocol> protocols) {
-    return protocols
-        .stream()
-        .map(p -> SpServiceTag.create(SpServiceTagPrefix.ADAPTER, p.declareModel().getAppId()))
-        .collect(Collectors.toList());
-  }
 }
