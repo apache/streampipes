@@ -54,7 +54,8 @@ package org.apache.streampipes.connect.iiot.adapters.ros;
 //        .category(AdapterType.Manufacturing)
 //        .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
 //        .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
-//        .requiredSingleValueSelectionFromContainer(Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
+//        .requiredSingleValueSelectionFromContainer(
+//        Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
 //        .build();
 //
 //    return description;

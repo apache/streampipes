@@ -184,7 +184,8 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
 //    return builder.build();
 //  }
 //
-//  private void readPlcData(PlcConnection plcConnection, PlcReadResponseHandler handler) throws PlcConnectionException {
+//  private void readPlcData(
+//  PlcConnection plcConnection, PlcReadResponseHandler handler) throws PlcConnectionException {
 //    var readRequest = makeReadRequest(plcConnection);
 //    // Execute the request
 //    CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();

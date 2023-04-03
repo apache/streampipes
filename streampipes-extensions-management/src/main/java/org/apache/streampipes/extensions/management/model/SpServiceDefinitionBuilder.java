@@ -18,12 +18,12 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.api.connect.Connector;
 import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 

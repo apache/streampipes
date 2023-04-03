@@ -92,7 +92,8 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.modbus;
 //   */
 //  private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
 //
-//    StaticPropertyExtractor extractor = StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+//    StaticPropertyExtractor extractor =
+//    StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
 //
 //    this.ip = extractor.singleValueParameter(PLC_IP, String.class);
 //    this.port = extractor.singleValueParameter(PLC_PORT, Integer.class);

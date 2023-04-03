@@ -98,7 +98,8 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 //    try {
 //      this.natsConsumer.connect(natsConfig, new BrokerEventProcessor(stk, parser));
 //    } catch (IOException | InterruptedException e) {
-//      throw new AdapterException("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . ", e);
+//      throw new AdapterException("Error when connecting to the Nats broker on "
+//      + natsConfig.getNatsUrls() + " . ", e);
 //    }
 //  }
 //

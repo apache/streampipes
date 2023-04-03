@@ -217,7 +217,8 @@ package org.apache.streampipes.connect.adapters.sensemap;
 //          event.put(SensorNames.KEY_LATITUDE, getLatitude(senseBox));
 //          event.put(SensorNames.KEY_LONGITUDE, getLongitude(senseBox));
 //        } else {
-//          logger.info("Sense box id: " + senseBox.get_id() + " does not contain correct latitude or longitude values");
+//          logger
+//          .info("Sense box id: " + senseBox.get_id() + " does not contain correct latitude or longitude values");
 //        }
 //
 ////                Add Sensor values

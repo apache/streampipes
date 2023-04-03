@@ -147,7 +147,8 @@ package org.apache.streampipes.connect.adapters.gdelt;
 //    allProperties.add(
 //        PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_known_group_code").label("Actor1KnownGroupCode")
 //            .description("The CAMEO code if Actor 1 is a known IGO/NGO/rebel organization").build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_ethnic_code").label("Actor1EthnicCode")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_ethnic_code").label("Actor1EthnicCode")
 //        .description("The CAMEO code if the source document specifies the ethnic affiliation of Actor1").build());
 //    allProperties.add(
 //        PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_religion_1_code").label("Actor1Religion1Code")
@@ -157,11 +158,14 @@ package org.apache.streampipes.connect.adapters.gdelt;
 //        PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_religion_2_code").label("Actor1Religion2Code")
 //            .description("The CAMEO code if the source document specifies multiple religious affiliations of Actor1")
 //            .build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_type_1_code").label("Actor1Type1Code")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_type_1_code").label("Actor1Type1Code")
 //        .description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor1").build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_type_2_code").label("Actor1Type2Code")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_type_2_code").label("Actor1Type2Code")
 //        .description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor1").build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_type_3_code").label("Actor1Type3Code")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_1_type_3_code").label("Actor1Type3Code")
 //        .description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor1").build());
 //
 //    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_code").label("Actor2Code")
@@ -174,7 +178,8 @@ package org.apache.streampipes.connect.adapters.gdelt;
 //    allProperties.add(
 //        PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_known_group_code").label("Actor2KnownGroupCode")
 //            .description("The CAMEO code if Actor 1 is a known IGO/NGO/rebel organization").build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_ethnic_code").label("Actor2EthnicCode")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_ethnic_code").label("Actor2EthnicCode")
 //        .description("The CAMEO code if the source document specifies the ethnic affiliation of Actor2").build());
 //    allProperties.add(
 //        PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_religion_1_code").label("Actor2Religion1Code")
@@ -184,11 +189,14 @@ package org.apache.streampipes.connect.adapters.gdelt;
 //        PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_religion_2_code").label("Actor2Religion2Code")
 //            .description("The CAMEO code if the source document specifies multiple religious affiliations of Actor2")
 //            .build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_1_code").label("Actor2Type1Code")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_1_code").label("Actor2Type1Code")
 //        .description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor2").build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_2_code").label("Actor2Type2Code")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_2_code").label("Actor2Type2Code")
 //        .description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor2").build());
-//    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_3_code").label("Actor2Type3Code")
+//    allProperties
+//    .add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_3_code").label("Actor2Type3Code")
 //        .description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor2").build());
 //
 //    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "source_url").label("URL")

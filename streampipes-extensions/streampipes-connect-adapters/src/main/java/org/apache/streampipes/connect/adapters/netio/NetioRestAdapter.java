@@ -95,7 +95,8 @@ package org.apache.streampipes.connect.adapters.netio;
 //        throw new AdapterException(
 //            "Unauthorized! Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
 //      } else {
-//        throw new AdapterException("Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
+//        throw
+//        new AdapterException("Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
 //      }
 //    }
 //

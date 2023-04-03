@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
@@ -42,7 +41,7 @@ public class SourcesManagementTest {
     EventSchema newEventSchema = new EventSchema();
     newEventSchema.addEventProperty(new EventPropertyPrimitive());
 
-    AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
+    AdapterDescription adapterDescription = new AdapterDescription();
     SpDataStream newDataStream = new SpDataStream();
     newDataStream.setEventSchema(newEventSchema);
     adapterDescription.setName(newAdapterName);

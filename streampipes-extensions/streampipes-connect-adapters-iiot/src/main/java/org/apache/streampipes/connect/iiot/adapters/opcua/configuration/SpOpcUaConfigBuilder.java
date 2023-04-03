@@ -53,13 +53,15 @@ package org.apache.streampipes.connect.iiot.adapters.opcua.configuration;
 //
 //    if (useURL && unauthenticated) {
 //
-//      String serverAddress = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
+//      String serverAddress =
+//      extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
 //      serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 //
 //      return new SpOpcUaConfig(serverAddress, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
 //
 //    } else if (!useURL && unauthenticated) {
-//      String serverAddress = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
+//      String serverAddress =
+//      extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
 //      serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 //      int port = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 //

@@ -36,7 +36,8 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 //  public TubeMQProtocol() {
 //  }
 //
-//  private TubeMQProtocol(IParser parser, IFormat format, String masterHostAndPort, String topic, String consumerGroup) {
+//  private TubeMQProtocol(
+//  IParser parser, IFormat format, String masterHostAndPort, String topic, String consumerGroup) {
 //    super(parser, format, masterHostAndPort, topic);
 //    this.consumerGroup = consumerGroup;
 //  }
@@ -56,7 +57,8 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 //  public ProtocolDescription declareModel() {
 //    return ProtocolDescriptionBuilder.create(ID).withAssets(Assets.DOCUMENTATION, Assets.ICON).withLocales(Locales.EN)
 //        .category(AdapterType.Generic).sourceType(AdapterSourceType.STREAM)
-//        .requiredTextParameter(Labels.withId(MASTER_HOST_AND_PORT_KEY)).requiredTextParameter(Labels.withId(TOPIC_KEY))
+//        .requiredTextParameter(
+//        Labels.withId(MASTER_HOST_AND_PORT_KEY)).requiredTextParameter(Labels.withId(TOPIC_KEY))
 //        .requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY)).build();
 //  }
 //
