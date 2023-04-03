@@ -16,27 +16,23 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.dataexplorer.query.writer.item;
 
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
-
+import com.google.gson.Gson;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class DataLakeQueryBuilderTest {
+public class TestJsonItemWriter extends TestItemWriter {
 
-  private static final String MEASUREMENT = "measurement";
+  private static final String Expected = "{\"time\": 1668578077051,\"string\": \"test\",\"number\": 1}";
+
   @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
+  public void testJsonWriter() {
+    var writer = new JsonItemWriter(new Gson());
 
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+    String result = writer.createItem(row, columns);
+
+    assertEquals(Expected, result);
   }
 }

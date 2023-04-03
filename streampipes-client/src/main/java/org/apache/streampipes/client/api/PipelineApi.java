@@ -17,9 +17,11 @@
  */
 package org.apache.streampipes.client.api;
 
+
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
@@ -46,9 +48,10 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
     return getAll(getBaseResourcePath());
   }
 
+
   @Override
   public void create(Pipeline element) {
-
+    post(getBaseResourcePath(), element, SuccessMessage.class);
   }
 
   /**

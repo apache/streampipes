@@ -15,28 +15,30 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.querybuilder;
 
-package org.apache.streampipes.dataexplorer.sdk;
+public class FilterCondition {
 
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+  private String field;
+  private String operator;
+  private Object condition;
 
-import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
-public class DataLakeQueryBuilderTest {
-
-  private static final String MEASUREMENT = "measurement";
-  @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
-
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+  public FilterCondition(String field, String operator, Object condition) {
+    this.field = field;
+    this.operator = operator;
+    this.condition = condition;
   }
+
+  public String getField() {
+    return field;
+  }
+
+  public String getOperator() {
+    return operator;
+  }
+
+  public Object getCondition() {
+    return condition;
+  }
+
 }

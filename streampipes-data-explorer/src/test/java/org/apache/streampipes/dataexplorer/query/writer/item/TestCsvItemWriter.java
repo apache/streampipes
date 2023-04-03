@@ -16,27 +16,32 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
-
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+package org.apache.streampipes.dataexplorer.query.writer.item;
 
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 
-public class DataLakeQueryBuilderTest {
+public class TestCsvItemWriter extends TestItemWriter {
 
-  private static final String MEASUREMENT = "measurement";
+  private static final String ExpectedComma = "1668578077051,test,1";
+  private static final String ExpectedSemicolon = "1668578077051;test;1";
+
   @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
+  public void testCsvItemWriterCommaSeparated() {
+    var writer = new CsvItemWriter(",");
 
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+    String result = writer.createItem(row, columns);
+
+    assertEquals(ExpectedComma, result);
+  }
+
+  @Test
+  public void testCsvItemWriterSemicolonSeparated() {
+    var writer = new CsvItemWriter(";");
+
+    String result = writer.createItem(row, columns);
+
+    assertEquals(ExpectedSemicolon, result);
   }
 }

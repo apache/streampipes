@@ -16,27 +16,22 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
 
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+package org.apache.streampipes.dataexplorer.query.writer.item;
 
-import org.junit.Test;
+public class CsvItemWriter extends ItemGenerator {
 
-import java.util.List;
+  public CsvItemWriter(String delimiter) {
+    super(delimiter);
+  }
 
-import static org.junit.Assert.assertEquals;
+  @Override
+  protected String makeItemString(String key, Object value) {
+    return value != null ? value.toString() : "";
+  }
 
-public class DataLakeQueryBuilderTest {
-
-  private static final String MEASUREMENT = "measurement";
-  @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
-
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+  @Override
+  protected String finalizeItem(String item) {
+    return item;
   }
 }

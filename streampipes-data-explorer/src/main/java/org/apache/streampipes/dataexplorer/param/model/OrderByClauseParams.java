@@ -16,27 +16,25 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.dataexplorer.param.model;
 
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IQueryStatement;
+import org.apache.streampipes.dataexplorer.querybuilder.DataLakeQueryOrdering;
+import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
 
-import org.junit.Test;
+public class OrderByClauseParams implements IQueryStatement {
+  private final String ordering;
 
-import java.util.List;
+  public OrderByClauseParams(String ordering) {
+    this.ordering = ordering;
+  }
 
-import static org.junit.Assert.assertEquals;
+  public static OrderByClauseParams from(String ordering) {
+    return new OrderByClauseParams(ordering);
+  }
 
-public class DataLakeQueryBuilderTest {
-
-  private static final String MEASUREMENT = "measurement";
-  @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
-
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+  @Override
+  public void buildStatement(IDataLakeQueryBuilder<?> builder) {
+    builder.withOrderBy(DataLakeQueryOrdering.valueOf(ordering));
   }
 }

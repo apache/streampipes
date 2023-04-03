@@ -15,28 +15,27 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.param.model;
 
-package org.apache.streampipes.dataexplorer.sdk;
+public enum AggregationFunction {
 
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+  MEAN("MEAN"),
+  MIN("MIN"),
+  MAX("MAX"),
+  COUNT("COUNT"),
+  FIRST("FIRST"),
+  LAST("LAST"),
+  MODE("MODE"),
+  SUM("SUM");
 
-import org.junit.Test;
+  private final String dbName;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
-public class DataLakeQueryBuilderTest {
-
-  private static final String MEASUREMENT = "measurement";
-  @Test
-  public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
-
-    var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+  AggregationFunction(String dbName) {
+    this.dbName = dbName;
   }
+
+  public String toDbName() {
+    return this.dbName;
+  }
+
 }
