@@ -20,7 +20,7 @@ import logging
 from typing import AsyncIterator, Dict, List
 
 from streampipes.client.client import StreamPipesClient
-from streampipes.functions.broker import Broker, get_broker
+from streampipes.functions.broker import Broker, Consumer, get_broker
 from streampipes.functions.registration import Registration
 from streampipes.functions.utils.async_iter_handler import AsyncIterHandler
 from streampipes.functions.utils.data_stream_context import DataStreamContext
@@ -77,7 +77,7 @@ class FunctionHandler:
                 # Get the data stream schema from the API
                 data_stream: DataStream = self.client.dataStreamApi.get(stream_id)  # type: ignore
                 # Get the broker
-                broker = get_broker(data_stream)
+                broker: Consumer = get_broker(data_stream)  # type: ignore
                 # Assign the functions, broker and schema to every stream
                 if stream_id in self.stream_contexts.keys():
                     self.stream_contexts[stream_id].add_function(streampipes_function)
@@ -110,7 +110,6 @@ class FunctionHandler:
             broker = self.stream_contexts[stream_id].broker
             # Connect the broker
             await broker.connect(data_stream)
-            await broker.createSubscription()
             self.brokers.append(broker)
             # Get the messages
             messages[stream_id] = broker.get_message()

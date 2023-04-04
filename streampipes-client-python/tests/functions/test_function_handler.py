@@ -228,10 +228,10 @@ class TestFunctionHandler(TestCase):
             {"density": 3.6, "temperature": 30.4, "timestamp": 1670000007000},
         ]
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._create_subscription", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
     def test_function_handler(self, http_session: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         http_session_mock = MagicMock()
@@ -263,10 +263,10 @@ class TestFunctionHandler(TestCase):
         self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._create_subscription", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
     @patch("streampipes.endpoint.endpoint.APIEndpoint.get", autospec=True)
     def test_function_handler_two_streams(self, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         def get_stream(endpoint, stream_id):
@@ -318,12 +318,14 @@ class TestFunctionHandler(TestCase):
         self.assertListEqual(test_function2.data2, self.test_stream_data2)
         self.assertTrue(test_function2.stopped)
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._create_subscription", autospec=True)
     @patch("streampipes.functions.streampipes_function.time", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.publish_event", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
     def test_function_output_stream(
         self,

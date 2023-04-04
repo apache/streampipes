@@ -14,27 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .broker import Broker
-from .consumer import Consumer
-from .publisher import Publisher
+from abc import abstractmethod
+from typing import Any, Dict
 
-# isort: split
+from streampipes.functions.broker import Broker
 
-from .kafka.kafka_consumer import KafkaConsumer
-from .kafka.kafka_publisher import KafkaPublisher
-from .nats.nats_consumer import NatsConsumer
-from .nats.nats_publisher import NatsPublisher
 
-from .broker_handler import SupportedBroker, get_broker  # isort: skip
+class Publisher(Broker):
+    """Abstract implementation of a publisher for a broker.
 
-__all__ = [
-    "Broker",
-    "Consumer",
-    "Publisher",
-    "SupportedBroker",
-    "get_broker",
-    "KafkaConsumer",
-    "KafkaPublisher",
-    "NatsConsumer",
-    "NatsPublisher",
-]
+    A publisher allows to publish events to a data stream.
+    """
+
+    @abstractmethod
+    async def publish_event(self, event: Dict[str, Any]) -> None:
+        """Publish an event to a connected data stream.
+
+        Parameters
+        ----------
+        event: Dict[str, Any]
+            The event to be published.
+
+        Returns
+        -------
+        None
+        """
+        raise NotImplementedError  # pragma: no cover

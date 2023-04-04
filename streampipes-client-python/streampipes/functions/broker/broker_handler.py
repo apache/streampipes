@@ -16,7 +16,13 @@
 #
 from enum import Enum
 
-from streampipes.functions.broker import Broker, KafkaBroker, NatsBroker
+from streampipes.functions.broker import (
+    Broker,
+    KafkaConsumer,
+    KafkaPublisher,
+    NatsConsumer,
+    NatsPublisher,
+)
 from streampipes.model.resource.data_stream import DataStream
 
 
@@ -35,7 +41,9 @@ class UnsupportedBrokerError(Exception):
         super().__init__(message)
 
 
-def get_broker(data_stream: DataStream) -> Broker:  # TODO implementation for more transport_protocols
+def get_broker(
+    data_stream: DataStream, is_publisher: bool = False
+) -> Broker:  # TODO implementation for more transport_protocols
     """Derive the broker for the given data stream.
 
     Parameters
@@ -55,8 +63,12 @@ def get_broker(data_stream: DataStream) -> Broker:  # TODO implementation for mo
     """
     broker_name = data_stream.event_grounding.transport_protocols[0].class_name
     if SupportedBroker.NATS.value in broker_name:
-        return NatsBroker()
+        if is_publisher:
+            return NatsPublisher()
+        return NatsConsumer()
     elif SupportedBroker.KAFKA.value in broker_name:
-        return KafkaBroker()
+        if is_publisher:
+            KafkaPublisher()
+        return KafkaConsumer()
     else:
         raise UnsupportedBrokerError(f'The python client doesn\'t include the broker: "{broker_name}" yet')

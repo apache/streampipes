@@ -14,20 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import os
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from typing import AsyncIterator
 
+from streampipes.functions.broker import Broker
 from streampipes.model.resource.data_stream import DataStream
 
 
-class Broker(ABC):
-    """Abstract implementation of a broker for consumer and publisher.
+class Consumer(Broker):
+    """Abstract implementation a consumer for a broker.
 
-    It contains the basic logic to connect to a data stream.
+    A consumer allows to subscribe to a data stream.
     """
 
     async def connect(self, data_stream: DataStream) -> None:
-        """Connects to the broker running in StreamPipes.
+        """Connects to the broker running in StreamPipes and creates a subscription.
 
         Parameters
         ----------
@@ -38,37 +39,27 @@ class Broker(ABC):
         -------
         None
         """
-        self.stream_id = data_stream.element_id
-        transport_protocol = data_stream.event_grounding.transport_protocols[0]
-        self.topic_name = transport_protocol.topic_definition.actual_topic_name
-        hostname = transport_protocol.broker_hostname
-        if "BROKER-HOST" in os.environ.keys():
-            hostname = os.environ["BROKER-HOST"]
-        await self._make_connection(hostname, transport_protocol.port)
+        await super().connect(data_stream)
+        await self._create_subscription()
 
     @abstractmethod
-    async def _make_connection(self, hostname: str, port: int) -> None:
-        """Helper function to connect to a server.
-
-        Parameters
-        ----------
-        hostname: str
-            The hostname of the server, which the broker connects to.
-        port: int
-            The port number of the connection.
+    async def _create_subscription(self) -> None:
+        """Creates a subscription to a data stream.
 
         Returns
         -------
         None
+
         """
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    async def disconnect(self) -> None:
-        """Closes the connection to the server.
+    def get_message(self) -> AsyncIterator:
+        """Get the published messages of the subscription.
 
         Returns
         -------
-        None
+        iterator: AsyncIterator
+            An async iterator for the messages.
         """
         raise NotImplementedError  # pragma: no cover

@@ -16,20 +16,20 @@
 #
 
 import logging
-from typing import Any, AsyncIterator, Dict
+from typing import AsyncIterator
 
-from confluent_kafka import Consumer  # type: ignore
-from streampipes.functions.broker.broker import Broker
-from streampipes.functions.broker.kafka_message_fetcher import KafkaMessageFetcher
+from confluent_kafka import Consumer as KafkaConnection  # type: ignore
+from streampipes.functions.broker import Consumer
+from streampipes.functions.broker.kafka.kafka_message_fetcher import KafkaMessageFetcher
 from streampipes.model.common import random_letters
 
 logger = logging.getLogger(__name__)
 
 
-class KafkaBroker(Broker):
-    """Implementation of the broker for Kafka"""
+class KafkaConsumer(Consumer):
+    """Implementation of a consumer for Kafka"""
 
-    async def _makeConnection(self, hostname: str, port: int) -> None:
+    async def _make_connection(self, hostname: str, port: int) -> None:
         """Helper function to connect to a server.
 
         Parameters
@@ -45,11 +45,12 @@ class KafkaBroker(Broker):
         -------
         None
         """
-        self.kafka_consumer = Consumer(
+        self.kafka_consumer = KafkaConnection(
             {"bootstrap.servers": f"{hostname}:{port}", "group.id": random_letters(6), "auto.offset.reset": "latest"}
         )
+        logger.info(f"Connected to Kafka at {hostname}:{port}")
 
-    async def createSubscription(self) -> None:
+    async def _create_subscription(self) -> None:
         """Creates a subscription to a data stream.
 
         Returns
@@ -57,23 +58,7 @@ class KafkaBroker(Broker):
         None
         """
         self.kafka_consumer.subscribe([self.topic_name])
-
         logger.info(f"Subscribed to stream: {self.stream_id}")
-
-    async def publish_event(self, event: Dict[str, Any]):
-        """Publish an event to a connected data stream.
-
-        Parameters
-        ----------
-        event: Dict[str, Any]
-            The event to be published.
-
-        Returns
-        -------
-        None
-        """
-
-        # await self.publish(subject=self.topic_name, payload=json.dumps(event).encode("utf-8"))
 
     async def disconnect(self) -> None:
         """Closes the connection to the server.
@@ -93,5 +78,4 @@ class KafkaBroker(Broker):
         iterator: AsyncIterator
             An async iterator for the messages.
         """
-
         return KafkaMessageFetcher(self.kafka_consumer)
