@@ -24,10 +24,11 @@ import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBui
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class AdapterDescriptionBuilder extends
     AbstractConfigurablePipelineElementBuilder<AdapterDescriptionBuilder, AdapterDescription> {
 
-  private AdapterDescriptionBuilder(String appId) {
+  protected AdapterDescriptionBuilder(String appId) {
     super(appId, new AdapterDescription());
   }
 

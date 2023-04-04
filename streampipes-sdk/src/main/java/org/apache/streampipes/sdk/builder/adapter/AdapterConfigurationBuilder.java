@@ -21,24 +21,40 @@ package org.apache.streampipes.sdk.builder.adapter;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AdapterConfigurationBuilder {
+public class AdapterConfigurationBuilder extends
+    AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterConfiguration> {
 
   private AdapterDescription adapterDescription;
   private final List<Parser> supportedParsers;
 
-  private AdapterConfigurationBuilder() {
+  protected AdapterConfigurationBuilder(String appId) {
+    super(appId, new AdapterConfiguration());
+    adapterDescription = new AdapterDescription();
+    adapterDescription.setAppId(appId);
     supportedParsers = new ArrayList<>();
   }
 
-  public static AdapterConfigurationBuilder create() {
-    return new AdapterConfigurationBuilder();
+  public static AdapterConfigurationBuilder create(String appId) {
+    return new AdapterConfigurationBuilder(appId);
   }
 
+  @Override
+  protected AdapterConfigurationBuilder me() {
+    return this;
+  }
+
+  @Override
+  protected void prepareBuild() {
+    // TODO
+  }
+
+  @Override
   public AdapterConfiguration build() {
     return new AdapterConfiguration(adapterDescription, supportedParsers);
   }

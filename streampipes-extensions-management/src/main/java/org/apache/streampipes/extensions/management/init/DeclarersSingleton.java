@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DeclarersSingleton {
@@ -267,13 +268,6 @@ public class DeclarersSingleton {
         .orElse(null);
   }
 
-  public IAdapter getAdapter(String id) {
-    return getAllAdapters().stream()
-        .filter(adapter -> adapter.getId().equals(id))
-        .findAny()
-        .orElse(null);
-  }
-
   public int getPort() {
     return this.port;
   }
@@ -308,6 +302,18 @@ public class DeclarersSingleton {
 
   public List<AdapterInterface> getAdapters() {
     return adapters;
+  }
+
+  public void setAdapters(List<AdapterInterface> adapters) {
+    this.adapters = adapters;
+  }
+
+  public Optional<AdapterInterface> getAdapter(String id) {
+    return getAdapters().stream()
+        .filter(adapter -> adapter.declareConfig()
+            .getAdapterDescription()
+            .getAppId().equals(id))
+        .findFirst();
   }
 
   private void checkAndStartExecutableStreams(DataStreamDeclarer declarer) {

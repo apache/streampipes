@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.extensions.management.connect;
+package org.apache.streampipes.extensions.management.init;
 
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
 import org.junit.Test;
@@ -28,57 +28,31 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
-public class ConnectWorkerDescriptionProviderTest {
-
-  private String adapterId = "adapterAppId";
+public class DeclarersSingletonTest {
 
   @Test
-  public void getAdapterDescriptions() {
-    var expected = new AdapterDescription();
-
-    var provider = setUpTest(expected);
-
-    var result = provider.getAdapterDescriptions();
-
-    assertEquals(1, result.size());
-    assertEquals(expected, result.get(0));
-  }
-
-  @Test
-  public void getAdapterDescription() {
-    var expected = new AdapterDescription();
-    expected.setAppId(adapterId);
-
-    var provider = setUpTest(expected);
-
-    var result = provider.getAdapterDescription(adapterId);
-
-    assertTrue(result.isPresent());
-    assertEquals(adapterId, result.get().getAppId());
-  }
-
-  private ConnectWorkerDescriptionProvider setUpTest(AdapterDescription expected) {
-
-    var provider = spy(new ConnectWorkerDescriptionProvider());
-
+  public void getAdapterTest() {
+    var id = "id";
     var testAdapter = mock(AdapterInterface.class);
     doAnswer(invocation ->
         AdapterConfigurationBuilder
-            .create(adapterId)
-            .withAdapterDescription(expected)
+            .create(id)
+//            .withAdapterDescription(
+//                AdapterDescriptionBuilder.create(id)
+//                    .build())
             .build())
         .when(testAdapter)
         .declareConfig();
 
-    List<AdapterInterface> adapters = List.of(testAdapter);
-    doReturn(adapters).when(provider).getRegisteredAdapters();
 
-    return provider;
+    DeclarersSingleton.getInstance().setAdapters(List.of(testAdapter));
+
+    var result = DeclarersSingleton.getInstance().getAdapter(id);
+
+    assertTrue(result.isPresent());
+    assertEquals(testAdapter, result.get());
   }
-
 
 }

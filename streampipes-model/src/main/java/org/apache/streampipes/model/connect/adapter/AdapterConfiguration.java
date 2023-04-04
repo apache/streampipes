@@ -37,12 +37,17 @@
 package org.apache.streampipes.model.connect.adapter;
 
 
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+
 import java.util.List;
 
 /**
  * Represents an adapter configuration consisting of parsers and an AdapterDescription
  */
-public class AdapterConfiguration {
+public class AdapterConfiguration extends NamedStreamPipesEntity {
+
+  public AdapterConfiguration() {
+  }
 
   public AdapterConfiguration(AdapterDescription adapterDescription, List<Parser> supportedParsers) {
     this.adapterDescription = adapterDescription;

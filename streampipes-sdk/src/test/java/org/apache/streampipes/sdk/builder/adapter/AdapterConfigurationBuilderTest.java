@@ -31,20 +31,23 @@ import static org.junit.Assert.assertNotNull;
 
 public class AdapterConfigurationBuilderTest {
 
+  String id = "adapterAppid";
+
   @Test
   public void create() {
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create()
+        .create(id)
         .build();
 
     assertNotNull(adapterConfiguration);
+    assertEquals(id, adapterConfiguration.getAdapterDescription().getAppId());
   }
 
   @Test
   public void withOneParser() {
     var expected = new Parser();
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create()
+        .create(id)
         .withSupportedParsers(expected)
         .build();
 
@@ -56,7 +59,7 @@ public class AdapterConfigurationBuilderTest {
     var parser1 = new Parser();
     var parser2 = new Parser();
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create()
+        .create(id)
         .withSupportedParsers(parser1, parser2)
         .build();
 
@@ -68,7 +71,7 @@ public class AdapterConfigurationBuilderTest {
     var parser1 = new Parser();
     var parser2 = new Parser();
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create()
+        .create(id)
         .withSupportedParsers(parser1)
         .withSupportedParsers(parser2)
         .build();
@@ -81,7 +84,7 @@ public class AdapterConfigurationBuilderTest {
     var expected = new AdapterDescription();
 
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create()
+        .create(id)
         .withAdapterDescription(expected)
         .build();
 
