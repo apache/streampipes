@@ -39,38 +39,41 @@ describe('Test Truncate data in datalake', () => {
             .should('be.visible')
             .click();
 
-        // Check if amount of events is zero
+        // Check if amount of events is zero. The should('have.text, '0') is required to check for text equality
         cy.dataCy('datalake-number-of-events', { timeout: 10000 })
             .should('be.visible')
-            .contains('0');
-    });
-});
-
-describe('Delete data in datalake', () => {
-    before('Setup Test', () => {
-        cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
-        PipelineUtils.deletePipeline();
+            .should($element => {
+                const text = $element.text().trim();
+                expect(text).to.equal('0');
+            });
     });
 
-    it('Perform Test', () => {
-        DataLakeUtils.goToDatalakeConfiguration();
+    describe('Delete data in datalake', () => {
+        before('Setup Test', () => {
+            cy.initStreamPipesTest();
+            DataLakeUtils.loadRandomDataSetIntoDataLake();
+            PipelineUtils.deletePipeline();
+        });
 
-        // Check if amount of events is correct
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
-            .should('be.visible')
-            .contains('10');
+        it('Perform Test', () => {
+            DataLakeUtils.goToDatalakeConfiguration();
 
-        // Delete data
-        cy.dataCy('datalake-delete-btn').should('be.visible').click();
-        cy.dataCy('confirm-delete-data-btn', { timeout: 10000 })
-            .should('be.visible')
-            .click();
+            // Check if amount of events is correct
+            cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+                .should('be.visible')
+                .contains('10');
 
-        // Check if amount of events is zero
-        cy.dataCy('datalake-number-of-events', { timeout: 10000 }).should(
-            'have.length',
-            0,
-        );
+            // Delete data
+            cy.dataCy('datalake-delete-btn').should('be.visible').click();
+            cy.dataCy('confirm-delete-data-btn', { timeout: 10000 })
+                .should('be.visible')
+                .click();
+
+            // Check if amount of events is zero
+            cy.dataCy('datalake-number-of-events', { timeout: 10000 }).should(
+                'have.length',
+                0,
+            );
+        });
     });
 });
