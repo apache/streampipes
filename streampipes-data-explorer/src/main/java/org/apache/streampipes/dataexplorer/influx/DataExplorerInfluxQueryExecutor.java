@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
@@ -125,24 +126,33 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
           + " AND time < "
           + params.getEndTime() * 1000000;
     }
-    return new Query(query);
+    return new Query(query, getDatabaseName());
   }
 
   @Override
   protected Query makeCountQuery(SelectQueryParams params) {
     var builder = getQueryBuilder(params.getIndex());
-    return params.toCountQuery(builder);
+    return getQueryWithDatabaseName(params.toCountQuery(builder));
   }
 
   @Override
   protected Query makeSelectQuery(SelectQueryParams params) {
     var builder = getQueryBuilder(params.getIndex());
-    return params.toQuery(builder);
+    return getQueryWithDatabaseName(params.toQuery(builder));
   }
 
   private boolean hasResult(QueryResult queryResult) {
     return queryResult.getResults() != null
         && queryResult.getResults().size() > 0
         && queryResult.getResults().get(0).getSeries() != null;
+  }
+
+  private Query getQueryWithDatabaseName(Query query) {
+    var databaseName = getDatabaseName();
+    return new Query(query.getCommand(), databaseName);
+  }
+
+  private String getDatabaseName() {
+    return Environments.getEnvironment().getTsStorageBucket().getValueOrDefault();
   }
 }
