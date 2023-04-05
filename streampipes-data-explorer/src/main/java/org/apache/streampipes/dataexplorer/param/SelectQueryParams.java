@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.param;
 import org.apache.streampipes.dataexplorer.param.model.FillClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTagsClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTimeClauseParams;
-import org.apache.streampipes.dataexplorer.param.model.ItemClauseParams;
+import org.apache.streampipes.dataexplorer.param.model.LimitClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OffsetClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OrderByClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectClauseParams;
@@ -39,7 +39,7 @@ public class SelectQueryParams {
   private GroupByTimeClauseParams groupByTimeClauseParams;
 
   private OrderByClauseParams orderByClauseParams;
-  private ItemClauseParams limitParams;
+  private LimitClauseParams limitParams;
 
   private OffsetClauseParams offsetClauseParams;
 
@@ -59,7 +59,7 @@ public class SelectQueryParams {
     this.selectParams = params;
   }
 
-  public void withLimitParams(ItemClauseParams params) {
+  public void withLimitParams(LimitClauseParams params) {
     this.limitParams = params;
   }
 
@@ -97,6 +97,14 @@ public class SelectQueryParams {
     this.selectParams.buildCountStatement(builder);
     prepareBuilder(builder);
     return builder.build();
+  }
+
+  public int getLimit() {
+    if (Objects.nonNull(limitParams)) {
+      return limitParams.getLimit();
+    } else {
+      return Integer.MIN_VALUE;
+    }
   }
 
   private <T> void prepareBuilder(IDataLakeQueryBuilder<T> builder) {
