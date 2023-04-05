@@ -47,33 +47,33 @@ describe('Test Truncate data in datalake', () => {
                 expect(text).to.equal('0');
             });
     });
+});
 
-    describe('Delete data in datalake', () => {
-        before('Setup Test', () => {
-            cy.initStreamPipesTest();
-            DataLakeUtils.loadRandomDataSetIntoDataLake();
-            PipelineUtils.deletePipeline();
-        });
+describe('Delete data in datalake', () => {
+    before('Setup Test', () => {
+        cy.initStreamPipesTest();
+        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        PipelineUtils.deletePipeline();
+    });
 
-        it('Perform Test', () => {
-            DataLakeUtils.goToDatalakeConfiguration();
+    it('Perform Test', () => {
+        DataLakeUtils.goToDatalakeConfiguration();
 
-            // Check if amount of events is correct
-            cy.dataCy('datalake-number-of-events', { timeout: 10000 })
-                .should('be.visible')
-                .contains('10');
+        // Check if amount of events is correct
+        cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+            .should('be.visible')
+            .contains('10');
 
-            // Delete data
-            cy.dataCy('datalake-delete-btn').should('be.visible').click();
-            cy.dataCy('confirm-delete-data-btn', { timeout: 10000 })
-                .should('be.visible')
-                .click();
+        // Delete data
+        cy.dataCy('datalake-delete-btn').should('be.visible').click();
+        cy.dataCy('confirm-delete-data-btn', { timeout: 10000 })
+            .should('be.visible')
+            .click();
 
-            // Check if amount of events is zero
-            cy.dataCy('datalake-number-of-events', { timeout: 10000 }).should(
-                'have.length',
-                0,
-            );
-        });
+        // Check if amount of events is zero
+        cy.dataCy('datalake-number-of-events', { timeout: 10000 }).should(
+            'have.length',
+            0,
+        );
     });
 });
