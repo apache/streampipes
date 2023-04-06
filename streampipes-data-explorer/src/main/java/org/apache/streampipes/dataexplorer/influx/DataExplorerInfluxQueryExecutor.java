@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
@@ -32,6 +33,7 @@ import org.influxdb.dto.QueryResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
 
@@ -52,10 +54,20 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   protected double getAmountOfResults(QueryResult countQueryResult) {
     if (countQueryResult.getResults().get(0).getSeries() != null
         && countQueryResult.getResults().get(0).getSeries().get(0).getValues() != null) {
-      return (double) countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);
+      return getMaxCount(countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0));
     } else {
       return 0.0;
     }
+  }
+
+  private double getMaxCount(List<Object> rows) {
+    return rows.stream()
+        .skip(1)
+        .filter(Objects::nonNull)
+        .filter(Number.class::isInstance)
+        .mapToDouble(r -> ((Number) r).doubleValue())
+        .max()
+        .orElse(Double.NEGATIVE_INFINITY);
   }
 
 
@@ -125,24 +137,33 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
           + " AND time < "
           + params.getEndTime() * 1000000;
     }
-    return new Query(query);
+    return new Query(query, getDatabaseName());
   }
 
   @Override
   protected Query makeCountQuery(SelectQueryParams params) {
     var builder = getQueryBuilder(params.getIndex());
-    return params.toCountQuery(builder);
+    return getQueryWithDatabaseName(params.toCountQuery(builder));
   }
 
   @Override
   protected Query makeSelectQuery(SelectQueryParams params) {
     var builder = getQueryBuilder(params.getIndex());
-    return params.toQuery(builder);
+    return getQueryWithDatabaseName(params.toQuery(builder));
   }
 
   private boolean hasResult(QueryResult queryResult) {
     return queryResult.getResults() != null
         && queryResult.getResults().size() > 0
         && queryResult.getResults().get(0).getSeries() != null;
+  }
+
+  private Query getQueryWithDatabaseName(Query query) {
+    var databaseName = getDatabaseName();
+    return new Query(query.getCommand(), databaseName);
+  }
+
+  private String getDatabaseName() {
+    return Environments.getEnvironment().getTsStorageBucket().getValueOrDefault();
   }
 }

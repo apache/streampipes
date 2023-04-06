@@ -21,16 +21,16 @@ package org.apache.streampipes.dataexplorer.param.model;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
 
-public class ItemClauseParams implements IQueryStatement {
+public class LimitClauseParams implements IQueryStatement {
 
   private final Integer limit;
 
-  public ItemClauseParams(Integer limit) {
+  public LimitClauseParams(Integer limit) {
     this.limit = limit;
   }
 
-  public static ItemClauseParams from(Integer limit) {
-    return new ItemClauseParams(limit);
+  public static LimitClauseParams from(Integer limit) {
+    return new LimitClauseParams(limit);
   }
 
   public Integer getLimit() {
