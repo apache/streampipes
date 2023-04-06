@@ -39,4 +39,11 @@ public class AdaptersTest {
       testAdapter(pulsarAdapterTester);
     }
   }
+
+  @Test
+  public void testMqttAdapter() throws Exception {
+    try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
+      testAdapter(mqttAdapterTester);
+    }
+  }
 }
