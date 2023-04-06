@@ -31,15 +31,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AdapterConfigurationBuilder extends
-    AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterConfiguration> {
+    AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterDescription> {
 
-  private final AdapterDescription adapterDescription;
   private final List<Parser> supportedParsers;
 
   protected AdapterConfigurationBuilder(String appId) {
-    super(appId, new AdapterConfiguration());
-    adapterDescription = new AdapterDescription();
-    adapterDescription.setAppId(appId);
+    super(appId, new AdapterDescription());
     supportedParsers = new ArrayList<>();
   }
 
@@ -54,12 +51,19 @@ public class AdapterConfigurationBuilder extends
 
   @Override
   protected void prepareBuild() {
-    // TODO
   }
 
   @Override
-  public AdapterConfiguration build() {
-    return new AdapterConfiguration(adapterDescription, supportedParsers);
+  public AdapterDescription build() {
+    return this.elementDescription;
+  }
+
+  // TODO this is currently only a provisional solution
+  // We need a way to extend the class `AbstractConfigurablePipelineElementBuilder`
+  // to reuse the methods, but for the `AdapterDescription` and not for the `AdapterConfiguration`
+  public AdapterConfiguration buildConfiguration() {
+    this.elementDescription.setConfig(getStaticProperties());
+    return new AdapterConfiguration(this.elementDescription, this.supportedParsers);
   }
 
   public AdapterConfigurationBuilder withSupportedParsers(Parser... parsers) {
@@ -68,7 +72,7 @@ public class AdapterConfigurationBuilder extends
   }
 
   public AdapterConfigurationBuilder withCategory(AdapterType... categories) {
-    this.adapterDescription
+    this.elementDescription
         .setCategory(Arrays
             .stream(categories)
             .map(Enum::name)

@@ -71,7 +71,7 @@ public class FileReplayAdapter implements AdapterInterface {
             Alternatives.from(Labels.withId(FASTEST)), Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
                 StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
                     StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP)))))
-        .build();
+        .buildConfiguration();
   }
 
   @Override

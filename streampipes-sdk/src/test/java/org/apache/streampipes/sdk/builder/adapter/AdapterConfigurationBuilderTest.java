@@ -38,11 +38,14 @@ public class AdapterConfigurationBuilderTest {
   public void create() {
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
-        .build();
+        .buildConfiguration();
 
     assertNotNull(adapterConfiguration);
     assertEquals(id, adapterConfiguration.getAdapterDescription().getAppId());
-    assertEquals(new AdapterDescription(), adapterConfiguration.getAdapterDescription());
+
+    var expected = new AdapterDescription();
+    expected.setElementId("sp:" + id);
+    assertEquals(expected, adapterConfiguration.getAdapterDescription());
   }
 
   @Test
@@ -51,7 +54,7 @@ public class AdapterConfigurationBuilderTest {
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(expected)
-        .build();
+        .buildConfiguration();
 
     assertEquals(List.of(expected), adapterConfiguration.getSupportedParsers());
   }
@@ -63,7 +66,7 @@ public class AdapterConfigurationBuilderTest {
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(parser1, parser2)
-        .build();
+        .buildConfiguration();
 
     assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
   }
@@ -76,7 +79,7 @@ public class AdapterConfigurationBuilderTest {
         .create(id)
         .withSupportedParsers(parser1)
         .withSupportedParsers(parser2)
-        .build();
+        .buildConfiguration();
 
     assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
   }
@@ -86,7 +89,7 @@ public class AdapterConfigurationBuilderTest {
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withCategory(AdapterType.Manufacturing)
-        .build();
+        .buildConfiguration();
 
     var actual = adapterConfiguration.getAdapterDescription().getCategory();
 

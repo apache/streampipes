@@ -68,7 +68,7 @@ public class NewMachineDataSimulatorAdapter implements AdapterInterface {
         .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
         .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
             "flowrate", "pressure", "waterlevel"))
-        .build();
+        .buildConfiguration();
   }
 
   @Override
