@@ -56,16 +56,6 @@ public class KafkaPublishSink extends StreamPipesDataSink {
   public KafkaPublishSink() {
   }
 
-  @VisibleForTesting
-  public KafkaPublishSink(SpKafkaProducer producer) {
-    this.producer = producer;
-  }
-
-  @VisibleForTesting
-  public SpKafkaProducer getProducer() {
-    return producer;
-  }
-
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka")
