@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer.param;
 import org.apache.streampipes.dataexplorer.param.model.FillClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTagsClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTimeClauseParams;
-import org.apache.streampipes.dataexplorer.param.model.ItemClauseParams;
+import org.apache.streampipes.dataexplorer.param.model.LimitClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OffsetClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OrderByClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectClauseParams;
@@ -99,7 +99,7 @@ public class ProvidedRestQueryParamConverter {
     }
 
     if (params.has(QP_LIMIT)) {
-      queryParameters.withLimitParams(ItemClauseParams.from(params.getAsInt(QP_LIMIT)));
+      queryParameters.withLimitParams(LimitClauseParams.from(params.getAsInt(QP_LIMIT)));
     }
 
     if (params.has(QP_OFFSET)) {

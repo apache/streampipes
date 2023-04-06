@@ -56,7 +56,8 @@ public abstract class DataExplorerQueryExecutor<X, W> {
     if (this.maximumAmountOfEvents != -1) {
       X countQuery = makeCountQuery(params);
       W countQueryResult = executeQuery(countQuery);
-      Double amountOfQueryResults = getAmountOfResults(countQueryResult);
+      var limit = params.getLimit();
+      Double amountOfQueryResults = limit == Integer.MIN_VALUE ? getAmountOfResults(countQueryResult) : limit;
 
       if (amountOfQueryResults > this.maximumAmountOfEvents) {
         SpQueryResult tooMuchData = new SpQueryResult();

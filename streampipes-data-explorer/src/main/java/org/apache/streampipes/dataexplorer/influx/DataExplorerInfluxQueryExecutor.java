@@ -33,6 +33,7 @@ import org.influxdb.dto.QueryResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
 
@@ -53,10 +54,20 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   protected double getAmountOfResults(QueryResult countQueryResult) {
     if (countQueryResult.getResults().get(0).getSeries() != null
         && countQueryResult.getResults().get(0).getSeries().get(0).getValues() != null) {
-      return (double) countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);
+      return getMaxCount(countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0));
     } else {
       return 0.0;
     }
+  }
+
+  private double getMaxCount(List<Object> rows) {
+    return rows.stream()
+        .skip(1)
+        .filter(Objects::nonNull)
+        .filter(Number.class::isInstance)
+        .mapToDouble(r -> ((Number) r).doubleValue())
+        .max()
+        .orElse(Double.NEGATIVE_INFINITY);
   }
 
 
