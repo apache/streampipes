@@ -26,7 +26,6 @@ from pydantic import BaseModel, Extra, Field, StrictInt, ValidationError, valida
 from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.container import DataLakeMeasures
 from streampipes.model.container.resource_container import ResourceContainer
-from streampipes.model.resource import DataSeries
 
 __all__ = [
     "DataLakeMeasureEndpoint",

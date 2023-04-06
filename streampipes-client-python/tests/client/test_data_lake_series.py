@@ -21,25 +21,25 @@ from unittest.mock import MagicMock, call, patch
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes.model.resource.data_lake_series import (
-    StreamPipesUnsupportedDataLakeSeries,
-)
+from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataLakeSeries
 
 
 class TestDataLakeSeries(TestCase):
     def setUp(self) -> None:
+        self.base_headers = [
+            "changeDetectedHigh",
+            "changeDetectedLow",
+            "cumSumHigh",
+            "cumSumLow",
+            "level",
+            "overflow",
+            "sensorId",
+            "underflow",
+        ]
 
-        self.headers = [
-                "time",
-                "changeDetectedHigh",
-                "changeDetectedLow",
-                "cumSumHigh",
-                "cumSumLow",
-                "level",
-                "overflow",
-                "sensorId",
-                "underflow",
-            ]
+        self.headers = ["time"] + self.base_headers
+
+        self.headers_expected = ["timestamp"] + self.base_headers
 
         self.data_series = {
             "total": 2,
@@ -93,10 +93,8 @@ class TestDataLakeSeries(TestCase):
 
         return result.to_pandas()
 
-
     @patch("streampipes.client.client.Session", autospec=True)
     def test_to_pandas(self, http_session: MagicMock):
-
         query_result = {
             "total": 1,
             "headers": self.headers,
@@ -110,7 +108,7 @@ class TestDataLakeSeries(TestCase):
 
         self.assertEqual(2, len(result_pd))
         self.assertListEqual(
-            self.headers,
+            self.headers_expected,
             list(result_pd.columns),
         )
         self.assertEqual(73.37740325927734, result_pd["level"][0])
@@ -131,7 +129,21 @@ class TestDataLakeSeries(TestCase):
 
         self.assertEqual(4, len(result_pd))
         self.assertListEqual(
-            self.headers,
+            self.headers_expected,
             list(result_pd.columns),
         )
         self.assertEqual(70.03279876708984, result_pd["level"][3])
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    def test_different_headers_exception(self, http_session: MagicMock):
+        query_result = {
+            "total": 1,
+            "headers": ['one'],
+            "spQueryStatus": "OK",
+            "allDataSeries": [
+                self.data_series
+            ],
+        }
+
+        with self.assertRaises(StreamPipesUnsupportedDataLakeSeries):
+            self.get_result_as_panda(http_session, query_result)

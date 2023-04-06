@@ -17,14 +17,13 @@
 
 from __future__ import annotations
 
-import json
 from itertools import chain
-from typing import Any, Dict, List, Optional, Union, Literal
+from typing import Any, Dict, List, Literal, Union
 
 import pandas as pd
-from pydantic import StrictInt, StrictStr, Field
-
+from pydantic import Field, StrictInt, StrictStr
 from streampipes.model.resource import DataSeries
+from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataLakeSeries
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
@@ -33,6 +32,12 @@ __all__ = [
 
 
 class QueryResult(Resource):
+    """Implementation of a resource for query result.
+    This resource defines the data model used by its resource container(`model.container.DataLakeMeasures`).
+    It inherits from Pydantic's BaseModel to get all its superpowers,
+    which are used to parse, validate the API response and to easily switch between
+    the Python representation (both serialized and deserialized) and Java representation (serialized only).
+    """
 
     def convert_to_pandas_representation(self) -> Dict[str, Union[List[str], List[List[Any]]]]:
         """Returns the dictionary representation of a data lake series
@@ -42,35 +47,45 @@ class QueryResult(Resource):
 
         Returns
         -------
-        Dictionary
+        dict
             Dictionary with the keys `headers` and `rows`
 
+        Raises
+        ------
+        StreamPipesUnsupportedDataLakeSeries
+            If the query result returned by the StreamPipes API cannot be converted to the pandas representation
+
         """
-        return self.dict(include={"headers", "rows"})
+        for series in self.all_data_series:
+            if self.headers != series.headers:
+                raise StreamPipesUnsupportedDataLakeSeries("Headers of series does not match query result headers")
+
+        if self.headers[0] == "time":
+            self.headers[0] = "timestamp"
+        else:
+            raise StreamPipesUnsupportedDataLakeSeries(f"Unsupported headers {self.headers}")
+
+        return {
+            "headers": self.headers,
+            "rows": list(chain.from_iterable([series.rows for series in self.all_data_series])),
+        }
 
     total: StrictInt
     headers: List[StrictStr]
     all_data_series: List[DataSeries]
-    query_status: Literal['OK', 'TOO_MUCH_DATA'] = Field(alias="spQueryStatus")
+    query_status: Literal["OK", "TOO_MUCH_DATA"] = Field(alias="spQueryStatus")
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the data lake series in representation of a Pandas Dataframe.
 
         Returns
         -------
-        pd.DataFrame
+        df: pd.DataFrame
+            Pandas df containing the query result
         """
 
-        # Pseudocode:
-        # pandas_representation = self.convert_to_pandas_representation()
-        #
-        # pd = pd.DataFrame(data=chain(*[item.rows for item in self.all_data_series]),
-        #              columns=pandas_representation["headers"])
-        #
-        # if tags not None:
-        #     pd.groupBy(tags)
+        pandas_representation = self.convert_to_pandas_representation()
 
-        return pd
+        df = pd.DataFrame(data=pandas_representation["rows"], columns=pandas_representation["headers"])
 
-
-    test ={})
+        return df

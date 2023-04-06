@@ -22,23 +22,12 @@ from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
 from pydantic import StrictInt, StrictStr
+from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataLakeSeries
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
     "DataSeries",
 ]
-
-
-class StreamPipesUnsupportedDataLakeSeries(Exception):
-    """Exception to be raised when the returned data lake series
-    cannot be parsed with the current implementation of the resource.
-    """
-
-    def __init__(self):
-        super().__init__(
-            "The Data Lake series returned by the API appears "
-            "to have a structure that is not currently supported by the Python client."
-        )
 
 
 class DataSeries(Resource):
