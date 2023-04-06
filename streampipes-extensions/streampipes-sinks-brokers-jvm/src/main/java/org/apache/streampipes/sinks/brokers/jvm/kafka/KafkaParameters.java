@@ -18,29 +18,42 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.kafka;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.apache.streampipes.pe.shared.config.kafka.KafkaConnectUtils;
+import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
 
-public class KafkaParameters extends EventSinkBindingParams {
+public class KafkaParameters {
 
-  private String kafkaHost;
-  private Integer kafkaPort;
-  private String topic;
-  private String authentication;
+  private final String kafkaHost;
+
+  private final Integer kafkaPort;
+
+  private final String topic;
+
+  private final String authentication;
+
   private String username;
-  private String password;
-  private boolean useSSL;
 
-  public KafkaParameters(DataSinkInvocation graph, String kafkaHost, Integer kafkaPort, String topic,
-                         String authentication, String username, String password, boolean useSSL) {
-    super(graph);
-    this.kafkaHost = kafkaHost;
-    this.kafkaPort = kafkaPort;
-    this.topic = topic;
-    this.authentication = authentication;
-    this.username = username;
-    this.password = password;
-    this.useSSL = useSSL;
+  private String password;
+
+  private final boolean useSSL;
+
+  public KafkaParameters(SinkParams params) {
+    DataSinkParameterExtractor extractor = params.extractor();
+    this.topic = extractor.singleValueParameter(KafkaConnectUtils.TOPIC_KEY, String.class);
+    this.kafkaHost = extractor.singleValueParameter(KafkaConnectUtils.HOST_KEY, String.class);
+    this.kafkaPort = extractor.singleValueParameter(KafkaConnectUtils.PORT_KEY, Integer.class);
+    this.authentication = extractor.selectedAlternativeInternalId(KafkaConnectUtils.ACCESS_MODE);
+
+    if (!useAuthentication()) {
+      this.useSSL = KafkaConnectUtils.UNAUTHENTICATED_SSL.equals(this.authentication);
+    } else {
+      String username = extractor.singleValueParameter(KafkaConnectUtils.USERNAME_KEY, String.class);
+      String password = extractor.secretValue(KafkaConnectUtils.PASSWORD_KEY);
+      this.username = username;
+      this.password = password;
+      this.useSSL = KafkaConnectUtils.SASL_SSL.equals(this.authentication);
+    }
   }
 
   public String getKafkaHost() {
@@ -69,5 +82,10 @@ public class KafkaParameters extends EventSinkBindingParams {
 
   public boolean isUseSSL() {
     return useSSL;
+  }
+
+  public boolean useAuthentication() {
+    return KafkaConnectUtils.SASL_PLAIN.equals(this.authentication)
+        || KafkaConnectUtils.SASL_SSL.equals(this.authentication);
   }
 }

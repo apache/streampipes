@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.sdk;
 
+import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+
 import org.junit.Test;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public class DataLakeQueryBuilderTest {
   private static final String MEASUREMENT = "measurement";
   @Test
   public void withSimpleColumnsTest() {
-    var result = DataLakeQueryBuilder
+    var result = DataLakeInfluxQueryBuilder
         .create(MEASUREMENT)
         .withSimpleColumns(List.of("one", "two"))
         .build();

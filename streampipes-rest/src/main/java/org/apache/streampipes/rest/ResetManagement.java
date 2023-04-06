@@ -19,7 +19,9 @@
 package org.apache.streampipes.rest;
 
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
-import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
+import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
@@ -93,13 +95,15 @@ public class ResetManagement {
     });
 
     // Remove all data in data lake
-    DataLakeManagementV4 dataLakeManagementV4 = new DataLakeManagementV4();
-    List<DataLakeMeasure> allMeasurements = dataLakeManagementV4.getAllMeasurements();
+    IDataExplorerSchemaManagement dataLakeMeasureManagement = new DataExplorerSchemaManagement();
+    DataExplorerQueryManagement dataExplorerQueryManagement =
+        new DataExplorerQueryManagement(dataLakeMeasureManagement);
+    List<DataLakeMeasure> allMeasurements = dataLakeMeasureManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
-      boolean isSuccessDataLake = dataLakeManagementV4.removeMeasurement(measurement.getMeasureName());
+      boolean isSuccessDataLake = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
 
       if (isSuccessDataLake) {
-        dataLakeManagementV4.removeEventProperty(measurement.getMeasureName());
+        dataLakeMeasureManagement.deleteMeasurementByName(measurement.getMeasureName());
       }
     });
 
