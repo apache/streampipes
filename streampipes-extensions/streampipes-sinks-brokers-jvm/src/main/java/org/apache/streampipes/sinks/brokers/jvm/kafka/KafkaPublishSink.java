@@ -40,8 +40,6 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import java.util.List;
 import java.util.Map;
 
