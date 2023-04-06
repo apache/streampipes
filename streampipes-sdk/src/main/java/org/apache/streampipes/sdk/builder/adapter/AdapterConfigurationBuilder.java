@@ -18,19 +18,22 @@
 
 package org.apache.streampipes.sdk.builder.adapter;
 
+import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.Parser;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdapterConfigurationBuilder extends
     AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterConfiguration> {
 
-  private AdapterDescription adapterDescription;
+  private final AdapterDescription adapterDescription;
   private final List<Parser> supportedParsers;
 
   protected AdapterConfigurationBuilder(String appId) {
@@ -64,9 +67,14 @@ public class AdapterConfigurationBuilder extends
     return this;
   }
 
-
-  public AdapterConfigurationBuilder withAdapterDescription(AdapterDescription adapterDescription) {
-    this.adapterDescription = adapterDescription;
-    return this;
+  public AdapterConfigurationBuilder withCategory(AdapterType... categories) {
+    this.adapterDescription
+        .setCategory(Arrays
+            .stream(categories)
+            .map(Enum::name)
+            .collect(Collectors.toList()));
+    return me();
   }
+
+
 }

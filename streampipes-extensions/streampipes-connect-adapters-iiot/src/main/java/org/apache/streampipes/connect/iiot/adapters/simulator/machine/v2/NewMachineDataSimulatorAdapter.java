@@ -46,7 +46,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.builder.adapter.AdapterDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -62,19 +61,13 @@ public class NewMachineDataSimulatorAdapter implements AdapterInterface {
 
   @Override
   public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create()
-
-        // TODO write new builder
-        .withAdapterDescription(
-            AdapterDescriptionBuilder
-            .create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .withLocales(Locales.EN)
-                .category(AdapterType.Debugging)
-                .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
-                .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
-                    "flowrate", "pressure", "waterlevel"))
-                .build())
+    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.Debugging)
+        .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
+        .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
+            "flowrate", "pressure", "waterlevel"))
         .build();
   }
 

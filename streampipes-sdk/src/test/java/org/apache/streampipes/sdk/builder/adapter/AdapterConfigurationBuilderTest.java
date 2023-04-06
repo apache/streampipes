@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 
+import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.Parser;
 
@@ -41,6 +42,7 @@ public class AdapterConfigurationBuilderTest {
 
     assertNotNull(adapterConfiguration);
     assertEquals(id, adapterConfiguration.getAdapterDescription().getAppId());
+    assertEquals(new AdapterDescription(), adapterConfiguration.getAdapterDescription());
   }
 
   @Test
@@ -80,15 +82,17 @@ public class AdapterConfigurationBuilderTest {
   }
 
   @Test
-  public void withAdapterDescription() {
-    var expected = new AdapterDescription();
-
+  public void withCategory() {
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
-        .withAdapterDescription(expected)
+        .withCategory(AdapterType.Manufacturing)
         .build();
 
-    assertEquals(expected, adapterConfiguration.getAdapterDescription());
+    var actual = adapterConfiguration.getAdapterDescription().getCategory();
+
+    assertEquals(1, actual.size());
+    assertEquals(AdapterType.Manufacturing.getCode(), actual.get(0));
   }
+
 
 }

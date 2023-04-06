@@ -28,7 +28,6 @@ import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.builder.adapter.AdapterDescriptionBuilder;
 import org.apache.streampipes.sdk.builder.adapter.CsvParser;
 import org.apache.streampipes.sdk.builder.adapter.JsonParser;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
@@ -59,21 +58,19 @@ public class FileReplayAdapter implements AdapterInterface {
 
   @Override
   public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create().withSupportedParsers(new JsonParser(), new CsvParser())
-        // TODO write new builder
-        .withAdapterDescription(
-            AdapterDescriptionBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .withLocales(Locales.EN)
-                .category(AdapterType.Generic)
-                .requiredFile(Labels.withId(FILE_PATH), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
-                .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
-                .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
-                .requiredAlternatives(Labels.withId(SPEED),
-                Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
-                    Alternatives.from(Labels.withId(FASTEST)), Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
-                        StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
-                            StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP))))).build())
+    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
+        .withSupportedParsers(new JsonParser(), new CsvParser())
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.Generic)
+        .requiredFile(Labels.withId(FILE_PATH), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
+        .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
+        .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
+        .requiredAlternatives(Labels.withId(SPEED),
+            Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
+            Alternatives.from(Labels.withId(FASTEST)), Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
+                StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
+                    StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP)))))
         .build();
   }
 
