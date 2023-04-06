@@ -155,7 +155,9 @@ public class MqttClient {
    */
   public void disconnect() {
     try {
-      this.conn.disconnect();
+      if (this.conn.isConnected()) {
+        this.conn.disconnect();
+      }
     } catch (Exception e) {
       throw new SpRuntimeException("Could not disconnect from MQTT broker: "
           + uri.toString() + ", " + e.getMessage(), e);
