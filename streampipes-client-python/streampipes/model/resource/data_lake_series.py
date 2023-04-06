@@ -50,7 +50,7 @@ class DataLakeSeries(Resource):
 
     Notes
     ------
-        This class will only exist temporarily it its current appearance since
+        This class will only exist temporarily in it its current appearance since
         there are some inconsistencies in the StreamPipes API.
 
     """
