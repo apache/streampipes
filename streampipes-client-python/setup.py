@@ -51,7 +51,7 @@ dev_packages = base_packages + [
     "flake8==6.0.0",
     "interrogate==1.5.0",
     "isort==5.12.0",
-    "mypy==1.1.1",
+    "mypy==1.2.0",
     "pandas-stubs==1.5.2.230105",
     "pre-commit==3.2.0",
     "pytest==7.2.1",
