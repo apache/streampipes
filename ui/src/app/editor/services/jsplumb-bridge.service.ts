@@ -16,7 +16,11 @@
  *
  */
 
-import { BrowserJsPlumbInstance, EndpointSelection, SelectOptions } from '@jsplumb/browser-ui';
+import {
+    BrowserJsPlumbInstance,
+    EndpointSelection,
+    SelectOptions,
+} from '@jsplumb/browser-ui';
 
 export class JsplumbBridge {
     constructor(private jsPlumbInstance: BrowserJsPlumbInstance) {}
