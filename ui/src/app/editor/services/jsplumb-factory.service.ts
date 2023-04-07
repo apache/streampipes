@@ -17,11 +17,11 @@
  */
 
 import { JsPlumbInstance } from '@jsplumb/core';
-import { JsplumbBridge } from './jsplumb-bridge.service';
 import { Injectable } from '@angular/core';
 import {
     BrowserJsPlumbInstance,
     ContainmentType,
+    JsplumbBridge,
     newInstance,
 } from '@jsplumb/browser-ui';
 import { PipelineElementDraggedService } from './pipeline-element-dragged.service';
