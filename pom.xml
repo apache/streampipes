@@ -142,7 +142,7 @@
 	<maven.compiler.target>17</maven.compiler.target>
 
 	<amqp-client.version>5.16.0</amqp-client.version>
-	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
+	<animal-sniffer-annotations.version>1.23</animal-sniffer-annotations.version>
 	<boofcv.version>0.42</boofcv.version>
 	<bcprov.version>1.70</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
