@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.91.0</version>
+        <version>0.91.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-sources</artifactId>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-extensions-management</artifactId>
-            <version>0.91.0</version>
+            <version>0.91.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
