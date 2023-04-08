@@ -35,7 +35,7 @@ jobs:
 
       - name: Scan for vulnerabilities
         run: |
-          docker run --rm -v $PWD:/repo -w /repo ghcr.io/google/osv-scanner --format markdown -r . |  grep -vE '^((Scanning|Scanned).*)$' > VULNERABILITY.md
+          docker run --rm -v $PWD:/repo -w /repo ghcr.io/google/osv-scanner --format markdown -r . 2>&1 | grep -vE '^((Scanning|Scanned|Failed).*)$' > VULNERABILITY.md
         continue-on-error: true
 
       - name: Create Pull Request
