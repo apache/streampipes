@@ -19,7 +19,7 @@
 
 <h1 align="center">
   <br>
-   <img src="https://raw.githubusercontent.com/apache/streampipes/dev/streampipes-client-python/docs/img/streampipes-python.png"
+   <img src="./img/streampipes-python.png"
    alt="StreamPipes Logo with Python" title="Apache StreamPipes Logo with Python" width="75%"/>
   <br>
 </h1>
@@ -100,4 +100,4 @@ StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="API-KEY"
 `username` is always the username that is used to log in into StreamPipes. <br>
 The `api_key` can be generated within the UI as demonstrated below:
 
-![Howto API Key](/img/how-to-get-api-key.gif)
+![Howto API Key](./img/how-to-get-api-key.gif)
