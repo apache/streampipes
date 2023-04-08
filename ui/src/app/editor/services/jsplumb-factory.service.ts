@@ -18,7 +18,7 @@
 
 import { JsPlumbInstance } from '@jsplumb/core';
 import { Injectable } from '@angular/core';
-import { JsplumbBridge } from './jsplumb-bridge.service'
+import { JsplumbBridge } from './jsplumb-bridge.service';
 import {
     BrowserJsPlumbInstance,
     ContainmentType,
