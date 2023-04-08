@@ -25,7 +25,7 @@ import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeConte
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.CsvParser;
@@ -78,7 +78,9 @@ public class FileReplayAdapter implements AdapterInterface {
   public void onAdapterStarted(AdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    var inputStream = getDataFromEndpoint(extractor.selectedFilename(FILE_PATH));
+    var inputStream = getDataFromEndpoint(extractor
+        .getStaticPropertyExtractor()
+        .selectedFilename(FILE_PATH));
     extractor.selectedParser().parse(inputStream, collector);
   }
 
@@ -89,10 +91,12 @@ public class FileReplayAdapter implements AdapterInterface {
   }
 
   @Override
-  public AdapterGuessInfo onSchemaRequested(AdapterParameterExtractor extractor,
-                                            IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    var inputStream = getDataFromEndpoint(extractor.selectedFilename(FILE_PATH));
-    var adapterGuessInfo = extractor.selectedParser().getAdapterGuessInfo(inputStream);
+  public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
+                                       IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    var inputStream = getDataFromEndpoint(extractor
+        .getStaticPropertyExtractor()
+        .selectedFilename(FILE_PATH));
+    var adapterGuessInfo = extractor.selectedParser().getGuessSchema(inputStream);
 
     return adapterGuessInfo;
   }

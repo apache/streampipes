@@ -19,37 +19,9 @@
 package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
-import org.junit.Test;
+import java.util.Optional;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-
-public class DeclarersSingletonTest {
-
-  @Test
-  public void getAdapterTest() {
-    var id = "id";
-    var testAdapter = mock(AdapterInterface.class);
-    doAnswer(invocation ->
-        AdapterConfigurationBuilder
-            .create(id)
-            .buildConfiguration())
-        .when(testAdapter)
-        .declareConfig();
-
-
-    DeclarersSingleton.getInstance().setAdapters(List.of(testAdapter));
-
-    var result = DeclarersSingleton.getInstance().getAdapter(id);
-
-    assertTrue(result.isPresent());
-    assertEquals(testAdapter, result.get());
-  }
-
+public interface IDeclarersSingleton {
+  Optional<AdapterInterface> getAdapter(String id);
 }

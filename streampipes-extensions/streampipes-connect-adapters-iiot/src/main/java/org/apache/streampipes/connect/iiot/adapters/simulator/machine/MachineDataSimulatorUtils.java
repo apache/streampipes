@@ -18,7 +18,6 @@
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -52,11 +51,6 @@ public class MachineDataSimulatorUtils {
       default:
         throw new AdapterException("resource not found");
     }
-  }
-
-  public static AdapterGuessInfo getAdapterGuessInfo(String selectedSimulatorOption) throws AdapterException {
-    // TODO implement
-    return null;
   }
 
   private static GuessSchema getWaterlevelSchema() {

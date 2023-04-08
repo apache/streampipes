@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.io.InputStream;
 
 public class Parser {
 
-  public AdapterGuessInfo getAdapterGuessInfo(InputStream inputStream) {
+  public GuessSchema getGuessSchema(InputStream inputStream) {
     return null;
   }
 

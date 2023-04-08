@@ -44,7 +44,7 @@ import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeConte
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -76,9 +76,10 @@ public class NewMachineDataSimulatorAdapter implements AdapterInterface {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext)
       throws AdapterException {
+    var ex = extractor.getStaticPropertyExtractor();
 
-    var waitTimeMs = extractor.singleValueParameter(WAIT_TIME_MS, Integer.class);
-    var selectedSimulatorOption = extractor.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
+    var waitTimeMs = ex.singleValueParameter(WAIT_TIME_MS, Integer.class);
+    var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
     this.machineDataSimulator = new MachineDataSimulator(collector, waitTimeMs, selectedSimulatorOption);
     Thread thread = new Thread(this.machineDataSimulator);
     thread.start();
@@ -92,9 +93,10 @@ public class NewMachineDataSimulatorAdapter implements AdapterInterface {
 
 
   @Override
-  public AdapterGuessInfo onSchemaRequested(AdapterParameterExtractor extractor,
-                                            IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    var selectedSimulatorOption = extractor.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
-    return MachineDataSimulatorUtils.getAdapterGuessInfo(selectedSimulatorOption);
+  public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
+                                       IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    var ex = extractor.getStaticPropertyExtractor();
+    var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
+    return MachineDataSimulatorUtils.getSchema(selectedSimulatorOption);
   }
 }

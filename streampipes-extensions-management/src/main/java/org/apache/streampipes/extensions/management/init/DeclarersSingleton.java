@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DeclarersSingleton {
+public class DeclarersSingleton implements IDeclarersSingleton {
 
   private static final Logger LOG = LoggerFactory.getLogger(DeclarersSingleton.class);
   private static final String Http = "http://";

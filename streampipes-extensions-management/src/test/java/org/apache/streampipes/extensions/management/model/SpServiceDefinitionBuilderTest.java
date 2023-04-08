@@ -22,7 +22,7 @@ import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.junit.Test;
@@ -61,8 +61,8 @@ public class SpServiceDefinitionBuilderTest {
     }
 
     @Override
-    public AdapterGuessInfo onSchemaRequested(AdapterParameterExtractor extractor,
-                                              IAdapterRuntimeContext adapterRuntimeContext) {
+    public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
+                                         IAdapterRuntimeContext adapterRuntimeContext) {
       return null;
     }
   }

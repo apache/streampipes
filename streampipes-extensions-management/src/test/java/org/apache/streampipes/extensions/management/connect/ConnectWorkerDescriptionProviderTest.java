@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -35,12 +35,30 @@ import static org.mockito.Mockito.spy;
 public class ConnectWorkerDescriptionProviderTest {
 
   private String adapterId = "adapterAppId";
+  private ConnectWorkerDescriptionProvider provider;
+
+  @Before
+  public void initializeProvider() {
+    provider = spy(new ConnectWorkerDescriptionProvider());
+
+    var testAdapter = mock(AdapterInterface.class);
+    doAnswer(invocation ->
+        AdapterConfigurationBuilder
+            .create(adapterId)
+            .buildConfiguration())
+        .when(testAdapter)
+        .declareConfig();
+
+    List<AdapterInterface> adapters = List.of(testAdapter);
+    doReturn(adapters).when(provider).getRegisteredAdapters();
+  }
 
   @Test
   public void getAdapterDescriptions() {
-    var expected = new AdapterDescription();
-
-    var provider = setUpTest(expected);
+    var expected = AdapterConfigurationBuilder
+        .create(adapterId)
+        .buildConfiguration()
+        .getAdapterDescription();
 
     var result = provider.getAdapterDescriptions();
 
@@ -50,34 +68,10 @@ public class ConnectWorkerDescriptionProviderTest {
 
   @Test
   public void getAdapterDescription() {
-    var expected = new AdapterDescription();
-    expected.setAppId(adapterId);
-
-    var provider = setUpTest(expected);
-
     var result = provider.getAdapterDescription(adapterId);
 
     assertTrue(result.isPresent());
     assertEquals(adapterId, result.get().getAppId());
-  }
-
-  private ConnectWorkerDescriptionProvider setUpTest(AdapterDescription expected) {
-
-    var provider = spy(new ConnectWorkerDescriptionProvider());
-
-    var testAdapter = mock(AdapterInterface.class);
-    doAnswer(invocation ->
-        AdapterConfigurationBuilder
-            .create(adapterId)
-            .withAdapterDescription(expected)
-            .build())
-        .when(testAdapter)
-        .declareConfig();
-
-    List<AdapterInterface> adapters = List.of(testAdapter);
-    doReturn(adapters).when(provider).getRegisteredAdapters();
-
-    return provider;
   }
 
 

@@ -47,7 +47,7 @@ public class ConnectWorkerDescriptionProvider {
     return getRegisteredAdapters()
         .stream()
         .map(ac -> ac.declareConfig().getAdapterDescription())
-        .filter(ad -> ad.getElementId().equals(id))
+        .filter(ad -> ad.getAppId().equals(id))
         .findFirst();
   }
 

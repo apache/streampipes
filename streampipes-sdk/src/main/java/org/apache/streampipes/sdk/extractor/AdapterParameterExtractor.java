@@ -18,18 +18,34 @@
 
 package org.apache.streampipes.sdk.extractor;
 
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.Parser;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.builder.adapter.JsonParser;
 
 // TODO only provisional implementation
-public class AdapterParameterExtractor extends StaticPropertyExtractor {
-  public AdapterParameterExtractor(DataSinkInvocation sepaElement) {
-    super(sepaElement);
+public class AdapterParameterExtractor {
+  private StaticPropertyExtractor staticPropertyExtractor;
+
+  public AdapterParameterExtractor() {
+    super();
   }
 
   public Parser selectedParser() {
     // TODO implement
     return new JsonParser();
+  }
+
+  public static AdapterParameterExtractor from(AdapterDescription adapterDescription) {
+    var result = new AdapterParameterExtractor();
+    result.setStaticPropertyExtractor(StaticPropertyExtractor.from(adapterDescription.getConfig()));
+    return result;
+  }
+
+  public void setStaticPropertyExtractor(StaticPropertyExtractor staticPropertyExtractor) {
+    this.staticPropertyExtractor = staticPropertyExtractor;
+  }
+
+  public StaticPropertyExtractor getStaticPropertyExtractor() {
+    return staticPropertyExtractor;
   }
 }
