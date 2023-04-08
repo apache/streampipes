@@ -18,10 +18,10 @@
 
 import { JsPlumbInstance } from '@jsplumb/core';
 import { Injectable } from '@angular/core';
+import { JsplumbBridge } from './jsplumb-bridge.service'
 import {
     BrowserJsPlumbInstance,
     ContainmentType,
-    JsplumbBridge,
     newInstance,
 } from '@jsplumb/browser-ui';
 import { PipelineElementDraggedService } from './pipeline-element-dragged.service';
