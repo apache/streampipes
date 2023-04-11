@@ -20,6 +20,8 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
@@ -46,7 +48,10 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   private AdapterWorkerManagement adapterManagement;
 
   public AdapterWorkerResource() {
-    adapterManagement = new AdapterWorkerManagement();
+    adapterManagement = new AdapterWorkerManagement(
+        RunningAdapterInstances.INSTANCE,
+        DeclarersSingleton.getInstance()
+    );
   }
 
   public AdapterWorkerResource(AdapterWorkerManagement adapterManagement) {
@@ -67,10 +72,10 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   @Path("/stream/invoke")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response invokeStreamAdapter(AdapterDescription adapterStreamDescription) {
+  public Response invokeAdapter(AdapterDescription adapterStreamDescription) {
 
     try {
-      adapterManagement.invokeStreamAdapter(adapterStreamDescription);
+      adapterManagement.invokeAdapter(adapterStreamDescription);
       String responseMessage = "Stream adapter with id " + adapterStreamDescription.getUri() + " successfully started";
       logger.info(responseMessage);
       return ok(Notifications.success(responseMessage));
@@ -85,12 +90,12 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   @Path("/stream/stop")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response stopStreamAdapter(AdapterDescription adapterStreamDescription) {
+  public Response stopAdapter(AdapterDescription adapterStreamDescription) {
 
     String responseMessage;
     try {
       if (adapterStreamDescription.isRunning()) {
-        adapterManagement.stopStreamAdapter(adapterStreamDescription);
+        adapterManagement.stopAdapter(adapterStreamDescription);
         responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId() + " successfully stopped";
       } else {
         responseMessage =

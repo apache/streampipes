@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.init;
 
-import org.apache.streampipes.extensions.api.connect.IAdapter;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.Collection;
@@ -28,16 +28,16 @@ import java.util.Map;
 public enum RunningAdapterInstances {
   INSTANCE;
 
-  private final Map<String, IAdapter<?>> runningAdapterInstances = new HashMap<>();
+  private final Map<String, AdapterInterface> runningAdapterInstances = new HashMap<>();
   private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new HashMap<>();
 
-  public void addAdapter(String elementId, IAdapter<?> adapter, AdapterDescription adapterDescription) {
+  public void addAdapter(String elementId, AdapterInterface adapter, AdapterDescription adapterDescription) {
     runningAdapterInstances.put(elementId, adapter);
     runningAdapterDescriptionInstances.put(elementId, adapterDescription);
   }
 
-  public IAdapter<?> removeAdapter(String elementId) {
-    IAdapter<?> result = runningAdapterInstances.get(elementId);
+  public AdapterInterface removeAdapter(String elementId) {
+    AdapterInterface result = runningAdapterInstances.get(elementId);
     runningAdapterInstances.remove(elementId);
     runningAdapterDescriptionInstances.remove(elementId);
     return result;

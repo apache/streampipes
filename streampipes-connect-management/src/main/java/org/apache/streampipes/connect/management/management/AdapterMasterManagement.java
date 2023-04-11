@@ -27,7 +27,6 @@ import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
@@ -72,19 +71,19 @@ public class AdapterMasterManagement {
       throws AdapterException {
 
     // Create elementId for adapter
-    String dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
+    var dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
     ad.setElementId(ElementIdGenerator.makeElementId(ad));
     ad.setCreatedAt(System.currentTimeMillis());
     ad.setCorrespondingDataStreamElementId(dataStreamElementId);
 
     // Add EventGrounding to AdapterDescription
-    EventGrounding eventGrounding = GroundingUtils.createEventGrounding();
+    var eventGrounding = GroundingUtils.createEventGrounding();
     ad.setEventGrounding(eventGrounding);
 
-    String elementId = this.adapterResourceManager.encryptAndCreate(ad);
+    var elementId = this.adapterResourceManager.encryptAndCreate(ad);
 
     // Create stream
-    SpDataStream storedDescription = new SourcesManagement().createAdapterDataStream(ad, dataStreamElementId);
+    var storedDescription = new SourcesManagement().createAdapterDataStream(ad, dataStreamElementId);
     storedDescription.setCorrespondingAdapterId(elementId);
     installDataSource(storedDescription, principalSid, true);
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
@@ -162,11 +161,11 @@ public class AdapterMasterManagement {
 
   public void startStreamAdapter(String elementId) throws AdapterException {
 
-    AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
+    var ad = adapterInstanceStorage.getAdapter(elementId);
 
     try {
       // Find endpoint to start adapter on
-      String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
+      var baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
 
       // Update selected endpoint URL of adapter
       ad.setSelectedEndpointUrl(baseUrl);

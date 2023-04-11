@@ -58,8 +58,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public Response addAdapter(AdapterDescription adapterDescription) {
-    String principalSid = getAuthenticatedUserSid();
-    String username = getAuthenticatedUsername();
+    var principalSid = getAuthenticatedUserSid();
+    var username = getAuthenticatedUsername();
     String adapterId;
     LOG.info("User: " + username + " starts adapter " + adapterDescription.getElementId());
 
@@ -79,8 +79,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public Response updateAdapter(AdapterDescription adapterDescription) {
-    String principalSid = getAuthenticatedUserSid();
-    String username = getAuthenticatedUsername();
+    var principalSid = getAuthenticatedUserSid();
+    var username = getAuthenticatedUsername();
     LOG.info("User: " + username + " updates adapter " + adapterDescription.getElementId());
 
     try {

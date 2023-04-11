@@ -18,11 +18,13 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,40 +33,61 @@ import java.util.Collection;
 
 public class AdapterWorkerManagement {
 
-  private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+
+  private RunningAdapterInstances runningAdapterInstances;
+  private DeclarersSingleton declarers;
+
+  public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances,
+                                 DeclarersSingleton declarers) {
+    this.runningAdapterInstances = runningAdapterInstances;
+    this.declarers = declarers;
+  }
 
   public Collection<AdapterDescription> getAllRunningAdapterInstances() {
     return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
   }
 
-  public void invokeStreamAdapter(AdapterDescription adapterStreamDescription) throws AdapterException {
+  public void invokeAdapter(AdapterDescription adapterDescription) throws AdapterException {
+    var adapter = getDeclarerSingleton()
+        .getAdapter(adapterDescription.getAppId());
 
-//    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
-    IAdapter<?> adapter = null;
+    if (adapter.isPresent()) {
 
-    RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter,
-        adapterStreamDescription);
-    adapter.startAdapter();
+      runningAdapterInstances.addAdapter(
+          adapterDescription.getElementId(),
+          adapter.get(),
+          adapterDescription);
+
+      var extractor = AdapterParameterExtractor.from(adapterDescription);
+
+      // TODO how to intantiate the collector?
+
+      adapter.get().onAdapterStarted(extractor, null, null);
+    } else {
+      //TODO
+    }
   }
 
-  public void stopStreamAdapter(AdapterDescription adapterStreamDescription) throws AdapterException {
-    stopAdapter(adapterStreamDescription);
-  }
-
-  private void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
+  public void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
 
     String elementId = adapterDescription.getElementId();
 
-    IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+//    IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
-    if (adapter != null) {
-      adapter.stopAdapter();
-    }
+//    if (adapter != null) {
+//      adapter.stopAdapter();
+//    }
     resetMonitoring(elementId);
   }
 
   private void resetMonitoring(String elementId) {
     SpMonitoringManager.INSTANCE.reset(elementId);
+  }
+
+  public IDeclarersSingleton getDeclarerSingleton() {
+    return DeclarersSingleton.getInstance();
   }
 
 }
