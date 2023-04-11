@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import {
     DataProcessorInvocation,
     DataSetModificationMessage,
@@ -40,6 +40,7 @@ import {
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { HelpComponent } from '../dialog/help/help.component';
 import { map } from 'rxjs/operators';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
@@ -234,7 +235,7 @@ export class EditorService {
                 previewId +
                 '/' +
                 pipelineElementDomId,
-            { headers: { ignoreLoadingBar: '' } },
+            { context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) },
         );
     }
 
