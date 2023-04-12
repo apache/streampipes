@@ -43,7 +43,11 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     doc.setActions(doc.getActions().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
     doc.setStreams(doc.getStreams()
         .stream()
-        .filter(s -> s instanceof SpDataSet).peek(s -> ((SpDataSet) s).setSelectedEndpointUrl(null))
+        .peek(s -> {
+          if (s instanceof SpDataSet) {
+            ((SpDataSet) s).setSelectedEndpointUrl(null);
+          }
+        })
         .collect(Collectors.toList()));
     return doc;
   }
