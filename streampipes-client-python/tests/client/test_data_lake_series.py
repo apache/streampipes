@@ -21,7 +21,7 @@ from unittest.mock import MagicMock, call, patch
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataLakeSeries
+from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries
 
 
 class TestDataLakeSeries(TestCase):
@@ -145,5 +145,5 @@ class TestDataLakeSeries(TestCase):
             ],
         }
 
-        with self.assertRaises(StreamPipesUnsupportedDataLakeSeries):
+        with self.assertRaises(StreamPipesUnsupportedDataSeries):
             self.get_result_as_panda(http_session, query_result)

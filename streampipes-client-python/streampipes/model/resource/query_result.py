@@ -15,15 +15,13 @@
 # limitations under the License.
 #
 
-from __future__ import annotations
-
 from itertools import chain
 from typing import Any, Dict, List, Literal, Union
 
 import pandas as pd
 from pydantic import Field, StrictInt, StrictStr
 from streampipes.model.resource import DataSeries
-from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataLakeSeries
+from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
@@ -58,12 +56,12 @@ class QueryResult(Resource):
         """
         for series in self.all_data_series:
             if self.headers != series.headers:
-                raise StreamPipesUnsupportedDataLakeSeries("Headers of series does not match query result headers")
+                raise StreamPipesUnsupportedDataSeries("Headers of series does not match query result headers")
 
         if self.headers[0] == "time":
             self.headers[0] = "timestamp"
         else:
-            raise StreamPipesUnsupportedDataLakeSeries(f"Unsupported headers {self.headers}")
+            raise StreamPipesUnsupportedDataSeries(f"Unsupported headers {self.headers}")
 
         return {
             "headers": self.headers,

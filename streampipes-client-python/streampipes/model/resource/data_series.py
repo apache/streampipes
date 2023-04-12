@@ -22,7 +22,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
 from pydantic import StrictInt, StrictStr
-from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataLakeSeries
+from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
@@ -31,7 +31,7 @@ __all__ = [
 
 
 class DataSeries(Resource):
-    """Implementation of a resource for data lake series.
+    """Implementation of a resource for data series.
     This resource defines the data model used by its resource container(`model.container.DataLakeMeasures`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
     which are used to parse, validate the API response and to easily switch between
@@ -46,7 +46,7 @@ class DataSeries(Resource):
 
     @classmethod
     def from_json(cls, json_string: str) -> DataSeries:
-        """Creates an instance of `DataLakeSeries` from a given JSON string.
+        """Creates an instance of `DataSeries` from a given JSON string.
 
         This method is used by the resource container to parse the JSON response of
         the StreamPipes API.
@@ -60,7 +60,7 @@ class DataSeries(Resource):
         Returns
         -------
         DataSeries
-            Instance of `DataLakeSeries` that is created based on the given JSON string.
+            Instance of `DataSeries` that is created based on the given JSON string.
 
         Raises
         ------
@@ -76,7 +76,7 @@ class DataSeries(Resource):
         # check if the provided JSON has only one data series entry
         # otherwise raise the proper exception
         if len(parsed_json["allDataSeries"]) != 1:
-            raise StreamPipesUnsupportedDataLakeSeries()
+            raise StreamPipesUnsupportedDataSeries()
 
         # get the data data series
         data_series = parsed_json["allDataSeries"][0]

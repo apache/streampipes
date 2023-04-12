@@ -15,12 +15,10 @@
 # limitations under the License.
 #
 
-from __future__ import annotations
-
 from typing import Optional
 
 
-class StreamPipesUnsupportedDataLakeSeries(Exception):
+class StreamPipesUnsupportedDataSeries(Exception):
     """Exception to be raised when the returned data lake series
     cannot be parsed with the current implementation of the resource.
     """
