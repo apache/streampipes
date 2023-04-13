@@ -73,7 +73,6 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
-import { SplitSectionComponent } from './split-section/split-section.component';
 import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -143,7 +142,6 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplatePipe,
-        SplitSectionComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,
@@ -211,7 +209,6 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         ImageViewerComponent,
         ErrorHintComponent,
         PipelineStartedStatusComponent,
-        SplitSectionComponent,
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,

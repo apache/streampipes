@@ -94,7 +94,7 @@
 	<kafka.version>3.4.0</kafka.version>
 	<kotlin-stdlib.version>1.8.0</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
-	<log4j.version>2.19.0</log4j.version>
+	<log4j.version>2.20.0</log4j.version>
 	<lz4.version>1.8.0</lz4.version>
 	<logback.version>1.4.5</logback.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
@@ -108,7 +108,7 @@
 	<plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
 	<plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
 	<plexus-utils.version>3.5.0</plexus-utils.version>
-	<rdf4j.version>3.5.0</rdf4j.version>
+	<rdf4j.version>3.7.7</rdf4j.version> <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
 	<reflections.version>0.9.10</reflections.version>
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<retrofit.version>2.5.0</retrofit.version>
@@ -142,7 +142,7 @@
 	<maven.compiler.target>17</maven.compiler.target>
 
 	<amqp-client.version>5.16.0</amqp-client.version>
-	<animal-sniffer-annotations.version>1.22</animal-sniffer-annotations.version>
+	<animal-sniffer-annotations.version>1.23</animal-sniffer-annotations.version>
 	<boofcv.version>0.42</boofcv.version>
 	<bcprov.version>1.70</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
@@ -180,7 +180,6 @@
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
-	<zstd-jni.version>1.4.3-1</zstd-jni.version>
 	<inlong.version>1.5.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
@@ -1188,11 +1187,6 @@
             </dependency>
 
             <!-- External dependencies -->
-            <dependency>
-                <groupId>com.github.luben</groupId>
-                <artifactId>zstd-jni</artifactId>
-                <version>${zstd-jni.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.google.maps</groupId>
                 <artifactId>google-maps-services</artifactId>

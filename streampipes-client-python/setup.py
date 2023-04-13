@@ -51,10 +51,10 @@ dev_packages = base_packages + [
     "flake8==6.0.0",
     "interrogate==1.5.0",
     "isort==5.12.0",
-    "mypy==1.1.1",
-    "pandas-stubs==1.5.2.230105",
+    "mypy==1.2.0",
+    "pandas-stubs==2.0.0.230412",
     "pre-commit==3.2.0",
-    "pytest==7.2.1",
+    "pytest==7.3.0",
     "pytest-cov==4.0.0",
     "pyupgrade==3.3.1",
     "types-Jinja2==2.11.9",
@@ -63,7 +63,7 @@ dev_packages = base_packages + [
 
 docs_packages = [
     "mkdocs==1.4.2",
-    "mkdocs-awesome-pages-plugin==2.8.0",
+    "mkdocs-awesome-pages-plugin==2.9.0",
     "mkdocs-material==9.1.3",
     "mkdocstrings[python]==0.21.1",
     "pytkdocs[numpy-style]>=0.16.1",
