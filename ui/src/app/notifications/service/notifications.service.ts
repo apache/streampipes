@@ -15,7 +15,7 @@
  *   limitations under the License.
  */
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
     ExistingNotification,
@@ -25,6 +25,7 @@ import { Injectable } from '@angular/core';
 import { NotificationUtils } from '../utils/notifications.utils';
 import { map } from 'rxjs/operators';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable()
 export class NotificationsService {
@@ -80,7 +81,7 @@ export class NotificationsService {
             this.notificationUrl + '/' + notificationItem._id,
             notificationItem,
             {
-                headers: { ignoreLoadingBar: '' },
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
             },
         );
     }

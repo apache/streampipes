@@ -67,13 +67,33 @@ public class SelectColumn implements IQueryStatement {
 
   public static SelectColumn fromApiQueryString(String queryString,
                                                 String globalAggregationFunction) {
+    SelectColumn column = SelectColumn.fromApiQueryString(queryString);
     AggregationFunction aggregationFunction = AggregationFunction.valueOf(globalAggregationFunction);
-    String targetField = aggregationFunction.name().toLowerCase() + "_" + queryString;
-    return new SelectColumn(queryString, AggregationFunction.valueOf(globalAggregationFunction), targetField);
+    column.setAggregationFunction(aggregationFunction);
+    column.setTargetField(aggregationFunction.name().toLowerCase() + "_" + column.getOriginalField());
+    column.setRename(true);
+    column.setSimpleField(false);
+    return column;
   }
 
   public String getOriginalField() {
     return originalField;
+  }
+
+  public void setAggregationFunction(AggregationFunction aggregationFunction) {
+    this.aggregationFunction = aggregationFunction;
+  }
+
+  public void setTargetField(String targetField) {
+    this.targetField = targetField;
+  }
+
+  public void setSimpleField(boolean simpleField) {
+    this.simpleField = simpleField;
+  }
+
+  public void setRename(boolean rename) {
+    this.rename = rename;
   }
 
   @Override

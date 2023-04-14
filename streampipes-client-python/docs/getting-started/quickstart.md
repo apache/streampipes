@@ -75,4 +75,4 @@ StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="API-KEY"
 `username` is always the username that is used to log in into StreamPipes. <br>
 The `api_key` can be generated within the UI as demonstrated below:
 
-![Howto API Key](https://raw.githubusercontent.com/apache/streampipes/dev/streampipes-client-python/docs/img/how-to-get-api-key.gif)
+![Howto API Key](../img/how-to-get-api-key.gif)

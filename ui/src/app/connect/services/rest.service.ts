@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -31,6 +31,7 @@ import {
     PlatformServicesCommons,
     SpDataStream,
 } from '@streampipes/platform-services';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable()
 export class RestService {
@@ -83,7 +84,7 @@ export class RestService {
             `${this.platformServicesCommons.apiBasePath}/pipeline-element/runtime`,
             sourceDescription,
             {
-                headers: { ignoreLoadingBar: '' },
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
             },
         );
     }

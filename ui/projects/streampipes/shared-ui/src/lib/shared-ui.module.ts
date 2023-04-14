@@ -35,6 +35,7 @@ import { SpBasicHeaderTitleComponent } from './components/basic-header-title/hea
 import { SpExceptionMessageComponent } from './components/sp-exception-message/sp-exception-message.component';
 import { SpExceptionDetailsDialogComponent } from './components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { SplitSectionComponent } from './components/split-section/split-section.component';
 
 @NgModule({
     declarations: [
@@ -47,6 +48,7 @@ import { MatDividerModule } from '@angular/material/divider';
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
+        SplitSectionComponent,
     ],
     imports: [
         CommonModule,
@@ -69,6 +71,7 @@ import { MatDividerModule } from '@angular/material/divider';
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
+        SplitSectionComponent,
     ],
 })
 export class SharedUiModule {}

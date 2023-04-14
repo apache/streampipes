@@ -30,6 +30,7 @@ export * from './lib/components/basic-header-title/header-title.component';
 export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
+export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 
