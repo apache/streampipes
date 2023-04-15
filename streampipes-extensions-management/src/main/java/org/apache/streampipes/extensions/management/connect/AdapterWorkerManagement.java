@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
@@ -36,21 +36,21 @@ public class AdapterWorkerManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 
-  private RunningAdapterInstances runningAdapterInstances;
-  private DeclarersSingleton declarers;
+  private final RunningAdapterInstances runningAdapterInstances;
+  private final IDeclarersSingleton declarers;
 
   public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances,
-                                 DeclarersSingleton declarers) {
+                                 IDeclarersSingleton declarers) {
     this.runningAdapterInstances = runningAdapterInstances;
     this.declarers = declarers;
   }
 
   public Collection<AdapterDescription> getAllRunningAdapterInstances() {
-    return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
+    return runningAdapterInstances.getAllRunningAdapterDescriptions();
   }
 
   public void invokeAdapter(AdapterDescription adapterDescription) throws AdapterException {
-    var adapter = getDeclarerSingleton()
+    var adapter = declarers
         .getAdapter(adapterDescription.getAppId());
 
     if (adapter.isPresent()) {
@@ -61,12 +61,13 @@ public class AdapterWorkerManagement {
           adapterDescription);
 
       var extractor = AdapterParameterExtractor.from(adapterDescription);
+      var eventCollector = EventCollector.from(adapterDescription);
 
-      // TODO how to intantiate the collector?
-
-      adapter.get().onAdapterStarted(extractor, null, null);
+      adapter.get().onAdapterStarted(extractor, eventCollector, null);
     } else {
-      //TODO
+      var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
+      LOG.error(errorMessage);
+      throw new AdapterException(errorMessage);
     }
   }
 
@@ -74,20 +75,19 @@ public class AdapterWorkerManagement {
 
     String elementId = adapterDescription.getElementId();
 
-//    IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+    AdapterInterface adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
-//    if (adapter != null) {
-//      adapter.stopAdapter();
-//    }
+    if (adapter != null) {
+
+      var extractor = AdapterParameterExtractor.from(adapterDescription);
+      adapter.onAdapterStopped(extractor, null);
+    }
+
     resetMonitoring(elementId);
   }
 
   private void resetMonitoring(String elementId) {
     SpMonitoringManager.INSTANCE.reset(elementId);
-  }
-
-  public IDeclarersSingleton getDeclarerSingleton() {
-    return DeclarersSingleton.getInstance();
   }
 
 }

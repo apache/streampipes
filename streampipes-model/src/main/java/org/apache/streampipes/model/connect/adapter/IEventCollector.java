@@ -36,5 +36,8 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
+import java.util.Map;
+
 public abstract class IEventCollector {
+  public abstract void collect(Map<String, Object> event);
 }

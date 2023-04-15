@@ -26,14 +26,15 @@ import java.util.Map;
 
 public class MachineDataSimulator implements Runnable {
 
-  private final AdapterPipeline adapterPipeline;
+  private IEventCollector collector;
+
   private final Integer waitTimeMs;
   private final String selectedSimulatorOption;
 
   private Boolean running;
 
   public MachineDataSimulator(IEventCollector collector, Integer waitTimeMs, String selectedSimulatorOption) {
-    this.adapterPipeline = null;
+    this.collector = collector;
     this.waitTimeMs = waitTimeMs;
     this.selectedSimulatorOption = selectedSimulatorOption;
     this.running = true;
@@ -41,7 +42,6 @@ public class MachineDataSimulator implements Runnable {
 
   @Deprecated
   public MachineDataSimulator(AdapterPipeline adapterPipeline, Integer waitTimeMs, String selectedSimulatorOption) {
-    this.adapterPipeline = adapterPipeline;
     this.waitTimeMs = waitTimeMs;
     this.selectedSimulatorOption = selectedSimulatorOption;
     this.running = true;
@@ -106,7 +106,7 @@ public class MachineDataSimulator implements Runnable {
       }
 
       if (event.keySet().size() > 0) {
-        adapterPipeline.process(event);
+        collector.collect(event);
       }
 
       try {
