@@ -109,7 +109,6 @@
 	<plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
 	<plexus-utils.version>3.5.0</plexus-utils.version>
 	<rdf4j.version>3.7.7</rdf4j.version> <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
-	<reflections.version>0.9.10</reflections.version>
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<retrofit.version>2.5.0</retrofit.version>
 	<roaster.version>2.28.0.Final</roaster.version>
@@ -786,11 +785,6 @@
 					<groupId>org.ow2.asm</groupId>
 					<artifactId>asm</artifactId>
 					<version>${asm.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.reflections</groupId>
-					<artifactId>reflections</artifactId>
-					<version>${reflections.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.rendersnake</groupId>
