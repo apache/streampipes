@@ -29,7 +29,7 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.CsvParser;
-import org.apache.streampipes.sdk.builder.adapter.JsonParser;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParser;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Filetypes;
@@ -58,7 +58,7 @@ public class FileReplayAdapter implements AdapterInterface {
 
   @Override
   public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
+    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.file")
         .withSupportedParsers(new JsonParser(), new CsvParser())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)

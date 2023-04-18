@@ -20,7 +20,6 @@ package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.Parser;
-import org.apache.streampipes.sdk.builder.adapter.JsonParser;
 
 // TODO only provisional implementation
 public class AdapterParameterExtractor {
@@ -32,7 +31,7 @@ public class AdapterParameterExtractor {
 
   public Parser selectedParser() {
     // TODO implement
-    return new JsonParser();
+    return null;
   }
 
   public static AdapterParameterExtractor from(AdapterDescription adapterDescription) {

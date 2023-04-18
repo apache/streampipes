@@ -18,16 +18,12 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 
-import java.io.InputStream;
+import java.util.List;
 
-public interface Parser {
+public class ParserDescription {
 
-  ParserDescription declareDescription();
-
-  GuessSchema getGuessSchema(InputStream inputStream);
-
-  void parse(InputStream inputStream, IEventCollector collector);
+  private List<StaticProperty> config;
 
 }

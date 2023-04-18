@@ -88,6 +88,7 @@ public class JsonEventProperty {
 
       ((EventPropertyList) resultProperty).setEventProperty(arrayContent);
       resultProperty.setRuntimeName(key);
+
     }
 
     if (resultProperty == null) {
@@ -95,6 +96,7 @@ public class JsonEventProperty {
           + "This should never happen!");
     }
 
+    resultProperty.setDescription("");
     return resultProperty;
   }
 }

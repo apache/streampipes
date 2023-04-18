@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.iiot;
 
-import org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.NewMachineDataSimulatorAdapter;
+import org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.FileReplayAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
@@ -34,7 +34,8 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
             "StreamPipes connect worker containing adapters relevant for the IIoT",
             "",
             8001)
-        .registerAdapter(new NewMachineDataSimulatorAdapter())
+//        .registerAdapter(new NewMachineDataSimulatorAdapter())
+        .registerAdapter(new FileReplayAdapter())
 //        .registerAdapter(new MachineDataStreamAdapter())
 //        .registerAdapter(new RosBridgeAdapter())
 //        .registerAdapter(new OpcUaAdapter())

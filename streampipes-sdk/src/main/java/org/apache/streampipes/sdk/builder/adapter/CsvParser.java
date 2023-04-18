@@ -37,8 +37,27 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 
+import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.ParserDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+
+import java.io.InputStream;
 
 // TODO only dummy
-public class CsvParser extends Parser {
+public class CsvParser implements Parser {
+  @Override
+  public ParserDescription declareDescription() {
+    return null;
+  }
+
+  @Override
+  public GuessSchema getGuessSchema(InputStream inputStream) {
+    return null;
+  }
+
+  @Override
+  public void parse(InputStream inputStream, IEventCollector collector) {
+
+  }
 }

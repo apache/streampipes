@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
@@ -74,5 +75,21 @@ public class GuessSchema {
     this.fieldStatusInfo = fieldStatusInfo;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GuessSchema that = (GuessSchema) o;
+    return Objects.equals(eventSchema, that.eventSchema) && Objects.equals(eventPreview,
+        that.eventPreview) && Objects.equals(fieldStatusInfo, that.fieldStatusInfo);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(eventSchema, eventPreview, fieldStatusInfo);
+  }
 }

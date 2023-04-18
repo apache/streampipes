@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 public class AdapterConfigurationBuilderTest {
 
@@ -50,7 +51,7 @@ public class AdapterConfigurationBuilderTest {
 
   @Test
   public void withOneParser() {
-    var expected = new Parser();
+    var expected = mock(Parser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(expected)
@@ -61,8 +62,8 @@ public class AdapterConfigurationBuilderTest {
 
   @Test
   public void withMultipleParserInOneCall() {
-    var parser1 = new Parser();
-    var parser2 = new Parser();
+    var parser1 = mock(Parser.class);
+    var parser2 = mock(Parser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(parser1, parser2)
@@ -73,8 +74,8 @@ public class AdapterConfigurationBuilderTest {
 
   @Test
   public void withMultipleParserInTwoCall() {
-    var parser1 = new Parser();
-    var parser2 = new Parser();
+    var parser1 = mock(Parser.class);
+    var parser2 = mock(Parser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(parser1)

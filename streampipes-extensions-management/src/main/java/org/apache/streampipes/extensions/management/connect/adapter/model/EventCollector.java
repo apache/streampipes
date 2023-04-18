@@ -25,7 +25,7 @@ import org.apache.streampipes.model.connect.adapter.IEventCollector;
 
 import java.util.Map;
 
-public class EventCollector extends IEventCollector {
+public class EventCollector implements IEventCollector {
   private final AdapterPipeline adapterPipeline;
 
   public EventCollector(AdapterPipeline adapterPipeline) {
