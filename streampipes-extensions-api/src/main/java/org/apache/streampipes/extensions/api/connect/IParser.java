@@ -18,7 +18,7 @@
 package org.apache.streampipes.extensions.api.connect;
 
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.schema.EventSchema;
 
@@ -28,7 +28,7 @@ import java.util.List;
 @Deprecated
 public interface IParser {
 
-  IParser getInstance(FormatDescription formatDescription);
+  IParser getInstance(ParserDescription parserDescription);
 
   void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException;
 

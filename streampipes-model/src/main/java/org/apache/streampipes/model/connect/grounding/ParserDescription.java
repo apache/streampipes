@@ -27,30 +27,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Deprecated
-public class FormatDescription extends NamedStreamPipesEntity {
+public class ParserDescription extends NamedStreamPipesEntity {
 
   private List<StaticProperty> config;
 
   private String formatType = "";
 
-  public FormatDescription() {
+  public ParserDescription() {
     super();
     this.config = new ArrayList<>();
   }
 
-  public FormatDescription(String uri, String name, String description) {
+  public ParserDescription(String uri, String name, String description) {
     super(uri, name, description);
     this.config = new ArrayList<>();
   }
 
-  public FormatDescription(String uri, String name, String description, List<StaticProperty> config,
+  public ParserDescription(String uri, String name, String description, List<StaticProperty> config,
                            String formatType) {
     super(uri, name, description);
     this.config = config;
     this.formatType = formatType;
   }
 
-  public FormatDescription(FormatDescription other) {
+  public ParserDescription(ParserDescription other) {
     super(other);
     this.config = new Cloner().staticProperties(other.getConfig());
     this.formatType = other.getFormatType();

@@ -25,7 +25,7 @@ import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -64,8 +64,8 @@ public class XmlParser extends Parser {
   }
 
   @Override
-  public Parser getInstance(FormatDescription formatDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
+  public Parser getInstance(ParserDescription parserDescription) {
+    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
     String tag = extractor.singleValue("tag");
 
     return new XmlParser(tag);

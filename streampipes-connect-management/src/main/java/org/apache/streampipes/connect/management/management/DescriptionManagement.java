@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -35,10 +35,10 @@ import java.util.Optional;
 
 public class DescriptionManagement {
 
-  public List<FormatDescription> getFormats() {
+  public List<ParserDescription> getFormats() {
     Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
 
-    List<FormatDescription> result = new ArrayList<>();
+    List<ParserDescription> result = new ArrayList<>();
     for (IFormat f : allFormats.values()) {
       result.add(f.declareModel());
     }

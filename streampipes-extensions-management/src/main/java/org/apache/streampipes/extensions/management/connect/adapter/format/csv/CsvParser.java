@@ -24,7 +24,7 @@ import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.util.DatatypeUtils;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -53,8 +53,8 @@ public class CsvParser extends Parser {
   }
 
   @Override
-  public Parser getInstance(FormatDescription formatDescription) throws ParseException {
-    ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
+  public Parser getInstance(ParserDescription parserDescription) throws ParseException {
+    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
 
     boolean header = extractor.selectedMultiValues(CsvFormat.HEADER_NAME).stream()
         .anyMatch(option -> "Header".equals(option));

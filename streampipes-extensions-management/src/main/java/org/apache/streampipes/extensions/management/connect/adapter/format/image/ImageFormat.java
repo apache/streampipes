@@ -20,8 +20,8 @@ package org.apache.streampipes.extensions.management.connect.adapter.format.imag
 
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -36,13 +36,13 @@ public class ImageFormat implements IFormat {
   }
 
   @Override
-  public IFormat getInstance(FormatDescription formatDescription) {
+  public IFormat getInstance(ParserDescription parserDescription) {
     return new ImageFormat();
   }
 
   @Override
-  public FormatDescription declareModel() {
-    return FormatDescriptionBuilder.create(ID, "Image", "Processes images and transforms them into events")
+  public ParserDescription declareModel() {
+    return ParserDescriptionBuilder.create(ID, "Image", "Processes images and transforms them into events")
         .build();
   }
 

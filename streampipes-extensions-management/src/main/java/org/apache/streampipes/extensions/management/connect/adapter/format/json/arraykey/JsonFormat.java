@@ -21,8 +21,8 @@ package org.apache.streampipes.extensions.management.connect.adapter.format.json
 
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonFormat;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 
 public class JsonFormat extends AbstractJsonFormat {
@@ -30,15 +30,15 @@ public class JsonFormat extends AbstractJsonFormat {
   public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
 
   @Override
-  public IFormat getInstance(FormatDescription formatDescription) {
+  public IFormat getInstance(ParserDescription parserDescription) {
     return new JsonFormat();
   }
 
 
   @Override
-  public FormatDescription declareModel() {
+  public ParserDescription declareModel() {
 
-    return FormatDescriptionBuilder.create(ID, "Array Field",
+    return ParserDescriptionBuilder.create(ID, "Array Field",
             "Use one property of the json object that is an array, e.g. {'arrayKey': [{'value': 1}, {'value': 2}]}")
         .addFormatType(JSON_FORMAT_TYPE)
         .requiredTextParameter(Labels.from("key", "Key",

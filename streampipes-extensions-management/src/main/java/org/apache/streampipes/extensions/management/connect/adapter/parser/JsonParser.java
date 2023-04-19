@@ -57,9 +57,10 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser;
 import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.adapter.Parser;
-import org.apache.streampipes.model.connect.adapter.ParserDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -74,6 +75,9 @@ public class JsonParser implements Parser {
 
   private static final Logger LOG = LoggerFactory.getLogger(JsonParser.class);
 
+  public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser";
+  public static final String LABEL = "Json";
+
   private final ObjectMapper mapper;
 
   public JsonParser() {
@@ -82,7 +86,9 @@ public class JsonParser implements Parser {
 
   @Override
   public ParserDescription declareDescription() {
-    return null;
+    return ParserDescriptionBuilder
+        .create(ID, LABEL, "Each event is a single json object (e.g. {'value': 1})")
+        .build();
   }
 
   @Override
@@ -104,7 +110,6 @@ public class JsonParser implements Parser {
 
     return schemaBuilder.build();
   }
-
 
   // TODO we need to introduce a parse exeption here
   @Override

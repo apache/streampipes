@@ -21,21 +21,21 @@ package org.apache.streampipes.extensions.management.connect.adapter.format.json
 
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonFormat;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 
 public class JsonArrayFormat extends AbstractJsonFormat {
 
   public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraynokey";
 
   @Override
-  public IFormat getInstance(FormatDescription formatDescription) {
+  public IFormat getInstance(ParserDescription parserDescription) {
     return new JsonArrayFormat();
   }
 
   @Override
-  public FormatDescription declareModel() {
-    return FormatDescriptionBuilder.create(ID, "Array",
+  public ParserDescription declareModel() {
+    return ParserDescriptionBuilder.create(ID, "Array",
             "Each event consists of only one array of json objects, e.g. [{'value': 1}, {'value': 2}]")
         .addFormatType(JSON_FORMAT_TYPE)
         .build();

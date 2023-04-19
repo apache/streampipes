@@ -25,7 +25,7 @@ import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonParser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +47,8 @@ public class JsonParser extends AbstractJsonParser {
 
 
   @Override
-  public Parser getInstance(FormatDescription formatDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
+  public Parser getInstance(ParserDescription parserDescription) {
+    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
     String key = extractor.singleValue("key");
 
     return new JsonParser(true, key);

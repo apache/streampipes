@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.io.InputStream;

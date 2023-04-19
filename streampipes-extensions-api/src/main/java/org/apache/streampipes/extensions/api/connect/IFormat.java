@@ -20,16 +20,16 @@ package org.apache.streampipes.extensions.api.connect;
 
 
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 
 import java.util.Map;
 
 @Deprecated
 public interface IFormat {
 
-  IFormat getInstance(FormatDescription formatDescription);
+  IFormat getInstance(ParserDescription parserDescription);
 
-  FormatDescription declareModel();
+  ParserDescription declareModel();
 
   String getId();
 

@@ -20,8 +20,8 @@ package org.apache.streampipes.extensions.management.connect.adapter.format.json
 
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonFormat;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 
 public class JsonObjectFormat extends AbstractJsonFormat {
 
@@ -29,13 +29,13 @@ public class JsonObjectFormat extends AbstractJsonFormat {
   public static final String LABEL = "Single Object";
 
   @Override
-  public IFormat getInstance(FormatDescription formatDescription) {
+  public IFormat getInstance(ParserDescription parserDescription) {
     return new JsonObjectFormat();
   }
 
   @Override
-  public FormatDescription declareModel() {
-    return FormatDescriptionBuilder.create(ID, LABEL, "Each event is a single json object (e.g. {'value': 1})")
+  public ParserDescription declareModel() {
+    return ParserDescriptionBuilder.create(ID, LABEL, "Each event is a single json object (e.g. {'value': 1})")
         .addFormatType(JSON_FORMAT_TYPE)
         .build();
   }

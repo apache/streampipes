@@ -21,7 +21,7 @@ package org.apache.streampipes.extensions.management.connect.adapter.format.imag
 import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import org.apache.commons.io.IOUtils;
@@ -36,7 +36,7 @@ import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
 public class ImageParser extends Parser {
 
   @Override
-  public Parser getInstance(FormatDescription formatDescription) {
+  public Parser getInstance(ParserDescription parserDescription) {
     return new ImageParser();
   }
 

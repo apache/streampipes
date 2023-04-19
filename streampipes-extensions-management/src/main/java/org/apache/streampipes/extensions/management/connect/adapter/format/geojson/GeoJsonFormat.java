@@ -23,8 +23,8 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonFormat;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,16 +39,16 @@ public class GeoJsonFormat implements IFormat {
   private static final Logger logger = LoggerFactory.getLogger(GeoJsonFormat.class);
 
   @Override
-  public FormatDescription declareModel() {
+  public ParserDescription declareModel() {
 
-    return FormatDescriptionBuilder.create(ID, "GeoJSON", "Reads GeoJson")
+    return ParserDescriptionBuilder.create(ID, "GeoJSON", "Reads GeoJson")
         .addFormatType(AbstractJsonFormat.JSON_FORMAT_TYPE)
         .build();
 
   }
 
   @Override
-  public IFormat getInstance(FormatDescription formatDescription) {
+  public IFormat getInstance(ParserDescription parserDescription) {
     return new GeoJsonFormat();
   }
 

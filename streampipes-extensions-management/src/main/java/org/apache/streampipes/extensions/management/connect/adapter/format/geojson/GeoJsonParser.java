@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -62,7 +62,7 @@ public class GeoJsonParser extends Parser {
   Logger logger = LoggerFactory.getLogger(GeoJsonParser.class);
 
   @Override
-  public Parser getInstance(FormatDescription formatDescription) {
+  public Parser getInstance(ParserDescription parserDescription) {
     return new GeoJsonParser();
   }
 

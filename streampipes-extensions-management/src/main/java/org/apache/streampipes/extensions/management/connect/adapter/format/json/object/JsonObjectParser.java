@@ -25,7 +25,7 @@ import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonParser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class JsonObjectParser extends AbstractJsonParser {
   private JsonDataFormatDefinition jsonDefinition;
 
   @Override
-  public Parser getInstance(FormatDescription formatDescription) {
+  public Parser getInstance(ParserDescription parserDescription) {
     return new JsonObjectParser();
   }
 

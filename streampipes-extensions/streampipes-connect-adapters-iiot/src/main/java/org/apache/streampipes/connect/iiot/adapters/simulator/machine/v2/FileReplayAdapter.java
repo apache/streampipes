@@ -28,7 +28,7 @@ import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.builder.adapter.CsvParser;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.CsvParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParser;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;

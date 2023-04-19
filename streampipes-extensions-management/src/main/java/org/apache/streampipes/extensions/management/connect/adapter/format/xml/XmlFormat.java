@@ -23,9 +23,9 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 
 import org.slf4j.Logger;
@@ -50,17 +50,17 @@ public class XmlFormat implements IFormat {
   }
 
   @Override
-  public IFormat getInstance(FormatDescription formatDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
+  public IFormat getInstance(ParserDescription parserDescription) {
+    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
     String tag = extractor.singleValue(TAG_ID);
 
     return new XmlFormat(tag);
   }
 
   @Override
-  public FormatDescription declareModel() {
+  public ParserDescription declareModel() {
 
-    return FormatDescriptionBuilder.create(ID, "XML", "Process XML data")
+    return ParserDescriptionBuilder.create(ID, "XML", "Process XML data")
         .requiredTextParameter(Labels.from(TAG_ID, "Tag",
             "Information in the tag is transformed into an event"))
         .build();

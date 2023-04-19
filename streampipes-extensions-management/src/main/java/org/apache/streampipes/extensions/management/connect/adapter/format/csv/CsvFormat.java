@@ -22,9 +22,9 @@ package org.apache.streampipes.extensions.management.connect.adapter.format.csv;
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,8 +54,8 @@ public class CsvFormat implements IFormat {
   }
 
   @Override
-  public IFormat getInstance(FormatDescription formatDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
+  public IFormat getInstance(ParserDescription parserDescription) {
+    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
     String delimiter = extractor.singleValue(DELIMITER_NAME);
 
     boolean header = extractor.selectedMultiValues(HEADER_NAME).stream()
@@ -125,9 +125,9 @@ public class CsvFormat implements IFormat {
   }
 
   @Override
-  public FormatDescription declareModel() {
+  public ParserDescription declareModel() {
 
-    return FormatDescriptionBuilder.create(ID, "Csv", "Can be used to read CSV")
+    return ParserDescriptionBuilder.create(ID, "Csv", "Can be used to read CSV")
         .requiredTextParameter(Labels.from("delimiter", "Delimiter",
             "The delimiter for json. Mostly either , or ;"))
         .requiredMultiValueSelection(Labels.from("header", "Header",

@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.sdk.builder.adapter;
 
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
-public class FormatDescriptionBuilder extends
-    AbstractConfigurablePipelineElementBuilder<FormatDescriptionBuilder, FormatDescription> {
+public class ParserDescriptionBuilder extends
+    AbstractConfigurablePipelineElementBuilder<ParserDescriptionBuilder, ParserDescription> {
 
-  protected FormatDescriptionBuilder(String appId, String label, String description) {
-    super(appId, label, description, new FormatDescription());
+  protected ParserDescriptionBuilder(String appId, String label, String description) {
+    super(appId, label, description, new ParserDescription());
   }
 
   /**
@@ -36,8 +36,8 @@ public class FormatDescriptionBuilder extends
    *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    */
-  public static FormatDescriptionBuilder create(String id, String label, String description) {
-    return new FormatDescriptionBuilder(id, label, description);
+  public static ParserDescriptionBuilder create(String id, String label, String description) {
+    return new ParserDescriptionBuilder(id, label, description);
   }
 
   /**
@@ -46,13 +46,13 @@ public class FormatDescriptionBuilder extends
    * @param formatType
    * @return
    */
-  public FormatDescriptionBuilder addFormatType(String formatType) {
+  public ParserDescriptionBuilder addFormatType(String formatType) {
     this.elementDescription.setFormatType(formatType);
     return me();
   }
 
   @Override
-  protected FormatDescriptionBuilder me() {
+  protected ParserDescriptionBuilder me() {
     return this;
   }
 
