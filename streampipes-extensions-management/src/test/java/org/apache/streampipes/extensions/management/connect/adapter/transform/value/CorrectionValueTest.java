@@ -63,15 +63,15 @@ public class CorrectionValueTest {
   @Test
   public void testAdd() {
 
-     var correctionRule = new CorrectionValueTransformationRule(
+    var correctionRule = new CorrectionValueTransformationRule(
          List.of(propertyNameBasicValue),
          10.0,
          "ADD"
      );
 
-     var resultEvent = correctionRule.transform(event);
+    var resultEvent = correctionRule.transform(event);
     assertNotNull(resultEvent);
-    assertEquals( 110.0, resultEvent.get(propertyNameBasicValue));
+    assertEquals(110.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -84,7 +84,7 @@ public class CorrectionValueTest {
     );
     var resultEvent = correctionRule.transform(event);
     assertNotNull(resultEvent);
-    assertEquals( 90.0, resultEvent.get(propertyNameBasicValue));
+    assertEquals(90.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -97,7 +97,7 @@ public class CorrectionValueTest {
     );
     var resultEvent = correctionRule.transform(event);
     assertNotNull(resultEvent);
-    assertEquals( 150.0, resultEvent.get(propertyNameBasicValue));
+    assertEquals(150.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -110,7 +110,7 @@ public class CorrectionValueTest {
     );
     var resultEvent = correctionRule.transform(event);
     assertNotNull(resultEvent);
-    assertEquals( 20.0, resultEvent.get(propertyNameBasicValue));
+    assertEquals(20.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -123,7 +123,7 @@ public class CorrectionValueTest {
     );
     var resultEvent = correctionRule.transform(event);
     assertNotNull(resultEvent);
-    assertEquals( Double.POSITIVE_INFINITY, resultEvent.get(propertyNameBasicValue));
+    assertEquals(Double.POSITIVE_INFINITY, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -153,6 +153,6 @@ public class CorrectionValueTest {
     );
     var resultEvent = correctionRule.transform(event);
     assertNotNull(resultEvent);
-    assertEquals( 100.0, resultEvent.get(propertyNameBasicValue));
+    assertEquals(100.0, resultEvent.get(propertyNameBasicValue));
   }
 }
