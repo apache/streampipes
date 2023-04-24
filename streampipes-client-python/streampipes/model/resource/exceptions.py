@@ -15,14 +15,17 @@
 # limitations under the License.
 #
 
-from .data_lake_measure import DataLakeMeasure
-from .data_series import DataSeries
-from .data_stream import DataStream
-from .function_definition import FunctionDefinition
+from typing import Optional
 
-__all__ = [
-    "DataLakeMeasure",
-    "DataSeries",
-    "DataStream",
-    "FunctionDefinition",
-]
+
+class StreamPipesUnsupportedDataSeries(Exception):
+    """Exception to be raised when the returned data lake series
+    cannot be parsed with the current implementation of the resource.
+    """
+
+    def __init__(self, reason: Optional[str] = None):
+        super().__init__(
+            "The Data Lake series returned by the API appears "
+            "to have a structure that is not currently supported by the Python client."
+            f"Reason: {reason}"
+        )

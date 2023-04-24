@@ -109,7 +109,6 @@
 	<plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
 	<plexus-utils.version>3.5.0</plexus-utils.version>
 	<rdf4j.version>3.7.7</rdf4j.version> <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
-	<reflections.version>0.9.10</reflections.version>
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<retrofit.version>2.5.0</retrofit.version>
 	<roaster.version>2.28.0.Final</roaster.version>
@@ -180,7 +179,6 @@
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
-	<zstd-jni.version>1.4.3-1</zstd-jni.version>
 	<inlong.version>1.5.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
@@ -789,11 +787,6 @@
 					<version>${asm.version}</version>
 				</dependency>
 				<dependency>
-					<groupId>org.reflections</groupId>
-					<artifactId>reflections</artifactId>
-					<version>${reflections.version}</version>
-				</dependency>
-				<dependency>
 					<groupId>org.rendersnake</groupId>
 					<artifactId>rendersnake</artifactId>
 					<version>${rendersnake.version}</version>
@@ -1188,11 +1181,6 @@
             </dependency>
 
             <!-- External dependencies -->
-            <dependency>
-                <groupId>com.github.luben</groupId>
-                <artifactId>zstd-jni</artifactId>
-                <version>${zstd-jni.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.google.maps</groupId>
                 <artifactId>google-maps-services</artifactId>

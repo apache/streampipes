@@ -52,10 +52,6 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.luben</groupId>
-            <artifactId>zstd-jni</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
         </dependency>
