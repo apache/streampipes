@@ -159,7 +159,7 @@ export class EditEventPropertyComponent implements OnInit {
         this.property.label = this.cachedProperty.label;
         this.property.description = this.cachedProperty.description;
 
-        // remove undefined from domain properies array
+        // remove undefined from domain properties array
         this.property.domainProperties =
             this.cachedProperty.domainProperties.filter(n => n);
         this.property.runtimeName = this.cachedProperty.runtimeName;
