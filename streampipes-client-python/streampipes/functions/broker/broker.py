@@ -42,9 +42,12 @@ class Broker(ABC):
         transport_protocol = data_stream.event_grounding.transport_protocols[0]
         self.topic_name = transport_protocol.topic_definition.actual_topic_name
         hostname = transport_protocol.broker_hostname
+        port = transport_protocol.port
         if "BROKER-HOST" in os.environ.keys():
             hostname = os.environ["BROKER-HOST"]
-        await self._make_connection(hostname, transport_protocol.port)
+            if "Kafka" in transport_protocol.class_name and "KAFKA-PORT" in os.environ.keys():
+                port = int(os.environ["KAFKA-PORT"])
+        await self._make_connection(hostname, port)
 
     @abstractmethod
     async def _make_connection(self, hostname: str, port: int) -> None:

@@ -48,7 +48,7 @@ class KafkaConsumer(Consumer):
         self.kafka_consumer = KafkaConnection(
             {"bootstrap.servers": f"{hostname}:{port}", "group.id": random_letters(6), "auto.offset.reset": "latest"}
         )
-        logger.info(f"Connected to Kafka at {hostname}:{port}")
+        logger.info(f"Connecting to Kafka at {hostname}:{port}")
 
     async def _create_subscription(self) -> None:
         """Creates a subscription to a data stream.
@@ -58,7 +58,7 @@ class KafkaConsumer(Consumer):
         None
         """
         self.kafka_consumer.subscribe([self.topic_name])
-        logger.info(f"Subscribed to stream: {self.stream_id}")
+        logger.info(f"Subscribing to stream: {self.stream_id}")
 
     async def disconnect(self) -> None:
         """Closes the connection to the server.

@@ -45,7 +45,7 @@ class NatsPublisher(Publisher):
 
         """
         self.nats_client = await connect(f"nats://{hostname}:{port}")
-        logger.info(f"Connected to NATS at {hostname}:{port}")
+        logger.info(f"Connecting to NATS at {hostname}:{port}")
 
     async def publish_event(self, event: Dict[str, Any]):
         """Publish an event to a connected data stream.

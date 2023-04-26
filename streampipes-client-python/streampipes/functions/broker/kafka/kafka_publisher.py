@@ -45,7 +45,7 @@ class KafkaPublisher(Publisher):
         None
         """
         self.kafka_producer = Producer({"bootstrap.servers": f"{hostname}:{port}"})
-        logger.info(f"Connected to Kafka at {hostname}:{port}")
+        logger.info(f"Connecting to Kafka at {hostname}:{port}")
 
     async def publish_event(self, event: Dict[str, Any]):
         """Publish an event to a connected data stream.

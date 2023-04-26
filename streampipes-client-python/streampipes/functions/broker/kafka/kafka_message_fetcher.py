@@ -46,5 +46,7 @@ class KafkaMessageFetcher:
         return self
 
     async def __anext__(self):
-        msg = self.consumer.poll(0.1)
+        msg = None
+        while not msg:
+            msg = self.consumer.poll(0.1)
         return KafkaMessage(msg.value())
