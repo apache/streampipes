@@ -69,5 +69,4 @@ class KafkaPublisher(Publisher):
         -------
         None
         """
-        self.kafka_producer.close()
         logger.info(f"Stopped connection to stream: {self.stream_id}")

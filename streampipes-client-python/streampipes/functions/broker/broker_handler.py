@@ -68,7 +68,32 @@ def get_broker(
         return NatsConsumer()
     elif SupportedBroker.KAFKA.value in broker_name:
         if is_publisher:
-            KafkaPublisher()
+            return KafkaPublisher()
         return KafkaConsumer()
     else:
         raise UnsupportedBrokerError(f'The python client doesn\'t include the broker: "{broker_name}" yet')
+
+
+def get_broker_enum(data_stream: DataStream) -> SupportedBroker:
+    """Derive the enum of the broker for the given data stream.
+
+    Parameters
+    ----------
+    data_stream: DataStream
+        Data stream instance from which the broker is inferred
+
+    Returns
+    -------
+    broker: SupportedBroker
+        The corresponding broker enum derived from data stream.
+
+    Raises
+    ------
+    UnsupportedBrokerError
+        Is raised when the given data stream belongs to a broker that is currently not supported by StreamPipes Python.
+    """
+    broker_name = data_stream.event_grounding.transport_protocols[0].class_name
+    for b in SupportedBroker:
+        if b.value in broker_name:
+            return b
+    raise UnsupportedBrokerError(f'The python client doesn\'t include the broker: "{broker_name}" yet')
