@@ -28,7 +28,7 @@ from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 from streampipes.endpoint.endpoint import MessagingEndpoint, _error_code_to_message
 from streampipes.endpoint.exceptions import MessagingEndpointNotConfiguredError
-from streampipes.functions.broker.nats_broker import NatsBroker
+from streampipes.functions.broker import NatsConsumer
 from streampipes.model.container.resource_container import (
     StreamPipesDataModelError,
     StreamPipesResourceContainerJSONError,
@@ -421,9 +421,9 @@ class TestMessagingEndpoint(TestCase):
     def test_messaging_endpoint_happy_path(self):
         demo_endpoint = MessagingEndpoint(parent_client=self.client)
 
-        demo_endpoint.configure(broker=NatsBroker())
+        demo_endpoint.configure(broker=NatsConsumer())
 
-        self.assertTrue(isinstance(demo_endpoint.broker, NatsBroker))
+        self.assertTrue(isinstance(demo_endpoint.broker, NatsConsumer))
 
     def test_messaging_endpoint_missing_configure(self):
         demo_endpoint = MessagingEndpoint(parent_client=self.client)
