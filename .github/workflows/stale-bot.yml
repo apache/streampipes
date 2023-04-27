@@ -33,5 +33,7 @@ jobs:
           days-before-stale: 21
           exempt-pr-labels: 'blocked'
           labels-to-remove-when-unstale: 'stale'
+          only-issue-labels: 'do-not-stale'
+          operations-per-run: 1000
           stale-pr-label: 'stale'
           stale-pr-message: "Hello there :wave:<br> <br> We noticed that it's been some time since activity occurred on your pull request :thinking:. In order to keep things moving forward, we're marking this PR as _stale_ and giving you 7 days to respond before it's automatically closed :alarm_clock:.<br> <br> Please take a moment to review your pull request and make any necessary updates or changes :man_technologist:. If you need more time or have any questions, please don't hesitate to let us know :speech_balloon:.<br> <br> Thank you for your contributions to our project, and we look forward to hearing back from you soon :pray:."
