@@ -28,7 +28,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <property name="severity" value="error"/>
 
     <module name="Header">
-        <property name="headerFile" value="tools/maven/checkstyle-header.txt"/>
+        <property name="headerFile" value="${checkstyle.config.base.path}/checkstyle-header.txt" default="tools/maven/checkstyle-header.txt"/>
         <property name="fileExtensions" value="java"/>
     </module>
 
