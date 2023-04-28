@@ -126,8 +126,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Path("{userId}/appearance/mode/{darkMode}")
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateAppearanceMode(@PathParam("userId") String userId,
-                                       @PathParam("darkMode") boolean darkMode) {
+  public Response updateAppearanceMode(@PathParam("darkMode") boolean darkMode) {
     String authenticatedUserId = getAuthenticatedUsername();
     if (authenticatedUserId != null) {
       UserAccount user = getUser(authenticatedUserId);
@@ -145,8 +144,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response registerUser(UserAccount userAccount) {
-    // TODO check if userId is already taken
     try {
       if (getUserStorage().getUser(userAccount.getUsername()) == null) {
         String property = userAccount.getPassword();
@@ -171,8 +170,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response registerService(ServiceAccount serviceAccount) {
-    // TODO check if userId is already taken
     if (getUserStorage().getUser(serviceAccount.getUsername()) == null) {
       serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(serviceAccount.getClientSecret()));
       serviceAccount.setSecretEncrypted(true);
