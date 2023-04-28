@@ -72,11 +72,12 @@
                     [matAutocompleteDisabled]="isTimestampProperty"
                     [formControl]="domainPropertyControl"
                 />
-                <mat-autocomplete #st="matAutocomplete" [panelWidth]="'300px'">
+                <mat-autocomplete #st="matAutocomplete" [panelWidth]="'400px'">
                     <mat-option
                         *ngFor="let semanticType of semanticTypes | async"
                         [value]="semanticType"
                         style="font-size: 10pt"
+                        [matTooltip]="semanticType"
                     >
                         {{ semanticType }}
                     </mat-option>
