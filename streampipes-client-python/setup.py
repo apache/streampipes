@@ -67,7 +67,7 @@ docs_packages = [
     "mkdocs-material==9.1.3",
     "mkdocstrings[python]==0.21.1",
     "pytkdocs[numpy-style]>=0.16.1",
-    "mkdocs-gen-files==0.4.0",
+    "mkdocs-gen-files==0.5.0",
     "mkdocs-literate-nav==0.6.0",
     "numpydoc==1.5.0",
     "mkdocs-jupyter==0.24.0",
