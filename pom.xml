@@ -121,7 +121,7 @@
 	<spring-boot.version>3.0.5</spring-boot.version>
 	<spring-security.version>6.0.2</spring-security.version>
 	<swagger.version>2.2.7</swagger.version>
-	<type-parser.version>0.7.0</type-parser.version>
+	<type-parser.version>0.8.1</type-parser.version>
 	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
