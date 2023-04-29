@@ -26,6 +26,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRUDApi<String, Pipeline> {
 
@@ -34,7 +35,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
   }
 
   @Override
-  public Pipeline get(String pipelineId) {
+  public Optional<Pipeline> get(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId));
   }
 

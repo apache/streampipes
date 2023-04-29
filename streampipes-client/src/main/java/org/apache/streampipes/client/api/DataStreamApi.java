@@ -28,6 +28,7 @@ import org.apache.streampipes.model.message.Message;
 
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Optional;
 
 public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implements CRUDApi<String, SpDataStream> {
 
@@ -36,7 +37,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   }
 
   @Override
-  public SpDataStream get(String streamId) {
+  public Optional<SpDataStream> get(String streamId) {
     return getSingle(StreamPipesApiPath.fromBaseApiPath()
         .addToPath("streams").addToPath(streamId));
   }

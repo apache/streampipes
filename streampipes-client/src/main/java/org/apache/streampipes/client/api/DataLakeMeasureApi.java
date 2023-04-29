@@ -23,6 +23,7 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
     implements CRUDApi<String, DataLakeMeasure> {
@@ -31,7 +32,7 @@ public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
     super(clientConfig, DataLakeMeasure.class);
   }
 
-  public DataLakeMeasure get(String id) {
+  public Optional<DataLakeMeasure> get(String id) {
     return getSingle(getBaseResourcePath().addToPath(id));
   }
 
