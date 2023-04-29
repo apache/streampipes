@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,20 +15,25 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.api;
 
-import java.util.List;
-import java.util.Optional;
+package org.apache.streampipes.commons.exceptions;
 
-public interface CRUDApi<K, V> {
+public class SpHttpErrorStatusCode extends SpRuntimeException {
 
-  Optional<V> get(K id);
+  private static final long serialVersionUID = 2289470758226670270L;
+  private Integer httpStatusCode;
 
-  List<V> all();
+  /**
+   * Creates a new Exception with the given message and null as the cause.
+   *
+   * @param message The exception message
+   */
+  public SpHttpErrorStatusCode(String message, Integer httpStatusCode) {
+    super(message);
+    this.httpStatusCode = httpStatusCode;
+  }
 
-  void create(V element);
-
-  void delete(K id);
-
-  void update(V element);
+  public Integer getHttpStatusCode() {
+    return httpStatusCode;
+  }
 }
