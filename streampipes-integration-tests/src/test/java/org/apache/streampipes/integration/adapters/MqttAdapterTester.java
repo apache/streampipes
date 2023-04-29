@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class MqttAdapterTester extends AdapterTesterBase {
 
@@ -81,6 +82,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
 
   @Override
   public List<Map<String, Object>> generateData() throws Exception {
+    TimeUnit.SECONDS.sleep(2);
     List<Map<String, Object>> result = new ArrayList<>();
     MqttTransportProtocol mqttSettings = makeMqttSettings();
     MqttPublisher publisher = new MqttPublisher();
