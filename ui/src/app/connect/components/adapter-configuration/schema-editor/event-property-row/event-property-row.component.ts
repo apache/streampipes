@@ -86,7 +86,10 @@ export class EventPropertyRowComponent implements OnInit {
         this.timestampProperty = this.isTimestampProperty(this.node.data);
 
         if (this.node.data instanceof EventProperty) {
-            this.originalRuntimeName = this.findOriginalProperty().runtimeName;
+            const originalProperty = this.findOriginalProperty(
+                this.originalEventSchema.eventProperties,
+            );
+            this.originalRuntimeName = originalProperty.runtimeName;
             this.showFieldStatus =
                 this.fieldStatusInfo &&
                 this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
@@ -96,7 +99,7 @@ export class EventPropertyRowComponent implements OnInit {
                 this.eventPreview[0][this.originalRuntimeName] !== undefined;
             if (this.isPrimitive) {
                 this.originalRuntimeType = this.parseType(
-                    this.findOriginalProperty().runtimeType,
+                    originalProperty.runtimeType,
                 );
                 this.runtimeType = this.parseType(
                     (this.node.data as EventPropertyPrimitive).runtimeType,
@@ -109,10 +112,21 @@ export class EventPropertyRowComponent implements OnInit {
         }
     }
 
-    private findOriginalProperty(): any {
-        return this.originalEventSchema.eventProperties.find(
-            ep => ep.elementId === this.node.data.elementId,
-        );
+    private findOriginalProperty(properties: EventPropertyUnion[]): any {
+        let result: EventPropertyUnion | undefined;
+
+        for (const property of properties) {
+            if (property.elementId === this.node.data.elementId) {
+                result = property;
+                break;
+            } else if (property instanceof EventPropertyNested) {
+                result = this.findOriginalProperty(property.eventProperties);
+                if (result) {
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     private parseType(runtimeType: string) {
