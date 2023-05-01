@@ -40,7 +40,7 @@ setup(
     long_description_content_type='text/markdown',
     install_requires=[
         'confluent-kafka==1.4.2',
-        'Flask==1.1.2',
+        'Flask==2.3.2',
         'flask-classful==0.14.2',
         'Flask-Negotiate==0.1.0',
         'waitress==2.1.2',
