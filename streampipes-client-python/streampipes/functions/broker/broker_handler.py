@@ -37,8 +37,8 @@ class SupportedBroker(Enum):
 class UnsupportedBrokerError(Exception):
     """Exception if a broker isn't implemented yet."""
 
-    def __init__(self, message):
-        super().__init__(message)
+    def __init__(self, broker_name: str):
+        super().__init__(f'The python client doesn\'t support the broker: "{broker_name}" yet')
 
 
 def get_broker(
@@ -71,11 +71,11 @@ def get_broker(
             return KafkaPublisher()
         return KafkaConsumer()
     else:
-        raise UnsupportedBrokerError(f'The python client doesn\'t include the broker: "{broker_name}" yet')
+        raise UnsupportedBrokerError(broker_name)
 
 
-def get_broker_enum(data_stream: DataStream) -> SupportedBroker:
-    """Derive the enum of the broker for the given data stream.
+def get_broker_description(data_stream: DataStream) -> SupportedBroker:
+    """Derive the decription of the broker for the given data stream.
 
     Parameters
     ----------
@@ -85,7 +85,7 @@ def get_broker_enum(data_stream: DataStream) -> SupportedBroker:
     Returns
     -------
     broker: SupportedBroker
-        The corresponding broker enum derived from data stream.
+        The corresponding broker description derived from data stream.
 
     Raises
     ------
@@ -96,4 +96,4 @@ def get_broker_enum(data_stream: DataStream) -> SupportedBroker:
     for b in SupportedBroker:
         if b.value in broker_name:
             return b
-    raise UnsupportedBrokerError(f'The python client doesn\'t include the broker: "{broker_name}" yet')
+    raise UnsupportedBrokerError(broker_name)

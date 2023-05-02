@@ -17,7 +17,7 @@
 from typing import Any, Callable, Dict, List, Optional
 
 from streampipes.client.client import StreamPipesClient
-from streampipes.functions.broker.broker_handler import get_broker_enum
+from streampipes.functions.broker.broker_handler import get_broker_description
 from streampipes.functions.function_handler import FunctionHandler
 from streampipes.functions.registration import Registration
 from streampipes.functions.streampipes_function import StreamPipesFunction
@@ -192,7 +192,7 @@ class OnlineML:
         output_stream = create_data_stream(
             name="prediction",
             attributes=attributes,
-            broker=get_broker_enum(client.dataStreamApi.get(stream_ids[0])),  # type: ignore
+            broker=get_broker_description(client.dataStreamApi.get(stream_ids[0])),  # type: ignore
         )
         function_definition = FunctionDefinition().add_output_data_stream(output_stream)
         self.sp_function = RiverFunction(
