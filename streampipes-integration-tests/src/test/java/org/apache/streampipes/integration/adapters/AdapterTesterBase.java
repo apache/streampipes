@@ -21,9 +21,9 @@ import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 
 public abstract class AdapterTesterBase implements AutoCloseable {
   Adapter adapter;
-
+//
 //  public Adapter startAdapter(AdapterDescription adapterDescription) throws AdapterException {
-//    DeclarersSingleton.getInstance().add(new PulsarProtocol());
+//    DeclarersSingleton.getInstance().add(new PulsarProtocol()).add(new MqttProtocol());
 //    Adapter adapter = (Adapter) AdapterUtils.setAdapter(adapterDescription);
 //    adapter.startAdapter();
 //    this.adapter = adapter;
