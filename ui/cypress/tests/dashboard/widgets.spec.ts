@@ -19,7 +19,7 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
 
-describe('Test live dashboard', () => {
+describe('Test dashboard widgets', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         ConnectUtils.addMachineDataSimulator('simulator', true);
@@ -32,9 +32,9 @@ describe('Test live dashboard', () => {
         const dashboardName = 'testDashboard';
         DashboardUtils.addAndEditDashboard(dashboardName);
 
-        DashboardUtils.addRawWidget('Persist_simulator');
+        DashboardUtils.addAreaWidget('Persist_simulator', 0, 0);
 
         // Validate that data is coming (at least 3 events)
-        DashboardUtils.validateRawWidgetEvents(3);
+        DashboardUtils.validateAreaWidgetEvents(3);
     });
 });

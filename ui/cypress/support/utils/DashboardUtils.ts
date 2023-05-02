@@ -34,7 +34,36 @@ export class DashboardUtils {
         cy.dataCy('edit-dashboard-' + dashboardName).click();
     }
 
-    public static addWidget(pipelineName: string, widgetType: string) {
+    public static addRawWidget(pipelineName: string) {
+        this.addWidget(pipelineName, 'raw');
+        this.saveWidget();
+    }
+
+    public static validateRawWidgetEvents(amountOfEvents: number) {
+        cy.dataCy('dashboard-raw-item', { timeout: 10000 })
+            .its('length')
+            .should('be.gte', amountOfEvents);
+    }
+
+    public static addAreaWidget(
+        pipelineName: string,
+        yAxisMin: number,
+        yAxisMax: number,
+    ) {
+        this.addWidget(pipelineName, 'area');
+        // optional configure widget
+        cy.dataCy('min-y-axis-key').type(yAxisMin.toString());
+        cy.dataCy('max-y-axis-key').type(yAxisMax.toString());
+        this.saveWidget();
+    }
+
+    public static validateAreaWidgetEvents(amountOfEvents: number) {
+        cy.get('[class="tick ng-star-inserted"]', { timeout: 10000 })
+            .its('length')
+            .should('be.gte', amountOfEvents);
+    }
+
+    private static addWidget(pipelineName: string, widgetType: string) {
         // Add raw data widget
         cy.dataCy('dashboard-add-widget').click();
 
@@ -43,16 +72,11 @@ export class DashboardUtils {
 
         // Select widget
         cy.dataCy('dashboard-select-widget-' + widgetType).click();
-        // optional configure widget
-        cy.dataCy('dashboard-new-widget-next-btn').click();
-
-        // Finish edit mode
-        cy.dataCy('dashboard-save-edit-mode').click();
     }
 
-    public static validateRawWidgetEvents(amountOfEvents: number) {
-        cy.dataCy('dashboard-raw-item', { timeout: 10000 })
-            .its('length')
-            .should('be.gte', amountOfEvents);
+    private static saveWidget() {
+        cy.dataCy('dashboard-new-widget-next-btn').click();
+        // Finish edit mode
+        cy.dataCy('dashboard-save-edit-mode').click();
     }
 }
