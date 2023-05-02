@@ -63,5 +63,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: streampipes-python-docs
-          path: streampipes-client-python/docs-tmp/**/*
+          path: |
+            streampipes-client-python/docs-tmp/**/*
+            !streampipes-client-python/docs-tmp/**/versions.json  # exclude versions file because this would overwrite existing versions and aliases
           retention-days: 5
