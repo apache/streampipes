@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -41,12 +41,17 @@ public class GuessManagement {
         .getAdapter(adapterDescription.getAppId());
 
     if (adapter.isPresent()) {
+      var adapterInstance = adapter.get();
 
       LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
-      var extractor = AdapterParameterExtractor.from(adapterDescription);
+
+      // get registered parser of adapter
+      var registeredParsers = adapterInstance.declareConfig().getSupportedParsers();
+
+      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
 
       try {
-        var schema = adapter.get()
+        var schema = adapterInstance
             .onSchemaRequested(extractor, null);
         LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
 

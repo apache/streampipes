@@ -250,6 +250,4 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     this.running = running;
   }
 
-  // TODO dummy class that can soon be removed
-
 }

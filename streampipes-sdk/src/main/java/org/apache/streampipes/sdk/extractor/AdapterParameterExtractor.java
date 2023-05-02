@@ -18,25 +18,52 @@
 
 package org.apache.streampipes.sdk.extractor;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 
-// TODO only provisional implementation
+import java.util.List;
+
 public class AdapterParameterExtractor {
+
   private StaticPropertyExtractor staticPropertyExtractor;
+
+  private List<Parser> parsers;
 
   public AdapterParameterExtractor() {
     super();
   }
 
-  public Parser selectedParser() {
-    // TODO implement
-    return null;
+  public Parser selectedParser() throws AdapterException {
+    var parserStaticProperties =
+        staticPropertyExtractor.getStaticPropertyByName("format");
+
+    if (parserStaticProperties instanceof StaticPropertyAlternatives) {
+      var selectedFormat = ((StaticPropertyAlternatives) parserStaticProperties).getAlternatives()
+          .stream()
+          .filter(StaticPropertyAlternative::getSelected)
+          .findFirst()
+          .orElseThrow(() -> new AdapterException("No format was selected in adapter configuration"));
+
+      return parsers
+          .stream()
+          .filter(parser ->
+              parser.declareDescription().getName().equals(selectedFormat.getInternalName())
+          ).findFirst()
+          .orElseThrow(
+              () -> new AdapterException("Selected parser is not supported")
+          );
+    } else {
+      throw new AdapterException("Parser configuration is not found in adapter configuration");
+    }
   }
 
-  public static AdapterParameterExtractor from(AdapterDescription adapterDescription) {
+  public static AdapterParameterExtractor from(AdapterDescription adapterDescription, List<Parser> parsers) {
     var result = new AdapterParameterExtractor();
     result.setStaticPropertyExtractor(StaticPropertyExtractor.from(adapterDescription.getConfig()));
+    result.setParsers(parsers);
     return result;
   }
 
@@ -46,5 +73,9 @@ public class AdapterParameterExtractor {
 
   public StaticPropertyExtractor getStaticPropertyExtractor() {
     return staticPropertyExtractor;
+  }
+
+  public void setParsers(List<Parser> parsers) {
+    this.parsers = parsers;
   }
 }

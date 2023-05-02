@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.SendToPipeline;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 

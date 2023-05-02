@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.management.connect.adapter.format.json;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;

@@ -18,9 +18,9 @@
 package org.apache.streampipes.extensions.management.connect.adapter.format.json;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 
 import java.util.Map;
 

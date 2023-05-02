@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
@@ -60,7 +60,8 @@ public class AdapterWorkerManagement {
           adapter.get(),
           adapterDescription);
 
-      var extractor = AdapterParameterExtractor.from(adapterDescription);
+      var registeredParsers = adapter.get().declareConfig().getSupportedParsers();
+      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
       var eventCollector = EventCollector.from(adapterDescription);
 
       adapter.get().onAdapterStarted(extractor, eventCollector, null);
@@ -79,7 +80,8 @@ public class AdapterWorkerManagement {
 
     if (adapter != null) {
 
-      var extractor = AdapterParameterExtractor.from(adapterDescription);
+      var registeredParsers = adapter.declareConfig().getSupportedParsers();
+      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
       adapter.onAdapterStopped(extractor, null);
     }
 

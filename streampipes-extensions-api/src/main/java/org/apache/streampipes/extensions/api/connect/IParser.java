@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.extensions.api.connect;
 
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.schema.EventSchema;

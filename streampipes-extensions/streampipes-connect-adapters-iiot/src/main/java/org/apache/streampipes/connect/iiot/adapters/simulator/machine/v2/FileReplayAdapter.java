@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParser;
