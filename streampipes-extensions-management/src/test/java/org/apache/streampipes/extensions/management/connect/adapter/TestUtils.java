@@ -41,12 +41,12 @@ public class TestUtils {
   }
 
   public static String makeNestedJsonObject() {
-    return "{\"device\": " +
-        "{" +
-        "\"uuid\": \"uuid\", " +
-        "\"name\": null, " +
-        "\"version\": \"1.2.3\"} " +
-        "}";
+    return "{\"device\": "
+        + "{"
+        + "\"uuid\": \"uuid\", "
+        + "\"name\": null, "
+        + "\"version\": \"1.2.3\"} "
+        + "}";
   }
 
   public static JsonArray makeJsonArray(JsonObject... jsonObjects) {
