@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,43 +16,24 @@
  *
  */
 
-.fixed-height {
-    flex-direction: row;
-    box-sizing: border-box;
-    display: flex;
-    flex: 1 1 100%;
-    max-height: 100%;
-    overflow-y: auto;
-}
+package org.apache.streampipes.commons.exceptions;
 
-.page-container-nav {
-    line-height: 24px;
-    height: 50px;
-    border-bottom: 1px solid var(--color-bg-3);
-}
+public class SpHttpErrorStatusCode extends SpRuntimeException {
 
-.sp-bg-lightgray {
-    background-color: var(--color-bg-1);
-}
+  private static final long serialVersionUID = 2289470758226670270L;
+  private Integer httpStatusCode;
 
-.sp-tab-bg {
-    background-color: var(--color-bg-1);
-}
+  /**
+   * Creates a new Exception with the given message and null as the cause.
+   *
+   * @param message The exception message
+   */
+  public SpHttpErrorStatusCode(String message, Integer httpStatusCode) {
+    super(message);
+    this.httpStatusCode = httpStatusCode;
+  }
 
-.page-container {
-    margin: 10px;
-    border: 1px solid var(--color-bg-3);
-    min-height: calc(100vh - 90px);
-}
-
-.page-container-padding-inner {
-    margin: 20px;
-}
-
-.pl-5 {
-    padding-left: 5px;
-}
-
-.pr-5 {
-    padding-right: 5px;
+  public Integer getHttpStatusCode() {
+    return httpStatusCode;
+  }
 }
