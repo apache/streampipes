@@ -39,7 +39,7 @@ public class ConnectWorkerDescriptionProvider {
   public List<AdapterDescription> getAdapterDescriptions() {
     return getRegisteredAdapters()
         .stream()
-        .map(adapter -> rewrite(adapter.declareConfig().getAdapterDescription()))
+        .map(adapter -> applyLocales(adapter.declareConfig().getAdapterDescription()))
         .toList();
   }
 
@@ -60,9 +60,7 @@ public class ConnectWorkerDescriptionProvider {
   }
 
 
-  // TODO check how to change it
-  private AdapterDescription rewrite(AdapterDescription entity) {
-    // TODO remove after full internationalization support has been implemented
+  private AdapterDescription applyLocales(AdapterDescription entity) {
     if (entity.isIncludesLocales()) {
       LabelGenerator lg = new LabelGenerator(entity);
       try {

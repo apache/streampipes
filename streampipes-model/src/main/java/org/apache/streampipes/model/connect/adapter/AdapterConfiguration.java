@@ -38,6 +38,8 @@ package org.apache.streampipes.model.connect.adapter;
 
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 
 import java.util.List;
 
@@ -67,10 +69,35 @@ public class AdapterConfiguration extends NamedStreamPipesEntity {
   }
 
   public AdapterDescription getAdapterDescription() {
+    // Add parser configuration to adapter description
+    var alternatives = supportedParsers.stream()
+        .map(parser -> {
+          return new StaticPropertyAlternative(
+              parser.declareDescription().getName(),
+              parser.declareDescription().getName(),
+              parser.declareDescription().getDescription());
+        }).toList();
+
+    adapterDescription.addConfig(getFormatAlternatives(alternatives));
+
     return adapterDescription;
   }
 
   public void setAdapterDescription(AdapterDescription adapterDescription) {
     this.adapterDescription = adapterDescription;
   }
+
+  private StaticPropertyAlternatives getFormatAlternatives(List<StaticPropertyAlternative> alternatives) {
+    var alternativesContainer =
+        new StaticPropertyAlternatives("format", "Format", "Select the format that is used to parse the events");
+
+    for (int i = 0; i < alternatives.size(); i++) {
+      alternatives.get(i).setIndex(i);
+    }
+
+    alternativesContainer.setAlternatives(alternatives);
+
+    return alternativesContainer;
+  }
+
 }
