@@ -98,7 +98,8 @@ public class ConnectionStorageImpl extends AbstractDao<Connection> implements
 
   private Optional<JsonObject> getFrequentConnections(String query) {
     try {
-      return Optional.of((JsonObject) new JsonParser().parse(Request.Get(query).execute().returnContent().asString()));
+      var request = Utils.append(Request.Get(query));
+      return Optional.of((JsonObject) new JsonParser().parse(request.execute().returnContent().asString()));
     } catch (IOException e) {
       e.printStackTrace();
       return Optional.empty();
