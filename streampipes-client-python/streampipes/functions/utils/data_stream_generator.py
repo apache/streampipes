@@ -100,7 +100,7 @@ def create_data_stream(
             TransportProtocol(
                 class_name="org.apache.streampipes.model.grounding.KafkaTransportProtocol",  # type: ignore
                 broker_hostname="kafka",
-                kafkaPort=9092,
+                port=9092,
             )
         ]
 

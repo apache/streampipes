@@ -14,14 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
 from json.encoder import JSONEncoder
 from typing import Any, Dict, List, Tuple
 from unittest import TestCase
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, call, patch
 
 from streampipes.client.client import StreamPipesClient, StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes.functions.broker import SupportedBroker
+from streampipes.functions.broker.broker_handler import (
+    SupportedBroker,
+    UnsupportedBrokerError,
+)
 from streampipes.functions.function_handler import FunctionHandler
 from streampipes.functions.registration import Registration
 from streampipes.functions.streampipes_function import StreamPipesFunction
@@ -145,6 +149,9 @@ class TestFunctionHandler(TestCase):
         data_stream2.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test1"
         self.data_stream_kafka: Dict[str, Any] = data_stream2.to_dict()
 
+        data_stream1.event_grounding.transport_protocols[0].class_name = "None"
+        self.data_stream_unsupported_broker = data_stream1.to_dict()
+
         self.test_stream_data1 = [
             {"density": 10.3, "temperature": 20.5, "timestamp": 1670000001000},
             {"density": 13.4, "temperature": 20.4, "timestamp": 1670000002000},
@@ -230,6 +237,27 @@ class TestFunctionHandler(TestCase):
 
         self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)
+
+    @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
+    def test_function_handler_unsupported_broker(self, http_session: MagicMock, connection: AsyncMock):
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.json.return_value = self.data_stream_unsupported_broker
+        http_session.return_value = http_session_mock
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        registration = Registration()
+        test_function = TestFunction()
+        registration.register(test_function)
+        function_handler = FunctionHandler(registration, client)
+        with self.assertRaises(UnsupportedBrokerError):
+            function_handler.initializeFunctions()
 
     @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
     @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
@@ -330,6 +358,65 @@ class TestFunctionHandler(TestCase):
         self.assertEqual(test_function.context.client, client)
         self.assertDictEqual(
             test_function.context.schema, {self.data_stream_nats["elementId"]: DataStream(**self.data_stream_nats)}
+        )
+        self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
+        self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
+        self.assertTrue(test_function.stopped)
+
+        self.assertListEqual(output_events, [{"number": i, "timestamp": 0} for i in range(len(self.test_stream_data1))])
+
+    @patch("streampipes.functions.broker.kafka.kafka_publisher.Producer", autospec=True)
+    @patch("streampipes.functions.streampipes_function.time", autospec=True)
+    @patch("streampipes.functions.broker.kafka.kafka_consumer.KafkaConnection", autospec=True)
+    @patch("streampipes.functions.broker.KafkaPublisher.publish_event", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
+    def test_function_output_stream_kafka(
+        self,
+        http_session: MagicMock,
+        pulish_event: MagicMock,
+        connection: MagicMock,
+        time: MagicMock,
+        producer: MagicMock,
+    ):
+        os.environ["BROKER-HOST"] = "localhost"
+        os.environ["KAFKA-PORT"] = "9094"
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.json.return_value = self.data_stream_kafka
+        http_session.return_value = http_session_mock
+
+        output_events = []
+
+        def save_event(self, event: Dict[str, Any]):
+            output_events.append(event)
+
+        pulish_event.side_effect = save_event
+        connection_mock = MagicMock()
+        connection_mock.poll.side_effect = TestKafkaMessageContainer(self.test_stream_data1).get_data
+        connection.return_value = connection_mock
+        time.side_effect = lambda: 0
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        output_stream = create_data_stream(
+            "test", attributes={"number": RuntimeType.INTEGER.value}, broker=SupportedBroker.KAFKA
+        )
+        test_function = TestFunctionOutput(
+            function_definition=FunctionDefinition().add_output_data_stream(output_stream)
+        )
+        registration = Registration()
+        registration.register(test_function)
+        function_handler = FunctionHandler(registration, client)
+        function_handler.initializeFunctions()
+
+        producer.assert_has_calls(calls=[call({"bootstrap.servers": "localhost:9094"})])
+        self.assertEqual(test_function.context.client, client)
+        self.assertDictEqual(
+            test_function.context.schema, {self.data_stream_kafka["elementId"]: DataStream(**self.data_stream_kafka)}
         )
         self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
         self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
