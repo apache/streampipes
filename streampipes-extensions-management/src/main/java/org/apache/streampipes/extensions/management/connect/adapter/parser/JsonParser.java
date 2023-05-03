@@ -54,6 +54,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.adapter.Parser;
@@ -78,6 +79,8 @@ public class JsonParser implements Parser {
   public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser";
   public static final String LABEL = "Json";
 
+  public static final String DESCRIPTION = "Each event is a single json object (e.g. {'value': 1})";
+
   private final ObjectMapper mapper;
 
   public JsonParser() {
@@ -87,7 +90,7 @@ public class JsonParser implements Parser {
   @Override
   public ParserDescription declareDescription() {
     return ParserDescriptionBuilder
-        .create(ID, LABEL, "Each event is a single json object (e.g. {'value': 1})")
+        .create(ID, LABEL, DESCRIPTION)
         .build();
   }
 
@@ -111,22 +114,24 @@ public class JsonParser implements Parser {
     return schemaBuilder.build();
   }
 
-  // TODO we need to introduce a parse exeption here
   @Override
-  public void parse(InputStream inputStream, IEventCollector collector) {
+  public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
     Map<String, Object> event = toMap(inputStream);
     collector.collect(event);
   }
 
-  private Map<String, Object> toMap(InputStream inputStream) {
+  private HashMap<String, Object> toMap(InputStream inputStream) throws ParseException {
+    if (inputStream == null) {
+      LOG.error("Input stream was null in JsonParser");
+      throw new ParseException("Input stream was null in JsonParser");
+    }
+
     try {
       return mapper.readValue(inputStream, HashMap.class);
     } catch (IOException e) {
-      LOG.error("Could not parse event", e);
+      LOG.error("Event " + inputStream, e);
+      throw new ParseException("Event " + inputStream, e);
     }
-
-    // TODO we need to introduce a parse exeption here
-    return null;
   }
 
 }

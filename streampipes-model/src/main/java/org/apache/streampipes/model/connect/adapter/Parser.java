@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
@@ -29,6 +30,6 @@ public interface Parser {
 
   GuessSchema getGuessSchema(InputStream inputStream);
 
-  void parse(InputStream inputStream, IEventCollector collector);
+  void parse(InputStream inputStream, IEventCollector collector) throws ParseException;
 
 }
