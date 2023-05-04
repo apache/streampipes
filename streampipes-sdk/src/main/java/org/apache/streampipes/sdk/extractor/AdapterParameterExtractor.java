@@ -23,6 +23,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.Parser;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class AdapterParameterExtractor {
           .findFirst()
           .orElseThrow(() -> new AdapterException("No format was selected in adapter configuration"));
 
-      return parsers
+      var selectedParser = parsers
           .stream()
           .filter(parser ->
               parser.declareDescription().getName().equals(selectedFormat.getInternalName())
@@ -55,6 +56,9 @@ public class AdapterParameterExtractor {
           .orElseThrow(
               () -> new AdapterException("Selected parser is not supported")
           );
+
+      var parserConfigs = ((StaticPropertyGroup) selectedFormat.getStaticProperty()).getStaticProperties();
+      return selectedParser.fromDescription(parserConfigs);
     } else {
       throw new AdapterException("Parser configuration is not found in adapter configuration");
     }

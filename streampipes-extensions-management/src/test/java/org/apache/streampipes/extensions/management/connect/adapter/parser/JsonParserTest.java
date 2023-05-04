@@ -25,11 +25,9 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,15 +35,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class JsonParserTest {
+public class JsonParserTest extends ParserTest {
 
   JsonParser parser = new JsonParser();
 
-  private static final String K1 = "k1";
-  private static final String K2 = "k2";
+  InputStream event = toStream("{\"k1\": \"v1\", \"k2\": 2}");
 
-
-  InputStream event = IOUtils.toInputStream("{\"k1\": \"v1\", \"k2\": 2}", StandardCharsets.UTF_8);
 
   @Test
   public void getGuessSchema() {
@@ -88,12 +83,12 @@ public class JsonParserTest {
 
   @Test(expected = ParseException.class)
   public void parseEmptyString() {
-    parser.parse(IOUtils.toInputStream("", StandardCharsets.UTF_8), mock(IEventCollector.class));
+    parser.parse(toStream(""), mock(IEventCollector.class));
   }
 
   @Test(expected = ParseException.class)
   public void parseInvalidJson() {
-    parser.parse(IOUtils.toInputStream("{\"f\",", StandardCharsets.UTF_8), mock(IEventCollector.class));
+    parser.parse(toStream("{\"f\","), mock(IEventCollector.class));
   }
 
 }

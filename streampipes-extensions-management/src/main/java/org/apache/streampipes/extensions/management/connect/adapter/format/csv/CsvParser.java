@@ -54,7 +54,9 @@ public class CsvParser extends Parser {
 
   @Override
   public Parser getInstance(ParserDescription parserDescription) throws ParseException {
-    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+//    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+    ParameterExtractor extractor = null;
+
 
     boolean header = extractor.selectedMultiValues(CsvFormat.HEADER_NAME).stream()
         .anyMatch(option -> "Header".equals(option));

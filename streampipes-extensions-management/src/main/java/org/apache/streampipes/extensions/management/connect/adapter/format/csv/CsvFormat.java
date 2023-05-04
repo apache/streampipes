@@ -55,7 +55,9 @@ public class CsvFormat implements IFormat {
 
   @Override
   public IFormat getInstance(ParserDescription parserDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+//    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+    ParameterExtractor extractor = null;
+
     String delimiter = extractor.singleValue(DELIMITER_NAME);
 
     boolean header = extractor.selectedMultiValues(HEADER_NAME).stream()

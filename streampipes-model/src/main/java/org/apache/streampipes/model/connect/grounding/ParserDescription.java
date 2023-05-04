@@ -21,49 +21,48 @@ package org.apache.streampipes.model.connect.grounding;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ParserDescription extends NamedStreamPipesEntity {
 
-  private List<StaticProperty> config;
+  private StaticPropertyGroup config;
 
   private String formatType = "";
 
   public ParserDescription() {
     super();
-    this.config = new ArrayList<>();
+    this.config = new StaticPropertyGroup();
   }
 
   public ParserDescription(String uri, String name, String description) {
     super(uri, name, description);
-    this.config = new ArrayList<>();
+    this.config = new StaticPropertyGroup(uri, name, description);
   }
 
-  public ParserDescription(String uri, String name, String description, List<StaticProperty> config,
+  public ParserDescription(String uri,
+                           String name,
+                           String description,
+                           List<StaticProperty> config,
                            String formatType) {
     super(uri, name, description);
-    this.config = config;
+
+    this.config = new StaticPropertyGroup(uri, name, description, config);
     this.formatType = formatType;
   }
 
   public ParserDescription(ParserDescription other) {
     super(other);
-    this.config = new Cloner().staticProperties(other.getConfig());
+    this.config = other.getConfig();
     this.formatType = other.getFormatType();
   }
 
-  public void addConfig(StaticProperty sp) {
-    this.config.add(sp);
-  }
-
-  public List<StaticProperty> getConfig() {
+  public StaticPropertyGroup getConfig() {
     return config;
   }
 
-  public void setConfig(List<StaticProperty> config) {
+  public void setConfig(StaticPropertyGroup config) {
     this.config = config;
   }
 

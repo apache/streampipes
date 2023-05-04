@@ -194,4 +194,18 @@ public abstract class EventProperty {
            && ListUtils.isEqualList(this.domainProperties, that.domainProperties);
   }
 
+  @Override
+  public String toString() {
+    return "EventProperty{"
+           + "elementId='" + elementId + '\''
+           + ", label='" + label + '\''
+           + ", description='" + description + '\''
+           + ", runtimeName='" + runtimeName + '\''
+           + ", required=" + required
+           + ", domainProperties=" + domainProperties
+           + ", propertyScope='" + propertyScope + '\''
+           + ", index=" + index
+           + ", runtimeId='" + runtimeId + '\''
+           + '}';
+  }
 }

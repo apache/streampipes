@@ -55,12 +55,11 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.adapter.Parser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,21 +69,30 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JsonParser implements Parser {
 
   private static final Logger LOG = LoggerFactory.getLogger(JsonParser.class);
 
-  public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser";
+  public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser.json";
   public static final String LABEL = "Json";
 
   public static final String DESCRIPTION = "Each event is a single json object (e.g. {'value': 1})";
 
   private final ObjectMapper mapper;
 
+  private final ParserUtils parserUtils;
+
   public JsonParser() {
     mapper = new ObjectMapper();
+    parserUtils = new ParserUtils();
+  }
+
+  @Override
+  public Parser fromDescription(List<StaticProperty> config) {
+    return this;
   }
 
   @Override
@@ -96,22 +104,8 @@ public class JsonParser implements Parser {
 
   @Override
   public GuessSchema getGuessSchema(InputStream inputStream) {
-    var schemaBuilder = GuessSchemaBuilder.create();
-
-    toMap(inputStream)
-        .forEach((key, value) -> {
-          schemaBuilder.sample(
-              key,
-              value);
-          schemaBuilder
-              .property(
-                  JsonEventProperty.getEventProperty(
-                      key,
-                      value
-                  ));
-        });
-
-    return schemaBuilder.build();
+    var event = toMap(inputStream);
+    return parserUtils.getGuessSchema(event);
   }
 
   @Override
@@ -119,6 +113,7 @@ public class JsonParser implements Parser {
     Map<String, Object> event = toMap(inputStream);
     collector.collect(event);
   }
+
 
   private HashMap<String, Object> toMap(InputStream inputStream) throws ParseException {
     if (inputStream == null) {

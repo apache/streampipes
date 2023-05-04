@@ -51,7 +51,8 @@ public class XmlFormat implements IFormat {
 
   @Override
   public IFormat getInstance(ParserDescription parserDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+//    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+    ParameterExtractor extractor = null;
     String tag = extractor.singleValue(TAG_ID);
 
     return new XmlFormat(tag);

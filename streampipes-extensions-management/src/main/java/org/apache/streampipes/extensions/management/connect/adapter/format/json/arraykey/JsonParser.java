@@ -48,7 +48,8 @@ public class JsonParser extends AbstractJsonParser {
 
   @Override
   public Parser getInstance(ParserDescription parserDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+//    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+    ParameterExtractor extractor = null;
     String key = extractor.singleValue("key");
 
     return new JsonParser(true, key);

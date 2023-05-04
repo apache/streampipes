@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
 public class ParserDescriptionBuilder extends
@@ -58,7 +59,12 @@ public class ParserDescriptionBuilder extends
 
   @Override
   protected void prepareBuild() {
-    this.elementDescription.setConfig(getStaticProperties());
+    var group = new StaticPropertyGroup(
+        elementDescription.getAppId(),
+        elementDescription.getName(),
+        elementDescription.getDescription(),
+        getStaticProperties());
+    this.elementDescription.setConfig(group);
   }
 }
 

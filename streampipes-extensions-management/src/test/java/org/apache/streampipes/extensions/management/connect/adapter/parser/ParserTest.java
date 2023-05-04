@@ -16,23 +16,19 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter;
+package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.grounding.ParserDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
 
-public interface Parser {
+public class ParserTest {
 
-  ParserDescription declareDescription();
+  protected static final String K1 = "k1";
+  protected static final String K2 = "k2";
 
-  GuessSchema getGuessSchema(InputStream inputStream) throws ParseException;
-
-  void parse(InputStream inputStream, IEventCollector collector) throws ParseException;
-
-  Parser fromDescription(List<StaticProperty> configuration);
+  protected InputStream toStream(String s) {
+    return IOUtils.toInputStream(s, StandardCharsets.UTF_8);
+  }
 }

@@ -92,4 +92,13 @@ public class GuessSchema {
   public int hashCode() {
     return Objects.hash(eventSchema, eventPreview, fieldStatusInfo);
   }
+
+  @Override
+  public String toString() {
+    return "GuessSchema{"
+           + "eventSchema=" + eventSchema
+           + ", eventPreview=" + eventPreview
+           + ", fieldStatusInfo=" + fieldStatusInfo
+           + '}';
+  }
 }

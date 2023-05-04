@@ -104,4 +104,13 @@ public class EventPropertyPrimitive extends EventProperty {
   public int hashCode() {
     return Objects.hash(runtimeType, measurementUnit, valueSpecification);
   }
+
+  @Override
+  public String toString() {
+    return "EventPropertyPrimitive{"
+           + "runtimeType='" + runtimeType + '\''
+           + ", measurementUnit=" + measurementUnit
+           + ", valueSpecification=" + valueSpecification
+           + '}';
+  }
 }

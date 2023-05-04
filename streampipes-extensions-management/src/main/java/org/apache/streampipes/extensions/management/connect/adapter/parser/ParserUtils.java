@@ -16,23 +16,33 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter;
+package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
-import java.io.InputStream;
-import java.util.List;
+import java.util.Map;
 
-public interface Parser {
+public class ParserUtils {
 
-  ParserDescription declareDescription();
+  public GuessSchema getGuessSchema(Map<String, Object> event) {
+    var schemaBuilder = GuessSchemaBuilder.create();
 
-  GuessSchema getGuessSchema(InputStream inputStream) throws ParseException;
+    event
+        .forEach((key, value) -> {
+          schemaBuilder.sample(
+              key,
+              value);
+          schemaBuilder
+              .property(
+                  JsonEventProperty.getEventProperty(
+                      key,
+                      value
+                  ));
+        });
 
-  void parse(InputStream inputStream, IEventCollector collector) throws ParseException;
+    return schemaBuilder.build();
+  }
 
-  Parser fromDescription(List<StaticProperty> configuration);
 }

@@ -65,7 +65,8 @@ public class XmlParser extends Parser {
 
   @Override
   public Parser getInstance(ParserDescription parserDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+//    ParameterExtractor extractor = new ParameterExtractor(parserDescription.getConfig());
+    ParameterExtractor extractor = null;
     String tag = extractor.singleValue("tag");
 
     return new XmlParser(tag);
