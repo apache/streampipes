@@ -39,7 +39,7 @@ class AsyncIterHandler:
         """
         try:
             return stream_id, await message.__anext__()
-        except StopAsyncIteration:
+        except (StopAsyncIteration, RuntimeError):
             return "stop", None
 
     @staticmethod

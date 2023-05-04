@@ -67,12 +67,14 @@ class TestRiverFunction(TestCase):
             {"number": 10.6, "bool": False, "timestamp": 1670000005000},
         ]
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._create_subscription", autospec=True)
     @patch("streampipes.functions.streampipes_function.time", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.publish_event", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
     def test_river_function_unsupervised(
         self,
@@ -130,12 +132,14 @@ class TestRiverFunction(TestCase):
 
         self.assertListEqual(model.data_x, self.test_stream_data)
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.disconnect", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._make_connection", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer._create_subscription", autospec=True)
     @patch("streampipes.functions.streampipes_function.time", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.publish_event", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
     def test_river_function_supervised(
         self,

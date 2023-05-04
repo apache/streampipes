@@ -16,18 +16,18 @@
 #
 import json
 import logging
-from typing import Any, AsyncIterator, Dict
+from typing import Any, Dict
 
 from nats import connect
-from streampipes.functions.broker.broker import Broker
+from streampipes.functions.broker import Publisher
 
 logger = logging.getLogger(__name__)
 
 
-class NatsBroker(Broker):
-    """Implementation of the NatsBroker"""
+class NatsPublisher(Publisher):
+    """Implementation of a publisher for NATS"""
 
-    async def _makeConnection(self, hostname: str, port: int) -> None:
+    async def _make_connection(self, hostname: str, port: int) -> None:
         """Helper function to connect to a server.
 
         Parameters
@@ -45,19 +45,7 @@ class NatsBroker(Broker):
 
         """
         self.nats_client = await connect(f"nats://{hostname}:{port}")
-        if self.nats_client.connected_url is not None:
-            logger.info(f"Connected to NATS at {self.nats_client.connected_url.netloc}")
-
-    async def createSubscription(self) -> None:
-        """Creates a subscription to a data stream.
-
-        Returns
-        -------
-        None
-
-        """
-        self.subscription = await self.nats_client.subscribe(self.topic_name)
-        logger.info(f"Subscribed to stream: {self.stream_id}")
+        logger.info(f"Connecting to NATS at {hostname}:{port}")
 
     async def publish_event(self, event: Dict[str, Any]):
         """Publish an event to a connected data stream.
@@ -83,13 +71,3 @@ class NatsBroker(Broker):
         """
         await self.nats_client.close()
         logger.info(f"Stopped connection to stream: {self.stream_id}")
-
-    def get_message(self) -> AsyncIterator:
-        """Get the published messages of the subscription.
-
-        Returns
-        -------
-        message_iterator: AsyncIterator
-            An async iterator for the messages.
-        """
-        return self.subscription.messages

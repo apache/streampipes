@@ -14,37 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from confluent_kafka import Consumer  # type: ignore
+from abc import abstractmethod
+from typing import Any, Dict
+
+from streampipes.functions.broker import Broker
 
 
-class KafkaMessage:
-    """An internal representation of a Kafka message
+class Publisher(Broker):
+    """Abstract implementation of a publisher for a broker.
 
-    Parameters
-    ----------
-    data: bytes
-        The received Kafka message as byte array
+    A publisher allows to publish events to a data stream.
     """
 
-    def __init__(self, data):
-        self.data = data
+    @abstractmethod
+    async def publish_event(self, event: Dict[str, Any]) -> None:
+        """Publish an event to a connected data stream.
 
+        Parameters
+        ----------
+        event: Dict[str, Any]
+            The event to be published.
 
-class KafkaMessageFetcher:
-    """Fetches the next message from Kafka
-
-    Parameters
-    ----------
-    consumer: Consumer
-        The Kafka consumer
-    """
-
-    def __init__(self, consumer: Consumer):
-        self.consumer = consumer
-
-    def __aiter__(self):
-        return self
-
-    async def __anext__(self):
-        msg = self.consumer.poll(0.1)
-        return KafkaMessage(msg.value())
+        Returns
+        -------
+        None
+        """
+        raise NotImplementedError  # pragma: no cover

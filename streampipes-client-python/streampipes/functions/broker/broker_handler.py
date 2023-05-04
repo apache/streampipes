@@ -16,7 +16,13 @@
 #
 from enum import Enum
 
-from streampipes.functions.broker import Broker, KafkaBroker, NatsBroker
+from streampipes.functions.broker import (
+    Broker,
+    KafkaConsumer,
+    KafkaPublisher,
+    NatsConsumer,
+    NatsPublisher,
+)
 from streampipes.model.resource.data_stream import DataStream
 
 
@@ -31,11 +37,13 @@ class SupportedBroker(Enum):
 class UnsupportedBrokerError(Exception):
     """Exception if a broker isn't implemented yet."""
 
-    def __init__(self, message):
-        super().__init__(message)
+    def __init__(self, broker_name: str):
+        super().__init__(f'The python client doesn\'t support the broker: "{broker_name}" yet')
 
 
-def get_broker(data_stream: DataStream) -> Broker:  # TODO implementation for more transport_protocols
+def get_broker(
+    data_stream: DataStream, is_publisher: bool = False
+) -> Broker:  # TODO implementation for more transport_protocols
     """Derive the broker for the given data stream.
 
     Parameters
@@ -55,8 +63,37 @@ def get_broker(data_stream: DataStream) -> Broker:  # TODO implementation for mo
     """
     broker_name = data_stream.event_grounding.transport_protocols[0].class_name
     if SupportedBroker.NATS.value in broker_name:
-        return NatsBroker()
+        if is_publisher:
+            return NatsPublisher()
+        return NatsConsumer()
     elif SupportedBroker.KAFKA.value in broker_name:
-        return KafkaBroker()
+        if is_publisher:
+            return KafkaPublisher()
+        return KafkaConsumer()
     else:
-        raise UnsupportedBrokerError(f'The python client doesn\'t include the broker: "{broker_name}" yet')
+        raise UnsupportedBrokerError(broker_name)
+
+
+def get_broker_description(data_stream: DataStream) -> SupportedBroker:
+    """Derive the decription of the broker for the given data stream.
+
+    Parameters
+    ----------
+    data_stream: DataStream
+        Data stream instance from which the broker is inferred
+
+    Returns
+    -------
+    broker: SupportedBroker
+        The corresponding broker description derived from data stream.
+
+    Raises
+    ------
+    UnsupportedBrokerError
+        Is raised when the given data stream belongs to a broker that is currently not supported by StreamPipes Python.
+    """
+    broker_name = data_stream.event_grounding.transport_protocols[0].class_name
+    for b in SupportedBroker:
+        if b.value in broker_name:
+            return b
+    raise UnsupportedBrokerError(broker_name)

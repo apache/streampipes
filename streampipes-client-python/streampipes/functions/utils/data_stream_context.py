@@ -16,7 +16,7 @@
 #
 from typing import List
 
-from streampipes.functions.broker.broker import Broker
+from streampipes.functions.broker import Consumer
 from streampipes.functions.streampipes_function import StreamPipesFunction
 from streampipes.model.resource.data_stream import DataStream
 
@@ -30,11 +30,11 @@ class DataStreamContext:
         StreamPipes Functions which require the data of this data stream.
     schema: DataStream
         The schema of this data stream.
-    broker: Broker
-        The broker to connect to this data stream.
+    broker: Consumer
+        The consumer to connect to this data stream.
     """
 
-    def __init__(self, functions: List[StreamPipesFunction], schema: DataStream, broker: Broker) -> None:
+    def __init__(self, functions: List[StreamPipesFunction], schema: DataStream, broker: Consumer) -> None:
         self.functions = functions
         self.schema = schema
         self.broker = broker
