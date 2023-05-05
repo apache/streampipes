@@ -252,7 +252,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updatePassword(@PathParam("principalId") String principalId,
                                  ChangePasswordRequest passwordRequest) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
     if (principalId.equals(authenticatedUserId) || isAdmin()) {
       try {
