@@ -187,10 +187,15 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  public Response createNewApiToken(@PathParam("userId") String userId,
+  public Response createNewApiToken(@PathParam("userId") String username,
                                     RawUserApiToken rawToken) {
-    RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(userId, rawToken);
-    return ok(generatedToken);
+    String authenticatedUserName = getAuthenticatedUsername();
+    if (authenticatedUserName.equals(username)) {
+      RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken);
+      return ok(generatedToken);
+    } else {
+      return statusMessage(Notifications.error("User not found"));
+    }
   }
 
   @PUT
