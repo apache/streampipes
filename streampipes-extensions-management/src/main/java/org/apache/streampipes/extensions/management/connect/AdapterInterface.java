@@ -42,19 +42,19 @@ import org.apache.streampipes.extensions.management.context.IAdapterRuntimeConte
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
+import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 
 // TODO Rename to IAdapter once the old class can be deleted
 public interface AdapterInterface {
   AdapterConfiguration declareConfig();
 
-  void onAdapterStarted(AdapterParameterExtractor extractor,
+  void onAdapterStarted(IAdapterParameterExtractor extractor,
                         IEventCollector collector,
                         IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
 
-  void onAdapterStopped(AdapterParameterExtractor extractor,
+  void onAdapterStopped(IAdapterParameterExtractor extractor,
                         IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
 
-  GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
+  GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                 IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException;
 }

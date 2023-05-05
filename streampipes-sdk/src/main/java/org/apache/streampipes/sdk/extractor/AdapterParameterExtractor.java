@@ -27,16 +27,18 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.util.List;
 
-public class AdapterParameterExtractor {
-
-  private StaticPropertyExtractor staticPropertyExtractor;
+public class AdapterParameterExtractor implements IAdapterParameterExtractor {
 
   private List<Parser> parsers;
 
-  public AdapterParameterExtractor() {
+  private final StaticPropertyExtractor staticPropertyExtractor;
+
+  public AdapterParameterExtractor(StaticPropertyExtractor extractor) {
     super();
+    this.staticPropertyExtractor = extractor;
   }
 
+  @Override
   public Parser selectedParser() throws AdapterException {
     var parserStaticProperties =
         staticPropertyExtractor.getStaticPropertyByName("format");
@@ -64,17 +66,14 @@ public class AdapterParameterExtractor {
     }
   }
 
-  public static AdapterParameterExtractor from(AdapterDescription adapterDescription, List<Parser> parsers) {
-    var result = new AdapterParameterExtractor();
-    result.setStaticPropertyExtractor(StaticPropertyExtractor.from(adapterDescription.getConfig()));
+  public static IAdapterParameterExtractor from(AdapterDescription adapterDescription, List<Parser> parsers) {
+    var extractor = StaticPropertyExtractor.from(adapterDescription.getConfig());
+    var result = new AdapterParameterExtractor(extractor);
     result.setParsers(parsers);
     return result;
   }
 
-  public void setStaticPropertyExtractor(StaticPropertyExtractor staticPropertyExtractor) {
-    this.staticPropertyExtractor = staticPropertyExtractor;
-  }
-
+  @Override
   public StaticPropertyExtractor getStaticPropertyExtractor() {
     return staticPropertyExtractor;
   }

@@ -31,7 +31,7 @@ import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
+import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -78,7 +78,7 @@ public class FileReplayAdapter implements AdapterInterface {
   }
 
   @Override
-  public void onAdapterStarted(AdapterParameterExtractor extractor,
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     var inputStream = getDataFromEndpoint(extractor
@@ -88,13 +88,13 @@ public class FileReplayAdapter implements AdapterInterface {
   }
 
   @Override
-  public void onAdapterStopped(AdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
       throws AdapterException {
 
   }
 
   @Override
-  public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     var inputStream = getDataFromEndpoint(extractor
         .getStaticPropertyExtractor()

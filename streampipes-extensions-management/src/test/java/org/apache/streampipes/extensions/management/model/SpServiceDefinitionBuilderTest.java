@@ -24,7 +24,7 @@ import org.apache.streampipes.extensions.management.context.IAdapterRuntimeConte
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
+import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 
 import org.junit.Test;
 
@@ -51,18 +51,18 @@ public class SpServiceDefinitionBuilderTest {
     }
 
     @Override
-    public void onAdapterStarted(AdapterParameterExtractor extractor, IEventCollector collector,
+    public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
                                  IAdapterRuntimeContext adapterRuntimeContext) {
 
     }
 
     @Override
-    public void onAdapterStopped(AdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
+    public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
 
     }
 
     @Override
-    public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
+    public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                          IAdapterGuessSchemaContext adapterGuessSchemaContext) {
       return null;
     }
