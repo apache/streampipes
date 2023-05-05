@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.iiot;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
+import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.FileReplayAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.NewMachineDataSimulatorAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
@@ -41,7 +42,7 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
         .registerAdapter(new NewMachineDataSimulatorAdapter())
         .registerAdapter(new FileReplayAdapter())
 //        .registerAdapter(new MachineDataStreamAdapter())
-//        .registerAdapter(new RosBridgeAdapter())
+        .registerAdapter(new RosBridgeAdapter())
         .registerAdapter(new OpcUaAdapter())
         .registerAdapter(new Plc4xS7Adapter())
         .registerAdapter(new Plc4xModbusAdapter())
