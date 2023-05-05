@@ -21,7 +21,7 @@ import org.apache.streampipes.mail.utils.MailUtils;
 
 public class LogoPart extends AbstractPart {
 
-  private static final String LOGO_PATH = "/assets/img/login/logo.png";
+  private static final String LOGO_PATH = "/assets/img/sp/logo.png";
 
   private final String baseUrl;
 
