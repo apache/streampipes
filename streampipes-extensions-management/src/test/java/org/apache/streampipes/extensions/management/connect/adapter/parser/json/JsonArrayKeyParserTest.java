@@ -16,10 +16,10 @@
  *
  */
 
-package org.apache.streampipes.extensions.management.connect.adapter.parser;
+package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserTest;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -34,14 +34,15 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class JsonObjectParsersTest extends ParserTest {
 
-  JsonObjectParser parser = new JsonObjectParser();
+public class JsonArrayKeyParserTest extends ParserTest {
 
-  InputStream event = toStream("{\"k1\": \"v1\", \"k2\": 2}");
+  JsonArrayKeyParser parser = new JsonArrayKeyParser("arr");
 
+  InputStream event = toStream("{\"arr\":[{\"k1\": \"v1\", \"k2\": 2},{\"k1\": \"v2\", \"k2\": 3}]}");
 
   @Test
   public void getGuessSchema() {
@@ -65,6 +66,29 @@ public class JsonObjectParsersTest extends ParserTest {
     assertEquals(expected, result);
   }
 
+  @Test(expected = ParseException.class)
+  public void getGuessSchemaNoObject() {
+    var event = toStream("{\"arr\":[1,2,3]}");
+    parser.getGuessSchema(event);
+  }
+
+  @Test(expected = ParseException.class)
+  public void getGuessSchemaNoArray() {
+    var event = toStream("{\"arr\": {\"s\": 1}}");
+    parser.getGuessSchema(event);
+  }
+
+  @Test(expected = ParseException.class)
+  public void getGuessSchemaMissingKey() {
+    var event = toStream("{\"abc\": [{\"s\": 1}]}");
+    parser.getGuessSchema(event);
+  }
+
+  @Test(expected = ParseException.class)
+  public void getGuessSchemaEmptyArray() {
+    var event = toStream("{\"arr\":[]}");
+    parser.getGuessSchema(event);
+  }
 
   @Test
   public void parse() {
@@ -74,22 +98,16 @@ public class JsonObjectParsersTest extends ParserTest {
     Map<String, Object> expectedEvent = new HashMap<>();
     expectedEvent.put(K1, "v1");
     expectedEvent.put(K2, 2);
-    verify(mockEventCollector).collect(expectedEvent);
+    verify(mockEventCollector, times(1)).collect(expectedEvent);
+
+    expectedEvent.put(K1, "v2");
+    expectedEvent.put(K2, 3);
+    verify(mockEventCollector, times(1)).collect(expectedEvent);
   }
 
-  @Test(expected = ParseException.class)
-  public void parseNullCheck() {
-    parser.parse(null, mock(IEventCollector.class));
+  @Test
+  public void parseEmptyArray() {
+    var mockEventCollector = mock(IEventCollector.class);
+    parser.parse(toStream("{\"arr\":[]}"), mockEventCollector);
   }
-
-  @Test(expected = ParseException.class)
-  public void parseEmptyString() {
-    parser.parse(toStream(""), mock(IEventCollector.class));
-  }
-
-  @Test(expected = ParseException.class)
-  public void parseInvalidJson() {
-    parser.parse(toStream("{\"f\","), mock(IEventCollector.class));
-  }
-
 }

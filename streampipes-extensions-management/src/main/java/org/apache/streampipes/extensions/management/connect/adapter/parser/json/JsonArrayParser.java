@@ -19,40 +19,28 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Map;
 
-public abstract class JsonParser {
+public class JsonArrayParser extends JsonParser {
 
-  protected final ObjectMapper mapper;
-  protected final ParserUtils parserUtils;
-
-  public JsonParser() {
-    this.mapper = new ObjectMapper();
-    this.parserUtils = new ParserUtils();
-  }
-
-  public abstract GuessSchema getGuessSchema(InputStream inputStream);
-
-  public abstract void parse(InputStream inputStream, IEventCollector collector) throws ParseException;
-
-
-  protected <T> T toMap(InputStream inputStream, Class<T> clazz) throws ParseException {
-    if (inputStream == null) {
-      throw new ParseException("Input stream was null in JsonParser");
+  @Override
+  public GuessSchema getGuessSchema(InputStream inputStream) {
+    var events = toMap(inputStream, Map[].class);
+    if (events.length == 0) {
+      throw new ParseException("Cannot guess schema from an empty array of events. Please provide at least one event.");
     }
 
-    try {
-      return mapper.readValue(inputStream, clazz);
-    } catch (IOException e) {
-      throw new ParseException("Event " + inputStream, e);
-    }
+    return parserUtils.getGuessSchema(events[0]);
   }
 
+  @Override
+  public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
+    var events = toMap(inputStream, Map[].class);
+    Arrays.stream(events).forEach(collector::collect);
+  }
 }

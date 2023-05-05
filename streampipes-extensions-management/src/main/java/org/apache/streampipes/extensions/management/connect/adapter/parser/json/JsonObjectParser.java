@@ -19,57 +19,24 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
-public class JsonObjectParser implements JsonParser {
-
-  private static final Logger LOG = LoggerFactory.getLogger(JsonParsers.class);
-
-  private final ParserUtils parserUtils;
-
-  private final ObjectMapper mapper;
-  public JsonObjectParser() {
-    parserUtils = new ParserUtils();
-    mapper = new ObjectMapper();
-  }
+public class JsonObjectParser extends JsonParser {
 
   @Override
   public GuessSchema getGuessSchema(InputStream inputStream) {
-    var event = toMap(inputStream);
+    var event = toMap(inputStream, Map.class);
     return parserUtils.getGuessSchema(event);
   }
 
   @Override
   public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
-    Map<String, Object> event = toMap(inputStream);
+    Map<String, Object> event = toMap(inputStream, Map.class);
     collector.collect(event);
-  }
-
-
-  private HashMap<String, Object> toMap(InputStream inputStream) throws ParseException {
-    if (inputStream == null) {
-      LOG.error("Input stream was null in JsonParser");
-      throw new ParseException("Input stream was null in JsonParser");
-    }
-
-    try {
-      return mapper.readValue(inputStream, HashMap.class);
-    } catch (IOException e) {
-      LOG.error("Event " + inputStream, e);
-      throw new ParseException("Event " + inputStream, e);
-    }
   }
 
 }

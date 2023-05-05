@@ -19,6 +19,8 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonArrayKeyParser;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonArrayParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonParser;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
@@ -86,12 +88,17 @@ public class JsonParsers implements Parser {
       case KEY_OBJECT -> {
         return new JsonParsers(new JsonObjectParser());
       }
-      // TODO add all parsers
+      case KEY_ARRAY -> {
+        return new JsonParsers(new JsonArrayParser());
+      }
+      case KEY_ARRAY_FIELD -> {
+        var key = extractor.singleValueParameter("key", String.class);
+        return new JsonParsers(new JsonArrayKeyParser(key));
+      }
     }
 
-    LOG.error("Parser %s was not found".formatted(selectedParser));
-    // TODO think about returning JSON Object parser as default
-    return null;
+    LOG.warn("No parser was found. Json parser is used as a default");
+    return new JsonParsers(new JsonObjectParser());
   }
 
   @Override
