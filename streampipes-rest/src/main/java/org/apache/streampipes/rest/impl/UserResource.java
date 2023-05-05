@@ -127,9 +127,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateAppearanceMode(@PathParam("darkMode") boolean darkMode) {
-    String authenticatedUserId = getAuthenticatedUserSid();
-    if (authenticatedUserId != null) {
-      UserAccount user = getUser(authenticatedUserId);
+    String authenticatedUsername = getAuthenticatedUsername();
+    if (authenticatedUsername != null) {
+      UserAccount user = getUser(authenticatedUsername);
       user.setDarkMode(darkMode);
       getUserStorage().updateUser(user);
 
