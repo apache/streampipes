@@ -145,6 +145,10 @@ public class SpServiceDefinition {
     this.adapters.add(adapter);
   }
 
+  public void addAdapters(List<AdapterInterface> adapters) {
+    this.adapters.addAll(adapters);
+  }
+
   public void addSpecificAdapter(IAdapter<?> adapter) {
     this.specificAdapters.put(adapter.getId(), adapter);
   }

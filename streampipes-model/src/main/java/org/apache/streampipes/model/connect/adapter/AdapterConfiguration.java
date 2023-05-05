@@ -97,6 +97,8 @@ public class AdapterConfiguration extends NamedStreamPipesEntity {
     this.adapterDescription = adapterDescription;
   }
 
+
+
   private StaticPropertyAlternatives getFormatAlternatives(List<StaticPropertyAlternative> alternatives) {
     var alternativesContainer =
         new StaticPropertyAlternatives("format", "Format", "Select the format that is used to parse the events");

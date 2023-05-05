@@ -18,10 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.Connector;
-import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
@@ -43,15 +40,12 @@ public class RuntimeResovable {
     }
   }
 
-  public static Connector getAdapterOrProtocol(String id) {
+  public static AdapterInterface getAdapter(String id) {
     id = id.replaceAll("sp:", SP_NS);
-    Map<String, IAdapter> allAdapters = DeclarersSingleton.getInstance().getAllAdaptersMap();
-    Map<String, IProtocol> allProtocols = DeclarersSingleton.getInstance().getAllProtocolsMap();
+    Map<String, AdapterInterface> allAdapters = DeclarersSingleton.getInstance().getAdapterMap();
 
     if (allAdapters.containsKey(id)) {
       return allAdapters.get(id);
-    } else if (allProtocols.containsKey(id)) {
-      return allProtocols.get(id);
     } else {
       throw new IllegalArgumentException("Could not find adapter with id " + id);
     }

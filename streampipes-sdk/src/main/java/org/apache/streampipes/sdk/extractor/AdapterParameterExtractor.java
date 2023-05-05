@@ -33,9 +33,13 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
 
   private final StaticPropertyExtractor staticPropertyExtractor;
 
-  public AdapterParameterExtractor(StaticPropertyExtractor extractor) {
+  private final AdapterDescription adapterDescription;
+
+  public AdapterParameterExtractor(StaticPropertyExtractor extractor,
+                                   AdapterDescription adapterDescription) {
     super();
     this.staticPropertyExtractor = extractor;
+    this.adapterDescription = adapterDescription;
   }
 
   @Override
@@ -68,7 +72,7 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
 
   public static IAdapterParameterExtractor from(AdapterDescription adapterDescription, List<Parser> parsers) {
     var extractor = StaticPropertyExtractor.from(adapterDescription.getConfig());
-    var result = new AdapterParameterExtractor(extractor);
+    var result = new AdapterParameterExtractor(extractor, adapterDescription);
     result.setParsers(parsers);
     return result;
   }
@@ -76,6 +80,11 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
   @Override
   public StaticPropertyExtractor getStaticPropertyExtractor() {
     return staticPropertyExtractor;
+  }
+
+  @Override
+  public AdapterDescription getAdapterDescription() {
+    return adapterDescription;
   }
 
   public void setParsers(List<Parser> parsers) {

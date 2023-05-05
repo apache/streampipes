@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class ConnectWorkerDescriptionProvider {
    * This is a helper method to mock the Declarer Singleton in unit tests
    * @return the registered adapters from the DeclarerSingleton
    */
-  public List<AdapterInterface> getRegisteredAdapters() {
+  public Collection<AdapterInterface> getRegisteredAdapters() {
     return DeclarersSingleton.getInstance().getAdapters();
   }
 

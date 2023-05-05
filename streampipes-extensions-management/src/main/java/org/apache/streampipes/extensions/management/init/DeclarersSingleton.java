@@ -43,7 +43,6 @@ import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -75,7 +74,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   @Deprecated
   private Map<String, IAdapter> allAdapters;
 
-  private List<AdapterInterface> adapters;
+  private Map<String, AdapterInterface> adapters;
 
   private String serviceId;
 
@@ -93,7 +92,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.supportedFormats = new HashMap<>();
     this.allProtocols = new HashMap<>();
     this.allAdapters = new HashMap<>();
-    this.adapters = new ArrayList<>();
+    this.adapters = new HashMap<>();
     this.functions = new HashMap<>();
     this.route = "/";
   }
@@ -117,7 +116,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.allAdapters = serviceDef.getSpecificAdapters();
     this.allProtocols = serviceDef.getAdapterProtocols();
-    this.adapters = serviceDef.getAdapters();
+    serviceDef.getAdapters().forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
     serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
   }
 
@@ -245,10 +244,12 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     return getInstance();
   }
 
+  @Deprecated
   public Map<String, IProtocol> getAllProtocolsMap() {
     return this.allProtocols;
   }
 
+  @Deprecated
   public Map<String, IAdapter> getAllAdaptersMap() {
     return this.allAdapters;
   }
@@ -300,12 +301,16 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     return functions;
   }
 
-  public List<AdapterInterface> getAdapters() {
+  public Collection<AdapterInterface> getAdapters() {
+    return adapters.values();
+  }
+
+  public Map<String, AdapterInterface> getAdapterMap() {
     return adapters;
   }
 
   public void setAdapters(List<AdapterInterface> adapters) {
-    this.adapters = adapters;
+    adapters.forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
   }
 
   public Optional<AdapterInterface> getAdapter(String id) {

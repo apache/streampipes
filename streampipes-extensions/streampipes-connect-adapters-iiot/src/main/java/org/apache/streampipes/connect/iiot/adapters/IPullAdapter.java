@@ -16,15 +16,16 @@
  *
  */
 
-package org.apache.streampipes.sdk.extractor;
+package org.apache.streampipes.connect.iiot.adapters;
 
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
-public interface IAdapterParameterExtractor {
-  Parser selectedParser() throws AdapterException;
-  StaticPropertyExtractor getStaticPropertyExtractor();
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
-  AdapterDescription getAdapterDescription();
+public interface IPullAdapter {
+
+  void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException;
+  PollingSettings getPollingInterval();
+
 }

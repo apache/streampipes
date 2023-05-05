@@ -71,6 +71,11 @@ public class AdapterConfigurationBuilder extends
     return this;
   }
 
+  public AdapterConfigurationBuilder withSupportedParsers(List<Parser> parsers) {
+    this.supportedParsers.addAll(parsers);
+    return this;
+  }
+
   public AdapterConfigurationBuilder withCategory(AdapterType... categories) {
     this.elementDescription
         .setCategory(Arrays
