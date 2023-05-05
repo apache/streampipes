@@ -127,7 +127,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateAppearanceMode(@PathParam("darkMode") boolean darkMode) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     if (authenticatedUserId != null) {
       UserAccount user = getUser(authenticatedUserId);
       user.setDarkMode(darkMode);
@@ -199,7 +199,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateUserAccountDetails(@PathParam("principalId") String principalId,
                                            UserAccount user) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
       updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
@@ -217,7 +217,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateUsername(@PathParam("principalId") String principalId,
                                  UserAccount user) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
       try {
@@ -279,7 +279,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateServiceAccountDetails(@PathParam("principalId") String principalId,
                                               ServiceAccount user) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);
       user.setRev(existingUser.getRev());
