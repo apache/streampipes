@@ -37,6 +37,8 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -54,5 +56,5 @@ public interface AdapterInterface {
                         IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
 
   GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
-                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
+                                IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException;
 }

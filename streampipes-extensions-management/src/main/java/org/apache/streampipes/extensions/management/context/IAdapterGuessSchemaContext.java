@@ -15,26 +15,14 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.extensions.management.config;
 
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
+package org.apache.streampipes.extensions.management.context;
 
-import java.io.Serializable;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 
-public class ConfigExtractor implements Serializable {
+public interface IAdapterGuessSchemaContext {
+  ConfigExtractor getConfigStore();
 
-  private SpConfig config;
-
-  private ConfigExtractor(String serviceGroup) {
-    this.config = SpServiceDiscovery.getSpConfig(serviceGroup);
-  }
-
-  public static ConfigExtractor from(String serviceId) {
-    return new ConfigExtractor(serviceId);
-  }
-
-  public SpConfig getConfig() {
-    return this.config;
-  }
+  StreamPipesClient getStreamPipesClient();
 }

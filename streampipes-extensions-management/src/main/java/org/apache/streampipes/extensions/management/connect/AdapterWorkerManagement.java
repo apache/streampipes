@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
@@ -39,10 +40,14 @@ public class AdapterWorkerManagement {
   private final RunningAdapterInstances runningAdapterInstances;
   private final IDeclarersSingleton declarers;
 
+  private final IAdapterRuntimeContext adapterRuntimeContext;
+
   public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances,
-                                 IDeclarersSingleton declarers) {
+                                 IDeclarersSingleton declarers,
+                                 IAdapterRuntimeContext runtimeContext) {
     this.runningAdapterInstances = runningAdapterInstances;
     this.declarers = declarers;
+    this.adapterRuntimeContext = runtimeContext;
   }
 
   public Collection<AdapterDescription> getAllRunningAdapterInstances() {
@@ -64,7 +69,7 @@ public class AdapterWorkerManagement {
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
       var eventCollector = EventCollector.from(adapterDescription);
 
-      adapter.get().onAdapterStarted(extractor, eventCollector, null);
+      adapter.get().onAdapterStarted(extractor, eventCollector, adapterRuntimeContext);
     } else {
       var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
       LOG.error(errorMessage);
@@ -82,7 +87,7 @@ public class AdapterWorkerManagement {
 
       var registeredParsers = adapter.declareConfig().getSupportedParsers();
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
-      adapter.onAdapterStopped(extractor, null);
+      adapter.onAdapterStopped(extractor, adapterRuntimeContext);
     }
 
     resetMonitoring(elementId);
@@ -91,5 +96,4 @@ public class AdapterWorkerManagement {
   private void resetMonitoring(String elementId) {
     SpMonitoringManager.INSTANCE.reset(elementId);
   }
-
 }

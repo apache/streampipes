@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
+import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
@@ -50,7 +51,8 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   public AdapterWorkerResource() {
     adapterManagement = new AdapterWorkerManagement(
         RunningAdapterInstances.INSTANCE,
-        DeclarersSingleton.getInstance()
+        DeclarersSingleton.getInstance(),
+        new AdapterContextGenerator().makeRuntimeContext()
     );
   }
 

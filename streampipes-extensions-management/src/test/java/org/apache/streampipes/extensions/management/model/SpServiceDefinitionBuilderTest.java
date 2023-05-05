@@ -19,7 +19,8 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -62,7 +63,7 @@ public class SpServiceDefinitionBuilderTest {
 
     @Override
     public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
-                                         IAdapterRuntimeContext adapterRuntimeContext) {
+                                         IAdapterGuessSchemaContext adapterGuessSchemaContext) {
       return null;
     }
   }

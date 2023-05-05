@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -35,6 +36,12 @@ import java.util.Optional;
 public class GuessManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
+
+  private IAdapterGuessSchemaContext guessSchemaContext;
+
+  public GuessManagement(IAdapterGuessSchemaContext guessSchemaContext) {
+    this.guessSchemaContext = guessSchemaContext;
+  }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
     var adapter = getDeclarerSingleton()
@@ -52,7 +59,7 @@ public class GuessManagement {
 
       try {
         var schema = adapterInstance
-            .onSchemaRequested(extractor, null);
+            .onSchemaRequested(extractor, guessSchemaContext);
         LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
 
         return schema;

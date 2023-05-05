@@ -16,47 +16,30 @@
  *
  */
 
-package org.apache.streampipes.wrapper.context;
+package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
-import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
-import org.apache.streampipes.model.runtime.SchemaInfo;
-import org.apache.streampipes.model.runtime.SourceInfo;
 
-import java.io.Serializable;
-import java.util.List;
+public class AdapterContextGenerator {
 
-// TODO implement methods
-public class SpAdapterRuntimeContext implements IAdapterRuntimeContext, Serializable {
-  @Override
-  public SpMonitoringManager getLogger() {
-    return null;
+  public IAdapterRuntimeContext makeRuntimeContext() {
+    return new SpAdapterRuntimeContext(SpMonitoringManager.INSTANCE, makeConfigExtractor(), makeStreamPipesClient());
   }
 
-  @Override
-  public List<SchemaInfo> getInputSchemaInfo() {
-    return null;
+  public IAdapterGuessSchemaContext makeGuessSchemaContext() {
+    return new SpAdapterGuessSchemaContext(makeConfigExtractor(), makeStreamPipesClient());
   }
 
-  @Override
-  public List<SourceInfo> getInputSourceInfo() {
-    return null;
+  private ConfigExtractor makeConfigExtractor() {
+    var serviceId = DeclarersSingleton.getInstance().getServiceId();
+    return ConfigExtractor.from(serviceId);
   }
 
-  @Override
-  public String getCorrespondingUser() {
-    return null;
-  }
-
-  @Override
-  public ConfigExtractor getConfigStore() {
-    return null;
-  }
-
-  @Override
-  public StreamPipesClient getStreamPipesClient() {
-    return null;
+  private StreamPipesClient makeStreamPipesClient() {
+    return new StreamPipesClientResolver().makeStreamPipesClientInstance();
   }
 }

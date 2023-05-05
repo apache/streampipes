@@ -36,11 +36,12 @@
 
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulator;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulatorUtils;
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
@@ -94,7 +95,7 @@ public class NewMachineDataSimulatorAdapter implements AdapterInterface {
 
   @Override
   public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
-                                       IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     var ex = extractor.getStaticPropertyExtractor();
     var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
     return MachineDataSimulatorUtils.getSchema(selectedSimulatorOption);

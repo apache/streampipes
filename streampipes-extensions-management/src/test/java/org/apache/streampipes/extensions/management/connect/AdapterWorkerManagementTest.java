@@ -41,8 +41,9 @@ public class AdapterWorkerManagementTest {
     var declarerSingleton = mock(IDeclarersSingleton.class);
     when(declarerSingleton.getAdapter(any())).thenReturn(Optional.empty());
 
-    var adapterWorkerManageement = new AdapterWorkerManagement(null, declarerSingleton);
+    var adapterWorkerManagement = new AdapterWorkerManagement(
+        null, declarerSingleton, null);
 
-    adapterWorkerManageement.invokeAdapter(adapterDescription);
+    adapterWorkerManagement.invokeAdapter(adapterDescription);
   }
 }

@@ -21,7 +21,8 @@ package org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.CsvParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.model.AdapterType;
@@ -94,7 +95,7 @@ public class FileReplayAdapter implements AdapterInterface {
 
   @Override
   public GuessSchema onSchemaRequested(AdapterParameterExtractor extractor,
-                                       IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     var inputStream = getDataFromEndpoint(extractor
         .getStaticPropertyExtractor()
         .selectedFilename(FILE_PATH));
