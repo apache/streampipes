@@ -23,7 +23,7 @@ import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.CsvParser;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParser;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
@@ -59,7 +59,9 @@ public class FileReplayAdapter implements AdapterInterface {
   @Override
   public AdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.file")
-        .withSupportedParsers(new JsonParser(), new CsvParser())
+        .withSupportedParsers(
+            new JsonParsers(),
+            new CsvParser())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic)

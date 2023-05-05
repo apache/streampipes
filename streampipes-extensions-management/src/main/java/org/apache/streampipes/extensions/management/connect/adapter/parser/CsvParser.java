@@ -16,42 +16,6 @@
  *
  */
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 
@@ -93,6 +57,9 @@ public class CsvParser implements Parser {
   public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser.csv";
   public static final String LABEL = "CSV";
 
+  public static final String DELIMITER = "delimiter";
+  public static final String HEADER = "header";
+
   public static final String DESCRIPTION = "Can be used to read CSV";
 
   private final ParserUtils parserUtils;
@@ -114,10 +81,10 @@ public class CsvParser implements Parser {
   public Parser fromDescription(List<StaticProperty> config) {
     StaticPropertyExtractor extractor = StaticPropertyExtractor.from(config);
 
-    char delimiter = extractor.singleValueParameter("delimiter", String.class).charAt(0);
+    char delimiter = extractor.singleValueParameter(DELIMITER, String.class).charAt(0);
 
-    boolean header = extractor.selectedMultiValues("header", String.class).stream()
-        .anyMatch(option -> "Header".equals(option));
+    boolean header = extractor.selectedMultiValues(HEADER, String.class).stream()
+        .anyMatch("Header"::equals);
 
     return new CsvParser(header, delimiter);
   }
@@ -126,9 +93,9 @@ public class CsvParser implements Parser {
   @Override
   public ParserDescription declareDescription() {
     return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION)
-        .requiredTextParameter(Labels.from("delimiter", "Delimiter",
+        .requiredTextParameter(Labels.from(DELIMITER, "Delimiter",
             "The delimiter for json. Mostly either , or ;"))
-        .requiredMultiValueSelection(Labels.from("header", "Header",
+        .requiredMultiValueSelection(Labels.from(HEADER, "Header",
                 "Does the CSV file include a header or not"),
             List.of(new Option("Header", "Header")))
         .build();

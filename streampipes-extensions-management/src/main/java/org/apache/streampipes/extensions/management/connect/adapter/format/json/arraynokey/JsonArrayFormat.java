@@ -37,7 +37,6 @@ public class JsonArrayFormat extends AbstractJsonFormat {
   public ParserDescription declareModel() {
     return ParserDescriptionBuilder.create(ID, "Array",
             "Each event consists of only one array of json objects, e.g. [{'value': 1}, {'value': 2}]")
-        .addFormatType(JSON_FORMAT_TYPE)
         .build();
   }
 

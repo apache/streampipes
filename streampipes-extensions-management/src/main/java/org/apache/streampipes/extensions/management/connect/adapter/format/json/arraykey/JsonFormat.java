@@ -40,7 +40,6 @@ public class JsonFormat extends AbstractJsonFormat {
 
     return ParserDescriptionBuilder.create(ID, "Array Field",
             "Use one property of the json object that is an array, e.g. {'arrayKey': [{'value': 1}, {'value': 2}]}")
-        .addFormatType(JSON_FORMAT_TYPE)
         .requiredTextParameter(Labels.from("key", "Key",
             "Key of the array within the Json object"))
         .build();

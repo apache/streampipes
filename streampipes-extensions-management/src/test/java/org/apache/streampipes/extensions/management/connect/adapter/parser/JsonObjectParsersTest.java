@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -35,9 +36,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class JsonParserTest extends ParserTest {
+public class JsonObjectParsersTest extends ParserTest {
 
-  JsonParser parser = new JsonParser();
+  JsonObjectParser parser = new JsonObjectParser();
 
   InputStream event = toStream("{\"k1\": \"v1\", \"k2\": 2}");
 

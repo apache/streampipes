@@ -41,17 +41,6 @@ public class ParserDescriptionBuilder extends
     return new ParserDescriptionBuilder(id, label, description);
   }
 
-  /**
-   * Add a format type to the format description, e.g. json
-   *
-   * @param formatType
-   * @return
-   */
-  public ParserDescriptionBuilder addFormatType(String formatType) {
-    this.elementDescription.setFormatType(formatType);
-    return me();
-  }
-
   @Override
   protected ParserDescriptionBuilder me() {
     return this;

@@ -30,7 +30,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class JsonParserTest {
+public class JsonObjectParserTest {
 
   @Test
   public void parseOneEvent() {

@@ -29,8 +29,6 @@ public class ParserDescription extends NamedStreamPipesEntity {
 
   private StaticPropertyGroup config;
 
-  private String formatType = "";
-
   public ParserDescription() {
     super();
     this.config = new StaticPropertyGroup();
@@ -44,18 +42,15 @@ public class ParserDescription extends NamedStreamPipesEntity {
   public ParserDescription(String uri,
                            String name,
                            String description,
-                           List<StaticProperty> config,
-                           String formatType) {
+                           List<StaticProperty> config) {
     super(uri, name, description);
 
     this.config = new StaticPropertyGroup(uri, name, description, config);
-    this.formatType = formatType;
   }
 
   public ParserDescription(ParserDescription other) {
     super(other);
     this.config = other.getConfig();
-    this.formatType = other.getFormatType();
   }
 
   public StaticPropertyGroup getConfig() {
@@ -66,16 +61,8 @@ public class ParserDescription extends NamedStreamPipesEntity {
     this.config = config;
   }
 
-  public String getFormatType() {
-    return formatType;
-  }
-
-  public void setFormatType(String formatType) {
-    this.formatType = formatType;
-  }
-
   @Override
   public String toString() {
-    return String.format("FormatDescription{formatType='%s', config='%s'}", formatType, config);
+    return String.format("FormatDescription{config='%s'}", config);
   }
 }

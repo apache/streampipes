@@ -71,6 +71,7 @@ public class AdapterConfiguration extends NamedStreamPipesEntity {
   public AdapterDescription getAdapterDescription() {
     // Add parser configuration to adapter description
     if (supportedParsers != null) {
+
       var alternatives = supportedParsers.stream()
           .map(parser -> {
             var result = new StaticPropertyAlternative(

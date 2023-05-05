@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.management.connect.adapter.format.json.AbstractJsonFormat;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 
@@ -42,7 +41,6 @@ public class GeoJsonFormat implements IFormat {
   public ParserDescription declareModel() {
 
     return ParserDescriptionBuilder.create(ID, "GeoJSON", "Reads GeoJson")
-        .addFormatType(AbstractJsonFormat.JSON_FORMAT_TYPE)
         .build();
 
   }

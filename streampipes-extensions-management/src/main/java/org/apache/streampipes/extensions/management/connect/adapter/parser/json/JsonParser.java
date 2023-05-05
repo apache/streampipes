@@ -16,20 +16,17 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter;
+package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-import org.junit.Test;
+import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
+public interface JsonParser {
+  GuessSchema getGuessSchema(InputStream inputStream);
 
-public class AdapterConfigurationTest {
+  void parse(InputStream inputStream, IEventCollector collector) throws ParseException;
 
-  @Test
-  public void simpleAdapterDescriptionTest() {
-    var adapterDescription = new AdapterDescription();
-    var adapterConfiguration = new AdapterConfiguration(adapterDescription, null);
-
-    assertEquals(adapterDescription, adapterConfiguration.getAdapterDescription());
-  }
 }

@@ -36,7 +36,6 @@ public class JsonObjectFormat extends AbstractJsonFormat {
   @Override
   public ParserDescription declareModel() {
     return ParserDescriptionBuilder.create(ID, LABEL, "Each event is a single json object (e.g. {'value': 1})")
-        .addFormatType(JSON_FORMAT_TYPE)
         .build();
   }
 
