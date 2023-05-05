@@ -193,7 +193,7 @@
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>9.30.1</nimbus-jose-jwt.version>
-	<opencsv.version>5.5.2</opencsv.version>
+	<opencsv.version>5.7.1</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
 	<proton-j.version>0.34.0</proton-j.version>
