@@ -34,15 +34,27 @@ and the amazing universe of data analytics libraries in Python. </p>
 <br>
 
 <p align="center">
-
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/streampipes)
-[![PyPI](https://img.shields.io/pypi/v/streampipes)](https://pypi.org/project/streampipes/)
-[![code-style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
-[![typed](https://img.shields.io/badge/typed-mypy-blue)](https://github.com/python/mypy)
+<a href="https://github.com/apache/streampipes/tree/dev/streampipes-client-python" target="_blank">
+    <img src="https://img.shields.io/pypi/pyversions/streampipes" alt="Supported Python versions">
+</a>
+<a href="https://pypi.org/project/streampipes/" target="_blank">
+    <img src="https://img.shields.io/pypi/v/streampipes" alt="Current PyPI version">
+</a>
+<a href="https://streampipes.apache.org/docs/docs/python/latest/" target="_blank">
+    <img src="https://github.com/apache/streampipes-website/actions/workflows/update-python-docs.yml/badge.svg" alt="Status Python Docs">
+</a>
+<a href="https://github.com/psf/black" target="_blank">
+    <img src="https://img.shields.io/badge/code%20style-black-black" alt="Code Style: Black">
+</a>
+<a href="https://github.com/python/mypy" target="_blank">
+    <img src="https://img.shields.io/badge/typed-mypy-blue" alt="Typed: MyPy">
+</a>
 <img src="./docs/img/interrogate_badge.png" alt= “interrogate” height="20">
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/streampipes)](https://pypi.org/project/streampipes/)
-
+<a href="https://pypi.org/project/streampipes/" target="_blank">
+    <img src="https://img.shields.io/pypi/dm/streampipes" alt="Downloads: PyPI/Month">
+</a>
 </p>
+
 ---
 
 <br>
