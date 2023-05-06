@@ -65,5 +65,5 @@ jobs:
           name: streampipes-python-docs
           path: |
             streampipes-client-python/docs-tmp/**/*
-            !streampipes-client-python/docs-tmp/**/versions.json  # exclude versions file because this would overwrite existing versions and aliases
+            !streampipes-client-python/docs-tmp/versions.json  # exclude versions file because this would overwrite existing versions and aliases
           retention-days: 5
