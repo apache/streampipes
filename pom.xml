@@ -1727,6 +1727,9 @@
                         <!-- Jupyter Notebooks as well -->
                         <exclude>**/*.ipynb</exclude>
 
+						<!-- Ignore SVG files -->
+						<exclude>**/*.svg</exclude>
+
                         <exclude>**/system</exclude>
 
                         <!-- Test files -->

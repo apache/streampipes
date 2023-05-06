@@ -31,19 +31,42 @@
 <p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python library to interact with StreamPipes.
 In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
 and the amazing universe of data analytics libraries in Python. </p>
+<br>
+
+<p align="center">
+<a href="https://github.com/apache/streampipes/tree/dev/streampipes-client-python" target="_blank">
+    <img src="https://img.shields.io/pypi/pyversions/streampipes" alt="Supported Python versions">
+</a>
+<a href="https://pypi.org/project/streampipes/" target="_blank">
+    <img src="https://img.shields.io/pypi/v/streampipes" alt="Current PyPI version">
+</a>
+<a href="https://streampipes.apache.org/docs/docs/python/latest/" target="_blank">
+    <img src="https://github.com/apache/streampipes-website/actions/workflows/update-python-docs.yml/badge.svg" alt="Status Python Docs">
+</a>
+<a href="https://github.com/psf/black" target="_blank">
+    <img src="https://img.shields.io/badge/code%20style-black-black" alt="Code Style: Black">
+</a>
+<a href="https://github.com/python/mypy" target="_blank">
+    <img src="https://img.shields.io/badge/typed-mypy-blue" alt="Typed: MyPy">
+</a>
+<img src="./docs/img/interrogate_badge.svg" alt= “interrogate” height="20">
+<a href="https://pypi.org/project/streampipes/" target="_blank">
+    <img src="https://img.shields.io/pypi/dm/streampipes" alt="Downloads: PyPI/Month">
+</a>
+</p>
 
 ---
 
 <br>
 
-**💡The current version of this Python client is still a beta version.**
-<br>
-**This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
+<h4 align="center">💡The current version of this Python client is still a beta version.</h4>
+<h4 align="center">This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.</h4>
+
 <br>
 
 
 ## 📚 Documentation
-Please visit our documentation: https://streampipes.apache.org/docs/docs/python/latest/
+Please visit our [documentation](https://streampipes.apache.org/docs/docs/python/latest/).
 There you can find information about how to [get started](https://streampipes.apache.org/docs/docs/python/latest/getting-started/first-steps/),
 follow some [tutorials](https://streampipes.apache.org/docs/docs/python/latest/tutorials/1-introduction-to-streampipes-python-client/),
 or discover the library via our [references](https://streampipes.apache.org/docs/docs/python/latest/reference/client/client/).
@@ -52,6 +75,8 @@ or discover the library via our [references](https://streampipes.apache.org/docs
 In case you want to access the documentation of the current development state, you can go here:
 
 👉 [development docs 🤓](https://streampipes.apache.org/docs/docs/python/dev/)
+
+<br>
 
 ## ⚡️ Quickstart
 
