@@ -62,6 +62,8 @@ and the amazing universe of data analytics libraries in Python. </p>
 <h4 align="center">💡The current version of this Python client is still a beta version.</h4>
 <h4 align="center">This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.</h4>
 
+<br>
+
 
 ## 📚 Documentation
 Please visit our documentation: https://streampipes.apache.org/docs/docs/python/latest/
