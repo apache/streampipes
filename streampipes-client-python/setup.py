@@ -49,7 +49,7 @@ dev_packages = base_packages + [
     "black==23.3.0",
     "blacken-docs==1.13.0",
     "flake8==6.0.0",
-    "interrogate==1.5.0",
+    "interrogate[png]==1.5.0",
     "isort==5.12.0",
     "mypy==1.2.0",
     "pandas-stubs==2.0.0.230412",

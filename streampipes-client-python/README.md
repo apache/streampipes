@@ -25,6 +25,12 @@
 </h1>
 <h4 align="center"><a href="[StreamPipes](https://github.com/apache/streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/streampipes)
+[![PyPI](https://img.shields.io/pypi/v/streampipes)](https://pypi.org/project/streampipes/)
+[![code-style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![typed](https://img.shields.io/badge/typed-mypy-blue)](https://github.com/python/mypy)
+<img src="./docs/img/interrogate_badge.png" alt= “interrogate” height="20">
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/streampipes)](https://pypi.org/project/streampipes/)
 <br>
 <h3 align="center">Apache StreamPipes for Python</h3>
 
