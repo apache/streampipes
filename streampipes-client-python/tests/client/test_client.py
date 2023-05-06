@@ -17,7 +17,9 @@
 import json
 from collections import namedtuple
 from unittest import TestCase
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import patch, MagicMock, call
+
+from requests import Response
 
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
@@ -74,10 +76,18 @@ class TestStreamPipesClient(TestCase):
     @patch("builtins.print")
     @patch("streampipes.endpoint.endpoint.APIEndpoint._make_request", autospec=True)
     def test_client_describe(self, make_request: MagicMock, mocked_print: MagicMock):
+
+        class MockResponse:
+            def __init__(self, text):
+                self.text = text
+
+            def json(self):
+                return json.loads(self.text)
+
         def simulate_response(*args, **kwargs):
-            Response = namedtuple("Response", ["text"])
+
             if "measurements" in kwargs["url"]:
-                return Response(
+                return MockResponse(
                     json.dumps(
                         [
                             {
@@ -90,10 +100,14 @@ class TestStreamPipesClient(TestCase):
                     )
                 )
             if "streams" in kwargs["url"]:
-                return Response(
+                return MockResponse(
                     json.dumps(
                         [{"elementId": "test-stream", "name": "test", "eventGrounding": {"transportProtocols": []}}]
                     )
+                )
+            if "versions" in kwargs["url"]:
+                return MockResponse(
+                    json.dumps({"backendVersion": "SP-dev"})
                 )
 
         make_request.side_effect = simulate_response
@@ -109,7 +123,7 @@ class TestStreamPipesClient(TestCase):
         mocked_print.assert_has_calls(
             calls=[
                 call(
-                    "\nHi there!\nYou are connected to a StreamPipes instance running at https://localhost:443.\n"
+                    "\nHi there!\nYou are connected to a StreamPipes instance running at https://localhost:443 with version SP-dev.\n"
                     "The following StreamPipes resources are available with this client:\n"
                     "1x DataLakeMeasures\n1x DataStreams"
                 ),

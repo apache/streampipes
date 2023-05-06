@@ -418,6 +418,7 @@ class TestMessagingEndpoint(TestCase):
         )
     )
 
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_messaging_endpoint_happy_path(self):
         demo_endpoint = MessagingEndpoint(parent_client=self.client)
 
@@ -425,6 +426,7 @@ class TestMessagingEndpoint(TestCase):
 
         self.assertTrue(isinstance(demo_endpoint.broker, NatsConsumer))
 
+    @patch("streampipes.client.client.Session", autospec=True)
     def test_messaging_endpoint_missing_configure(self):
         demo_endpoint = MessagingEndpoint(parent_client=self.client)
 
