@@ -76,6 +76,8 @@ In case you want to access the documentation of the current development state, y
 
 👉 [development docs 🤓](https://streampipes.apache.org/docs/docs/python/dev/)
 
+<br>
+
 ## ⚡️ Quickstart
 
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.
