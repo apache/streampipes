@@ -97,7 +97,14 @@ setuptools.setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=PROJECT_URLS,
-    packages=setuptools.find_packages(exclude=("tests",)),
+    packages=setuptools.find_packages(exclude=("*tests*",)),
+    package_data={
+        "streampipes": [
+            "py.typed",
+            "*.pyi",
+            "**/*.pyi"
+        ]
+    },
     install_requires=base_packages,
     extras_require={
         "dev": dev_packages,
@@ -105,7 +112,6 @@ setuptools.setup(
         "docs": docs_packages,
         "all": dev_packages + docs_packages,
     },
-    include_package_data=True,
     license="Apache License 2.0",
     classifiers=[
         # Trove classifiers
