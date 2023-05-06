@@ -25,18 +25,20 @@
 </h1>
 <h4 align="center"><a href="[StreamPipes](https://github.com/apache/streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
 
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/streampipes)
-[![PyPI](https://img.shields.io/pypi/v/streampipes)](https://pypi.org/project/streampipes/)
-[![code-style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
-[![typed](https://img.shields.io/badge/typed-mypy-blue)](https://github.com/python/mypy)
-<img src="./docs/img/interrogate_badge.png" alt= “interrogate” height="20">
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/streampipes)](https://pypi.org/project/streampipes/)
 <br>
 <h3 align="center">Apache StreamPipes for Python</h3>
 
 <p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python library to interact with StreamPipes.
 In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
 and the amazing universe of data analytics libraries in Python. </p>
+<br>
+
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/streampipes)
+[![PyPI](https://img.shields.io/pypi/v/streampipes)](https://pypi.org/project/streampipes/)
+[![code-style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![typed](https://img.shields.io/badge/typed-mypy-blue)](https://github.com/python/mypy)
+<img src="./docs/img/interrogate_badge.png" alt= “interrogate” height="20">
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/streampipes)](https://pypi.org/project/streampipes/)
 
 ---
 
