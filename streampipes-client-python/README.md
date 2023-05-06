@@ -59,10 +59,8 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-**💡The current version of this Python client is still a beta version.**
-<br>
-**This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
-<br>
+<h4 align="center">💡The current version of this Python client is still a beta version.</h4>
+<h4 align="center">This means that it is still under development, which may result in frequent and extensive API changes, unstable behavior, etc.</h4>
 
 
 ## 📚 Documentation
