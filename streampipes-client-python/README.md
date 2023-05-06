@@ -66,7 +66,7 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 
 ## 📚 Documentation
-Please visit our documentation: https://streampipes.apache.org/docs/docs/python/latest/
+Please visit our [documentation](https://streampipes.apache.org/docs/docs/python/latest/).
 There you can find information about how to [get started](https://streampipes.apache.org/docs/docs/python/latest/getting-started/first-steps/),
 follow some [tutorials](https://streampipes.apache.org/docs/docs/python/latest/tutorials/1-introduction-to-streampipes-python-client/),
 or discover the library via our [references](https://streampipes.apache.org/docs/docs/python/latest/reference/client/client/).
