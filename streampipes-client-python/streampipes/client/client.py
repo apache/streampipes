@@ -274,10 +274,13 @@ class StreamPipesClient:
             }
         )
 
+        # ensure deterministic order
+        ordered_available_endpoints = sorted(available_endpoints)
+
         # collect the number of available resources per endpoint
         endpoint_stats = {
             (all_items := self.__getattribute__(endpoint_name).all()).__class__.__name__: len(all_items)
-            for endpoint_name in available_endpoints
+            for endpoint_name in ordered_available_endpoints
         }
 
         # sort the endpoints descending based on the number of resources
@@ -295,4 +298,4 @@ class StreamPipesClient:
 
         endpoint_stats_message = "\n".join(f"{count}x {name}" for name, count in sorted_endpoint_stats.items())
 
-        print(base_message + endpoint_stats_message)
+        logger.info(base_message + endpoint_stats_message)

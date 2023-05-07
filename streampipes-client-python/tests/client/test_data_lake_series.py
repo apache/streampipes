@@ -94,7 +94,11 @@ class TestDataLakeSeries(TestCase):
         return result.to_pandas()
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_to_pandas(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_to_pandas(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         query_result = {
             "total": 1,
             "headers": self.headers,
@@ -114,7 +118,11 @@ class TestDataLakeSeries(TestCase):
         self.assertEqual(73.37740325927734, result_pd["level"][0])
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_group_by_to_pandas(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_group_by_to_pandas(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         query_result = {
             "total": 2,
             "headers": self.headers,
@@ -135,7 +143,11 @@ class TestDataLakeSeries(TestCase):
         self.assertEqual(70.03279876708984, result_pd["level"][3])
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_different_headers_exception(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_different_headers_exception(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         query_result = {
             "total": 1,
             "headers": ['one'],

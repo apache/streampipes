@@ -28,7 +28,11 @@ from streampipes.endpoint.api import DataLakeMeasureEndpoint
 
 
 class TestStreamPipesClient(TestCase):
-    def test_client_init(self):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_client_init(self, server_version: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         result = StreamPipesClient(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
@@ -50,7 +54,11 @@ class TestStreamPipesClient(TestCase):
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "http://localhost:80/streampipes-backend/")
 
-    def test_client_create(self):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_client_create(self, server_version: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         result = StreamPipesClient.create(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
@@ -73,9 +81,9 @@ class TestStreamPipesClient(TestCase):
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
 
-    @patch("builtins.print")
+    @patch("streampipes.client.client.logger", autospec=True)
     @patch("streampipes.endpoint.endpoint.APIEndpoint._make_request", autospec=True)
-    def test_client_describe(self, make_request: MagicMock, mocked_print: MagicMock):
+    def test_client_describe(self, make_request: MagicMock, mocked_logger: MagicMock):
 
         class MockResponse:
             def __init__(self, text):
@@ -120,7 +128,7 @@ class TestStreamPipesClient(TestCase):
             )
         ).describe()
 
-        mocked_print.assert_has_calls(
+        mocked_logger.info.assert_has_calls(
             calls=[
                 call(
                     "\nHi there!\nYou are connected to a StreamPipes instance running at https://localhost:443 with version SP-dev.\n"

@@ -174,10 +174,13 @@ class TestFunctionHandler(TestCase):
     @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
     @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_function_handler_nats(self, http_session: MagicMock, get_messages: MagicMock, connection: AsyncMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_handler_nats(self, server_version: MagicMock, http_session: MagicMock, get_messages: MagicMock, connection: AsyncMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_nats
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": '0.x.y'}
 
         get_messages.return_value = TestMessageIterator(self.test_stream_data1)
 
@@ -206,10 +209,13 @@ class TestFunctionHandler(TestCase):
 
     @patch("streampipes.functions.broker.kafka.kafka_consumer.KafkaConnection", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_function_handler_kafka(self, http_session: MagicMock, connection: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_handler_kafka(self, server_version: MagicMock, http_session: MagicMock, connection: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_kafka
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": '0.x.y'}
 
         connection_mock = MagicMock()
         connection_mock.poll.side_effect = TestKafkaMessageContainer(self.test_stream_data1).get_data
@@ -240,10 +246,13 @@ class TestFunctionHandler(TestCase):
 
     @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_function_handler_unsupported_broker(self, http_session: MagicMock, connection: AsyncMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_handler_unsupported_broker(self, server_version: MagicMock, http_session: MagicMock, connection: AsyncMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_unsupported_broker
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
@@ -261,8 +270,9 @@ class TestFunctionHandler(TestCase):
 
     @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
     @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
-    @patch("streampipes.endpoint.endpoint.APIEndpoint.get", autospec=True)
-    def test_two_streams_nats(self, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
+    @patch("streampipes.endpoint.api.DataStreamEndpoint.get", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_two_streams_nats(self, server_version: MagicMock, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         def get_stream(endpoint, stream_id):
             if stream_id == "urn:streampipes.apache.org:eventstream:uPDKLI":
                 return DataStream(**self.data_stream_nats)
@@ -272,6 +282,7 @@ class TestFunctionHandler(TestCase):
                 data_stream.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test2"
                 return data_stream
 
+        server_version.return_value = {"backendVersion": "0.x.y"}
         endpoint.side_effect = get_stream
 
         def get_message(broker):
@@ -318,8 +329,10 @@ class TestFunctionHandler(TestCase):
     @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
     @patch("streampipes.functions.broker.NatsPublisher.publish_event", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
     def test_function_output_stream_nats(
         self,
+            server_version: MagicMock,
         http_session: MagicMock,
         pulish_event: MagicMock,
         get_message: MagicMock,
@@ -329,6 +342,8 @@ class TestFunctionHandler(TestCase):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_nats
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         output_events = []
 
@@ -370,8 +385,10 @@ class TestFunctionHandler(TestCase):
     @patch("streampipes.functions.broker.kafka.kafka_consumer.KafkaConnection", autospec=True)
     @patch("streampipes.functions.broker.KafkaPublisher.publish_event", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
     def test_function_output_stream_kafka(
         self,
+            server_version: MagicMock,
         http_session: MagicMock,
         pulish_event: MagicMock,
         connection: MagicMock,
@@ -383,6 +400,8 @@ class TestFunctionHandler(TestCase):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_kafka
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         output_events = []
 
