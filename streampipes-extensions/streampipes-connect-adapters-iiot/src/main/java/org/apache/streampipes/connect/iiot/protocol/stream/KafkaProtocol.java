@@ -23,18 +23,15 @@ import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.Parser;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
@@ -50,7 +47,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
@@ -175,7 +171,7 @@ public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
 
     this.kafkaConsumer = new SpKafkaConsumer(protocol,
         config.getTopic(),
-        new EventProcessor(extractor.selectedParser(), collector),
+        new BrokerEventProcessor(extractor.selectedParser(), collector),
         Collections.singletonList(this.config.getSecurityConfig()));
 
     thread = new Thread(this.kafkaConsumer);
@@ -246,19 +242,5 @@ public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
     consumer.close();
 
     return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(resultEventsByte.get(0)));
-  }
-
-
-  private record EventProcessor(Parser parser,
-                                IEventCollector collector) implements InternalEventProcessor<byte[]> {
-
-    @Override
-    public void onEvent(byte[] payload) {
-      try {
-        parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), collector);
-      } catch (ParseException e) {
-        logger.error("Error while parsing: " + e.getMessage());
-      }
-    }
   }
 }

@@ -19,30 +19,25 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.api.connect.IParser;
-import org.apache.streampipes.extensions.management.connect.SendToPipeline;
 import org.apache.streampipes.messaging.InternalEventProcessor;
+import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.Parser;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class BrokerEventProcessor implements InternalEventProcessor<byte[]> {
+public record BrokerEventProcessor(Parser parser,
+                                   IEventCollector collector) implements InternalEventProcessor<byte[]> {
 
-  private SendToPipeline stk;
-  private IParser parser;
-
-  public BrokerEventProcessor(SendToPipeline stk,
-                              IParser parser) {
-    this.stk = stk;
-    this.parser = parser;
-  }
+  private static final Logger LOG = LoggerFactory.getLogger(BrokerEventProcessor.class);
 
   @Override
   public void onEvent(byte[] payload) {
     try {
-      parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
+      parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), collector);
     } catch (ParseException e) {
-      e.printStackTrace();
-      //logger.error("Adapter " + ID + " could not read value!",e);
+      LOG.error("Error while parsing: " + e.getMessage());
     }
   }
 }

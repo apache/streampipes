@@ -17,84 +17,100 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
-//public class MqttProtocol extends BrokerProtocol {
-//
-//  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.mqtt";
-//
-//  private Thread thread;
-//  private MqttConsumer mqttConsumer;
-//  private MqttConfig mqttConfig;
-//
-//  public MqttProtocol() {
-//  }
-//
-//  public MqttProtocol(IParser parser, IFormat format, MqttConfig mqttConfig) {
-//    super(parser, format, mqttConfig.getUrl(), mqttConfig.getTopic());
-//    this.mqttConfig = mqttConfig;
-//  }
-//
-//  @Override
-//  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-//    MqttConfig mqttConfig;
-//    StaticPropertyExtractor extractor =
-//        StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
-//
-//    mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
-//
-//    return new MqttProtocol(parser, format, mqttConfig);
-//  }
-//
-//  @Override
-//  public ProtocolDescription declareModel() {
-//    return ProtocolDescriptionBuilder.create(ID)
-//        .withLocales(Locales.EN)
-//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-//        .category(AdapterType.Generic, AdapterType.Manufacturing)
-//        .sourceType(AdapterSourceType.STREAM)
-//        .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-//        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-//            MqttConnectUtils.getAlternativesTwo())
-//        .requiredTextParameter(MqttConnectUtils.getTopicLabel())
-//        .build();
-//  }
-//
-//  @Override
-//  protected List<byte[]> getNByteElements(int n) throws ParseException {
-//    List<byte[]> elements = new ArrayList<>();
-//    InternalEventProcessor<byte[]> eventProcessor = elements::add;
-//
-//    MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);
-//
-//    Thread thread = new Thread(consumer);
-//    thread.start();
-//
-//    while (consumer.getMessageCount() < n) {
-//      try {
-//        Thread.sleep(100);
-//      } catch (InterruptedException e) {
-//        e.printStackTrace();
-//      }
-//    }
-//    return elements;
-//  }
-//
-//  @Override
-//  public void run(IAdapterPipeline adapterPipeline) {
-//    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-//    this.mqttConsumer = new MqttConsumer(this.mqttConfig, new BrokerEventProcessor(stk, parser));
-//
-//    thread = new Thread(this.mqttConsumer);
-//    thread.start();
-//  }
-//
-//  @Override
-//  public void stop() {
-//    this.mqttConsumer.close();
-//  }
-//
-//  @Override
-//  public String getId() {
-//    return ID;
-//  }
-//
-//}
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
+import org.apache.streampipes.messaging.InternalEventProcessor;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
+import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
+import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
+import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class MqttProtocol implements AdapterInterface {
+
+  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.mqtt";
+
+  private Thread thread;
+  private MqttConsumer mqttConsumer;
+  private MqttConfig mqttConfig;
+
+  public MqttProtocol() {
+  }
+
+  public void applyConfiguration(StaticPropertyExtractor extractor) {
+    this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
+  }
+
+  @Override
+  public AdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder
+        .create(ID)
+        .withSupportedParsers(Parsers.defaultParsers())
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
+        .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
+            MqttConnectUtils.getAlternativesTwo())
+        .requiredTextParameter(MqttConnectUtils.getTopicLabel())
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    this.mqttConsumer = new MqttConsumer(
+        this.mqttConfig,
+        new BrokerEventProcessor(extractor.selectedParser(), collector)
+    );
+
+    thread = new Thread(this.mqttConsumer);
+    thread.start();
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.mqttConsumer.close();
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    List<byte[]> elements = new ArrayList<>();
+    InternalEventProcessor<byte[]> eventProcessor = elements::add;
+
+    MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);
+
+    Thread thread = new Thread(consumer);
+    thread.start();
+
+    while (consumer.getMessageCount() < 1) {
+      try {
+        TimeUnit.MILLISECONDS.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
+  }
+}
