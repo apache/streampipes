@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.json.GeoJsonParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonArrayKeyParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonArrayParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
@@ -94,6 +95,9 @@ public class JsonParsers implements Parser {
       case KEY_ARRAY_FIELD -> {
         var key = extractor.singleValueParameter("key", String.class);
         return new JsonParsers(new JsonArrayKeyParser(key));
+      }
+      case KEY_GEO_JSON -> {
+        return new JsonParsers(new GeoJsonParser());
       }
     }
 

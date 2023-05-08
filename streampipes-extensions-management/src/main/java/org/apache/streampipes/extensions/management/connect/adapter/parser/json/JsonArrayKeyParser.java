@@ -78,7 +78,7 @@ public class JsonArrayKeyParser extends JsonParser {
             .formatted(list));
       }
     } else {
-      throw new ParseException("The selected key %s could not be found in the json object".formatted(key));
+      throw new ParseException("The selected key '%s' could not be found in the json object".formatted(key));
     }
   }
 }
