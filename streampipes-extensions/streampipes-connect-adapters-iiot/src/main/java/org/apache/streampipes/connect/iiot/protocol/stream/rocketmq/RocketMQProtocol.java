@@ -18,128 +18,134 @@
 package org.apache.streampipes.connect.iiot.protocol.stream.rocketmq;
 
 
-//public class RocketMQProtocol extends BrokerProtocol {
-//
-//  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.rocketmq";
-//
-//  public static final String TOPIC_KEY = "rocketmq-topic";
-//  public static final String ENDPOINT_KEY = "rocketmq-endpoint";
-//  public static final String CONSUMER_GROUP_KEY = "rocketmq-consumer-group";
-//
-//  private Logger logger = LoggerFactory.getLogger(RocketMQProtocol.class);
-//
-//  private String consumerGroup;
-//
-//  private Thread thread;
-//  private RocketMQConsumer rocketMQConsumer;
-//
-//  public RocketMQProtocol() {
-//  }
-//
-//  public RocketMQProtocol(IParser parser, IFormat format, String brokerUrl, String topic, String consumerGroup) {
-//    super(parser, format, brokerUrl, topic);
-//    this.consumerGroup = consumerGroup;
-//  }
-//
-//  @Override
-//  public IProtocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-//    ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-//    String endpoint = extractor.singleValue(ENDPOINT_KEY, String.class);
-//    String topic = extractor.singleValue(TOPIC_KEY, String.class);
-//    String consumerGroup = extractor.singleValue(CONSUMER_GROUP_KEY, String.class);
-//
-//    return new RocketMQProtocol(parser, format, endpoint, topic, consumerGroup);
-//  }
-//
-//  @Override
-//  public ProtocolDescription declareModel() {
-//    return ProtocolDescriptionBuilder.create(ID)
-//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-//        .withLocales(Locales.EN)
-//        .category(AdapterType.Generic)
-//        .sourceType(AdapterSourceType.STREAM)
-//        .requiredTextParameter(Labels.withId(ENDPOINT_KEY))
-//        .requiredTextParameter(Labels.withId(TOPIC_KEY))
-//        .requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY))
-//        .build();
-//  }
-//
-//  @Override
-//  public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
-//    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-//    this.rocketMQConsumer = new RocketMQConsumer(brokerUrl, topic, consumerGroup, new EventProcessor(stk));
-//
-//    thread = new Thread(this.rocketMQConsumer);
-//    thread.start();
-//  }
-//
-//  @Override
-//  public void stop() {
-//    try {
-//      rocketMQConsumer.stop();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Override
-//  public String getId() {
-//    return ID;
-//  }
-//
-//  @Override
-//  protected List<byte[]> getNByteElements(int n) throws ParseException {
-//    List<byte[]> nEventsByte = new ArrayList<>(n);
-//    CountDownLatch latch = new CountDownLatch(n);
-//
-//    PushConsumer consumer = null;
-//    try {
-//      consumer = RocketMQUtils.createConsumer(brokerUrl, topic, consumerGroup, messageView -> {
-//        InputStream inputStream = new ByteArrayInputStream(messageView.getBody().array());
-//        nEventsByte.addAll(parser.parseNEvents(inputStream, n));
-//
-//        latch.countDown();
-//        return ConsumeResult.SUCCESS;
-//      });
-//    } catch (ClientException e) {
-//      e.printStackTrace();
-//      try {
-//        if (consumer != null) {
-//          consumer.close();
-//        }
-//      } catch (IOException ex) {
-//      }
-//      throw new ParseException("Failed to fetch messages.", e);
-//    }
-//
-//    try {
-//      latch.await();
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    }
-//    try {
-//      consumer.close();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//
-//    return nEventsByte;
-//  }
-//
-//  private class EventProcessor implements InternalEventProcessor<byte[]> {
-//    private SendToPipeline stk;
-//
-//    public EventProcessor(SendToPipeline stk) {
-//      this.stk = stk;
-//    }
-//
-//    @Override
-//    public void onEvent(byte[] payload) {
-//      try {
-//        parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
-//      } catch (ParseException e) {
-//        logger.error("Error while parsing: " + e.getMessage());
-//      }
-//    }
-//  }
-//}
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.connect.iiot.protocol.stream.BrokerEventProcessor;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
+import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+
+import org.apache.rocketmq.client.apis.ClientException;
+import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
+import org.apache.rocketmq.client.apis.consumer.PushConsumer;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
+public class RocketMQProtocol implements AdapterInterface {
+
+  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.rocketmq";
+
+  public static final String TOPIC_KEY = "rocketmq-topic";
+  public static final String ENDPOINT_KEY = "rocketmq-endpoint";
+  public static final String CONSUMER_GROUP_KEY = "rocketmq-consumer-group";
+
+  private String endpoint;
+  private String topic;
+  private String consumerGroup;
+
+  private Thread thread;
+  private RocketMQConsumer rocketMQConsumer;
+
+  public RocketMQProtocol() {
+  }
+
+  public void applyConfiguration(StaticPropertyExtractor extractor) {
+    this.endpoint = extractor.singleValueParameter(ENDPOINT_KEY, String.class);
+    this.topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
+    this.consumerGroup = extractor.singleValueParameter(CONSUMER_GROUP_KEY, String.class);
+  }
+
+  @Override
+  public AdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder
+        .create(ID)
+        .withSupportedParsers(Parsers.defaultParsers())
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.Generic)
+        .requiredTextParameter(Labels.withId(ENDPOINT_KEY))
+        .requiredTextParameter(Labels.withId(TOPIC_KEY))
+        .requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY))
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    this.rocketMQConsumer = new RocketMQConsumer(
+        endpoint,
+        topic,
+        consumerGroup,
+        new BrokerEventProcessor(extractor.selectedParser(), collector));
+
+    thread = new Thread(this.rocketMQConsumer);
+    thread.start();
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    try {
+      rocketMQConsumer.stop();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    List<byte[]> nEventsByte = new ArrayList<>(1);
+    CountDownLatch latch = new CountDownLatch(1);
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+
+    PushConsumer consumer = null;
+    try {
+      consumer = RocketMQUtils.createConsumer(endpoint, topic, consumerGroup, messageView -> {
+        nEventsByte.add(messageView.getBody().array());
+
+        latch.countDown();
+        return ConsumeResult.SUCCESS;
+      });
+    } catch (ClientException e) {
+      e.printStackTrace();
+      try {
+        if (consumer != null) {
+          consumer.close();
+        }
+      } catch (IOException ignored) {
+      }
+      throw new ParseException("Failed to fetch messages.", e);
+    }
+
+    try {
+      latch.await();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    try {
+      consumer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(nEventsByte.get(0)));
+  }
+}
