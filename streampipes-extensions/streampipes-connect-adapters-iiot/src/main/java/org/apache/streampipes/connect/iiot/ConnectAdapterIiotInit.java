@@ -25,6 +25,7 @@ import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.FileReplayAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.NewMachineDataSimulatorAdapter;
 import org.apache.streampipes.connect.iiot.protocol.stream.HttpServerProtocol;
+import org.apache.streampipes.connect.iiot.protocol.stream.HttpStreamProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.KafkaProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.MqttProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.NatsProtocol;
@@ -57,7 +58,7 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
         .registerAdapter(new KafkaProtocol())
         .registerAdapter(new MqttProtocol())
         .registerAdapter(new NatsProtocol())
-//        .registerAdapter(new HttpStreamProtocol())
+        .registerAdapter(new HttpStreamProtocol())
         .registerAdapter(new PulsarProtocol())
         .registerAdapter(new RocketMQProtocol())
         .registerAdapter(new HttpServerProtocol())

@@ -18,106 +18,136 @@
 
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
-//public class HttpStreamProtocol extends PullProtocol {
-//
-//  Logger logger = LoggerFactory.getLogger(HttpStreamProtocol.class);
-//
-//  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.http";
-//
-//  private static final String URL_PROPERTY = "url";
-//  private static final String INTERVAL_PROPERTY = "interval";
-//
-//  private String url;
-//  private String accessToken;
-//
-//  public HttpStreamProtocol() {
-//  }
-//
-//
-//  public HttpStreamProtocol(IParser parser, IFormat format, String url, long interval, String accessToken) {
-//    super(parser, format, interval);
-//    this.url = url;
-//    this.accessToken = accessToken;
-//  }
-//
-//  @Override
-//  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-//    ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-//
-//    String urlProperty = extractor.singleValue(URL_PROPERTY);
-//    try {
-//      long intervalProperty = Long.parseLong(extractor.singleValue(INTERVAL_PROPERTY));
-//      // TODO change access token to an optional parameter
-////            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
-//      String accessToken = "";
-//      return new HttpStreamProtocol(parser, format, urlProperty, intervalProperty, accessToken);
-//    } catch (NumberFormatException e) {
-//      logger.error("Could not parse" + extractor.singleValue(INTERVAL_PROPERTY) + "to int");
-//      return null;
-//    }
-//
-//  }
-//
-//  @Override
-//  public ProtocolDescription declareModel() {
-//    return ProtocolDescriptionBuilder.create(ID)
-//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-//        .withLocales(Locales.EN)
-//        .sourceType(AdapterSourceType.STREAM)
-//        .category(AdapterType.Generic)
-//        .requiredTextParameter(Labels.withId(URL_PROPERTY))
-//        .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY))
-//        .build();
-//  }
-//
-//  @Override
-//  public GuessSchema getGuessSchema() throws ParseException {
-//    int n = 2;
-//
-//    InputStream dataInputStream = getDataFromEndpoint();
-//
-//    List<byte[]> dataByte = parser.parseNEvents(dataInputStream, n);
-//    if (dataByte.size() < n) {
-//      logger.error("Error in HttpStreamProtocol! Required: " + n + " elements but the resource just had: "
-//          + dataByte.size());
-//
-//      dataByte.addAll(dataByte);
-//    }
-//    EventSchema eventSchema = parser.getEventSchema(dataByte);
-//    GuessSchema result = SchemaGuesser.guessSchema(eventSchema);
-//
-//    return result;
-//  }
-//
-//  @Override
-//  public String getId() {
-//    return ID;
-//  }
-//
-//  @Override
-//  public InputStream getDataFromEndpoint() throws ParseException {
-//    InputStream result = null;
-//
-//    try {
-//      Request request = Request.Get(url)
-//          .connectTimeout(1000)
-//          .socketTimeout(100000);
-//
-//      if (this.accessToken != null && !this.accessToken.equals("")) {
-//        request.setHeader("Authorization", "Bearer " + this.accessToken);
-//      }
-//
-//      result = request
-//          .execute().returnContent().asStream();
-//
-//    } catch (Exception e) {
-//      logger.error("Error while fetching data from URL: " + url, e);
-//      throw new ParseException("Error while fetching data from URL: " + url);
-//    }
-//    if (result == null) {
-//      throw new ParseException("Could not receive Data from file: " + url);
-//    }
-//
-//    return result;
-//  }
-//}
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.connect.iiot.adapters.IPullAdapter;
+import org.apache.streampipes.connect.iiot.adapters.PullAdapterScheduler;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
+import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
+import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+
+import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
+
+  private static final Logger logger = LoggerFactory.getLogger(HttpStreamProtocol.class);
+
+  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.http";
+
+  private static final String URL_PROPERTY = "url";
+  private static final String INTERVAL_PROPERTY = "interval";
+
+  private String url;
+  private String accessToken;
+
+  private PollingSettings pollingSettings;
+  private PullAdapterScheduler pullAdapterScheduler;
+
+  private BrokerEventProcessor processor;
+
+  public HttpStreamProtocol() {
+  }
+
+  private void applyConfiguration(StaticPropertyExtractor extractor) {
+    this.url = extractor.singleValueParameter(URL_PROPERTY, String.class);
+    int interval = extractor.singleValueParameter(INTERVAL_PROPERTY, Integer.class);
+    this.pollingSettings = PollingSettings.from(TimeUnit.SECONDS, interval);
+    // TODO change access token to an optional parameter
+//            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
+    this.accessToken = "";
+  }
+
+  private byte[] getDataFromEndpoint() throws ParseException {
+    byte[] result = null;
+
+    try {
+      Request request = Request.Get(url)
+          .connectTimeout(1000)
+          .socketTimeout(100000);
+
+      if (this.accessToken != null && !this.accessToken.equals("")) {
+        request.setHeader("Authorization", "Bearer " + this.accessToken);
+      }
+
+      result = request
+          .execute().returnContent().asBytes();
+
+    } catch (Exception e) {
+      logger.error("Error while fetching data from URL: " + url, e);
+      throw new ParseException("Error while fetching data from URL: " + url);
+    }
+    if (result == null) {
+      throw new ParseException("Could not receive Data from file: " + url);
+    }
+
+    return result;
+  }
+
+  @Override
+  public AdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder
+        .create(ID)
+        .withSupportedParsers(Parsers.defaultParsers())
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.Generic)
+        .requiredTextParameter(Labels.withId(URL_PROPERTY))
+        .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY))
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    this.processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
+    this.pullAdapterScheduler = new PullAdapterScheduler();
+    this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.pullAdapterScheduler.shutdown();
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    byte[] dataInputStream = getDataFromEndpoint();
+
+    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(dataInputStream));
+  }
+
+  @Override
+  public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
+    var result = getDataFromEndpoint();
+    this.processor.onEvent(result);
+  }
+
+  @Override
+  public PollingSettings getPollingInterval() {
+    return pollingSettings;
+  }
+}
