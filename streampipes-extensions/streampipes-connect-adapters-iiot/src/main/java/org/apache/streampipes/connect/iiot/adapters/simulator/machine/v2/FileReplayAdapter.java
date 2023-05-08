@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.CsvParser;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.ImageParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
 import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
@@ -64,7 +65,8 @@ public class FileReplayAdapter implements AdapterInterface {
         .withSupportedParsers(
             new JsonParsers(),
             new CsvParser(),
-            new XmlParser())
+            new XmlParser(),
+            new ImageParser())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic)
@@ -90,8 +92,7 @@ public class FileReplayAdapter implements AdapterInterface {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
-      throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
 
   }
 
@@ -101,9 +102,7 @@ public class FileReplayAdapter implements AdapterInterface {
     var inputStream = getDataFromEndpoint(extractor
         .getStaticPropertyExtractor()
         .selectedFilename(FILE_PATH));
-    var adapterGuessInfo = extractor.selectedParser().getGuessSchema(inputStream);
-
-    return adapterGuessInfo;
+    return extractor.selectedParser().getGuessSchema(inputStream);
   }
 
   private InputStream getDataFromEndpoint(String selectedFileName) throws AdapterException {
