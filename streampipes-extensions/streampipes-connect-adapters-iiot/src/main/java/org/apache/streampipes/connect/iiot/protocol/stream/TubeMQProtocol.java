@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
@@ -101,6 +102,7 @@ public class TubeMQProtocol implements AdapterInterface {
   public AdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
         .create(ID)
+        .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic)

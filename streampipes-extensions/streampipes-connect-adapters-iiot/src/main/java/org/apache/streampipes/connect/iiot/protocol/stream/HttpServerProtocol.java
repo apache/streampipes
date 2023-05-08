@@ -17,122 +17,138 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
-//public class HttpServerProtocol extends Protocol {
-//
-//  private ProtocolDescription adapterDescription;
-//
-//  private static final String ENDPOINT_NAME = "endpoint-name";
-//  private static final String CONFIGURE = "configure";
-//
-//  private static final String MANUALLY = "manually";
-//  private static final String EP_CONFIG = "ep-config";
-//  private static final String EP_RUNTIME_NAME = "ep-runtime-name";
-//  private static final String EP_RUNTIME_TYPE = "ep-runtime-type";
-//  private static final String EP_DOMAIN_PROPERTY = "ep-domain-property";
-//
-//  private static final String FILE_IMPORT = "file-import";
-//  private static final String FILE = "file";
-//
-//  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.httpserver";
-//
-//  private String endpointId;
-//
-//  public HttpServerProtocol() {
-//
-//  }
-//
-//  public HttpServerProtocol(ProtocolDescription adapterDescription, IParser parser, IFormat format) {
-//    super(parser, format);
-//    StaticPropertyExtractor extractor =
-//        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-//    this.adapterDescription = adapterDescription;
-//    this.endpointId = extractor.singleValueParameter(ENDPOINT_NAME, String.class);
-//  }
-//
-//  @Override
-//  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-//    return new HttpServerProtocol(protocolDescription, parser, format);
-//  }
-//
-//  @Override
-//  public ProtocolDescription declareModel() {
-//    return ProtocolDescriptionBuilder.create(ID)
-//        .withLocales(Locales.EN)
-//        .sourceType(AdapterSourceType.STREAM)
-//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-//        .category(AdapterType.Generic)
-//        .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
-//        .requiredAlternatives(Labels.withId(CONFIGURE),
-//            Alternatives.from(Labels.withId(MANUALLY),
-//                StaticProperties.collection(Labels.withId(EP_CONFIG),
-//                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_RUNTIME_NAME)),
-//                    StaticProperties.singleValueSelection(Labels.withId(EP_RUNTIME_TYPE),
-//                        Options.from("String", "Integer", "Double", "Boolean")),
-//                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_DOMAIN_PROPERTY)))),
-//            Alternatives.from(Labels.withId(FILE_IMPORT),
-//                StaticProperties.fileProperty(Labels.withId(FILE), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)))
-//        .build();
-//  }
-//
-//  @Override
-//  public GuessSchema getGuessSchema() throws ParseException {
-//    StaticPropertyExtractor extractor =
-//        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-//    GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
-//
-//    String selectedImportMode = extractor.selectedAlternativeInternalId(CONFIGURE);
-//
-//    if (selectedImportMode.equals(MANUALLY)) {
-//      CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(EP_CONFIG);
-//
-//      for (StaticProperty member : sp.getMembers()) {
-//        StaticPropertyExtractor memberExtractor =
-//            StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
-//        schemaBuilder.property(makeProperty(memberExtractor));
-//      }
-//    }
-//
-//    return schemaBuilder.build();
-//  }
-//
-//  private EventProperty makeProperty(StaticPropertyExtractor memberExtractor) {
-//    EventPropertyPrimitive primitive = new EventPropertyPrimitive();
-//    primitive.setRuntimeName(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class));
-//    primitive.setRuntimeType(extractRuntimeType(memberExtractor.selectedSingleValue(EP_RUNTIME_TYPE, String.class)));
-//    primitive
-//        .setDomainProperties(Collections
-//            .singletonList(URI.create(memberExtractor.singleValueParameter(EP_DOMAIN_PROPERTY, String.class))));
-//    return primitive;
-//  }
-//
-//  private String extractRuntimeType(String type) {
-//    switch (type) {
-//      case "String":
-//        return Datatypes.String.toString();
-//      case "Boolean":
-//        return Datatypes.Boolean.toString();
-//      case "Integer":
-//        return Datatypes.Integer.toString();
-//      default:
-//        return Datatypes.Double.toString();
-//    }
-//  }
-//
-//  @Override
-//  public void run(IAdapterPipeline adapterPipeline) {
-//    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-//    InternalEventProcessor<byte[]> receiver = new HttpServerEventReceiver(stk);
-//    HttpServerAdapterManagement.INSTANCE.addAdapter(this.endpointId, receiver);
-//  }
-//
-//  @Override
-//  public void stop() {
-//    HttpServerAdapterManagement.INSTANCE.removeAdapter(this.endpointId);
-//  }
-//
-//  @Override
-//  public String getId() {
-//    return ID;
-//  }
-//
-//}
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
+import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
+import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
+import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.Filetypes;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sdk.utils.Datatypes;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class HttpServerProtocol implements AdapterInterface {
+
+  private static final String ENDPOINT_NAME = "endpoint-name";
+  private static final String CONFIGURE = "configure";
+
+  private static final String MANUALLY = "manually";
+  private static final String EP_CONFIG = "ep-config";
+  private static final String EP_RUNTIME_NAME = "ep-runtime-name";
+  private static final String EP_RUNTIME_TYPE = "ep-runtime-type";
+  private static final String EP_DOMAIN_PROPERTY = "ep-domain-property";
+
+  private static final String FILE_IMPORT = "file-import";
+  private static final String FILE = "file";
+
+  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.httpserver";
+
+  private String endpointId;
+
+  public HttpServerProtocol() {
+
+  }
+
+  private void applyConfiguration(StaticPropertyExtractor extractor) {
+    this.endpointId = extractor.singleValueParameter(ENDPOINT_NAME, String.class);
+  }
+
+  private EventProperty makeProperty(StaticPropertyExtractor memberExtractor) {
+    EventPropertyPrimitive primitive = new EventPropertyPrimitive();
+    primitive.setRuntimeName(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class));
+    primitive.setRuntimeType(extractRuntimeType(memberExtractor.selectedSingleValue(EP_RUNTIME_TYPE, String.class)));
+    primitive
+        .setDomainProperties(Collections
+            .singletonList(URI.create(memberExtractor.singleValueParameter(EP_DOMAIN_PROPERTY, String.class))));
+    return primitive;
+  }
+
+  private String extractRuntimeType(String type) {
+    return switch (type) {
+      case "String" -> Datatypes.String.toString();
+      case "Boolean" -> Datatypes.Boolean.toString();
+      case "Integer" -> Datatypes.Integer.toString();
+      default -> Datatypes.Double.toString();
+    };
+  }
+
+  @Override
+  public AdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder
+        .create(ID)
+        .withSupportedParsers(Parsers.defaultParsers())
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withCategory(AdapterType.Generic)
+        .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
+        .requiredAlternatives(Labels.withId(CONFIGURE),
+            Alternatives.from(Labels.withId(MANUALLY),
+                StaticProperties.collection(Labels.withId(EP_CONFIG),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_RUNTIME_NAME)),
+                    StaticProperties.singleValueSelection(Labels.withId(EP_RUNTIME_TYPE),
+                        Options.from("String", "Integer", "Double", "Boolean")),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_DOMAIN_PROPERTY)))),
+            Alternatives.from(Labels.withId(FILE_IMPORT),
+                StaticProperties.fileProperty(Labels.withId(FILE), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)))
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    applyConfiguration(extractor.getStaticPropertyExtractor());
+    var processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
+    HttpServerAdapterManagement.INSTANCE.addAdapter(this.endpointId, processor);
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    HttpServerAdapterManagement.INSTANCE.removeAdapter(this.endpointId);
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor parameterExtractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    StaticPropertyExtractor extractor = parameterExtractor.getStaticPropertyExtractor();
+    applyConfiguration(extractor);
+    GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
+
+    String selectedImportMode = extractor.selectedAlternativeInternalId(CONFIGURE);
+
+    if (selectedImportMode.equals(MANUALLY)) {
+      CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(EP_CONFIG);
+
+      for (StaticProperty member : sp.getMembers()) {
+        StaticPropertyExtractor memberExtractor =
+            StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
+        schemaBuilder.property(makeProperty(memberExtractor));
+      }
+    }
+
+    return schemaBuilder.build();
+  }
+}
