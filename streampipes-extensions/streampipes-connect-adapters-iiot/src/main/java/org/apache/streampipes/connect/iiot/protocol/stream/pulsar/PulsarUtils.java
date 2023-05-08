@@ -17,14 +17,17 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+
 public class PulsarUtils {
 
-//  private static final String PULSAR_SCHEME = "pulsar://";
-//
-//  public static PulsarClient makePulsarClient(String brokerHostname) throws PulsarClientException {
-//    String serviceUrl = PULSAR_SCHEME + brokerHostname;
-//    return PulsarClient.builder()
-//        .serviceUrl(serviceUrl)
-//        .build();
-//  }
+  private static final String PULSAR_SCHEME = "pulsar://";
+
+  public static PulsarClient makePulsarClient(String brokerHostname) throws PulsarClientException {
+    String serviceUrl = PULSAR_SCHEME + brokerHostname;
+    return PulsarClient.builder()
+        .serviceUrl(serviceUrl)
+        .build();
+  }
 }
