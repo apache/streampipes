@@ -17,16 +17,16 @@
  */
 
 import { UserInput } from '../model/UserInput';
-import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
+// import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
 import { UserInputType } from '../model/UserInputType';
 
 export class SpecificAdapterBuilder {
-    specificAdapterInput: SpecificAdapterInput;
+    // specificAdapterInput: SpecificAdapterInput;
 
     constructor(type: string) {
-        this.specificAdapterInput = new SpecificAdapterInput();
-        this.specificAdapterInput.adapterType = type;
-        this.specificAdapterInput.adapterConfiguration = [];
+        // this.specificAdapterInput = new SpecificAdapterInput();
+        // this.specificAdapterInput.adapterType = type;
+        // this.specificAdapterInput.adapterConfiguration = [];
     }
 
     public static create(name: string) {
@@ -34,27 +34,27 @@ export class SpecificAdapterBuilder {
     }
 
     public setName(name: string) {
-        this.specificAdapterInput.adapterName = name;
+        // this.specificAdapterInput.adapterName = name;
         return this;
     }
 
     public setTimestampProperty(timestsmpProperty: string) {
-        this.specificAdapterInput.timestampProperty = timestsmpProperty;
+        // this.specificAdapterInput.timestampProperty = timestsmpProperty;
         return this;
     }
 
     public setStoreInDataLake() {
-        this.specificAdapterInput.storeInDataLake = true;
+        // this.specificAdapterInput.storeInDataLake = true;
         return this;
     }
 
     public setStartAdapter(startAdapter: boolean) {
-        this.specificAdapterInput.startAdapter = startAdapter;
+        // this.specificAdapterInput.startAdapter = startAdapter;
         return this;
     }
 
     public withAutoAddedTimestamp() {
-        this.specificAdapterInput.autoAddTimestamp = true;
+        // this.specificAdapterInput.autoAddTimestamp = true;
         return this;
     }
 
@@ -64,12 +64,12 @@ export class SpecificAdapterBuilder {
         userInput.selector = selector;
         userInput.value = value;
 
-        this.specificAdapterInput.adapterConfiguration.push(userInput);
+        // this.specificAdapterInput.adapterConfiguration.push(userInput);
 
         return this;
     }
 
     build() {
-        return this.specificAdapterInput;
+        // return this.specificAdapterInput;
     }
 }

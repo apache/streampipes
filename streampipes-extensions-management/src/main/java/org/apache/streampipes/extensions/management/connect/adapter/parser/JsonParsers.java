@@ -25,7 +25,8 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.json.
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonParser;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -41,7 +42,7 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.util.List;
 
-public class JsonParsers implements Parser {
+public class JsonParsers implements IParser {
 
   private static final Logger LOG = LoggerFactory.getLogger(JsonParsers.class);
 
@@ -81,7 +82,7 @@ public class JsonParsers implements Parser {
   }
 
   @Override
-  public Parser fromDescription(List<StaticProperty> config) {
+  public IParser fromDescription(List<StaticProperty> config) {
     var extractor = StaticPropertyExtractor.from(config);
     var selectedJsonAlternative = extractor.selectedAlternativeInternalId(KEY_JSON_OPTIONS);
 
@@ -126,7 +127,7 @@ public class JsonParsers implements Parser {
   }
 
   @Override
-  public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
-    selectedParser.parse(inputStream, collector);
+  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
+    selectedParser.parse(inputStream, handler);
   }
 }

@@ -22,8 +22,8 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.util.DatatypeUtils;
 import org.apache.streampipes.model.Tuple2;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.Option;
@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class CsvParser implements Parser {
+public class CsvParser implements IParser {
 
   private static final Logger LOG = LoggerFactory.getLogger(CsvParser.class);
 
@@ -78,7 +78,7 @@ public class CsvParser implements Parser {
   }
 
   @Override
-  public Parser fromDescription(List<StaticProperty> config) {
+  public IParser fromDescription(List<StaticProperty> config) {
     StaticPropertyExtractor extractor = StaticPropertyExtractor.from(config);
 
     char delimiter = extractor.singleValueParameter(DELIMITER, String.class).charAt(0);
@@ -114,7 +114,7 @@ public class CsvParser implements Parser {
 
 
   @Override
-  public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
+  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
     var csvReader = getCsvReader(inputStream);
 
     var headerAndSample = getHeaderAndFirstSample(csvReader);
@@ -125,7 +125,7 @@ public class CsvParser implements Parser {
     try {
       do {
         var event = toMap(header, sample);
-        collector.collect(event);
+        handler.handle(event);
       } while ((sample = csvReader.readNext()) != null);
 
     } catch (CsvValidationException | IOException e) {

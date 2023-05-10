@@ -20,10 +20,10 @@ package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IParser;
 
 public interface IAdapterParameterExtractor {
-  Parser selectedParser() throws AdapterException;
+  IParser selectedParser() throws AdapterException;
   StaticPropertyExtractor getStaticPropertyExtractor();
 
   AdapterDescription getAdapterDescription();

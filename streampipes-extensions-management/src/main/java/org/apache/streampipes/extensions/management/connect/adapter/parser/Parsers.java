@@ -19,13 +19,13 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IParser;
 
 import java.util.List;
 
 public class Parsers {
 
-  public static List<Parser> defaultParsers() {
+  public static List<IParser> defaultParsers() {
     return List.of(
         new JsonParsers(),
         new CsvParser(),

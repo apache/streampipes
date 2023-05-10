@@ -120,7 +120,9 @@ public class HttpServerProtocol implements AdapterInterface {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     applyConfiguration(extractor.getStaticPropertyExtractor());
-    var processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
+    var processor = new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
+      collector.collect(event);
+    });
     HttpServerAdapterManagement.INSTANCE.addAdapter(this.endpointId, processor);
   }
 

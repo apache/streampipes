@@ -16,7 +16,7 @@
  *
  */
 
-import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
+import { GenericAdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
 import { PipelineElementInput } from '../../support/model/PipelineElementInput';

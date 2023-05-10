@@ -20,7 +20,7 @@ package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
@@ -29,7 +29,7 @@ import java.util.List;
 
 public class AdapterParameterExtractor implements IAdapterParameterExtractor {
 
-  private List<Parser> parsers;
+  private List<IParser> parsers;
 
   private final StaticPropertyExtractor staticPropertyExtractor;
 
@@ -43,7 +43,7 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
   }
 
   @Override
-  public Parser selectedParser() throws AdapterException {
+  public IParser selectedParser() throws AdapterException {
     var parserStaticProperties =
         staticPropertyExtractor.getStaticPropertyByName("format");
 
@@ -70,7 +70,7 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
     }
   }
 
-  public static IAdapterParameterExtractor from(AdapterDescription adapterDescription, List<Parser> parsers) {
+  public static IAdapterParameterExtractor from(AdapterDescription adapterDescription, List<IParser> parsers) {
     var extractor = StaticPropertyExtractor.from(adapterDescription.getConfig());
     var result = new AdapterParameterExtractor(extractor, adapterDescription);
     result.setParsers(parsers);
@@ -87,7 +87,7 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
     return adapterDescription;
   }
 
-  public void setParsers(List<Parser> parsers) {
+  public void setParsers(List<IParser> parsers) {
     this.parsers = parsers;
   }
 }

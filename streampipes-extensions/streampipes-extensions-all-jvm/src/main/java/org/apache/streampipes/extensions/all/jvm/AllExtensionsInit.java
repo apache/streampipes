@@ -43,7 +43,7 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.jvm",
             "StreamPipes Extensions (JVM)",
             "", 8090)
-        //.merge(new ConnectAdapterInit().provideServiceDefinition())
+//        .merge(new ConnectAdapterInit().provideServiceDefinition())
         .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
         .merge(new AllPipelineElementsInit().provideServiceDefinition())
         .registerMessagingFormats(

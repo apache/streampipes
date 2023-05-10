@@ -171,7 +171,9 @@ public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
 
     this.kafkaConsumer = new SpKafkaConsumer(protocol,
         config.getTopic(),
-        new BrokerEventProcessor(extractor.selectedParser(), collector),
+        new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
+          collector.collect(event);
+        }),
         Collections.singletonList(this.config.getSecurityConfig()));
 
     thread = new Thread(this.kafkaConsumer);

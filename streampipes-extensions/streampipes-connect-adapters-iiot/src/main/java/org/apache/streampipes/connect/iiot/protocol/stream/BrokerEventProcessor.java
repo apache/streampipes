@@ -21,13 +21,13 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IParser;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public record BrokerEventProcessor(Parser parser,
+public record BrokerEventProcessor(IParser parser,
                                    IEventCollector collector) implements InternalEventProcessor<byte[]> {
 
   private static final Logger LOG = LoggerFactory.getLogger(BrokerEventProcessor.class);
@@ -35,7 +35,9 @@ public record BrokerEventProcessor(Parser parser,
   @Override
   public void onEvent(byte[] payload) {
     try {
-      parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), collector);
+      parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), (event) -> {
+        collector.collect(event);
+      });
     } catch (ParseException e) {
       LOG.error("Error while parsing: " + e.getMessage());
     }

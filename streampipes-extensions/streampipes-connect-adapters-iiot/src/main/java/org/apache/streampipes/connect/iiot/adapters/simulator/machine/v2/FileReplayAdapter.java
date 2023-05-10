@@ -28,9 +28,12 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.X
 import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
+import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
@@ -40,12 +43,24 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.vocabulary.SO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.plc4x.java.api.types.PlcValueType.List;
 
 public class FileReplayAdapter implements AdapterInterface {
 
+  private static final Logger LOG = LoggerFactory.getLogger(FileReplayAdapter.class);
+
+  private static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.file";
   private static final String REPLACE_TIMESTAMP = "replaceTimestamp";
   private static final String SPEED = "speed";
   private static final String FILE_PATH = "filePath";
@@ -59,9 +74,16 @@ public class FileReplayAdapter implements AdapterInterface {
   private static final String SPEED_UP_FACTOR_GROUP = "speed-up-factor-group";
 
 
+  private ScheduledExecutorService executor;
+  private boolean replayOnce;
+  private boolean replaceTimestamp;
+  private String timestampRuntimeName;
+
+  private float speedUp;
+
   @Override
   public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.file")
+    return AdapterConfigurationBuilder.create(ID)
         .withSupportedParsers(
             new JsonParsers(),
             new CsvParser(),
@@ -85,15 +107,87 @@ public class FileReplayAdapter implements AdapterInterface {
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    var inputStream = getDataFromEndpoint(extractor
+
+    // extract user input
+    executor = Executors.newScheduledThreadPool(1);
+    replayOnce = extractor
         .getStaticPropertyExtractor()
-        .selectedFilename(FILE_PATH));
-    extractor.selectedParser().parse(inputStream, collector);
+        .selectedSingleValue(REPLAY_ONCE, String.class)
+        .equals("yes");
+    var replaceTimestampStringList = extractor
+        .getStaticPropertyExtractor()
+        .selectedMultiValues(REPLACE_TIMESTAMP, String.class);
+    replaceTimestamp = replaceTimestampStringList.size() != 0;
+    var speedUpAlternative = extractor
+        .getStaticPropertyExtractor()
+        .selectedAlternativeInternalId(SPEED);
+    speedUp = switch (speedUpAlternative) {
+      case FASTEST -> Float.MAX_VALUE;
+      case SPEED_UP_FACTOR -> extractor
+          .getStaticPropertyExtractor()
+          .singleValueParameter(SPEED_UP, Float.class);
+      default -> 1.0f;
+    };
+
+    // adapt preprocessing pipeline
+    if (replaceTimestamp) {
+      // get timestamp field
+      var timestampField = extractor
+          .getAdapterDescription()
+          .getEventSchema()
+          .getEventProperties()
+          .stream()
+          .map(eventProperty -> eventProperty.getDomainProperties())
+          .filter(uri -> uri.toString().equals(SO.DATE_TIME))
+
+      if (!timestampField.isPresent()) {
+        throw new AdapterException("Could not find a timestamp field in event schema");
+      } else {
+        timestampRuntimeName = timestampField.get().;
+      }
+    }
+
+    // start replay adapter
+    if (replayOnce) {
+      executor.schedule(() -> parseFile(extractor, collector, adapterRuntimeContext),
+          0,
+          TimeUnit.SECONDS);
+    } else {
+      executor.scheduleAtFixedRate(() -> parseFile(extractor, collector, adapterRuntimeContext),
+          0,
+          1,
+          TimeUnit.SECONDS);
+    }
+  }
+
+  private void parseFile(IAdapterParameterExtractor extractor,
+                         IEventCollector collector,
+                         IAdapterRuntimeContext adapterRuntimeContext) {
+    try {
+      InputStream inputStream = getDataFromEndpoint(extractor
+          .getStaticPropertyExtractor()
+          .selectedFilename(FILE_PATH));
+
+      extractor.selectedParser().parse(inputStream, (event) -> {
+        if (replaceTimestamp) {
+          event.put(timestampRuntimeName, System.currentTimeMillis());
+        }
+
+        collector.collect(event);
+      });
+
+    } catch (AdapterException e) {
+      adapterRuntimeContext
+          .getLogger()
+          .addErrorMessage(extractor.getAdapterDescription().getElementId(),
+              SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+    }
   }
 
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
-
+    executor.shutdownNow();
+    LOG.info("Stopped file stream adapter for file");
   }
 
   @Override

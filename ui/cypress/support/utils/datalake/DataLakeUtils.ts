@@ -16,7 +16,7 @@
  *
  */
 
-import { GenericAdapterBuilder } from '../../builder/GenericAdapterBuilder';
+import { GenericAdapterBuilder } from '../../builder/AdapterBuilder';
 import { DataLakeFilterConfig } from '../../model/DataLakeFilterConfig';
 import { DataExplorerWidget } from '../../model/DataExplorerWidget';
 import { DataSetUtils } from '../DataSetUtils';

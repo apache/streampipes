@@ -120,7 +120,9 @@ public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    this.processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
+    this.processor = new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
+      collector.collect(event);
+    });
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
   }

@@ -16,29 +16,23 @@
  *
  */
 
-import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
-import { UserInput } from '../model/UserInput';
-import { ProcessorTest } from '../model/ProcessorTest';
-import { PipelineElementInput } from '../model/PipelineElementInput';
+package org.apache.streampipes.model.connect.adapter;
 
-export class ProcessorTestBuilder {
-    processorTest: ProcessorTest;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 
-    constructor(name: string) {
-        this.processorTest = new ProcessorTest();
-        this.processorTest.name = name;
-    }
+import java.io.InputStream;
+import java.util.List;
 
-    public static create(name: string) {
-        return new ProcessorTestBuilder(name);
-    }
+public interface IParser {
 
-    public setProcessor(processor: PipelineElementInput) {
-        this.processorTest.processor = processor;
-        return this;
-    }
+  ParserDescription declareDescription();
 
-    build() {
-        return this.processorTest;
-    }
+  GuessSchema getGuessSchema(InputStream inputStream) throws ParseException;
+
+  void parse(InputStream inputStream, IEventHandler handler) throws ParseException;
+
+  IParser fromDescription(List<StaticProperty> configuration);
 }

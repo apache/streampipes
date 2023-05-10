@@ -19,7 +19,7 @@
 package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -36,7 +36,7 @@ public class AdapterParameterExtractorTest {
 
   @Test
   public void selectedParser() throws AdapterException {
-    var parserInstance = mock(Parser.class);
+    var parserInstance = mock(IParser.class);
     var parserDescription = new ParserDescription("", "parserName", "");
     when(parserInstance.declareDescription()).thenReturn(parserDescription);
 

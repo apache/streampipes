@@ -21,7 +21,7 @@ package org.apache.streampipes.sdk.builder.adapter;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class AdapterConfigurationBuilder extends
     AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterDescription> {
 
-  private final List<Parser> supportedParsers;
+  private final List<IParser> supportedParsers;
 
   protected AdapterConfigurationBuilder(String appId) {
     super(appId, new AdapterDescription());
@@ -58,20 +58,17 @@ public class AdapterConfigurationBuilder extends
     return this.elementDescription;
   }
 
-  // TODO this is currently only a provisional solution
-  // We need a way to extend the class `AbstractConfigurablePipelineElementBuilder`
-  // to reuse the methods, but for the `AdapterDescription` and not for the `AdapterConfiguration`
   public AdapterConfiguration buildConfiguration() {
     this.elementDescription.setConfig(getStaticProperties());
     return new AdapterConfiguration(this.elementDescription, this.supportedParsers);
   }
 
-  public AdapterConfigurationBuilder withSupportedParsers(Parser... parsers) {
+  public AdapterConfigurationBuilder withSupportedParsers(IParser... parsers) {
     Collections.addAll(supportedParsers, parsers);
     return this;
   }
 
-  public AdapterConfigurationBuilder withSupportedParsers(List<Parser> parsers) {
+  public AdapterConfigurationBuilder withSupportedParsers(List<IParser> parsers) {
     this.supportedParsers.addAll(parsers);
     return this;
   }

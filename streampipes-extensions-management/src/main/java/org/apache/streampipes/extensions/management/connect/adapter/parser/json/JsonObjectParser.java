@@ -19,13 +19,22 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.io.InputStream;
 import java.util.Map;
 
 public class JsonObjectParser extends JsonParser {
+  InputStream inputStream;
+
+  public void init(InputStream inputStream) {
+    this.inputStream = inputStream;
+  }
+
+  public Map<String, Object> next() {
+    return toMap(inputStream, Map.class);
+  }
 
   @Override
   public GuessSchema getGuessSchema(InputStream inputStream) {
@@ -34,9 +43,9 @@ public class JsonObjectParser extends JsonParser {
   }
 
   @Override
-  public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
+  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
     Map<String, Object> event = toMap(inputStream, Map.class);
-    collector.collect(event);
+    handler.handle(event);
   }
 
 }

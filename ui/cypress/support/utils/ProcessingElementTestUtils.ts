@@ -20,11 +20,11 @@ import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { PipelineUtils } from './PipelineUtils';
 import { DataLakeUtils } from './datalake/DataLakeUtils';
-import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';
 import { ProcessorTest } from '../model/ProcessorTest';
 import { ConnectBtns } from './connect/ConnectBtns';
+import { AdapterBuilder } from '../builder/AdapterBuilder';
 
 export class ProcessingElementTestUtils {
     public static testElement(pipelineElementTest: ProcessorTest) {
@@ -48,7 +48,7 @@ export class ProcessingElementTestUtils {
         const adapterName = pipelineElementTest.name.toLowerCase();
 
         // Build adapter
-        const adapterInputBuilder = GenericAdapterBuilder.create('File_Stream')
+        const adapterInputBuilder = AdapterBuilder.create('File_Stream')
             .setName(adapterName)
             .setTimestampProperty('timestamp')
             .setFormat(formatType)
@@ -68,7 +68,7 @@ export class ProcessingElementTestUtils {
 
         const adapterInput = adapterInputBuilder.build();
 
-        ConnectUtils.addGenericStreamAdapter(adapterInput);
+        ConnectUtils.addAdapter(adapterInput);
 
         // Build Pipeline
         const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)

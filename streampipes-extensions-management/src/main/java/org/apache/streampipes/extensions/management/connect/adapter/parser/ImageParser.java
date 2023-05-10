@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -34,7 +34,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
-public class ImageParser implements Parser {
+public class ImageParser implements IParser {
 
   public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser.image";
   public static final String LABEL = "Image";
@@ -47,7 +47,7 @@ public class ImageParser implements Parser {
   }
 
   @Override
-  public Parser fromDescription(List<StaticProperty> configuration) {
+  public IParser fromDescription(List<StaticProperty> configuration) {
     return new ImageParser();
   }
 
@@ -62,9 +62,9 @@ public class ImageParser implements Parser {
   }
 
   @Override
-  public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
+  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
     var image = parseImage(inputStream);
-    collector.collect(Map.of("image", image));
+    handler.handle(Map.of("image", image));
   }
 
   private String parseImage(InputStream inputStream) throws ParseException {

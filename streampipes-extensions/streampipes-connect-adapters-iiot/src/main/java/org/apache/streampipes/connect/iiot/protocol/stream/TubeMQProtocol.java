@@ -132,10 +132,16 @@ public class TubeMQProtocol implements AdapterInterface {
         public void receiveMessages(PeerInfo peerInfo, List<Message> messages) {
           for (final Message message : messages) {
             try {
-              processor.onEvent(message.getData());
+              var inputStream = new ByteArrayInputStream(message.getData());
+              extractor.selectedParser().parse(inputStream, (event) -> {
+                collector.collect(event);
+              });
+//              processor.onEvent(message.getData());
             } catch (ParseException e) {
               LOGGER.error("Error while parsing: " + e.getMessage());
               e.printStackTrace();
+            } catch (AdapterException e) {
+              throw new RuntimeException(e);
             }
           }
         }

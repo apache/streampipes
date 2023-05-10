@@ -18,8 +18,8 @@
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
-import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Test File Stream Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -28,7 +28,7 @@ describe('Test File Stream Adapter', () => {
     });
 
     it('Perform Test', () => {
-        const adapterInput = GenericAdapterBuilder.create('File_Stream')
+        const adapterInput = AdapterBuilder.create('File_Stream')
             .setName('File Stream Adapter Test')
             .setTimestampProperty('timestamp')
             .setStoreInDataLake()
@@ -38,7 +38,7 @@ describe('Test File Stream Adapter', () => {
             .addFormatInput('checkbox', 'header', 'check')
             .build();
 
-        ConnectUtils.testGenericStreamAdapter(adapterInput);
+        ConnectUtils.testAdapter(adapterInput);
         PipelineUtils.checkAmountOfPipelinesPipeline(1);
     });
 });

@@ -51,20 +51,20 @@ public class AdapterConfiguration extends NamedStreamPipesEntity {
   public AdapterConfiguration() {
   }
 
-  public AdapterConfiguration(AdapterDescription adapterDescription, List<Parser> supportedParsers) {
+  public AdapterConfiguration(AdapterDescription adapterDescription, List<IParser> supportedParsers) {
     this.adapterDescription = adapterDescription;
     this.supportedParsers = supportedParsers;
   }
 
-  private List<Parser> supportedParsers;
+  private List<IParser> supportedParsers;
 
   private AdapterDescription adapterDescription;
 
-  public List<Parser> getSupportedParsers() {
+  public List<IParser> getSupportedParsers() {
     return supportedParsers;
   }
 
-  public void setSupportedParsers(List<Parser> supportedParsers) {
+  public void setSupportedParsers(List<IParser> supportedParsers) {
     this.supportedParsers = supportedParsers;
   }
 

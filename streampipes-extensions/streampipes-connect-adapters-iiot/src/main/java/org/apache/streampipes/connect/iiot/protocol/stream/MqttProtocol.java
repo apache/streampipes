@@ -79,7 +79,9 @@ public class MqttProtocol implements AdapterInterface {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.mqttConsumer = new MqttConsumer(
         this.mqttConfig,
-        new BrokerEventProcessor(extractor.selectedParser(), collector)
+        new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
+          collector.collect(event);
+        })
     );
 
     thread = new Thread(this.mqttConsumer);

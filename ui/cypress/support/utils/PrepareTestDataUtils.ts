@@ -18,7 +18,7 @@
 
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
-import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
+import { AdapterBuilder } from '../builder/AdapterBuilder';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -37,7 +37,7 @@ export class PrepareTestDataUtils {
             storeInDataLake,
         );
 
-        ConnectUtils.addGenericAdapter(adapter);
+        ConnectUtils.addAdapter(adapter);
 
         ConnectUtils.startAdapter(adapter, true);
     }
@@ -47,7 +47,7 @@ export class PrepareTestDataUtils {
         format: 'csv' | 'json_array',
         storeInDataLake: boolean = true,
     ) {
-        const adapterBuilder = GenericAdapterBuilder.create('File_Stream')
+        const adapterBuilder = AdapterBuilder.create('File_Stream')
             .setName(name)
             .setTimestampProperty('timestamp')
             .addProtocolInput(

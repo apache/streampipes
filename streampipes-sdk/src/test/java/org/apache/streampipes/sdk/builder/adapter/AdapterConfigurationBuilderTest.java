@@ -21,7 +21,7 @@ package org.apache.streampipes.sdk.builder.adapter;
 
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IParser;
 
 import org.junit.Test;
 
@@ -51,7 +51,7 @@ public class AdapterConfigurationBuilderTest {
 
   @Test
   public void withOneParser() {
-    var expected = mock(Parser.class);
+    var expected = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(expected)
@@ -62,8 +62,8 @@ public class AdapterConfigurationBuilderTest {
 
   @Test
   public void withMultipleParserInOneCall() {
-    var parser1 = mock(Parser.class);
-    var parser2 = mock(Parser.class);
+    var parser1 = mock(IParser.class);
+    var parser2 = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(parser1, parser2)
@@ -74,8 +74,8 @@ public class AdapterConfigurationBuilderTest {
 
   @Test
   public void withMultipleParserInTwoCall() {
-    var parser1 = mock(Parser.class);
-    var parser2 = mock(Parser.class);
+    var parser1 = mock(IParser.class);
+    var parser2 = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
         .create(id)
         .withSupportedParsers(parser1)

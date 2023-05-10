@@ -38,8 +38,8 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser.xml;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.Parser;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -55,7 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XmlParser implements Parser {
+public class XmlParser implements IParser {
 
   public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser.xml";
   public static final String LABEL = "XML";
@@ -89,7 +89,7 @@ public class XmlParser implements Parser {
   }
 
   @Override
-  public Parser fromDescription(List<StaticProperty> configuration) {
+  public IParser fromDescription(List<StaticProperty> configuration) {
     StaticPropertyExtractor extractor = StaticPropertyExtractor.from(configuration);
 
     var configuredTag = extractor.singleValueParameter(TAG, String.class);
@@ -105,12 +105,12 @@ public class XmlParser implements Parser {
   }
 
   @Override
-  public void parse(InputStream inputStream, IEventCollector collector) throws ParseException {
+  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
     var events = getEvents(inputStream);
 
     events.forEach(event -> {
       var converter = new XmlMapConverter(event);
-      collector.collect(converter.convert());
+      handler.handle(converter.convert());
     });
   }
 
