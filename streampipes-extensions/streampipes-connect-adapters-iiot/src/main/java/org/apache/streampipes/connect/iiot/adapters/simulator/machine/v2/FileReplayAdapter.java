@@ -33,7 +33,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
-import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
@@ -50,11 +49,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static org.apache.plc4x.java.api.types.PlcValueType.List;
 
 public class FileReplayAdapter implements AdapterInterface {
 
@@ -132,18 +130,20 @@ public class FileReplayAdapter implements AdapterInterface {
     // adapt preprocessing pipeline
     if (replaceTimestamp) {
       // get timestamp field
+
       var timestampField = extractor
           .getAdapterDescription()
           .getEventSchema()
           .getEventProperties()
           .stream()
-          .map(eventProperty -> eventProperty.getDomainProperties())
-          .filter(uri -> uri.toString().equals(SO.DATE_TIME))
+          .filter(eventProperty ->
+              eventProperty.getDomainProperties().contains(URI.create(SO.DATE_TIME)))
+          .findFirst();
 
       if (!timestampField.isPresent()) {
         throw new AdapterException("Could not find a timestamp field in event schema");
       } else {
-        timestampRuntimeName = timestampField.get().;
+        timestampRuntimeName = timestampField.get().getRuntimeName();
       }
     }
 
