@@ -64,7 +64,7 @@
 	<influxdb.version>2.23</influxdb.version>
 	<j2html.version>1.6.0</j2html.version>
 	<jackson.version>2.15.0</jackson.version>
-	<jackson.databind.version>2.14.1</jackson.databind.version>
+	<jackson.databind.version>2.15.0</jackson.databind.version>
 	<jakarta-annotation.version>2.1.1</jakarta-annotation.version>
 	<jakarta-activation-api.version>1.2.2</jakarta-activation-api.version>
 	<jakarta-json-api.version>2.1.1</jakarta-json-api.version>
@@ -148,12 +148,12 @@
 	<classindex.version>3.9</classindex.version>
 	<checker-qual.version>3.28.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
-	<commons-compress.version>1.22</commons-compress.version>
+	<commons-compress.version>1.23.0</commons-compress.version>
 	<commons-text.version>1.10.0</commons-text.version>
 	<commons-pool2.version>2.11.1</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
-	<google-maps-services.version>2.1.2</google-maps-services.version>
+	<google-maps-services.version>2.2.0</google-maps-services.version>
 	<graalvm.js.version>22.3.1</graalvm.js.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
@@ -193,7 +193,7 @@
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>9.30.1</nimbus-jose-jwt.version>
-	<opencsv.version>5.5.2</opencsv.version>
+	<opencsv.version>5.7.1</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
 	<proton-j.version>0.34.0</proton-j.version>
@@ -1726,6 +1726,9 @@
 
                         <!-- Jupyter Notebooks as well -->
                         <exclude>**/*.ipynb</exclude>
+
+						<!-- Ignore SVG files -->
+						<exclude>**/*.svg</exclude>
 
                         <exclude>**/system</exclude>
 

@@ -22,7 +22,6 @@ import org.apache.streampipes.mail.template.part.LinkPart;
 import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import org.apache.streampipes.mail.utils.MailUtils;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class AccountActiviationMailTemplate extends AbstractMailTemplate {
@@ -31,11 +30,6 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
 
   public AccountActiviationMailTemplate(String activationCode) {
     this.activationCode = activationCode;
-  }
-
-  public static void main(String[] args) throws IOException {
-    String template = new PasswordRecoveryMailTemplate("asd").generateTemplate();
-    System.out.println(template);
   }
 
   @Override

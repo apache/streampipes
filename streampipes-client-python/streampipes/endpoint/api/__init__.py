@@ -17,8 +17,10 @@
 
 from .data_lake_measure import DataLakeMeasureEndpoint
 from .data_stream import DataStreamEndpoint
+from .version import VersionEndpoint
 
 __all__ = [
     "DataLakeMeasureEndpoint",
     "DataStreamEndpoint",
+    "VersionEndpoint",
 ]

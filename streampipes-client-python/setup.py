@@ -49,16 +49,16 @@ dev_packages = base_packages + [
     "black==23.3.0",
     "blacken-docs==1.13.0",
     "flake8==6.0.0",
-    "interrogate==1.5.0",
+    "interrogate[png]==1.5.0",
     "isort==5.12.0",
     "mypy==1.2.0",
     "pandas-stubs==2.0.0.230412",
     "pre-commit==3.3.0",
     "pytest==7.3.0",
     "pytest-cov==4.0.0",
-    "pyupgrade==3.3.1",
+    "pyupgrade==3.4.0",
     "types-Jinja2==2.11.9",
-    "types-requests==2.29.0.0",
+    "types-requests==2.30.0.0",
 ]
 
 docs_packages = [
@@ -97,7 +97,14 @@ setuptools.setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=PROJECT_URLS,
-    packages=setuptools.find_packages(exclude=("tests",)),
+    packages=setuptools.find_packages(exclude=("*tests*",)),
+    package_data={
+        "streampipes": [
+            "py.typed",
+            "*.pyi",
+            "**/*.pyi"
+        ]
+    },
     install_requires=base_packages,
     extras_require={
         "dev": dev_packages,
@@ -105,7 +112,6 @@ setuptools.setup(
         "docs": docs_packages,
         "all": dev_packages + docs_packages,
     },
-    include_package_data=True,
     license="Apache License 2.0",
     classifiers=[
         # Trove classifiers

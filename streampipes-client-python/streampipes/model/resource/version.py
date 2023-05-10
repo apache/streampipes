@@ -15,16 +15,29 @@
 # limitations under the License.
 #
 
-from .data_lake_measure import DataLakeMeasure
-from .data_series import DataSeries
-from .data_stream import DataStream
-from .function_definition import FunctionDefinition
-from .version import Version
-
 __all__ = [
-    "DataLakeMeasure",
-    "DataSeries",
-    "DataStream",
-    "FunctionDefinition",
     "Version",
 ]
+
+from typing import Dict
+
+from pydantic import StrictStr
+from streampipes.model.resource.resource import Resource
+
+
+class Version(Resource):
+    """Metadata about the version of the connected StreamPipes server.
+
+    Attributes
+    ----------
+    backend_version: str
+        version of the StreamPipes backend the client is connected to
+    """
+
+    def convert_to_pandas_representation(self) -> Dict:
+        """Returns the dictionary representation of the version metadata
+        to be used when creating a pandas Dataframe.
+        """
+        return self.to_dict(use_source_names=False)
+
+    backend_version: StrictStr

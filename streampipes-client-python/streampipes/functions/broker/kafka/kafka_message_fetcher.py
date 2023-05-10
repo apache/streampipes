@@ -14,17 +14,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from confluent_kafka import Consumer  # type: ignore
 
-from .data_lake_measure import DataLakeMeasure
-from .data_series import DataSeries
-from .data_stream import DataStream
-from .function_definition import FunctionDefinition
-from .version import Version
 
-__all__ = [
-    "DataLakeMeasure",
-    "DataSeries",
-    "DataStream",
-    "FunctionDefinition",
-    "Version",
-]
+class KafkaMessage:
+    """An internal representation of a Kafka message
+
+    Parameters
+    ----------
+    data: bytes
+        The received Kafka message as byte array
+    """
+
+    def __init__(self, data):
+        self.data = data
+
+
+class KafkaMessageFetcher:
+    """Fetches the next message from Kafka
+
+    Parameters
+    ----------
+    consumer: Consumer
+        The Kafka consumer
+    """
+
+    def __init__(self, consumer: Consumer):
+        self.consumer = consumer
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        msg = None
+        while not msg:
+            msg = self.consumer.poll(0.1)
+        return KafkaMessage(msg.value())

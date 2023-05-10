@@ -14,17 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from abc import abstractmethod
+from typing import Any, Dict
 
-from .data_lake_measure import DataLakeMeasure
-from .data_series import DataSeries
-from .data_stream import DataStream
-from .function_definition import FunctionDefinition
-from .version import Version
+from streampipes.functions.broker import Broker
 
-__all__ = [
-    "DataLakeMeasure",
-    "DataSeries",
-    "DataStream",
-    "FunctionDefinition",
-    "Version",
-]
+
+class Publisher(Broker):
+    """Abstract implementation of a publisher for a broker.
+
+    A publisher allows to publish events to a data stream.
+    """
+
+    @abstractmethod
+    async def publish_event(self, event: Dict[str, Any]) -> None:
+        """Publish an event to a connected data stream.
+
+        Parameters
+        ----------
+        event: Dict[str, Any]
+            The event to be published.
+
+        Returns
+        -------
+        None
+        """
+        raise NotImplementedError  # pragma: no cover
