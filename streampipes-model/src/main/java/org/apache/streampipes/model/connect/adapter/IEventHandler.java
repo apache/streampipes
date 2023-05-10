@@ -16,9 +16,13 @@
  *
  */
 
-import { UserInput } from './UserInput';
-import { AdapterInput } from './AdapterInput';
+package org.apache.streampipes.model.connect.adapter;
 
-export class SpecificAdapterInput extends AdapterInput {
-    adapterConfiguration: UserInput[];
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+
+import java.util.Map;
+
+public interface IEventHandler {
+  // TODO same interface as the event collector
+  void handle(Map<String, Object> event) throws ParseException;
 }

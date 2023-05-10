@@ -17,47 +17,56 @@
  */
 
 import { UserInput } from '../model/UserInput';
-import { GenericAdapterInput } from '../model/GenericAdapterInput';
 import { UserInputType } from '../model/UserInputType';
+import { AdapterInput } from '../model/AdapterInput';
 
-export class GenericAdapterBuilder {
-    genericAdapterInput: GenericAdapterInput;
+export class AdapterBuilder {
+    adapterInput: AdapterInput;
 
     constructor(type: string) {
-        this.genericAdapterInput = new GenericAdapterInput();
-        this.genericAdapterInput.adapterType = type;
-        this.genericAdapterInput.protocolConfiguration = [];
-        this.genericAdapterInput.formatConfiguration = [];
+        this.adapterInput = new AdapterInput();
+        this.adapterInput.adapterType = type;
+        this.adapterInput.adapterConfiguration = [];
+        this.adapterInput.formatConfiguration = [];
     }
 
     public static create(name: string) {
-        return new GenericAdapterBuilder(name);
+        return new AdapterBuilder(name);
     }
 
     public setName(name: string) {
-        this.genericAdapterInput.adapterName = name;
+        this.adapterInput.adapterName = name;
         return this;
     }
 
     public setTimestampProperty(timestsmpProperty: string) {
-        this.genericAdapterInput.timestampProperty = timestsmpProperty;
+        this.adapterInput.timestampProperty = timestsmpProperty;
         return this;
     }
 
     public addDimensionProperty(dimensionPropertyName: string) {
-        this.genericAdapterInput.dimensionProperties.push(
-            dimensionPropertyName,
-        );
+        this.adapterInput.dimensionProperties.push(dimensionPropertyName);
         return this;
     }
 
     public setStoreInDataLake() {
-        this.genericAdapterInput.storeInDataLake = true;
+        this.adapterInput.storeInDataLake = true;
+        return this;
+    }
+
+    public addInput(type: UserInputType, selector: string, value?: string) {
+        const userInput = new UserInput();
+        userInput.type = type;
+        userInput.selector = selector;
+        userInput.value = value;
+
+        this.adapterInput.adapterConfiguration.push(userInput);
+
         return this;
     }
 
     public setStartAdapter(startAdapter: boolean) {
-        this.genericAdapterInput.startAdapter = startAdapter;
+        this.adapterInput.startAdapter = startAdapter;
         return this;
     }
 
@@ -71,13 +80,13 @@ export class GenericAdapterBuilder {
         userInput.selector = selector;
         userInput.value = value;
 
-        this.genericAdapterInput.protocolConfiguration.push(userInput);
+        this.adapterInput.adapterConfiguration.push(userInput);
 
         return this;
     }
 
     public setFormat(format: 'csv' | 'json_array' | 'json_object') {
-        this.genericAdapterInput.format = format;
+        this.adapterInput.format = format;
         return this;
     }
 
@@ -86,17 +95,26 @@ export class GenericAdapterBuilder {
         selector: string,
         value: string,
     ) {
+        //
         const userInput = new UserInput();
         userInput.type = type;
-        userInput.selector = selector;
+        // userInput.selector = selector;
+        userInput.selector = this.escapeString(
+            'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.' +
+                selector,
+        );
         userInput.value = value;
 
-        this.genericAdapterInput.formatConfiguration.push(userInput);
+        this.adapterInput.formatConfiguration.push(userInput);
 
         return this;
     }
 
     build() {
-        return this.genericAdapterInput;
+        return this.adapterInput;
+    }
+
+    escapeString(str: string): string {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 }
