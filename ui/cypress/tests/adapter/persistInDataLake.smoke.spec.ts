@@ -20,6 +20,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Test File Stream Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -34,8 +35,8 @@ describe('Test File Stream Adapter', () => {
             .setStoreInDataLake()
             .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
             .setFormat('csv')
-            .addFormatInput('input', 'delimiter', ';')
-            .addFormatInput('checkbox', 'header', 'check')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
             .build();
 
         ConnectUtils.testAdapter(adapterInput);

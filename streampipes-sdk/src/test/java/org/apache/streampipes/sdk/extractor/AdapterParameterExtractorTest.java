@@ -29,6 +29,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +40,7 @@ public class AdapterParameterExtractorTest {
     var parserInstance = mock(IParser.class);
     var parserDescription = new ParserDescription("", "parserName", "");
     when(parserInstance.declareDescription()).thenReturn(parserDescription);
+    when(parserInstance.fromDescription(any())).thenReturn(parserInstance);
 
     var adapterConfiguration = AdapterConfigurationBuilder.create("test")
         .withSupportedParsers(parserInstance)

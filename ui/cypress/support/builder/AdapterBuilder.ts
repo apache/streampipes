@@ -85,7 +85,7 @@ export class AdapterBuilder {
         return this;
     }
 
-    public setFormat(format: 'csv' | 'json_array' | 'json_object') {
+    public setFormat(format: 'csv' | 'json' | 'json_array' | 'json_object') {
         this.adapterInput.format = format;
         return this;
     }
@@ -98,11 +98,7 @@ export class AdapterBuilder {
         //
         const userInput = new UserInput();
         userInput.type = type;
-        // userInput.selector = selector;
-        userInput.selector = this.escapeString(
-            'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.' +
-                selector,
-        );
+        userInput.selector = this.escapeString(selector);
         userInput.value = value;
 
         this.adapterInput.formatConfiguration.push(userInput);

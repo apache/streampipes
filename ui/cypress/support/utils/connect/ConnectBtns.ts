@@ -62,11 +62,11 @@ export class ConnectBtns {
     // =====================  Format configurations  ==========================
 
     public static csvDelimiter() {
-        return 'csv-1-delimiter-0';
+        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-delimiter-0';
     }
 
     public static csvHeader() {
-        return 'csv-1-header-1';
+        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
     }
 
     // ========================================================================

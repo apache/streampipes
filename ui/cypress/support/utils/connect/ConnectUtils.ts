@@ -22,7 +22,6 @@ import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
-import { dataCy } from '../../general/dataCy';
 
 export class ConnectUtils {
     public static testAdapter(adapterConfiguration: AdapterInput) {
@@ -130,24 +129,7 @@ export class ConnectUtils {
 
     public static configureFormat(adapterInput: AdapterInput) {
         if (adapterInput.format) {
-            // TODO select checkbox
-
-            // Select format
-            // if (adapterInput.format.indexOf('json') !== -1) {
-            //     ConnectBtns.json().click();
-            //     if (adapterInput.format.indexOf('object') !== -1) {
-            //         ConnectBtns.jsonObject().click();
-            //     } else {
-            //         ConnectBtns.jsonArray().click();
-            //     }
-            // } else {
-            //     cy.dataCy(adapterInput.format).click();
-            // }
-
             cy.dataCy('format-' + adapterInput.format).click();
-
-            // cy.dataCy(,
-            //   { timeout: 10000 }).type('abc');
 
             StaticPropertyUtils.input(adapterInput.formatConfiguration);
         }
@@ -234,8 +216,8 @@ export class ConnectUtils {
             .addProtocolInput('radio', 'replayonce', 'yes')
             .setName('Adapter to test rules')
             .setFormat('csv')
-            .addFormatInput('input', 'delimiter', ';')
-            .addFormatInput('checkbox', 'header', 'check')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
             .build();
 
         ConnectUtils.goToConnect();

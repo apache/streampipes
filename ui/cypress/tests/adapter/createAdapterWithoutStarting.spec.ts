@@ -17,7 +17,6 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Creates a new adapter without starting it', () => {

@@ -62,8 +62,8 @@ export class ProcessingElementTestUtils {
 
         if (formatType === 'csv') {
             adapterInputBuilder
-                .addFormatInput('input', 'delimiter', ';')
-                .addFormatInput('checkbox', 'header', 'check');
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
         }
 
         const adapterInput = adapterInputBuilder.build();

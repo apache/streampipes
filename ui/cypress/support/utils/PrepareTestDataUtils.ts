@@ -19,6 +19,7 @@
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { AdapterBuilder } from '../builder/AdapterBuilder';
+import { ConnectBtns } from './connect/ConnectBtns';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -60,10 +61,12 @@ export class PrepareTestDataUtils {
         if (format === 'csv') {
             adapterBuilder
                 .setFormat('csv')
-                .addFormatInput('input', 'delimiter', ';')
-                .addFormatInput('checkbox', 'header', 'check');
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
         } else {
-            adapterBuilder.setFormat('json_array');
+            adapterBuilder
+                .setFormat('json')
+                .addFormatInput('checkbox', 'json_options-array', '');
         }
 
         adapterBuilder.setStartAdapter(true);
