@@ -73,11 +73,12 @@ public class FileReplayAdapter implements AdapterInterface {
 
 
   private ScheduledExecutorService executor;
-  private boolean replayOnce;
   private boolean replaceTimestamp;
   private String timestampRuntimeName;
 
   private float speedUp;
+
+  private long timestampLastEvent = -1;
 
   @Override
   public AdapterConfiguration declareConfig() {
@@ -108,7 +109,7 @@ public class FileReplayAdapter implements AdapterInterface {
 
     // extract user input
     executor = Executors.newScheduledThreadPool(1);
-    replayOnce = extractor
+    boolean replayOnce = extractor
         .getStaticPropertyExtractor()
         .selectedSingleValue(REPLAY_ONCE, String.class)
         .equals("yes");
@@ -127,24 +128,20 @@ public class FileReplayAdapter implements AdapterInterface {
       default -> 1.0f;
     };
 
-    // adapt preprocessing pipeline
-    if (replaceTimestamp) {
-      // get timestamp field
+    // get timestamp field
+    var timestampField = extractor
+        .getAdapterDescription()
+        .getEventSchema()
+        .getEventProperties()
+        .stream()
+        .filter(eventProperty ->
+            eventProperty.getDomainProperties().contains(URI.create(SO.DATE_TIME)))
+        .findFirst();
 
-      var timestampField = extractor
-          .getAdapterDescription()
-          .getEventSchema()
-          .getEventProperties()
-          .stream()
-          .filter(eventProperty ->
-              eventProperty.getDomainProperties().contains(URI.create(SO.DATE_TIME)))
-          .findFirst();
-
-      if (!timestampField.isPresent()) {
-        throw new AdapterException("Could not find a timestamp field in event schema");
-      } else {
-        timestampRuntimeName = timestampField.get().getRuntimeName();
-      }
+    if (timestampField.isEmpty()) {
+      throw new AdapterException("Could not find a timestamp field in event schema");
+    } else {
+      timestampRuntimeName = timestampField.get().getRuntimeName();
     }
 
     // start replay adapter
@@ -169,6 +166,29 @@ public class FileReplayAdapter implements AdapterInterface {
           .selectedFilename(FILE_PATH));
 
       extractor.selectedParser().parse(inputStream, (event) -> {
+
+        long actualEventTimestamp = -1;
+        if (event.get(timestampRuntimeName) instanceof Long) {
+          actualEventTimestamp = (long) event.get(timestampRuntimeName);
+        } else {
+          LOG.error(
+              "The timestamp field is not a unix timestamp in ms. Value: %s"
+                  .formatted(event.get(timestampRuntimeName)));
+        }
+
+        if (timestampLastEvent != -1) {
+          long sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
+          // speed up is set to Float.MAX_VALUE when user selected fastest option
+          if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
+            try {
+              Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+              LOG.info("File stream adapter was stopped, the current replay is interuppted", e);
+            }
+          }
+        }
+
+        timestampLastEvent = actualEventTimestamp;
         if (replaceTimestamp) {
           event.put(timestampRuntimeName, System.currentTimeMillis());
         }

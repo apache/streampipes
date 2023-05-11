@@ -107,7 +107,7 @@ public class CsvParser implements IParser {
 
     var headerAndSample = getHeaderAndFirstSample(csvReader);
 
-    var event = toMap(headerAndSample.k, headerAndSample.v);
+    var event = toMap(headerAndSample.k, headerAndSample.v, true);
 
     return parserUtils.getGuessSchema(event);
   }
@@ -124,7 +124,7 @@ public class CsvParser implements IParser {
 
     try {
       do {
-        var event = toMap(header, sample);
+        var event = toMap(header, sample, false);
         handler.handle(event);
       } while ((sample = csvReader.readNext()) != null);
 
@@ -134,7 +134,7 @@ public class CsvParser implements IParser {
   }
 
 
-  private Map<String, Object> toMap(String[] header, String[] values) throws ParseException {
+  private Map<String, Object> toMap(String[] header, String[] values, boolean preferFloat) throws ParseException {
     if (header == null) {
       throw new ParseException("Header of csv could not be parsed");
     }
@@ -151,7 +151,7 @@ public class CsvParser implements IParser {
 
     var event = new HashMap<String, Object>();
     for (int i = 0; i < header.length; i++) {
-      var runtimeType = DatatypeUtils.getXsdDatatype(values[i], true);
+      var runtimeType = DatatypeUtils.getXsdDatatype(values[i], preferFloat);
       var convertedValue = DatatypeUtils.convertValue(values[i], runtimeType);
       event.put(header[i], convertedValue);
     }

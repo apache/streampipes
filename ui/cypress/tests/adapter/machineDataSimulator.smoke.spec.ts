@@ -17,10 +17,9 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+describe('Test Machine Data Simulator Adapter', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });

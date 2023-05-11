@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -57,7 +57,7 @@ public class GeoJsonParserTest {
   );
 
   @Test
-  public void getGuessSchema() throws JsonProcessingException {
+  public void getGuessSchema() {
     var expected = GuessSchemaBuilder.create()
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Float, "longitude")
@@ -88,14 +88,14 @@ public class GeoJsonParserTest {
 
   @Test
   public void parse() {
-    var mockEventCollector = mock(IEventCollector.class);
-    parser.parse(toEvent(event), mockEventCollector);
+    var mockEventHandler = mock(IEventHandler.class);
+    parser.parse(toEvent(event), mockEventHandler);
 
     Map<String, Object> expectedEvent = new HashMap<>();
     expectedEvent.put("latitude", 51.437344);
     expectedEvent.put("temperature", 5.0);
     expectedEvent.put("longitude", 6.946535);
-    verify(mockEventCollector, times(1)).collect(expectedEvent);
+    verify(mockEventHandler, times(1)).handle(expectedEvent);
   }
 
 

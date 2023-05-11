@@ -38,7 +38,7 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser.json
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserTest;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -86,28 +86,28 @@ public class JsonObjectParsersTest extends ParserTest {
 
   @Test
   public void parse() {
-    var mockEventCollector = mock(IEventCollector.class);
-    parser.parse(event, mockEventCollector);
+    var mockEventHandler = mock(IEventHandler.class);
+    parser.parse(event, mockEventHandler);
 
     Map<String, Object> expectedEvent = new HashMap<>();
     expectedEvent.put(K1, "v1");
     expectedEvent.put(K2, 2);
-    verify(mockEventCollector).collect(expectedEvent);
+    verify(mockEventHandler).handle(expectedEvent);
   }
 
   @Test(expected = ParseException.class)
   public void parseNullCheck() {
-    parser.parse(null, mock(IEventCollector.class));
+    parser.parse(null, mock(IEventHandler.class));
   }
 
   @Test(expected = ParseException.class)
   public void parseEmptyString() {
-    parser.parse(toStream(""), mock(IEventCollector.class));
+    parser.parse(toStream(""), mock(IEventHandler.class));
   }
 
   @Test(expected = ParseException.class)
   public void parseInvalidJson() {
-    parser.parse(toStream("{\"f\","), mock(IEventCollector.class));
+    parser.parse(toStream("{\"f\","), mock(IEventHandler.class));
   }
 
 }

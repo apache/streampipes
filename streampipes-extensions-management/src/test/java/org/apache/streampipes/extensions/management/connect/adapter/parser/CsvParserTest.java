@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -121,33 +121,46 @@ public class CsvParserTest extends ParserTest {
   @Test
   public void parseOneEvent() {
     var event = toStream("k1;k2\nv1;2");
-    var mockEventCollector = mock(IEventCollector.class);
+    var mockEventHandler = mock(IEventHandler.class);
 
     var parser = new CsvParser(true, ';');
-    parser.parse(event, mockEventCollector);
+    parser.parse(event, mockEventHandler);
 
     Map<String, Object> expectedEvent = new HashMap<>();
     expectedEvent.put(K1, "v1");
-    expectedEvent.put(K2, 2.0f);
-    verify(mockEventCollector).collect(expectedEvent);
+    expectedEvent.put(K2, 2);
+    verify(mockEventHandler).handle(expectedEvent);
+  }
+
+  @Test
+  public void parseEventWithTimestamp() {
+    var event = toStream("timestamp\n1683783150548");
+    var mockEventHandler = mock(IEventHandler.class);
+
+    var parser = new CsvParser(true, ';');
+    parser.parse(event, mockEventHandler);
+
+    Map<String, Object> expectedEvent = new HashMap<>();
+    expectedEvent.put("timestamp", 1683783150548L);
+    verify(mockEventHandler).handle(expectedEvent);
   }
 
   @Test
   public void parseMultiplEvent() {
     var event = toStream("k1;k2\nv1;2\nv2;3");
-    var mockEventCollector = mock(IEventCollector.class);
+    var mockEventHandler = mock(IEventHandler.class);
 
     var parser = new CsvParser(true, ';');
-    parser.parse(event, mockEventCollector);
+    parser.parse(event, mockEventHandler);
 
     Map<String, Object> expectedEvent = new HashMap<>();
     expectedEvent.put(K1, "v1");
-    expectedEvent.put(K2, 2.0f);
-    verify(mockEventCollector, times(1)).collect(expectedEvent);
+    expectedEvent.put(K2, 2);
+    verify(mockEventHandler, times(1)).handle(expectedEvent);
 
     expectedEvent.put(K1, "v2");
-    expectedEvent.put(K2, 3.0f);
-    verify(mockEventCollector, times(1)).collect(expectedEvent);
+    expectedEvent.put(K2, 3);
+    verify(mockEventHandler, times(1)).handle(expectedEvent);
   }
 
 }

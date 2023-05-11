@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser.json
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserTest;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -92,22 +92,22 @@ public class JsonArrayKeyParserTest extends ParserTest {
 
   @Test
   public void parse() {
-    var mockEventCollector = mock(IEventCollector.class);
-    parser.parse(event, mockEventCollector);
+    var mockEventHandler = mock(IEventHandler.class);
+    parser.parse(event, mockEventHandler);
 
     Map<String, Object> expectedEvent = new HashMap<>();
     expectedEvent.put(K1, "v1");
     expectedEvent.put(K2, 2);
-    verify(mockEventCollector, times(1)).collect(expectedEvent);
+    verify(mockEventHandler, times(1)).handle(expectedEvent);
 
     expectedEvent.put(K1, "v2");
     expectedEvent.put(K2, 3);
-    verify(mockEventCollector, times(1)).collect(expectedEvent);
+    verify(mockEventHandler, times(1)).handle(expectedEvent);
   }
 
   @Test
   public void parseEmptyArray() {
-    var mockEventCollector = mock(IEventCollector.class);
-    parser.parse(toStream("{\"arr\":[]}"), mockEventCollector);
+    var mockEventHandler = mock(IEventHandler.class);
+    parser.parse(toStream("{\"arr\":[]}"), mockEventHandler);
   }
 }

@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.verify;
 
 public class XmlParserTest extends ParserTest {
 
-  private String sampleEvent = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>"
+  private final String sampleEvent = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>"
                                + "<list>"
                                + "<enclosing>"
                                + "<k1>v1</k1><k2>1.0</k2>"
@@ -48,7 +48,7 @@ public class XmlParserTest extends ParserTest {
                                + "</enclosing>"
                                + "</list>";
 
-  private String tag = "enclosing";
+  private final String tag = "enclosing";
 
   @Test
   public void getGuessSchema() {
@@ -79,18 +79,18 @@ public class XmlParserTest extends ParserTest {
   @Test
   public void parse() {
     var event = toStream(sampleEvent);
-    var mockEventCollector = mock(IEventCollector.class);
+    var mockEventHandler = mock(IEventHandler.class);
 
     var parser = new XmlParser(tag);
-    parser.parse(event, mockEventCollector);
+    parser.parse(event, mockEventHandler);
 
     Map<String, Object> expectedEvent = new HashMap<>();
     expectedEvent.put(K1, "v1");
     expectedEvent.put(K2, 1.0f);
-    verify(mockEventCollector).collect(expectedEvent);
+    verify(mockEventHandler).handle(expectedEvent);
 
     expectedEvent.put(K1, "v2");
     expectedEvent.put(K2, 2.0f);
-    verify(mockEventCollector, times(1)).collect(expectedEvent);
+    verify(mockEventHandler, times(1)).handle(expectedEvent);
   }
 }
