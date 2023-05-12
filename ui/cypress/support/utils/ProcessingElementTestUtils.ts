@@ -69,6 +69,7 @@ export class ProcessingElementTestUtils {
         const adapterInput = adapterInputBuilder.build();
 
         ConnectUtils.addAdapter(adapterInput);
+        ConnectUtils.startAdapter(adapterInput);
 
         // Build Pipeline
         const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)

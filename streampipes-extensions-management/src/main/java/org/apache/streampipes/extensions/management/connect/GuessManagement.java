@@ -39,6 +39,9 @@ public class GuessManagement {
 
   private IAdapterGuessSchemaContext guessSchemaContext;
 
+  public GuessManagement() {
+  }
+
   public GuessManagement(IAdapterGuessSchemaContext guessSchemaContext) {
     this.guessSchemaContext = guessSchemaContext;
   }

@@ -24,7 +24,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.json.
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonArrayParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonParser;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;

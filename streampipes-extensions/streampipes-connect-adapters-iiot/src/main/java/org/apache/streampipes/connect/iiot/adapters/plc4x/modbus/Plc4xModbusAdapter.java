@@ -246,7 +246,7 @@ public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
         }
       } else {
         LOG.error("Error[" + node.get(PLC_NODE_RUNTIME_NAME) + "]: "
-            + response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)));
+                  + response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)));
       }
     }
 
@@ -286,7 +286,9 @@ public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector, IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     before(extractor.getStaticPropertyExtractor());
     this.collector = collector;
     this.pullAdapterScheduler = new PullAdapterScheduler();
@@ -295,7 +297,8 @@ public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+      throws AdapterException {
     this.pullAdapterScheduler.shutdown();
   }
 
@@ -303,7 +306,8 @@ public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
    * Takes the user input and creates the event schema. The event schema describes the properties of the event stream.
    */
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor, IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     getConfigurations(extractor.getStaticPropertyExtractor());
 
     GuessSchema guessSchema = new GuessSchema();
