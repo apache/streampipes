@@ -16,11 +16,11 @@
  *
  */
 
-import { GenericAdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
 import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 import { ParameterUtils } from '../../support/utils/ParameterUtils';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Test Kafka Integration', () => {
     beforeEach('Setup Test', () => {
@@ -45,7 +45,7 @@ describe('Test Kafka Integration', () => {
             .addInput('input', 'topic', topicName)
             .build();
 
-        const adapter = GenericAdapterBuilder.create('Apache_Kafka')
+        const adapter = AdapterBuilder.create('Apache_Kafka')
             .setName('Kafka4')
             .setTimestampProperty('timestamp')
             .addProtocolInput(
@@ -57,7 +57,8 @@ describe('Test Kafka Integration', () => {
             .addProtocolInput('input', 'port', port)
             .addProtocolInput('click', 'sp-reload', '')
             .addProtocolInput('select', topicName, 'check')
-            .setFormat('json_object')
+            .setFormat('json')
+            .addFormatInput('checkbox', 'json_options-single_object', '')
             .build();
 
         ThirdPartyIntegrationUtils.runTest(sink, adapter);
