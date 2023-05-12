@@ -42,11 +42,6 @@ export class AdapterConfigurationComponent implements OnInit {
     @Input() adapter: AdapterDescription;
     @Input() isEditMode;
 
-    /**
-     * Required to render the corresponding components
-     */
-    isGenericAdapter = false;
-
     myStepper: MatStepper;
     parentForm: UntypedFormGroup;
 
@@ -66,18 +61,11 @@ export class AdapterConfigurationComponent implements OnInit {
     ngOnInit() {
         this.parentForm = this._formBuilder.group({});
 
-        this.isGenericAdapter = false;
-
         this.eventSchema = this.adapter.dataStream.eventSchema;
     }
 
     removeSelection() {
         this.router.navigate(['connect', 'create']).then();
-    }
-
-    clickProtocolSettingsNextButton() {
-        this.shepherdService.trigger('specific-settings-next-button');
-        this.goForward();
     }
 
     clickSpecificSettingsNextButton() {
@@ -90,12 +78,6 @@ export class AdapterConfigurationComponent implements OnInit {
         this.setSchema();
 
         this.shepherdService.trigger('event-schema-next-button');
-        this.goForward();
-    }
-
-    clickFormatSelectionNextButton() {
-        this.shepherdService.trigger('format-selection-next-button');
-        this.guessEventSchema();
         this.goForward();
     }
 
