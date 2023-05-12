@@ -18,27 +18,12 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 
 import java.util.Map;
 
 public class RuntimeResovable {
   private static final String SP_NS = "https://streampipes.org/vocabulary/v1/";
-
-
-  public static ResolvesContainerProvidedOptions getRuntimeResolvableFormat(String id) throws IllegalArgumentException {
-    id = id.replaceAll("sp:", SP_NS);
-    Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
-
-    if (allFormats.containsKey(id)) {
-      return (ResolvesContainerProvidedOptions) allFormats.get(id);
-    } else {
-      return null;
-    }
-  }
 
   public static AdapterInterface getAdapter(String id) {
     id = id.replaceAll("sp:", SP_NS);

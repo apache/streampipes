@@ -22,7 +22,6 @@ package org.apache.streampipes.connect.iiot.adapters.ros;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.extensions.management.connect.adapter.format.json.object.JsonObjectParser;
 import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
@@ -57,6 +56,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+// TODO Fix ROS adapter
 public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProvidedOptions {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.ros";
@@ -71,10 +71,7 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
 
   private Ros ros;
 
-  private final JsonObjectParser jsonObjectParser;
-
   public RosBridgeAdapter() {
-    this.jsonObjectParser = new JsonObjectParser();
   }
 
   @Override
@@ -164,7 +161,9 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
 
     ros.disconnect();
 
-    EventSchema eventSchema = this.jsonObjectParser.getEventSchema(getNEvents.getEvents());
+    EventSchema eventSchema = null;
+//    EventSchema eventSchema = this.jsonObjectParser.getEventSchema(getNEvents.getEvents());
+
 
     GuessSchema guessSchema = new GuessSchema();
 

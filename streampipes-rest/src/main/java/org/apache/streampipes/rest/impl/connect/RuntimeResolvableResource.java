@@ -29,9 +29,6 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -39,6 +36,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Path("/v2/connect/master/resolvable")
@@ -60,8 +59,6 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
   @Consumes(MediaType.APPLICATION_JSON)
   public Response fetchConfigurations(@PathParam("id") String appId,
                                       RuntimeOptionsRequest runtimeOptionsRequest) {
-
-    // TODO add solution for formats
 
     try {
       String workerEndpoint = workerUrlProvider.getWorkerBaseUrl(appId);

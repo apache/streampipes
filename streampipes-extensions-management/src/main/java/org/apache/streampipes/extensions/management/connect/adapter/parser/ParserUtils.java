@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
-import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.util.JsonEventProperty;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 

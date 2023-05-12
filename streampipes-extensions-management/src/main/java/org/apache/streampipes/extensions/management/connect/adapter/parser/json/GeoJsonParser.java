@@ -19,8 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.format.geojson.GeoJsonConstants;
-import org.apache.streampipes.extensions.management.connect.adapter.format.util.JsonEventProperty;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.util.JsonEventProperty;
 import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
