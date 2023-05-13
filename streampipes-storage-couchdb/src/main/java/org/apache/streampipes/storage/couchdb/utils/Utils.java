@@ -75,6 +75,10 @@ public class Utils {
     return getCouchDbAdapterClient("adapterinstance");
   }
 
+  public static CouchDbClient getCouchDbAdapterInstanceBackupClient() {
+    return new CouchDbClient(props("adapterinstance_backup"));
+  }
+
   public static CouchDbClient getCouchDbAdapterDescriptionClient() {
     return getCouchDbAdapterClient("adapterdescription");
   }

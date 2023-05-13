@@ -62,7 +62,7 @@ public class NewMachineDataSimulatorAdapter implements AdapterInterface {
 
   @Override
   public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2")
+    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine")
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Debugging)

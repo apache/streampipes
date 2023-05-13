@@ -16,26 +16,12 @@
  *
  */
 
+package org.apache.streampipes.service.core.migrations.v093.migrator;
 
-package org.apache.streampipes.service.core.migrations;
+import com.google.gson.JsonObject;
+import org.lightcouch.CouchDbClient;
 
-import org.apache.streampipes.service.core.migrations.v070.CreateAssetLinkTypeMigration;
-import org.apache.streampipes.service.core.migrations.v070.CreateDefaultAssetMigration;
-import org.apache.streampipes.service.core.migrations.v070.CreateFileAssetTypeMigration;
-import org.apache.streampipes.service.core.migrations.v090.UpdateUsernameViewMigration;
+public interface AdapterMigrator {
 
-import java.util.Arrays;
-import java.util.List;
-
-public class AvailableMigrations {
-
-  public List<Migration> getAvailableMigrations() {
-    return Arrays.asList(
-        new CreateAssetLinkTypeMigration(),
-        new CreateDefaultAssetMigration(),
-        new CreateFileAssetTypeMigration(),
-        new UpdateUsernameViewMigration()
-        //new AdapterMigration()
-    );
-  }
+  void migrate(CouchDbClient couchDbClient, JsonObject adapter);
 }
