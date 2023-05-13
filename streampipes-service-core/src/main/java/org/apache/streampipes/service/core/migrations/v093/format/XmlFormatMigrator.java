@@ -16,31 +16,17 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.migrator;
+package org.apache.streampipes.service.core.migrations.v093.format;
 
 import com.google.gson.JsonObject;
-import org.lightcouch.CouchDbClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class SpecificAdapterMigrator implements AdapterMigrator {
-
-  private static final Logger LOG = LoggerFactory.getLogger(SpecificAdapterMigrator.class);
-  private final MigrationHelpers helpers;
-
-  public SpecificAdapterMigrator(MigrationHelpers helpers) {
-    this.helpers = helpers;
+public class XmlFormatMigrator implements FormatMigrator {
+  public XmlFormatMigrator(String xmlFormatId,
+                           JsonObject formatDescription) {
   }
 
   @Override
-  public void migrate(CouchDbClient couchDbClient,
-                      JsonObject adapter) {
-    var adapterName = helpers.getAdapterName(adapter);
-    helpers.updateType(adapter);
-    helpers.updateFieldType(adapter);
+  public void migrate(JsonObject newFormatProperties) {
 
-    couchDbClient.update(adapter);
-
-    LOG.info("Successfully migrated adapter {}", adapterName);
   }
 }

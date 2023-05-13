@@ -53,7 +53,7 @@ public class AdapterMigrationUtils {
 
   public static AdapterMigrator getAdapterMigrator(String adapterType) {
     if (adapterType.equals(GENERIC_STREAM)) {
-      return new GenericAdapterMigrator();
+      return new GenericAdapterMigrator(new MigrationHelpers());
     } else {
       return new SpecificAdapterMigrator(new MigrationHelpers());
     }

@@ -18,12 +18,19 @@
 
 package org.apache.streampipes.service.core.migrations.v093.migrator;
 
+import org.apache.streampipes.service.core.migrations.v093.utils.AdapterMigrationUtils;
+
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class MigrationHelpers {
 
-  private static final String ID = "_id";
-  private static final String REV = "_rev";
+  public static final String ID = "_id";
+  public static final String REV = "_rev";
+
+  public static final String APP_ID = "appId";
+
+  public static final String PROPERTIES = "properties";
 
   public String getDocId(JsonObject adapter) {
     return adapter.get(ID).getAsString();
@@ -31,5 +38,17 @@ public class MigrationHelpers {
 
   public String getRev(JsonObject adapter) {
     return adapter.get(REV).getAsString();
+  }
+
+  public void updateType(JsonObject adapter) {
+    adapter.add("type", new JsonPrimitive(AdapterMigrationUtils.NEW_MODEL));
+  }
+
+  public void updateFieldType(JsonObject adapter) {
+    adapter.add("field_type", new JsonPrimitive(AdapterMigrationUtils.NEW_MODEL));
+  }
+
+  public String getAdapterName(JsonObject adapter) {
+    return adapter.get("properties").getAsJsonObject().get("name").getAsString();
   }
 }
