@@ -23,8 +23,7 @@ import com.google.gson.JsonObject;
 public class CsvFormatMigrator implements FormatMigrator {
 
 
-  public CsvFormatMigrator(String csvFormatId,
-                           JsonObject formatDescription) {
+  public CsvFormatMigrator(JsonObject formatDescription) {
   }
 
   @Override

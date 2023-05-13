@@ -21,8 +21,7 @@ package org.apache.streampipes.service.core.migrations.v093.format;
 import com.google.gson.JsonObject;
 
 public class XmlFormatMigrator implements FormatMigrator {
-  public XmlFormatMigrator(String xmlFormatId,
-                           JsonObject formatDescription) {
+  public XmlFormatMigrator(JsonObject formatDescription) {
   }
 
   @Override

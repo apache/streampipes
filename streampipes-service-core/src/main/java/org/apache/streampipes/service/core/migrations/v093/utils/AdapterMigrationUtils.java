@@ -29,12 +29,17 @@ import java.util.stream.Stream;
 
 public class AdapterMigrationUtils {
 
-  private static final String GENERIC_SET = "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
-  private static final String SPECIFIC_SET = "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription";
-  private static final String GENERIC_STREAM = "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
-  private static final String SPECIFIC_STREAM = "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription";
+  private static final String GENERIC_SET =
+      "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
+  private static final String SPECIFIC_SET =
+      "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription";
+  private static final String GENERIC_STREAM =
+      "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
+  private static final String SPECIFIC_STREAM =
+      "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription";
 
-  public static final String NEW_MODEL = "org.apache.streampipes.model.connect.adapter.AdapterDescription";
+  public static final String NEW_MODEL =
+      "org.apache.streampipes.model.connect.adapter.AdapterDescription";
   public static List<String> deprecatedAdapterSetClasses = List.of(
       GENERIC_SET,
       SPECIFIC_SET

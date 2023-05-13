@@ -33,11 +33,14 @@ import static org.apache.streampipes.service.core.migrations.v093.migrator.Migra
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.CSV;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.CSV_FORMAT_ID;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.GEOJSON_FORMAT_ID;
+import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.GEOJSON_NEW_KEY;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.IMAGE;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.IMAGE_FORMAT_ID;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_ARRAY_KEY_FORMAT_ID;
+import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_ARRAY_KEY_NEW_KEY;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_ARRAY_NO_KEY_FORMAT_ID;
+import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_ARRAY_NO_KEY_NEW_KEY;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_OBJECT_FORMAT_ID;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_OBJECT_NEW_KEY;
 import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.XML;
@@ -100,19 +103,19 @@ public class GenericAdapterMigrator implements AdapterMigrator {
       var migrator = new JsonFormatMigrator(JSON_OBJECT_NEW_KEY, formatDescription);
       applyFormat(JSON, formatTemplate, migrator);
     } else if (isFormat(formatDescription, JSON_ARRAY_KEY_FORMAT_ID)) {
-      var migrator = new JsonFormatMigrator(JSON_ARRAY_KEY_FORMAT_ID, formatDescription);
+      var migrator = new JsonFormatMigrator(JSON_ARRAY_KEY_NEW_KEY, formatDescription);
       applyFormat(JSON, formatTemplate, migrator);
     } else if (isFormat(formatDescription, JSON_ARRAY_NO_KEY_FORMAT_ID)) {
-      var migrator = new JsonFormatMigrator(JSON_ARRAY_NO_KEY_FORMAT_ID, formatDescription);
+      var migrator = new JsonFormatMigrator(JSON_ARRAY_NO_KEY_NEW_KEY, formatDescription);
       applyFormat(JSON, formatTemplate, migrator);
     } else if (isFormat(formatDescription, CSV_FORMAT_ID)) {
-      var migrator = new CsvFormatMigrator(CSV_FORMAT_ID, formatDescription);
+      var migrator = new CsvFormatMigrator(formatDescription);
       applyFormat(CSV, formatTemplate, migrator);
     } else if (isFormat(formatDescription, GEOJSON_FORMAT_ID)) {
-      var migrator = new JsonFormatMigrator(GEOJSON_FORMAT_ID, formatDescription);
+      var migrator = new JsonFormatMigrator(GEOJSON_NEW_KEY, formatDescription);
       applyFormat(JSON, formatTemplate, migrator);
     } else if (isFormat(formatDescription, XML_FORMAT_ID)) {
-      var migrator = new XmlFormatMigrator(XML_FORMAT_ID, formatDescription);
+      var migrator = new XmlFormatMigrator(formatDescription);
       applyFormat(XML, formatTemplate, migrator);
     } else if (isFormat(formatDescription, IMAGE_FORMAT_ID)) {
       applyFormat(IMAGE, formatTemplate, new EmptyFormatMigrator());
