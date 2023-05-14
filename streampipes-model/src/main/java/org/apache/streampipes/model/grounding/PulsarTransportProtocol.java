@@ -15,29 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.config;
 
-public enum SpProtocol {
+package org.apache.streampipes.model.grounding;
 
-  KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
-  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
-  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
-  NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol"),
-  PULSAR("PULSAR", "org.apache.streampipes.model.grounding.PulsarTransportProtocol");
+public class PulsarTransportProtocol extends TransportProtocol {
 
-  private final String name;
-  private final String protocolClass;
-
-  SpProtocol(String name, String protocolClass) {
-    this.name = name;
-    this.protocolClass = protocolClass;
+  public PulsarTransportProtocol(String brokerUrl,
+                                 TopicDefinition topicDefinition) {
+    super(brokerUrl, topicDefinition);
   }
 
-  public String getName() {
-    return name;
+  public PulsarTransportProtocol(PulsarTransportProtocol other) {
+    super(other);
   }
 
-  public String getProtocolClass() {
-    return protocolClass;
+  public PulsarTransportProtocol() {
+    super();
+  }
+
+  @Override
+  public String toString() {
+    return getBrokerHostname();
   }
 }

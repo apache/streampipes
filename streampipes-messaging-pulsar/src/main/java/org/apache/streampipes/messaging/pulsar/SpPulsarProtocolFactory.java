@@ -15,29 +15,28 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.config;
+package org.apache.streampipes.messaging.pulsar;
 
-public enum SpProtocol {
+import org.apache.streampipes.messaging.SpProtocolDefinition;
+import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
-  KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
-  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
-  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
-  NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol"),
-  PULSAR("PULSAR", "org.apache.streampipes.model.grounding.PulsarTransportProtocol");
+public class SpPulsarProtocolFactory extends SpProtocolDefinitionFactory<PulsarTransportProtocol> {
 
-  private final String name;
-  private final String protocolClass;
-
-  SpProtocol(String name, String protocolClass) {
-    this.name = name;
-    this.protocolClass = protocolClass;
+  @Override
+  public TransportProtocol getTransportProtocol() {
+    return new PulsarTransportProtocol();
   }
 
-  public String getName() {
-    return name;
+  @Override
+  public String getTransportProtocolClass() {
+    return PulsarTransportProtocol.class.getCanonicalName();
   }
 
-  public String getProtocolClass() {
-    return protocolClass;
+  @Override
+  public SpProtocolDefinition<PulsarTransportProtocol> createInstance() {
+    return new SpPulsarProtocol();
   }
 }
+

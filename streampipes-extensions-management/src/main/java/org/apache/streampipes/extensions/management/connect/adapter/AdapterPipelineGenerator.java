@@ -29,6 +29,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.preprocessin
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToNatsAdapterSink;
+import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToPulsarAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.TransformSchemaAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.TransformStreamAdapterElement;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.TransformValueAdapterPipelineElement;
@@ -46,6 +47,7 @@ import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleD
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +125,8 @@ public class AdapterPipelineGenerator {
       return new SendToKafkaAdapterSink(adapterDescription);
     } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
       return new SendToMqttAdapterSink(adapterDescription);
+    } else if (isPrioritized(prioritizedProtocol, PulsarTransportProtocol.class)) {
+      return new SendToPulsarAdapterSink(adapterDescription);
     } else {
       return new SendToNatsAdapterSink(adapterDescription);
     }

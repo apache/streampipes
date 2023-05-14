@@ -24,11 +24,13 @@ import org.apache.streampipes.extensions.management.connect.adapter.preprocessin
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToNatsAdapterSink;
+import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToPulsarAdapterSink;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -60,6 +62,9 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
     } else if (transportProtocol instanceof NatsTransportProtocol) {
       SendToNatsAdapterSink sink = (SendToNatsAdapterSink) this.adapterPipeline.getPipelineSink();
       sink.changeTransportProtocol((NatsTransportProtocol) transportProtocol);
+    } else if (transportProtocol instanceof PulsarTransportProtocol) {
+      SendToPulsarAdapterSink sink = (SendToPulsarAdapterSink) this.adapterPipeline.getPipelineSink();
+      sink.changeTransportProtocol((PulsarTransportProtocol) transportProtocol);
     }
   }
 

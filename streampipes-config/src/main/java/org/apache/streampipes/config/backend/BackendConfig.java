@@ -130,6 +130,10 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.KAFKA_PORT);
   }
 
+  public String getPulsarUrl() {
+    return config.getString(BackendConfigKeys.PULSAR_URL);
+  }
+
   public String getZookeeperHost() {
     return config.getString(BackendConfigKeys.ZOOKEEPER_HOST);
   }

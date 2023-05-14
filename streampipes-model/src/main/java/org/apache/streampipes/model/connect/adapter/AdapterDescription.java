@@ -28,6 +28,7 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -88,10 +89,11 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     TransportProtocol tpKafka = new KafkaTransportProtocol();
     TransportProtocol tpJms = new JmsTransportProtocol();
     TransportProtocol tpMqtt = new MqttTransportProtocol();
+    TransportProtocol tpPulsar = new PulsarTransportProtocol();
     tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
     tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
     tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
-    this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka, tpJms, tpMqtt));
+    this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka, tpJms, tpMqtt, tpPulsar));
   }
 
   public AdapterDescription(String elementId, String name, String description) {

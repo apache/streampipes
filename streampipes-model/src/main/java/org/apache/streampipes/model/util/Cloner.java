@@ -34,6 +34,7 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportFormat;
@@ -172,6 +173,8 @@ public class Cloner {
       return new MqttTransportProtocol((MqttTransportProtocol) protocol);
     } else if (protocol instanceof NatsTransportProtocol) {
       return new NatsTransportProtocol((NatsTransportProtocol) protocol);
+    } else if (protocol instanceof PulsarTransportProtocol) {
+      return new PulsarTransportProtocol((PulsarTransportProtocol) protocol);
     } else {
       logger.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
       return protocol;

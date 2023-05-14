@@ -26,6 +26,7 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -80,6 +81,13 @@ public class DataSetGroundingSelector {
           topicDefinition,
           NatsTransportProtocol.class
       ));
+    } else if (isPrioritized(prioritizedProtocol, PulsarTransportProtocol.class)) {
+      outputGrounding.setTransportProtocol(makeTransportProtocol(
+          BackendConfig.INSTANCE.getPulsarUrl(),
+          -1,
+          topicDefinition,
+          PulsarTransportProtocol.class
+      ));
     }
 
     outputGrounding.setTransportFormats(Collections
@@ -115,6 +123,9 @@ public class DataSetGroundingSelector {
       NatsTransportProtocol tp = new NatsTransportProtocol();
       tp.setPort(port);
       fillTransportProtocol(tp, hostname, topicDefinition);
+      tpOut = (T) tp;
+    } else if (protocolClass.equals(PulsarTransportProtocol.class)) {
+      PulsarTransportProtocol tp = new PulsarTransportProtocol(hostname, topicDefinition);
       tpOut = (T) tp;
     }
     return tpOut;

@@ -15,29 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.config;
 
-public enum SpProtocol {
+package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
-  KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
-  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
-  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
-  NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol"),
-  PULSAR("PULSAR", "org.apache.streampipes.model.grounding.PulsarTransportProtocol");
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.messaging.pulsar.PulsarProducer;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 
-  private final String name;
-  private final String protocolClass;
+public class SendToPulsarAdapterSink extends SendToBrokerAdapterSink<PulsarTransportProtocol>
+    implements IAdapterPipelineElement {
 
-  SpProtocol(String name, String protocolClass) {
-    this.name = name;
-    this.protocolClass = protocolClass;
+  public SendToPulsarAdapterSink(AdapterDescription adapterDescription) {
+    super(adapterDescription, PulsarProducer::new, PulsarTransportProtocol.class);
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public String getProtocolClass() {
-    return protocolClass;
+  @Override
+  public void modifyProtocolForDebugging(PulsarTransportProtocol protocol) {
+    protocol.setBrokerHostname("pulsar://localhost:6650");
   }
 }

@@ -1390,6 +1390,7 @@
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
         <module>streampipes-messaging-mqtt</module>
+		<module>streampipes-messaging-pulsar</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
