@@ -16,8 +16,14 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Dashboard, DashboardService } from '@streampipes/platform-services';
+import {
+    Dashboard,
+    DashboardService,
+    DataLakeMeasure,
+    DatalakeRestService,
+} from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
+import { zip } from 'rxjs';
 
 @Component({
     templateUrl: './standalone-dashboard.component.html',
@@ -27,21 +33,26 @@ export class StandaloneDashboardComponent implements OnInit {
     dashboard: Dashboard;
     dashboardReady = false;
 
+    allMeasurements: DataLakeMeasure[] = [];
+
     constructor(
         private activatedRoute: ActivatedRoute,
         private dashboardService: DashboardService,
+        private datalakeRestService: DatalakeRestService,
     ) {}
 
     ngOnInit(): void {
         this.activatedRoute.params.subscribe(params => {
             if (params['dashboardId']) {
                 const dashboardId = params['dashboardId'];
-                this.dashboardService
-                    .getDashboard(dashboardId)
-                    .subscribe(dashboard => {
-                        this.dashboard = dashboard;
-                        this.dashboardReady = true;
-                    });
+                zip([
+                    this.datalakeRestService.getAllMeasurementSeries(),
+                    this.dashboardService.getDashboard(dashboardId),
+                ]).subscribe(res => {
+                    this.allMeasurements = res[0];
+                    this.dashboard = res[1];
+                    this.dashboardReady = true;
+                });
             }
         });
     }
