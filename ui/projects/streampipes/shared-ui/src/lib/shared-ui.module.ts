@@ -36,6 +36,7 @@ import { SpExceptionMessageComponent } from './components/sp-exception-message/s
 import { SpExceptionDetailsDialogComponent } from './components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { SplitSectionComponent } from './components/split-section/split-section.component';
+import { SpLabelComponent } from './components/sp-label/sp-label.component';
 
 @NgModule({
     declarations: [
@@ -48,6 +49,7 @@ import { SplitSectionComponent } from './components/split-section/split-section.
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
+        SpLabelComponent,
         SplitSectionComponent,
     ],
     imports: [
@@ -71,6 +73,7 @@ import { SplitSectionComponent } from './components/split-section/split-section.
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
+        SpLabelComponent,
         SplitSectionComponent,
     ],
 })
