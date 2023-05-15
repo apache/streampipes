@@ -22,13 +22,13 @@ package org.apache.streampipes.connect.iiot.adapters.ros;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
@@ -56,7 +56,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-// TODO Fix ROS adapter
 public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProvidedOptions {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.ros";
@@ -68,6 +67,9 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
   private String topic;
   private String host;
   private int port;
+
+
+  private final ObjectMapper mapper = new ObjectMapper();
 
   private Ros ros;
 
@@ -111,7 +113,6 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
 
     String topicType = getMethodType(this.ros, this.topic);
 
-    ObjectMapper mapper = new ObjectMapper();
     Topic echoBack = new Topic(ros, this.topic, topicType);
     echoBack.subscribe(message -> {
       try {
@@ -161,14 +162,13 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
 
     ros.disconnect();
 
-    EventSchema eventSchema = null;
-//    EventSchema eventSchema = this.jsonObjectParser.getEventSchema(getNEvents.getEvents());
+    try {
+      Map<String, Object> event = mapper.readValue(getNEvents.getEvents().get(0), HashMap.class);
+      return new ParserUtils().getGuessSchema(event);
 
-
-    GuessSchema guessSchema = new GuessSchema();
-
-    guessSchema.setEventSchema(eventSchema);
-    return guessSchema;
+    } catch (JsonProcessingException e) {
+      throw new AdapterException("Could not guess event schema for %s".formatted(getNEvents.getEvents().get(0)), e);
+    }
   }
 
   private class GetNEvents implements Runnable {
@@ -177,7 +177,7 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
     private final String topicType;
     private final Ros ros;
 
-    private final List<byte[]> events;
+    private final List<String> events;
 
     public GetNEvents(String topic, String topicType, Ros ros) {
       this.topic = topic;
@@ -189,10 +189,10 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
     @Override
     public void run() {
       Topic echoBack = new Topic(ros, this.topic, topicType);
-      echoBack.subscribe(message -> events.add(message.toString().getBytes()));
+      echoBack.subscribe(message -> events.add(message.toString()));
     }
 
-    public List<byte[]> getEvents() {
+    public List<String> getEvents() {
       return this.events;
     }
   }
