@@ -97,9 +97,6 @@ public class Plc4xS7Adapter implements AdapterInterface, IPullAdapter, PlcReadRe
 
   private IEventCollector collector;
 
-  /**
-   * Empty constructor and a constructor with SpecificAdapterStreamDescription are mandatory
-   */
   public Plc4xS7Adapter() {
   }
 
