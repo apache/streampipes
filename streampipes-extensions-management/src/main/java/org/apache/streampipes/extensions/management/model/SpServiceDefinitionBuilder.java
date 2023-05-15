@@ -18,9 +18,6 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
-import org.apache.streampipes.extensions.api.connect.Connector;
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
@@ -105,22 +102,6 @@ public class SpServiceDefinitionBuilder {
   }
 
 
-  @Deprecated
-  public SpServiceDefinitionBuilder registerAdapter(Connector protocolOrAdapter) {
-    if (protocolOrAdapter instanceof IProtocol) {
-      this.serviceDefinition.addAdapterProtocol((IProtocol) protocolOrAdapter);
-    } else if (protocolOrAdapter instanceof IAdapter<?>) {
-      this.serviceDefinition.addSpecificAdapter((IAdapter<?>) protocolOrAdapter);
-    }
-    return this;
-  }
-
-  @Deprecated
-  public SpServiceDefinitionBuilder registerAdapters(Connector... protocolOrAdapter) {
-    Arrays.asList(protocolOrAdapter).forEach(this::registerAdapter);
-    return this;
-  }
-
   public SpServiceDefinitionBuilder registerMessagingFormat(SpDataFormatFactory dataFormatDefinition) {
     this.serviceDefinition.addDataFormatFactory(dataFormatDefinition);
     return this;
@@ -144,8 +125,6 @@ public class SpServiceDefinitionBuilder {
   public SpServiceDefinitionBuilder merge(SpServiceDefinition other) {
     this.serviceDefinition.addDeclarers(other.getDeclarers());
     this.serviceDefinition.addAdapters(other.getAdapters());
-    this.serviceDefinition.addAdapterProtocols(other.getAdapterProtocols());
-    this.serviceDefinition.addSpecificAdapters(other.getSpecificAdapters());
     other.getKvConfigs().values().forEach(value -> {
       if (this.serviceDefinition.getKvConfigs().containsKey(value.getKey())) {
         LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.",

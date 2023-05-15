@@ -25,6 +25,7 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.util.List;
 
+@Deprecated
 public class ParserDescription extends NamedStreamPipesEntity {
 
   private StaticPropertyGroup config;

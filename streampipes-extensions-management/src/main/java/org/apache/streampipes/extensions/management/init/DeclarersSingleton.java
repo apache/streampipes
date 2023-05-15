@@ -20,9 +20,6 @@ package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
-import org.apache.streampipes.extensions.api.connect.Connector;
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
@@ -69,11 +66,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   private Map<String, TransportProtocol> supportedProtocols;
   private Map<String, TransportFormat> supportedFormats;
 
-  @Deprecated
-  private Map<String, IProtocol> allProtocols;
-  @Deprecated
-  private Map<String, IAdapter> allAdapters;
-
   private Map<String, AdapterInterface> adapters;
 
   private String serviceId;
@@ -90,8 +82,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.pipelineTemplateDeclarers = new HashMap<>();
     this.supportedProtocols = new HashMap<>();
     this.supportedFormats = new HashMap<>();
-    this.allProtocols = new HashMap<>();
-    this.allAdapters = new HashMap<>();
     this.adapters = new HashMap<>();
     this.functions = new HashMap<>();
     this.route = "/";
@@ -114,8 +104,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.serviceId = serviceDef.getServiceId();
     this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.registerDataFormats(serviceDef.getDataFormatFactories());
-    this.allAdapters = serviceDef.getSpecificAdapters();
-    this.allProtocols = serviceDef.getAdapterProtocols();
     serviceDef.getAdapters().forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
     serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
   }
@@ -231,42 +219,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
         .stream()
         .map(TransportFormat::new)
         .collect(Collectors.toList());
-  }
-
-  public DeclarersSingleton add(Connector c) {
-
-    if (c instanceof IProtocol) {
-      this.allProtocols.put(c.getId(), (IProtocol) c);
-    } else if (c instanceof IAdapter) {
-      this.allAdapters.put(c.getId(), (IAdapter<?>) c);
-    }
-
-    return getInstance();
-  }
-
-  @Deprecated
-  public Map<String, IProtocol> getAllProtocolsMap() {
-    return this.allProtocols;
-  }
-
-  @Deprecated
-  public Map<String, IAdapter> getAllAdaptersMap() {
-    return this.allAdapters;
-  }
-
-  public Collection<IProtocol> getAllProtocols() {
-    return this.allProtocols.values();
-  }
-
-  public Collection<IAdapter> getAllAdapters() {
-    return this.allAdapters.values();
-  }
-
-  public IProtocol getProtocol(String id) {
-    return getAllProtocols().stream()
-        .filter(protocol -> protocol.getId().equals(id))
-        .findAny()
-        .orElse(null);
   }
 
   public int getPort() {

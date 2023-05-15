@@ -18,8 +18,6 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
@@ -47,10 +45,6 @@ public class SpServiceDefinition {
 
   private List<AdapterInterface> adapters;
 
-  @Deprecated
-  private Map<String, IProtocol> adapterProtocols;
-  @Deprecated
-  private Map<String, IAdapter> specificAdapters;
   private Map<String, ConfigItem> kvConfigs;
 
   public SpServiceDefinition() {
@@ -58,8 +52,6 @@ public class SpServiceDefinition {
     this.declarers = new ArrayList<>();
     this.dataFormatFactories = new ArrayList<>();
     this.protocolDefinitionFactories = new ArrayList<>();
-    this.adapterProtocols = new HashMap<>();
-    this.specificAdapters = new HashMap<>();
     this.kvConfigs = new HashMap<>();
     this.functions = new ArrayList<>();
     this.adapters = new ArrayList<>();
@@ -129,14 +121,6 @@ public class SpServiceDefinition {
     this.dataFormatFactories.addAll(factories);
   }
 
-  public void addAdapterProtocol(IProtocol protocol) {
-    this.adapterProtocols.put(protocol.getId(), protocol);
-  }
-
-  public void addAdapterProtocols(Map<String, IProtocol> protocols) {
-    protocols.values().forEach(this::addAdapterProtocol);
-  }
-
   public void addConfig(ConfigItem configItem) {
     this.kvConfigs.put(configItem.getKey(), configItem);
   }
@@ -147,14 +131,6 @@ public class SpServiceDefinition {
 
   public void addAdapters(List<AdapterInterface> adapters) {
     this.adapters.addAll(adapters);
-  }
-
-  public void addSpecificAdapter(IAdapter<?> adapter) {
-    this.specificAdapters.put(adapter.getId(), adapter);
-  }
-
-  public void addSpecificAdapters(Map<String, IAdapter> adapters) {
-    adapters.values().forEach(this::addSpecificAdapter);
   }
 
   public List<SpDataFormatFactory> getDataFormatFactories() {
@@ -179,14 +155,6 @@ public class SpServiceDefinition {
 
   public void setProtocolDefinitionFactories(List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories) {
     this.protocolDefinitionFactories = protocolDefinitionFactories;
-  }
-
-  public Map<String, IProtocol> getAdapterProtocols() {
-    return adapterProtocols;
-  }
-
-  public Map<String, IAdapter> getSpecificAdapters() {
-    return specificAdapters;
   }
 
   public Map<String, ConfigItem> getKvConfigs() {
