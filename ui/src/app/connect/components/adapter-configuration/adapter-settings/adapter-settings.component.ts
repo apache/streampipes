@@ -17,21 +17,18 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {
-    AdapterDescription,
-    PipelineElementTemplateService,
-} from '@streampipes/platform-services';
+import { PipelineElementTemplateService } from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DialogService } from '@streampipes/shared-ui';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
 
 @Component({
-    selector: 'sp-specific-adapter-configuration',
-    templateUrl: './specific-adapter-configuration.component.html',
-    styleUrls: ['./specific-adapter-configuration.component.scss'],
+    selector: 'sp-adapter-settings',
+    templateUrl: './adapter-settings.component.html',
+    styleUrls: ['./adapter-settings.component.scss'],
 })
-export class SpecificAdapterConfigurationComponent
+export class AdapterSettingsComponent
     extends AdapterTemplateConfigurationDirective
     implements OnInit
 {

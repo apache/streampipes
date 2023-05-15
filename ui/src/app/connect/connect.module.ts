@@ -82,9 +82,9 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
 import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/adapter-details-overview/adapter-details-overview.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
-import { SpecificAdapterConfigurationComponent } from './components/adapter-configuration/specific-adapter-configuration/specific-adapter-configuration.component';
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
 import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adapter-actions-dialog.component';
+import { AdapterSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-settings.component';
 
 @NgModule({
     imports: [
@@ -145,8 +145,10 @@ import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adap
     exports: [PipelineElementRuntimeInfoComponent, ErrorMessageComponent],
     declarations: [
         AdapterConfigurationHeaderComponent,
+        AdapterConfigurationComponent,
         AdapterDescriptionComponent,
         AdapterStartedDialog,
+        AdapterSettingsComponent,
         DataMarketplaceComponent,
         DeleteAdapterDialogComponent,
         EventSchemaComponent,
@@ -165,7 +167,7 @@ import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adap
         PipelineElementRuntimeInfoComponent,
         TimestampPipe,
         EditCorrectionValueComponent,
-        SpecificAdapterConfigurationComponent,
+        AdapterConfigurationComponent,
         ConfigurationGroupComponent,
         ErrorMessageComponent,
         LoadingMessageComponent,
