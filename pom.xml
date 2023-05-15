@@ -188,7 +188,7 @@
 	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
-	<guice.version>5.1.0</guice.version>
+	<guice.version>7.0.0</guice.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>9.30.1</nimbus-jose-jwt.version>
