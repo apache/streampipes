@@ -113,7 +113,9 @@ public class SourcesManagement {
       eg.setTransportProtocols(
           Arrays.asList(SupportedProtocols.kafka(),
               SupportedProtocols.jms(),
-              SupportedProtocols.mqtt()));
+              SupportedProtocols.mqtt(),
+              SupportedProtocols.pulsar()
+              ));
       eg.setTransportFormats(Arrays.asList(TransportFormatGenerator.getTransportFormat()));
       ((SpDataSet) ds).setSupportedGrounding(eg);
     } else {

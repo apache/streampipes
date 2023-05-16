@@ -144,7 +144,7 @@ public enum BackendConfig {
 
   public MessagingSettings getMessagingSettings() {
     return config.getObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.class,
-        new MessagingSettings());
+        DefaultMessagingSettings.make());
   }
 
   public boolean isConfigured() {
