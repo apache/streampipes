@@ -52,7 +52,7 @@
 	<file-management.version>3.1.0</file-management.version>
 	<flink.version>1.13.5</flink.version>
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
-	<fst.version>2.57</fst.version>
+	<fst.version>3.0.4-jdk17</fst.version>
 	<geojson-jackson.version>1.14</geojson-jackson.version>
 	<guava.version>31.1-jre</guava.version>
 	<gson.version>2.10</gson.version>
