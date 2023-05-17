@@ -19,13 +19,13 @@ package org.apache.streampipes.integration.adapters;
 
 import org.junit.Test;
 
-public class AdapterTests {
+public class AdaptersTest {
 
 
 //  @Test
 //  public void testPulsarAdapter() throws Exception {
 //    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-//      testAdapter(pulsarAdapterTester);
+//      pulsarAdapterTester.run();
 //    }
 //  }
 

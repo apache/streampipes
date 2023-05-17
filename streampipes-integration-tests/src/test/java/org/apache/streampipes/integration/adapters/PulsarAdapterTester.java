@@ -17,82 +17,128 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-//public class PulsarAdapterTester {
-//  PulsarContainer pulsarContainer;
-//  private static final String TOPIC = "test-topic";
-//
-//  @Override
-//  public void startAdapterService() {
-//    if (Objects.equals(System.getenv("TEST_MODE"), "dev")) {
-//      pulsarContainer = new PulsarDevContainer();
-//    } else {
-//      pulsarContainer = new PulsarContainer();
-//    }
-//    pulsarContainer.start();
-//  }
-//
-//  @Override
-//  public AdapterDescription prepareAdapter() {
-//
-//    return AdapterConfigurationBuilder
-//        .create(PulsarProtocol.ID)
-////        .format(new JsonObjectFormat()
-////            .declareModel())
-//            .requiredTextParameter(
-//                Labels.withId(PulsarProtocol.PULSAR_BROKER_HOST),
-//                pulsarContainer.getBrokerHost())
-//            .requiredIntegerParameter(
-//                Labels.withId(PulsarProtocol.PULSAR_BROKER_PORT),
-//                pulsarContainer.getBrokerPort())
-//            .requiredTextParameter(
-//                Labels.withId(PulsarProtocol.PULSAR_TOPIC), TOPIC)
-//            .requiredTextParameter(
-//                Labels.withId(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME), "test-sub")
-//            .buildConfiguration();
-////        .addRules(List.of(new DebugSinkRuleDescription()))
-////        .build();
-//  }
-//
-//  @Override
-//  public List<Map<String, Object>> generateData() throws Exception {
-//    List<Map<String, Object>> result = new ArrayList<>();
-//    try (PulsarClient client = PulsarClient.builder().serviceUrl(
-//            String.format("pulsar://%s:%s", pulsarContainer.getBrokerHost(),
-//                pulsarContainer.getBrokerPort()))
-//        .build();
-//         Producer<byte[]> producer = client.newProducer().topic(TOPIC).create()) {
-//      ObjectMapper objectMapper = new ObjectMapper();
-//
-//      for (int i = 0; i < 3; i++) {
-//        var dataMap = new HashMap<String, Object>();
-//        dataMap.put("timestamp", i);
-//        dataMap.put("value", "test-data");
-//        byte[] data = objectMapper.writeValueAsBytes(dataMap);
-//        producer.sendAsync(data);
-//        result.add(dataMap);
-//      }
-//      producer.flush();
-//    }
-//    return result;
-//  }
-//
-//  @Override
-//  public void validateData(List<Map<String, Object>> expectedData) throws Exception {
-//    for (Map<String, Object> expected : expectedData) {
-//      Map<String, Object> actual = takeEvent();
-//      Assert.assertTrue(Maps.difference(expected, actual).areEqual());
-//    }
-//  }
-//
-//  @Override
-//  public void close() {
-//    if (pulsarContainer != null) {
-//      pulsarContainer.stop();
-//    }
-//    try {
-//      stopAdapter();
-//    } catch (AdapterException e) {
-//      throw new RuntimeException(e);
-//    }
-//  }
-//}
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
+import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.integration.containers.PulsarContainer;
+import org.apache.streampipes.integration.containers.PulsarDevContainer;
+import org.apache.streampipes.manager.template.AdapterTemplateHandler;
+import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+public class PulsarAdapterTester extends AdapterTesterBase {
+  PulsarContainer pulsarContainer;
+  private static final String TOPIC = "test-topic";
+
+  @Override
+  public void startAdapterService() {
+    if (Objects.equals(System.getenv("TEST_MODE"), "dev")) {
+      pulsarContainer = new PulsarDevContainer();
+    } else {
+      pulsarContainer = new PulsarContainer();
+    }
+    pulsarContainer.start();
+  }
+
+  @Override
+  public AdapterConfiguration prepareAdapter() {
+    var configuration = new PulsarProtocol().declareConfig();
+
+    Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
+    configs.put(PulsarProtocol.PULSAR_BROKER_HOST,
+        new PipelineElementTemplateConfig(true, true, pulsarContainer.getBrokerHost()));
+    configs.put(PulsarProtocol.PULSAR_BROKER_PORT,
+        new PipelineElementTemplateConfig(true, false, pulsarContainer.getBrokerPort()));
+    configs.put(PulsarProtocol.PULSAR_TOPIC,
+        new PipelineElementTemplateConfig(true, false, TOPIC));
+    configs.put(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME,
+        new PipelineElementTemplateConfig(true, false, "test-sub"));
+
+    var template = new PipelineElementTemplate("name", "description", configs);
+
+    var desc =
+        new AdapterTemplateHandler(template,
+            configuration.getAdapterDescription(),
+            true)
+            .applyTemplateOnPipelineElement();
+
+    ((StaticPropertyAlternatives) (desc)
+        .getConfig()
+        .get(4))
+        .getAlternatives()
+        .get(0)
+        .setSelected(true);
+
+    return configuration;
+  }
+
+  @Override
+  public AdapterInterface getAdapterInstance() {
+    return new PulsarProtocol();
+  }
+
+  @Override
+  public List<Map<String, Object>> getTestEvents() {
+    List<Map<String, Object>> result = new ArrayList<>();
+
+    for (int i = 0; i < 3; i++) {
+      result.add(
+          Map.of(
+              "timestamp", i,
+              "value", "test-data")
+      );
+    }
+
+    return result;
+  }
+
+  @Override
+  public void publishEvents(List<Map<String, Object>> events) {
+    try (PulsarClient client = PulsarClient.builder().serviceUrl(
+            String.format("pulsar://%s:%s", pulsarContainer.getBrokerHost(),
+                pulsarContainer.getBrokerPort()))
+        .build();
+         Producer<byte[]> producer = client.newProducer().topic(TOPIC).create()) {
+      var objectMapper = new ObjectMapper();
+
+      events.forEach(event -> {
+        try {
+          var serializedEvent = objectMapper.writeValueAsBytes(event);
+          producer.sendAsync(serializedEvent);
+        } catch (JsonProcessingException e) {
+          throw new RuntimeException(e);
+        }
+      });
+
+      producer.flush();
+    } catch (PulsarClientException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void close() {
+    if (pulsarContainer != null) {
+      pulsarContainer.stop();
+    }
+    try {
+      stopAdapter();
+    } catch (AdapterException e) {
+      throw new RuntimeException(e);
+    }
+  }
+}

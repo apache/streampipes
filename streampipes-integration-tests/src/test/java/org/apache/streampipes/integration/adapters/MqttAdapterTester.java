@@ -67,9 +67,8 @@ public class MqttAdapterTester extends AdapterTesterBase {
     Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
     configs.put(MqttConnectUtils.TOPIC,
         new PipelineElementTemplateConfig(true, true, TOPIC));
-    var url = mosquittoContainer.getBrokerUrl();
     configs.put(MqttConnectUtils.BROKER_URL,
-        new PipelineElementTemplateConfig(true, false, url));
+        new PipelineElementTemplateConfig(true, false, mosquittoContainer.getBrokerUrl()));
 
     var template = new PipelineElementTemplate("name", "description", configs);
 
@@ -79,6 +78,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
             true)
             .applyTemplateOnPipelineElement();
 
+    // Set authentication mode to unauthenticated
     ((StaticPropertyAlternatives) desc
         .getConfig()
         .get(1))
@@ -86,6 +86,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
         .get(0)
         .setSelected(true);
 
+    // Set format to Json
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
         .get(3))
@@ -118,7 +119,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
 
 
   @Override
-  public void publishEvents(List<Map<String, Object>> events) throws Exception {
+  public void publishEvents(List<Map<String, Object>> events) {
     var publisher = getMqttPublisher();
     var objectMapper = new ObjectMapper();
 
