@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-public class PulsarAdapterTester {
+//public class PulsarAdapterTester {
 //  PulsarContainer pulsarContainer;
 //  private static final String TOPIC = "test-topic";
 //
@@ -34,11 +34,10 @@ public class PulsarAdapterTester {
 //  @Override
 //  public AdapterDescription prepareAdapter() {
 //
-//    return GenericDataStreamAdapterBuilder
+//    return AdapterConfigurationBuilder
 //        .create(PulsarProtocol.ID)
-//        .format(new JsonObjectFormat()
-//            .declareModel())
-//        .protocol(ProtocolDescriptionBuilder.create(PulsarProtocol.ID)
+////        .format(new JsonObjectFormat()
+////            .declareModel())
 //            .requiredTextParameter(
 //                Labels.withId(PulsarProtocol.PULSAR_BROKER_HOST),
 //                pulsarContainer.getBrokerHost())
@@ -49,9 +48,9 @@ public class PulsarAdapterTester {
 //                Labels.withId(PulsarProtocol.PULSAR_TOPIC), TOPIC)
 //            .requiredTextParameter(
 //                Labels.withId(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME), "test-sub")
-//            .build())
-//        .addRules(List.of(new DebugSinkRuleDescription()))
-//        .build();
+//            .buildConfiguration();
+////        .addRules(List.of(new DebugSinkRuleDescription()))
+////        .build();
 //  }
 //
 //  @Override
@@ -96,4 +95,4 @@ public class PulsarAdapterTester {
 //      throw new RuntimeException(e);
 //    }
 //  }
-}
+//}

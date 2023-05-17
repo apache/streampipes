@@ -17,26 +17,22 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-public class AdaptersTest {
-//  public void testAdapter(AdapterTesterBase adapterTester) throws Exception {
-//    adapterTester.startAdapterService();
-//    AdapterDescription adapterDescription = adapterTester.prepareAdapter();
-//    adapterTester.startAdapter(adapterDescription);
-//    List<Map<String, Object>> data = adapterTester.generateData();
-//    adapterTester.validateData(data);
-//  }
-//
+import org.junit.Test;
+
+public class AdapterTests {
+
+
 //  @Test
 //  public void testPulsarAdapter() throws Exception {
 //    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
 //      testAdapter(pulsarAdapterTester);
 //    }
 //  }
-//
-//  @Test
-//  public void testMqttAdapter() throws Exception {
-//    try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
-//      testAdapter(mqttAdapterTester);
-//    }
-//  }
+
+  @Test
+  public void testMqttAdapter() throws Exception {
+    try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
+      mqttAdapterTester.run();
+    }
+  }
 }
