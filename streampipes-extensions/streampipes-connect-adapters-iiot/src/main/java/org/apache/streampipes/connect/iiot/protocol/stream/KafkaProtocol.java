@@ -165,6 +165,7 @@ public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     KafkaTransportProtocol protocol = new KafkaTransportProtocol();
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
     protocol.setKafkaPort(config.getKafkaPort());
     protocol.setBrokerHostname(config.getKafkaHost());
     protocol.setTopicDefinition(new SimpleTopicDefinition(config.getTopic()));
