@@ -83,7 +83,7 @@
 	<jboss-logging-annotations.version>2.2.1.Final</jboss-logging-annotations.version>
 	<jboss-logging-processor.version>2.2.1.Final</jboss-logging-processor.version>
 	<jersey.version>3.1.0</jersey.version>
-	<jetbrains-annotations.version>16.0.2</jetbrains-annotations.version>
+	<jetbrains-annotations.version>24.0.1</jetbrains-annotations.version>
 	<jetty.version>10.0.14</jetty.version>
 	<jgrapht.version>1.5.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
@@ -139,7 +139,7 @@
 	<maven.compiler.source>17</maven.compiler.source>
 	<maven.compiler.target>17</maven.compiler.target>
 
-	<amqp-client.version>5.16.0</amqp-client.version>
+	<amqp-client.version>5.17.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.23</animal-sniffer-annotations.version>
 	<boofcv.version>0.42</boofcv.version>
 	<bcprov.version>1.70</bcprov.version>
@@ -178,7 +178,7 @@
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
-	<inlong.version>1.5.0</inlong.version>
+	<inlong.version>1.6.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 	<maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -188,7 +188,6 @@
 	<antlr4-runtime.version>4.11.1</antlr4-runtime.version>
 	<checker-qual.version>2.5.2</checker-qual.version>
 	<commons-collections4.version>4.4</commons-collections4.version>
-	<guice.version>5.1.0</guice.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>9.30.1</nimbus-jose-jwt.version>
@@ -541,12 +540,6 @@
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-core</artifactId>
 					<version>${maven.version}</version>
-					<exclusions>
-						<exclusion>
-							<groupId>com.google.inject</groupId>
-							<artifactId>guice</artifactId>
-						</exclusion>
-					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
@@ -1020,12 +1013,6 @@
 					<groupId>org.apache.qpid</groupId>
 					<artifactId>proton-j</artifactId>
 					<version>${proton-j.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.google.inject</groupId>
-					<artifactId>guice</artifactId>
-					<version>${guice.version}</version>
-					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.scala-lang.modules</groupId>

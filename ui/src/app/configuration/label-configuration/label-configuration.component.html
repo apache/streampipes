@@ -1,0 +1,94 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'labels'">
+    <div fxLayout="column" class="page-container-padding">
+        <sp-basic-header-title-component
+            title="Labels"
+        ></sp-basic-header-title-component>
+        <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="createLabelMode = true"
+            >
+                <i class="material-icons">add</i><span>&nbsp;New label</span>
+            </button>
+        </div>
+        <div *ngIf="createLabelMode">
+            <sp-edit-label
+                (cancelEmitter)="createLabelMode = false"
+                (saveEmitter)="saveLabel($event)"
+            ></sp-edit-label>
+        </div>
+
+        <sp-basic-inner-panel panelTitle="Available labels" class="mt-10">
+            <div
+                fxLayout="column"
+                *ngFor="let label of allLabels"
+                class="label-item"
+            >
+                <div
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="10px"
+                >
+                    <sp-label
+                        fxFlex="20"
+                        [labelText]="label.label"
+                        [labelBackground]="label.color"
+                    >
+                    </sp-label>
+                    <span fxFlex="50" *ngIf="!isEditMode(label._id)">{{
+                        label.description
+                    }}</span>
+                    <div fxFlex fxLayoutAlign="end center">
+                        <button
+                            mat-button
+                            mat-icon-button
+                            color="accent"
+                            (click)="editedLabels.push(label._id)"
+                            *ngIf="!isEditMode(label._id)"
+                        >
+                            <i class="material-icons">edit</i>
+                        </button>
+                        <button
+                            mat-button
+                            mat-icon-button
+                            color="warn"
+                            (click)="deleteLabel(label)"
+                        >
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </div>
+                </div>
+                <div fxLayout="column" *ngIf="isEditMode(label._id)">
+                    <sp-edit-label
+                        [editMode]="true"
+                        [showPreview]="false"
+                        [label]="label"
+                        (cancelEmitter)="removeEditedLabel(label._id)"
+                        (saveEmitter)="updateLabel(label)"
+                    >
+                    </sp-edit-label>
+                </div>
+            </div>
+        </sp-basic-inner-panel>
+    </div>
+</sp-basic-nav-tabs>
