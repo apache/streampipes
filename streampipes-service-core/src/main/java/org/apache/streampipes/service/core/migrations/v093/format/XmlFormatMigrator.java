@@ -21,11 +21,29 @@ package org.apache.streampipes.service.core.migrations.v093.format;
 import com.google.gson.JsonObject;
 
 public class XmlFormatMigrator implements FormatMigrator {
+  private final JsonObject formatDescription;
+
   public XmlFormatMigrator(JsonObject formatDescription) {
+    this.formatDescription = formatDescription;
   }
 
   @Override
   public void migrate(JsonObject newFormatProperties) {
+    var tagValue = this.formatDescription.getAsJsonObject()
+        .get("config").getAsJsonArray()
+        .get(0).getAsJsonObject()
+        .get("properties").getAsJsonObject()
+        .get("value").getAsString();
+    newFormatProperties
+        .getAsJsonObject("properties")
+        .get("staticProperties")
+        .getAsJsonArray()
+        .get(0)
+        .getAsJsonObject()
+        .get("properties")
+        .getAsJsonObject()
+        .addProperty("value", tagValue);
+
 
   }
 }

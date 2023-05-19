@@ -58,7 +58,7 @@ public class FileReplayAdapter implements AdapterInterface {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileReplayAdapter.class);
 
-  private static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.file";
+  private static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.file";
   private static final String REPLACE_TIMESTAMP = "replaceTimestamp";
   private static final String SPEED = "speed";
   private static final String FILE_PATH = "filePath";

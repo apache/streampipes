@@ -25,14 +25,18 @@ import com.google.gson.JsonPrimitive;
 
 import static org.apache.streampipes.service.core.migrations.v093.utils.DocumentKeys.ALTERNATIVES;
 import static org.apache.streampipes.service.core.migrations.v093.utils.DocumentKeys.INTERNAL_NAME;
+import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_ARRAY_KEY_NEW_KEY;
 
 public class JsonFormatMigrator implements FormatMigrator {
 
-  private String jsonFormatId;
+  private final String jsonFormatId;
+
+  private final JsonObject existingFormat;
 
   public JsonFormatMigrator(String jsonFormatId,
                             JsonObject existingFormat) {
     this.jsonFormatId = jsonFormatId;
+    this.existingFormat = existingFormat;
   }
 
   @Override
@@ -45,7 +49,25 @@ public class JsonFormatMigrator implements FormatMigrator {
         .forEach(al -> {
           if (al.getAsJsonObject().get(INTERNAL_NAME).getAsString().equals(jsonFormatId)) {
             al.getAsJsonObject().add("selected", new JsonPrimitive(true));
+
+            //  If the type is JSON_ARRAY set the value for the key in the configuration
+            if (this.jsonFormatId.equals(JSON_ARRAY_KEY_NEW_KEY)) {
+              var keyValue = this.existingFormat.getAsJsonObject()
+                  .get("config").getAsJsonArray()
+                  .get(0).getAsJsonObject()
+                  .get("properties").getAsJsonObject()
+                  .get("value").getAsString();
+              al.getAsJsonObject()
+                  .get("staticProperty").getAsJsonObject()
+                  .get("properties").getAsJsonObject()
+                  .get("staticProperties").getAsJsonArray()
+                  .get(0).getAsJsonObject()
+                  .get("properties").getAsJsonObject()
+                  .addProperty("value", keyValue);
+            }
           }
         });
+
+
   }
 }

@@ -22,12 +22,49 @@ import com.google.gson.JsonObject;
 
 public class CsvFormatMigrator implements FormatMigrator {
 
+  private final JsonObject formatDescription;
 
   public CsvFormatMigrator(JsonObject formatDescription) {
+    this.formatDescription = formatDescription;
   }
 
   @Override
   public void migrate(JsonObject newFormatProperties) {
 
+    // read value for delimter & header information
+    var delimiter = this.formatDescription.getAsJsonObject()
+        .get("config").getAsJsonArray()
+        .get(0).getAsJsonObject()
+        .get("properties").getAsJsonObject()
+        .get("value").getAsString();
+    var selectedHeader =  this.formatDescription.getAsJsonObject()
+        .get("config").getAsJsonArray()
+        .get(1).getAsJsonObject()
+        .getAsJsonObject("properties")
+        .getAsJsonArray("options")
+        .get(0)
+        .getAsJsonObject()
+        .get("selected")
+        .getAsBoolean();
+
+    // write values
+    newFormatProperties
+        .getAsJsonObject("properties")
+        .getAsJsonArray("staticProperties")
+        .get(0)
+        .getAsJsonObject()
+        .get("properties")
+        .getAsJsonObject()
+        .addProperty("value", delimiter);
+
+    newFormatProperties
+        .getAsJsonObject("properties")
+        .getAsJsonArray("staticProperties")
+        .get(1).getAsJsonObject()
+        .getAsJsonObject("properties")
+        .getAsJsonArray("options")
+        .get(0)
+        .getAsJsonObject()
+        .addProperty("selected", selectedHeader);
   }
 }
