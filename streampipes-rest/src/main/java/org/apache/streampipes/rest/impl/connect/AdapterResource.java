@@ -79,6 +79,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public Response updateAdapter(AdapterDescription adapterDescription) {
+    //TODO: The adapterDescription.eventGrouding.transportProtocols may be a array list with one null element
     String principalSid = getAuthenticatedUserSid();
     String username = getAuthenticatedUsername();
     LOG.info("User: " + username + " updates adapter " + adapterDescription.getElementId());
