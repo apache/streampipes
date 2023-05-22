@@ -28,11 +28,13 @@ import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ImageParser implements IParser {
 
@@ -54,23 +56,27 @@ public class ImageParser implements IParser {
   @Override
   public GuessSchema getGuessSchema(InputStream inputStream) throws ParseException {
     // validate that image can be parsed
-    parseImage(inputStream);
+    var image = parseImage(inputStream);
 
     return GuessSchemaBuilder.create()
         .property(EpProperties.imageProperty("image"))
+        .sample("image", image)
         .build();
   }
 
   @Override
   public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
     var image = parseImage(inputStream);
-    handler.handle(Map.of("image", image));
+    var event = new HashMap<String, Object>();
+    event.put("image", image);
+    handler.handle(event);
   }
 
   private String parseImage(InputStream inputStream) throws ParseException {
     byte[] bytes;
     try {
-      bytes = inputStream.readAllBytes();
+      bytes = IOUtils.toByteArray(inputStream);
+
       return Base64.getEncoder().encodeToString(bytes);
     } catch (IOException e) {
       throw new ParseException("Image could not be parsed", e);

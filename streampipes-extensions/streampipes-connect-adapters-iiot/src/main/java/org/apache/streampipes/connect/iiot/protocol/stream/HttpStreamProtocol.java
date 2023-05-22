@@ -30,6 +30,7 @@ import org.apache.streampipes.extensions.management.context.IAdapterRuntimeConte
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
@@ -42,10 +43,9 @@ import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.util.concurrent.ExecutionException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
 
@@ -62,7 +62,8 @@ public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
   private PollingSettings pollingSettings;
   private PullAdapterScheduler pullAdapterScheduler;
 
-  private BrokerEventProcessor processor;
+  private IEventCollector collector;
+  private IParser parser;
 
   public HttpStreamProtocol() {
   }
@@ -76,8 +77,7 @@ public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
     this.accessToken = "";
   }
 
-  private byte[] getDataFromEndpoint() throws ParseException {
-    byte[] result = null;
+  private InputStream getDataFromEndpoint() throws ParseException {
 
     try {
       Request request = Request.Get(url)
@@ -88,18 +88,19 @@ public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
         request.setHeader("Authorization", "Bearer " + this.accessToken);
       }
 
-      result = request
-          .execute().returnContent().asBytes();
+      var result = request
+          .execute().returnContent().asStream();
 
-    } catch (Exception e) {
+      if (result == null) {
+        throw new ParseException("Could not receive Data from file: " + url);
+      } else {
+        return result;
+      }
+
+    } catch (IOException e) {
       logger.error("Error while fetching data from URL: " + url, e);
       throw new ParseException("Error while fetching data from URL: " + url);
     }
-    if (result == null) {
-      throw new ParseException("Could not receive Data from file: " + url);
-    }
-
-    return result;
   }
 
   @Override
@@ -120,9 +121,9 @@ public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    this.processor = new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
-      collector.collect(event);
-    });
+    this.parser = extractor.selectedParser();
+
+    this.collector = collector;
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
   }
@@ -137,15 +138,17 @@ public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    byte[] dataInputStream = getDataFromEndpoint();
+    var dataInputStream = getDataFromEndpoint();
 
-    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(dataInputStream));
+    return extractor.selectedParser().getGuessSchema(dataInputStream);
   }
 
   @Override
-  public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
+  public void pullData() throws RuntimeException {
     var result = getDataFromEndpoint();
-    this.processor.onEvent(result);
+    parser.parse(result, (event ->
+        collector.collect(event))
+    );
   }
 
   @Override
