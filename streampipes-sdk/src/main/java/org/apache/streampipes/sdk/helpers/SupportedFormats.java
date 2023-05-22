@@ -54,16 +54,6 @@ public class SupportedFormats {
 
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messaging
-   * arriving in fast-serialization format
-   *
-   * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
-   */
-  public static TransportFormat fstFormat() {
-    return new TransportFormat(MessageFormat.FST);
-  }
-
-  /**
-   * Defines that a pipeline element (data processor or data sink) supports processing messaging
    * arriving in smile format
    *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.

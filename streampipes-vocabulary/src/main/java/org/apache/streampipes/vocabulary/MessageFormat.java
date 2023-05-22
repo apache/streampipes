@@ -24,7 +24,6 @@ public class MessageFormat {
 
   public static final String JSON = SEPA_NAMESPACE + "json";
   public static final String AVRO = SEPA_NAMESPACE + "avro";
-  public static final String FST = SEPA_NAMESPACE + "fst";
   public static final String SMILE = SEPA_NAMESPACE + "smile";
   public static final String CBOR = SEPA_NAMESPACE + "cbor";
   public static final String XML = SEPA_NAMESPACE + "xml";

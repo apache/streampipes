@@ -52,7 +52,7 @@ public class DefaultMessagingSettings {
 
     return new MessagingSettings(
         1638400, 5000012, 20, 2,
-        Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.FST, SpDataFormat.SMILE),
+        Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.SMILE),
         protocolList);
   }
 }

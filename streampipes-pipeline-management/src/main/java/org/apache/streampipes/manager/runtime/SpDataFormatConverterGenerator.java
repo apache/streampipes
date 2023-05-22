@@ -18,7 +18,6 @@
 package org.apache.streampipes.manager.runtime;
 
 import org.apache.streampipes.dataformat.cbor.CborDataFormatDefinition;
-import org.apache.streampipes.dataformat.fst.FstDataFormatDefinition;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatDefinition;
 import org.apache.streampipes.model.grounding.TransportFormat;
@@ -37,8 +36,6 @@ public class SpDataFormatConverterGenerator {
       return new SpDataFormatConverter(new JsonDataFormatDefinition());
     } else if (isCborFormat(transportFormat)) {
       return new SpDataFormatConverter(new CborDataFormatDefinition());
-    } else if (isFstFormat(transportFormat)) {
-      return new SpDataFormatConverter(new FstDataFormatDefinition());
     } else if (isSmileFormat(transportFormat)) {
       return new SpDataFormatConverter(new SmileDataFormatDefinition());
     } else {
@@ -48,10 +45,6 @@ public class SpDataFormatConverterGenerator {
 
   private boolean isSmileFormat(TransportFormat transportFormat) {
     return isFormat(MessageFormat.SMILE, transportFormat);
-  }
-
-  private boolean isFstFormat(TransportFormat transportFormat) {
-    return isFormat(MessageFormat.FST, transportFormat);
   }
 
   private boolean isCborFormat(TransportFormat transportFormat) {

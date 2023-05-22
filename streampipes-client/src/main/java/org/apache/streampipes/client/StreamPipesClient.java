@@ -39,7 +39,6 @@ import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
 import org.apache.streampipes.client.paths.ApiPath;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
@@ -59,7 +58,6 @@ public class StreamPipesClient implements SupportsPipelineApi,
   private StreamPipesClient(ClientConnectionUrlResolver connectionConfig) {
     this.config = new StreamPipesClientConfig(connectionConfig);
     this.registerDataFormat(new JsonDataFormatFactory());
-    this.registerDataFormat(new FstDataFormatFactory());
     this.registerDataFormat(new CborDataFormatFactory());
   }
 

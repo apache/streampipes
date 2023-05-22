@@ -42,15 +42,6 @@ public class Formats {
   }
 
   /**
-   * Defines the transport format Fast-Serializer used by a data stream at runtime.
-   *
-   * @return The {@link org.apache.streampipes.model.grounding.TransportFormat} of type FST.
-   */
-  public static TransportFormat fstFormat() {
-    return new TransportFormat(MessageFormat.FST);
-  }
-
-  /**
    * Defines the transport format SMILE used by a data stream at runtime.
    *
    * @return The {@link org.apache.streampipes.model.grounding.TransportFormat} of type SMILE.

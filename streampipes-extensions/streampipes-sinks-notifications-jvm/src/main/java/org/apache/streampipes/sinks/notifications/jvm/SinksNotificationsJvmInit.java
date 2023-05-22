@@ -19,7 +19,6 @@
 package org.apache.streampipes.sinks.notifications.jvm;
 
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
@@ -47,11 +46,12 @@ public class SinksNotificationsJvmInit extends ExtensionsModelSubmitter {
             new OneSignalController(),
             new SlackNotificationController(),
             new TelegramController())
-        .registerMessagingFormats(new JsonDataFormatFactory(),
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory())
-        .registerMessagingProtocols(new SpKafkaProtocolFactory(),
+            new SmileDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory())
         .addConfig(ConfigKeys.WEBSOCKET_PROTOCOL, "ws", "")

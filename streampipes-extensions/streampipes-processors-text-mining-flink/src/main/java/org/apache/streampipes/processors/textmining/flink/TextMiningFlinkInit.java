@@ -19,7 +19,6 @@
 package org.apache.streampipes.processors.textmining.flink;
 
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
@@ -47,8 +46,7 @@ public class TextMiningFlinkInit extends ExtensionsModelSubmitter {
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory())
+            new SmileDataFormatFactory())
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),

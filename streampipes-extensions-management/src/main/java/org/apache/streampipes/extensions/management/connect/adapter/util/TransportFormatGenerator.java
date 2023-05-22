@@ -42,7 +42,6 @@ public class TransportFormatGenerator {
   public static List<TransportFormat> getAllFormats() {
     return Arrays.asList(SupportedFormats.cborFormat(),
         SupportedFormats.jsonFormat(),
-        SupportedFormats.fstFormat(),
         SupportedFormats.smileFormat());
   }
 }

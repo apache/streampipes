@@ -52,7 +52,6 @@
 	<file-management.version>3.1.0</file-management.version>
 	<flink.version>1.13.5</flink.version>
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
-	<fst.version>3.0.4-jdk17</fst.version>
 	<geojson-jackson.version>1.14</geojson-jackson.version>
 	<guava.version>31.1-jre</guava.version>
 	<gson.version>2.10</gson.version>
@@ -360,11 +359,6 @@
 					<groupId>de.grundid.opendatalab</groupId>
 					<artifactId>geojson-jackson</artifactId>
 					<version>${geojson-jackson.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>de.ruedigermoeller</groupId>
-					<artifactId>fst</artifactId>
-					<version>${fst.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>io.rest-assured</groupId>
@@ -1360,7 +1354,6 @@
         <module>streampipes-data-explorer</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-cbor</module>
-        <module>streampipes-dataformat-fst</module>
         <module>streampipes-dataformat-json</module>
         <module>streampipes-dataformat-smile</module>
         <module>streampipes-extensions</module>

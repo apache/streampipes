@@ -24,7 +24,6 @@ public enum SpDataFormat {
 
   CBOR("Cbor", MessageFormat.CBOR),
   JSON("JSON", MessageFormat.JSON),
-  FST("Fast-Serializer", MessageFormat.FST),
   SMILE("Smile", MessageFormat.SMILE);
 
   private String name;
