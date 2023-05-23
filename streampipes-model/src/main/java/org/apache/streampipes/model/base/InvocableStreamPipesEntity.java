@@ -119,7 +119,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   }
 
   public void setSupportedGrounding(EventGrounding supportedGrounding) {
-    // (FIXME): front-end pass the supportedGrounding without Pulsar protocol included.
+    // TODO: front-end pass the supportedGrounding without Pulsar protocol included.
     this.supportedGrounding = supportedGrounding;
   }
 

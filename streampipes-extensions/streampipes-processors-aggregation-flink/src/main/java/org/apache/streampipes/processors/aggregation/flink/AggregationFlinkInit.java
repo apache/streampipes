@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.processors.aggregation.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.aggregation.flink.processor.aggregation.AggregationController;
 import org.apache.streampipes.processors.aggregation.flink.processor.count.CountController;
@@ -60,7 +61,8 @@ public class AggregationFlinkInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpPulsarProtocolFactory())
         .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
         .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
         .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")

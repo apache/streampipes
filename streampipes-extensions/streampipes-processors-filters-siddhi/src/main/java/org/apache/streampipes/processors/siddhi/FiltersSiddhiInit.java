@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.processors.siddhi.count.CountAggregation;
 import org.apache.streampipes.processors.siddhi.filter.NumericalFilterController;
 import org.apache.streampipes.processors.siddhi.listcollector.ListCollector;
@@ -63,7 +64,8 @@ public class FiltersSiddhiInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpPulsarProtocolFactory())
         .build();
   }
 }

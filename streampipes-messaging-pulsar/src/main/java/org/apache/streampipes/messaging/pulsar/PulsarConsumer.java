@@ -38,9 +38,13 @@ public class PulsarConsumer implements EventConsumer<PulsarTransportProtocol> {
   public void connect(PulsarTransportProtocol protocolSettings,
                       InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
     try {
-      // TODO: the pulsarClient may need to move to PulsarTransportProtocol
+      String serviceURL = "";
+      if (!protocolSettings.getBrokerHostname().startsWith("pulsar://")) {
+        // TODO: Add support for 'pulsar+ssl://'
+        serviceURL = "pulsar://" + protocolSettings.getBrokerHostname();
+      }
       pulsarClient = PulsarClient.builder()
-          .serviceUrl(protocolSettings.getBrokerHostname())
+          .serviceUrl(serviceURL)
           .build();
       consumer = pulsarClient.newConsumer()
           .topic(protocolSettings.getTopicDefinition().getActualTopicName())
@@ -69,6 +73,9 @@ public class PulsarConsumer implements EventConsumer<PulsarTransportProtocol> {
 
   @Override
   public boolean isConnected() {
+    if (consumer == null) {
+      return false;
+    }
     return consumer.isConnected();
   }
 }
