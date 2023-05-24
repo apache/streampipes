@@ -54,7 +54,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   @Override
   public void visit(AnyStaticProperty property) {
     if (hasKey(property)) {
-      List<String> value = (List<String>) getValue(property);
+      List<String> value = getValueAsList(property);
       property.getOptions().forEach(option -> {
         option.setSelected(value.stream().anyMatch(v -> v.equals(option.getName())));
       });
@@ -195,6 +195,10 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   private Object getValue(StaticProperty sp) {
     return ((Map<String, Object>) configs.get(sp.getInternalName())).get("value");
+  }
+
+  private List<String> getValueAsList(StaticProperty sp) {
+    return (List<String>) configs.get(sp.getInternalName());
   }
 
   private boolean hasKey(StaticProperty sp) {

@@ -106,14 +106,20 @@ export class PipelineElementTemplateService {
     getConfiguredAdapterForTemplate(
         templateId: string,
         adapter: AdapterDescription,
-    ): Observable<any> {
-        return this.http.post(
-            this.platformServicesCommons.apiBasePath +
-                '/pipeline-element-templates/' +
-                templateId +
-                '/adapter',
-            adapter,
-        );
+    ): Observable<AdapterDescription> {
+        return this.http
+            .post(
+                this.platformServicesCommons.apiBasePath +
+                    '/pipeline-element-templates/' +
+                    templateId +
+                    '/adapter',
+                adapter,
+            )
+            .pipe(
+                map(res =>
+                    AdapterDescription.fromData(res as AdapterDescription),
+                ),
+            );
     }
 
     storePipelineElementTemplate(template: PipelineElementTemplate) {
