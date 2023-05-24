@@ -16,17 +16,13 @@
  *
  */
 
-package org.apache.streampipes.extensions.management.connect.adapter.util;
-
-import org.apache.streampipes.extensions.api.connect.IPollingSettings;
+package org.apache.streampipes.extensions.api.connect;
 
 import java.util.concurrent.TimeUnit;
 
-public record PollingSettings(Integer value, TimeUnit timeUnit) implements IPollingSettings {
+public interface IPollingSettings {
 
-  public static PollingSettings from(TimeUnit timeUnit,
-                                     Integer value) {
-    return new PollingSettings(value, timeUnit);
-  }
+  Integer value();
 
+  TimeUnit timeUnit();
 }

@@ -16,8 +16,9 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters;
+package org.apache.streampipes.extensions.management.connect;
 
+import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
@@ -37,8 +38,6 @@ public class PullAdapterScheduler {
   protected static final Logger LOGGER = LoggerFactory.getLogger(PullAdapterScheduler.class);
 
   private ScheduledExecutorService scheduler;
-  private ScheduledExecutorService errorThreadscheduler;
-
 
   public PullAdapterScheduler() {
     super();
@@ -61,7 +60,7 @@ public class PullAdapterScheduler {
 
     scheduler = Executors.newScheduledThreadPool(1);
     ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
-        pullAdapter.getPollingInterval().getValue(), pullAdapter.getPollingInterval().getTimeUnit());
+        pullAdapter.getPollingInterval().value(), pullAdapter.getPollingInterval().timeUnit());
 
     try {
       handle.get();

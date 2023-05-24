@@ -20,8 +20,8 @@ package org.apache.streampipes.connect.iiot.adapters.opcua;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.connect.iiot.adapters.IPullAdapter;
-import org.apache.streampipes.connect.iiot.adapters.PullAdapterScheduler;
+import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
@@ -145,7 +145,7 @@ public class OpcUaAdapter implements AdapterInterface, IPullAdapter, SupportsRun
     boolean badStatusCodeReceived = false;
     boolean emptyValueReceived = false;
     List<DataValue> returnValues =
-        response.get(this.getPollingInterval().getValue(), this.getPollingInterval().getTimeUnit());
+        response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
     if (returnValues.size() == 0) {
       emptyValueReceived = true;
       LOG.warn("Empty value object returned - event will not be sent");

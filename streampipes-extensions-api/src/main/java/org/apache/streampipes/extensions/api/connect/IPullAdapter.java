@@ -16,9 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters;
-
-import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
+package org.apache.streampipes.extensions.api.connect;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -26,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 public interface IPullAdapter {
 
   void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException;
-  PollingSettings getPollingInterval();
+
+  IPollingSettings getPollingInterval();
 
 }

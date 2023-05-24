@@ -20,8 +20,8 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.connect.iiot.adapters.IPullAdapter;
-import org.apache.streampipes.connect.iiot.adapters.PullAdapterScheduler;
+import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
