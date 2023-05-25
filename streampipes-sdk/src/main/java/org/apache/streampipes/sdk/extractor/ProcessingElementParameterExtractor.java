@@ -25,7 +25,8 @@ import org.apache.streampipes.model.output.CustomOutputStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProcessingElementParameterExtractor extends AbstractParameterExtractor<DataProcessorInvocation> implements IDataProcessorParameterExtractor {
+public class ProcessingElementParameterExtractor extends AbstractParameterExtractor<DataProcessorInvocation>
+    implements IDataProcessorParameterExtractor {
 
   public ProcessingElementParameterExtractor(DataProcessorInvocation sepaElement) {
     super(sepaElement);

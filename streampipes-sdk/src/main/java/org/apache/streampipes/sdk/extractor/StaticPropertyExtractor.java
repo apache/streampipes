@@ -25,7 +25,8 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSinkInvocation> implements IStaticPropertyExtractor {
+public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSinkInvocation>
+    implements IStaticPropertyExtractor {
 
   public StaticPropertyExtractor(DataSinkInvocation sepaElement) {
     super(sepaElement);

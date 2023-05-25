@@ -63,7 +63,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity> implements IParameterExtractor<T> {
+public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity>
+    implements IParameterExtractor<T> {
 
   protected T sepaElement;
   private TypeParser typeParser;
@@ -246,13 +247,13 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   private Boolean comparePropertyRuntimeType(EventProperty eventProperty,
-                                            Datatypes datatype) {
+                                             Datatypes datatype) {
     return comparePropertyRuntimeType(eventProperty, datatype, false);
   }
 
   private Boolean comparePropertyRuntimeType(EventProperty eventProperty,
-                                            Datatypes datatype,
-                                            boolean ignoreListElements) {
+                                             Datatypes datatype,
+                                             boolean ignoreListElements) {
     EventPropertyPrimitive testProperty = null;
     if (eventProperty instanceof EventPropertyList && !ignoreListElements) {
       testProperty = (EventPropertyPrimitive) ((EventPropertyList) eventProperty).getEventProperty();
