@@ -18,8 +18,8 @@
 package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.testcontainers.shaded.com.google.common.collect.Maps;
@@ -56,7 +56,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
     startAdapterService();
 
     // generate the AdapterConfiguration for the test adapter
-    var adapterConfiguration = prepareAdapter();
+    IAdapterConfiguration adapterConfiguration = prepareAdapter();
 
     // start the adapter instance
     adapter = startAdapter(adapterConfiguration);
@@ -78,7 +78,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
    * @return an instance of the adapter
    * @throws AdapterException when adapter can not be started
    */
-  public AdapterInterface startAdapter(AdapterConfiguration adapterConfiguration) throws AdapterException {
+  public AdapterInterface startAdapter(IAdapterConfiguration adapterConfiguration) throws AdapterException {
     var adapter = getAdapterInstance();
 
     var registeredParsers = adapterConfiguration.getSupportedParsers();
@@ -104,7 +104,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
    * Create the AdapterConfiguration that initializes the adapter instance
    * @return AdapterConfiguration
    */
-  public abstract AdapterConfiguration prepareAdapter() throws AdapterException;
+  public abstract IAdapterConfiguration prepareAdapter() throws AdapterException;
 
   /**
    * Create an instance of the adpater

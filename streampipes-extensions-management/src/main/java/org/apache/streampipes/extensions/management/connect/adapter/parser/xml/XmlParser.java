@@ -19,9 +19,9 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.xml;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
-import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -87,7 +87,7 @@ public class XmlParser implements IParser {
   }
 
   @Override
-  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
+  public void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException {
     var events = getEvents(inputStream);
 
     events.forEach(event -> {

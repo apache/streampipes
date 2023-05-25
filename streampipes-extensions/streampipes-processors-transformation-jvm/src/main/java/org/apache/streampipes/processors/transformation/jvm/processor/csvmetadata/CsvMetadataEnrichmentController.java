@@ -20,6 +20,8 @@ package org.apache.streampipes.processors.transformation.jvm.processor.csvmetada
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
@@ -32,9 +34,7 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -108,7 +108,7 @@ public class CsvMetadataEnrichmentController
 
   @Override
   public List<Option> resolveOptions(String requestId,
-                                     StaticPropertyExtractor parameterExtractor) {
+                                     IStaticPropertyExtractor parameterExtractor) {
     try {
       String fileContents = getFileContents(parameterExtractor);
       if (requestId.equals(FIELDS_TO_APPEND_KEY)) {
@@ -181,7 +181,7 @@ public class CsvMetadataEnrichmentController
         .collect(Collectors.toList());
   }
 
-  private String getFileContents(AbstractParameterExtractor<?> extractor) {
+  private String getFileContents(IParameterExtractor<?> extractor) {
     String filename = extractor.selectedFilename(CSV_FILE_KEY);
     return getStreamPipesClientInstance().fileApi().getFileContentAsString(filename);
   }

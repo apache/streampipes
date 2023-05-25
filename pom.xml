@@ -1409,6 +1409,7 @@
         <module>streampipes-integration-tests</module>
 		<module>streampipes-rest-extensions</module>
         <module>streampipes-extensions/streampipes-connectors-influx</module>
+        <module>streampipes-client-api</module>
     </modules>
 
     <profiles>

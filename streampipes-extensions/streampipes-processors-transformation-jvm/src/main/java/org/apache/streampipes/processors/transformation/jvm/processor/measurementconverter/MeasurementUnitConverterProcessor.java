@@ -20,6 +20,7 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -31,7 +32,6 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticP
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.PropertyRequirementsBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
@@ -125,7 +125,8 @@ public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public List<Option> resolveOptions(String staticPropertyInternalName, StaticPropertyExtractor parameterExtractor) {
+  public List<Option> resolveOptions(String staticPropertyInternalName,
+                                     IStaticPropertyExtractor parameterExtractor) {
     try {
       String selector = parameterExtractor.mappingPropertyValue(CONVERT_PROPERTY);
       EventProperty linkedEventProperty = parameterExtractor.getEventPropertyBySelector(selector);

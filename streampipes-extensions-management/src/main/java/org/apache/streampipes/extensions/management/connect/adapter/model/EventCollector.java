@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model;
 
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterPipelineGenerator;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 
 import java.util.Map;
 

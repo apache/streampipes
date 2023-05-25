@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
@@ -62,7 +63,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity> {
+public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity> implements IParameterExtractor<T> {
 
   protected T sepaElement;
   private TypeParser typeParser;
@@ -72,6 +73,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     this.typeParser = TypeParser.newBuilder().build();
   }
 
+  @Override
   public String measurementUnit(String runtimeName, Integer streamIndex) {
     return sepaElement
         .getInputStreams()
@@ -87,6 +89,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .toString();
   }
 
+  @Override
   public String inputTopic(Integer streamIndex) {
     return sepaElement
         .getInputStreams()
@@ -97,6 +100,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .getActualTopicName();
   }
 
+  @Override
   public Object singleValueParameter(EventPropertyPrimitive targetType, String internalName) {
     String value = singleValueParameter(internalName, String.class);
 
@@ -113,28 +117,34 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     }
   }
 
+  @Override
   public <V> V singleValueParameter(String internalName, Class<V> targetClass) {
     return typeParser.parse(getStaticPropertyByName(internalName, FreeTextStaticProperty.class)
         .getValue(), targetClass);
   }
 
+  @Override
   public String textParameter(String internalName) {
     return singleValueParameter(internalName, String.class);
   }
 
+  @Override
   public String secretValue(String internalName) {
     return (getStaticPropertyByName(internalName, SecretStaticProperty.class)
         .getValue());
   }
 
+  @Override
   public boolean slideToggleValue(String internalName) {
     return (getStaticPropertyByName(internalName, SlideToggleStaticProperty.class)).isSelected();
   }
 
+  @Override
   public String codeblockValue(String internalName) {
     return getStaticPropertyByName(internalName, CodeInputStaticProperty.class).getValue();
   }
 
+  @Override
   public String selectedColor(String internalName) {
     return getStaticPropertyByName(internalName, ColorPickerStaticProperty.class).getSelectedColor();
   }
@@ -143,6 +153,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
    * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
+  @Override
   @Deprecated(since = "0.90.0", forRemoval = true)
   public String fileContentsAsString(String internalName) throws IOException {
     throw new IllegalArgumentException(
@@ -153,6 +164,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
    * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
+  @Override
   @Deprecated(since = "0.90.0", forRemoval = true)
   public byte[] fileContentsAsByteArray(String internalName) throws IOException {
     throw new IllegalArgumentException(
@@ -163,12 +175,14 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
    * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
+  @Override
   @Deprecated(since = "0.90.0", forRemoval = true)
   public InputStream fileContentsAsStream(String internalName) throws IOException {
     throw new IllegalArgumentException(
         "Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
   }
 
+  @Override
   public String selectedFilename(String internalName) {
     return getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
   }
@@ -177,6 +191,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
    * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
+  @Override
   @Deprecated(since = "0.90.0", forRemoval = true)
   public String selectedFileFetchUrl(String internalName) {
     throw new IllegalArgumentException(
@@ -198,15 +213,18 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   /**
    * @deprecated Use {@link #selectedSingleValue(String, Class)} instead
    */
+  @Override
   @Deprecated
   public <V> V selectedSingleValueFromRemote(String internalName, Class<V> targetClass) {
     return selectedSingleValue(internalName, targetClass);
   }
 
+  @Override
   public <V> V selectedSingleValue(String internalName, Class<V> targetClass) {
     return selectedSingleValue(internalName, targetClass, OneOfStaticProperty.class);
   }
 
+  @Override
   public <V> V selectedSingleValueInternalName(String internalName, Class<V> targetClass) {
     return typeParser.parse(getStaticPropertyByName(internalName, OneOfStaticProperty.class)
         .getOptions()
@@ -217,6 +235,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .getInternalName(), targetClass);
   }
 
+  @Override
   public List<StaticPropertyGroup> collectionMembersAsGroup(String internalName) {
     return getStaticPropertyByName(internalName, CollectionStaticProperty.class)
         .getMembers()
@@ -226,12 +245,12 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .collect(Collectors.toList());
   }
 
-  public Boolean comparePropertyRuntimeType(EventProperty eventProperty,
+  private Boolean comparePropertyRuntimeType(EventProperty eventProperty,
                                             Datatypes datatype) {
     return comparePropertyRuntimeType(eventProperty, datatype, false);
   }
 
-  public Boolean comparePropertyRuntimeType(EventProperty eventProperty,
+  private Boolean comparePropertyRuntimeType(EventProperty eventProperty,
                                             Datatypes datatype,
                                             boolean ignoreListElements) {
     EventPropertyPrimitive testProperty = null;
@@ -248,10 +267,12 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     }
   }
 
+  @Override
   public StaticProperty extractGroupMember(String internalName, StaticPropertyGroup group) {
     return getStaticPropertyByName(group.getStaticProperties(), internalName);
   }
 
+  @Override
   public <V> List<V> singleValueParameterFromCollection(String internalName, Class<V> targetClass) {
     CollectionStaticProperty collection = getStaticPropertyByName(internalName, CollectionStaticProperty.class);
     return collection
@@ -264,6 +285,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .collect(Collectors.toList());
   }
 
+  @Override
   public <V> List<V> selectedMultiValues(String internalName, Class<V> targetClass) {
     return getStaticPropertyByName(internalName, AnyStaticProperty.class)
         .getOptions()
@@ -274,6 +296,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .collect(Collectors.toList());
   }
 
+  @Override
   public <V> List<V> selectedTreeNodesInternalNames(String internalName,
                                                     Class<V> targetClass,
                                                     boolean onlyDataNodes) {
@@ -309,11 +332,13 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     }
   }
 
+  @Override
   public <W extends StaticProperty> W getStaticPropertyByName(String internalName, Class<W>
       spType) {
     return spType.cast(getStaticPropertyByName(internalName));
   }
 
+  @Override
   public StaticProperty getStaticPropertyByName(String name) {
     return getStaticPropertyByName(sepaElement.getStaticProperties(), name);
   }
@@ -347,10 +372,12 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .getStaticProperty();
   }
 
+  @Override
   public String mappingPropertyValue(String staticPropertyName) {
     return getPropertySelectorFromUnaryMapping(staticPropertyName);
   }
 
+  @Override
   public List<String> getUnaryMappingsFromCollection(String collectionStaticPropertyName) {
     CollectionStaticProperty collection =
         getStaticPropertyByName(collectionStaticPropertyName, CollectionStaticProperty.class);
@@ -363,10 +390,12 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<String> mappingPropertyValues(String staticPropertyName) {
     return getPropertySelectorsFromNaryMapping(staticPropertyName);
   }
 
+  @Override
   public String propertyDatatype(String runtimeName) {
     List<EventProperty> eventProperties = new ArrayList<>();
     for (SpDataStream is : sepaElement.getInputStreams()) {
@@ -394,6 +423,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return null;
   }
 
+  @Override
   public <V> V supportedOntologyPropertyValue(String domainPropertyInternalId, String
       propertyId, Class<V> targetClass) {
     DomainStaticProperty dsp = getStaticPropertyByName(domainPropertyInternalId,
@@ -409,6 +439,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
   }
 
+  @Override
   public List<EventProperty> getEventPropertiesBySelector(List<String> selectors) throws
       SpRuntimeException {
     List<EventProperty> properties = new ArrayList<>();
@@ -418,6 +449,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return properties;
   }
 
+  @Override
   public EventProperty getEventPropertyBySelector(String selector) throws SpRuntimeException {
     SpDataStream input = getStreamBySelector(selector);
 
@@ -431,6 +463,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     }
   }
 
+  @Override
   public String getEventPropertyTypeBySelector(String selector) throws SpRuntimeException {
 
     EventProperty eventProperty = getEventPropertyBySelector(selector);
@@ -469,6 +502,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return selector.split(PropertySelectorConstants.PROPERTY_DELIMITER)[0];
   }
 
+  @Override
   public List<EventProperty> getNoneInputStreamEventPropertySubset(List<String> propertySelectors) {
     List<EventProperty> properties = new ArrayList<>();
     for (SpDataStream stream : sepaElement.getInputStreams()) {
@@ -493,6 +527,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
 
+  @Override
   public List<EventProperty> getInputStreamEventPropertySubset(List<String> propertySelectors) {
     List<EventProperty> properties = new ArrayList<>();
     for (SpDataStream stream : sepaElement.getInputStreams()) {
@@ -543,6 +578,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return property.map(MappingPropertyNary::getSelectedProperties).orElse(new ArrayList<>());
   }
 
+  @Override
   public String selectedAlternativeInternalId(String alternativesInternalId) {
     StaticPropertyAlternatives alternatives = getStaticPropertyByName(alternativesInternalId,
         StaticPropertyAlternatives.class);
@@ -555,6 +591,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .findFirst().get();
   }
 
+  @Override
   public List<String> getEventPropertiesRuntimeNamesByScope(PropertyScope scope) {
     List<String> propertiesSelector = new ArrayList<>();
 
@@ -570,6 +607,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return propertiesSelector;
   }
 
+  @Override
   public List<String> getEventPropertiesSelectorByScope(PropertyScope scope) {
     List<String> propertiesSelector = new ArrayList<>();
 
@@ -585,6 +623,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return propertiesSelector;
   }
 
+  @Override
   public List<EventProperty> getEventPropertiesByScope(PropertyScope scope) {
     List<EventProperty> properties = new ArrayList<>();
     for (SpDataStream stream : sepaElement.getInputStreams()) {

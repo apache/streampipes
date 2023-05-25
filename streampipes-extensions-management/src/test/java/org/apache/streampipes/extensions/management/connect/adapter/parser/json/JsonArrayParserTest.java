@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserTest;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -74,7 +74,7 @@ public class JsonArrayParserTest extends ParserTest {
 
   @Test
   public void parse() {
-    var mockEventHandler = mock(IEventHandler.class);
+    var mockEventHandler = mock(IParserEventHandler.class);
     parser.parse(event, mockEventHandler);
 
     Map<String, Object> expectedEvent = new HashMap<>();

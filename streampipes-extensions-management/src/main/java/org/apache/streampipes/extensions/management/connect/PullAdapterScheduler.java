@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 
@@ -29,8 +29,6 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class PullAdapterScheduler {
@@ -39,13 +37,8 @@ public class PullAdapterScheduler {
 
   private ScheduledExecutorService scheduler;
 
-  public PullAdapterScheduler() {
-    super();
-  }
-
-
-  private void executeAdapterLogic(IPullAdapter pullAdapter,
-                                   String adapterElementId) {
+  public void schedule(IPullAdapter pullAdapter,
+                       String adapterElementId) {
     final Runnable task = () -> {
       try {
         pullAdapter.pullData();
@@ -59,23 +52,8 @@ public class PullAdapterScheduler {
     };
 
     scheduler = Executors.newScheduledThreadPool(1);
-    ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
+    scheduler.scheduleAtFixedRate(task, 1,
         pullAdapter.getPollingInterval().value(), pullAdapter.getPollingInterval().timeUnit());
-
-    try {
-      handle.get();
-    } catch (ExecutionException | InterruptedException e) {
-      LOGGER.error("Error", e);
-    }
-  }
-
-  public void schedule(IPullAdapter pullAdapter,
-                       String adapterElementId) {
-
-    final Runnable errorThread = () -> this.executeAdapterLogic(pullAdapter, adapterElementId);
-
-    scheduler = Executors.newScheduledThreadPool(1);
-    scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
   }
 
   public void shutdown() {

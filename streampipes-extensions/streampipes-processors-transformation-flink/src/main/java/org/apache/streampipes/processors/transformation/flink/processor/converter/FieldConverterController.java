@@ -19,6 +19,7 @@ package org.apache.streampipes.processors.transformation.flink.processor.convert
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
@@ -32,7 +33,6 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -90,7 +90,7 @@ public class FieldConverterController extends
   }
 
   @Override
-  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+  public List<Option> resolveOptions(String requestId, IStaticPropertyExtractor parameterExtractor) {
     String fieldSelector = parameterExtractor.mappingPropertyValue(CONVERT_PROPERTY);
     try {
       EventProperty property = parameterExtractor.getEventPropertyBySelector(fieldSelector);

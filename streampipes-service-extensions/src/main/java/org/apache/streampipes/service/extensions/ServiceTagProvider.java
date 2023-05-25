@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.service.extensions;
 
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.util.ServiceDefinitionUtil;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;

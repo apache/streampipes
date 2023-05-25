@@ -19,9 +19,9 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.IParser;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

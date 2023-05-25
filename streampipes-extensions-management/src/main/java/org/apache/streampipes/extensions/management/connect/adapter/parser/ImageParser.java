@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
-import org.apache.streampipes.model.connect.adapter.IParser;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -65,7 +65,7 @@ public class ImageParser implements IParser {
   }
 
   @Override
-  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
+  public void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException {
     var image = parseImage(inputStream);
     var event = new HashMap<String, Object>();
     event.put("image", image);

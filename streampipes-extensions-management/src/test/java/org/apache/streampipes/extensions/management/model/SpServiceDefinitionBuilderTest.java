@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.extensions.management.model;
 
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 
 import org.junit.Test;
 
@@ -46,7 +46,7 @@ public class SpServiceDefinitionBuilderTest {
   private static class TestAdapter implements AdapterInterface {
 
     @Override
-    public AdapterConfiguration declareConfig() {
+    public IAdapterConfiguration declareConfig() {
       return null;
     }
 

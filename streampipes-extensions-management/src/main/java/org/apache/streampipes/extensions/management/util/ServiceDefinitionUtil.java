@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.extensions.management.util;
 
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;

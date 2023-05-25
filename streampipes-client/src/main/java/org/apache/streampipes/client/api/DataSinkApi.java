@@ -17,20 +17,21 @@
  */
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.client.annotation.NotYetImplemented;
-import org.apache.streampipes.client.live.EventProcessor;
-import org.apache.streampipes.client.live.KafkaConfig;
+import org.apache.streampipes.client.api.annotation.NotYetImplemented;
+import org.apache.streampipes.client.api.live.EventProcessor;
+import org.apache.streampipes.client.api.live.IKafkaConfig;
 import org.apache.streampipes.client.live.SubscriptionManager;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.List;
 import java.util.Optional;
 
 public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
-    implements CRUDApi<String, DataSinkInvocation> {
+    implements IDataSinkApi {
 
   public DataSinkApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataSinkInvocation.class);
@@ -69,8 +70,9 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
    * @param sink     The data sink to subscribe to
    * @param callback The callback where events will be received
    */
-  public SpKafkaConsumer subscribe(DataSinkInvocation sink,
-                                   EventProcessor callback) {
+  @Override
+  public EventConsumer<KafkaTransportProtocol> subscribe(DataSinkInvocation sink,
+                                                         EventProcessor callback) {
     return new SubscriptionManager(clientConfig,
         sink.getInputStreams().get(0).getEventGrounding(), callback).subscribe();
   }
@@ -82,13 +84,15 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
    * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
    * @param callback    The callback where events will be received
    */
-  public SpKafkaConsumer subscribe(DataSinkInvocation sink,
-                                   KafkaConfig kafkaConfig,
+  @Override
+  public EventConsumer<KafkaTransportProtocol> subscribe(DataSinkInvocation sink,
+                                   IKafkaConfig kafkaConfig,
                                    EventProcessor callback) {
     return new SubscriptionManager(clientConfig, kafkaConfig,
         sink.getInputStreams().get(0).getEventGrounding(), callback).subscribe();
   }
 
+  @Override
   public DataSinkInvocation getDataSinkForPipelineElement(String templateId, DataSinkInvocation pipelineElement) {
     StreamPipesApiPath path = StreamPipesApiPath.fromBaseApiPath()
         .addToPath("pipeline-element-templates")

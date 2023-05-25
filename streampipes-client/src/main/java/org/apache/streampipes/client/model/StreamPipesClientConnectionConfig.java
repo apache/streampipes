@@ -17,7 +17,8 @@
  */
 package org.apache.streampipes.client.model;
 
-import org.apache.streampipes.client.credentials.CredentialsProvider;
+import org.apache.streampipes.client.api.config.ClientConnectionConfigResolver;
+import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 
 public class StreamPipesClientConnectionConfig implements ClientConnectionConfigResolver {
 

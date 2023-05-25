@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -121,7 +121,7 @@ public class CsvParserTest extends ParserTest {
   @Test
   public void parseOneEvent() {
     var event = toStream("k1;k2\nv1;2");
-    var mockEventHandler = mock(IEventHandler.class);
+    var mockEventHandler = mock(IParserEventHandler.class);
 
     var parser = new CsvParser(true, ';');
     parser.parse(event, mockEventHandler);
@@ -135,7 +135,7 @@ public class CsvParserTest extends ParserTest {
   @Test
   public void parseEventWithTimestamp() {
     var event = toStream("timestamp\n1683783150548");
-    var mockEventHandler = mock(IEventHandler.class);
+    var mockEventHandler = mock(IParserEventHandler.class);
 
     var parser = new CsvParser(true, ';');
     parser.parse(event, mockEventHandler);
@@ -148,7 +148,7 @@ public class CsvParserTest extends ParserTest {
   @Test
   public void parseMultiplEvent() {
     var event = toStream("k1;k2\nv1;2\nv2;3");
-    var mockEventHandler = mock(IEventHandler.class);
+    var mockEventHandler = mock(IParserEventHandler.class);
 
     var parser = new CsvParser(true, ';');
     parser.parse(event, mockEventHandler);

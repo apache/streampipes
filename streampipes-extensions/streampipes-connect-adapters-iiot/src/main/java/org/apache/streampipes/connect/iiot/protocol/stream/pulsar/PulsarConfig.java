@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 
 import static org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol.PULSAR_BROKER_HOST;
 import static org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol.PULSAR_BROKER_PORT;
@@ -39,7 +39,7 @@ public class PulsarConfig {
     this.subscriptionName = subscriptionName;
   }
 
-  public static PulsarConfig from(StaticPropertyExtractor extractor) {
+  public static PulsarConfig from(IStaticPropertyExtractor extractor) {
     String brokerHost = extractor.singleValueParameter(PULSAR_BROKER_HOST, String.class);
     Integer brokerPort = extractor.singleValueParameter(PULSAR_BROKER_PORT, Integer.class);
     String brokerUrl = brokerHost + ":" + brokerPort;

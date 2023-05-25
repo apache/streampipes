@@ -18,30 +18,35 @@
 
 package org.apache.streampipes.sdk.builder.adapter;
 
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class AdapterConfigurationBuilder extends
     AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterDescription> {
 
   private final List<IParser> supportedParsers;
+  private final Supplier<AdapterInterface> supplier;
 
-  protected AdapterConfigurationBuilder(String appId) {
+  protected AdapterConfigurationBuilder(String appId,
+                                        Supplier<AdapterInterface> supplier) {
     super(appId, new AdapterDescription());
     supportedParsers = new ArrayList<>();
+    this.supplier = supplier;
   }
 
-  public static AdapterConfigurationBuilder create(String appId) {
-    return new AdapterConfigurationBuilder(appId);
+  public static AdapterConfigurationBuilder create(String appId,
+                                                   Supplier<AdapterInterface> supplier) {
+    return new AdapterConfigurationBuilder(appId, supplier);
   }
 
   @Override
@@ -60,7 +65,7 @@ public class AdapterConfigurationBuilder extends
 
   public AdapterConfiguration buildConfiguration() {
     this.elementDescription.setConfig(getStaticProperties());
-    return new AdapterConfiguration(this.elementDescription, this.supportedParsers);
+    return new AdapterConfiguration(this.elementDescription, this.supportedParsers, supplier);
   }
 
   public AdapterConfigurationBuilder withSupportedParsers(IParser... parsers) {

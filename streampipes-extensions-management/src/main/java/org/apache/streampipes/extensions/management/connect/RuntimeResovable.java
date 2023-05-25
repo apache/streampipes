@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 
 import java.util.Map;

@@ -20,15 +20,17 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.modbus;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -38,7 +40,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -113,7 +114,7 @@ public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
    * @param extractor static property extractor
    * @throws AdapterException
    */
-  private void getConfigurations(StaticPropertyExtractor extractor) throws AdapterException {
+  private void getConfigurations(IStaticPropertyExtractor extractor) throws AdapterException {
 
     this.ip = extractor.singleValueParameter(PLC_IP, String.class);
     this.port = extractor.singleValueParameter(PLC_PORT, Integer.class);
@@ -172,7 +173,7 @@ public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
    *
    * @throws AdapterException
    */
-  private void before(StaticPropertyExtractor extractor) throws AdapterException {
+  private void before(IStaticPropertyExtractor extractor) throws AdapterException {
 
     // Extract user input
     getConfigurations(extractor);
@@ -271,8 +272,8 @@ public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
    * @return description of adapter
    */
   @Override
-  public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, Plc4xModbusAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)

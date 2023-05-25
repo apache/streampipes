@@ -20,19 +20,19 @@ package org.apache.streampipes.connect.iiot.adapters.ros;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -78,7 +78,7 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
 
   @Override
   public List<Option> resolveOptions(String requestId,
-                                     StaticPropertyExtractor extractor) {
+                                     IStaticPropertyExtractor extractor) {
     String rosBridgeHost = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
     Integer rosBridgePort = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);
 
@@ -91,8 +91,8 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, RosBridgeAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)
@@ -206,7 +206,7 @@ public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProv
     return ob.get("type").getAsString();
   }
 
-  private void getConfigurations(StaticPropertyExtractor extractor) {
+  private void getConfigurations(IStaticPropertyExtractor extractor) {
     this.host = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
     this.topic = extractor.selectedSingleValue(TOPIC_KEY, String.class);
     this.port = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);

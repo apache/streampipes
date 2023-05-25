@@ -23,7 +23,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.declarer.IFunctionConfig;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.StreamPipesErrorMessage;

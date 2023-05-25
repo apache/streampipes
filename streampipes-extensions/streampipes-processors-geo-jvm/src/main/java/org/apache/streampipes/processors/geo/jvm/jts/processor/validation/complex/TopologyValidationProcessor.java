@@ -19,7 +19,7 @@
 package org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.graph.DataProcessorDescription;

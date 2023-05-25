@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua.configuration;
 
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class SpOpcUaConfigBuilder {
    * @param extractor extractor for user inputs
    * @return {@link SpOpcUaConfig}  instance based on information from {@code extractor}
    */
-  public static SpOpcUaConfig from(StaticPropertyExtractor extractor) {
+  public static SpOpcUaConfig from(IStaticPropertyExtractor extractor) {
 
     String selectedAlternativeConnection =
         extractor.selectedAlternativeInternalId(OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL.name());

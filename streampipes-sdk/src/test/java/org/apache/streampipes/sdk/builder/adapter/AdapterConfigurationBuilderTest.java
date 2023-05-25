@@ -19,9 +19,9 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 
+import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.IParser;
 
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ public class AdapterConfigurationBuilderTest {
   @Test
   public void create() {
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id)
+        .create(id, null)
         .buildConfiguration();
 
     assertNotNull(adapterConfiguration);
@@ -53,7 +53,7 @@ public class AdapterConfigurationBuilderTest {
   public void withOneParser() {
     var expected = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id)
+        .create(id, null)
         .withSupportedParsers(expected)
         .buildConfiguration();
 
@@ -65,7 +65,7 @@ public class AdapterConfigurationBuilderTest {
     var parser1 = mock(IParser.class);
     var parser2 = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id)
+        .create(id, null)
         .withSupportedParsers(parser1, parser2)
         .buildConfiguration();
 
@@ -77,7 +77,7 @@ public class AdapterConfigurationBuilderTest {
     var parser1 = mock(IParser.class);
     var parser2 = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id)
+        .create(id, null)
         .withSupportedParsers(parser1)
         .withSupportedParsers(parser2)
         .buildConfiguration();
@@ -88,7 +88,7 @@ public class AdapterConfigurationBuilderTest {
   @Test
   public void withCategory() {
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id)
+        .create(id, null)
         .withCategory(AdapterType.Manufacturing)
         .buildConfiguration();
 

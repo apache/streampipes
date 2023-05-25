@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.init;
 
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class DeclarersSingletonTest {
     var testAdapter = mock(AdapterInterface.class);
     doAnswer(invocation ->
         AdapterConfigurationBuilder
-            .create(id)
+            .create(id, null)
             .buildConfiguration())
         .when(testAdapter)
         .declareConfig();

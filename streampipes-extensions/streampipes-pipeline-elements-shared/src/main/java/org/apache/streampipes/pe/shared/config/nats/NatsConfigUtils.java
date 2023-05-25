@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.pe.shared.config.nats;
 
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.nats.NatsConfig;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 public class NatsConfigUtils {
 
@@ -39,7 +39,7 @@ public class NatsConfigUtils {
   public static final String CONNECTION_PROPERTIES_GROUP = "connection-group";
   public static final String PROPERTIES_KEY = "properties";
 
-  public static NatsConfig from(StaticPropertyExtractor extractor) {
+  public static NatsConfig from(IParameterExtractor<?> extractor) {
     String subject = extractor.singleValueParameter(SUBJECT_KEY, String.class);
     String natsUrls = extractor.singleValueParameter(URLS_KEY, String.class);
     String authentication = extractor.selectedAlternativeInternalId(ACCESS_MODE);

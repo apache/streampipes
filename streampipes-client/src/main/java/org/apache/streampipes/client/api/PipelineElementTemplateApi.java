@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineElementTemplate>
-    implements CRUDApi<String, PipelineElementTemplate> {
+    implements IPipelineElementTemplateApi {
 
   public PipelineElementTemplateApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, PipelineElementTemplate.class);

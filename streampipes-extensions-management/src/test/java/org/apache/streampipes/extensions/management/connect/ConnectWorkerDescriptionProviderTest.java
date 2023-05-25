@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class ConnectWorkerDescriptionProviderTest {
     var testAdapter = mock(AdapterInterface.class);
     doAnswer(invocation ->
         AdapterConfigurationBuilder
-            .create(adapterId)
+            .create(adapterId, null)
             .buildConfiguration())
         .when(testAdapter)
         .declareConfig();
@@ -56,7 +57,7 @@ public class ConnectWorkerDescriptionProviderTest {
   @Test
   public void getAdapterDescriptions() {
     var expected = AdapterConfigurationBuilder
-        .create(adapterId)
+        .create(adapterId, null)
         .buildConfiguration()
         .getAdapterDescription();
 

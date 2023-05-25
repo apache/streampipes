@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
@@ -34,7 +35,7 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
             "StreamPipes Connect Worker Main",
             "", 8001)
 //        .registerAdapter(new GdeltAdapter())
-//        .registerAdapter(new CoindeskBitcoinAdapter())
+        .registerAdapter(new CoindeskBitcoinAdapter())
 //        .registerAdapter(new NetioRestAdapter())
 //        .registerAdapter(new NetioMQTTAdapter())
 //        .registerAdapter(new IexCloudNewsAdapter())

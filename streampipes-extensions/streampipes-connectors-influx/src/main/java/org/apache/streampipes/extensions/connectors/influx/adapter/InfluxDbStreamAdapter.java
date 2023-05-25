@@ -20,17 +20,17 @@ package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -59,8 +59,8 @@ public class InfluxDbStreamAdapter implements AdapterInterface {
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    var builder = AdapterConfigurationBuilder.create(ID, InfluxDbStreamAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN);
 
@@ -182,7 +182,7 @@ public class InfluxDbStreamAdapter implements AdapterInterface {
     return influxDbClient;
   }
 
-  private void getConfigurations(StaticPropertyExtractor extractor) {
+  private void getConfigurations(IStaticPropertyExtractor extractor) {
 
     pollingInterval = extractor.singleValueParameter(POLLING_INTERVAL, Integer.class);
     String replace = extractor.selectedSingleValueInternalName(InfluxDbClient.REPLACE_NULL_VALUES, String.class);

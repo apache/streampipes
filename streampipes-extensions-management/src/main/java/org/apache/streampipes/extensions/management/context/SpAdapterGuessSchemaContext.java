@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 
 public class SpAdapterGuessSchemaContext implements IAdapterGuessSchemaContext {
