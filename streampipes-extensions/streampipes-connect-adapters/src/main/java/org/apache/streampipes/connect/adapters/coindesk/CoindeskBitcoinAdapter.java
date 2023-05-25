@@ -19,7 +19,7 @@ package org.apache.streampipes.connect.adapters.coindesk;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.adapters.coindesk.model.CoindeskRawModel;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class CoindeskBitcoinAdapter implements AdapterInterface, IPullAdapter {
+public class CoindeskBitcoinAdapter implements StreamPipesAdapter, IPullAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.coindesk";
 

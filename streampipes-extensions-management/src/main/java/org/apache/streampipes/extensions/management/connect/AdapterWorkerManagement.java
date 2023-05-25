@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
@@ -82,7 +82,7 @@ public class AdapterWorkerManagement {
 
     String elementId = adapterDescription.getElementId();
 
-    AdapterInterface adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+    StreamPipesAdapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
     if (adapter != null) {
 

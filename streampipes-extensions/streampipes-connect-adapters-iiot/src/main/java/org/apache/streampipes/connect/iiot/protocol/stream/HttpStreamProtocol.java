@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IParser;
@@ -47,7 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
-public class HttpStreamProtocol implements AdapterInterface, IPullAdapter {
+public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
   private static final Logger logger = LoggerFactory.getLogger(HttpStreamProtocol.class);
 

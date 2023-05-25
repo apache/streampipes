@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -33,7 +33,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 
-public class MachineDataSimulatorAdapter implements AdapterInterface {
+public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
 
   private static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
   private static final String WAIT_TIME_MS = "wait-time-ms";

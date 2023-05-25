@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -54,7 +54,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class FileReplayAdapter implements AdapterInterface {
+public class FileReplayAdapter implements StreamPipesAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileReplayAdapter.class);
 

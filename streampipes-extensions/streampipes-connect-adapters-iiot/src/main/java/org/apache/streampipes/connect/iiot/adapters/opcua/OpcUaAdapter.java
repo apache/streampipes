@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
@@ -74,7 +74,7 @@ import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil
 import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_URL;
 import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.getSchema;
 
-public class OpcUaAdapter implements AdapterInterface, IPullAdapter, SupportsRuntimeConfig {
+public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.opcua";
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaAdapter.class);

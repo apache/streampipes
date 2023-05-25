@@ -23,7 +23,7 @@ import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -68,7 +68,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
+public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig {
 
   private static final Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
   KafkaConfig config;

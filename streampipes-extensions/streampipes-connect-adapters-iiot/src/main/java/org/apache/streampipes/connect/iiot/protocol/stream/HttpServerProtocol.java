@@ -18,7 +18,7 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -50,7 +50,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HttpServerProtocol implements AdapterInterface {
+public class HttpServerProtocol implements StreamPipesAdapter {
 
   private static final String ENDPOINT_NAME = "endpoint-name";
   private static final String CONFIGURE = "configure";

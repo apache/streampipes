@@ -19,7 +19,7 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -38,14 +38,14 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
   private List<IParser> supportedParsers;
 
   private AdapterDescription adapterDescription;
-  private Supplier<AdapterInterface> supplier;
+  private Supplier<StreamPipesAdapter> supplier;
 
   public AdapterConfiguration() {
   }
 
   public AdapterConfiguration(AdapterDescription adapterDescription,
                               List<IParser> supportedParsers,
-                              Supplier<AdapterInterface> supplier) {
+                              Supplier<StreamPipesAdapter> supplier) {
     this.adapterDescription = adapterDescription;
     this.supportedParsers = supportedParsers;
     this.supplier = supplier;
@@ -83,7 +83,7 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
   }
 
   @Override
-  public Supplier<AdapterInterface> getSupplier() {
+  public Supplier<StreamPipesAdapter> getSupplier() {
     return supplier;
   }
 

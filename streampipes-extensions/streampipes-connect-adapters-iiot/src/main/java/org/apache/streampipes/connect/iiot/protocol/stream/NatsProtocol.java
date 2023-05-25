@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -62,7 +62,7 @@ import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERN
 import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_GROUP;
 import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_KEY;
 
-public class NatsProtocol implements AdapterInterface {
+public class NatsProtocol implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.nats";
   private NatsConfig natsConfig;

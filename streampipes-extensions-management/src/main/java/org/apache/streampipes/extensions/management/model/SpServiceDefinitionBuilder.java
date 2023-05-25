@@ -18,7 +18,7 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -96,7 +96,7 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
-  public SpServiceDefinitionBuilder registerAdapter(AdapterInterface adapter) {
+  public SpServiceDefinitionBuilder registerAdapter(StreamPipesAdapter adapter) {
     this.serviceDefinition.addAdapter(adapter);
     return this;
   }

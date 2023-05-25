@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.service.extensions;
 
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.util.ServiceDefinitionUtil;
@@ -48,7 +48,7 @@ public class ServiceTagProvider {
   }
 
   private List<SpServiceTag> extractAdapterServiceTags() {
-    Collection<AdapterInterface> adapters = DeclarersSingleton.getInstance().getAdapters();
+    Collection<StreamPipesAdapter> adapters = DeclarersSingleton.getInstance().getAdapters();
     var tags = new ArrayList<>(ServiceDefinitionUtil.extractAppIdsFromAdapters(adapters));
     tags.add(DefaultSpServiceTags.CONNECT_WORKER);
 

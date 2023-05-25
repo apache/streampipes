@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.extensions.management.util;
 
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -51,7 +51,7 @@ public class ServiceDefinitionUtil {
     }
   }
 
-  public static List<SpServiceTag> extractAppIdsFromAdapters(Collection<AdapterInterface> adapters) {
+  public static List<SpServiceTag> extractAppIdsFromAdapters(Collection<StreamPipesAdapter> adapters) {
     return adapters
         .stream()
         .map(d -> SpServiceTag.create(

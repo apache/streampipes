@@ -21,7 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.iiot.protocol.stream.BrokerEventProcessor;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class PulsarProtocol implements AdapterInterface, SupportsRuntimeConfig {
+public class PulsarProtocol implements StreamPipesAdapter, SupportsRuntimeConfig {
 
   private static final Logger LOG = LoggerFactory.getLogger(PulsarProtocol.class);
 

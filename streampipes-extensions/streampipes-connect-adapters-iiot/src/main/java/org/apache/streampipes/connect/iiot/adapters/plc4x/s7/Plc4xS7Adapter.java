@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
@@ -66,7 +66,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Plc4xS7Adapter implements AdapterInterface, IPullAdapter, PlcReadResponseHandler {
+public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcReadResponseHandler {
 
   /**
    * A unique id to identify the Plc4xS7Adapter

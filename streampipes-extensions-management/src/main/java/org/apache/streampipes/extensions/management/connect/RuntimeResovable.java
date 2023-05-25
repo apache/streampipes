@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 
 import java.util.Map;
@@ -26,9 +26,9 @@ import java.util.Map;
 public class RuntimeResovable {
   private static final String SP_NS = "https://streampipes.org/vocabulary/v1/";
 
-  public static AdapterInterface getAdapter(String id) {
+  public static StreamPipesAdapter getAdapter(String id) {
     id = id.replaceAll("sp:", SP_NS);
-    Map<String, AdapterInterface> allAdapters = DeclarersSingleton.getInstance().getAdapterMap();
+    Map<String, StreamPipesAdapter> allAdapters = DeclarersSingleton.getInstance().getAdapterMap();
 
     if (allAdapters.containsKey(id)) {
       return allAdapters.get(id);

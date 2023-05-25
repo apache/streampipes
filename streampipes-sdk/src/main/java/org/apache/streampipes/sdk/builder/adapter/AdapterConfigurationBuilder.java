@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.sdk.builder.adapter;
 
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -35,17 +35,17 @@ public class AdapterConfigurationBuilder extends
     AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterDescription> {
 
   private final List<IParser> supportedParsers;
-  private final Supplier<AdapterInterface> supplier;
+  private final Supplier<StreamPipesAdapter> supplier;
 
   protected AdapterConfigurationBuilder(String appId,
-                                        Supplier<AdapterInterface> supplier) {
+                                        Supplier<StreamPipesAdapter> supplier) {
     super(appId, new AdapterDescription());
     supportedParsers = new ArrayList<>();
     this.supplier = supplier;
   }
 
   public static AdapterConfigurationBuilder create(String appId,
-                                                   Supplier<AdapterInterface> supplier) {
+                                                   Supplier<StreamPipesAdapter> supplier) {
     return new AdapterConfigurationBuilder(appId, supplier);
   }
 

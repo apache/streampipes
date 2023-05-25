@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.model;
 
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -43,7 +43,7 @@ public class SpServiceDefinitionBuilderTest {
     assertEquals(expected, result.getAdapters().get(0));
   }
 
-  private static class TestAdapter implements AdapterInterface {
+  private static class TestAdapter implements StreamPipesAdapter {
 
     @Override
     public IAdapterConfiguration declareConfig() {

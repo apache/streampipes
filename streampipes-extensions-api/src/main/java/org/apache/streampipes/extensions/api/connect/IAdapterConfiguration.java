@@ -28,7 +28,7 @@ public interface IAdapterConfiguration {
 
   AdapterDescription getAdapterDescription();
 
-  Supplier<AdapterInterface> getSupplier();
+  Supplier<StreamPipesAdapter> getSupplier();
 
   void setAdapterDescription(AdapterDescription adapterDescription);
 }

@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class InfluxDbStreamAdapter implements AdapterInterface {
+public class InfluxDbStreamAdapter implements StreamPipesAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxDbStreamAdapter.class);
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.influxdb.stream";

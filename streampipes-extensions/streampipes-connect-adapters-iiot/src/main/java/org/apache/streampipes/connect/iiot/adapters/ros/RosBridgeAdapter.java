@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.iiot.adapters.ros;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -56,7 +56,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class RosBridgeAdapter implements AdapterInterface, ResolvesContainerProvidedOptions {
+public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerProvidedOptions {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.ros";
 

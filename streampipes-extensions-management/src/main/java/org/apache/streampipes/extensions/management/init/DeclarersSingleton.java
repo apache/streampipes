@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
 import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
@@ -66,7 +66,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   private Map<String, TransportProtocol> supportedProtocols;
   private Map<String, TransportFormat> supportedFormats;
 
-  private Map<String, AdapterInterface> adapters;
+  private Map<String, StreamPipesAdapter> adapters;
 
   private String serviceId;
 
@@ -253,19 +253,19 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     return functions;
   }
 
-  public Collection<AdapterInterface> getAdapters() {
+  public Collection<StreamPipesAdapter> getAdapters() {
     return adapters.values();
   }
 
-  public Map<String, AdapterInterface> getAdapterMap() {
+  public Map<String, StreamPipesAdapter> getAdapterMap() {
     return adapters;
   }
 
-  public void setAdapters(List<AdapterInterface> adapters) {
+  public void setAdapters(List<StreamPipesAdapter> adapters) {
     adapters.forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
   }
 
-  public Optional<AdapterInterface> getAdapter(String id) {
+  public Optional<StreamPipesAdapter> getAdapter(String id) {
     return getAdapters().stream()
         .filter(adapter -> adapter.declareConfig()
             .getAdapterDescription()

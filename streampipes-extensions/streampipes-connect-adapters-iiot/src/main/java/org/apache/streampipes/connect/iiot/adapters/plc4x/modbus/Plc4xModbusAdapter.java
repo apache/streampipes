@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.modbus;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
@@ -65,7 +65,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class Plc4xModbusAdapter implements AdapterInterface, IPullAdapter {
+public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(Plc4xModbusAdapter.class);
   /**
