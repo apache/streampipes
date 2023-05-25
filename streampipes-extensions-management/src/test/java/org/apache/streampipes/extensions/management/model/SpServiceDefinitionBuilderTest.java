@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.extensions.management.model;
 
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
