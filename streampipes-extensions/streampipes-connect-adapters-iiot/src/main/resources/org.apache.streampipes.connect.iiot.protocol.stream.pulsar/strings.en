@@ -29,6 +29,4 @@ pulsar-topic.title=Topic
 pulsar-topic.description=Example: test.topic
 
 pulsar-subscription-name.title=Subscription Name
-pulsar-subscription-name.description=
-
-
+pulsar-subscription-name.description=Example: my-sub
