@@ -19,11 +19,11 @@ package org.apache.streampipes.connect.adapters.coindesk;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.adapters.coindesk.model.CoindeskRawModel;
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;

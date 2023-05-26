@@ -20,9 +20,9 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
