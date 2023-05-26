@@ -18,27 +18,37 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.sentencedetection;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class SentenceDetectionController extends StandaloneEventProcessingDeclarer<SentenceDetectionParameters> {
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class SentenceDetectionProcessor extends StreamPipesDataProcessor {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   private static final String BINARY_FILE_KEY = "binary-file";
+
+  private String detection;
+  private SentenceDetectorME sentenceDetector;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -59,16 +69,38 @@ public class SentenceDetectionController extends StandaloneEventProcessingDeclar
   }
 
   @Override
-  public ConfiguredEventProcessor<SentenceDetectionParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
+    byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
+    this.detection = parameters.extractor().mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    String filename = extractor.selectedFilename(BINARY_FILE_KEY);
-    byte[] fileContent = client.fileApi().getFileContent(filename);
-    String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
+    InputStream modelIn = new ByteArrayInputStream(fileContent);
+    SentenceModel model;
+    try {
+      model = new SentenceModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
 
-    SentenceDetectionParameters params = new SentenceDetectionParameters(graph, detection, fileContent);
-    return new ConfiguredEventProcessor<>(params, SentenceDetection::new);
+    sentenceDetector = new SentenceDetectorME(model);
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    String text = event.getFieldBySelector(detection).getAsPrimitive().getAsString();
+
+    String sentences[] = sentenceDetector.sentDetect(text);
+
+    for (String sentence : sentences) {
+      event.updateFieldBySelector(detection, sentence);
+      collector.collect(event);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }

@@ -18,15 +18,15 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.chunker;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.ListField;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.processors.textmining.jvm.processor.TextMiningUtil;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -34,16 +34,32 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class ChunkerController extends StandaloneEventProcessingDeclarer<ChunkerParameters> {
+import opennlp.tools.chunker.ChunkerME;
+import opennlp.tools.chunker.ChunkerModel;
+import opennlp.tools.util.Span;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+
+public class ChunkerProcessor extends StreamPipesDataProcessor {
 
   private static final String TAGS_FIELD_KEY = "tagsField";
   private static final String TOKENS_FIELD_KEY = "tokensField";
   static final String CHUNK_TYPE_FIELD_KEY = "chunkType";
   static final String CHUNK_FIELD_KEY = "chunk";
   private static final String BINARY_FILE_KEY = "binary-file";
+
+  private String tags;
+  private String tokens;
+  private ChunkerME chunker;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -76,17 +92,48 @@ public class ChunkerController extends StandaloneEventProcessingDeclarer<Chunker
   }
 
   @Override
-  public ConfiguredEventProcessor<ChunkerParameters> onInvocation(DataProcessorInvocation graph,
-                                                                  ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext context) throws SpRuntimeException {
+    this.tags = parameters.extractor().mappingPropertyValue(TAGS_FIELD_KEY);
+    this.tokens = parameters.extractor().mappingPropertyValue(TOKENS_FIELD_KEY);
+    String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
+    byte[] fileContent = context.getStreamPipesClient().fileApi().getFileContent(filename);
 
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    String filename = extractor.selectedFilename(BINARY_FILE_KEY);
-    byte[] fileContent = client.fileApi().getFileContent(filename);
+    InputStream modelIn = new ByteArrayInputStream(fileContent);
+    ChunkerModel model;
+    try {
+      model = new ChunkerModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
 
-    String tags = extractor.mappingPropertyValue(TAGS_FIELD_KEY);
-    String tokens = extractor.mappingPropertyValue(TOKENS_FIELD_KEY);
+    chunker = new ChunkerME(model);
+  }
 
-    ChunkerParameters params = new ChunkerParameters(graph, tags, tokens, fileContent);
-    return new ConfiguredEventProcessor<>(params, Chunker::new);
+  @Override
+  public void onEvent(Event event,
+                      SpOutputCollector collector) throws SpRuntimeException {
+    ListField tags = event.getFieldBySelector(this.tags).getAsList();
+    ListField tokens = event.getFieldBySelector(this.tokens).getAsList();
+
+
+    String[] tagsArray = tags.castItems(String.class).toArray(String[]::new);
+    String[] tokensArray = tokens.castItems(String.class).toArray(String[]::new);
+
+    Span[] spans = chunker.chunkAsSpans(tokensArray, tagsArray);
+
+    List<String> chunks = TextMiningUtil.extractSpans(spans, tokensArray);
+    String[] types = Arrays.stream(spans).map(Span::getType).toArray(String[]::new);
+
+    event.addField(ChunkerProcessor.CHUNK_TYPE_FIELD_KEY, types);
+    event.addField(ChunkerProcessor.CHUNK_FIELD_KEY, chunks);
+
+    collector.collect(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }

@@ -18,15 +18,14 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.partofspeech;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.ListField;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -34,15 +33,27 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<PartOfSpeechParameters> {
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class PartOfSpeechProcessor extends StreamPipesDataProcessor {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   static final String CONFIDENCE_KEY = "confidencePos";
   static final String TAG_KEY = "tagPos";
   private static final String BINARY_FILE_KEY = "binary-file";
+
+  private String detection;
+  private POSTaggerME posTagger;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -71,15 +82,39 @@ public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<Pa
   }
 
   @Override
-  public ConfiguredEventProcessor<PartOfSpeechParameters> onInvocation(DataProcessorInvocation graph,
-                                                                       ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
+    byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
+    this.detection = parameters.extractor().mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    String filename = extractor.selectedFilename(BINARY_FILE_KEY);
-    byte[] fileContent = client.fileApi().getFileContent(filename);
-    String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
+    InputStream modelIn = new ByteArrayInputStream(fileContent);
+    POSModel model;
+    try {
+      model = new POSModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
 
-    PartOfSpeechParameters params = new PartOfSpeechParameters(graph, detection, fileContent);
-    return new ConfiguredEventProcessor<>(params, PartOfSpeech::new);
+    posTagger = new POSTaggerME(model);
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    ListField text = event.getFieldBySelector(detection).getAsList();
+
+    String[] tags = posTagger.tag(text.castItems(String.class).toArray(String[]::new));
+    double[] confidence = posTagger.probs();
+
+
+    event.addField(PartOfSpeechProcessor.CONFIDENCE_KEY, confidence);
+    event.addField(PartOfSpeechProcessor.TAG_KEY, tags);
+
+    collector.collect(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
   }
 }
