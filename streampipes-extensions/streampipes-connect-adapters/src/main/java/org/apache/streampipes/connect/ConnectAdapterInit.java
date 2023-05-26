@@ -19,6 +19,8 @@
 package org.apache.streampipes.connect;
 
 import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
+import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
+import org.apache.streampipes.connect.adapters.iss.IssAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
@@ -45,8 +47,8 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
 //        .registerAdapter(new WikipediaEditedArticlesAdapter())
 //        .registerAdapter(new WikipediaNewArticlesAdapter())
 //        .registerAdapter(new ImageStreamAdapter())
-//        .registerAdapter(new IssAdapter())
-//        .registerAdapter(new FlicMQTTAdapter())
+        .registerAdapter(new IssAdapter())
+        .registerAdapter(new FlicMQTTAdapter())
 //        .registerAdapter(new TISensorTag())
         .build();
   }
