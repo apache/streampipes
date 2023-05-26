@@ -19,28 +19,33 @@
 package org.apache.streampipes.sinks.brokers.jvm.jms;
 
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
+import java.util.Map;
 
-  private static final String JMS_BROKER_SETTINGS_KEY = "broker-settings";
+public class JmsPublisherSink extends StreamPipesDataSink {
+
   private static final String TOPIC_KEY = "topic";
   private static final String HOST_KEY = "host";
   private static final String PORT_KEY = "port";
 
-//  private static final String JMS_HOST_URI = "http://schema.org/jmsHost";
-//  private static final String JMS_PORT_URI = "http://schema.org/jmsPort";
+  private ActiveMQPublisher publisher;
+  private JsonDataFormatDefinition jsonDataFormatDefinition;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -55,27 +60,43 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
         .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
         .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
         .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
-//            .requiredOntologyConcept(Labels.withId(JMS_BROKER_SETTINGS_KEY),
-//                    OntologyProperties.mandatory(JMS_HOST_URI),
-//                    OntologyProperties.mandatory(JMS_PORT_URI))
         .build();
   }
 
   @Override
-  public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph,
-                                                         DataSinkParameterExtractor extractor) {
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
-    String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
+    var extractor = parameters.extractor();
+    this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
 
     String jmsHost = extractor.singleValueParameter(HOST_KEY, String.class);
     Integer jmsPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
-//    String jmsHost = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_HOST_URI,
-//            String.class);
-//    Integer jmsPort = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_PORT_URI,
-//            Integer.class);
+    String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
-    JmsParameters params = new JmsParameters(graph, jmsHost, jmsPort, topic);
+    this.publisher = new ActiveMQPublisher();
+    JmsTransportProtocol jmsTransportProtocol =
+        new JmsTransportProtocol(jmsHost, jmsPort, topic);
+    this.publisher.connect(jmsTransportProtocol);
+    if (!this.publisher.isConnected()) {
+      throw new SpRuntimeException(
+          "Could not connect to JMS server " + jmsHost + " on Port: " + jmsPort
+              + " to topic: " + topic);
+    }
+  }
 
-    return new ConfiguredEventSink<>(params, JmsPublisher::new);
+  @Override
+  public void onEvent(Event inputEvent) throws SpRuntimeException {
+    try {
+      Map<String, Object> event = inputEvent.getRaw();
+      this.publisher.publish(jsonDataFormatDefinition.fromMap(event));
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    this.publisher.disconnect();
   }
 }
