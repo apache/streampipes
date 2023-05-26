@@ -20,9 +20,9 @@ package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
@@ -55,9 +55,6 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
   private Thread pollingThread;
   private int pollingInterval;
 
-  public InfluxDbStreamAdapter() {
-  }
-
   @Override
   public IAdapterConfiguration declareConfig() {
     var builder = AdapterConfigurationBuilder.create(ID, InfluxDbStreamAdapter::new)
@@ -79,6 +76,7 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    applyConfigurations(extractor.getStaticPropertyExtractor());
     pollingThread = new Thread(new PollingThread(this, pollingInterval, collector));
     pollingThread.start();
   }
@@ -98,7 +96,7 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    getConfigurations(extractor.getStaticPropertyExtractor());
+    applyConfigurations(extractor.getStaticPropertyExtractor());
     return influxDbClient.getSchema();
   }
 
@@ -182,7 +180,7 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
     return influxDbClient;
   }
 
-  private void getConfigurations(IStaticPropertyExtractor extractor) {
+  private void applyConfigurations(IStaticPropertyExtractor extractor) {
 
     pollingInterval = extractor.singleValueParameter(POLLING_INTERVAL, Integer.class);
     String replace = extractor.selectedSingleValueInternalName(InfluxDbClient.REPLACE_NULL_VALUES, String.class);
