@@ -18,22 +18,23 @@
 
 package org.apache.streampipes.sinks.databases.jvm.postgresql;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSqlParameters> {
+public class PostgreSqlSink extends StreamPipesDataSink {
 
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
@@ -45,32 +46,34 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
   private static final String SSL_ENABLED = "ssl_enabled";
   private static final String SSL_DISABLED = "ssl_disabled";
 
+  private PostgreSql postgreSql;
+
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.postgresql")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.DATABASE)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
-            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
-            .requiredSingleValueSelection(Labels.withId(SSL_MODE),
-                    Options.from(
-                      new Tuple2<>("Yes", SSL_ENABLED),
-                      new Tuple2<>("No", SSL_DISABLED)))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.DATABASE)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
+        .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
+        .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
+        .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
+        .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
+        .requiredSingleValueSelection(Labels.withId(SSL_MODE),
+            Options.from(
+                new Tuple2<>("Yes", SSL_ENABLED),
+                new Tuple2<>("No", SSL_DISABLED)))
+        .build();
   }
 
   @Override
-  public ConfiguredEventSink<PostgreSqlParameters> onInvocation(DataSinkInvocation graph,
-                                                                DataSinkParameterExtractor extractor) {
-
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
@@ -79,15 +82,26 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String sslSelection = extractor.selectedSingleValueInternalName(SSL_MODE, String.class);
 
-    PostgreSqlParameters params = new PostgreSqlParameters(graph,
-            hostname,
-            port,
-            dbName,
-            tableName,
-            user,
-            password,
-            sslSelection.equals(SSL_ENABLED));
+    PostgreSqlParameters params = new PostgreSqlParameters(parameters.getGraph(),
+        hostname,
+        port,
+        dbName,
+        tableName,
+        user,
+        password,
+        sslSelection.equals(SSL_ENABLED));
 
-    return new ConfiguredEventSink<>(params, PostgreSql::new);
+    this.postgreSql = new PostgreSql();
+    postgreSql.onInvocation(params);
+  }
+
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    postgreSql.onEvent(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    postgreSql.onDetach();
   }
 }

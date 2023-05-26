@@ -18,9 +18,19 @@
 package org.apache.streampipes.sinks.databases.jvm.ditto;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.sdk.builder.DataSinkBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.eclipse.ditto.client.DittoClient;
 import org.eclipse.ditto.client.DittoClients;
@@ -41,7 +51,16 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
-public class Ditto implements EventSink<DittoParameters> {
+public class DittoSink extends StreamPipesDataSink {
+
+  private static final String DITTO_API_ENDPOINT_KEY = "dittoApiEndpointKey";
+  private static final String DITTO_USER_KEY = "dittoUserKey";
+  private static final String DITTO_PASSWORD_KEY = "dittoPasswordKey";
+
+  private static final String DITTO_THING_ID_KEY = "dittoThingIdKey";
+  private static final String DITTO_FEATURE_ID_KEY = "dittoFeatureIdKey";
+
+  private static final String SELECTED_FIELDS_KEY = "selectedFieldsKey";
 
   private DittoClient client;
   private String thingId;
@@ -49,22 +68,45 @@ public class Ditto implements EventSink<DittoParameters> {
 
   private List<String> selectedFields;
 
-  @Override
-  public void onInvocation(DittoParameters parameters, EventSinkRuntimeContext runtimeContext)
-      throws SpRuntimeException {
 
-    this.thingId = parameters.getThingId();
-    this.featureId = parameters.getFeatureId();
-    this.selectedFields = parameters.getSelectedFields();
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.ditto")
+        .category(DataSinkType.FORWARD)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithNaryMapping(
+            EpRequirements.anyProperty(),
+            Labels.withId(SELECTED_FIELDS_KEY),
+            PropertyScope.NONE).build())
+        .requiredTextParameter(Labels.withId(DITTO_API_ENDPOINT_KEY))
+        .requiredTextParameter(Labels.withId(DITTO_USER_KEY))
+        .requiredSecret(Labels.withId(DITTO_PASSWORD_KEY))
+        .requiredTextParameter(Labels.withId(DITTO_THING_ID_KEY))
+        .requiredTextParameter(Labels.withId(DITTO_FEATURE_ID_KEY))
+        .build();
+  }
+
+  @Override
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    String dittoApiEndpoint = extractor.textParameter(DITTO_API_ENDPOINT_KEY);
+    String dittoUser = extractor.textParameter(DITTO_USER_KEY);
+    String dittoPassword = extractor.secretValue(DITTO_PASSWORD_KEY);
+
+    this.thingId = extractor.textParameter(DITTO_THING_ID_KEY);
+    this.featureId = extractor.textParameter(DITTO_FEATURE_ID_KEY);
+    this.selectedFields = extractor.mappingPropertyValues(SELECTED_FIELDS_KEY);
 
     MessagingConfiguration configuration = WebSocketMessagingConfiguration.newBuilder()
-        .endpoint(parameters.getDittoApiEndpoint())
+        .endpoint(dittoApiEndpoint)
         .build();
     WebSocketMessagingProvider provider = WebSocketMessagingProvider.newInstance(configuration,
         AuthenticationProviders
             .basic(BasicAuthenticationConfiguration.newBuilder()
-                .username(parameters.getDittoUser())
-                .password(parameters.getDittoPassword())
+                .username(dittoUser)
+                .password(dittoPassword)
                 .build()),
         Executors.newFixedThreadPool(4));
     this.client = DittoClients.newInstance(provider);
