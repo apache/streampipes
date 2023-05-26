@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -32,10 +32,16 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class SizeMeasureController extends StandaloneEventProcessingDeclarer<SizeMeasureParameters> {
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+public class SizeMeasureProcessor extends StreamPipesDataProcessor {
 
   private static final String SIZE_UNIT = "sizeUnit";
   static final String BYTE_SIZE = "BYTE";
@@ -43,6 +49,8 @@ public class SizeMeasureController extends StandaloneEventProcessingDeclarer<Siz
   static final String MEGABYTE_SIZE = "MEGABYTE";
 
   static final String EVENT_SIZE = "eventSize";
+
+  private String sizeUnit;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -66,13 +74,41 @@ public class SizeMeasureController extends StandaloneEventProcessingDeclarer<Siz
   }
 
   @Override
-  public ConfiguredEventProcessor<SizeMeasureParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    this.sizeUnit = parameters.extractor().selectedSingleValueInternalName(SIZE_UNIT, String.class);
+  }
 
-    String sizeUnit = extractor.selectedSingleValueInternalName(SIZE_UNIT, String.class);
-    SizeMeasureParameters staticParam = new SizeMeasureParameters(graph, sizeUnit);
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    try {
+      double size = getSizeInBytes(event.getRaw());
+      if (sizeUnit.equals(KILOBYTE_SIZE)) {
+        size /= 1024;
+      } else if (sizeUnit.equals(MEGABYTE_SIZE)) {
+        size /= 1048576;
+      }
+      event.addField(EVENT_SIZE, size);
+      collector.collect(event);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
-    return new ConfiguredEventProcessor<>(staticParam, SizeMeasure::new);
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
+
+  private int getSizeInBytes(Object map) throws IOException {
+    // Measuring the size by serializing it and then measuring the bytes
+    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+    ObjectOutputStream out = new ObjectOutputStream(byteStream);
+
+    out.writeObject(map);
+    out.close();
+
+    return byteStream.toByteArray().length;
   }
 }
