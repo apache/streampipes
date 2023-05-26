@@ -19,9 +19,18 @@
 package org.apache.streampipes.sinks.notifications.jvm.onesignal;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.sdk.builder.DataSinkBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -33,23 +42,43 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class OneSignalProducer implements EventSink<OneSignalParameters> {
+public class OneSignalSink extends StreamPipesDataSink {
+
+  private static final String CONTENT_KEY = "content";
+  private static final String APP_ID = "app_id";
+  private static final String REST_API_KEY = "api_key";
 
   private String content;
   private String appId;
   private String apiKey;
 
   @Override
-  public void onInvocation(OneSignalParameters parameters, EventSinkRuntimeContext runtimeContext)
-      throws SpRuntimeException {
-    this.content = parameters.getContent();
-    this.appId = parameters.getAppId();
-    this.apiKey = parameters.getApiKey();
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.onesignal")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.NOTIFICATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
+        .requiredTextParameter(Labels.withId(APP_ID))
+        .requiredTextParameter(Labels.withId(REST_API_KEY))
+        .build();
   }
 
   @Override
-  public void onEvent(Event inputEvent) {
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    content = extractor.singleValueParameter(CONTENT_KEY, String.class);
+    appId = extractor.singleValueParameter(APP_ID, String.class);
+    apiKey = extractor.singleValueParameter(REST_API_KEY, String.class);
+  }
 
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
     String jsondata =
         "{\"app_id\": \"" + appId + "\",\"contents\": {\"en\": \"" + content + "\"}, \"included_segments\":[\"All\"]}";
 
@@ -74,10 +103,10 @@ public class OneSignalProducer implements EventSink<OneSignalParameters> {
       e.printStackTrace();
     }
     HttpEntity entity = response.getEntity();
-
   }
 
   @Override
   public void onDetach() throws SpRuntimeException {
+
   }
 }

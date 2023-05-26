@@ -18,26 +18,40 @@
 
 package org.apache.streampipes.sinks.notifications.jvm.email;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.mail.SpEmail;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters> {
+import java.time.Instant;
+import java.util.Collections;
+
+public class EmailSink extends StreamPipesDataSink {
 
   private static final String TO_EMAIL_ADRESS = "to_email";
   private static final String EMAIL_SUBJECT = "email_subject";
   private static final String EMAIL_CONTENT = "email_content";
   private static final String SILENT_PERIOD = "silent-period";
 
+  private SpEmail preparedEmail;
+  private long silentPeriodInSeconds;
+  private long lastMailEpochSecond = -1;
+
+  private String originalContent;
+
+  private StreamPipesClient client;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -57,17 +71,43 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
   }
 
   @Override
-  public ConfiguredEventSink<EmailParameters> onInvocation(DataSinkInvocation graph,
-                                                           DataSinkParameterExtractor extractor) {
-
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
     String toEmail = extractor.singleValueParameter(TO_EMAIL_ADRESS, String.class);
     String subject = extractor.singleValueParameter(EMAIL_SUBJECT, String.class);
-    String content = extractor.singleValueParameter(EMAIL_CONTENT, String.class);
     Integer silentPeriod = extractor.singleValueParameter(SILENT_PERIOD, Integer.class);
 
-    EmailParameters params = new EmailParameters(graph, toEmail, subject, content, silentPeriod);
+    this.preparedEmail = new SpEmail();
+    this.preparedEmail.setRecipients(Collections.singletonList(toEmail));
+    this.preparedEmail.setSubject(subject);
 
-    return new ConfiguredEventSink<>(params, EmailPublisher::new);
+    this.silentPeriodInSeconds = silentPeriod * 60;
+    this.client = runtimeContext.getStreamPipesClient();
+    this.originalContent = extractor.singleValueParameter(EMAIL_CONTENT, String.class);
+  }
+
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    if (shouldSendMail()) {
+      String message = PlaceholderExtractor.replacePlaceholders(event, this.originalContent);
+      this.preparedEmail.setMessage(message);
+      this.client.deliverEmail(this.preparedEmail);
+      this.lastMailEpochSecond = Instant.now().getEpochSecond();
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
+
+  private boolean shouldSendMail() {
+    if (this.lastMailEpochSecond == -1) {
+      return true;
+    } else {
+      return Instant.now().getEpochSecond() >= (this.lastMailEpochSecond + this.silentPeriodInSeconds);
+    }
   }
 }
 

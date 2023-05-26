@@ -19,9 +19,18 @@
 package org.apache.streampipes.sinks.notifications.jvm.telegram;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.sdk.builder.DataSinkBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,21 +42,44 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class TelegramPublisher implements EventSink<TelegramParameters> {
+public class TelegramSink extends StreamPipesDataSink {
+  private static final String CHANNEL_NAME_OR_CHAT_ID = "channel-chat-name";
+  private static final String MESSAGE_TEXT = "message-text";
+  private static final String BOT_API_KEY = "api-key";
+
   private static final String ENDPOINT = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=%s";
   private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
   private static final String HASH_TAG = "#";
   private static final String HTML = "HTML";
+
   private String apiKey;
   private String channelOrChatId;
   private String message;
 
   @Override
-  public void onInvocation(TelegramParameters parameters,
-                           EventSinkRuntimeContext runtimeContext) {
-    this.apiKey = parameters.getApiKey();
-    this.channelOrChatId = parameters.getChannelOrChatId();
-    this.message = parameters.getMessage();
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.telegram")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.NOTIFICATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredSecret(Labels.withId(BOT_API_KEY))
+        .requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
+        .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true)
+        .build();
+  }
+
+
+  @Override
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    apiKey = extractor.secretValue(BOT_API_KEY);
+    channelOrChatId = extractor.singleValueParameter(CHANNEL_NAME_OR_CHAT_ID, String.class);
+    message = extractor.singleValueParameter(MESSAGE_TEXT, String.class);
   }
 
   @Override
@@ -55,7 +87,7 @@ public class TelegramPublisher implements EventSink<TelegramParameters> {
     try {
       String content = replacePlaceholders(event, this.message);
       content = trimHTML(content);
-      content = URLEncoder.encode(content, StandardCharsets.UTF_8.toString());
+      content = URLEncoder.encode(content, StandardCharsets.UTF_8);
       String url = String.format(ENDPOINT, this.apiKey, this.channelOrChatId, content, HTML);
       Request request = new Request.Builder().url(url).build();
       try (Response response = HTTP_CLIENT.newCall(request).execute()) {
@@ -71,8 +103,8 @@ public class TelegramPublisher implements EventSink<TelegramParameters> {
   }
 
   @Override
-  public void onDetach() {
-    // do nothing.
+  public void onDetach() throws SpRuntimeException {
+    // Do nothing
   }
 
   private String replacePlaceholders(Event event, String content) {
