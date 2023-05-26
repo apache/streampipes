@@ -18,15 +18,15 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.namefinder;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.ListField;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.processors.textmining.jvm.processor.TextMiningUtil;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -34,14 +34,28 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class NameFinderController extends StandaloneEventProcessingDeclarer<NameFinderParameters> {
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.util.Span;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+public class NameFinderProcessor extends StreamPipesDataProcessor {
 
   private static final String MODEL = "model";
   private static final String TOKENS_FIELD_KEY = "tokensField";
   static final String FOUND_NAME_FIELD_KEY = "foundNames";
+
+  private String tokens;
+  private NameFinderME nameFinder;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -66,31 +80,42 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
   }
 
   @Override
-  public ConfiguredEventProcessor<NameFinderParameters> onInvocation(DataProcessorInvocation graph,
-                                                                     ProcessingElementParameterExtractor extractor) {
-
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    String filename = extractor.selectedFilename(MODEL);
-    byte[] fileContent = client.fileApi().getFileContent(filename);
-    String tokens = extractor.mappingPropertyValue(TOKENS_FIELD_KEY);
-
-    NameFinderParameters params = new NameFinderParameters(graph, tokens, fileContent);
-    return new ConfiguredEventProcessor<>(params, NameFinder::new);
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    String filename = parameters.extractor().selectedFilename(MODEL);
+    byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
+    this.tokens = parameters.extractor().mappingPropertyValue(TOKENS_FIELD_KEY);
+    loadModel(fileContent);
   }
 
-//  @Override
-//  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
-//    String directoryPath = TextMiningJvmConfig.INSTANCE.getModelDirectory();
-//
-//    List<Option> result = new ArrayList<>();
-//
-//    File folder = new File(directoryPath);
-//    File[] listOfFiles = folder.listFiles();
-//
-//    for (File file : listOfFiles) {
-//      result.add(new Option(file.getName()));
-//    }
-//
-//    return result;
-//  }
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    ListField tokens = event.getFieldBySelector(this.tokens).getAsList();
+
+    String[] tokensArray = tokens.castItems(String.class).toArray(String[]::new);
+    Span[] spans = nameFinder.find(tokensArray);
+
+    // Generating the list of names from the found spans by the nameFinder
+    List<String> names = TextMiningUtil.extractSpans(spans, tokensArray);
+
+    nameFinder.clearAdaptiveData();
+
+    event.addField(NameFinderProcessor.FOUND_NAME_FIELD_KEY, names);
+    collector.collect(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
+
+  private void loadModel(byte[] modelContent) {
+    try (InputStream modelIn = new ByteArrayInputStream(modelContent)) {
+      TokenNameFinderModel model = new TokenNameFinderModel(modelIn);
+      nameFinder = new NameFinderME(model);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

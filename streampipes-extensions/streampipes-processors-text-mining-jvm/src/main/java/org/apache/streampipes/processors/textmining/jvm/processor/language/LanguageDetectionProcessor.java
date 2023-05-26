@@ -18,30 +18,42 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.language;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class LanguageDetectionController extends StandaloneEventProcessingDeclarer<LanguageDetectionParameters> {
+import opennlp.tools.langdetect.Language;
+import opennlp.tools.langdetect.LanguageDetector;
+import opennlp.tools.langdetect.LanguageDetectorME;
+import opennlp.tools.langdetect.LanguageDetectorModel;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class LanguageDetectionProcessor extends StreamPipesDataProcessor {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   static final String LANGUAGE_KEY = "language";
   static final String CONFIDENCE_KEY = "confidenceLanguage";
   private static final String BINARY_FILE_KEY = "binary-file";
+
+  private String detection;
+  private LanguageDetector languageDetector;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -70,16 +82,37 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
   }
 
   @Override
-  public ConfiguredEventProcessor<LanguageDetectionParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext context) throws SpRuntimeException {
+    String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
+    byte[] fileContent = context.getStreamPipesClient().fileApi().getFileContent(filename);
+    this.detection = parameters.extractor().mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    String filename = extractor.selectedFilename(BINARY_FILE_KEY);
-    byte[] fileContent = client.fileApi().getFileContent(filename);
-    String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
+    InputStream modelIn = new ByteArrayInputStream(fileContent);
+    LanguageDetectorModel model = null;
+    try {
+      model = new LanguageDetectorModel(modelIn);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Error when loading the uploaded model.", e);
+    }
 
-    LanguageDetectionParameters params = new LanguageDetectionParameters(graph, detection, fileContent);
-    return new ConfiguredEventProcessor<>(params, LanguageDetection::new);
+    languageDetector = new LanguageDetectorME(model);
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    String text = event.getFieldBySelector(detection).getAsPrimitive().getAsString();
+    Language language = languageDetector.predictLanguage(text);
+
+    event.addField(LanguageDetectionProcessor.LANGUAGE_KEY, language.getLang());
+    event.addField(LanguageDetectionProcessor.CONFIDENCE_KEY, language.getConfidence());
+
+    collector.collect(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }
