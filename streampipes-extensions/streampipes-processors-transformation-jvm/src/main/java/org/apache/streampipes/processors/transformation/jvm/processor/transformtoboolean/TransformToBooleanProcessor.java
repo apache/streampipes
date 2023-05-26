@@ -23,6 +23,8 @@ import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOu
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -36,18 +38,27 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TransformToBooleanController
-    extends StandaloneEventProcessingDeclarer<TransformToBooleanParameters>
+public class TransformToBooleanProcessor
+    extends StreamPipesDataProcessor
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(TransformToBooleanProcessor.class);
+
   public static final String TRANSFORM_FIELDS_ID = "transform-fields";
+
+  private List<String> transformFields;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -63,18 +74,6 @@ public class TransformToBooleanController
             .build())
         .outputStrategy(OutputStrategies.customTransformation())
         .build();
-  }
-
-  @Override
-  public ConfiguredEventProcessor<TransformToBooleanParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
-
-    List<String> transformFields = extractor.mappingPropertyValues(TRANSFORM_FIELDS_ID);
-
-    TransformToBooleanParameters params = new TransformToBooleanParameters(graph, transformFields);
-
-    return new ConfiguredEventProcessor<>(params, TransformToBoolean::new);
   }
 
   @Override
@@ -109,5 +108,49 @@ public class TransformToBooleanController
     }
 
     return eventSchema;
+  }
+
+  @Override
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    transformFields = parameters.extractor().mappingPropertyValues(TRANSFORM_FIELDS_ID);
+
+  }
+
+  @Override
+  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
+    for (String transformField : transformFields) {
+      AbstractField field = inputEvent.getFieldBySelector(transformField);
+      // Is the field a primitive (and no list/nested field)?
+      if (field.isPrimitive()) {
+        // Yes. So remove the element and replace it with a boolean (if possible)
+        inputEvent.removeFieldBySelector(transformField);
+        try {
+          inputEvent.addField(transformField, toBoolean(field.getRawValue()));
+        } catch (SpRuntimeException e) {
+          LOG.info(e.getMessage());
+          return;
+        }
+      }
+    }
+    collector.collect(inputEvent);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
+
+  private Boolean toBoolean(Object value) throws SpRuntimeException {
+    String s = value.toString().toLowerCase();
+    // If it is a double, maybe add some delta here?
+    if (s.equals("true") || s.equals("1") || s.equals("1.0")) {
+      return true;
+    } else if (s.equals("false") || s.equals("0") || s.equals("0.0")) {
+      return false;
+    } else {
+      throw new SpRuntimeException("Value " + s + " not convertible to boolean");
+    }
   }
 }

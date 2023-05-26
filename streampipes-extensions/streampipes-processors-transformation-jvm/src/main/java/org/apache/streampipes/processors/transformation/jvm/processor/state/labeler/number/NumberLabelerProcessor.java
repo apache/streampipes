@@ -23,9 +23,12 @@ import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOu
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.LabelerUtils;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.Statement;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.StatementUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -36,8 +39,10 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.List;
 
@@ -51,10 +56,14 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.sta
 import static org.apache.streampipes.processors.transformation.jvm.processor.state.StateUtils.getLabelStrings;
 import static org.apache.streampipes.processors.transformation.jvm.processor.state.StateUtils.getNumberValues;
 
-public class NumberLabelerController extends StandaloneEventProcessingDeclarer<NumberLabelerParameters>
+public class NumberLabelerProcessor extends StreamPipesDataProcessor
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String SENSOR_VALUE_ID = "sensorValueId";
+
+  private String sensorListValueProperty;
+  private String labelName;
+  private List<Statement> statements;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -85,28 +94,6 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
   }
 
   @Override
-  public ConfiguredEventProcessor<NumberLabelerParameters> onInvocation(DataProcessorInvocation graph,
-                                                                        ProcessingElementParameterExtractor extractor) {
-
-    String sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
-
-    String labelName = getLabelName(extractor);
-
-    List<Double> numberValues = getNumberValues(extractor);
-
-    List<String> labelStrings = getLabelStrings(extractor);
-
-    List<String> comparators = getComparators(extractor);
-
-
-    NumberLabelerParameters params =
-        new NumberLabelerParameters(graph, sensorListValueProperty, labelName, numberValues, labelStrings, comparators);
-
-
-    return new ConfiguredEventProcessor<>(params, NumberLabeler::new);
-  }
-
-  @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
                                            ProcessingElementParameterExtractor parameterExtractor)
       throws SpRuntimeException {
@@ -115,5 +102,38 @@ public class NumberLabelerController extends StandaloneEventProcessingDeclarer<N
     List<String> labelStrings = getLabelStrings(parameterExtractor);
 
     return LabelerUtils.resolveOutputStrategy(processingElement, labelName, labelStrings);
+  }
+
+  @Override
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+
+    var extractor = parameters.extractor();
+    sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
+
+    labelName = getLabelName(extractor);
+    List<Double> numberValues = getNumberValues(extractor);
+    List<String> labelStrings = getLabelStrings(extractor);
+
+    List<String> comparators = getComparators(extractor);
+    statements = StatementUtils.getStatements(
+        numberValues,
+        labelStrings,
+        comparators);
+  }
+
+  @Override
+  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
+    Double value = inputEvent.getFieldBySelector(this.sensorListValueProperty).getAsPrimitive().getAsDouble();
+
+    Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, value, this.statements);
+
+    collector.collect(resultEvent);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }

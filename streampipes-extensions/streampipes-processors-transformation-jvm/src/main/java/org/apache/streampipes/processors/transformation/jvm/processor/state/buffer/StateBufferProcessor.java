@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.state.buffer;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -32,10 +32,18 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.SPSensor;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class StateBufferController extends StandaloneEventProcessingDeclarer<StateBufferParameters> {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class StateBufferProcessor extends StreamPipesDataProcessor {
 
   public static final String TIMESTAMP_FIELD_ID = "timestampId";
   public static final String STATE_FIELD_ID = "stateId";
@@ -44,6 +52,12 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
   public static final String VALUES = "values";
   public static final String STATE = "state";
   public static final String TIMESTAMP = "timestamp";
+
+  private String timeProperty;
+  private String stateProperty;
+  private String sensorValueProperty;
+
+  private Map<String, List> stateBuffer;
 
 
   @Override
@@ -76,15 +90,54 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
   }
 
   @Override
-  public ConfiguredEventProcessor<StateBufferParameters> onInvocation(DataProcessorInvocation graph,
-                                                                      ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    timeProperty = extractor.mappingPropertyValue(TIMESTAMP_FIELD_ID);
+    stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
+    sensorValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_FIELD_ID);
+    stateBuffer = new HashMap<>();
+  }
 
-    String timeProperty = extractor.mappingPropertyValue(TIMESTAMP_FIELD_ID);
-    String stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
-    String sensorValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_FIELD_ID);
+  @Override
+  public void onEvent(Event inputEvent,
+                      SpOutputCollector collector) throws SpRuntimeException {
+    long timestamp = inputEvent.getFieldBySelector(this.timeProperty).getAsPrimitive().getAsLong();
+    List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
+    double value = inputEvent.getFieldBySelector(this.sensorValueProperty).getAsPrimitive().getAsDouble();
 
-    StateBufferParameters params = new StateBufferParameters(graph, timeProperty, stateProperty, sensorValueProperty);
+    // add value to state buffer
+    for (String state : states) {
+      if (stateBuffer.containsKey(state)) {
+        stateBuffer.get(state).add(value);
+      } else {
+        List tmp = new ArrayList();
+        tmp.add(value);
+        stateBuffer.put(state, tmp);
+      }
+    }
 
-    return new ConfiguredEventProcessor<>(params, StateBuffer::new);
+    // emit event if state is not in event anymore
+    List<String> keysToRemove = new ArrayList<>();
+    for (String key : stateBuffer.keySet()) {
+      if (!states.contains(key)) {
+        Event resultEvent = new Event();
+        resultEvent.addField(StateBufferProcessor.VALUES, stateBuffer.get(key));
+        resultEvent.addField(StateBufferProcessor.STATE, Arrays.asList(key));
+        resultEvent.addField(StateBufferProcessor.TIMESTAMP, timestamp);
+        collector.collect(resultEvent);
+        keysToRemove.add(key);
+      }
+    }
+
+    for (String s : keysToRemove) {
+      stateBuffer.remove(s);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }

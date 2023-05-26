@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -32,10 +32,12 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class BooleanTimerController extends StandaloneEventProcessingDeclarer<BooleanTimerParameters> {
+public class BooleanTimerProcessor extends StreamPipesDataProcessor {
 
   public static final String FIELD_ID = "field";
   public static final String TIMER_FIELD_ID = "timerField";
@@ -48,6 +50,14 @@ public class BooleanTimerController extends StandaloneEventProcessingDeclarer<Bo
   private static final String MILLISECONDS = "Milliseconds";
   private static final String SECONDS = "Seconds";
   private static final String MINUTES = "Minutes";
+
+  private String fieldName;
+  private boolean measureTrue;
+
+  private Long timestamp;
+
+  private double outputDivisor;
+
 
 
   @Override
@@ -73,28 +83,53 @@ public class BooleanTimerController extends StandaloneEventProcessingDeclarer<Bo
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanTimerParameters> onInvocation(
-      DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
-    String invertFieldName = extractor.mappingPropertyValue(FIELD_ID);
+    var extractor = parameters.extractor();
+    fieldName = extractor.mappingPropertyValue(FIELD_ID);
     String measureTrueString = extractor.selectedSingleValue(TIMER_FIELD_ID, String.class);
     String outputUnit = extractor.selectedSingleValue(OUTPUT_UNIT_ID, String.class);
 
-    boolean measureTrue = false;
-
+    measureTrue = false;
+    timestamp = Long.MIN_VALUE;
     if (measureTrueString.equals(TRUE)) {
       measureTrue = true;
     }
 
-    double outputDivisor = 1.0;
+    outputDivisor = 1.0;
     if (outputUnit.equals(SECONDS)) {
       outputDivisor = 1000.0;
     } else if (outputUnit.equals(MINUTES)) {
       outputDivisor = 60000.0;
     }
+  }
 
-    BooleanTimerParameters params = new BooleanTimerParameters(graph, invertFieldName, measureTrue, outputDivisor);
+  @Override
+  public void onEvent(Event inputEvent,
+                      SpOutputCollector collector) throws SpRuntimeException {
+    boolean field = inputEvent.getFieldBySelector(this.fieldName).getAsPrimitive().getAsBoolean();
 
-    return new ConfiguredEventProcessor<>(params, BooleanTimer::new);
+    if (this.measureTrue == field) {
+      if (timestamp == Long.MIN_VALUE) {
+        timestamp = System.currentTimeMillis();
+      }
+    } else {
+      if (timestamp != Long.MIN_VALUE) {
+        Long difference = System.currentTimeMillis() - timestamp;
+
+        double result = difference / this.outputDivisor;
+
+        inputEvent.addField("measured_time", result);
+        timestamp = Long.MIN_VALUE;
+        collector.collect(inputEvent);
+      }
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }

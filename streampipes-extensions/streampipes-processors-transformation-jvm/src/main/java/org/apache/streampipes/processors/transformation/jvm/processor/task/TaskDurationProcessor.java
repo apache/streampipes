@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.processors.transformation.jvm.processor.task;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -31,10 +31,12 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class TaskDurationController extends StandaloneEventProcessingDeclarer<TaskDurationParameters> {
+public class TaskDurationProcessor extends StreamPipesDataProcessor {
 
   private static final String TASK_FIELD_KEY = "task-field";
   private static final String TIMESTAMP_FIELD_KEY = "timestamp-field";
@@ -46,6 +48,13 @@ public class TaskDurationController extends StandaloneEventProcessingDeclarer<Ta
   private static final String MILLISECONDS = "Milliseconds";
   private static final String SECONDS = "Seconds";
   private static final String MINUTES = "Minutes";
+
+  private String taskFieldSelector;
+  private String timestampFieldSelector;
+
+  private String lastValue;
+  private Long lastTimestamp;
+  private Double outputDivisor;
 
 
   @Override
@@ -72,23 +81,57 @@ public class TaskDurationController extends StandaloneEventProcessingDeclarer<Ta
   }
 
   @Override
-  public ConfiguredEventProcessor<TaskDurationParameters> onInvocation(DataProcessorInvocation graph,
-                                                                       ProcessingElementParameterExtractor extractor) {
-    String taskFieldSelector = extractor.mappingPropertyValue(TASK_FIELD_KEY);
-    String timestampFieldSelector = extractor.mappingPropertyValue(TIMESTAMP_FIELD_KEY);
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    taskFieldSelector = extractor.mappingPropertyValue(TASK_FIELD_KEY);
+    timestampFieldSelector = extractor.mappingPropertyValue(TIMESTAMP_FIELD_KEY);
     String outputUnit = extractor.selectedSingleValue(OUTPUT_UNIT_ID, String.class);
 
-    double outputDivisor = 1.0;
+    outputDivisor = 1.0;
     if (outputUnit.equals(SECONDS)) {
       outputDivisor = 1000.0;
     } else if (outputUnit.equals(MINUTES)) {
       outputDivisor = 60000.0;
     }
+  }
+
+  @Override
+  public void onEvent(Event event,
+                      SpOutputCollector collector) throws SpRuntimeException {
+    String taskValue = event.getFieldBySelector(taskFieldSelector).getAsPrimitive().getAsString();
+    Long timestampValue =
+        event.getFieldBySelector(timestampFieldSelector).getAsPrimitive().getAsLong();
+
+    if (lastValue == null) {
+      this.lastValue = taskValue;
+      this.lastTimestamp = timestampValue;
+    } else {
+      if (!this.lastValue.equals(taskValue)) {
+        Long duration = timestampValue - this.lastTimestamp;
 
 
-    TaskDurationParameters params =
-        new TaskDurationParameters(graph, taskFieldSelector, timestampFieldSelector, outputDivisor);
+        double result = duration / this.outputDivisor;
 
-    return new ConfiguredEventProcessor<>(params, TaskDuration::new);
+        Event outEvent = new Event();
+        outEvent.addField("processId", makeProcessId(taskValue));
+        outEvent.addField("duration", result);
+
+        this.lastValue = taskValue;
+        this.lastTimestamp = timestampValue;
+
+        collector.collect(outEvent);
+      }
+    }
+  }
+
+  private String makeProcessId(String taskValue) {
+    return this.lastValue + "-" + taskValue;
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    this.lastValue = null;
   }
 }
