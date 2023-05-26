@@ -27,10 +27,10 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
+import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterProcessor;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
@@ -65,7 +65,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             "",
             8090)
         .registerPipelineElements(
-            new CountArrayController(),
+            new CountArrayProcessor(),
             new SplitArrayController(),
             new CalculateDurationController(),
             new ChangedValueDetectionController(),
@@ -81,7 +81,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new TaskDurationController(),
             new TransformToBooleanController(),
             new StringTimerProcessor(),
-            new SignalEdgeFilterController(),
+            new SignalEdgeFilterProcessor(),
             new BooleanToStateController(),
             new NumberLabelerController(),
             new StringToStateProcessor(),
