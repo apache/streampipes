@@ -111,7 +111,7 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
   /**
    * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
    *
-   * @param extractor: StaticPropertyExtractor
+   * @param extractor StaticPropertyExtractor
    */
   private void applyConfiguration(IParameterExtractor<?> extractor) {
 
