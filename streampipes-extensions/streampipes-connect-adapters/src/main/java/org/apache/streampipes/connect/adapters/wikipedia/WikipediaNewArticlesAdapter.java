@@ -17,37 +17,28 @@
  */
 package org.apache.streampipes.connect.adapters.wikipedia;
 
-//public class WikipediaNewArticlesAdapter extends WikipediaAdapter {
-//
-//  public static final String ID = "org.apache.streampipes.connect.adapters.wikipedia.new";
-//
-//  private static final String Type = "new";
-//
-//  public WikipediaNewArticlesAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-//    super(adapterStreamDescription, Type);
-//  }
-//
-//  public WikipediaNewArticlesAdapter() {
-//    super();
-//  }
-//
-//  @Override
-//  public SpecificAdapterStreamDescription declareModel() {
-//    return SpecificDataStreamAdapterBuilder.create(ID)
-//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-//        .withLocales(Locales.EN)
-//        .category(AdapterType.SocialMedia, AdapterType.OpenData)
-//        .build();
-//  }
-//
-//  @Override
-//  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-//    return new WikipediaNewArticlesAdapter(adapterDescription);
-//  }
-//
-//
-//  @Override
-//  public String getId() {
-//    return ID;
-//  }
-//}
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+
+public class WikipediaNewArticlesAdapter extends WikipediaAdapter {
+
+  public static final String ID = "org.apache.streampipes.connect.adapters.wikipedia.new";
+
+  private static final String Type = "new";
+
+  public WikipediaNewArticlesAdapter() {
+    super(Type);
+  }
+
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, WikipediaNewArticlesAdapter::new)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.SocialMedia, AdapterType.OpenData)
+        .buildConfiguration();
+  }
+}

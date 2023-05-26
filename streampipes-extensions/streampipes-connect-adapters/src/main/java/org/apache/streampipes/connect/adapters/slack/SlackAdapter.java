@@ -17,75 +17,76 @@
  */
 package org.apache.streampipes.connect.adapters.slack;
 
-//public class SlackAdapter extends SpecificDataStreamAdapter {
-//
-//  public static final String ID = "org.apache.streampipes.connect.adapters.slack";
-//
-//  private static final String SlackToken = "slack-token";
-//  private static final String Timestamp = "timestamp";
-//  private static final String Message = "message";
-//  private static final String Author = "author";
-//  private static final String Channel = "channel";
-//
-//  private String slackApiToken;
-//  private Thread thread;
-//  private SlackConsumer consumer;
-//
-//  public SlackAdapter() {
-//    super();
-//  }
-//
-//  public SlackAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-//    super(adapterStreamDescription);
-//    ParameterExtractor extractor = new ParameterExtractor(adapterStreamDescription.getConfig());
-//    this.slackApiToken = extractor.singleValue(SlackToken);
-//  }
-//
-//  @Override
-//  public SpecificAdapterStreamDescription declareModel() {
-//    return SpecificDataStreamAdapterBuilder.create(ID)
-//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-//        .withLocales(Locales.EN)
-//        .category(AdapterType.SocialMedia)
-//        .requiredTextParameter(Labels.withId(SlackToken))
-//        .build();
-//  }
-//
-//  @Override
-//  public void startAdapter() throws AdapterException {
-//    this.consumer = new SlackConsumer(adapterPipeline, slackApiToken);
-//    this.thread = new Thread(consumer);
-//    this.thread.start();
-//  }
-//
-//  @Override
-//  public void stopAdapter() throws AdapterException {
-//    this.consumer.stop();
-//    this.thread.stop();
-//  }
-//
-//  @Override
-//  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-//    return new SlackAdapter(adapterDescription);
-//  }
-//
-//  @Override
-//  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
-//      throws AdapterException, ParseException {
-//    return GuessSchemaBuilder.create()
-//        .property(timestampProperty(Timestamp))
-//        .property(stringEp(Labels.from(Author, "Author", "The username of the sender of the "
-//                + "Slack message"),
-//            Author, SO.TEXT))
-//        .property(stringEp(Labels.from(Channel, "Channel", "The Slack channel"), Channel,
-//            SO.TEXT))
-//        .property(stringEp(Labels.from(Message, "Message", "The Slack message"),
-//            Message, SO.TEXT))
-//        .build();
-//  }
-//
-//  @Override
-//  public String getId() {
-//    return ID;
-//  }
-//}
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.vocabulary.SO;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
+
+public class SlackAdapter implements StreamPipesAdapter {
+
+  public static final String ID = "org.apache.streampipes.connect.adapters.slack";
+
+  private static final String SlackToken = "slack-token";
+  private static final String Timestamp = "timestamp";
+  private static final String Message = "message";
+  private static final String Author = "author";
+  private static final String Channel = "channel";
+
+  private Thread thread;
+  private SlackConsumer consumer;
+
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, SlackAdapter::new)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.SocialMedia)
+        .requiredTextParameter(Labels.withId(SlackToken))
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
+    String slackApiToken = extractor.getStaticPropertyExtractor().singleValueParameter(SlackToken, String.class);
+    this.consumer = new SlackConsumer(collector, slackApiToken);
+    this.thread = new Thread(consumer);
+    this.thread.start();
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
+    this.consumer.stop();
+    this.thread.stop();
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
+    return GuessSchemaBuilder.create()
+        .property(timestampProperty(Timestamp))
+        .property(stringEp(Labels.from(Author, "Author", "The username of the sender of the "
+                + "Slack message"),
+            Author, SO.TEXT))
+        .property(stringEp(Labels.from(Channel, "Channel", "The Slack channel"), Channel,
+            SO.TEXT))
+        .property(stringEp(Labels.from(Message, "Message", "The Slack message"),
+            Message, SO.TEXT))
+        .build();
+  }
+}
