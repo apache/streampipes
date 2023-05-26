@@ -18,8 +18,8 @@
 package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.testcontainers.shaded.com.google.common.collect.Maps;
