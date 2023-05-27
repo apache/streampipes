@@ -15,8 +15,10 @@
 # limitations under the License.
 #
 import json
+from deprecated import deprecated
 
 
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class ConfigItem(object):
     def __init__(self):
         self.value = None
