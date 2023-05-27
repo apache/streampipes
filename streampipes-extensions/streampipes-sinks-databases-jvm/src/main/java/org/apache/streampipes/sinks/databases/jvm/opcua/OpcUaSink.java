@@ -21,19 +21,19 @@ package org.apache.streampipes.sinks.databases.jvm.opcua;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters> {
+public class OpcUaSink extends StreamPipesDataSink {
 
   private static final String OPC_SERVER_KEY = "opc_host";
   private static final String OPC_PORT_KEY = "opc_port";
@@ -41,6 +41,7 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
   private static final String OPC_NODE_ID_KEY = "opc_node_id_index";
   private static final String MAPPING_PROPERTY_KEY = "mapping_property_key";
 
+  private OpcUa opcUa;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -60,11 +61,10 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
         .build();
   }
 
-
   @Override
-  public ConfiguredEventSink<OpcUaParameters> onInvocation(DataSinkInvocation graph,
-                                                           DataSinkParameterExtractor extractor) {
-
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
     String hostname = extractor.singleValueParameter(OPC_SERVER_KEY, String.class);
     Integer port = extractor.singleValueParameter(OPC_PORT_KEY, Integer.class);
 
@@ -80,11 +80,20 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
       e.printStackTrace();
     }
 
-
-    OpcUaParameters params = new OpcUaParameters(graph, hostname, port, nodeId, nameSpaceIndex,
+    OpcUaParameters params = new OpcUaParameters(hostname, port, nodeId, nameSpaceIndex,
         mappingPropertySelector, mappingPropertyType);
 
-    return new ConfiguredEventSink<>(params, OpcUa::new);
+    this.opcUa = new OpcUa();
+    this.opcUa.onInvocation(params);
   }
 
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    this.opcUa.onEvent(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    this.opcUa.onDetach();
+  }
 }

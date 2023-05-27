@@ -18,25 +18,48 @@
 
 package org.apache.streampipes.sinks.databases.jvm.iotdb;
 
-import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
+import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.sdk.builder.DataSinkBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.iotdb.tsfile.utils.Binary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class IotDb implements EventSink<IotDbParameters> {
+public class IotDbSink extends StreamPipesDataSink {
 
-  private static Logger logger;
+  private static final Logger LOG = LoggerFactory.getLogger(IotDbSink.class);
+
+  private static final String HOST_KEY = "db_host";
+  private static final String PORT_KEY = "db_port";
+
+  private static final String DATABASE_KEY = "db_database";
+  private static final String DEVICE_KEY = "db_device";
+
+  private static final String USER_KEY = "db_user";
+  private static final String PASSWORD_KEY = "db_password";
+
+  private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
 
   private String timestampFieldId;
   private String deviceId;
@@ -50,20 +73,47 @@ public class IotDb implements EventSink<IotDbParameters> {
   private SessionPool sessionPool;
 
   @Override
-  public void onInvocation(IotDbParameters parameters, EventSinkRuntimeContext runtimeContext) {
-    logger = parameters.getGraph().getLogger(IotDb.class);
-
-    deviceId = "root." + parameters.getDatabase() + "." + parameters.getDevice();
-    timestampFieldId = parameters.getTimestampField();
-
-    // In our case, the pool size is set to 2.
-    // One connection is for current requests, and the other is a backup for fast-recovery when connection dies.
-    sessionPool = new SessionPool.Builder().maxSize(2).enableCompression(false).host(parameters.getHost())
-        .port(parameters.getPort()).user(parameters.getUser()).password(parameters.getPassword()).build();
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.iotdb").withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON).category(DataSinkType.DATABASE).requiredStream(
+            StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
+                    PropertyScope.NONE).build()).requiredTextParameter(Labels.withId(HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(PORT_KEY), 6667).requiredTextParameter(Labels.withId(USER_KEY), "root")
+        .requiredSecret(Labels.withId(PASSWORD_KEY)).requiredTextParameter(Labels.withId(DATABASE_KEY))
+        .requiredTextParameter(Labels.withId(DEVICE_KEY)).build();
   }
 
   @Override
-  public void onEvent(Event event) {
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    final String host = extractor.singleValueParameter(HOST_KEY, String.class);
+    final Integer port = extractor.singleValueParameter(PORT_KEY, Integer.class);
+
+    final String database = extractor.singleValueParameter(DATABASE_KEY, String.class);
+    final String device = extractor.singleValueParameter(DEVICE_KEY, String.class);
+
+    final String user = extractor.singleValueParameter(USER_KEY, String.class);
+    final String password = extractor.secretValue(PASSWORD_KEY);
+
+    timestampFieldId = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+    deviceId = "root." + database + "." + device;
+
+    // In our case, the pool size is set to 2.
+    // One connection is for current requests, and the other is a backup for fast-recovery when connection dies.
+    sessionPool = new SessionPool.Builder()
+        .maxSize(2)
+        .enableCompression(false)
+        .host(host)
+        .port(port)
+        .user(user)
+        .password(password)
+        .build();
+  }
+
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
     if (event == null) {
       return;
     }
@@ -117,13 +167,13 @@ public class IotDb implements EventSink<IotDbParameters> {
     try {
       sessionPool.insertRecord(deviceId, timestamp, measurements, types, values);
     } catch (IoTDBConnectionException | StatementExecutionException e) {
-      logger.error("Failed to save event to IoTDB, because: " + e.getMessage());
+      LOG.error("Failed to save event to IoTDB, because: " + e.getMessage());
       e.printStackTrace();
     }
   }
 
   @Override
-  public void onDetach() {
+  public void onDetach() throws SpRuntimeException {
     sessionPool.close();
   }
 }

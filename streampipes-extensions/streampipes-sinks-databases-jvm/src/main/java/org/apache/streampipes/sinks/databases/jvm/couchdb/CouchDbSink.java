@@ -18,26 +18,33 @@
 
 package org.apache.streampipes.sinks.databases.jvm.couchdb;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.EventConverter;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class CouchDbController extends StandaloneEventSinkDeclarer<CouchDbParameters> {
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.CouchDbProperties;
+
+public class CouchDbSink extends StreamPipesDataSink {
 
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
   private static final String DATABASE_NAME_KEY = "db_name";
   private static final String DATABASE_USER_KEY = "db_user";
   private static final String DATABASE_PASSORD_KEY = "db_password";
+
+  private CouchDbClient couchDbClient;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -55,11 +62,10 @@ public class CouchDbController extends StandaloneEventSinkDeclarer<CouchDbParame
         .build();
   }
 
-
   @Override
-  public ConfiguredEventSink<CouchDbParameters> onInvocation(DataSinkInvocation graph,
-                                                             DataSinkParameterExtractor extractor) {
-
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
@@ -71,9 +77,24 @@ public class CouchDbController extends StandaloneEventSinkDeclarer<CouchDbParame
     String user = null;
     String password = null;
 
-    CouchDbParameters params = new CouchDbParameters(graph, hostname, port, dbName, user, password);
-
-    return new ConfiguredEventSink<>(params, CouchDb::new);
+    this.couchDbClient = new CouchDbClient(new CouchDbProperties(
+        dbName,
+        true,
+        "http",
+       hostname,
+        port,
+        user,
+        password
+    ));
   }
 
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    couchDbClient.save(new EventConverter(event).toInputEventMap());
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    this.couchDbClient.shutdown();
+  }
 }
