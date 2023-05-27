@@ -47,7 +47,7 @@ public class JsonParsers implements IParser {
 
   public static final String ID = "org.apache.streampipes.extensions.management.connect.adapter.parser.json";
   public static final String LABEL = "Json";
-  public static final String DESCRIPTION = "";
+  public static final String DESCRIPTION = "Can be used to read json";
 
 
   public static final String KEY_JSON_OPTIONS = "json_options";
@@ -101,7 +101,7 @@ public class JsonParsers implements IParser {
       }
     }
 
-    LOG.warn("No parser was found. Json parser is used as a default");
+    LOG.warn("No parser was found. Json object parser is used as a default");
     return new JsonParsers(new JsonObjectParser());
   }
 

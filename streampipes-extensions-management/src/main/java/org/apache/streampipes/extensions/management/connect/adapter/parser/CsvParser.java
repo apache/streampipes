@@ -94,7 +94,7 @@ public class CsvParser implements IParser {
   public ParserDescription declareDescription() {
     return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION)
         .requiredTextParameter(Labels.from(DELIMITER, "Delimiter",
-            "The delimiter for json. Mostly either , or ;"))
+            "The delimiter of the CSV file(s). Mostly either , or ;"))
         .requiredMultiValueSelection(Labels.from(HEADER, "Header",
                 "Does the CSV file include a header or not"),
             List.of(new Option("Header", "Header")))
