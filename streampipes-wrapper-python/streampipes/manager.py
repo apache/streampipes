@@ -21,7 +21,7 @@ from deprectaed import deprecated
 from streampipes.declarer import DeclarerSingleton
 
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class ProcessorDispatcher(object):
     __metaclass__ = abc.ABC
 

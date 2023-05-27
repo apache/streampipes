@@ -21,7 +21,7 @@ sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 import streampipes.model.staticproperty.static_property
 
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class FreeTextStaticProperty(StaticProperty):
   __serialVersionUID = 1
   def __init__(self):

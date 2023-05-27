@@ -19,7 +19,7 @@ from deprecated import deprecated
 from streampipes.model.config_item import ConfigItem
 
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class Config(object):
     def __init__(self, app_id: str) -> None:
         if not app_id:

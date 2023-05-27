@@ -22,7 +22,7 @@ from deprecated import deprecated
 from streampipes.model.pipeline_element_config import Config
 
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class ConsulUtils(object):
     _DEFAULT_CONSUL_CONFIG = {
         'CONSUL_HOST': 'consul',

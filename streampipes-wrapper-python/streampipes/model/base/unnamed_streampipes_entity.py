@@ -21,7 +21,7 @@ sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 from streampipes.model.base.abstract_streampipes_entity import AbstractStreamPipesEntity
 
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class UnnamedStreamPipesEntity(AbstractStreamPipesEntity):
 
   __serialVersionUID = 8051137255998890188

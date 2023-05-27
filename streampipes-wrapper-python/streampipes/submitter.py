@@ -23,7 +23,7 @@ from streampipes.declarer import DeclarerSingleton
 from streampipes.model.pipeline_element_config import Config
 from streampipes.utils.register import ConsulUtils
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class StandaloneModelSubmitter(object):
     __metaclass__ = abc.ABC
 

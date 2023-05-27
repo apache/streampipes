@@ -26,7 +26,7 @@ from streampipes.api.resources.processor import SepaElementResource
 from streampipes.api.resources.welcome import WelcomeResource
 
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class PipelineElementApi(object):
     _FLASK_CONFIG = {
         'DEBUG': False,

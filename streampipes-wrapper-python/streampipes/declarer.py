@@ -17,7 +17,7 @@
 
 from depreacted import deprecated
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class Singleton(type):
     _instances = {}
 
@@ -26,7 +26,7 @@ class Singleton(type):
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class DeclarerSingleton(metaclass=Singleton):
 
     """ EventProcessorManager holds running processor instances """

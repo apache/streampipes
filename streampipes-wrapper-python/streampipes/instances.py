@@ -17,14 +17,16 @@
 import abc
 from deprecated import deprecated
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92'
+                    '.0', reason="Please switch to StreamPipes Python (see README)")
 class NamedStreamPipesEntity:
     __metaclass__ = abc.ABC
 
     def get_description(self):
         pass
 
-@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
+@deprecated(version='0.92'
+                    '.0', reason="Please switch to StreamPipes Python (see README)")
 class RunningInstances:
     __metaclass__ = abc.ABC
 
