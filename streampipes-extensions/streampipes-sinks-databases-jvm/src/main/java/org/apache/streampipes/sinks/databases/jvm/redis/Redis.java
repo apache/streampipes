@@ -20,8 +20,6 @@ package org.apache.streampipes.sinks.databases.jvm.redis;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,20 +29,27 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.exceptions.JedisException;
 
-public class Redis implements EventSink<RedisParameters> {
+public class Redis {
 
   private static final String EVENT_PREFIX = "sp:event:";
+
   private static final String EVENT_COUNT = "sp:events";
+
   private static JedisPool jedisPool = null;
+
   private String primaryKey;
+
   private Boolean autoIncrement;
+
   private String password;
+
   private String clientName;
+
   private Integer index;
+
   private Integer ttl;
 
-  @Override
-  public void onInvocation(RedisParameters parameters, EventSinkRuntimeContext runtimeContext) {
+  public void onInvocation(RedisParameters parameters) {
     if (jedisPool == null) {
       initialPool(parameters);
     }
@@ -56,11 +61,10 @@ public class Redis implements EventSink<RedisParameters> {
     ttl = parameters.getTTL();
   }
 
-  @Override
-  public void onEvent(Event inputEvent) throws SpRuntimeException {
+  public void onEvent(Event event) throws SpRuntimeException {
     try (Jedis jedis = getJedis()) {
-      final String eventKey = getEventKey(inputEvent, autoIncrement ? jedis.incr(EVENT_COUNT) : 0L);
-      jedis.set(eventKey, getEventValue(inputEvent));
+      final String eventKey = getEventKey(event, autoIncrement ? jedis.incr(EVENT_COUNT) : 0L);
+      jedis.set(eventKey, getEventValue(event));
       if (ttl > -1) {
         jedis.expire(eventKey, ttl);
       }
@@ -71,8 +75,7 @@ public class Redis implements EventSink<RedisParameters> {
     }
   }
 
-  @Override
-  public void onDetach() {
+  public void onDetach() throws SpRuntimeException {
     if (jedisPool != null && !jedisPool.isClosed()) {
       jedisPool.close();
     }
@@ -127,5 +130,4 @@ public class Redis implements EventSink<RedisParameters> {
       throw new SpRuntimeException("Could not convert event to JSON", e);
     }
   }
-
 }

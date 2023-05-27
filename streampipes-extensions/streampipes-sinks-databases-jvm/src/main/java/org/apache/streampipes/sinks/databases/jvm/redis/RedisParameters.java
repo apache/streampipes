@@ -18,26 +18,33 @@
 
 package org.apache.streampipes.sinks.databases.jvm.redis;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+public class RedisParameters {
 
-public class RedisParameters extends EventSinkBindingParams {
+  private final String primaryKey;
 
-  private String primaryKey;
-  private Boolean autoIncrement;
-  private Integer ttl;
-  private String redisHost;
-  private Integer redisPort;
-  private String redisPassword;
-  private String redisClient;
-  private Integer redisIndex;
-  private Integer redisPoolMaxActive;
-  private Integer redisPoolMaxIdle;
-  private Integer redisPoolMaxWait;
-  private Integer redisPoolTimeout;
+  private final Boolean autoIncrement;
 
-  public RedisParameters(DataSinkInvocation graph,
-                         String primaryKey,
+  private final Integer ttl;
+
+  private final String redisHost;
+
+  private final Integer redisPort;
+
+  private final String redisPassword;
+
+  private final String redisClient;
+
+  private final Integer redisIndex;
+
+  private final Integer redisPoolMaxActive;
+
+  private final Integer redisPoolMaxIdle;
+
+  private final Integer redisPoolMaxWait;
+
+  private final Integer redisPoolTimeout;
+
+  public RedisParameters(String primaryKey,
                          Boolean autoIncrement,
                          Integer ttl,
                          String redisHost,
@@ -49,7 +56,6 @@ public class RedisParameters extends EventSinkBindingParams {
                          Integer redisPoolMaxIdle,
                          Integer redisPoolMaxWait,
                          Integer redisPoolTimeout) {
-    super(graph);
     this.primaryKey = primaryKey;
     this.autoIncrement = autoIncrement;
     this.ttl = ttl;
