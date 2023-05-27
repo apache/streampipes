@@ -18,21 +18,16 @@
 
 package org.apache.streampipes.sinks.databases.jvm.opcua;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+public final class OpcUaParameters {
+  private final String hostname;
+  private final Integer port;
+  private final String nodeId;
+  private final Integer nameSpaceIndex;
+  private final String mappingPropertySelector;
+  private final String mappingPropertyType;
 
-public class OpcUaParameters extends EventSinkBindingParams {
-
-  private String hostname;
-  private Integer port;
-  private String nodeId;
-  private Integer nameSpaceIndex;
-  private String mappingPropertySelector;
-  private String mappingPropertyType;
-
-  public OpcUaParameters(DataSinkInvocation graph, String hostname, Integer port, String nodeId, Integer nameSpaceIndex,
+  public OpcUaParameters(String hostname, Integer port, String nodeId, Integer nameSpaceIndex,
                          String mappingPropertySelector, String mappingPropertyType) {
-    super(graph);
     this.hostname = hostname;
     this.port = port;
     this.nodeId = nodeId;
@@ -41,59 +36,27 @@ public class OpcUaParameters extends EventSinkBindingParams {
     this.mappingPropertyType = mappingPropertyType;
   }
 
-  public String getHostName() {
+  public String hostname() {
     return hostname;
   }
 
-  public void setHostName(String hostname) {
-    this.hostname = hostname;
-  }
-
-  public Integer getPort() {
+  public Integer port() {
     return port;
   }
 
-  public void setPort(Integer port) {
-    this.port = port;
-  }
-
-  public String getNodeId() {
+  public String nodeId() {
     return nodeId;
   }
 
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  public Integer getNameSpaceIndex() {
+  public Integer nameSpaceIndex() {
     return nameSpaceIndex;
   }
 
-  public void setNameSpaceIndex(Integer nameSpaceIndex) {
-    this.nameSpaceIndex = nameSpaceIndex;
-  }
-
-  public String getHostname() {
-    return hostname;
-  }
-
-  public void setHostname(String hostname) {
-    this.hostname = hostname;
-  }
-
-  public String getMappingPropertySelector() {
+  public String mappingPropertySelector() {
     return mappingPropertySelector;
   }
 
-  public void setMappingPropertySelector(String mappingPropertySelector) {
-    this.mappingPropertySelector = mappingPropertySelector;
-  }
-
-  public String getMappingPropertyType() {
+  public String mappingPropertyType() {
     return mappingPropertyType;
-  }
-
-  public void setMappingPropertyType(String mappingPropertyType) {
-    this.mappingPropertyType = mappingPropertyType;
   }
 }

@@ -29,10 +29,10 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.notifications.jvm.config.ConfigKeys;
-import org.apache.streampipes.sinks.notifications.jvm.email.EmailController;
-import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalController;
-import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationController;
-import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramController;
+import org.apache.streampipes.sinks.notifications.jvm.email.EmailSink;
+import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalSink;
+import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationSink;
+import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramSink;
 
 public class SinksNotificationsJvmInit extends ExtensionsModelSubmitter {
 
@@ -43,10 +43,10 @@ public class SinksNotificationsJvmInit extends ExtensionsModelSubmitter {
             "",
             8090)
         .registerPipelineElements(
-            new EmailController(),
-            new OneSignalController(),
-            new SlackNotificationController(),
-            new TelegramController())
+            new EmailSink(),
+            new OneSignalSink(),
+            new SlackNotificationSink(),
+            new TelegramSink())
         .registerMessagingFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
