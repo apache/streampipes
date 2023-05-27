@@ -33,7 +33,7 @@ import org.apache.streampipes.sinks.databases.jvm.ditto.DittoSink;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbSink;
 import org.apache.streampipes.sinks.databases.jvm.opcua.OpcUaSink;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
-import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
+import org.apache.streampipes.sinks.databases.jvm.redis.RedisSink;
 
 public class DatabasesJvmInit extends ExtensionsModelSubmitter {
 
@@ -53,7 +53,7 @@ public class DatabasesJvmInit extends ExtensionsModelSubmitter {
             new PostgreSqlSink(),
             new IotDbSink(),
             new DittoSink(),
-            new RedisController())
+            new RedisSink())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
