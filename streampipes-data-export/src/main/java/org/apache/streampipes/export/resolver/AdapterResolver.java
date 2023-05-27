@@ -33,12 +33,12 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   }
 
   @Override
-  public AdapterDescription modifyDocumentForExport(AdapterDescription doc) {
-    doc.setRev(null);
-    doc.setSelectedEndpointUrl(null);
-    doc.setRunning(false);
+  public AdapterDescription modifyDocumentForExport(AdapterDescription adapterDescription) {
+    adapterDescription.setRev(null);
+    adapterDescription.setSelectedEndpointUrl(null);
+    adapterDescription.setRunning(false);
 
-    return doc;
+    return adapterDescription;
   }
 
   @Override

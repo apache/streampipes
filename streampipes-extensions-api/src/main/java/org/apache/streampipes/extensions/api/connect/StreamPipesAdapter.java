@@ -24,7 +24,6 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-// TODO Rename to IAdapter once the old class can be deleted
 public interface StreamPipesAdapter {
   IAdapterConfiguration declareConfig();
 
