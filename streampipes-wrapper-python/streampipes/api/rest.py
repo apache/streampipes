@@ -19,12 +19,14 @@ import threading
 
 from waitress import serve
 from flask import Flask
+from deprecated import deprecated
 
 from streampipes.api.resources.dummy import DummyInterimsResource
 from streampipes.api.resources.processor import SepaElementResource
 from streampipes.api.resources.welcome import WelcomeResource
 
 
+@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
 class PipelineElementApi(object):
     _FLASK_CONFIG = {
         'DEBUG': False,

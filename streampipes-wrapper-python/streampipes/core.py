@@ -22,7 +22,10 @@ import threading
 from confluent_kafka.admin import AdminClient
 from confluent_kafka import Producer, Consumer
 
+from deprecated import deprecated
 
+
+@deprecated(version='0.93.0', reason="Please switch to StreamPipes Python (see README)")
 class EventProcessor(object):
     __metaclass__ = abc.ABC
 
