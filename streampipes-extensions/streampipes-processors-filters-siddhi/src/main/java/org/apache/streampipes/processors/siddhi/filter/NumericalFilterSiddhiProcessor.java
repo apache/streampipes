@@ -17,12 +17,22 @@
  */
 package org.apache.streampipes.processors.siddhi.filter;
 
+import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
 import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
-import org.apache.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
-import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.FromClause;
 import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
@@ -31,15 +41,30 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperator;
 import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperatorExpression;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
-public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters> {
+public class NumericalFilterSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
-  public NumericalFilter() {
-    super();
-  }
+  private static final String NUMBER_MAPPING = "number-mapping";
+  private static final String VALUE = "value";
+  private static final String OPERATION = "operation";
 
-  public NumericalFilter(SiddhiDebugCallback callback) {
-    super(callback);
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.numericalfilter")
+        .category(DataProcessorType.FILTER)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(NUMBER_MAPPING), PropertyScope.NONE).build())
+        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+            ">=", "==", "!="))
+        .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
+        //.outputStrategy(OutputStrategies.keep())
+        .outputStrategy(OutputStrategies.custom())
+        .build();
   }
 
   private Expression makeProperty(String fieldName) {
@@ -47,12 +72,28 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<NumericalFilterParameters> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
                                         String finalInsertIntoStreamName) {
-    NumericalFilterParameters filterParameters = siddhiParams.getParams();
-    String filterProperty = filterParameters.getFilterProperty();
-    RelationalOperator operator = filterParameters.getFilterOperator();
-    Double threshold = filterParameters.getThreshold();
+
+    var extractor = siddhiParams.getParams().extractor();
+    Double threshold = extractor.singleValueParameter(VALUE, Double.class);
+    String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
+
+    RelationalOperator operator = RelationalOperator.GREATER_THAN;
+
+    if (stringOperation.equals("<=")) {
+      operator = RelationalOperator.LESSER_EQUALS;
+    } else if (stringOperation.equals("<")) {
+      operator = RelationalOperator.LESSER_THAN;
+    } else if (stringOperation.equals(">=")) {
+      operator = RelationalOperator.GREATER_EQUALS;
+    } else if (stringOperation.equals("==")) {
+      operator = RelationalOperator.EQUALS;
+    } else if (stringOperation.equals("!=")) {
+      operator = RelationalOperator.NOT_EQUALS;
+    }
+
+    String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
     // e.g. Filter for numberField value less than 10 and output all fields
     //
