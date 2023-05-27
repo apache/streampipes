@@ -15,6 +15,9 @@
 # limitations under the License.
 #
 
+from deprecated import deprecated
+
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class AbstractStreamPipesEntity:
     def __init__(self):
         pass
