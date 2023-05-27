@@ -18,27 +18,47 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.bufferrest;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.BufferListener;
+import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.MessageBuffer;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import org.apache.commons.io.Charsets;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-public class BufferRestController extends StandaloneEventSinkDeclarer<BufferRestParameters> {
+public class BufferRestPublisherSink extends StreamPipesDataSink implements BufferListener {
+
+  private static final Logger LOG = LoggerFactory.getLogger(BufferRestPublisherSink.class);
 
   private static final String KEY = "bufferrest";
   private static final String URI = ".uri";
   private static final String COUNT = ".count";
   private static final String FIELDS = ".fields-to-send";
+
+  private List<String> fieldsToSend;
+  private SpDataFormatDefinition dataFormatDefinition;
+  private String restEndpointURI;
+  private MessageBuffer buffer;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -58,15 +78,41 @@ public class BufferRestController extends StandaloneEventSinkDeclarer<BufferRest
   }
 
   @Override
-  public ConfiguredEventSink<BufferRestParameters> onInvocation(DataSinkInvocation graph,
-                                                                DataSinkParameterExtractor extractor) {
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
-    List<String> fieldsToSend = extractor.mappingPropertyValues(KEY + FIELDS);
-    String restEndpointURI = extractor.singleValueParameter(KEY + URI, String.class);
+    var extractor = parameters.extractor();
+    fieldsToSend = extractor.mappingPropertyValues(KEY + FIELDS);
+    restEndpointURI = extractor.singleValueParameter(KEY + URI, String.class);
     int bufferSize = Integer.parseInt(extractor.singleValueParameter(KEY + COUNT, String.class));
+    this.dataFormatDefinition = new JsonDataFormatDefinition();
 
-    BufferRestParameters params = new BufferRestParameters(graph, fieldsToSend, restEndpointURI, bufferSize);
+    this.buffer = new MessageBuffer(bufferSize);
+    this.buffer.addListener(this);
+  }
 
-    return new ConfiguredEventSink<>(params, BufferRest::new);
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    Map<String, Object> outEventMap = event.getSubset(fieldsToSend).getRaw();
+    try {
+      String json = new String(dataFormatDefinition.fromMap(outEventMap));
+      this.buffer.addMessage(json);
+    } catch (SpRuntimeException e) {
+      LOG.error("Could not parse incoming event");
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    buffer.removeListener(this);
+  }
+
+  @Override
+  public void bufferFull(String messagesJsonArray) {
+    try {
+      Request.Post(restEndpointURI).body(new StringEntity(messagesJsonArray, Charsets.UTF_8)).execute();
+    } catch (IOException e) {
+      LOG.error("Could not reach endpoint at {}", restEndpointURI);
+    }
   }
 }

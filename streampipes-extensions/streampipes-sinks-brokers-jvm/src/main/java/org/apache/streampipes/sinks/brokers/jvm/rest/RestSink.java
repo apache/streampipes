@@ -19,22 +19,36 @@
 package org.apache.streampipes.sinks.brokers.jvm.rest;
 
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class RestController extends StandaloneEventSinkDeclarer<RestParameters> {
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
+public class RestSink extends StreamPipesDataSink {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RestSink.class);
 
   private static final String URL_KEY = "url-key";
+
+  private String url;
+  private JsonDataFormatDefinition jsonDataFormatDefinition;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -52,13 +66,35 @@ public class RestController extends StandaloneEventSinkDeclarer<RestParameters> 
   }
 
   @Override
-  public ConfiguredEventSink<RestParameters> onInvocation(DataSinkInvocation graph,
-                                                          DataSinkParameterExtractor extractor) {
+  public void onDetach() throws SpRuntimeException {
 
-    String url = extractor.singleValueParameter(URL_KEY, String.class);
+  }
 
-    RestParameters params = new RestParameters(graph, url);
+  @Override
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    jsonDataFormatDefinition = new JsonDataFormatDefinition();
+    url = parameters.extractor().singleValueParameter(URL_KEY, String.class);
+  }
 
-    return new ConfiguredEventSink<>(params, RestPublisher::new);
+  @Override
+  public void onEvent(Event inputEvent) throws SpRuntimeException {
+    byte[] json = null;
+    try {
+      json = jsonDataFormatDefinition.fromMap(inputEvent.getRaw());
+    } catch (SpRuntimeException e) {
+      LOG.error("Error while serializing event: " + inputEvent.getSourceInfo().getSourceId() + " Exception: "
+          + e);
+    }
+
+    try {
+      Request.Post(url)
+          .bodyByteArray(json, ContentType.APPLICATION_JSON)
+          .connectTimeout(1000)
+          .socketTimeout(100000)
+          .execute().returnContent().asString();
+    } catch (IOException e) {
+      LOG.error("Error while sending data to endpoint: " + url + " Exception: " + e);
+    }
   }
 }
