@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SplitArrayController extends StreamPipesDataProcessor
+public class SplitArrayProcessor extends StreamPipesDataProcessor
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String KEEP_PROPERTIES_ID = "keep";
@@ -128,7 +128,7 @@ public class SplitArrayController extends StreamPipesDataProcessor
           outEvent.addField(key.getValue());
         }
       } else {
-        outEvent.addField(SplitArrayController.VALUE, field);
+        outEvent.addField(SplitArrayProcessor.VALUE, field);
       }
 
       for (String propertyName : keepProperties) {

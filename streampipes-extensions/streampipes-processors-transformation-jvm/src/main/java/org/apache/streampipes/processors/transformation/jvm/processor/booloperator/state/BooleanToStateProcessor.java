@@ -21,11 +21,10 @@ package org.apache.streampipes.processors.transformation.jvm.processor.boolopera
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
@@ -35,8 +34,10 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.vocabulary.SPSensor;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
@@ -45,15 +46,19 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class BooleanToStateController extends StandaloneEventProcessingDeclarer<BooleanToStateParameters> {
+public class BooleanToStateProcessor extends StreamPipesDataProcessor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(BooleanToStateController.class);
+  private static final Logger LOG = LoggerFactory.getLogger(BooleanToStateProcessor.class);
 
   public static final String BOOLEAN_STATE_FIELD = "boolean_state_field";
   public static final String DEFAULT_STATE_ID = "default-state-id";
   public static final String JSON_CONFIGURATION = "json-configuration";
 
   public static final String CURRENT_STATE = "current_state";
+
+  private List<String> stateFields;
+  private String defaultState;
+  private Map<String, String> jsonConfiguration;
 
   private static final String defaultSkeleton = "// Add the configuration for the string mappings here:\n"
       + "{\n"
@@ -81,26 +86,47 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanToStateParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
-
-    List<String> stateFields = extractor.mappingPropertyValues(BOOLEAN_STATE_FIELD);
-    String defaultState = extractor.singleValueParameter(DEFAULT_STATE_ID, String.class);
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    stateFields = extractor.mappingPropertyValues(BOOLEAN_STATE_FIELD);
+    defaultState = extractor.singleValueParameter(DEFAULT_STATE_ID, String.class);
     String jsonConfigurationString = extractor.codeblockValue(JSON_CONFIGURATION);
 
     try {
       jsonConfigurationString = jsonConfigurationString.replaceAll("(?m)^//.*", "");
-      Map<String, String> jsonConfiguration =
+      jsonConfiguration =
           JacksonSerializer.getObjectMapper().readValue(jsonConfigurationString, Map.class);
-      BooleanToStateParameters params =
-          new BooleanToStateParameters(graph, stateFields, defaultState, jsonConfiguration);
 
-      return new ConfiguredEventProcessor<>(params, BooleanToState::new);
     } catch (JsonProcessingException e) {
       LOG.info("Error when parsing the json configuration: " + jsonConfigurationString);
       throw new SpRuntimeException("The following mapping configuration is not valid: " + jsonConfigurationString);
     }
   }
 
+  @Override
+  public void onEvent(Event event,
+                      SpOutputCollector collector) throws SpRuntimeException {
+    String state = this.defaultState;
+
+    for (String stateField : stateFields) {
+      if (event.getFieldBySelector(stateField).getAsPrimitive().getAsBoolean().equals(true)) {
+        state = event.getFieldBySelector(stateField).getFieldNameIn();
+      }
+    }
+
+    // replace the state string when user provided a mapping
+    if (this.jsonConfiguration.containsKey(state)) {
+      state = this.jsonConfiguration.get(state);
+    }
+
+    event.addField(BooleanToStateProcessor.CURRENT_STATE, state);
+    collector.collect(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
 }

@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.value.duration;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -33,10 +33,12 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class CalculateDurationController extends StandaloneEventProcessingDeclarer<CalculateDurationParameters> {
+public class CalculateDurationProcessor extends StreamPipesDataProcessor {
 
   public static final String START_TS_FIELD_ID = "start-ts";
   public static final String END_TS_FIELD_ID = "end-ts";
@@ -47,6 +49,10 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   public static final String SECONDS = "Seconds";
   public static final String MINUTES = "Minutes";
   public static final String HOURS = "Hours";
+
+  private String startTs;
+  private String endTs;
+  private String unit;
 
 
   //TODO: Change Icon
@@ -72,16 +78,36 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   }
 
   @Override
-  public ConfiguredEventProcessor<CalculateDurationParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    startTs = extractor.mappingPropertyValue(START_TS_FIELD_ID);
+    endTs = extractor.mappingPropertyValue(END_TS_FIELD_ID);
+    unit = extractor.selectedSingleValue(UNIT_FIELD_ID, String.class);
+  }
 
-    String startTs = extractor.mappingPropertyValue(START_TS_FIELD_ID);
-    String endTs = extractor.mappingPropertyValue(END_TS_FIELD_ID);
-    String unit = extractor.selectedSingleValue(UNIT_FIELD_ID, String.class);
+  @Override
+  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
+    Long start = inputEvent.getFieldBySelector(startTs).getAsPrimitive().getAsLong();
+    Long end = inputEvent.getFieldBySelector(endTs).getAsPrimitive().getAsLong();
+    Long duration = end - start;
 
-    CalculateDurationParameters params =
-        new CalculateDurationParameters(graph, startTs, endTs, unit, DURATION_FIELD_NAME);
-    return new ConfiguredEventProcessor<>(params, CalculateDuration::new);
+    if (unit.equals(CalculateDurationProcessor.MS)) {
+      inputEvent.addField(DURATION_FIELD_NAME, duration);
+    } else if (unit.equals(CalculateDurationProcessor.SECONDS)) {
+      inputEvent.addField(DURATION_FIELD_NAME, (duration + 500) / 1000);
+    } else if (unit.equals(CalculateDurationProcessor.MINUTES)) {
+      inputEvent.addField(DURATION_FIELD_NAME, (duration + 30000) / 60000);
+    } else {
+      // Hours
+      inputEvent.addField(DURATION_FIELD_NAME, (duration + 1800000) / 3600000);
+    }
+    collector.collect(inputEvent);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }

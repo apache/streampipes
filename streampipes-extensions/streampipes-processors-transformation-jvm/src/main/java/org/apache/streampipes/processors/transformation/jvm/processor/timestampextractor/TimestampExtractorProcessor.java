@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOu
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -36,17 +37,23 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class TimestampExtractorController extends StandaloneEventProcessingDeclarer<TimestampExtractorParameters>
+public class TimestampExtractorProcessor extends StreamPipesDataProcessor
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String TIMESTAMP_FIELD = "timestampField";
   public static final String SELECTED_OUTPUT_FIELDS = "selectedOutputFields";
 
+  private String timestampField;
+  private List<String> outputFields;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -66,17 +73,6 @@ public class TimestampExtractorController extends StandaloneEventProcessingDecla
                 OutputFields.MINUTE.toString(), OutputFields.SECOND.toString(), OutputFields.WEEKDAY.toString()))
         .outputStrategy(OutputStrategies.customTransformation())
         .build();
-  }
-
-  @Override
-  public ConfiguredEventProcessor<TimestampExtractorParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
-    String timestampField = extractor.mappingPropertyValue(TIMESTAMP_FIELD);
-    List<String> selectedMultiValue = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
-
-    TimestampExtractorParameters params = new TimestampExtractorParameters(graph, timestampField, selectedMultiValue);
-    return new ConfiguredEventProcessor<>(params, TimestampExtractor::new);
   }
 
   @Override
@@ -124,4 +120,76 @@ public class TimestampExtractorController extends StandaloneEventProcessingDecla
     return eventSchema;
   }
 
+  @Override
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    timestampField = extractor.mappingPropertyValue(TIMESTAMP_FIELD);
+    outputFields = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    Long timestamp = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(new Date(timestamp));
+
+    for (String field : outputFields) {
+      if (field.equals(OutputFields.YEAR.toString())) {
+        event.addField("timestampYear", calendar.get(Calendar.YEAR));
+      }
+      if (field.equals(OutputFields.MONTH.toString())) {
+        event.addField("timestampMonth", calendar.get(Calendar.MONTH) + 1);
+      }
+      if (field.equals(OutputFields.DAY.toString())) {
+        event.addField("timestampDay", calendar.get(Calendar.DAY_OF_MONTH));
+      }
+      if (field.equals(OutputFields.HOUR.toString())) {
+        event.addField("timestampHour", calendar.get(Calendar.HOUR_OF_DAY));
+      }
+      if (field.equals(OutputFields.MINUTE.toString())) {
+        event.addField("timestampMinute", calendar.get(Calendar.MINUTE));
+      }
+      if (field.equals(OutputFields.SECOND.toString())) {
+        event.addField("timestampSecond", calendar.get(Calendar.SECOND));
+      }
+      if (field.equals(OutputFields.WEEKDAY.toString())) {
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        String dayString = "";
+        switch (day) {
+          case Calendar.MONDAY:
+            dayString = "Monday";
+            break;
+          case Calendar.TUESDAY:
+            dayString = "Tuesday";
+            break;
+          case Calendar.WEDNESDAY:
+            dayString = "Wednesday";
+            break;
+          case Calendar.THURSDAY:
+            dayString = "Thursday";
+            break;
+          case Calendar.FRIDAY:
+            dayString = "Friday";
+            break;
+          case Calendar.SATURDAY:
+            dayString = "Saturday";
+            break;
+          case Calendar.SUNDAY:
+            dayString = "Sunday";
+            break;
+        }
+        event.addField("timestampWeekday", dayString);
+      }
+    }
+
+    collector.collect(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
 }

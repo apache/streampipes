@@ -23,9 +23,12 @@ import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOu
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.LabelerUtils;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.Statement;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model.StatementUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -38,8 +41,12 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SPSensor;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
+
+import com.google.common.math.Stats;
 
 import java.util.List;
 
@@ -53,7 +60,7 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.sta
 import static org.apache.streampipes.processors.transformation.jvm.processor.state.StateUtils.getLabelStrings;
 import static org.apache.streampipes.processors.transformation.jvm.processor.state.StateUtils.getNumberValues;
 
-public class StateBufferLabelerController extends StandaloneEventProcessingDeclarer<StateBufferLabelerParameters>
+public class StateBufferLabelerProcessor extends StreamPipesDataProcessor
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String STATE_FILTER_ID = "stateFilterId";
@@ -66,6 +73,13 @@ public class StateBufferLabelerController extends StandaloneEventProcessingDecla
   public static final String MINIMUM = "minimum";
   public static final String MAXIMUM = "maximum";
   public static final String AVERAGE = "average";
+
+  private String sensorListValueProperty;
+  private String stateProperty;
+  private String stateFilter;
+  private String selectedOperation;
+  private String labelName;
+  private List<Statement> statements;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -104,31 +118,6 @@ public class StateBufferLabelerController extends StandaloneEventProcessingDecla
   }
 
   @Override
-  public ConfiguredEventProcessor<StateBufferLabelerParameters> onInvocation(
-      DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor) {
-
-    String sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
-    String stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
-    String stateFilter = extractor.singleValueParameter(STATE_FILTER_ID, String.class);
-    String selectedOperation = extractor.selectedSingleValue(OPERATIONS_ID, String.class);
-
-    String labelName = getLabelName(extractor);
-
-    List<Double> numberValues = getNumberValues(extractor);
-
-    List<String> labelStrings = getLabelStrings(extractor);
-
-    List<String> comparators = getComparators(extractor);
-
-    StateBufferLabelerParameters params =
-        new StateBufferLabelerParameters(graph, sensorListValueProperty, stateProperty, stateFilter, selectedOperation,
-            labelName, numberValues, labelStrings, comparators);
-
-    return new ConfiguredEventProcessor<>(params, StateBufferLabeler::new);
-  }
-
-  @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
                                            ProcessingElementParameterExtractor parameterExtractor)
       throws SpRuntimeException {
@@ -138,5 +127,55 @@ public class StateBufferLabelerController extends StandaloneEventProcessingDecla
     List<String> labelStrings = getLabelStrings(parameterExtractor);
 
     return LabelerUtils.resolveOutputStrategy(processingElement, labelName, labelStrings);
+  }
+
+  @Override
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    var extractor = parameters.extractor();
+    sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
+    stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
+    stateFilter = extractor.singleValueParameter(STATE_FILTER_ID, String.class);
+    selectedOperation = extractor.selectedSingleValue(OPERATIONS_ID, String.class);
+
+    labelName = getLabelName(extractor);
+
+    List<Double> numberValues = getNumberValues(extractor);
+    List<String> labelStrings = getLabelStrings(extractor);
+    List<String> comparators = getComparators(extractor);
+
+    statements = StatementUtils.getStatements(
+        numberValues,
+        labelStrings,
+        comparators);
+  }
+
+  @Override
+  public void onEvent(Event inputEvent,
+                      SpOutputCollector collector) throws SpRuntimeException {
+    List<Double> values =
+        inputEvent.getFieldBySelector(this.sensorListValueProperty).getAsList().parseAsSimpleType(Double.class);
+    List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
+
+    if (states.contains(this.stateFilter) || this.stateFilter.equals("*")) {
+      double calculatedValue;
+
+      if (StateBufferLabelerProcessor.MAXIMUM.equals(this.selectedOperation)) {
+        calculatedValue = Stats.of(values).max();
+      } else if (StateBufferLabelerProcessor.MINIMUM.equals(this.selectedOperation)) {
+        calculatedValue = Stats.of(values).min();
+      } else {
+        calculatedValue = Stats.of(values).mean();
+      }
+
+      Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, calculatedValue, this.statements);
+      collector.collect(resultEvent);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }
