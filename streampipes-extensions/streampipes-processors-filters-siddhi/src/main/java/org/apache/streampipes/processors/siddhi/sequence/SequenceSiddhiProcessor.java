@@ -19,19 +19,23 @@ package org.apache.streampipes.processors.siddhi.sequence;
 
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
+import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
+import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
+import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
+import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
+import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
+import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
-public class SequenceController extends StandaloneEventProcessingDeclarer<SequenceParameters> {
+public class SequenceSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
   private static final String Duration = "duration";
 
@@ -56,14 +60,32 @@ public class SequenceController extends StandaloneEventProcessingDeclarer<Sequen
   }
 
   @Override
-  public ConfiguredEventProcessor<SequenceParameters> onInvocation(DataProcessorInvocation graph,
-                                                                   ProcessingElementParameterExtractor extractor) {
-
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+                                        String finalInsertIntoStreamName) {
+    var extractor = siddhiParams.getParams().extractor();
     int duration = extractor.singleValueParameter(Duration, Integer.class);
 
-    SequenceParameters staticParam = new SequenceParameters(graph, duration);
-
-    return new ConfiguredEventProcessor<>(staticParam, Sequence::new);
+    InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
+    return SiddhiAppConfigBuilder
+        .create()
+        .addQuery(SiddhiQueryBuilder
+            .create(fromStatement(siddhiParams, duration), insertIntoClause)
+            .withSelectClause(selectStatement(siddhiParams))
+            .build())
+        .build();
   }
 
+  private String fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+                               int duration) {
+
+    return "from every not "
+        + siddhiParams.getInputStreamNames().get(0)
+        + " for "
+        + duration
+        + " sec";
+  }
+
+  private SelectClause selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
+    return SelectClause.createWildcard();
+  }
 }
