@@ -23,9 +23,6 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectio
 
 public class PostgreSqlParameters extends JdbcConnectionParameters {
 
-
-  private boolean sslEnabled;
-
   public PostgreSqlParameters(DataSinkInvocation graph, String postgreSqlHost, Integer postgreSqlPort,
                               String databaseName, String tableName, String user, String password, Boolean sslEnabled) {
     super(
