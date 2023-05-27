@@ -61,7 +61,6 @@ public class Redis {
     ttl = parameters.getTTL();
   }
 
-
   public void onEvent(Event event) throws SpRuntimeException {
     try (Jedis jedis = getJedis()) {
       final String eventKey = getEventKey(event, autoIncrement ? jedis.incr(EVENT_COUNT) : 0L);
@@ -75,7 +74,6 @@ public class Redis {
       throw new SpRuntimeException("Could not persist event to redis", ex);
     }
   }
-
 
   public void onDetach() throws SpRuntimeException {
     if (jedisPool != null && !jedisPool.isClosed()) {
