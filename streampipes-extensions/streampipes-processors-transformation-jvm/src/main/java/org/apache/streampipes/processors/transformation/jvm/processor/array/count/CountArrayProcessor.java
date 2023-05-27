@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.array.count;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -32,13 +33,19 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class CountArrayController extends StandaloneEventProcessingDeclarer<CountArrayParameters> {
+import java.util.List;
+
+public class CountArrayProcessor extends StreamPipesDataProcessor {
 
   public static final String COUNT_NAME = "countValue";
   public static final String ARRAY_FIELD = "array-field";
+
+  private String arrayField;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -57,12 +64,24 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
   }
 
   @Override
-  public ConfiguredEventProcessor<CountArrayParameters> onInvocation(DataProcessorInvocation graph,
-                                                                     ProcessingElementParameterExtractor extractor) {
-    String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD);
-
-    CountArrayParameters params = new CountArrayParameters(graph, arrayField);
-    return new ConfiguredEventProcessor<>(params, CountArray::new);
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    this.arrayField = parameters.extractor().mappingPropertyValue(ARRAY_FIELD);
   }
 
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+
+    List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList().getRawValue();
+
+    event.addField(CountArrayProcessor.COUNT_NAME, allEvents.size());
+
+    collector.collect(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
 }

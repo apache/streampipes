@@ -23,6 +23,10 @@ import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOu
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.field.AbstractField;
+import org.apache.streampipes.model.runtime.field.ListField;
+import org.apache.streampipes.model.runtime.field.NestedField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -35,18 +39,24 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class SplitArrayController extends StandaloneEventProcessingDeclarer<SplitArrayParameters>
+public class SplitArrayController extends StreamPipesDataProcessor
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String KEEP_PROPERTIES_ID = "keep";
   public static final String ARRAY_FIELD_ID = "array-field";
   public static final String VALUE = "array_value";
+
+  private String arrayField;
+  private List<String> keepProperties;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -64,17 +74,6 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
             .build())
         .outputStrategy(OutputStrategies.customTransformation())
         .build();
-  }
-
-  @Override
-  public ConfiguredEventProcessor<SplitArrayParameters> onInvocation(DataProcessorInvocation graph,
-                                                                     ProcessingElementParameterExtractor extractor) {
-
-    String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
-    List<String> keepProperties = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
-
-    SplitArrayParameters params = new SplitArrayParameters(graph, arrayField, keepProperties);
-    return new ConfiguredEventProcessor<>(params, SplitArray::new);
   }
 
   @Override
@@ -97,5 +96,51 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
     outProperties.addAll(keepProperties);
 
     return new EventSchema(outProperties);
+  }
+
+  @Override
+  public void onInvocation(ProcessorParams parameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    arrayField = parameters.extractor().mappingPropertyValue(ARRAY_FIELD_ID);
+    keepProperties = parameters.extractor().mappingPropertyValues(KEEP_PROPERTIES_ID);
+  }
+
+  @Override
+  public void onEvent(Event event,
+                      SpOutputCollector collector) throws SpRuntimeException {
+
+    List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList()
+        .parseAsCustomType(o -> {
+          if (o instanceof NestedField) {
+            return o;
+          } else if (o instanceof ListField) {
+            return o;
+          } else {
+            return o;
+          }
+        });
+
+    for (AbstractField field : allEvents) {
+      Event outEvent = new Event();
+      if (field instanceof NestedField) {
+        for (Map.Entry<String, AbstractField> key : ((NestedField) field).getRawValue().entrySet()) {
+          outEvent.addField(key.getValue());
+        }
+      } else {
+        outEvent.addField(SplitArrayController.VALUE, field);
+      }
+
+      for (String propertyName : keepProperties) {
+        outEvent.addField(event.getFieldBySelector(propertyName));
+      }
+
+      collector.collect(outEvent);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }
