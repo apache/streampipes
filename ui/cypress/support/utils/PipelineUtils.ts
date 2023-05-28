@@ -24,14 +24,6 @@ export class PipelineUtils {
     public static addPipeline(pipelineInput: PipelineInput) {
         PipelineUtils.goToPipelineEditor();
 
-        // if data source type is data set, switch to this tab
-        if (pipelineInput.dataSourceType === 'set') {
-            cy.wait(5000);
-            cy.dataCy('sp-pipeline-element-' + pipelineInput.dataSource, {
-                timeout: 10000,
-            }).should('be.visible');
-        }
-
         PipelineUtils.selectDataStream(pipelineInput);
 
         PipelineUtils.configurePipeline(pipelineInput);

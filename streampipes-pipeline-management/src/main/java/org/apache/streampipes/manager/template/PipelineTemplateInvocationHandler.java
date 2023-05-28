@@ -52,7 +52,7 @@ public class PipelineTemplateInvocationHandler {
 
 
   public PipelineOperationStatus handlePipelineInvocation() {
-    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), pipelineTemplateDescription,
+    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataStreamId(), pipelineTemplateDescription,
         pipelineTemplateInvocation.getKviName()).makePipeline();
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(System.currentTimeMillis());

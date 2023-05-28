@@ -116,6 +116,8 @@ services:
     restart: unless-stopped
     networks:
       spnet:
+    ports:
+      - 4222:4222
 
   # Lite version pipeline elements
   extensions-all-jvm:

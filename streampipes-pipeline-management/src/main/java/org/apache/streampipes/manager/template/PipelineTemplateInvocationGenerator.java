@@ -45,7 +45,7 @@ public class PipelineTemplateInvocationGenerator {
 
     PipelineTemplateInvocation pipelineTemplateInvocation = new PipelineTemplateInvocation();
     pipelineTemplateInvocation.setStaticProperties(collectStaticProperties(pipeline));
-    pipelineTemplateInvocation.setDataSetId(spDataStream.getElementId());
+    pipelineTemplateInvocation.setDataStreamId(spDataStream.getElementId());
     //pipelineTemplateInvocation.setPipelineTemplateDescription(pipelineTemplateDescription);
     pipelineTemplateInvocation.setPipelineTemplateId(pipelineTemplateDescription.getPipelineTemplateId());
     return pipelineTemplateInvocation;
