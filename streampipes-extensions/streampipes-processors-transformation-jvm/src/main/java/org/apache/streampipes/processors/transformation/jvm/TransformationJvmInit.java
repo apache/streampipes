@@ -51,6 +51,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.transformt
 import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationProcessor;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 public class TransformationJvmInit extends ExtensionsModelSubmitter {
 
@@ -64,6 +65,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             "Processors Transformation JVM",
             "",
             8090)
+        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerPipelineElements(
             new CountArrayProcessor(),
             new SplitArrayProcessor(),
