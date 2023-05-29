@@ -89,7 +89,7 @@ public class TestBooleanCounterProcessor {
   @Test
   public void testBooleanCounter() {
     BooleanCounterProcessor booleanCounter = new BooleanCounterProcessor();
-    DataProcessorDescription originalGraph = booleanCounter.declareModel();
+    DataProcessorDescription originalGraph = booleanCounter.declareConfig().getDescription();
     originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
     DataProcessorInvocation graph =
@@ -128,7 +128,7 @@ public class TestBooleanCounterProcessor {
       public void disconnect() throws SpRuntimeException {}
     };
 
-    booleanCounter.onInvocation(params, spOut, null);
+    booleanCounter.onPipelineStarted(params, spOut, null);
     Integer counter = sendEvents(booleanCounter, spOut);
     LOG.info("Expected match count is {}", expectedBooleanCount);
     LOG.info("Actual match count is {}", counter);

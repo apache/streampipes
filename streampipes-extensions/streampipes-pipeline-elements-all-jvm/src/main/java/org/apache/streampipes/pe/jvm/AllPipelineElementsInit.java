@@ -40,6 +40,7 @@ import org.apache.streampipes.sinks.brokers.jvm.BrokersJvmInit;
 import org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit;
 import org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit;
 import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
+import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 public class AllPipelineElementsInit extends ExtensionsModelSubmitter {
 
@@ -53,6 +54,7 @@ public class AllPipelineElementsInit extends ExtensionsModelSubmitter {
             "StreamPipes Bundled Pipeline Elements for JVM Wrapper",
             "",
             8090)
+        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .merge(new SinksInternalJvmInit().provideServiceDefinition())
         .merge(new FiltersJvmInit().provideServiceDefinition())
         .merge(new ChangeDetectionJvmInit().provideServiceDefinition())
