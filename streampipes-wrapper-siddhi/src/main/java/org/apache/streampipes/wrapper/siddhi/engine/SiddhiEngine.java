@@ -17,9 +17,8 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine;
 
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiOutputStreamCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiOutputStreamDebugCallback;
@@ -64,11 +63,11 @@ public class SiddhiEngine {
     this.debugMode = true;
   }
 
-  public void initializeEngine(SiddhiInvocationConfigGenerator<? extends EventProcessorBindingParams> settings,
+  public void initializeEngine(SiddhiInvocationConfigGenerator settings,
                                SpOutputCollector spOutputCollector,
-                               EventProcessorRuntimeContext runtimeContext) {
+                               IDataProcessorParameters runtimeParameters) {
 
-    EventProcessorBindingParams params = settings.getSiddhiProcessorParams().getParams();
+    IDataProcessorParameters params = settings.getSiddhiProcessorParams().getParams();
     this.typeInfo = settings.getSiddhiProcessorParams().getEventTypeInfo();
     SiddhiManager siddhiManager = SpSiddhiManager.INSTANCE.getSiddhiManager();
 
@@ -86,7 +85,7 @@ public class SiddhiEngine {
     List<Attribute> streamAttributes = streamDef.get(outputKey).getAttributeList();
     if (!debugMode) {
       callback = new SiddhiOutputStreamCallback(spOutputCollector,
-          runtimeContext,
+          runtimeParameters,
           streamAttributes,
           settings.getSiddhiAppConfig().getOutputConfig());
     } else {

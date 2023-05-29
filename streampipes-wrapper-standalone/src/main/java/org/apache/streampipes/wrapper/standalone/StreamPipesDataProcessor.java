@@ -17,21 +17,63 @@
  */
 package org.apache.streampipes.wrapper.standalone;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.wrapper.runtime.EventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-import java.util.function.Supplier;
+public abstract class StreamPipesDataProcessor
+    implements IStreamPipesDataProcessor {
 
-public abstract class StreamPipesDataProcessor extends StandaloneEventProcessingDeclarer<ProcessorParams>
-    implements EventProcessor<ProcessorParams> {
+//  @Override
+//  public StandaloneEventProcessorRuntime<ProcessorParams> getRuntime(DataProcessorInvocation graph,
+//                                                                     ProcessingElementParameterExtractor extractor,
+//                                                                     ConfigExtractor configExtractor,
+//                                                                     StreamPipesClient streamPipesClient) {
+//    ConfiguredEventProcessor<ProcessorParams> configuredEngine = onInvocation(graph, extractor);
+//    EventProcessorRuntimeParams<ProcessorParams> runtimeParams =
+//        new EventProcessorRuntimeParams<>(
+//            configuredEngine.getBindingParams(),
+//            false,
+//            configExtractor,
+//            streamPipesClient
+//        );
+//
+//    return new StandaloneEventProcessorRuntime<>(configuredEngine.getEngineSupplier(),
+//        runtimeParams);
+//  }
 
   @Override
-  public ConfiguredEventProcessor<ProcessorParams> onInvocation(DataProcessorInvocation graph,
-                                                                ProcessingElementParameterExtractor extractor) {
-    Supplier<EventProcessor<ProcessorParams>> supplier = () -> this;
-    return new ConfiguredEventProcessor<>(new ProcessorParams(graph), supplier);
+  public void onPipelineStarted(IDataProcessorParameters params,
+                                SpOutputCollector collector,
+                                EventProcessorRuntimeContext runtimeContext) {
+    ProcessorParams parameters = new ProcessorParams(params.getModel());
+    this.onInvocation(parameters, collector, runtimeContext);
   }
 
+  @Override
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        () -> this,
+        declareModel()
+    );
+  }
+
+  @Override
+  public void onPipelineStopped() {
+    this.onDetach();
+  }
+
+  public abstract DataProcessorDescription declareModel();
+
+  public abstract void onInvocation(ProcessorParams parameters,
+                                    SpOutputCollector spOutputCollector,
+                                    EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException;
+
+  public abstract void onDetach();
 }

@@ -19,72 +19,81 @@
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
+import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
+import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
+import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
-import org.apache.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
-import org.apache.streampipes.wrapper.routing.SpInputCollector;
-import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.wrapper.context.generator.DataSinkContextGenerator;
+import org.apache.streampipes.wrapper.params.generator.DataSinkParameterGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
-public class StandaloneEventSinkRuntime<T extends EventSinkBindingParams> extends
-    StandalonePipelineElementRuntime<T, DataSinkInvocation,
-        EventSinkRuntimeParams<T>, EventSinkRuntimeContext, EventSink<T>> {
+public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime<
+    IStreamPipesDataSink,
+    DataSinkInvocation,
+    EventSinkRuntimeContext,
+    IDataSinkParameterExtractor,
+    IDataSinkParameters> implements IDataSinkRuntime, RawDataProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventSinkRuntime.class);
 
-  public StandaloneEventSinkRuntime(Supplier<EventSink<T>> supplier, EventSinkRuntimeParams<T>
-      params) {
-    super(supplier, params);
-  }
-
-  @Override
-  public void discardRuntime() throws SpRuntimeException {
-    getInputCollectors().forEach(is -> is.unregisterConsumer(instanceId));
-    discardEngine();
-    postDiscard();
+  public StandaloneEventSinkRuntime() {
+    super(new DataSinkContextGenerator(), new DataSinkParameterGenerator());
   }
 
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
-      monitoringManager.increaseInCounter(resourceId, sourceInfo, System.currentTimeMillis());
-      engine.onEvent(params.makeEvent(rawEvent, sourceInfo));
+      runtimeContext.getLogger().increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
+      pipelineElement.onEvent(internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo));
     } catch (RuntimeException e) {
-      LOG.error("RuntimeException while processing event in {}", engine.getClass().getCanonicalName(), e);
-      addLogEntry(e);
+      LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
+      addLogEntry(runtimeContext.getLogger(), instanceId, e);
     }
   }
 
-  @Override
-  public void bindRuntime() throws SpRuntimeException {
-    bindEngine();
-    getInputCollectors().forEach(is -> is.registerConsumer(instanceId, this));
-    prepareRuntime();
-  }
-
-  @Override
   public void prepareRuntime() throws SpRuntimeException {
-    for (SpInputCollector spInputCollector : getInputCollectors()) {
+    for (SpInputCollector spInputCollector : getInputCollectors(runtimeParameters.getModel().getInputStreams())) {
       spInputCollector.connect();
     }
   }
 
-  @Override
   public void postDiscard() throws SpRuntimeException {
-    for (SpInputCollector spInputCollector : getInputCollectors()) {
+    for (SpInputCollector spInputCollector : inputCollectors) {
       spInputCollector.disconnect();
     }
   }
 
   @Override
-  public void bindEngine() throws SpRuntimeException {
-    engine.onInvocation(params.getBindingParams(), params.getRuntimeContext());
+  public Response onRuntimeInvoked(String instanceId,
+                                   IStreamPipesDataSink pipelineElement,
+                                   DataSinkInvocation pipelineElementInvocation) {
+    try {
+      return new Response(pipelineElementInvocation.getElementId(), true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new Response(pipelineElementInvocation.getElementId(), false, e.getMessage());
+    }
   }
 
+  @Override
+  protected void beforeStart() {
+    pipelineElement.onPipelineStarted(runtimeParameters, runtimeContext);
+    inputCollectors.forEach(is -> is.registerConsumer(instanceId, this));
+    prepareRuntime();
+  }
+
+  @Override
+  protected void afterStop() {
+    inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
+    postDiscard();
+  }
 }

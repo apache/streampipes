@@ -20,11 +20,11 @@ package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 import java.util.Collection;
 import java.util.HashMap;

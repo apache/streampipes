@@ -41,7 +41,6 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperator;
 import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperatorExpression;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 public class NumericalFilterSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
@@ -72,7 +71,7 @@ public class NumericalFilterSiddhiProcessor extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
                                         String finalInsertIntoStreamName) {
 
     var extractor = siddhiParams.getParams().extractor();

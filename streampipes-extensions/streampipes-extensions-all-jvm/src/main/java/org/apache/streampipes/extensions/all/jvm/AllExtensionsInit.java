@@ -30,6 +30,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.wrapper.kafka.KafkaStreamRuntimeProvider;
 
 
 public class AllExtensionsInit extends ExtensionsModelSubmitter {
@@ -46,6 +47,7 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
 //        .merge(new ConnectAdapterInit().provideServiceDefinition())
         .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
         .merge(new AllPipelineElementsInit().provideServiceDefinition())
+        .registerRuntimeProvider(new KafkaStreamRuntimeProvider())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

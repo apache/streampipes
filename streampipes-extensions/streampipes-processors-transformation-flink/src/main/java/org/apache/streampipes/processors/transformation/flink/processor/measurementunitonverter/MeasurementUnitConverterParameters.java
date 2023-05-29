@@ -19,11 +19,11 @@
 package org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import com.github.jqudt.Unit;
 
-public class MeasurementUnitConverterParameters extends EventProcessorBindingParams {
+public class MeasurementUnitConverterParameters extends ProcessorParams {
 
   private String convertProperty;
   private Unit inputUnit;

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.commons;
 
-import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.image.ImageStore;
@@ -39,7 +39,7 @@ public class TimeSeriesStore {
 
 
   public TimeSeriesStore(Environment environment,
-                         StreamPipesClient client,
+                         IStreamPipesClient client,
                          DataLakeMeasure measure,
                          boolean enableImageStore) {
 

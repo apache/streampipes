@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.internal.jvm.datalake;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.TimeSeriesStore;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -33,8 +34,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 
@@ -66,7 +66,7 @@ public class DataLakeSink extends StreamPipesDataSink {
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     String timestampField = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     String measureName = parameters.extractor().singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
-    EventSchema eventSchema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
+    EventSchema eventSchema = parameters.getInputSchemaInfos().get(0).getEventSchema();
 
     DataLakeMeasure measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
 

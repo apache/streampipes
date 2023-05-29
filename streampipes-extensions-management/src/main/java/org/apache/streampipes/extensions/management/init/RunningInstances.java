@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.init;
 
-import org.apache.streampipes.extensions.api.declarer.InvocableDeclarer;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
 import org.apache.streampipes.extensions.management.util.ElementInfo;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
@@ -30,19 +30,22 @@ import java.util.Map;
 public enum RunningInstances {
   INSTANCE;
 
-  private final Map<String, ElementInfo<NamedStreamPipesEntity, InvocableDeclarer>> runningInstances = new HashMap<>();
+  private final Map<String,
+      ElementInfo<NamedStreamPipesEntity, IStreamPipesRuntime<?, ?>>> runningInstances = new HashMap<>();
 
 
-  public void add(String id, NamedStreamPipesEntity description, InvocableDeclarer invocation) {
-    runningInstances.put(id, new ElementInfo<>(description, invocation));
+  public void add(String id,
+                  NamedStreamPipesEntity description,
+                  IStreamPipesRuntime<?, ?> runtime) {
+    runningInstances.put(id, new ElementInfo<>(description, runtime));
   }
 
   public boolean exists(String runningInstanceId) {
     return runningInstances.containsKey(runningInstanceId);
   }
 
-  public InvocableDeclarer getInvocation(String id) {
-    ElementInfo<NamedStreamPipesEntity, InvocableDeclarer> result = runningInstances.get(id);
+  public IStreamPipesRuntime<?, ?> getInvocation(String id) {
+    ElementInfo<NamedStreamPipesEntity, IStreamPipesRuntime<?, ?>> result = runningInstances.get(id);
     if (result != null) {
       return result.getInvocation();
     } else {

@@ -17,10 +17,15 @@
  */
 package org.apache.streampipes.wrapper.distributed.runtime;
 
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.context.IContextGenerator;
+import org.apache.streampipes.extensions.api.pe.context.RuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IParameterGenerator;
+import org.apache.streampipes.extensions.api.pe.param.IPipelineElementParameters;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
 import org.apache.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
 import org.apache.streampipes.model.SpDataStream;
@@ -30,41 +35,22 @@ import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.wrapper.context.RuntimeContext;
-import org.apache.streampipes.wrapper.params.binding.BindingParams;
-import org.apache.streampipes.wrapper.params.runtime.RuntimeParams;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 
 import java.util.Properties;
 
-public abstract class DistributedRuntime<RpT extends RuntimeParams<V, W, X>, V extends
-    BindingParams<W>, W extends InvocableStreamPipesEntity, X extends RuntimeContext> extends
-    PipelineElementRuntime {
+public abstract class DistributedRuntime<
+    PeT extends IStreamPipesPipelineElement<?>,
+    IvT extends InvocableStreamPipesEntity,
+    RcT extends RuntimeContext,
+    ExT extends IParameterExtractor<IvT>,
+    PepT extends IPipelineElementParameters<IvT, ExT>>
+    extends PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT>
+    implements IStreamPipesRuntime<PeT, IvT> {
 
-  protected RpT runtimeParams;
-  protected V bindingParams;
-
-  @Deprecated
-  protected V params;
-
-  public DistributedRuntime(RpT runtimeParams) {
-    super();
-    this.runtimeParams = runtimeParams;
-    this.bindingParams = runtimeParams.getBindingParams();
-    this.params = runtimeParams.getBindingParams();
-  }
-
-  public DistributedRuntime(V bindingParams,
-                            ConfigExtractor configExtractor,
-                            StreamPipesClient streamPipesClient) {
-    super();
-    this.bindingParams = bindingParams;
-    this.params = bindingParams;
-    this.runtimeParams = makeRuntimeParams(configExtractor, streamPipesClient);
-  }
-
-  protected W getGraph() {
-    return runtimeParams.getBindingParams().getGraph();
+  public DistributedRuntime(IContextGenerator<RcT, IvT> contextGenerator,
+                             IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+    super(contextGenerator, parameterGenerator);
   }
 
   protected Properties getProperties(KafkaTransportProtocol protocol) {
@@ -122,8 +108,5 @@ public abstract class DistributedRuntime<RpT extends RuntimeParams<V, W, X>, V e
     topic = topic.replaceAll("\\.", "\\\\.");
     return topic.replaceAll("\\*", ".*");
   }
-
-  protected abstract RpT makeRuntimeParams(ConfigExtractor configExtractor,
-                                           StreamPipesClient streamPipesClient);
 
 }

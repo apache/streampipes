@@ -20,12 +20,12 @@ package org.apache.streampipes.processors.pattern.detection.flink.processor.abse
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbsenceParameters extends EventProcessorBindingParams {
+public class AbsenceParameters extends ProcessorParams {
 
   private static final long serialVersionUID = 4319341875274736697L;
 

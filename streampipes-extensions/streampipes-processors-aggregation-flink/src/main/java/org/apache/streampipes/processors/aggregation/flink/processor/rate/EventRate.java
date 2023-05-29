@@ -19,7 +19,7 @@ package org.apache.streampipes.processors.aggregation.flink.processor.rate;
 
 import org.apache.streampipes.model.runtime.Event;
 
-import org.apache.flink.shaded.guava18.com.google.common.collect.Iterables;
+import org.apache.flink.shaded.curator5.com.google.common.collect.Iterables;
 import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;

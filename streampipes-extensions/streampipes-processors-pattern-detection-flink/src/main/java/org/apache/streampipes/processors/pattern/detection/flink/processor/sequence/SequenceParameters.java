@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.pattern.detection.flink.processor.sequence;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class SequenceParameters extends EventProcessorBindingParams {
+public class SequenceParameters extends ProcessorParams {
 
   private Integer timeWindow;
   private String timeUnit;

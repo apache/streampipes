@@ -19,7 +19,7 @@
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.util.ServiceDefinitionUtil;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
@@ -40,7 +40,8 @@ public class ServiceTagProvider {
   }
 
   private List<SpServiceTag> extractPipelineElementServiceTags() {
-    Collection<Declarer<?>> declarers = DeclarersSingleton.getInstance().getDeclarers().values();
+    Collection<IStreamPipesPipelineElement<?>> declarers =
+        DeclarersSingleton.getInstance().getDeclarers().values();
     List<SpServiceTag> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
     serviceTags.add(DefaultSpServiceTags.PE);
 

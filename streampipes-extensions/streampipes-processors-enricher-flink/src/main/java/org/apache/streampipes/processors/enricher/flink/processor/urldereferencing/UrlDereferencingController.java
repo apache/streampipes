@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.enricher.flink.processor.urldereferencing;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -35,7 +33,7 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDereferencingParameter> {
 
@@ -63,22 +61,11 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
 
 
   @Override
-  public FlinkDataProcessorRuntime<UrlDereferencingParameter> getRuntime(DataProcessorInvocation graph,
-                                                                         ProcessingElementParameterExtractor extractor,
-                                                                         ConfigExtractor configExtractor,
-                                                                         StreamPipesClient streamPipesClient) {
-    String urlString = extractor.mappingPropertyValue(URL);
-
-//        java.net.URL url = null;
-/*        try {
-             url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            logger.error("Malformed URL:" + urlString);
-            throw new IllegalArgumentException("Malformed URL:" + urlString);
-        }
-*/
+  public FlinkDataProcessorProgram<UrlDereferencingParameter> getProgram(DataProcessorInvocation graph,
+                                                                         ProcessingElementParameterExtractor ex) {
+    String urlString = ex.mappingPropertyValue(URL);
     UrlDereferencingParameter staticParam = new UrlDereferencingParameter(graph, urlString, APPEND_HTML);
 
-    return new UrlDereferencingProgram(staticParam, configExtractor, streamPipesClient);
+    return new UrlDereferencingProgram(staticParam);
   }
 }

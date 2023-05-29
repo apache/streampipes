@@ -34,7 +34,6 @@ import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 public class FrequencySiddhiProcessor extends StreamPipesSiddhiProcessor {
 
@@ -59,7 +58,7 @@ public class FrequencySiddhiProcessor extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
                                         String finalInsertIntoStreamName) {
     var extractor = siddhiParams.getParams().extractor();
     int duration = extractor.singleValueParameter(DURATION, Integer.class);
@@ -75,7 +74,7 @@ public class FrequencySiddhiProcessor extends StreamPipesSiddhiProcessor {
         .build();
   }
 
-  private String fromStatement(SiddhiProcessorParams<ProcessorParams> params,
+  private String fromStatement(SiddhiProcessorParams params,
                                int duration,
                                String timeUnit) {
     return "from every not "
