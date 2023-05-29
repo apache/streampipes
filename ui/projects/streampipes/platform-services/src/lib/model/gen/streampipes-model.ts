@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-05-15 15:33:04.
+// Generated using typescript-generator version 3.1.1185 on 2023-05-29 18:04:19.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -184,7 +184,6 @@ export class AdapterType {
 
 export class TransformationRuleDescription {
     '@class':
-        | 'org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
@@ -250,8 +249,6 @@ export class TransformationRuleDescription {
                 return CorrectionValueTransformationRuleDescription.fromData(
                     data,
                 );
-            case 'org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription':
-                return DebugSinkRuleDescription.fromData(data);
         }
     }
 }
@@ -1250,44 +1247,6 @@ export class DataSeries {
     }
 }
 
-export class Message {
-    elementName: string;
-    notifications: Notification[];
-    success: boolean;
-
-    static fromData(data: Message, target?: Message): Message {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Message();
-        instance.elementName = data.elementName;
-        instance.notifications = __getCopyArrayFn(Notification.fromData)(
-            data.notifications,
-        );
-        instance.success = data.success;
-        return instance;
-    }
-}
-
-export class DataSetModificationMessage extends Message {
-    eventGrounding: EventGrounding;
-    invocationId: string;
-
-    static fromData(
-        data: DataSetModificationMessage,
-        target?: DataSetModificationMessage,
-    ): DataSetModificationMessage {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DataSetModificationMessage();
-        super.fromData(data, instance);
-        instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
-        instance.invocationId = data.invocationId;
-        return instance;
-    }
-}
-
 export class DataSinkInvocation extends InvocableStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.graph.DataSinkInvocation';
     'category': string[];
@@ -1321,22 +1280,6 @@ export class DataSinkType {
         instance.code = data.code;
         instance.description = data.description;
         instance.label = data.label;
-        return instance;
-    }
-}
-
-export class DebugSinkRuleDescription extends TransformationRuleDescription {
-    '@class': 'org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription';
-
-    static 'fromData'(
-        data: DebugSinkRuleDescription,
-        target?: DebugSinkRuleDescription,
-    ): DebugSinkRuleDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DebugSinkRuleDescription();
-        super.fromData(data, instance);
         return instance;
     }
 }
@@ -1507,6 +1450,25 @@ export class Enumeration extends ValueSpecification {
         instance.runtimeValues = __getCopyArrayFn(__identity<string>())(
             data.runtimeValues,
         );
+        return instance;
+    }
+}
+
+export class Message {
+    elementName: string;
+    notifications: Notification[];
+    success: boolean;
+
+    static fromData(data: Message, target?: Message): Message {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Message();
+        instance.elementName = data.elementName;
+        instance.notifications = __getCopyArrayFn(Notification.fromData)(
+            data.notifications,
+        );
+        instance.success = data.success;
         return instance;
     }
 }
@@ -2905,7 +2867,7 @@ export class PipelineTemplateDescription extends NamedStreamPipesEntity {
 
 export class PipelineTemplateInvocation {
     '@class': 'org.apache.streampipes.model.template.PipelineTemplateInvocation';
-    'dataSetId': string;
+    'dataStreamId': string;
     'kviName': string;
     'pipelineTemplateDescription': PipelineTemplateDescription;
     'pipelineTemplateId': string;
@@ -2920,7 +2882,7 @@ export class PipelineTemplateInvocation {
         }
         const instance = target || new PipelineTemplateInvocation();
         instance['@class'] = data['@class'];
-        instance.dataSetId = data.dataSetId;
+        instance.dataStreamId = data.dataStreamId;
         instance.kviName = data.kviName;
         instance.pipelineTemplateDescription =
             PipelineTemplateDescription.fromData(
@@ -2993,7 +2955,7 @@ export class PropertyValueSpecification {
 }
 
 /**
- * @deprecated
+ * @deprecated since 0.93.0, for removal
  */
 export class ProtocolDescription extends NamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.grounding.ProtocolDescription';
@@ -3916,8 +3878,7 @@ export type TransformationRuleDescriptionUnion =
     | RenameRuleDescription
     | MoveRuleDescription
     | ChangeDatatypeTransformationRuleDescription
-    | CorrectionValueTransformationRuleDescription
-    | DebugSinkRuleDescription;
+    | CorrectionValueTransformationRuleDescription;
 
 export type TransportProtocolUnion =
     | JmsTransportProtocol
