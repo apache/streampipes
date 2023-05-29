@@ -28,12 +28,12 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
-import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
-import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
-import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
-import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
-import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
+import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbSink;
+import org.apache.streampipes.sinks.databases.jvm.ditto.DittoSink;
+import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbSink;
+import org.apache.streampipes.sinks.databases.jvm.opcua.OpcUaSink;
+import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
+import org.apache.streampipes.sinks.databases.jvm.redis.RedisSink;
 
 public class DatabasesJvmInit extends ExtensionsModelSubmitter {
 
@@ -48,12 +48,12 @@ public class DatabasesJvmInit extends ExtensionsModelSubmitter {
             "",
             8090)
         .registerPipelineElements(
-            new CouchDbController(),
-            new UpcUaController(),
-            new PostgreSqlController(),
-            new IotDbController(),
-            new DittoController(),
-            new RedisController())
+            new CouchDbSink(),
+            new OpcUaSink(),
+            new PostgreSqlSink(),
+            new IotDbSink(),
+            new DittoSink(),
+            new RedisSink())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

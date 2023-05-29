@@ -15,10 +15,13 @@
 # limitations under the License.
 #
 import sys, os
+from deprecated import deprecated
 sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 
-import streampipes.model.staticproperty.static_property 
+import streampipes.model.staticproperty.static_property
 
+
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class FreeTextStaticProperty(StaticProperty):
   __serialVersionUID = 1
   def __init__(self):

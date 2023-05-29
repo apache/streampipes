@@ -19,13 +19,17 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatementUtils {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StatementUtils.class);
 
   /**
    * Add a label to the input event according to the provided statements
@@ -33,16 +37,14 @@ public class StatementUtils {
    * @param inputEvent
    * @param value
    * @param statements
-   * @param log
    * @return
    */
-  public static Event addLabel(Event inputEvent, String labelName, double value, List<Statement> statements,
-                               Logger log) {
+  public static Event addLabel(Event inputEvent, String labelName, double value, List<Statement> statements) {
     String label = getLabel(value, statements);
     if (label != null) {
       inputEvent.addField(labelName, label);
     } else {
-      log.info("No condition of statements was fulfilled, add a default case (*) to the statements");
+      LOG.info("No condition of statements was fulfilled, add a default case (*) to the statements");
     }
 
     return inputEvent;

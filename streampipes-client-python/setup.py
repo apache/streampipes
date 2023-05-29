@@ -55,10 +55,10 @@ dev_packages = base_packages + [
     "pandas-stubs==2.0.0.230412",
     "pre-commit==3.3.0",
     "pytest==7.3.0",
-    "pytest-cov==4.0.0",
+    "pytest-cov==4.1.0",
     "pyupgrade==3.4.0",
     "types-Jinja2==2.11.9",
-    "types-requests==2.30.0.0",
+    "types-requests==2.31.0.0",
 ]
 
 docs_packages = [

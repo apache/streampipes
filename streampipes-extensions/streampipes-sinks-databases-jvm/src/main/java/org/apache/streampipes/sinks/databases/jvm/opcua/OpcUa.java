@@ -19,12 +19,9 @@
 package org.apache.streampipes.sinks.databases.jvm.opcua;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.vocabulary.XSD;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
@@ -37,6 +34,8 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,9 +43,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-public class OpcUa implements EventSink<OpcUaParameters> {
+public class OpcUa {
 
-  private static Logger log;
+  private static final Logger LOG = LoggerFactory.getLogger(OpcUa.class);
 
   private OpcUaClient opcUaClient;
   private OpcUaParameters params;
@@ -78,21 +77,19 @@ public class OpcUa implements EventSink<OpcUaParameters> {
     compatibleDataTypes.put(String.class, new Class[]{String.class});
   }
 
-  @Override
-  public void onInvocation(OpcUaParameters parameters, EventSinkRuntimeContext runtimeContext) throws
+  public void onInvocation(OpcUaParameters parameters) throws
       SpRuntimeException {
-    log = parameters.getGraph().getLogger(OpcUa.class);
 
-    if (!parameters.getHostName().startsWith("opc.tcp://")) {
-      serverUrl = "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
+    if (!parameters.hostname().startsWith("opc.tcp://")) {
+      serverUrl = "opc.tcp://" + parameters.hostname() + ":" + parameters.port();
     } else {
-      serverUrl = parameters.getHostName() + ":" + parameters.getPort();
+      serverUrl = parameters.hostname() + ":" + parameters.port();
     }
-    if (isInteger(parameters.getNodeId())) {
-      int integerNodeId = Integer.parseInt(parameters.getNodeId());
-      node = new NodeId(parameters.getNameSpaceIndex(), integerNodeId);
+    if (isInteger(parameters.nodeId())) {
+      int integerNodeId = Integer.parseInt(parameters.nodeId());
+      node = new NodeId(parameters.nameSpaceIndex(), integerNodeId);
     } else {
-      node = new NodeId(parameters.getNameSpaceIndex(), parameters.getNodeId());
+      node = new NodeId(parameters.nameSpaceIndex(), parameters.nodeId());
     }
 
 
@@ -126,7 +123,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
     try {
       Variant value = opcUaClient.getAddressSpace().getVariableNode(node).readValue().getValue();
       targetDataType = value.getValue().getClass();
-      sourceDataType = XSDMatchings.get(params.getMappingPropertyType());
+      sourceDataType = XSDMatchings.get(params.mappingPropertyType());
       if (!sourceDataType.equals(targetDataType)) {
         if (!Arrays.stream(compatibleDataTypes.get(sourceDataType)).anyMatch(dt -> dt.equals(targetDataType))) {
           throw new SpRuntimeException("Data Type of event of target node are not compatible");
@@ -138,13 +135,12 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 
   }
 
-  @Override
   public void onEvent(Event inputEvent) {
 
     Variant v = getValue(inputEvent);
 
     if (v == null) {
-      log.error("Mapping property type: " + this.params.getMappingPropertyType() + " is not supported");
+      LOG.error("Mapping property type: " + this.params.mappingPropertyType() + " is not supported");
     } else {
 
       DataValue value = new DataValue(v);
@@ -154,23 +150,22 @@ public class OpcUa implements EventSink<OpcUaParameters> {
         StatusCode status = f.get();
         if (status.isBad()) {
           if (status.getValue() == 0x80740000L) {
-            log.error("Type missmatch! Tried to write value of type: " + this.params.getMappingPropertyType()
+            LOG.error("Type missmatch! Tried to write value of type: " + this.params.mappingPropertyType()
                 + " but server did not accept this");
           } else if (status.getValue() == 0x803B0000L) {
-            log.error("Wrong access level. Not allowed to write to nodes");
+            LOG.error("Wrong access level. Not allowed to write to nodes");
           }
-          log.error(
+          LOG.error(
               "Value: " + value.getValue().toString() + " could not be written to node Id: "
-                  + this.params.getNodeId() + " on " + "OPC-UA server: " + this.serverUrl);
+                  + this.params.nodeId() + " on " + "OPC-UA server: " + this.serverUrl);
         }
       } catch (InterruptedException | ExecutionException e) {
-        log.error("Exception: Value: " + value.getValue().toString() + " could not be written to node Id: "
-            + this.params.getNodeId() + " on " + "OPC-UA server: " + this.serverUrl);
+        LOG.error("Exception: Value: " + value.getValue().toString() + " could not be written to node Id: "
+            + this.params.nodeId() + " on " + "OPC-UA server: " + this.serverUrl);
       }
     }
   }
 
-  @Override
   public void onDetach() throws SpRuntimeException {
     opcUaClient.disconnect();
   }
@@ -178,7 +173,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
   private Variant getValue(Event inputEvent) {
     Variant result = null;
     PrimitiveField propertyPrimitive =
-        inputEvent.getFieldBySelector(this.params.getMappingPropertySelector()).getAsPrimitive();
+        inputEvent.getFieldBySelector(this.params.mappingPropertySelector()).getAsPrimitive();
 
     if (targetDataType.equals(Integer.class)) {
       result = new Variant(propertyPrimitive.getAsInt());

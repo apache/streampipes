@@ -28,14 +28,14 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
-import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
+import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestPublisherSink;
+import org.apache.streampipes.sinks.brokers.jvm.jms.JmsPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaPublishSink;
 import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.nats.NatsController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink;
-import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
-import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
+import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqPublisherSink;
+import org.apache.streampipes.sinks.brokers.jvm.rest.RestSink;
 import org.apache.streampipes.sinks.brokers.jvm.rocketmq.RocketMQPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.tubemq.TubeMQPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
@@ -54,10 +54,10 @@ public class BrokersJvmInit extends ExtensionsModelSubmitter {
             8096)
         .registerPipelineElements(
             new KafkaPublishSink(),
-            new JmsController(),
-            new RestController(),
-            new BufferRestController(),
-            new RabbitMqController(),
+            new JmsPublisherSink(),
+            new RestSink(),
+            new BufferRestPublisherSink(),
+            new RabbitMqPublisherSink(),
             new MqttPublisherSink(),
             new WebsocketServerSink(),
             new PulsarPublisherSink(),
