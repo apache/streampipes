@@ -100,6 +100,11 @@ public class ProcessorParams implements IDataProcessorParameters {
     return params.getRenameRules();
   }
 
+  @Override
+  public String getOutName() {
+    return params.getOutName();
+  }
+
   public DataProcessorInvocation getGraph() {
     return graph;
   }

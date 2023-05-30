@@ -39,11 +39,9 @@ public class DataProcessorParameters
     implements IDataProcessorParameters {
 
   private final Map<String, Object> outEventType;
-  private SpDataStream outputStream;
-  private String outName;
-  private OutputStreamParams outputStreamParams;
-  private SchemaInfo outputSchemaInfo;
-  private SourceInfo outputSourceInfo;
+  private final SpDataStream outputStream;
+  private final String outName;
+  private final OutputStreamParams outputStreamParams;
 
 
   public DataProcessorParameters(DataProcessorInvocation pipelineElementInvocation,
@@ -70,12 +68,12 @@ public class DataProcessorParameters
 
   @Override
   public SchemaInfo getOutputSchemaInfo() {
-    return outputSchemaInfo;
+    return outputStreamParams.getSchemaInfo();
   }
 
   @Override
   public SourceInfo getOutputSourceInfo() {
-    return outputSourceInfo;
+    return outputStreamParams.getSourceInfo();
   }
 
   public List<String> getOutputProperties() {
@@ -89,6 +87,11 @@ public class DataProcessorParameters
         .stream()
         .flatMap(o -> o.getRenameRules().stream())
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public String getOutName() {
+    return outName;
   }
 
 

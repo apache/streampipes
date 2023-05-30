@@ -16,26 +16,9 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.pe.param;
+package org.apache.streampipes.extensions.api.monitoring;
 
-import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.output.PropertyRenameRule;
-import org.apache.streampipes.model.runtime.SchemaInfo;
-import org.apache.streampipes.model.runtime.SourceInfo;
+import org.slf4j.Logger;
 
-import java.util.List;
-import java.util.Map;
-
-public interface IDataProcessorParameters
-    extends IPipelineElementParameters<DataProcessorInvocation, IDataProcessorParameterExtractor> {
-
-  Map<String, Object> getOutEventType();
-
-  SchemaInfo getOutputSchemaInfo();
-
-  SourceInfo getOutputSourceInfo();
-  List<PropertyRenameRule> getRenameRules();
-
-  String getOutName();
+public interface IPipelineElementLogger extends Logger {
 }
