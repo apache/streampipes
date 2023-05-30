@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningInstances;
@@ -34,8 +35,12 @@ import jakarta.ws.rs.Path;
 import java.util.Map;
 
 @Path(SpServicePathPrefix.DATA_PROCESSOR)
-public class DataProcessorPipelineElementResource extends InvocablePipelineElementResource<DataProcessorInvocation,
-    IStreamPipesDataProcessor, IDataProcessorRuntime, ProcessingElementParameterExtractor> {
+public class DataProcessorPipelineElementResource extends InvocablePipelineElementResource<
+    DataProcessorInvocation,
+    IStreamPipesDataProcessor,
+    IDataProcessorConfiguration,
+    IDataProcessorRuntime,
+    ProcessingElementParameterExtractor> {
 
   public DataProcessorPipelineElementResource() {
 

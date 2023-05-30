@@ -41,7 +41,15 @@ public abstract class StreamPipesDataProcessor
   @Override
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
-        () -> this,
+        () -> {
+          try {
+            return this.getClass().newInstance();
+          } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+          } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+          }
+        },
         declareModel()
     );
   }

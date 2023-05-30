@@ -38,7 +38,15 @@ public abstract class StreamPipesDataSink implements IStreamPipesDataSink {
   @Override
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
-        () -> this,
+        () -> {
+          try {
+            return this.getClass().newInstance();
+          } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+          } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+          }
+        },
         declareModel()
     );
   }

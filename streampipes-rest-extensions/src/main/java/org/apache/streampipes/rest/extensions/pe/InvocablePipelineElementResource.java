@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.config.IPipelineElementConfiguration;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
@@ -53,7 +54,8 @@ import java.util.Map;
 
 public abstract class InvocablePipelineElementResource<
     K extends InvocableStreamPipesEntity,
-    T extends IStreamPipesPipelineElement<?>,
+    T extends IStreamPipesPipelineElement<PcT>,
+    PcT extends IPipelineElementConfiguration<?, T>,
     V extends IStreamPipesRuntime<T, K>,
     W extends AbstractParameterExtractor<K>> extends AbstractPipelineElementResource<T> {
 
@@ -81,7 +83,7 @@ public abstract class InvocablePipelineElementResource<
       graph = createGroundingDebugInformation(graph);
     }
 
-    T declarer = getDeclarerById(elementId);
+    T declarer = getDeclarerById(elementId).declareConfig().getSupplier().get();
 
     if (declarer != null) {
       String runningInstanceId = getInstanceId(graph.getElementId(), elementId);

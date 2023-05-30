@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningInstances;
@@ -34,8 +35,12 @@ import jakarta.ws.rs.Path;
 import java.util.Map;
 
 @Path(SpServicePathPrefix.DATA_SINK)
-public class DataSinkPipelineElementResource extends InvocablePipelineElementResource<DataSinkInvocation,
-    IStreamPipesDataSink, IDataSinkRuntime, DataSinkParameterExtractor> {
+public class DataSinkPipelineElementResource extends InvocablePipelineElementResource
+    <DataSinkInvocation,
+        IStreamPipesDataSink,
+        IDataSinkConfiguration,
+        IDataSinkRuntime,
+        DataSinkParameterExtractor> {
 
   public DataSinkPipelineElementResource() {
     super(DataSinkInvocation.class);
