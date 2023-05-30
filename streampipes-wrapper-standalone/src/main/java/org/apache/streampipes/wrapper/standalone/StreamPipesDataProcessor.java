@@ -30,29 +30,11 @@ import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 public abstract class StreamPipesDataProcessor
     implements IStreamPipesDataProcessor {
 
-//  @Override
-//  public StandaloneEventProcessorRuntime<ProcessorParams> getRuntime(DataProcessorInvocation graph,
-//                                                                     ProcessingElementParameterExtractor extractor,
-//                                                                     ConfigExtractor configExtractor,
-//                                                                     StreamPipesClient streamPipesClient) {
-//    ConfiguredEventProcessor<ProcessorParams> configuredEngine = onInvocation(graph, extractor);
-//    EventProcessorRuntimeParams<ProcessorParams> runtimeParams =
-//        new EventProcessorRuntimeParams<>(
-//            configuredEngine.getBindingParams(),
-//            false,
-//            configExtractor,
-//            streamPipesClient
-//        );
-//
-//    return new StandaloneEventProcessorRuntime<>(configuredEngine.getEngineSupplier(),
-//        runtimeParams);
-//  }
-
   @Override
   public void onPipelineStarted(IDataProcessorParameters params,
                                 SpOutputCollector collector,
                                 EventProcessorRuntimeContext runtimeContext) {
-    ProcessorParams parameters = new ProcessorParams(params.getModel());
+    ProcessorParams parameters = new ProcessorParams(params);
     this.onInvocation(parameters, collector, runtimeContext);
   }
 

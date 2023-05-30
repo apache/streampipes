@@ -26,7 +26,6 @@ import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
-import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.context.generator.DataSinkContextGenerator;
 import org.apache.streampipes.wrapper.params.generator.DataSinkParameterGenerator;
@@ -69,18 +68,6 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
   public void postDiscard() throws SpRuntimeException {
     for (SpInputCollector spInputCollector : inputCollectors) {
       spInputCollector.disconnect();
-    }
-  }
-
-  @Override
-  public Response onRuntimeInvoked(String instanceId,
-                                   IStreamPipesDataSink pipelineElement,
-                                   DataSinkInvocation pipelineElementInvocation) {
-    try {
-      return new Response(pipelineElementInvocation.getElementId(), true);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return new Response(pipelineElementInvocation.getElementId(), false, e.getMessage());
     }
   }
 

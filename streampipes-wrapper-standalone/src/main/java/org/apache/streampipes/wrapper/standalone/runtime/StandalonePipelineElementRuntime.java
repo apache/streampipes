@@ -69,7 +69,6 @@ public abstract class StandalonePipelineElementRuntime<
                            PeT pipelineElement,
                            PepT runtimeParameters,
                            RcT runtimeContext) {
-
     this.pipelineElement = pipelineElement;
     this.runtimeParameters = runtimeParameters;
     this.runtimeContext = runtimeContext;

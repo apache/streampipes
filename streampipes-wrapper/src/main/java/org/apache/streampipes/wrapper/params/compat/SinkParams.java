@@ -30,8 +30,15 @@ import java.util.Map;
 
 public class SinkParams implements IDataSinkParameters {
 
+  private IDataSinkParameters params;
+
   private IDataSinkParameterExtractor extractor;
   private DataSinkInvocation graph;
+
+  public SinkParams(IDataSinkParameters params) {
+    this(params.getModel());
+    this.params = params;
+  }
 
   public SinkParams(DataSinkInvocation graph) {
     this.graph = graph;
@@ -40,7 +47,7 @@ public class SinkParams implements IDataSinkParameters {
 
   @Override
   public IDataSinkParameterExtractor extractor() {
-    return this.extractor;
+    return extractor;
   }
 
   @Override
@@ -55,36 +62,36 @@ public class SinkParams implements IDataSinkParameters {
 
   @Override
   public List<InputStreamParams> getInputStreamParams() {
-    return null;
+    return params.getInputStreamParams();
   }
 
   @Override
   public Map<String, Map<String, Object>> getInEventTypes() {
-    return null;
+    return params.getInEventTypes();
   }
 
   @Override
   public List<SchemaInfo> getInputSchemaInfos() {
-    return null;
+    return params.getInputSchemaInfos();
   }
 
   @Override
   public List<SourceInfo> getInputSourceInfos() {
-    return null;
+    return params.getInputSourceInfos();
   }
 
   @Override
   public SchemaInfo getInputSchemaInfo(int index) {
-    return null;
+    return params.getInputSchemaInfo(index);
   }
 
   @Override
   public SourceInfo getInputSourceInfo(int index) {
-    return null;
+    return params.getInputSourceInfo(index);
   }
 
   @Override
   public Integer getSourceIndex(String sourceId) {
-    return null;
+    return params.getSourceIndex(sourceId);
   }
 }

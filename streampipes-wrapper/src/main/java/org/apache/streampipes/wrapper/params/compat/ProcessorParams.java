@@ -34,9 +34,16 @@ public class ProcessorParams implements IDataProcessorParameters {
   private ProcessingElementParameterExtractor extractor;
   private DataProcessorInvocation graph;
 
+  private IDataProcessorParameters params;
+
   public ProcessorParams(DataProcessorInvocation graph) {
     this.graph = graph;
     this.extractor = ProcessingElementParameterExtractor.from(graph);
+  }
+
+  public ProcessorParams(IDataProcessorParameters params) {
+    this(params.getModel());
+    this.params = params;
   }
 
   public ProcessingElementParameterExtractor extractor() {
@@ -55,42 +62,42 @@ public class ProcessorParams implements IDataProcessorParameters {
 
   @Override
   public List<InputStreamParams> getInputStreamParams() {
-    return null;
+    return params.getInputStreamParams();
   }
 
   @Override
   public Map<String, Map<String, Object>> getInEventTypes() {
-    return null;
+    return params.getInEventTypes();
   }
 
   @Override
   public List<SchemaInfo> getInputSchemaInfos() {
-    return null;
+    return params.getInputSchemaInfos();
   }
 
   @Override
   public List<SourceInfo> getInputSourceInfos() {
-    return null;
+    return params.getInputSourceInfos();
   }
 
   @Override
   public SchemaInfo getInputSchemaInfo(int index) {
-    return null;
+    return params.getInputSchemaInfo(index);
   }
 
   @Override
   public SourceInfo getInputSourceInfo(int index) {
-    return null;
+    return params.getInputSourceInfo(index);
   }
 
   @Override
   public Integer getSourceIndex(String sourceId) {
-    return null;
+    return params.getSourceIndex(sourceId);
   }
 
   @Override
   public List<PropertyRenameRule> getRenameRules() {
-    return null;
+    return params.getRenameRules();
   }
 
   public DataProcessorInvocation getGraph() {
@@ -99,16 +106,16 @@ public class ProcessorParams implements IDataProcessorParameters {
 
   @Override
   public Map<String, Object> getOutEventType() {
-    return null;
+    return params.getOutEventType();
   }
 
   @Override
   public SchemaInfo getOutputSchemaInfo() {
-    return null;
+    return params.getOutputSchemaInfo();
   }
 
   @Override
   public SourceInfo getOutputSourceInfo() {
-    return null;
+    return params.getOutputSourceInfo();
   }
 }

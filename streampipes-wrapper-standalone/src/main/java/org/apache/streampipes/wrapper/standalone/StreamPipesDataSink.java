@@ -31,7 +31,7 @@ public abstract class StreamPipesDataSink implements IStreamPipesDataSink {
   @Override
   public void onPipelineStarted(IDataSinkParameters params,
                                 EventSinkRuntimeContext runtimeContext) {
-    SinkParams parameters = new SinkParams(params.getModel());
+    SinkParams parameters = new SinkParams(params);
     this.onInvocation(parameters, runtimeContext);
   }
 
