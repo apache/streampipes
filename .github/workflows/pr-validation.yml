@@ -30,6 +30,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
       - name: Validate java code
         run: mvn clean verify

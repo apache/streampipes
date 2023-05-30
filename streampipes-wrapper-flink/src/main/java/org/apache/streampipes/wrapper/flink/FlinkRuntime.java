@@ -103,8 +103,7 @@ public abstract class FlinkRuntime<
         FlinkSpMiniCluster
             .INSTANCE
             .getClusterClient()
-            .submitJob(env.getStreamGraph().getJobGraph());
-            //.submitJob(env.getStreamGraph(runtimeParameters.getModel().getElementId()).getJobGraph());
+            .submitJob(env.getStreamGraph(runtimeParameters.getModel().getElementId()).getJobGraph());
       }
     } catch (Exception e) {
       e.printStackTrace();
