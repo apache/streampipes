@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.textmining.jvm.processor.chunker.ChunkerProcessor;
 import org.apache.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionProcessor;
 import org.apache.streampipes.processors.textmining.jvm.processor.namefinder.NameFinderProcessor;
@@ -61,7 +62,8 @@ public class TextMiningJvmInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .build();
   }
 }
