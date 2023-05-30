@@ -17,12 +17,14 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
+import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IFormat;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
 import org.apache.streampipes.extensions.management.connect.SendToPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
@@ -30,6 +32,7 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
@@ -46,9 +49,12 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class HttpServerProtocol extends Protocol {
 
@@ -112,6 +118,8 @@ public class HttpServerProtocol extends Protocol {
     StaticPropertyExtractor extractor =
         StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
     GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
+    GuessSchema shema = null;
+
 
     String selectedImportMode = extractor.selectedAlternativeInternalId(CONFIGURE);
 
@@ -123,9 +131,27 @@ public class HttpServerProtocol extends Protocol {
             StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
         schemaBuilder.property(makeProperty(memberExtractor));
       }
+
+      shema =  schemaBuilder.build();
+    } else if (selectedImportMode.equals(FILE_IMPORT)){
+      var fileName = extractor.selectedFilename(FILE);
+
+      InputStream dataInputStream = getDataFromEndpoint(fileName);
+
+      List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 2);
+      EventSchema eventSchema = parser.getEventSchema(dataByte);
+      shema = SchemaGuesser.guessSchema(eventSchema);
     }
 
-    return schemaBuilder.build();
+    return shema;
+  }
+
+  public InputStream getDataFromEndpoint(String fileName) throws ParseException {
+    try {
+      return FileProtocolUtils.getFileInputStream(fileName);
+    } catch (IOException e) {
+      throw new ParseException("Could not find file: " + fileName);
+    }
   }
 
   private EventProperty makeProperty(StaticPropertyExtractor memberExtractor) {
