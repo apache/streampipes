@@ -18,13 +18,10 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
@@ -34,50 +31,48 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AggregationProgram extends AbstractAggregationProgram<AggregationParameters> {
+public class AggregationProgram extends FlinkDataProcessorProgram<AggregationParameters> {
 
-  public AggregationProgram(AggregationParameters params,
-                            ConfigExtractor configExtractor,
-                            StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
-    setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
+  public AggregationProgram(AggregationParameters params) {
+    super(params);
+    //setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return getKeyedStream(dataStreams[0]);
   }
 
   private DataStream<Event> getKeyedStream(DataStream<Event> dataStream) {
-    if (bindingParams.getGroupBy().size() > 0) {
+    if (params.getGroupBy().size() > 0) {
       KeyedStream<Event, Map<String, String>> keyedStream = dataStream.keyBy(getKeySelector());
-      if (bindingParams.getTimeWindow()) {
+      if (params.getTimeWindow()) {
         return keyedStream
-            .window(SlidingEventTimeWindows.of(Time.seconds(bindingParams.getWindowSize()),
-                Time.seconds(bindingParams.getOutputEvery())))
-            .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(),
-                bindingParams.getGroupBy()));
+            .window(SlidingEventTimeWindows.of(Time.seconds(params.getWindowSize()),
+                Time.seconds(params.getOutputEvery())))
+            .apply(new TimeAggregation(params.getAggregationType(), params.getAggregateKeyList(),
+                params.getGroupBy()));
       } else {
         return keyedStream
-            .countWindow(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
-            .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(),
-                bindingParams.getGroupBy()));
+            .countWindow(params.getWindowSize(), params.getOutputEvery())
+            .apply(new CountAggregation(params.getAggregationType(), params.getAggregateKeyList(),
+                params.getGroupBy()));
       }
     } else {
-      if (bindingParams.getTimeWindow()) {
+      if (params.getTimeWindow()) {
         return dataStream
-            .timeWindowAll(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery()))
-            .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
+            .timeWindowAll(Time.seconds(params.getWindowSize()), Time.seconds(params.getOutputEvery()))
+            .apply(new TimeAggregation(params.getAggregationType(), params.getAggregateKeyList()));
       } else {
         return dataStream
-            .countWindowAll(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
-            .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
+            .countWindowAll(params.getWindowSize(), params.getOutputEvery())
+            .apply(new CountAggregation(params.getAggregationType(), params.getAggregateKeyList()));
       }
     }
   }
 
   private KeySelector<Event, Map<String, String>> getKeySelector() {
-    List<String> groupBy = bindingParams.getGroupBy();
+    List<String> groupBy = params.getGroupBy();
     return new KeySelector<Event, Map<String, String>>() {
       @Override
       public Map<String, String> getKey(Event event) throws Exception {

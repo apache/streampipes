@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 import abc
+from deprecated import deprecated
 
 from streampipes.api.rest import PipelineElementApi
 from streampipes.base.banner import banner
@@ -22,7 +23,7 @@ from streampipes.declarer import DeclarerSingleton
 from streampipes.model.pipeline_element_config import Config
 from streampipes.utils.register import ConsulUtils
 
-
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class StandaloneModelSubmitter(object):
     __metaclass__ = abc.ABC
 

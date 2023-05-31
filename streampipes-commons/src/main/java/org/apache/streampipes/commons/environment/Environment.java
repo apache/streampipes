@@ -102,4 +102,11 @@ public interface Environment {
   StringEnvironmentVariable getInitialAdminPassword();
 
   StringEnvironmentVariable getCoreAssetBaseDir();
+
+  // Flink Wrapper
+  StringEnvironmentVariable getFlinkJarFileLoc();
+
+  StringEnvironmentVariable getFlinkJobmanagerHost();
+
+  IntEnvironmentVariable getFlinkJobmanagerPort();
 }

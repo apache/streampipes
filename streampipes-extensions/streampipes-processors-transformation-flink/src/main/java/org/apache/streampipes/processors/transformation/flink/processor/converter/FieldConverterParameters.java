@@ -18,9 +18,9 @@
 package org.apache.streampipes.processors.transformation.flink.processor.converter;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class FieldConverterParameters extends EventProcessorBindingParams {
+public class FieldConverterParameters extends ProcessorParams {
 
   private String convertProperty;
   private String targetDatatype;

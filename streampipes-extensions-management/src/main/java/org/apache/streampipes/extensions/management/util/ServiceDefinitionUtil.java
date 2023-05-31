@@ -18,7 +18,7 @@
 package org.apache.streampipes.extensions.management.util;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -32,10 +32,13 @@ import java.util.stream.Collectors;
 
 public class ServiceDefinitionUtil {
 
-  public static List<SpServiceTag> extractAppIds(Collection<Declarer<?>> declarers) {
+  public static List<SpServiceTag> extractAppIds(Collection<IStreamPipesPipelineElement<?>> declarers) {
     return declarers
         .stream()
-        .map(d -> SpServiceTag.create(getPrefix(d.declareModel()), d.declareModel().getAppId()))
+        .map(d -> {
+          var model = d.declareConfig().getDescription();
+          return SpServiceTag.create(getPrefix(model), model.getAppId());
+        })
         .collect(Collectors.toList());
   }
 

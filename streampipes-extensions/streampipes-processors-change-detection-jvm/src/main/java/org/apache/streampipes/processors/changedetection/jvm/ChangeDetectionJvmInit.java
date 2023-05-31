@@ -28,6 +28,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.changedetection.jvm.welford.WelfordChangeDetection;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
@@ -54,7 +55,8 @@ public class ChangeDetectionJvmInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .build();
   }
 }

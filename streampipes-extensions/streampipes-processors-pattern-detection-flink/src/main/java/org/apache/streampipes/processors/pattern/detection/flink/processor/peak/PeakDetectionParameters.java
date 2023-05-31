@@ -19,14 +19,14 @@
 package org.apache.streampipes.processors.pattern.detection.flink.processor.peak;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import java.io.Serializable;
 
 /**
  * Created by riemer on 20.04.2017.
  */
-public class PeakDetectionParameters extends EventProcessorBindingParams implements Serializable {
+public class PeakDetectionParameters extends ProcessorParams implements Serializable {
 
   private String valueToObserve;
   private String timestampMapping;

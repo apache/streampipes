@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.boilerplate;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -33,7 +31,7 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class BoilerplateController extends FlinkDataProcessorDeclarer<BoilerplateParameters> {
 
@@ -64,10 +62,8 @@ public class BoilerplateController extends FlinkDataProcessorDeclarer<Boilerplat
   }
 
   @Override
-  public FlinkDataProcessorRuntime<BoilerplateParameters> getRuntime(DataProcessorInvocation graph,
-                                                                     ProcessingElementParameterExtractor extractor,
-                                                                     ConfigExtractor configExtractor,
-                                                                     StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<BoilerplateParameters> getProgram(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor) {
     String htmlProperty = extractor.mappingPropertyValue(HTML_PROPERTY);
     String htmlExtractor = extractor.selectedSingleValue(EXTRACTOR, String.class);
     String htmlOutputMode = extractor.selectedSingleValue(OUTPUT_MODE, String.class);
@@ -104,6 +100,6 @@ public class BoilerplateController extends FlinkDataProcessorDeclarer<Boilerplat
 
     BoilerplateParameters staticParams = new BoilerplateParameters(graph, htmlProperty, extractorMode, outputMode);
 
-    return new BoilerplateProgram(staticParams, configExtractor, streamPipesClient);
+    return new BoilerplateProgram(staticParams);
   }
 }

@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.boilerplate;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
@@ -27,14 +25,12 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class BoilerplateProgram extends AbstractFlinkTransformationProgram<BoilerplateParameters> {
 
-  public BoilerplateProgram(BoilerplateParameters params,
-                            ConfigExtractor configExtractor,
-                            StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public BoilerplateProgram(BoilerplateParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return dataStreams[0].flatMap(
         new BoilerplateRemover(params.getHtmlProperty(), params.getExtractorMode(), params.getOutputMode())
     );

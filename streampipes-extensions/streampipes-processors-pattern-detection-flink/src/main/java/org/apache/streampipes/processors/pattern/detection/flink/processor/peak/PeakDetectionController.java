@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.peak;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -34,7 +32,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDetectionParameters> {
 
@@ -72,10 +70,8 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
   }
 
   @Override
-  public FlinkDataProcessorRuntime<PeakDetectionParameters> getRuntime(DataProcessorInvocation sepa,
-                                                                       ProcessingElementParameterExtractor extractor,
-                                                                       ConfigExtractor configExtractor,
-                                                                       StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<PeakDetectionParameters> getProgram(DataProcessorInvocation sepa,
+                                                                       ProcessingElementParameterExtractor extractor) {
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);
     String timestampMapping = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
     String groupBy = extractor.mappingPropertyValue(PARTITION_BY);
@@ -90,6 +86,6 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
     PeakDetectionParameters params = new PeakDetectionParameters(sepa,
         valueToObserve, timestampMapping, groupBy, countWindowSize, lag, threshold, influence);
 
-    return new PeakDetectionProgram(params, configExtractor, streamPipesClient);
+    return new PeakDetectionProgram(params);
   }
 }

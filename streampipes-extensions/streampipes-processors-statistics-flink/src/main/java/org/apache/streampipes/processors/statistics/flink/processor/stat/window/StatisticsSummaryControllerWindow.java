@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.window;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -36,7 +34,7 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Statistics;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import java.util.concurrent.TimeUnit;
 
@@ -82,11 +80,9 @@ public class StatisticsSummaryControllerWindow extends
   }
 
   @Override
-  public FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(
+  public FlinkDataProcessorProgram<StatisticsSummaryParametersWindow> getProgram(
       DataProcessorInvocation sepa,
-      ProcessingElementParameterExtractor extractor,
-      ConfigExtractor configExtractor,
-      StreamPipesClient streamPipesClient) {
+      ProcessingElementParameterExtractor extractor) {
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);
     String timestampMapping = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
@@ -116,7 +112,7 @@ public class StatisticsSummaryControllerWindow extends
         (long) timeWindowSize,
         timeUnit);
 
-    return new StatisticsSummaryProgramWindow(params, serializableParams, configExtractor, streamPipesClient);
+    return new StatisticsSummaryProgramWindow(params, serializableParams);
 
   }
 }

@@ -17,11 +17,9 @@
  */
 package org.apache.streampipes.processors.pattern.detection.flink.processor.absence;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnitConverter;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -40,12 +38,10 @@ import org.apache.flink.util.OutputTag;
 import java.util.List;
 import java.util.Map;
 
-public class AbsenceProgram extends AbstractPatternDetectionProgram<AbsenceParameters> {
+public class AbsenceProgram extends FlinkDataProcessorProgram<AbsenceParameters> {
 
-  public AbsenceProgram(AbsenceParameters params,
-                        ConfigExtractor configExtractor,
-                        StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public AbsenceProgram(AbsenceParameters params) {
+    super(params);
   }
 
   @Override

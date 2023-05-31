@@ -58,14 +58,14 @@ dev_packages = base_packages + [
     "pytest-cov==4.1.0",
     "pyupgrade==3.4.0",
     "types-Jinja2==2.11.9",
-    "types-requests==2.30.0.0",
+    "types-requests==2.31.0.0",
 ]
 
 docs_packages = [
     "mkdocs==1.4.2",
     "mkdocs-awesome-pages-plugin==2.9.0",
     "mkdocs-material==9.1.3",
-    "mkdocstrings[python]==0.21.1",
+    "mkdocstrings[python]==0.22.0",
     "pytkdocs[numpy-style]>=0.16.1",
     "mkdocs-gen-files==0.5.0",
     "mkdocs-literate-nav==0.6.0",

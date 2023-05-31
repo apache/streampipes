@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.aggregation.flink.processor.rate;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class EventRateParameter extends EventProcessorBindingParams {
+public class EventRateParameter extends ProcessorParams {
 
   private Integer avgRate;
 

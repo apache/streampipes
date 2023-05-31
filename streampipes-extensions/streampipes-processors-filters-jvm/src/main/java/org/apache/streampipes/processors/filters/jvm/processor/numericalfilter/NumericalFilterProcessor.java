@@ -19,24 +19,25 @@
 package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class NumericalFilterProcessor extends StreamPipesDataProcessor {
+public class NumericalFilterProcessor implements IStreamPipesDataProcessor {
 
   private static final String NUMBER_MAPPING = "number-mapping";
   private static final String VALUE = "value";
@@ -47,29 +48,32 @@ public class NumericalFilterProcessor extends StreamPipesDataProcessor {
   private String filterProperty;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.numericalfilter")
-        .category(DataProcessorType.FILTER)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(NUMBER_MAPPING),
-                PropertyScope.NONE).build())
-        .outputStrategy(OutputStrategies.keep())
-        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
-            ">=", "==", "!="))
-        .requiredFloatParameter(Labels.withId(VALUE))
-        .build();
-
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        NumericalFilterProcessor::new,
+        ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.numericalfilter")
+            .category(DataProcessorType.FILTER)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                    Labels.withId(NUMBER_MAPPING),
+                    PropertyScope.NONE).build())
+            .outputStrategy(OutputStrategies.keep())
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+                ">=", "==", "!="))
+            .requiredFloatParameter(Labels.withId(VALUE))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-    this.threshold = processorParams.extractor().singleValueParameter(VALUE, Double.class);
-    String stringOperation = processorParams.extractor().selectedSingleValue(OPERATION, String.class);
+  public void onPipelineStarted(IDataProcessorParameters params,
+                                SpOutputCollector collector,
+                                EventProcessorRuntimeContext runtimeContext) {
+    this.threshold = params.extractor().singleValueParameter(VALUE, Double.class);
+    String stringOperation = params.extractor().selectedSingleValue(OPERATION, String.class);
     String operation = "GT";
 
     if (stringOperation.equals("<=")) {
@@ -86,7 +90,7 @@ public class NumericalFilterProcessor extends StreamPipesDataProcessor {
 
     this.numericalOperator = NumericalOperator.valueOf(operation);
 
-    this.filterProperty = processorParams.extractor().mappingPropertyValue(NUMBER_MAPPING);
+    this.filterProperty = params.extractor().mappingPropertyValue(NUMBER_MAPPING);
 
   }
 
@@ -119,7 +123,7 @@ public class NumericalFilterProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
 
   }
 }

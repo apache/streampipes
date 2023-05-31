@@ -19,8 +19,9 @@ package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
@@ -86,12 +87,12 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
-  public SpServiceDefinitionBuilder registerPipelineElement(Declarer<?> declarer) {
-    this.serviceDefinition.addDeclarer(declarer);
+  public SpServiceDefinitionBuilder registerPipelineElement(IStreamPipesPipelineElement<?> pipelineElement) {
+    this.serviceDefinition.addDeclarer(pipelineElement);
     return this;
   }
 
-  public SpServiceDefinitionBuilder registerPipelineElements(Declarer<?>... declarers) {
+  public SpServiceDefinitionBuilder registerPipelineElements(IStreamPipesPipelineElement<?>... declarers) {
     this.serviceDefinition.addDeclarers(Arrays.asList(declarers));
     return this;
   }
@@ -137,6 +138,11 @@ public class SpServiceDefinitionBuilder {
 
   public SpServiceDefinitionBuilder registerFunction(IStreamPipesFunctionDeclarer function) {
     this.serviceDefinition.addStreamPipesFunction(function);
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerRuntimeProvider(IStreamPipesRuntimeProvider runtimeProvider) {
+    this.serviceDefinition.addRuntimeProvider(runtimeProvider);
     return this;
   }
 

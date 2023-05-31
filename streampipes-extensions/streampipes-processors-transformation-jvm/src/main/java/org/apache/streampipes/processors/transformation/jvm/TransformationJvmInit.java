@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterProcessor;
@@ -51,6 +52,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.transformt
 import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationProcessor;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 public class TransformationJvmInit extends ExtensionsModelSubmitter {
 
@@ -64,6 +66,7 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             "Processors Transformation JVM",
             "",
             8090)
+        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerPipelineElements(
             new CountArrayProcessor(),
             new SplitArrayProcessor(),
@@ -96,7 +99,8 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .build();
   }
 }

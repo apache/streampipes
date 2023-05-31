@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.extensions.management.context;
 
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
-import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+
+import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeConfigExtractor;
+import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeStreamPipesClient;
 
 public class AdapterContextGenerator {
 
@@ -36,12 +35,5 @@ public class AdapterContextGenerator {
     return new SpAdapterGuessSchemaContext(makeConfigExtractor(), makeStreamPipesClient());
   }
 
-  private ConfigExtractor makeConfigExtractor() {
-    var serviceId = DeclarersSingleton.getInstance().getServiceId();
-    return ConfigExtractor.from(serviceId);
-  }
 
-  private StreamPipesClient makeStreamPipesClient() {
-    return new StreamPipesClientResolver().makeStreamPipesClientInstance();
-  }
 }

@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.sinks.brokers.jvm.mqtt.common;
 
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import org.fusesource.mqtt.client.QoS;
 
@@ -67,9 +66,9 @@ public class MqttOptions {
   private String mqttProtocolVersion = "3.1";
 
   public MqttOptions(SinkParams params) {
-    DataSinkParameterExtractor extract = params.extractor();
+    var extract = params.extractor();
 
-    this.clientId = MqttUtils.runningInstanceId(params.getGraph().getElementId());
+    this.clientId = MqttUtils.runningInstanceId(params.getModel().getElementId());
     this.topic = extract.singleValueParameter(TOPIC, String.class);
     this.host = extract.singleValueParameter(HOST, String.class);
     this.port = extract.singleValueParameter(PORT, Integer.class);

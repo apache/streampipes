@@ -18,23 +18,19 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.summary;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.statistics.flink.AbstractStatisticsProgram;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 
-public class StatisticsSummaryProgram extends AbstractStatisticsProgram<StatisticsSummaryParameters> {
+public class StatisticsSummaryProgram extends FlinkDataProcessorProgram<StatisticsSummaryParameters> {
 
-  public StatisticsSummaryProgram(StatisticsSummaryParameters params,
-                                  ConfigExtractor configExtractor,
-                                  StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public StatisticsSummaryProgram(StatisticsSummaryParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
-    return messageStream[0].flatMap(new StatisticsSummaryCalculator(bindingParams.getListPropertyMappings()));
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
+    return messageStream[0].flatMap(new StatisticsSummaryCalculator(params.getListPropertyMappings()));
   }
 }

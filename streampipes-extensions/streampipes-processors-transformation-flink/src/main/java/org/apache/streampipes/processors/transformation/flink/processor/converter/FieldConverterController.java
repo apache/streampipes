@@ -17,12 +17,10 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.converter;
 
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -42,7 +40,7 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,10 +71,8 @@ public class FieldConverterController extends
   }
 
   @Override
-  public FlinkDataProcessorRuntime<FieldConverterParameters> getRuntime(DataProcessorInvocation graph,
-                                                                        ProcessingElementParameterExtractor extractor,
-                                                                        ConfigExtractor configExtractor,
-                                                                        StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<FieldConverterParameters> getProgram(DataProcessorInvocation graph,
+                                                                        ProcessingElementParameterExtractor extractor) {
     String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String targetDatatype = extractor.selectedSingleValueInternalName(TARGET_TYPE, String.class);
 
@@ -86,7 +82,7 @@ public class FieldConverterController extends
         targetDatatype
     );
 
-    return new FieldConverterProgram(staticParams, configExtractor, streamPipesClient);
+    return new FieldConverterProgram(staticParams);
   }
 
   @Override

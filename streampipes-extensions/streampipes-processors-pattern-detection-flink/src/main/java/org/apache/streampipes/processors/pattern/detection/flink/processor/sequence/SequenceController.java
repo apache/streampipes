@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.sequence;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -33,7 +31,7 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParameters> {
 
@@ -56,17 +54,15 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
   }
 
   @Override
-  public FlinkDataProcessorRuntime<SequenceParameters> getRuntime(DataProcessorInvocation graph,
-                                                                  ProcessingElementParameterExtractor extractor,
-                                                                  ConfigExtractor configExtractor,
-                                                                  StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<SequenceParameters> getProgram(DataProcessorInvocation graph,
+                                                                  ProcessingElementParameterExtractor extractor) {
 
     Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
     String timeUnit = extractor.selectedSingleValue(TIME_UNIT, String.class);
 
     SequenceParameters params = new SequenceParameters(graph, timeWindowSize, timeUnit);
 
-    return new SequenceProgram(params, configExtractor, streamPipesClient);
+    return new SequenceProgram(params);
 
   }
 }

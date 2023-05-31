@@ -19,11 +19,11 @@
 package org.apache.streampipes.processors.statistics.flink.processor.stat.window;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import java.util.concurrent.TimeUnit;
 
-public class StatisticsSummaryParametersWindow extends EventProcessorBindingParams {
+public class StatisticsSummaryParametersWindow extends ProcessorParams {
 
   private String valueToObserve;
   private String timestampMapping;
