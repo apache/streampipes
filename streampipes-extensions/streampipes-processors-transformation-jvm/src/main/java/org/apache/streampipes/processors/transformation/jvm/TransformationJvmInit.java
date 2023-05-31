@@ -27,29 +27,30 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
-import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
+import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterProcessor;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge.SignalEdgeFilterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.BooleanOperatorProcessor;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateController;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
-import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
-import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state.BooleanToStateProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.hasher.FieldHasherProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
-import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
+import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor;
-import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
-import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
-import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanController;
-import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
-import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
+import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationProcessor;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class TransformationJvmInit extends ExtensionsModelSubmitter {
@@ -65,25 +66,25 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             "",
             8090)
         .registerPipelineElements(
-            new CountArrayController(),
-            new SplitArrayController(),
-            new CalculateDurationController(),
-            new ChangedValueDetectionController(),
-            new TimestampExtractorController(),
+            new CountArrayProcessor(),
+            new SplitArrayProcessor(),
+            new CalculateDurationProcessor(),
+            new ChangedValueDetectionProcessor(),
+            new TimestampExtractorProcessor(),
             new BooleanCounterProcessor(),
             new BooleanInverterProcessor(),
-            new BooleanTimekeepingController(),
-            new BooleanTimerController(),
-            new CsvMetadataEnrichmentController(),
+            new BooleanTimekeepingProcessor(),
+            new BooleanTimerProcessor(),
+            new CsvMetadataEnrichmentProcessor(),
             new FieldHasherProcessor(),
             new FieldMapperProcessor(),
             new MeasurementUnitConverterProcessor(),
-            new TaskDurationController(),
-            new TransformToBooleanController(),
+            new TaskDurationProcessor(),
+            new TransformToBooleanProcessor(),
             new StringTimerProcessor(),
-            new SignalEdgeFilterController(),
-            new BooleanToStateController(),
-            new NumberLabelerController(),
+            new SignalEdgeFilterProcessor(),
+            new BooleanToStateProcessor(),
+            new NumberLabelerProcessor(),
             new StringToStateProcessor(),
             new StringCounterProcessor(),
             new BooleanOperatorProcessor(),
@@ -96,7 +97,8 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .build();
   }
 }

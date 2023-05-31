@@ -46,7 +46,7 @@ describe('Test Table View in Data Explorer', () => {
 
         DataLakeUtils.selectTimeRange(
             new Date(2020, 10, 20, 22, 44),
-            new Date(2021, 10, 20, 22, 44),
+            DataLakeUtils.getFutureDate(),
         );
 
         cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should(

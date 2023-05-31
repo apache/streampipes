@@ -23,17 +23,14 @@ import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
 
-public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParameters> {
+public class PostgreSql extends JdbcClient {
 
   private PostgreSqlParameters params;
 
   private Logger log;
 
-  @Override
-  public void onInvocation(PostgreSqlParameters parameters, EventSinkRuntimeContext runtimeContext)
+  public void onInvocation(PostgreSqlParameters parameters)
       throws SpRuntimeException {
 
     this.params = parameters;
@@ -60,7 +57,6 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
         queryParameter);
   }
 
-  @Override
   public void onEvent(Event event) {
     try {
       save(event);
@@ -71,7 +67,6 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
     }
   }
 
-  @Override
   public void onDetach() throws SpRuntimeException {
     closeAll();
   }

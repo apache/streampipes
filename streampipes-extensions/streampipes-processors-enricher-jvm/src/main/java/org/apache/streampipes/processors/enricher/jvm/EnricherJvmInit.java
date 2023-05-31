@@ -27,10 +27,11 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalController;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
+import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.MathOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.StaticMathOpProcessor;
-import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
+import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.TrigonometryProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.valuechange.ValueChangeProcessor;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
@@ -47,8 +48,8 @@ public class EnricherJvmInit extends ExtensionsModelSubmitter {
             "Processors Enricher JVM",
             "",
             8090)
-        .registerPipelineElements(new SizeMeasureController(),
-            new JSEvalController(),
+        .registerPipelineElements(new SizeMeasureProcessor(),
+            new JSEvalProcessor(),
             new MathOpProcessor(),
             new StaticMathOpProcessor(),
             new TrigonometryProcessor(),
@@ -61,7 +62,8 @@ public class EnricherJvmInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .build();
   }
 }

@@ -15,10 +15,12 @@
 # limitations under the License.
 #
 import sys, os
+from depreacated import deprecated
 sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 
 from streampipes.model.base.consumable_streampipes_entity import ConsumableStreamPipesEntity
 
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class DataProcessorDescription (ConsumableStreamPipesEntity):
     __serialVersionUID = 3995767921861518597
     def __init__(self):
