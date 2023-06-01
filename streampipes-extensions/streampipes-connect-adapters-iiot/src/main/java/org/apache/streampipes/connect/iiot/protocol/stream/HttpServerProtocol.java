@@ -18,6 +18,8 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -46,6 +48,8 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -134,22 +138,36 @@ public class HttpServerProtocol implements StreamPipesAdapter {
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor parameterExtractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    IStaticPropertyExtractor extractor = parameterExtractor.getStaticPropertyExtractor();
-    applyConfiguration(extractor);
+    IStaticPropertyExtractor propertyExtractor = parameterExtractor.getStaticPropertyExtractor();
+    applyConfiguration(propertyExtractor);
     GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
 
-    String selectedImportMode = extractor.selectedAlternativeInternalId(CONFIGURE);
-
+    String selectedImportMode = propertyExtractor.selectedAlternativeInternalId(CONFIGURE);
     if (selectedImportMode.equals(MANUALLY)) {
-      CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(EP_CONFIG);
+      CollectionStaticProperty sp = (CollectionStaticProperty) propertyExtractor.getStaticPropertyByName(EP_CONFIG);
 
       for (StaticProperty member : sp.getMembers()) {
         StaticPropertyExtractor memberExtractor =
             StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
         schemaBuilder.property(makeProperty(memberExtractor));
       }
-    }
+      return schemaBuilder.build();
+    } else if (selectedImportMode.equals(FILE_IMPORT)){
+      String fileName = propertyExtractor.selectedFilename(FILE);
+      InputStream dataInputStream = this.getDataFromEndpoint(fileName);
 
-    return schemaBuilder.build();
+      return parameterExtractor.selectedParser().getGuessSchema(dataInputStream);
+    } else {
+      throw new AdapterException("Unknown import mode selected: " + selectedImportMode);
+    }
+  }
+
+
+  private InputStream getDataFromEndpoint(String fileName) throws ParseException {
+    try {
+      return FileProtocolUtils.getFileInputStream(fileName);
+    } catch (IOException e) {
+      throw new ParseException("Could not find file: " + fileName);
+    }
   }
 }
