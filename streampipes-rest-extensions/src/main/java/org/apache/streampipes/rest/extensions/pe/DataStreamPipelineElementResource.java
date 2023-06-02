@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
-import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
@@ -33,11 +33,11 @@ import java.io.IOException;
 import java.util.Map;
 
 @Path(SpServicePathPrefix.DATA_STREAM)
-public class DataStreamPipelineElementResource extends AbstractPipelineElementResource<DataStreamDeclarer> {
+public class DataStreamPipelineElementResource extends AbstractPipelineElementResource<IStreamPipesDataStream> {
 
   @Override
-  protected Map<String, DataStreamDeclarer> getElementDeclarers() {
-    return DeclarersSingleton.getInstance().getStreamDeclarers();
+  protected Map<String, IStreamPipesDataStream> getElementDeclarers() {
+    return DeclarersSingleton.getInstance().getDataStreams();
   }
 
   @GET

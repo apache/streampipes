@@ -30,6 +30,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 
 public class AllExtensionsInit extends ExtensionsModelSubmitter {
@@ -43,9 +44,9 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.jvm",
             "StreamPipes Extensions (JVM)",
             "", 8090)
-//        .merge(new ConnectAdapterInit().provideServiceDefinition())
         .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
         .merge(new AllPipelineElementsInit().provideServiceDefinition())
+        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

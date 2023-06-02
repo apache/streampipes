@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
@@ -28,14 +26,12 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 public class MeasurementUnitConverterProgram
     extends AbstractFlinkTransformationProgram<MeasurementUnitConverterParameters> {
 
-  public MeasurementUnitConverterProgram(MeasurementUnitConverterParameters params,
-                                         ConfigExtractor configExtractor,
-                                         StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public MeasurementUnitConverterProgram(MeasurementUnitConverterParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>...
+  public DataStream<Event> getApplicationLogic(DataStream<Event>...
                                                       dataStreams) {
     return dataStreams[0].flatMap(new MeasurementUnitConverter(params.getInputUnit()
         .getResource().toString(), params.getOutputUnit().getResource().toString(),

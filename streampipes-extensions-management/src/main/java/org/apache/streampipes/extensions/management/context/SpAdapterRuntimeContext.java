@@ -19,8 +19,9 @@
 package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 
 import java.io.Serializable;
 

@@ -20,15 +20,17 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -39,7 +41,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -65,7 +66,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Plc4xS7Adapter implements AdapterInterface, IPullAdapter, PlcReadResponseHandler {
+public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcReadResponseHandler {
 
   /**
    * A unique id to identify the Plc4xS7Adapter
@@ -105,7 +106,7 @@ public class Plc4xS7Adapter implements AdapterInterface, IPullAdapter, PlcReadRe
    *
    * @throws AdapterException
    */
-  private void before(StaticPropertyExtractor extractor) throws AdapterException {
+  private void before(IStaticPropertyExtractor extractor) throws AdapterException {
     // Extract user input
     getConfigurations(extractor);
 
@@ -176,7 +177,7 @@ public class Plc4xS7Adapter implements AdapterInterface, IPullAdapter, PlcReadRe
    *
    * @param extractor StaticPropertyExtractor
    */
-  private void getConfigurations(StaticPropertyExtractor extractor) throws AdapterException {
+  private void getConfigurations(IStaticPropertyExtractor extractor) throws AdapterException {
 
     this.ip = extractor.singleValueParameter(PLC_IP, String.class);
     this.pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
@@ -246,8 +247,8 @@ public class Plc4xS7Adapter implements AdapterInterface, IPullAdapter, PlcReadRe
    * @return AdapterConfiguration
    */
   @Override
-  public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, Plc4xS7Adapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)

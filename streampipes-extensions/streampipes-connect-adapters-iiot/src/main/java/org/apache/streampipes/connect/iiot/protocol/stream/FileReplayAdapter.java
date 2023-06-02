@@ -20,22 +20,22 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.CsvParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ImageParser;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -54,7 +54,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class FileReplayAdapter implements AdapterInterface {
+public class FileReplayAdapter implements StreamPipesAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileReplayAdapter.class);
 
@@ -81,8 +81,8 @@ public class FileReplayAdapter implements AdapterInterface {
   private long timestampLastEvent = -1;
 
   @Override
-  public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, FileReplayAdapter::new)
         .withSupportedParsers(
             new JsonParsers(),
             new CsvParser(),

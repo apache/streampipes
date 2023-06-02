@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.processors.pattern.detection.flink.processor.and;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
@@ -33,10 +31,8 @@ import java.util.List;
 
 public class AndProgram extends AbstractPatternDetectionProgram<AndParameters> {
 
-  public AndProgram(AndParameters params,
-                    ConfigExtractor configExtractor,
-                    StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public AndProgram(AndParameters params) {
+    super(params);
   }
 
   @Override

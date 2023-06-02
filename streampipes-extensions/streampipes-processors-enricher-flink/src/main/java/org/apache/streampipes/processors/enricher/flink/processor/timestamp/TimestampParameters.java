@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.enricher.flink.processor.timestamp;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class TimestampParameters extends EventProcessorBindingParams {
+public class TimestampParameters extends ProcessorParams {
 
   private String appendTimePropertyName;
 

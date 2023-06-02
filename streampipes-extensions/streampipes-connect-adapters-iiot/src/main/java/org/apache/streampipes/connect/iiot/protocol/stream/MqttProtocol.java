@@ -18,21 +18,21 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class MqttProtocol implements AdapterInterface {
+public class MqttProtocol implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.mqtt";
 
@@ -52,14 +52,14 @@ public class MqttProtocol implements AdapterInterface {
   public MqttProtocol() {
   }
 
-  public void applyConfiguration(StaticPropertyExtractor extractor) {
+  public void applyConfiguration(IStaticPropertyExtractor extractor) {
     this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
+  public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID)
+        .create(ID, MqttProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)

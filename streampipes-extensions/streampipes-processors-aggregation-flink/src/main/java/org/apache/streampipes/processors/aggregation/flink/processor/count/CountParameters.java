@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.aggregation.flink.processor.count;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class CountParameters extends EventProcessorBindingParams {
+public class CountParameters extends ProcessorParams {
 
   private Integer timeWindowSize;
   private String timeWindowScale;

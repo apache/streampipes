@@ -31,8 +31,6 @@ import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.transformation.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.transformation.flink.processor.boilerplate.BoilerplateController;
 import org.apache.streampipes.processors.transformation.flink.processor.converter.FieldConverterController;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.FieldHasherController;
-import org.apache.streampipes.processors.transformation.flink.processor.mapper.FieldMapperController;
 import org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter.MeasurementUnitConverterController;
 import org.apache.streampipes.processors.transformation.flink.processor.rename.FieldRenamerController;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
@@ -52,8 +50,6 @@ public class TransformationFlinkInit extends ExtensionsModelSubmitter {
             "",
             8090)
         .registerPipelineElements(new FieldConverterController(),
-            new FieldHasherController(),
-            new FieldMapperController(),
             new MeasurementUnitConverterController(),
             new FieldRenamerController(),
             new BoilerplateController())

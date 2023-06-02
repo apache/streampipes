@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.extensions.management.connect;
 
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -56,7 +57,7 @@ public class ConnectWorkerDescriptionProvider {
    * This is a helper method to mock the Declarer Singleton in unit tests
    * @return the registered adapters from the DeclarerSingleton
    */
-  public Collection<AdapterInterface> getRegisteredAdapters() {
+  public Collection<StreamPipesAdapter> getRegisteredAdapters() {
     return DeclarersSingleton.getInstance().getAdapters();
   }
 

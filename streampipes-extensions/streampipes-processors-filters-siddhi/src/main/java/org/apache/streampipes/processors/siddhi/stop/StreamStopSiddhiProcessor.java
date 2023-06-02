@@ -33,7 +33,6 @@ import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
 import org.apache.streampipes.wrapper.siddhi.engine.StreamPipesSiddhiProcessor;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 import java.util.Arrays;
 
@@ -64,7 +63,7 @@ public class StreamStopSiddhiProcessor extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
                                         String finalInsertIntoStreamName) {
     var extractor = siddhiParams.getParams().extractor();
     int duration = extractor.singleValueParameter(Duration, Integer.class);
@@ -80,7 +79,7 @@ public class StreamStopSiddhiProcessor extends StreamPipesSiddhiProcessor {
         .build();
   }
 
-  private String fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  private String fromStatement(SiddhiProcessorParams siddhiParams,
                                int duration) {
     return "define stream Test(timestamp LONG,message STRING);\n"
         + "from every not "
@@ -89,7 +88,7 @@ public class StreamStopSiddhiProcessor extends StreamPipesSiddhiProcessor {
         + " sec";
   }
 
-  private String selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
+  private String selectStatement(SiddhiProcessorParams siddhiParams) {
     return "select currentTimeMillis() as timestamp, 'Event stream has stopped' as message";
   }
 }

@@ -55,11 +55,11 @@ public class GuessManagement {
     var workerUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
     workerUrl = workerUrl + WorkerPaths.getGuessSchemaPath();
 
-    var mapper = JacksonSerializer.getObjectMapper();
-    var ad = mapper.writeValueAsString(adapterDescription);
+    var objectMapper = JacksonSerializer.getObjectMapper();
+    var description = objectMapper.writeValueAsString(adapterDescription);
     logger.info("Guess schema at: " + workerUrl);
     Response requestResponse = Request.Post(workerUrl)
-        .bodyString(ad, ContentType.APPLICATION_JSON)
+        .bodyString(description, ContentType.APPLICATION_JSON)
         .connectTimeout(1000)
         .socketTimeout(100000)
         .execute();
@@ -68,9 +68,9 @@ public class GuessManagement {
     var responseString = EntityUtils.toString(httpResponse.getEntity());
 
     if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-      return mapper.readValue(responseString, GuessSchema.class);
+      return objectMapper.readValue(responseString, GuessSchema.class);
     } else {
-      var exception = mapper.readValue(responseString, SpConfigurationException.class);
+      var exception = objectMapper.readValue(responseString, SpConfigurationException.class);
       throw new WorkerAdapterException(exception.getMessage(), exception.getCause());
     }
   }

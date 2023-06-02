@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.client.model;
 
+import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
+import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -25,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StreamPipesClientConfig {
+public class StreamPipesClientConfig implements IStreamPipesClientConfig {
 
   private ClientConnectionUrlResolver connectionConfig;
   private ObjectMapper serializer;
@@ -37,18 +39,22 @@ public class StreamPipesClientConfig {
     this.registeredDataFormats = new ArrayList<>();
   }
 
+  @Override
   public ObjectMapper getSerializer() {
     return serializer;
   }
 
+  @Override
   public void addDataFormat(SpDataFormatFactory spDataFormatFactory) {
     this.registeredDataFormats.add(spDataFormatFactory);
   }
 
+  @Override
   public List<SpDataFormatFactory> getRegisteredDataFormats() {
     return registeredDataFormats;
   }
 
+  @Override
   public ClientConnectionUrlResolver getConnectionConfig() {
     return connectionConfig;
   }

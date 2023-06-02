@@ -19,11 +19,11 @@ package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.integration.containers.PulsarContainer;
 import org.apache.streampipes.integration.containers.PulsarDevContainer;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
@@ -55,8 +55,8 @@ public class PulsarAdapterTester extends AdapterTesterBase {
   }
 
   @Override
-  public AdapterConfiguration prepareAdapter() {
-    var configuration = new PulsarProtocol().declareConfig();
+  public IAdapterConfiguration prepareAdapter() {
+    IAdapterConfiguration configuration = new PulsarProtocol().declareConfig();
 
     Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
     configs.put(PulsarProtocol.PULSAR_BROKER_HOST,
@@ -87,7 +87,7 @@ public class PulsarAdapterTester extends AdapterTesterBase {
   }
 
   @Override
-  public AdapterInterface getAdapterInstance() {
+  public StreamPipesAdapter getAdapterInstance() {
     return new PulsarProtocol();
   }
 

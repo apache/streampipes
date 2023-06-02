@@ -95,7 +95,6 @@ export class AdapterBuilder {
         selector: string,
         value: string,
     ) {
-        //
         const userInput = new UserInput();
         userInput.type = type;
         userInput.selector = this.escapeString(selector);

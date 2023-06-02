@@ -45,7 +45,6 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.SiddhiTimeUnit;
 import org.apache.streampipes.wrapper.siddhi.query.expression.StreamExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.StreamFilterExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCountOperator;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
                                         String finalInsertIntoStreamName) {
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
@@ -108,7 +107,7 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
         .build();
   }
 
-  public FromClause fromStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
+  public FromClause fromStatement(SiddhiProcessorParams siddhiParams) {
     var extractor = siddhiParams.getParams().extractor();
     var operation = getOperation(extractor.selectedSingleValue(OPERATION, String.class));
     double increase = extractor.singleValueParameter(INCREASE, Double.class);
@@ -144,7 +143,7 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
     return fromClause;
   }
 
-  private SelectClause selectStatement(SiddhiProcessorParams<ProcessorParams> siddhiParams) {
+  private SelectClause selectStatement(SiddhiProcessorParams siddhiParams) {
     List<String> outputFieldSelectors = siddhiParams.getParams().extractor().outputKeySelectors();
     SelectClause selectClause = SelectClause.create();
     outputFieldSelectors

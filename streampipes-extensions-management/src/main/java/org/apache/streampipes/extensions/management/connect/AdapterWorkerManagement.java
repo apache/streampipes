@@ -19,11 +19,12 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
@@ -59,17 +60,17 @@ public class AdapterWorkerManagement {
         .getAdapter(adapterDescription.getAppId());
 
     if (adapter.isPresent()) {
-
+      var newAdapterInstance = adapter.get().declareConfig().getSupplier().get();
       runningAdapterInstances.addAdapter(
           adapterDescription.getElementId(),
-          adapter.get(),
+          newAdapterInstance,
           adapterDescription);
 
-      var registeredParsers = adapter.get().declareConfig().getSupportedParsers();
+      var registeredParsers = newAdapterInstance.declareConfig().getSupportedParsers();
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
       var eventCollector = EventCollector.from(adapterDescription);
 
-      adapter.get().onAdapterStarted(extractor, eventCollector, adapterRuntimeContext);
+      newAdapterInstance.onAdapterStarted(extractor, eventCollector, adapterRuntimeContext);
     } else {
       var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
       LOG.error(errorMessage);
@@ -81,7 +82,7 @@ public class AdapterWorkerManagement {
 
     String elementId = adapterDescription.getElementId();
 
-    AdapterInterface adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+    StreamPipesAdapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
     if (adapter != null) {
 

@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +40,7 @@ public abstract class JsonParser {
 
   public abstract GuessSchema getGuessSchema(InputStream inputStream);
 
-  public abstract void parse(InputStream inputStream, IEventHandler handler) throws ParseException;
+  public abstract void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException;
 
 
   protected <T> T toMap(InputStream inputStream, Class<T> clazz) throws ParseException {

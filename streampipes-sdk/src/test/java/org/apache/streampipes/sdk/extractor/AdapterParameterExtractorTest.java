@@ -19,7 +19,7 @@
 package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.model.connect.adapter.IParser;
+import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -42,7 +42,7 @@ public class AdapterParameterExtractorTest {
     when(parserInstance.declareDescription()).thenReturn(parserDescription);
     when(parserInstance.fromDescription(any())).thenReturn(parserInstance);
 
-    var adapterConfiguration = AdapterConfigurationBuilder.create("test")
+    var adapterConfiguration = AdapterConfigurationBuilder.create("test", null)
         .withSupportedParsers(parserInstance)
         .buildConfiguration();
 

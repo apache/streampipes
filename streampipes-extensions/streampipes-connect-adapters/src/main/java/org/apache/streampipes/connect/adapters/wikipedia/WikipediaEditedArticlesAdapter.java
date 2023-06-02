@@ -17,36 +17,28 @@
  */
 package org.apache.streampipes.connect.adapters.wikipedia;
 
-//public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
-//
-//  public static final String ID = "org.apache.streampipes.connect.adapters.wikipedia.edit";
-//
-//  private static final String Type = "edit";
-//
-//  public WikipediaEditedArticlesAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-//    super(adapterStreamDescription, Type);
-//  }
-//
-//  public WikipediaEditedArticlesAdapter() {
-//    super();
-//  }
-//
-//  @Override
-//  public SpecificAdapterStreamDescription declareModel() {
-//    return SpecificDataStreamAdapterBuilder.create(ID)
-//        .withLocales(Locales.EN)
-//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-//        .category(AdapterType.SocialMedia, AdapterType.OpenData)
-//        .build();
-//  }
-//
-//  @Override
-//  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-//    return new WikipediaEditedArticlesAdapter(adapterDescription);
-//  }
-//
-//  @Override
-//  public String getId() {
-//    return ID;
-//  }
-//}
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+
+public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
+
+  public static final String ID = "org.apache.streampipes.connect.adapters.wikipedia.edit";
+
+  private static final String Type = "edit";
+
+  public WikipediaEditedArticlesAdapter() {
+    super(Type);
+  }
+
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, WikipediaEditedArticlesAdapter::new)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withCategory(AdapterType.SocialMedia, AdapterType.OpenData)
+        .buildConfiguration();
+  }
+}

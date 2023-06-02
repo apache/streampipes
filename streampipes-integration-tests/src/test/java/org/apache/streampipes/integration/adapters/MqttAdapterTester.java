@@ -20,12 +20,12 @@ package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.protocol.stream.MqttProtocol;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.integration.containers.MosquittoContainer;
 import org.apache.streampipes.integration.containers.MosquittoDevContainer;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
@@ -60,9 +60,9 @@ public class MqttAdapterTester extends AdapterTesterBase {
   }
 
   @Override
-  public AdapterConfiguration prepareAdapter() {
+  public IAdapterConfiguration prepareAdapter() {
 
-    var configuration = new MqttProtocol().declareConfig();
+    IAdapterConfiguration configuration = new MqttProtocol().declareConfig();
 
     Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
     configs.put(MqttConnectUtils.TOPIC,
@@ -98,7 +98,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
   }
 
   @Override
-  public AdapterInterface getAdapterInstance() {
+  public StreamPipesAdapter getAdapterInstance() {
     return new MqttProtocol();
   }
 

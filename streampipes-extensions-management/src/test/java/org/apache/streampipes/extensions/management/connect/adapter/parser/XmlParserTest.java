@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -79,7 +79,7 @@ public class XmlParserTest extends ParserTest {
   @Test
   public void parse() {
     var event = toStream(sampleEvent);
-    var mockEventHandler = mock(IEventHandler.class);
+    var mockEventHandler = mock(IParserEventHandler.class);
 
     var parser = new XmlParser(tag);
     parser.parse(event, mockEventHandler);

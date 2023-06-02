@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.client.credentials;
 
+import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 import org.apache.streampipes.client.http.header.Headers;
 
 import org.apache.http.Header;

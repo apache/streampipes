@@ -18,14 +18,18 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -35,7 +39,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Filetypes;
@@ -45,11 +48,13 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HttpServerProtocol implements AdapterInterface {
+public class HttpServerProtocol implements StreamPipesAdapter {
 
   private static final String ENDPOINT_NAME = "endpoint-name";
   private static final String CONFIGURE = "configure";
@@ -71,7 +76,7 @@ public class HttpServerProtocol implements AdapterInterface {
 
   }
 
-  private void applyConfiguration(StaticPropertyExtractor extractor) {
+  private void applyConfiguration(IStaticPropertyExtractor extractor) {
     this.endpointId = extractor.singleValueParameter(ENDPOINT_NAME, String.class);
   }
 
@@ -95,9 +100,9 @@ public class HttpServerProtocol implements AdapterInterface {
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
+  public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID)
+        .create(ID, HttpServerProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
@@ -120,9 +125,7 @@ public class HttpServerProtocol implements AdapterInterface {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     applyConfiguration(extractor.getStaticPropertyExtractor());
-    var processor = new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
-      collector.collect(event);
-    });
+    var processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
     HttpServerAdapterManagement.INSTANCE.addAdapter(this.endpointId, processor);
   }
 
@@ -135,22 +138,36 @@ public class HttpServerProtocol implements AdapterInterface {
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor parameterExtractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    StaticPropertyExtractor extractor = parameterExtractor.getStaticPropertyExtractor();
-    applyConfiguration(extractor);
+    IStaticPropertyExtractor propertyExtractor = parameterExtractor.getStaticPropertyExtractor();
+    applyConfiguration(propertyExtractor);
     GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
 
-    String selectedImportMode = extractor.selectedAlternativeInternalId(CONFIGURE);
-
+    String selectedImportMode = propertyExtractor.selectedAlternativeInternalId(CONFIGURE);
     if (selectedImportMode.equals(MANUALLY)) {
-      CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(EP_CONFIG);
+      CollectionStaticProperty sp = (CollectionStaticProperty) propertyExtractor.getStaticPropertyByName(EP_CONFIG);
 
       for (StaticProperty member : sp.getMembers()) {
         StaticPropertyExtractor memberExtractor =
             StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
         schemaBuilder.property(makeProperty(memberExtractor));
       }
-    }
+      return schemaBuilder.build();
+    } else if (selectedImportMode.equals(FILE_IMPORT)){
+      String fileName = propertyExtractor.selectedFilename(FILE);
+      InputStream dataInputStream = this.getDataFromEndpoint(fileName);
 
-    return schemaBuilder.build();
+      return parameterExtractor.selectedParser().getGuessSchema(dataInputStream);
+    } else {
+      throw new AdapterException("Unknown import mode selected: " + selectedImportMode);
+    }
+  }
+
+
+  private InputStream getDataFromEndpoint(String fileName) throws ParseException {
+    try {
+      return FileProtocolUtils.getFileInputStream(fileName);
+    } catch (IOException e) {
+      throw new ParseException("Could not find file: " + fileName);
+    }
   }
 }

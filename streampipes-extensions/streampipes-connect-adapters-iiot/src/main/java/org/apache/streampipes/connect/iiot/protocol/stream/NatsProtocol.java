@@ -20,23 +20,23 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -62,7 +62,7 @@ import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERN
 import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_GROUP;
 import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_KEY;
 
-public class NatsProtocol implements AdapterInterface {
+public class NatsProtocol implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.nats";
   private NatsConfig natsConfig;
@@ -75,7 +75,7 @@ public class NatsProtocol implements AdapterInterface {
 
   }
 
-  public void applyConfiguration(StaticPropertyExtractor extractor) {
+  public void applyConfiguration(IStaticPropertyExtractor extractor) {
     this.natsConfig = NatsConfigUtils.from(extractor);
   }
 
@@ -105,9 +105,9 @@ public class NatsProtocol implements AdapterInterface {
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
+  public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID)
+        .create(ID, NatsProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withCategory(AdapterType.Generic)
         .withLocales(Locales.EN)

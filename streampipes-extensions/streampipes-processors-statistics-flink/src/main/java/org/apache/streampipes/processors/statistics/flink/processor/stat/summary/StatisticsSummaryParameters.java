@@ -19,11 +19,11 @@
 package org.apache.streampipes.processors.statistics.flink.processor.stat.summary;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import java.util.List;
 
-public class StatisticsSummaryParameters extends EventProcessorBindingParams {
+public class StatisticsSummaryParameters extends ProcessorParams {
 
   private List<String> listPropertyMappings;
 

@@ -20,17 +20,17 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
-public class TubeMQProtocol implements AdapterInterface {
+public class TubeMQProtocol implements StreamPipesAdapter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TubeMQProtocol.class);
 
@@ -74,7 +74,7 @@ public class TubeMQProtocol implements AdapterInterface {
   public TubeMQProtocol() {
   }
 
-  private void applyConfiguration(StaticPropertyExtractor extractor) {
+  private void applyConfiguration(IStaticPropertyExtractor extractor) {
     this.masterHostAndPort = extractor.singleValueParameter(MASTER_HOST_AND_PORT_KEY, String.class);
     this.topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
     this.consumerGroup = extractor.singleValueParameter(CONSUMER_GROUP_KEY, String.class);
@@ -99,9 +99,9 @@ public class TubeMQProtocol implements AdapterInterface {
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
+  public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID)
+        .create(ID, TubeMQProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
@@ -133,10 +133,7 @@ public class TubeMQProtocol implements AdapterInterface {
           for (final Message message : messages) {
             try {
               var inputStream = new ByteArrayInputStream(message.getData());
-              extractor.selectedParser().parse(inputStream, (event) -> {
-                collector.collect(event);
-              });
-//              processor.onEvent(message.getData());
+              extractor.selectedParser().parse(inputStream, collector::collect);
             } catch (ParseException e) {
               LOGGER.error("Error while parsing: " + e.getMessage());
               e.printStackTrace();

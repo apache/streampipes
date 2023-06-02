@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.eventcount;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -34,7 +32,7 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class EventCountController extends FlinkDataProcessorDeclarer<EventCountParameters> {
 
@@ -68,14 +66,12 @@ public class EventCountController extends FlinkDataProcessorDeclarer<EventCountP
   }
 
   @Override
-  public FlinkDataProcessorRuntime<EventCountParameters> getRuntime(DataProcessorInvocation graph,
-                                                                    ProcessingElementParameterExtractor extractor,
-                                                                    ConfigExtractor configExtractor,
-                                                                    StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<EventCountParameters> getProgram(DataProcessorInvocation graph,
+                                                                    ProcessingElementParameterExtractor extractor) {
     Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String scale = extractor.selectedSingleValueInternalName(SCALE_KEY, String.class);
     EventCountParameters staticParam = new EventCountParameters(graph, timeWindowSize, scale);
 
-    return new EventCountProgram(staticParam, configExtractor, streamPipesClient);
+    return new EventCountProgram(staticParam);
   }
 }

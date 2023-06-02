@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.converter;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
@@ -26,14 +24,12 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class FieldConverterProgram extends AbstractFlinkTransformationProgram<FieldConverterParameters> {
 
-  public FieldConverterProgram(FieldConverterParameters params,
-                               ConfigExtractor configExtractor,
-                               StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public FieldConverterProgram(FieldConverterParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
     return messageStream[0].flatMap(new FieldConverter(params.getConvertProperty(), params.getTargetDatatype()));
   }
 }

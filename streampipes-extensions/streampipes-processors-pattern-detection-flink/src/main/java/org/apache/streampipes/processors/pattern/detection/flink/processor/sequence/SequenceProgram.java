@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.sequence;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
@@ -28,14 +26,12 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class SequenceProgram extends AbstractPatternDetectionProgram<SequenceParameters> {
 
-  public SequenceProgram(SequenceParameters params,
-                         ConfigExtractor configExtractor,
-                         StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public SequenceProgram(SequenceParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return dataStreams[0].keyBy(getKeySelector()).connect(dataStreams[1].keyBy(getKeySelector()))
         .process(new Sequence(params
             .getTimeUnit(),
@@ -45,11 +41,6 @@ public class SequenceProgram extends AbstractPatternDetectionProgram<SequencePar
   }
 
   private KeySelector<Event, String> getKeySelector() {
-    return new KeySelector<Event, String>() {
-      @Override
-      public String getKey(Event value) throws Exception {
-        return "dummy-key";
-      }
-    };
+    return value -> "dummy-key";
   }
 }

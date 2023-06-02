@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.client;
 
-import org.apache.streampipes.client.credentials.CredentialsProvider;
+import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 import org.apache.streampipes.client.credentials.StreamPipesApiKeyCredentials;
 import org.apache.streampipes.client.credentials.StreamPipesTokenCredentials;
 

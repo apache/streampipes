@@ -47,7 +47,6 @@ import org.apache.streampipes.wrapper.siddhi.query.FromClause;
 import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 import java.util.Collections;
 import java.util.List;
@@ -101,7 +100,7 @@ public class ListCollector extends StreamPipesSiddhiProcessor
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
                                         String finalInsertIntoStreamName) {
     Integer batchWindowSize = siddhiParams.getParams().extractor().singleValueParameter(WINDOW_SIZE, Integer.class);
     String propertySelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);

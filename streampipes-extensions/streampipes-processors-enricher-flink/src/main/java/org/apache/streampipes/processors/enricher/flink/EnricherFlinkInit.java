@@ -32,6 +32,7 @@ import org.apache.streampipes.processors.enricher.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.enricher.flink.processor.timestamp.TimestampController;
 import org.apache.streampipes.processors.enricher.flink.processor.urldereferencing.UrlDereferencingController;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.wrapper.flink.FlinkRuntimeProvider;
 
 public class EnricherFlinkInit extends ExtensionsModelSubmitter {
 
@@ -45,8 +46,10 @@ public class EnricherFlinkInit extends ExtensionsModelSubmitter {
             "Processors Enricher Flink",
             "",
             8090)
-        .registerPipelineElements(new TimestampController(),
+        .registerPipelineElements(
+            new TimestampController(),
             new UrlDereferencingController())
+        .registerRuntimeProvider(new FlinkRuntimeProvider())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

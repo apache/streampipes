@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.enricher.flink.processor.timestamp;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -33,7 +31,7 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class TimestampController extends FlinkDataProcessorDeclarer<TimestampParameters> {
 
@@ -54,17 +52,15 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
   }
 
   @Override
-  public FlinkDataProcessorRuntime<TimestampParameters> getRuntime(DataProcessorInvocation graph,
-                                                                   ProcessingElementParameterExtractor extractor,
-                                                                   ConfigExtractor configExtractor,
-                                                                   StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<TimestampParameters> getProgram(DataProcessorInvocation graph,
+                                                                   ProcessingElementParameterExtractor extractor) {
 
     TimestampParameters staticParam = new TimestampParameters(
         graph,
         APPEND_PROPERTY);
 
 
-    return new TimestampProgram(staticParam, configExtractor, streamPipesClient);
+    return new TimestampProgram(staticParam);
   }
 
 }

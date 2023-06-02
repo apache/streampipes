@@ -19,30 +19,31 @@
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 
-public class MachineDataSimulatorAdapter implements AdapterInterface {
+public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
 
+  private static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
   private static final String WAIT_TIME_MS = "wait-time-ms";
   private static final String SELECTED_SIMULATOR_OPTION = "selected-simulator-option";
 
   private MachineDataSimulator machineDataSimulator;
 
   @Override
-  public AdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create("org.apache.streampipes.connect.iiot.adapters.simulator.machine")
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, MachineDataSimulatorAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Debugging)

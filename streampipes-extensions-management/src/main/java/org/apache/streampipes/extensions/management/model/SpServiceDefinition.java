@@ -18,9 +18,10 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
@@ -38,23 +39,26 @@ public class SpServiceDefinition {
   private String serviceDescription;
   private Integer defaultPort;
 
-  private List<Declarer<?>> declarers;
+  private List<IStreamPipesPipelineElement<?>> pipelineElements;
   private List<SpDataFormatFactory> dataFormatFactories;
   private List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories;
   private List<IStreamPipesFunctionDeclarer> functions;
 
-  private List<AdapterInterface> adapters;
+  private List<StreamPipesAdapter> adapters;
 
   private Map<String, ConfigItem> kvConfigs;
 
+  private List<IStreamPipesRuntimeProvider> runtimeProviders;
+
   public SpServiceDefinition() {
     this.serviceId = UUID.randomUUID().toString();
-    this.declarers = new ArrayList<>();
+    this.pipelineElements = new ArrayList<>();
     this.dataFormatFactories = new ArrayList<>();
     this.protocolDefinitionFactories = new ArrayList<>();
     this.kvConfigs = new HashMap<>();
     this.functions = new ArrayList<>();
     this.adapters = new ArrayList<>();
+    this.runtimeProviders = new ArrayList<>();
   }
 
   public String getServiceGroup() {
@@ -97,20 +101,20 @@ public class SpServiceDefinition {
     this.defaultPort = defaultPort;
   }
 
-  public void addDeclarer(Declarer<?> declarer) {
-    this.declarers.add(declarer);
+  public void addDeclarer(IStreamPipesPipelineElement<?> pipelineElements) {
+    this.pipelineElements.add(pipelineElements);
   }
 
-  public void addDeclarers(List<Declarer<?>> declarers) {
-    this.declarers.addAll(declarers);
+  public void addDeclarers(List<IStreamPipesPipelineElement<?>> declarers) {
+    this.pipelineElements.addAll(declarers);
   }
 
-  public List<Declarer<?>> getDeclarers() {
-    return declarers;
+  public List<IStreamPipesPipelineElement<?>> getDeclarers() {
+    return pipelineElements;
   }
 
-  public void setDeclarers(List<Declarer<?>> declarers) {
-    this.declarers = declarers;
+  public void setDeclarers(List<IStreamPipesPipelineElement<?>> pipelineElements) {
+    this.pipelineElements = pipelineElements;
   }
 
   public void addDataFormatFactory(SpDataFormatFactory factory) {
@@ -125,11 +129,11 @@ public class SpServiceDefinition {
     this.kvConfigs.put(configItem.getKey(), configItem);
   }
 
-  public void addAdapter(AdapterInterface adapter) {
+  public void addAdapter(StreamPipesAdapter adapter) {
     this.adapters.add(adapter);
   }
 
-  public void addAdapters(List<AdapterInterface> adapters) {
+  public void addAdapters(List<StreamPipesAdapter> adapters) {
     this.adapters.addAll(adapters);
   }
 
@@ -169,7 +173,15 @@ public class SpServiceDefinition {
     return functions;
   }
 
-  public List<AdapterInterface> getAdapters() {
+  public List<StreamPipesAdapter> getAdapters() {
     return adapters;
+  }
+
+  public List<IStreamPipesRuntimeProvider> getRuntimeProviders() {
+    return runtimeProviders;
+  }
+
+  public void addRuntimeProvider(IStreamPipesRuntimeProvider runtimeProvider) {
+    this.runtimeProviders.add(runtimeProvider);
   }
 }

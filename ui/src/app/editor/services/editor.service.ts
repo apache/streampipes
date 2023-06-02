@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import {
     DataProcessorInvocation,
-    DataSetModificationMessage,
     DataSinkInvocation,
     Pipeline,
     PipelineCanvasMetadata,

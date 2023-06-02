@@ -25,6 +25,10 @@ import org.apache.streampipes.commons.parser.FloatParser;
 import org.apache.streampipes.commons.parser.IntegerParser;
 import org.apache.streampipes.commons.parser.PrimitiveTypeParser;
 import org.apache.streampipes.commons.parser.StringParser;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
@@ -38,9 +42,7 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -49,9 +51,7 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.apache.commons.csv.CSVParser;
@@ -111,7 +111,7 @@ public class CsvMetadataEnrichmentProcessor
 
   @Override
   public List<Option> resolveOptions(String requestId,
-                                     StaticPropertyExtractor parameterExtractor) {
+                                     IStaticPropertyExtractor parameterExtractor) {
     try {
       String fileContents = getFileContents(parameterExtractor);
       if (requestId.equals(FIELDS_TO_APPEND_KEY)) {
@@ -184,7 +184,7 @@ public class CsvMetadataEnrichmentProcessor
         .collect(Collectors.toList());
   }
 
-  private String getFileContents(AbstractParameterExtractor<?> extractor) {
+  private String getFileContents(IParameterExtractor<?> extractor) {
     String filename = extractor.selectedFilename(CSV_FILE_KEY);
     return getStreamPipesClientInstance().fileApi().getFileContentAsString(filename);
   }

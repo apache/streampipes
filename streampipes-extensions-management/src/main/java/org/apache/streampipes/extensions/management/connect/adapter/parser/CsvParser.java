@@ -20,10 +20,10 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.DatatypeUtils;
 import org.apache.streampipes.model.Tuple2;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
-import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.Option;
@@ -94,7 +94,7 @@ public class CsvParser implements IParser {
   public ParserDescription declareDescription() {
     return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION)
         .requiredTextParameter(Labels.from(DELIMITER, "Delimiter",
-            "The delimiter for json. Mostly either , or ;"))
+            "The delimiter of the CSV file(s). Mostly either , or ;"))
         .requiredMultiValueSelection(Labels.from(HEADER, "Header",
                 "Does the CSV file include a header or not"),
             List.of(new Option("Header", "Header")))
@@ -114,7 +114,7 @@ public class CsvParser implements IParser {
 
 
   @Override
-  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
+  public void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException {
     var csvReader = getCsvReader(inputStream);
 
     var headerAndSample = getHeaderAndFirstSample(csvReader);

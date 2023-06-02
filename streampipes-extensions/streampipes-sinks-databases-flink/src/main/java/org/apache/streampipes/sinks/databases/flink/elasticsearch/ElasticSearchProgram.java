@@ -19,14 +19,9 @@
 package org.apache.streampipes.sinks.databases.flink.elasticsearch;
 
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sinks.databases.flink.config.ConfigKeys;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.elastic.ElasticsearchSink;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.wrapper.flink.FlinkDataSinkRuntime;
-import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
+import org.apache.streampipes.wrapper.flink.FlinkDataSinkProgram;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -40,36 +35,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ElasticSearchProgram extends FlinkDataSinkRuntime<ElasticSearchParameters> implements Serializable {
+public class ElasticSearchProgram extends FlinkDataSinkProgram<ElasticSearchParameters> implements Serializable {
 
   private static final long serialVersionUID = 1L;
   private static final String INDEX_NAME_PREFIX = "sp_";
 
-  public ElasticSearchProgram(ElasticSearchParameters params,
-                              ConfigExtractor configExtractor,
-                              StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
-  }
-
-  @Override
-  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
-    SpConfig config = configExtractor.getConfig();
-    return new FlinkDeploymentConfig(config.getString(
-        ConfigKeys.FLINK_JAR_FILE_LOC),
-        config.getString(ConfigKeys.FLINK_HOST),
-        config.getInteger(ConfigKeys.FLINK_PORT),
-        config.getBoolean(ConfigKeys.DEBUG)
-    );
+  public ElasticSearchProgram(ElasticSearchParameters params) {
+    super(params);
   }
 
   @Override
   public void getSink(
       DataStream<Event>... convertedStream) {
 
-    String indexName = bindingParams.getIndexName();
-    String timeName = bindingParams.getTimestampField();
-    String elasticsearchHost = bindingParams.getElasticsearchHost();
-    Integer elasticsearchPort = bindingParams.getElasticsearchPort();
+    String indexName = params.getIndexName();
+    String timeName = params.getTimestampField();
+    String elasticsearchHost = params.getElasticsearchHost();
+    Integer elasticsearchPort = params.getElasticsearchPort();
 
     List<HttpHost> httpHosts = Arrays.asList(new HttpHost(
         elasticsearchHost,

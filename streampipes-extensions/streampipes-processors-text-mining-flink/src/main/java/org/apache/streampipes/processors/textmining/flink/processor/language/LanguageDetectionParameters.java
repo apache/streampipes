@@ -18,9 +18,9 @@
 package org.apache.streampipes.processors.textmining.flink.processor.language;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class LanguageDetectionParameters extends EventProcessorBindingParams {
+public class LanguageDetectionParameters extends ProcessorParams {
 
   private String fieldName;
 

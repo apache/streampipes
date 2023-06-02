@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.model.connect.adapter.IEventHandler;
+import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.io.InputStream;
@@ -52,7 +52,7 @@ public class JsonArrayParser extends JsonParser {
   }
 
   @Override
-  public void parse(InputStream inputStream, IEventHandler handler) throws ParseException {
+  public void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException {
     var events = toMap(inputStream, Map[].class);
     Arrays.stream(events).forEach(handler::handle);
   }

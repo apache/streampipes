@@ -23,15 +23,17 @@ import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
@@ -41,8 +43,6 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.pe.shared.config.kafka.kafka.KafkaConfig;
 import org.apache.streampipes.pe.shared.config.kafka.kafka.KafkaConnectUtils;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -68,7 +68,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
+public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig {
 
   private static final Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
   KafkaConfig config;
@@ -81,7 +81,7 @@ public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
   public KafkaProtocol() {
   }
 
-  private void applyConfiguration(StaticPropertyExtractor extractor) {
+  private void applyConfiguration(IStaticPropertyExtractor extractor) {
     this.config = KafkaConnectUtils.getConfig(extractor, true);
   }
 
@@ -107,7 +107,8 @@ public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
   }
 
   @Override
-  public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor)
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName,
+                                             IStaticPropertyExtractor extractor)
       throws SpConfigurationException {
     RuntimeResolvableOneOfStaticProperty config = extractor
         .getStaticPropertyByName(KafkaConnectUtils.TOPIC_KEY, RuntimeResolvableOneOfStaticProperty.class);
@@ -135,9 +136,9 @@ public class KafkaProtocol implements AdapterInterface, SupportsRuntimeConfig {
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
+  public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID)
+        .create(ID, KafkaProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)

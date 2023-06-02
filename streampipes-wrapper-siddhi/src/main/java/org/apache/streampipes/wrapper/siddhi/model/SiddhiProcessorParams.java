@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.wrapper.siddhi.model;
 
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
@@ -27,15 +27,15 @@ import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 import java.util.List;
 import java.util.Map;
 
-public class SiddhiProcessorParams<T extends EventProcessorBindingParams> {
+public class SiddhiProcessorParams {
 
-  private final T params;
+  private final IDataProcessorParameters params;
   private final List<String> inputStreamNames;
   private final Map<String, List<EventPropertyDef>> eventTypeInfo;
   private final List<String> outputEventKeys;
   private final List<EventPropertyDef> outTypeInfo;
 
-  public SiddhiProcessorParams(T params,
+  public SiddhiProcessorParams(IDataProcessorParameters params,
                                List<String> inputStreamNames,
                                Map<String, List<EventPropertyDef>> eventTypeInfo,
                                List<String> outputEventKeys,
@@ -47,7 +47,7 @@ public class SiddhiProcessorParams<T extends EventProcessorBindingParams> {
     this.outTypeInfo = outTypeInfo;
   }
 
-  public T getParams() {
+  public IDataProcessorParameters getParams() {
     return params;
   }
 

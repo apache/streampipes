@@ -67,7 +67,15 @@ public enum Envs {
 
   SP_TS_STORAGE_ORG("SP_TS_STORAGE_ORG", "sp"),
 
-  SP_TS_STORAGE_BUCKET("SP_TS_STORAGE_BUCKET", "sp");
+  SP_TS_STORAGE_BUCKET("SP_TS_STORAGE_BUCKET", "sp"),
+
+  SP_FLINK_JAR_FILE_LOC(
+      "SP_FLINK_JAR_FILE_LOC",
+      "./streampipes-processing-element-container.jar"),
+
+  SP_FLINK_JOBMANAGER_HOST("SP_FLINK_JOBMANAGER_HOST", "jobmanager"),
+
+  SP_FLINK_JOBMANAGER_PORT("SP_FLINK_JOBMANAGER_PORT", "8081");
 
   private final String envVariableName;
   private String defaultValue;

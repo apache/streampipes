@@ -18,8 +18,8 @@
 package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.testcontainers.shaded.com.google.common.collect.Maps;
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public abstract class AdapterTesterBase implements AutoCloseable {
-  private AdapterInterface adapter;
+  private StreamPipesAdapter adapter;
 
   private List<Map<String, Object>> expectedEvents;
 
@@ -56,7 +56,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
     startAdapterService();
 
     // generate the AdapterConfiguration for the test adapter
-    var adapterConfiguration = prepareAdapter();
+    IAdapterConfiguration adapterConfiguration = prepareAdapter();
 
     // start the adapter instance
     adapter = startAdapter(adapterConfiguration);
@@ -78,7 +78,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
    * @return an instance of the adapter
    * @throws AdapterException when adapter can not be started
    */
-  public AdapterInterface startAdapter(AdapterConfiguration adapterConfiguration) throws AdapterException {
+  public StreamPipesAdapter startAdapter(IAdapterConfiguration adapterConfiguration) throws AdapterException {
     var adapter = getAdapterInstance();
 
     var registeredParsers = adapterConfiguration.getSupportedParsers();
@@ -104,13 +104,13 @@ public abstract class AdapterTesterBase implements AutoCloseable {
    * Create the AdapterConfiguration that initializes the adapter instance
    * @return AdapterConfiguration
    */
-  public abstract AdapterConfiguration prepareAdapter() throws AdapterException;
+  public abstract IAdapterConfiguration prepareAdapter() throws AdapterException;
 
   /**
    * Create an instance of the adpater
    * @return AdapterInterface
    */
-  public abstract AdapterInterface getAdapterInstance();
+  public abstract StreamPipesAdapter getAdapterInstance();
 
   /**
    * Create the list of events that should be emitted by the adapter
