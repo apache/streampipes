@@ -18,14 +18,11 @@
 
 package org.apache.streampipes.rest.extensions.html.page;
 
-import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
-import org.apache.streampipes.extensions.api.declarer.InvocableDeclarer;
-import org.apache.streampipes.extensions.api.declarer.PipelineTemplateDeclarer;
-import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
-import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -41,11 +38,12 @@ import java.util.List;
 public class WelcomePageGenerator {
 
   protected List<Description> descriptions;
-  protected Collection<Declarer<?>> declarers;
+  protected Collection<IStreamPipesPipelineElement<?>> pipelineElements;
   protected String baseUri;
 
-  public WelcomePageGenerator(String baseUri, Collection<Declarer<?>> declarers) {
-    this.declarers = declarers;
+  public WelcomePageGenerator(String baseUri,
+                              Collection<IStreamPipesPipelineElement<?>> pipelineElements) {
+    this.pipelineElements = pipelineElements;
     this.baseUri = baseUri;
     this.descriptions = new ArrayList<>();
   }
@@ -57,23 +55,17 @@ public class WelcomePageGenerator {
   public List<Description> buildUris() {
     List<Description> descriptions = new ArrayList<>();
 
-    for (Declarer<?> declarer : declarers) {
-      if (declarer instanceof InvocableDeclarer) {
-        descriptions.add(getDescription(declarer));
-      } else if (declarer instanceof DataStreamDeclarer) {
-        descriptions.add(getDescription(declarer));
-      } else if (declarer instanceof PipelineTemplateDeclarer) {
-        descriptions.add(getDescription(declarer));
-      }
+    for (IStreamPipesPipelineElement<?> pipelineElement : pipelineElements) {
+      descriptions.add(getDescription(pipelineElement));
     }
     return descriptions;
   }
 
-  private Description getDescription(Declarer<?> declarer) {
-    NamedStreamPipesEntity entity = declarer.declareModel();
+  private Description getDescription(IStreamPipesPipelineElement<?> declarer) {
+    NamedStreamPipesEntity entity = declarer.declareConfig().getDescription();
     Description desc = new Description();
     // TODO remove after full internationalization support has been implemented
-    updateLabel(declarer.declareModel(), desc);
+    updateLabel(entity, desc);
     desc.setType(getType(declarer));
     desc.setElementId(entity.getElementId());
     desc.setAppId(entity.getAppId());
@@ -83,27 +75,22 @@ public class WelcomePageGenerator {
     desc.setIncludesIcon(entity.isIncludesAssets()
         && entity.getIncludedAssets().contains(Assets.ICON));
     String uri = baseUri;
-    if (declarer instanceof SemanticEventConsumerDeclarer) {
+    if (declarer instanceof IStreamPipesDataSink) {
       uri += "sec/";
-    } else if (declarer instanceof SemanticEventProcessingAgentDeclarer) {
+    } else if (declarer instanceof IStreamPipesDataProcessor) {
       uri += "sepa/";
-    } else if (declarer instanceof DataStreamDeclarer) {
+    } else if (declarer instanceof IStreamPipesDataStream) {
       uri += "stream/";
-    } else if (declarer instanceof PipelineTemplateDeclarer) {
-      uri += "template/";
     }
-    desc.setDescriptionUrl(uri + declarer.declareModel().getAppId());
-    //desc.setUri(URI.create(uri + declarer.declareModel().getUri()
-    // .replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
+    desc.setDescriptionUrl(uri + entity.getAppId());
     return desc;
   }
 
-  private String getType(Declarer<?> declarer) {
-    if (declarer.declareModel() instanceof DataSinkDescription) {
+  private String getType(IStreamPipesPipelineElement<?> pipelineElement) {
+    var elementDescription = pipelineElement.declareConfig().getDescription();
+    if (elementDescription instanceof DataSinkDescription) {
       return "action";
-    } else if (declarer.declareModel() instanceof SpDataSet) {
-      return "set";
-    } else if (declarer.declareModel() instanceof SpDataStream) {
+    } else if (elementDescription instanceof SpDataStream) {
       return "stream";
     } else {
       return "sepa";

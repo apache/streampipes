@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.GuessManagement;
+import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -41,10 +42,10 @@ public class GuessResource extends AbstractSharedRestInterface {
 
   private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);
 
-  private GuessManagement guessManagement;
+  private final GuessManagement guessManagement;
 
   public GuessResource() {
-    this.guessManagement = new GuessManagement();
+    this.guessManagement = new GuessManagement(new AdapterContextGenerator().makeGuessSchemaContext());
   }
 
   public GuessResource(GuessManagement guessManagement) {

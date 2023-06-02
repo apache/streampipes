@@ -17,7 +17,7 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Test Random Data Simulator Stream Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -25,14 +25,14 @@ describe('Test Random Data Simulator Stream Adapter', () => {
     });
 
     it('Perform Test', () => {
-        const adapterInput = SpecificAdapterBuilder.create(
+        const adapterInput = AdapterBuilder.create(
             'Random_Data_Simulator_\\(Stream\\)',
         )
             .setName('Random Data Simulator Adapter Test')
             .addInput('input', 'wait-time-ms', '1000')
             .build();
 
-        ConnectUtils.testSpecificStreamAdapter(adapterInput);
+        ConnectUtils.testAdapter(adapterInput);
         ConnectUtils.deleteAdapter();
     });
 });

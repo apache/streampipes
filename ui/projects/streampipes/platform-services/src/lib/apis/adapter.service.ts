@@ -22,11 +22,7 @@ import { map } from 'rxjs/operators';
 
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import {
-    AdapterDescription,
-    AdapterDescriptionUnion,
-    Message,
-} from '../model/gen/streampipes-model';
+import { AdapterDescription, Message } from '../model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class AdapterService {
@@ -39,21 +35,19 @@ export class AdapterService {
         return `${this.platformServicesCommons.apiBasePath}/connect`;
     }
 
-    getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {
+    getAdapterDescriptions(): Observable<AdapterDescription[]> {
         return this.requestAdapterDescriptions('/master/description/adapters');
     }
 
-    getAdapters(): Observable<AdapterDescriptionUnion[]> {
+    getAdapters(): Observable<AdapterDescription[]> {
         return this.requestAdapterDescriptions('/master/adapters');
     }
 
-    getAdapter(id: string): Observable<AdapterDescriptionUnion> {
+    getAdapter(id: string): Observable<AdapterDescription> {
         return this.http
             .get(this.connectPath + `/master/adapters/${id}`)
             .pipe(
-                map(response =>
-                    AdapterDescription.fromDataUnion(response as any),
-                ),
+                map(response => AdapterDescription.fromData(response as any)),
             );
     }
 
@@ -63,25 +57,23 @@ export class AdapterService {
         );
     }
 
-    requestAdapterDescriptions(
-        path: string,
-    ): Observable<AdapterDescriptionUnion[]> {
+    requestAdapterDescriptions(path: string): Observable<AdapterDescription[]> {
         return this.http.get(this.connectPath + path).pipe(
             map(response => {
                 return (response as any[]).map(p =>
-                    AdapterDescription.fromDataUnion(p),
+                    AdapterDescription.fromData(p),
                 );
             }),
         );
     }
 
-    stopAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
+    stopAdapter(adapter: AdapterDescription): Observable<Message> {
         return this.http
             .post(this.adapterMasterUrl + adapter.elementId + '/stop', {})
             .pipe(map(response => Message.fromData(response as any)));
     }
 
-    startAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
+    startAdapter(adapter: AdapterDescription): Observable<Message> {
         return this.startAdapterByElementId(adapter.elementId);
     }
 

@@ -18,29 +18,25 @@
 
 package org.apache.streampipes.processors.textmining.flink.processor.wordcount;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.textmining.flink.AbstractTextMiningProgram;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.io.Serializable;
 
-public class WordCountProgram extends AbstractTextMiningProgram<WordCountParameters> implements Serializable {
+public class WordCountProgram extends FlinkDataProcessorProgram<WordCountParameters> implements Serializable {
 
-  public WordCountProgram(WordCountParameters params,
-                          ConfigExtractor configExtractor,
-                          StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public WordCountProgram(WordCountParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(
+  public DataStream<Event> getApplicationLogic(
       DataStream<Event>... messageStream) {
 
     return messageStream[0]
-        .flatMap(new WordSplitter(bindingParams.getWordCountFieldName()))
+        .flatMap(new WordSplitter(params.getWordCountFieldName()))
         .keyBy("word")
         .sum("count")
         .flatMap(new WordToEventConverter());

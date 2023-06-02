@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.connect.iiot.adapters.opcua.configuration;
 
-import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
 import java.util.List;

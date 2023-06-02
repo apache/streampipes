@@ -18,35 +18,15 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.util;
 
+import org.apache.streampipes.extensions.api.connect.IPollingSettings;
+
 import java.util.concurrent.TimeUnit;
 
-public class PollingSettings {
+public record PollingSettings(Integer value, TimeUnit timeUnit) implements IPollingSettings {
 
-  private Integer value;
-  private TimeUnit timeUnit;
-
-  public static PollingSettings from(TimeUnit timeUnit, Integer value) {
+  public static PollingSettings from(TimeUnit timeUnit,
+                                     Integer value) {
     return new PollingSettings(value, timeUnit);
   }
 
-  public PollingSettings(Integer value, TimeUnit timeUnit) {
-    this.value = value;
-    this.timeUnit = timeUnit;
-  }
-
-  public Integer getValue() {
-    return value;
-  }
-
-  public void setValue(Integer value) {
-    this.value = value;
-  }
-
-  public TimeUnit getTimeUnit() {
-    return timeUnit;
-  }
-
-  public void setTimeUnit(TimeUnit timeUnit) {
-    this.timeUnit = timeUnit;
-  }
 }

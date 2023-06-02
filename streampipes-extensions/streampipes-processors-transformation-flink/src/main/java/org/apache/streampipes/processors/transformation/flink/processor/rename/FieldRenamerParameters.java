@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.transformation.flink.processor.rename;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class FieldRenamerParameters extends EventProcessorBindingParams {
+public class FieldRenamerParameters extends ProcessorParams {
 
   private String oldPropertyName;
   private String newPropertyName;

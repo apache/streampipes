@@ -15,37 +15,24 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.extensions.api.connect;
 
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
-import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.model.connect.grounding.ParserDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 import java.io.InputStream;
 import java.util.List;
 
 public interface IParser {
 
-  IParser getInstance(FormatDescription formatDescription);
+  ParserDescription declareDescription();
 
-  void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException;
+  GuessSchema getGuessSchema(InputStream inputStream) throws ParseException;
 
-  List<byte[]> parseNEvents(InputStream data, int n) throws ParseException;
+  void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException;
 
-  /**
-   * Pass one event to Parser to get the event schema
-   *
-   * @param oneEvent
-   * @return
-   */
-  EventSchema getEventSchema(List<byte[]> oneEvent);
-
-  default boolean supportsPreview() {
-    return false;
-  }
-
-  default AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
-    throw new RuntimeException("Not yet implemented!");
-  }
+  IParser fromDescription(List<StaticProperty> configuration);
 }

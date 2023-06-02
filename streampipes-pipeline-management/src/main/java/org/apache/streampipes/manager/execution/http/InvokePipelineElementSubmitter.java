@@ -45,11 +45,6 @@ public class InvokePipelineElementSubmitter extends PipelineElementSubmitter {
   }
 
   @Override
-  protected boolean shouldSubmitDataSets() {
-    return isSuccess();
-  }
-
-  @Override
   protected void onSuccess() {
     status.setTitle("Pipeline " + pipelineName + " successfully started");
   }

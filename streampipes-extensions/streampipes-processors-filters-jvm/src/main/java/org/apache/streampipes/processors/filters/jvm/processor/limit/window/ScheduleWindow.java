@@ -18,9 +18,9 @@
 package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;

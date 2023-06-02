@@ -18,22 +18,19 @@
 
 package org.apache.streampipes.sinks.databases.flink.elasticsearch;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.sinks.databases.flink.config.ConfigKeys;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataSinkRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataSinkProgram;
 
 public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearchParameters> {
 
@@ -56,20 +53,19 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
   }
 
   @Override
-  public FlinkDataSinkRuntime<ElasticSearchParameters> getRuntime(DataSinkInvocation graph,
-                                                                  DataSinkParameterExtractor extractor,
-                                                                  ConfigExtractor configExtractor,
-                                                                  StreamPipesClient streamPipesClient) {
+  public FlinkDataSinkProgram<ElasticSearchParameters> getProgram(DataSinkInvocation graph,
+                                                                  IDataSinkParameterExtractor extractor) {
 
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
     String indexName = extractor.singleValueParameter(INDEX_NAME, String.class);
-    String elasticsearchHost = configExtractor.getConfig().getString(ConfigKeys.ELASTIC_HOST);
-    Integer elasticsearchPort = configExtractor.getConfig().getInteger(ConfigKeys.ELASTIC_PORT_REST);
+    //TODO after refactoring
+    // String elasticsearchHost = configExtractor.getConfig().getString(ConfigKeys.ELASTIC_HOST);
+    //Integer elasticsearchPort = configExtractor.getConfig().getInteger(ConfigKeys.ELASTIC_PORT_REST);
 
     ElasticSearchParameters params =
-        new ElasticSearchParameters(graph, timestampField, indexName, elasticsearchHost, elasticsearchPort);
+        new ElasticSearchParameters(graph, timestampField, indexName, null, null);
 
-    return new ElasticSearchProgram(params, configExtractor, streamPipesClient);
+    return new ElasticSearchProgram(params);
 
   }
 

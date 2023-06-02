@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.connect.guess;
 
+import java.util.Objects;
+
 public class FieldStatusInfo {
 
   private FieldStatus fieldStatus;
@@ -65,5 +67,23 @@ public class FieldStatusInfo {
 
   public void setChangesRequired(boolean changesRequired) {
     this.changesRequired = changesRequired;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    FieldStatusInfo that = (FieldStatusInfo) o;
+    return changesRequired == that.changesRequired && fieldStatus == that.fieldStatus && Objects.equals(
+        additionalInfo, that.additionalInfo);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(fieldStatus, additionalInfo, changesRequired);
   }
 }

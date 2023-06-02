@@ -17,7 +17,7 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Creates a new adapter without starting it', () => {
     beforeEach('Setup Test', () => {
@@ -25,15 +25,13 @@ describe('Creates a new adapter without starting it', () => {
     });
 
     it('Perform Test', () => {
-        const adapterInput = SpecificAdapterBuilder.create(
-            'Machine_Data_Simulator',
-        )
+        const adapterInput = AdapterBuilder.create('Machine_Data_Simulator')
             .setName('Machine Data Simulator Test')
             .addInput('input', 'wait-time-ms', '1000')
             .setStartAdapter(false)
             .build();
 
-        ConnectUtils.testSpecificStreamAdapter(adapterInput);
+        ConnectUtils.testAdapter(adapterInput);
 
         ConnectUtils.startAndValidateAdapter(7);
 

@@ -46,8 +46,7 @@ public class InfluxConnectorsInit extends ExtensionsModelSubmitter {
             8090)
         .registerPipelineElements(
             new InfluxDbSink())
-        .registerAdapters(
-            new InfluxDbStreamAdapter())
+        .registerAdapter(new InfluxDbStreamAdapter())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

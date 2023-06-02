@@ -16,13 +16,14 @@
  *
  */
 
-import { GenericAdapterBuilder } from '../../builder/GenericAdapterBuilder';
 import { DataLakeFilterConfig } from '../../model/DataLakeFilterConfig';
 import { DataExplorerWidget } from '../../model/DataExplorerWidget';
 import { DataSetUtils } from '../DataSetUtils';
 import { PrepareTestDataUtils } from '../PrepareTestDataUtils';
 import { FileManagementUtils } from '../FileManagementUtils';
 import { ConnectUtils } from '../connect/ConnectUtils';
+import { ConnectBtns } from '../connect/ConnectBtns';
+import { AdapterBuilder } from '../../builder/AdapterBuilder';
 
 export class DataLakeUtils {
     public static goToDatalake() {
@@ -34,7 +35,7 @@ export class DataLakeUtils {
         storeInDataLake: boolean = true,
         format: 'csv' | 'json_array',
     ) {
-        const adapterBuilder = GenericAdapterBuilder.create('File_Stream')
+        const adapterBuilder = AdapterBuilder.create('File_Stream')
             .setName(name)
             .setTimestampProperty('timestamp')
             .addDimensionProperty('randomtext')
@@ -48,8 +49,8 @@ export class DataLakeUtils {
         if (format === 'csv') {
             adapterBuilder
                 .setFormat('csv')
-                .addFormatInput('input', 'delimiter', ';')
-                .addFormatInput('checkbox', 'header', 'check');
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
         } else {
             adapterBuilder.setFormat('json_array');
         }
@@ -74,7 +75,8 @@ export class DataLakeUtils {
             format,
         );
 
-        ConnectUtils.addGenericStreamAdapter(adapter);
+        ConnectUtils.addAdapter(adapter);
+        ConnectUtils.startAdapter(adapter);
     }
 
     public static addDataViewAndWidget(

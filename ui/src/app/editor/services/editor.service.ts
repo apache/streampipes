@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import {
     DataProcessorInvocation,
-    DataSetModificationMessage,
     DataSinkInvocation,
     Pipeline,
     PipelineCanvasMetadata,
@@ -28,7 +27,6 @@ import {
     PipelineModificationMessage,
     PipelinePreviewModel,
     PlatformServicesCommons,
-    SpDataSet,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { Observable, Subject } from 'rxjs';
@@ -87,22 +85,6 @@ export class EditorService {
             );
     }
 
-    updateDataSet(dataSet): Observable<DataSetModificationMessage> {
-        return this.http
-            .post(
-                this.platformServicesCommons.apiBasePath +
-                    '/pipelines/update/dataset',
-                dataSet,
-            )
-            .pipe(
-                map(data =>
-                    DataSetModificationMessage.fromData(
-                        data as DataSetModificationMessage,
-                    ),
-                ),
-            );
-    }
-
     getCachedPipeline(): Observable<PipelineElementConfig[]> {
         return this.http.get(this.apiBasePath + '/pipeline-cache').pipe(
             map(result => {
@@ -130,11 +112,7 @@ export class EditorService {
     }
 
     convert(payload: any) {
-        if (payload['@class'] === 'org.apache.streampipes.model.SpDataSet') {
-            return SpDataSet.fromData(payload as SpDataSet);
-        } else if (
-            payload['@class'] === 'org.apache.streampipes.model.SpDataStream'
-        ) {
+        if (payload['@class'] === 'org.apache.streampipes.model.SpDataStream') {
             return SpDataStream.fromData(payload as SpDataStream);
         } else if (
             payload['@class'] ===

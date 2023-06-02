@@ -18,21 +18,22 @@
 package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.connect.iiot.protocol.stream.BrokerProtocol;
-import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
-import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.connect.IParser;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.connect.iiot.protocol.stream.BrokerEventProcessor;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
-import org.apache.streampipes.extensions.management.connect.SendToPipeline;
-import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -47,12 +48,13 @@ import org.apache.pulsar.client.api.Reader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeConfig {
+public class PulsarProtocol implements StreamPipesAdapter, SupportsRuntimeConfig {
 
   private static final Logger LOG = LoggerFactory.getLogger(PulsarProtocol.class);
 
@@ -63,110 +65,19 @@ public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeCon
   public static final String PULSAR_TOPIC = "pulsar-topic";
   public static final String PULSAR_SUBSCRIPTION_NAME = "pulsar-subscription-name";
 
-  private String subscriptionName;
+  private PulsarConfig config;
   private Consumer<byte[]> consumer;
 
   public PulsarProtocol() {
 
   }
 
-  public PulsarProtocol(IParser parser, IFormat format, String brokerUrl, String topic, String subscriptionName) {
-    super(parser, format, brokerUrl, topic);
-    this.subscriptionName = subscriptionName;
+  public void applyConfiguration(IStaticPropertyExtractor extractor) {
+    this.config = PulsarConfig.from(extractor);
   }
 
   @Override
-  protected List<byte[]> getNByteElements(int n) throws ParseException {
-    List<byte[]> elements = new ArrayList<>();
-    try (PulsarClient pulsarClient = PulsarUtils.makePulsarClient(brokerUrl);
-         Reader<byte[]> reader = pulsarClient.newReader()
-             .topic(topic)
-             .startMessageId(MessageId.earliest)
-             .create()) {
-      int readCount = 0;
-      while (readCount < n) {
-        Message<byte[]> message = reader.readNext(1, TimeUnit.SECONDS);
-        if (message == null) {
-          continue;
-        }
-        elements.add(message.getValue());
-        readCount++;
-      }
-    } catch (IOException e) {
-      throw new ParseException("Failed to fetch messages.", e);
-    }
-    return elements;
-  }
-
-  @Override
-  public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-    ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-    String brokerHost = extractor.singleValue(PULSAR_BROKER_HOST, String.class);
-    Integer brokerPort = extractor.singleValue(PULSAR_BROKER_PORT, Integer.class);
-    String brokerUrl = brokerHost + ":" + brokerPort;
-    String topic = extractor.singleValue(PULSAR_TOPIC, String.class);
-    String subscriptionName = extractor.singleValue(PULSAR_SUBSCRIPTION_NAME, String.class);
-
-    return new PulsarProtocol(parser, format, brokerUrl, topic, subscriptionName);
-  }
-
-  @Override
-  public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .withLocales(Locales.EN)
-        .category(AdapterType.Generic)
-        .sourceType(AdapterSourceType.STREAM)
-        .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))
-        .requiredIntegerParameter(Labels.withId(PULSAR_BROKER_PORT), 6650)
-        .requiredTextParameter(Labels.withId(PULSAR_TOPIC))
-        .requiredTextParameter(Labels.withId(PULSAR_SUBSCRIPTION_NAME))
-        .build();
-  }
-
-  @Override
-  public void run(IAdapterPipeline adapterPipeline) {
-    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-
-    try {
-      if (consumer != null) {
-        consumer.close();
-      }
-      PulsarClient client = PulsarUtils.makePulsarClient(brokerUrl);
-      consumer = client.newConsumer()
-          .topic(topic)
-          .subscriptionName(subscriptionName)
-          .messageListener((MessageListener<byte[]>) (consumer, msg) -> {
-            try {
-              stk.emit(msg.getValue());
-            } catch (ParseException e) {
-              LOG.error("Failed to parse message.", e);
-            }
-          }).subscribe();
-    } catch (PulsarClientException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
-  public void stop() {
-    if (consumer != null) {
-      try {
-        consumer.close();
-      } catch (PulsarClientException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    consumer = null;
-  }
-
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  @Override
-  public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor)
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName, IStaticPropertyExtractor extractor)
       throws
       SpConfigurationException {
     String brokerHost = extractor.singleValueParameter(PULSAR_BROKER_HOST, String.class);
@@ -178,5 +89,84 @@ public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeCon
     } catch (PulsarClientException e) {
       throw new SpConfigurationException(e);
     }
+  }
+
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder
+        .create(ID, PulsarProtocol::new)
+        .withSupportedParsers(Parsers.defaultParsers())
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.Generic)
+        .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))
+        .requiredIntegerParameter(Labels.withId(PULSAR_BROKER_PORT), 6650)
+        .requiredTextParameter(Labels.withId(PULSAR_TOPIC))
+        .requiredTextParameter(Labels.withId(PULSAR_SUBSCRIPTION_NAME))
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    applyConfiguration(extractor.getStaticPropertyExtractor());
+    var processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
+    try {
+      if (consumer != null) {
+        consumer.close();
+      }
+      PulsarClient client = PulsarUtils.makePulsarClient(config.getBrokerUrl());
+      consumer = client.newConsumer()
+          .topic(config.getTopic())
+          .subscriptionName(config.getSubscriptionName())
+          .messageListener((MessageListener<byte[]>) (consumer, msg) -> {
+            try {
+              processor.onEvent(msg.getValue());
+            } catch (ParseException e) {
+              LOG.error("Failed to parse message.", e);
+            }
+          }).subscribe();
+    } catch (PulsarClientException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    if (consumer != null) {
+      try {
+        consumer.close();
+      } catch (PulsarClientException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    consumer = null;
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    List<byte[]> elements = new ArrayList<>();
+    applyConfiguration(extractor.getStaticPropertyExtractor());
+    try (PulsarClient pulsarClient = PulsarUtils.makePulsarClient(config.getBrokerUrl());
+         Reader<byte[]> reader = pulsarClient.newReader()
+             .topic(config.getTopic())
+             .startMessageId(MessageId.earliest)
+             .create()) {
+      int readCount = 0;
+      while (readCount < 1) {
+        Message<byte[]> message = reader.readNext(1, TimeUnit.SECONDS);
+        if (message == null) {
+          continue;
+        }
+        elements.add(message.getValue());
+        readCount++;
+      }
+    } catch (IOException e) {
+      throw new ParseException("Failed to fetch messages.", e);
+    }
+    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
   }
 }

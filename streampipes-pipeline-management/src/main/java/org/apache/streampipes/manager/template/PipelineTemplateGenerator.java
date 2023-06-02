@@ -18,18 +18,15 @@
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
-import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.v2.ElementVerification;
 import org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate;
 import org.apache.streampipes.manager.template.instances.PipelineTemplate;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageManager;
@@ -75,12 +72,7 @@ public class PipelineTemplateGenerator {
 
     try {
       streamOffer = getStream(streamId);
-
-      if (streamOffer instanceof SpDataSet) {
-        streamOffer = new SpDataSet((SpDataSet) prepareStream((SpDataSet) streamOffer));
-      } else {
-        streamOffer = new SpDataStream(streamOffer);
-      }
+      streamOffer = new SpDataStream(streamOffer);
       if (streamOffer != null) {
         for (PipelineTemplateDescription pipelineTemplateDescription : getAllPipelineTemplates()) {
           // TODO make this work for 2+ input streams
@@ -105,13 +97,6 @@ public class PipelineTemplateGenerator {
     } else {
       return new DataSinkInvocation((DataSinkInvocation) pipelineElementTemplate);
     }
-  }
-
-  private SpDataStream prepareStream(SpDataSet stream) {
-    DataSetModificationMessage message = new DataSetGroundingSelector(stream).selectGrounding();
-    stream.setEventGrounding(message.getEventGrounding());
-    stream.setDatasetInvocationId(message.getInvocationId());
-    return stream;
   }
 
   protected SpDataStream getStream(String streamId) throws ElementNotFoundException {

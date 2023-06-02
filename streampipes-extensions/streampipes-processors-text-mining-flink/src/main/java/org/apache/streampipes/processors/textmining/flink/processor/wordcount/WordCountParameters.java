@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.textmining.flink.processor.wordcount;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class WordCountParameters extends EventProcessorBindingParams {
+public class WordCountParameters extends ProcessorParams {
 
   private String wordCountFieldName;
   private Integer timeWindowValue;

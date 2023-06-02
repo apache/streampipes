@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.execution;
 
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -33,8 +32,6 @@ public class PipelineExecutionInfo {
 
   private final List<NamedStreamPipesEntity> failedServices;
   private final List<InvocableStreamPipesEntity> processorsAndSinks;
-  private final List<SpDataSet> dataSets;
-
   private PipelineOperationStatus pipelineOperationStatus;
 
   private final String pipelineId;
@@ -46,7 +43,6 @@ public class PipelineExecutionInfo {
   private PipelineExecutionInfo(Pipeline pipeline) {
     this.failedServices = new ArrayList<>();
     this.processorsAndSinks = findProcessorsAndSinks(pipeline);
-    this.dataSets = findDataSets(pipeline);
     this.pipelineOperationStatus = new PipelineOperationStatus();
     this.pipelineId = pipeline.getPipelineId();
   }
@@ -59,25 +55,8 @@ public class PipelineExecutionInfo {
         ).collect(Collectors.toList());
   }
 
-  private List<SpDataSet> findDataSets(Pipeline pipeline) {
-    return pipeline
-        .getStreams()
-        .stream()
-        .filter(s -> s instanceof SpDataSet)
-        .map(s -> new SpDataSet((SpDataSet) s))
-        .toList();
-  }
-
   public void addFailedPipelineElement(NamedStreamPipesEntity failedElement) {
     this.failedServices.add(failedElement);
-  }
-
-  public void addDataSets(List<SpDataSet> dataSets) {
-    this.dataSets.addAll(dataSets);
-  }
-
-  public List<SpDataSet> getDataSets() {
-    return dataSets;
   }
 
   public List<NamedStreamPipesEntity> getFailedServices() {

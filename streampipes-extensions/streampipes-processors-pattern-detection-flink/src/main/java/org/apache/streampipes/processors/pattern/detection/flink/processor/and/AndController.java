@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.and;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -34,7 +32,7 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import java.util.List;
 
@@ -72,17 +70,15 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
 
 
   @Override
-  public FlinkDataProcessorRuntime<AndParameters> getRuntime(DataProcessorInvocation graph,
-                                                             ProcessingElementParameterExtractor extractor,
-                                                             ConfigExtractor configExtractor,
-                                                             StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<AndParameters> getProgram(DataProcessorInvocation graph,
+                                                             ProcessingElementParameterExtractor extractor) {
     List<String> leftMappings = extractor.mappingPropertyValues(LEFT_MAPPING);
     List<String> rightMappings = extractor.mappingPropertyValues(RIGHT_MAPPING);
     TimeUnit timeUnit = TimeUnit.valueOf(extractor.selectedSingleValue(TIME_UNIT, String.class));
     Integer timeWindow = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
 
     AndParameters params = new AndParameters(graph, timeUnit, timeWindow, leftMappings, rightMappings);
-    return new AndProgram(params, configExtractor, streamPipesClient);
+    return new AndProgram(params);
 
   }
 }

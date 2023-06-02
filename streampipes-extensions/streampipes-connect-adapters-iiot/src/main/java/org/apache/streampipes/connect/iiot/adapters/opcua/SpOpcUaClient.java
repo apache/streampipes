@@ -115,7 +115,8 @@ public class SpOpcUaClient {
   }
 
 
-  public void initSubscription(List<NodeId> nodes, OpcUaAdapter opcUaAdapter) throws Exception {
+  public void initSubscription(List<NodeId> nodes,
+                               OpcUaAdapter opcUaAdapter) throws Exception {
     /*
      * create a subscription @ 1000ms
      */

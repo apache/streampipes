@@ -28,8 +28,8 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
+import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -132,7 +132,7 @@ public class TestTrendProcessor {
         timeWindow);
     graph.getStaticProperties().forEach(sp -> sp.accept(visitor));
 
-    ProcessorParams processorParams = new ProcessorParams(graph);
+    var processorParams = new DataProcessorParameterGenerator().makeParameters(graph);
 
     SiddhiDebugCallback callback = new SiddhiDebugCallback() {
       @Override
@@ -147,7 +147,7 @@ public class TestTrendProcessor {
     };
 
     TrendProcessor trend = new TrendProcessor(callback);
-    trend.onInvocation(processorParams, null, null);
+    trend.onPipelineStarted(processorParams, null, null);
 
     sendEvents(trend);
     LOG.info("Expected match count is {}", expectedMatchCount);

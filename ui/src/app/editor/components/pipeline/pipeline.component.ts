@@ -46,7 +46,6 @@ import {
     PipelineEdgeValidation,
     PipelineModificationMessage,
     PipelinePreviewModel,
-    SpDataSet,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
@@ -267,29 +266,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         this.showMixedStreamAlert();
                     } else {
                         this.rawPipelineModel.push(pipelineElementConfig);
-                        if (pipelineElementConfig.type === 'set') {
-                            setTimeout(() => {
-                                this.editorService
-                                    .updateDataSet(
-                                        pipelineElementConfig.payload,
-                                    )
-                                    .subscribe(data => {
-                                        (
-                                            pipelineElementConfig.payload as SpDataSet
-                                        ).eventGrounding = data.eventGrounding;
-                                        (
-                                            pipelineElementConfig.payload as SpDataSet
-                                        ).datasetInvocationId =
-                                            data.invocationId;
-                                        this.jsplumbService.dataStreamDropped(
-                                            pipelineElementConfig.payload.dom,
-                                            pipelineElementConfig.payload as SpDataSet,
-                                            true,
-                                            false,
-                                        );
-                                    });
-                            }, 0);
-                        } else if (pipelineElementConfig.type === 'stream') {
+
+                        if (pipelineElementConfig.type === 'stream') {
                             this.checkTopicModel(pipelineElementConfig);
                         } else if (pipelineElementConfig.type === 'sepa') {
                             setTimeout(() => {

@@ -17,28 +17,24 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.eventcount;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 import org.apache.streampipes.processors.aggregation.flink.processor.count.TimeWindowConverter;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 
-public class EventCountProgram extends AbstractAggregationProgram<EventCountParameters> {
+public class EventCountProgram extends FlinkDataProcessorProgram<EventCountParameters> {
 
-  public EventCountProgram(EventCountParameters params,
-                           ConfigExtractor configExtractor,
-                           StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public EventCountProgram(EventCountParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return dataStreams[0]
         .map(new EventCountMapper())
-        .timeWindowAll(new TimeWindowConverter().makeTimeWindow(bindingParams.getTimeWindowSize(),
-            bindingParams.getTimeWindowScale()))
+        .timeWindowAll(new TimeWindowConverter().makeTimeWindow(params.getTimeWindowSize(),
+            params.getTimeWindowScale()))
         .sum(0)
         .map(new EventCountOutputMapper());
   }

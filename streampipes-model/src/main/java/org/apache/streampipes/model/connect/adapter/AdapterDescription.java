@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
@@ -25,34 +26,21 @@ import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRul
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(GenericAdapterSetDescription.class),
-    @JsonSubTypes.Type(GenericAdapterStreamDescription.class),
-    @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
-    @JsonSubTypes.Type(SpecificAdapterSetDescription.class)
-})
 @TsModel
-public abstract class AdapterDescription extends NamedStreamPipesEntity {
+public class AdapterDescription extends NamedStreamPipesEntity {
 
+  protected SpDataStream dataStream;
+
+  protected boolean running;
   private EventGrounding eventGrounding;
-
-  private String adapterType;
 
   private String icon;
 
@@ -83,21 +71,14 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     this.eventGrounding = new EventGrounding();
     this.config = new ArrayList<>();
     this.category = new ArrayList<>();
-
-    // TODO move to another place
-    TransportProtocol tpKafka = new KafkaTransportProtocol();
-    TransportProtocol tpJms = new JmsTransportProtocol();
-    TransportProtocol tpMqtt = new MqttTransportProtocol();
-    tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
-    tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
-    tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
-    this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka, tpJms, tpMqtt));
+    this.dataStream = new SpDataStream();
   }
 
   public AdapterDescription(String elementId, String name, String description) {
     super(elementId, name, description);
     this.rules = new ArrayList<>();
     this.category = new ArrayList<>();
+    this.dataStream = new SpDataStream();
   }
 
 
@@ -105,7 +86,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     super(other);
     this.config = new Cloner().staticProperties(other.getConfig());
     this.rules = other.getRules();
-    this.adapterType = other.getAdapterType();
     this.icon = other.getIcon();
     this.category = new Cloner().epaTypes(other.getCategory());
     this.createdAt = other.getCreatedAt();
@@ -115,6 +95,10 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     if (other.getEventGrounding() != null) {
       this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
+    if (other.getDataStream() != null) {
+      this.dataStream = new SpDataStream(other.getDataStream());
+    }
+    this.running = other.isRunning();
   }
 
   public String getRev() {
@@ -151,14 +135,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
   public void addConfig(StaticProperty sp) {
     this.config.add(sp);
-  }
-
-  public String getAdapterType() {
-    return adapterType;
-  }
-
-  public void setAdapterType(String adapterType) {
-    this.adapterType = adapterType;
   }
 
   public List<TransformationRuleDescription> getValueRules() {
@@ -254,5 +230,24 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     this.correspondingDataStreamElementId = correspondingDataStreamElementId;
   }
 
-  public abstract EventSchema getEventSchema();
+  public EventSchema getEventSchema() {
+    return this.getDataStream().getEventSchema();
+  }
+
+  public SpDataStream getDataStream() {
+    return dataStream;
+  }
+
+  public void setDataStream(SpDataStream dataStream) {
+    this.dataStream = dataStream;
+  }
+
+  public boolean isRunning() {
+    return running;
+  }
+
+  public void setRunning(boolean running) {
+    this.running = running;
+  }
+
 }

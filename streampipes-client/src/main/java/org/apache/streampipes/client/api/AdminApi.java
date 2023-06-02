@@ -26,24 +26,28 @@ import org.apache.streampipes.model.message.SuccessMessage;
 
 import java.util.List;
 
-public class AdminApi extends AbstractClientApi {
+public class AdminApi extends AbstractClientApi implements IAdminApi {
 
   public AdminApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);
   }
 
+  @Override
   public void registerAdapters(List<AdapterDescription> adapters) {
     post(getConnectPath(), adapters);
   }
 
+  @Override
   public void registerFunctions(List<FunctionDefinition> functions) {
     post(getFunctionsPath(), functions);
   }
 
+  @Override
   public void deregisterFunction(String functionId) {
     delete(getDeleteFunctionPath(functionId), SuccessMessage.class);
   }
 
+  @Override
   public MessagingSettings getMessagingSettings() {
     return getSingle(getMessagingSettingsPath(), MessagingSettings.class);
   }

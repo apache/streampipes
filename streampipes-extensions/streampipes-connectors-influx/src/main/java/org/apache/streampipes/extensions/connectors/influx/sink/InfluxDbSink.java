@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.connectors.influx.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.DataSinkType;
@@ -31,8 +32,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.BATCH_INTERVAL_ACTIONS_KEY;
@@ -52,7 +52,7 @@ public class InfluxDbSink extends StreamPipesDataSink {
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
     var extractor = parameters.extractor();
-    log = parameters.getGraph().getLogger(InfluxDbSink.class);
+    log = parameters.getModel().getLogger(InfluxDbSink.class);
 
     var connectionSettings = InfluxConfigs.fromExtractor(extractor);
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);

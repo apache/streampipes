@@ -17,16 +17,16 @@
  */
 package org.apache.streampipes.connect.adapters.slack;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
-import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -35,7 +35,7 @@ import org.apache.streampipes.vocabulary.SO;
 import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
-public class SlackAdapter extends SpecificDataStreamAdapter {
+public class SlackAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.slack";
 
@@ -45,51 +45,39 @@ public class SlackAdapter extends SpecificDataStreamAdapter {
   private static final String Author = "author";
   private static final String Channel = "channel";
 
-  private String slackApiToken;
   private Thread thread;
   private SlackConsumer consumer;
 
-  public SlackAdapter() {
-    super();
-  }
-
-  public SlackAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-    super(adapterStreamDescription);
-    ParameterExtractor extractor = new ParameterExtractor(adapterStreamDescription.getConfig());
-    this.slackApiToken = extractor.singleValue(SlackToken);
-  }
-
   @Override
-  public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, SlackAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
-        .category(AdapterType.SocialMedia)
+        .withCategory(AdapterType.SocialMedia)
         .requiredTextParameter(Labels.withId(SlackToken))
-        .build();
+        .buildConfiguration();
   }
 
   @Override
-  public void startAdapter() throws AdapterException {
-    this.consumer = new SlackConsumer(adapterPipeline, slackApiToken);
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
+    String slackApiToken = extractor.getStaticPropertyExtractor().singleValueParameter(SlackToken, String.class);
+    this.consumer = new SlackConsumer(collector, slackApiToken);
     this.thread = new Thread(consumer);
     this.thread.start();
   }
 
   @Override
-  public void stopAdapter() throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
     this.consumer.stop();
     this.thread.stop();
   }
 
   @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new SlackAdapter(adapterDescription);
-  }
-
-  @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
-      throws AdapterException, ParseException {
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(Timestamp))
         .property(stringEp(Labels.from(Author, "Author", "The username of the sender of the "
@@ -100,10 +88,5 @@ public class SlackAdapter extends SpecificDataStreamAdapter {
         .property(stringEp(Labels.from(Message, "Message", "The Slack message"),
             Message, SO.TEXT))
         .build();
-  }
-
-  @Override
-  public String getId() {
-    return ID;
   }
 }

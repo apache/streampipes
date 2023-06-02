@@ -36,18 +36,6 @@
     <div class="data-marketplace-options-item">
         <mat-form-field color="accent">
             <mat-select
-                [(value)]="currentFilter.selectedType"
-                (selectionChange)="filterAdapter($event)"
-            >
-                <mat-option *ngFor="let type of adapterTypes" [value]="type">
-                    {{ type }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="data-marketplace-options-item">
-        <mat-form-field color="accent">
-            <mat-select
                 [(value)]="currentFilter.selectedCategory"
                 (selectionChange)="filterAdapter($event)"
             >

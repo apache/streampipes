@@ -17,31 +17,26 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.count;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-public class CountProgram extends AbstractAggregationProgram<CountParameters> {
+public class CountProgram extends FlinkDataProcessorProgram<CountParameters> {
 
-  public CountProgram(CountParameters params,
-                      ConfigExtractor configExtractor,
-                      StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
-    setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
+  public CountProgram(CountParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return dataStreams[0]
-        .map(new CountMapper(bindingParams.getFieldToCount()))
+        .map(new CountMapper(params.getFieldToCount()))
         .keyBy(1)
-        .timeWindow(new TimeWindowConverter().makeTimeWindow(bindingParams.getTimeWindowSize(),
-            bindingParams.getTimeWindowScale()))
+        .timeWindow(new TimeWindowConverter().makeTimeWindow(params.getTimeWindowSize(),
+            params.getTimeWindowScale()))
         .trigger(new CountTrigger())
         .sum(2)
         .map(new Tuple2MapMapper());

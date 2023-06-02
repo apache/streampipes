@@ -18,10 +18,8 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.summary;
 
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -38,7 +36,7 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Statistics;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -73,16 +71,14 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
   }
 
   @Override
-  public FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(
+  public FlinkDataProcessorProgram<StatisticsSummaryParameters> getProgram(
       DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor,
-      ConfigExtractor configExtractor,
-      StreamPipesClient streamPipesClient) {
+      ProcessingElementParameterExtractor extractor) {
     List<String> listPropertyMappings = extractor.mappingPropertyValues(listPropertyMappingName);
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMappings);
 
-    return new StatisticsSummaryProgram(params, configExtractor, streamPipesClient);
+    return new StatisticsSummaryProgram(params);
 
   }
 

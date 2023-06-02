@@ -26,7 +26,6 @@ import { UnitDescription } from '../model/UnitDescription';
 import {
     AdapterDescription,
     AdapterEventPreview,
-    FormatDescription,
     GuessSchema,
     GuessTypeInfo,
     PlatformServicesCommons,
@@ -90,17 +89,17 @@ export class RestService {
         );
     }
 
-    getFormats(): Observable<FormatDescription[]> {
-        return this.http
-            .get(`${this.connectPath}/master/description/formats`)
-            .pipe(
-                map(response => {
-                    return (response as any[]).map(f =>
-                        FormatDescription.fromData(f),
-                    );
-                }),
-            );
-    }
+    // getFormats(): Observable<FormatDescription[]> {
+    //     return this.http
+    //         .get(`${this.connectPath}/master/description/formats`)
+    //         .pipe(
+    //             map(response => {
+    //                 return (response as any[]).map(f =>
+    //                     FormatDescription.fromData(f),
+    //                 );
+    //             }),
+    //         );
+    // }
 
     getFittingUnits(
         unitDescription: UnitDescription,

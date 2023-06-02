@@ -25,7 +25,6 @@
     <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="adapter">
         <sp-adapter-configuration-header
             [displayName]="displayName"
-            [isDataStreamDescription]="isDataStreamDescription"
             [isEditMode]="isEditMode"
         ></sp-adapter-configuration-header>
 
@@ -35,37 +34,15 @@
             color="accent"
             class="stepper"
         >
-            <mat-step *ngIf="!isGenericAdapter">
+            <mat-step>
                 <ng-template matStepLabel>Settings</ng-template>
-                <sp-specific-adapter-configuration
+                <sp-adapter-settings
                     [adapterDescription]="adapter"
                     (updateAdapterDescriptionEmitter)="adapter = $event"
                     (clickNextEmitter)="clickSpecificSettingsNextButton()"
                     (removeSelectionEmitter)="removeSelection()"
                 >
-                </sp-specific-adapter-configuration>
-            </mat-step>
-
-            <mat-step *ngIf="isGenericAdapter">
-                <ng-template matStepLabel>Settings</ng-template>
-                <sp-generic-adapter-configuration
-                    [adapterDescription]="adapter"
-                    (updateAdapterDescriptionEmitter)="adapter = $event"
-                    (clickNextEmitter)="clickProtocolSettingsNextButton()"
-                    (removeSelectionEmitter)="removeSelection()"
-                >
-                </sp-generic-adapter-configuration>
-            </mat-step>
-
-            <mat-step *ngIf="isGenericAdapter">
-                <ng-template matStepLabel>Select Format</ng-template>
-                <sp-format-configuration
-                    [adapterDescription]="adapter"
-                    (clickNextEmitter)="clickFormatSelectionNextButton()"
-                    (goBackEmitter)="goBack()"
-                    (removeSelectionEmitter)="removeSelection()"
-                >
-                </sp-format-configuration>
+                </sp-adapter-settings>
             </mat-step>
 
             <mat-step>

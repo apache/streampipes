@@ -17,33 +17,13 @@
  */
 package org.apache.streampipes.processors.transformation.flink;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
-import org.apache.streampipes.processors.transformation.flink.config.ConfigKeys;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public abstract class AbstractFlinkTransformationProgram<T extends EventProcessorBindingParams>
-    extends FlinkDataProcessorRuntime<T> {
+public abstract class AbstractFlinkTransformationProgram<T extends ProcessorParams>
+    extends FlinkDataProcessorProgram<T> {
 
-  public AbstractFlinkTransformationProgram(T params,
-                                            ConfigExtractor configExtractor,
-                                            StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public AbstractFlinkTransformationProgram(T params) {
+    super(params);
   }
-
-  @Override
-  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
-    SpConfig config = configExtractor.getConfig();
-    return new FlinkDeploymentConfig(config.getString(
-        ConfigKeys.FLINK_JAR_FILE_LOC),
-        config.getString(ConfigKeys.FLINK_HOST),
-        config.getInteger(ConfigKeys.FLINK_PORT),
-        config.getBoolean(ConfigKeys.DEBUG)
-    );
-  }
-
-
 }

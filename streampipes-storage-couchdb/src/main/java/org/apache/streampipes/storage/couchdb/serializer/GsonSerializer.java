@@ -21,14 +21,9 @@ package org.apache.streampipes.storage.couchdb.serializer;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
@@ -102,10 +97,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(TransformationRuleDescription.class,
         new JsonLdSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
-        .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet")
         .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataSet.class, "sourceType")
-        .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
         .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")
@@ -127,16 +119,6 @@ public class GsonSerializer {
             "org.apache.streampipes.model.ChangeDatatypeTransformationRuleDescription")
         .registerSubtype(CorrectionValueTransformationRuleDescription.class,
             "org.apache.streampipes.model.CorrectionValueTransformationRuleDescription"));
-
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
-        .registerSubtype(SpecificAdapterSetDescription.class,
-            "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription")
-        .registerSubtype(SpecificAdapterStreamDescription.class,
-            "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
-        .registerSubtype(GenericAdapterSetDescription.class,
-            "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription")
-        .registerSubtype(GenericAdapterStreamDescription.class,
-            "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription"));
 
     builder.setPrettyPrinting();
     return builder;

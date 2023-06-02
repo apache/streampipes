@@ -18,7 +18,8 @@
 
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
-import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
+import { AdapterBuilder } from '../builder/AdapterBuilder';
+import { ConnectBtns } from './connect/ConnectBtns';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -37,7 +38,7 @@ export class PrepareTestDataUtils {
             storeInDataLake,
         );
 
-        ConnectUtils.addGenericAdapter(adapter);
+        ConnectUtils.addAdapter(adapter);
 
         ConnectUtils.startAdapter(adapter, true);
     }
@@ -47,7 +48,7 @@ export class PrepareTestDataUtils {
         format: 'csv' | 'json_array',
         storeInDataLake: boolean = true,
     ) {
-        const adapterBuilder = GenericAdapterBuilder.create('File_Stream')
+        const adapterBuilder = AdapterBuilder.create('File_Stream')
             .setName(name)
             .setTimestampProperty('timestamp')
             .addProtocolInput(
@@ -60,10 +61,12 @@ export class PrepareTestDataUtils {
         if (format === 'csv') {
             adapterBuilder
                 .setFormat('csv')
-                .addFormatInput('input', 'delimiter', ';')
-                .addFormatInput('checkbox', 'header', 'check');
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
         } else {
-            adapterBuilder.setFormat('json_array');
+            adapterBuilder
+                .setFormat('json')
+                .addFormatInput('checkbox', 'json_options-array', '');
         }
 
         adapterBuilder.setStartAdapter(true);

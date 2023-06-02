@@ -18,10 +18,11 @@
 package org.apache.streampipes.connect.adapters.wikipedia;
 
 import org.apache.streampipes.connect.adapters.wikipedia.model.WikipediaModel;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -34,7 +35,7 @@ import static org.apache.streampipes.sdk.helpers.EpProperties.longEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
-public abstract class WikipediaAdapter extends SpecificDataStreamAdapter {
+public abstract class WikipediaAdapter implements StreamPipesAdapter {
 
   public static final String TIMESTAMP = "timestamp";
   public static final String TYPE = "type";
@@ -59,21 +60,21 @@ public abstract class WikipediaAdapter extends SpecificDataStreamAdapter {
   private static final String WikipediaApiUrl = "https://stream.wikimedia"
       + ".org/v2/stream/recentchange";
 
-  private Thread thread;
-  private String type;
+  private final String type;
   private WikipediaSseConsumer consumer;
 
-  public WikipediaAdapter(SpecificAdapterStreamDescription adapterStreamDescription, String type) {
-    super(adapterStreamDescription);
+  public WikipediaAdapter(String type) {
     this.type = type;
   }
 
-  public WikipediaAdapter() {
-    super();
+  public String dp(String domainPropertyName) {
+    return VocabPrefix + domainPropertyName;
   }
 
   @Override
-  public void startAdapter() throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
     Gson gson = new Gson();
     Runnable runnable = () -> {
       this.consumer = new WikipediaSseConsumer();
@@ -83,7 +84,7 @@ public abstract class WikipediaAdapter extends SpecificDataStreamAdapter {
               WikipediaModel wikipediaModel = gson.fromJson(event, WikipediaModel.class);
               if (wikipediaModel != null && wikipediaModel.getType() != null) {
                 if (wikipediaModel.getType().equals(type)) {
-                  adapterPipeline.process(new WikipediaModelConverter(wikipediaModel).makeMap());
+                  collector.collect(new WikipediaModelConverter(wikipediaModel).makeMap());
                 }
               }
             });
@@ -92,20 +93,19 @@ public abstract class WikipediaAdapter extends SpecificDataStreamAdapter {
       }
     };
 
-    this.thread = new Thread(runnable);
-    this.thread.start();
+    Thread thread = new Thread(runnable);
+    thread.start();
   }
 
   @Override
-  public void stopAdapter() throws AdapterException {
-    if (this.thread != null) {
-      this.consumer.stop();
-    }
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
+
   }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
-      throws AdapterException, ParseException {
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(TIMESTAMP))
         .property(stringEp(Labels.from(EVENT_ID, "ID", ""), EVENT_ID, dp(EVENT_ID)))
@@ -142,9 +142,5 @@ public abstract class WikipediaAdapter extends SpecificDataStreamAdapter {
         .property(stringEp(Labels.from(DOMAIN, "Domain", "Wiki Domain"),
             DOMAIN, dp(DOMAIN)))
         .build();
-  }
-
-  public String dp(String domainPropertyName) {
-    return VocabPrefix + domainPropertyName;
   }
 }

@@ -20,6 +20,8 @@ package org.apache.streampipes.model.connect.guess;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Objects;
+
 public class GuessTypeInfo {
 
   private String type;
@@ -49,5 +51,22 @@ public class GuessTypeInfo {
 
   public void setValue(Object value) {
     this.value = value;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GuessTypeInfo that = (GuessTypeInfo) o;
+    return Objects.equals(type, that.type) && Objects.equals(value, that.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, value);
   }
 }

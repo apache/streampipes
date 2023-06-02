@@ -18,49 +18,65 @@
 
 package org.apache.streampipes.wrapper.flink;
 
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.wrapper.context.generator.DataProcessorContextGenerator;
 import org.apache.streampipes.wrapper.flink.converter.EventToMapConverter;
 import org.apache.streampipes.wrapper.flink.serializer.ByteArraySerializer;
 import org.apache.streampipes.wrapper.flink.sink.JmsFlinkProducer;
 import org.apache.streampipes.wrapper.flink.sink.MqttFlinkProducer;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
+import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-public abstract class FlinkDataProcessorRuntime<T extends EventProcessorBindingParams> extends
-    FlinkRuntime<EventProcessorRuntimeParams<T>, T,
-        DataProcessorInvocation, EventProcessorRuntimeContext> {
+public class FlinkDataProcessorRuntime extends FlinkRuntime<
+    IStreamPipesDataProcessor,
+    DataProcessorInvocation,
+    EventProcessorRuntimeContext,
+    IDataProcessorParameterExtractor,
+    IDataProcessorParameters,
+    IDataProcessorProgram> implements IDataProcessorRuntime {
 
-  private static final long serialVersionUID = 1L;
-  private static final Logger LOG = LoggerFactory.getLogger(FlinkDataProcessorRuntime.class);
-
-
-  public FlinkDataProcessorRuntime(T params,
-                                   ConfigExtractor configExtractor,
-                                   StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public FlinkDataProcessorRuntime() {
+    super(new DataProcessorContextGenerator(), new DataProcessorParameterGenerator());
   }
 
-  @SuppressWarnings("deprecation")
-  public void appendExecutionConfig(DataStream<Event>... convertedStream) {
-    DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream).flatMap
-        (new EventToMapConverter());
+  private SpDataStream getOutputStream() {
+    //return getGraph().getOutputStream();
+    return null;
+  }
+
+  protected Properties getProperties(KafkaTransportProtocol protocol) {
+    Properties props = new Properties();
+
+    String kafkaHost = protocol.getBrokerHostname();
+    int kafkaPort = protocol.getKafkaPort();
+
+    props.put("client.id", UUID.randomUUID().toString());
+    props.put("bootstrap.servers", kafkaHost + ":" + kafkaPort);
+    return props;
+  }
+
+  @Override
+  protected void appendExecutionConfig(IDataProcessorProgram program,
+                                       DataStream<Event>... convertedStream) {
+    DataStream<Map<String, Object>> applicationLogic = program.getApplicationLogic(convertedStream)
+        .flatMap(new EventToMapConverter());
 
     EventGrounding outputGrounding = getOutputStream().getEventGrounding();
     SpDataFormatDefinition outputDataFormatDefinition =
@@ -80,31 +96,21 @@ public abstract class FlinkDataProcessorRuntime<T extends EventProcessorBindingP
       applicationLogic
           .addSink(new MqttFlinkProducer(getMqttProtocol(getOutputStream()), serializer));
     }
-
-  }
-
-  private SpDataStream getOutputStream() {
-    return getGraph().getOutputStream();
-  }
-
-  protected abstract DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream);
-
-  protected Properties getProperties(KafkaTransportProtocol protocol) {
-    Properties props = new Properties();
-
-    String kafkaHost = protocol.getBrokerHostname();
-    Integer kafkaPort = protocol.getKafkaPort();
-
-    props.put("client.id", UUID.randomUUID().toString());
-    props.put("bootstrap.servers", kafkaHost + ":" + kafkaPort);
-    return props;
   }
 
   @Override
-  protected EventProcessorRuntimeParams<T> makeRuntimeParams(ConfigExtractor configExtractor,
-                                                             StreamPipesClient streamPipesClient) {
-    LOG.warn("The config extractor and StreamPipes Client can currently not be accessed by"
-        + " a deployed Flink program due to non-serializable classes.");
-    return new EventProcessorRuntimeParams<>(bindingParams, false, null, null);
+  protected IDataProcessorProgram getFlinkProgram(IStreamPipesDataProcessor pipelineElement) {
+    IDataProcessorProgram program;
+
+    if (pipelineElement instanceof FlinkDataProcessorDeclarer<?>) {
+      program = ((FlinkDataProcessorDeclarer<?>) pipelineElement)
+          .getProgram(
+              runtimeParameters.getModel(),
+              ProcessingElementParameterExtractor.from(runtimeParameters.getModel())
+          );
+    } else {
+      program = new FlinkDataProcessorCompatProgram(pipelineElement);
+    }
+    return program;
   }
 }

@@ -19,10 +19,8 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua.configuration;
 
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpOpcUaConfigBuilder {
@@ -34,7 +32,7 @@ public class SpOpcUaConfigBuilder {
    * @param extractor extractor for user inputs
    * @return {@link SpOpcUaConfig}  instance based on information from {@code extractor}
    */
-  public static SpOpcUaConfig from(StaticPropertyExtractor extractor) {
+  public static SpOpcUaConfig from(IStaticPropertyExtractor extractor) {
 
     String selectedAlternativeConnection =
         extractor.selectedAlternativeInternalId(OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL.name());
@@ -60,13 +58,15 @@ public class SpOpcUaConfigBuilder {
 
     if (useURL && unauthenticated) {
 
-      String serverAddress = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
+      String serverAddress =
+          extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
       return new SpOpcUaConfig(serverAddress, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
 
     } else if (!useURL && unauthenticated) {
-      String serverAddress = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
+      String serverAddress =
+          extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
       int port = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 
@@ -93,19 +93,5 @@ public class SpOpcUaConfigBuilder {
             selectedNodeNames);
       }
     }
-  }
-
-  /***
-   * Creates {@link SpOpcUaConfig}  instance in accordance with the given
-   * {@link org.apache.streampipes.model.connect.adapter.AdapterDescription}
-   * @param adapterDescription description of current adapter
-   * @return {@link SpOpcUaConfig}  instance based on information from {@code adapterDescription}
-   */
-  public static SpOpcUaConfig from(AdapterDescription adapterDescription) {
-
-    StaticPropertyExtractor extractor = StaticPropertyExtractor.from(adapterDescription.getConfig(),
-        new ArrayList<>());
-
-    return from(extractor);
   }
 }

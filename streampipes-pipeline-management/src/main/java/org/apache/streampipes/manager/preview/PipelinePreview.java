@@ -24,7 +24,6 @@ import org.apache.streampipes.manager.execution.http.DetachHttpRequest;
 import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -46,7 +45,6 @@ public class PipelinePreview {
     List<NamedStreamPipesEntity> pipelineElements = new PipelineVerificationHandlerV2(pipeline)
         .verifyAndBuildGraphs(true)
         .stream()
-        .filter(pe -> !(pe instanceof SpDataSet))
         .collect(Collectors.toList());
 
     invokeGraphs(filter(pipelineElements));

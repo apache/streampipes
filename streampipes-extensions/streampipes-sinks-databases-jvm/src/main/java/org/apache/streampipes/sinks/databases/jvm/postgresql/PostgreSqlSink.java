@@ -19,6 +19,7 @@
 package org.apache.streampipes.sinks.databases.jvm.postgresql;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -30,8 +31,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 public class PostgreSqlSink extends StreamPipesDataSink {
@@ -82,7 +82,8 @@ public class PostgreSqlSink extends StreamPipesDataSink {
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String sslSelection = extractor.selectedSingleValueInternalName(SSL_MODE, String.class);
 
-    PostgreSqlParameters params = new PostgreSqlParameters(parameters.getGraph(),
+    PostgreSqlParameters params = new PostgreSqlParameters(
+        parameters.getModel(),
         hostname,
         port,
         dbName,

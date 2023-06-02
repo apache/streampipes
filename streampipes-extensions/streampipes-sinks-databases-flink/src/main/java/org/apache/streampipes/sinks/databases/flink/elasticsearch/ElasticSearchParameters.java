@@ -19,9 +19,9 @@
 package org.apache.streampipes.sinks.databases.flink.elasticsearch;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
-public class ElasticSearchParameters extends EventSinkBindingParams {
+public class ElasticSearchParameters extends SinkParams {
 
   private String timestampField;
   private String indexName;

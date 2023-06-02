@@ -19,6 +19,7 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -30,8 +31,7 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

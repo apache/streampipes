@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.client.live;
 
+import org.apache.streampipes.client.api.live.EventProcessor;
+import org.apache.streampipes.client.api.live.IKafkaConfig;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
@@ -35,7 +37,7 @@ public class SubscriptionManager {
   private final EventProcessor callback;
   private final StreamPipesClientConfig clientConfig;
 
-  private KafkaConfig kafkaConfig;
+  private IKafkaConfig kafkaConfig;
   private boolean overrideKafkaSettings = false;
 
   public SubscriptionManager(StreamPipesClientConfig clientConfig,
@@ -47,7 +49,7 @@ public class SubscriptionManager {
   }
 
   public SubscriptionManager(StreamPipesClientConfig clientConfig,
-                             KafkaConfig kafkaConfig,
+                             IKafkaConfig kafkaConfig,
                              EventGrounding grounding,
                              EventProcessor callback) {
     this(clientConfig, grounding, callback);

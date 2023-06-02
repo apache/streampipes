@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.absence;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -35,7 +33,7 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +65,8 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
   }
 
   @Override
-  public FlinkDataProcessorRuntime<AbsenceParameters> getRuntime(DataProcessorInvocation graph,
-                                                                 ProcessingElementParameterExtractor extractor,
-                                                                 ConfigExtractor configExtractor,
-                                                                 StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<AbsenceParameters> getProgram(DataProcessorInvocation graph,
+                                                                 ProcessingElementParameterExtractor extractor) {
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : graph.getOutputStream().getEventSchema().getEventProperties()) {
       selectProperties.add(p.getRuntimeName());
@@ -81,6 +77,6 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
 
     AbsenceParameters params = new AbsenceParameters(graph, selectProperties, timeWindow, timeUnit);
 
-    return new AbsenceProgram(params, configExtractor, streamPipesClient);
+    return new AbsenceProgram(params);
   }
 }

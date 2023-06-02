@@ -19,23 +19,26 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
-import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -59,7 +62,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.AVAILABLE_NODES;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.NAMESPACE_INDEX;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.NODE_ID;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_HOST;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_URL;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_URL;
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.getSchema;
+
+public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.opcua";
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaAdapter.class);
@@ -70,6 +85,9 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
   private List<NodeId> allNodeIds;
   private int numberProperties;
   private final Map<String, Object> event;
+
+  private IEventCollector collector;
+  private PullAdapterScheduler pullAdapterScheduler;
 
   /**
    * This variable is used to map the node ids during the subscription to the labels of the nodes
@@ -83,18 +101,11 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
     this.nodeIdToLabelMapping = new HashMap<>();
   }
 
-  public OpcUaAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-    super(adapterStreamDescription);
-    this.numberProperties = 0;
-    this.event = new HashMap<>();
-    this.nodeIdToLabelMapping = new HashMap<>();
-  }
-
-  @Override
-  protected void before() throws AdapterException {
+  private void prepareAdapter(IAdapterParameterExtractor extractor) throws AdapterException {
 
     this.allNodeIds = new ArrayList<>();
-    List<String> deleteKeys = this.adapterDescription
+    List<String> deleteKeys = extractor
+        .getAdapterDescription()
         .getSchemaRules()
         .stream()
         .filter(rule -> rule instanceof DeleteRuleDescription)
@@ -128,35 +139,13 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
   }
 
   @Override
-  public void startAdapter() throws AdapterException {
-
-    this.spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(this.adapterDescription));
-
-    if (this.spOpcUaClient.inPullMode()) {
-      super.startAdapter();
-    } else {
-      this.before();
-    }
-  }
-
-  @Override
-  public void stopAdapter() throws AdapterException {
-    // close connection
-    this.spOpcUaClient.disconnect();
-
-    if (this.spOpcUaClient.inPullMode()) {
-      super.stopAdapter();
-    }
-  }
-
-  @Override
-  protected void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
+  public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
     var response =
         this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
     boolean badStatusCodeReceived = false;
     boolean emptyValueReceived = false;
     List<DataValue> returnValues =
-        response.get(this.getPollingInterval().getValue(), this.getPollingInterval().getTimeUnit());
+        response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
     if (returnValues.size() == 0) {
       emptyValueReceived = true;
       LOG.warn("Empty value object returned - event will not be sent");
@@ -175,11 +164,12 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
       }
     }
     if (!badStatusCodeReceived && !emptyValueReceived) {
-      adapterPipeline.process(this.event);
+      collector.collect(this.event);
     }
   }
 
-  public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+  public void onSubscriptionValue(UaMonitoredItem item,
+                                  DataValue value) {
 
     String key = this.nodeIdToLabelMapping.get(item.getReadValueId().getNodeId().toString());
 
@@ -198,7 +188,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
         for (String k : event.keySet()) {
           newEvent.put(k, event.get(k));
         }
-        adapterPipeline.process(newEvent);
+        collector.collect(newEvent);
       }
     } else {
       LOG.error("No event is produced, because subscription item {} could not be found within all nodes", item);
@@ -206,18 +196,46 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
   }
 
   @Override
-  protected PollingSettings getPollingInterval() {
+  public PollingSettings getPollingInterval() {
     return PollingSettings.from(TimeUnit.MILLISECONDS, this.pullingIntervalMilliSeconds);
   }
 
   @Override
-  public SpecificAdapterStreamDescription declareModel() {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(extractor.getStaticPropertyExtractor()));
+    this.collector = collector;
+    this.prepareAdapter(extractor);
 
-    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder
-        .create(ID)
+    if (this.spOpcUaClient.inPullMode()) {
+      this.pullAdapterScheduler = new PullAdapterScheduler();
+      this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
+    }
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.spOpcUaClient.disconnect();
+
+    if (this.spOpcUaClient.inPullMode()) {
+      this.pullAdapterScheduler.shutdown();
+    }
+  }
+
+  @Override
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName,
+                                             IStaticPropertyExtractor extractor) throws SpConfigurationException {
+    return OpcUaUtil.resolveConfiguration(staticPropertyInternalName, extractor);
+  }
+
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, OpcUaAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
-        .category(AdapterType.Generic, AdapterType.Manufacturing)
+        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredAlternatives(Labels.withId(OpcUaLabels.ADAPTER_TYPE.name()),
             Alternatives.from(Labels.withId(OpcUaLabels.PULL_MODE.name()),
                 StaticProperties.integerFreeTextProperty(
@@ -233,53 +251,34 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
                     StaticProperties.secretValue(Labels.withId(OpcUaLabels.PASSWORD.name()))
                 ))
         )
-        .requiredAlternatives(Labels.withId(OpcUaLabels.OPC_HOST_OR_URL.name()),
+        .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL.name()),
             Alternatives.from(
-                Labels.withId(OpcUaLabels.OPC_URL.name()),
+                Labels.withId(OPC_URL.name()),
                 StaticProperties.stringFreeTextProperty(
-                    Labels.withId(OpcUaLabels.OPC_SERVER_URL.name()), "opc.tcp://localhost:4840"))
+                    Labels.withId(OPC_SERVER_URL.name()), "opc.tcp://localhost:4840"))
             ,
-            Alternatives.from(Labels.withId(OpcUaLabels.OPC_HOST.name()),
+            Alternatives.from(Labels.withId(OPC_HOST.name()),
                 StaticProperties.group(
                     Labels.withId("host-port"),
                     StaticProperties.stringFreeTextProperty(
-                        Labels.withId(OpcUaLabels.OPC_SERVER_HOST.name())),
+                        Labels.withId(OPC_SERVER_HOST.name())),
                     StaticProperties.stringFreeTextProperty(
-                        Labels.withId(OpcUaLabels.OPC_SERVER_PORT.name()))
+                        Labels.withId(OPC_SERVER_PORT.name()))
                 ))
         )
-        .requiredTextParameter(Labels.withId(OpcUaLabels.NAMESPACE_INDEX.name()))
-        .requiredTextParameter(Labels.withId(OpcUaLabels.NODE_ID.name()))
+        .requiredTextParameter(Labels.withId(NAMESPACE_INDEX.name()))
+        .requiredTextParameter(Labels.withId(NODE_ID.name()))
         .requiredRuntimeResolvableTreeInput(
-            Labels.withId(OpcUaLabels.AVAILABLE_NODES.name()),
-            Arrays.asList(OpcUaLabels.NAMESPACE_INDEX.name(), OpcUaLabels.NODE_ID.name())
+            Labels.withId(AVAILABLE_NODES.name()),
+            Arrays.asList(NAMESPACE_INDEX.name(), NODE_ID.name())
         )
-        .build();
-
-    description.setAppId(ID);
-
-    return description;
+        .buildConfiguration();
   }
 
-  @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new OpcUaAdapter(adapterDescription);
-  }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
-      throws AdapterException, ParseException {
-    return OpcUaUtil.getSchema(adapterDescription);
-  }
-
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  @Override
-  public StaticProperty resolveConfiguration(String staticPropertyInternalName,
-                                             StaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfiguration(staticPropertyInternalName, extractor);
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    return getSchema(extractor);
   }
 }

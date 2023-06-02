@@ -15,73 +15,111 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.context.IContextGenerator;
+import org.apache.streampipes.extensions.api.pe.context.RuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IInternalRuntimeParameters;
+import org.apache.streampipes.extensions.api.pe.param.IParameterGenerator;
+import org.apache.streampipes.extensions.api.pe.param.IPipelineElementParameters;
+import org.apache.streampipes.extensions.api.pe.routing.PipelineElementCollector;
+import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
+import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
-import org.apache.streampipes.wrapper.context.RuntimeContext;
-import org.apache.streampipes.wrapper.params.binding.BindingParams;
-import org.apache.streampipes.wrapper.params.runtime.RuntimeParams;
-import org.apache.streampipes.wrapper.routing.RawDataProcessor;
-import org.apache.streampipes.wrapper.routing.SpInputCollector;
-import org.apache.streampipes.wrapper.runtime.PipelineElement;
+import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
-public abstract class StandalonePipelineElementRuntime<T extends BindingParams<K>,
-    K extends InvocableStreamPipesEntity,
-    V extends RuntimeParams<T, K, X>,
-    X extends RuntimeContext,
-    PeT extends PipelineElement<T, K>>
-    extends PipelineElementRuntime implements RawDataProcessor {
+public abstract class StandalonePipelineElementRuntime<
+    PeT extends IStreamPipesPipelineElement<?>,
+    IvT extends InvocableStreamPipesEntity,
+    RcT extends RuntimeContext,
+    ExT extends IParameterExtractor<IvT>,
+    PepT extends IPipelineElementParameters<IvT, ExT>>
+    extends PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT> implements RawDataProcessor {
 
-  protected final PeT engine;
-  protected V params;
-  protected SpMonitoringManager monitoringManager;
-  protected String resourceId;
+  protected List<SpInputCollector> inputCollectors;
 
-  public StandalonePipelineElementRuntime(Supplier<PeT> supplier, V runtimeParams) {
-    super();
-    this.engine = supplier.get();
-    this.params = runtimeParams;
-    this.monitoringManager = params.getRuntimeContext().getLogger();
-    this.resourceId = params.getBindingParams().getGraph().getElementId();
+  protected String instanceId;
+  protected PepT runtimeParameters;
+  protected RcT runtimeContext;
+
+  protected PeT pipelineElement;
+  protected IInternalRuntimeParameters internalRuntimeParameters;
+
+  public StandalonePipelineElementRuntime(IContextGenerator<RcT, IvT> contextGenerator,
+                                          IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+    super(contextGenerator, parameterGenerator);
+    this.internalRuntimeParameters = new InternalRuntimeParameters();
   }
 
-  public PeT getEngine() {
-    return engine;
+  @Override
+  public void startRuntime(IvT pipelineElementInvocation,
+                           PeT pipelineElement,
+                           PepT runtimeParameters,
+                           RcT runtimeContext) {
+    this.pipelineElement = pipelineElement;
+    this.runtimeParameters = runtimeParameters;
+    this.runtimeContext = runtimeContext;
+    this.instanceId = pipelineElementInvocation.getElementId();
+    this.inputCollectors = getInputCollectors(pipelineElementInvocation.getInputStreams());
+    this.beforeStart();
   }
 
-  public void discardEngine() throws SpRuntimeException {
-    engine.onDetach();
-    this.monitoringManager.resetCounter(resourceId);
+  @Override
+  public void stopRuntime() {
+    this.inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
+    resetCounter(runtimeContext.getLogger(), instanceId);
+    afterStop();
   }
 
-  public List<SpInputCollector> getInputCollectors() throws SpRuntimeException {
+  protected void resetCounter(SpMonitoringManager manager,
+                              String resourceId) throws SpRuntimeException {
+    manager.resetCounter(resourceId);
+  }
+
+  protected List<SpInputCollector> getInputCollectors(List<SpDataStream> inputStreams) throws SpRuntimeException {
     List<SpInputCollector> inputCollectors = new ArrayList<>();
-    for (SpDataStream is : params.getBindingParams().getGraph().getInputStreams()) {
+    for (SpDataStream is : inputStreams) {
       inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding()
               .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0),
-          params.isSingletonEngine()));
+          false));
     }
     return inputCollectors;
   }
 
-  protected void addLogEntry(RuntimeException e) {
-    monitoringManager.addErrorMessage(
-        params.getBindingParams().getGraph().getElementId(),
+  protected void addLogEntry(SpMonitoringManager manager,
+                             String elementId,
+                             RuntimeException e) {
+    manager.addErrorMessage(
+        elementId,
         SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
   }
 
-  public abstract void bindEngine() throws SpRuntimeException;
+  protected void connectInputCollectors() {
+    inputCollectors.forEach(PipelineElementCollector::connect);
+  }
 
+  protected void disconnectInputCollectors() {
+    inputCollectors.forEach(PipelineElementCollector::disconnect);
+  }
 
+  protected void registerInputCollectors() {
+    this.inputCollectors.forEach(is -> is.registerConsumer(instanceId, this));
+  }
+
+  protected abstract void beforeStart();
+
+  protected abstract void afterStop();
 }

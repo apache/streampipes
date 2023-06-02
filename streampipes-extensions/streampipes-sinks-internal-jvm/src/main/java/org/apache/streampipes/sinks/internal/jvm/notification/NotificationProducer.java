@@ -19,8 +19,9 @@
 package org.apache.streampipes.sinks.internal.jvm.notification;
 
 
-import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -32,8 +33,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import java.time.Instant;
@@ -56,7 +56,7 @@ public class NotificationProducer extends StreamPipesDataSink {
   private String correspondingPipelineId;
   private String correspondingUser;
 
-  private StreamPipesClient client;
+  private IStreamPipesClient client;
 
 
   @Override
@@ -65,8 +65,8 @@ public class NotificationProducer extends StreamPipesDataSink {
     this.title = parameters.extractor().singleValueParameter(TITLE_KEY, String.class);
     this.content = parameters.extractor().singleValueParameter(CONTENT_KEY, String.class);
     this.silentPeriodInSeconds = parameters.extractor().singleValueParameter(SILENT_PERIOD, Integer.class) * 60;
-    this.correspondingPipelineId = parameters.getGraph().getCorrespondingPipeline();
-    this.correspondingUser = parameters.getGraph().getCorrespondingUser();
+    this.correspondingPipelineId = parameters.getModel().getCorrespondingPipeline();
+    this.correspondingUser = parameters.getModel().getCorrespondingUser();
     this.client = context.getStreamPipesClient();
   }
 

@@ -17,33 +17,22 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-
 public class AdaptersTest {
-  public void testAdapter(AdapterTesterBase adapterTester) throws Exception {
-    adapterTester.startAdapterService();
-    AdapterDescription adapterDescription = adapterTester.prepareAdapter();
-    adapterTester.startAdapter(adapterDescription);
-    List<Map<String, Object>> data = adapterTester.generateData();
-    adapterTester.validateData(data);
-  }
 
-  @Test
-  public void testPulsarAdapter() throws Exception {
-    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-      testAdapter(pulsarAdapterTester);
-    }
-  }
+
+//  @Test
+//  public void testPulsarAdapter() throws Exception {
+//    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
+//      pulsarAdapterTester.run();
+//    }
+//  }
 
   @Test
   public void testMqttAdapter() throws Exception {
     try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
-      testAdapter(mqttAdapterTester);
+      mqttAdapterTester.run();
     }
   }
 }

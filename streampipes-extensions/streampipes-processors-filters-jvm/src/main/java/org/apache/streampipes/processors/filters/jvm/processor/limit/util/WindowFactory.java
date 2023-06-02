@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.limit.util;
 
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.CronWindow;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.LengthWindow;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.TimeWindow;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Window;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 public class WindowFactory {
   private final WindowType windowType;

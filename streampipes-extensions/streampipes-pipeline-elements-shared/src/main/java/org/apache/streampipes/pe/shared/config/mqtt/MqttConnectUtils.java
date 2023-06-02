@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.pe.shared.config.mqtt;
 
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -69,11 +69,11 @@ public class MqttConnectUtils {
 
   }
 
-  public static MqttConfig getMqttConfig(StaticPropertyExtractor extractor) {
+  public static MqttConfig getMqttConfig(IParameterExtractor<?> extractor) {
     return getMqttConfig(extractor, null);
   }
 
-  public static MqttConfig getMqttConfig(StaticPropertyExtractor extractor, String topicInput) {
+  public static MqttConfig getMqttConfig(IParameterExtractor<?> extractor, String topicInput) {
     MqttConfig mqttConfig;
     String brokerUrl = extractor.singleValueParameter(BROKER_URL, String.class);
 

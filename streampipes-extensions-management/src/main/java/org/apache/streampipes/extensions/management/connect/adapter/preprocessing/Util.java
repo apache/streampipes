@@ -18,11 +18,6 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing;
 
-import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.schema.EventSchema;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,13 +41,4 @@ public class Util {
     }
   }
 
-  public static EventSchema getEventSchema(GenericAdapterDescription adapterDescription) {
-    if (adapterDescription instanceof GenericAdapterStreamDescription) {
-      return ((GenericAdapterStreamDescription) adapterDescription).getDataStream().getEventSchema();
-    } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-      return ((GenericAdapterSetDescription) adapterDescription).getDataSet().getEventSchema();
-
-    }
-    return null;
-  }
 }

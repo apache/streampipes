@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.connect.management.management;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 
@@ -48,7 +47,7 @@ public class AdapterMasterManagementTest {
 
   @Test(expected = AdapterException.class)
   public void getAdapterFail() throws AdapterException {
-    List<AdapterDescription> adapterDescriptions = List.of(new GenericAdapterStreamDescription());
+    List<AdapterDescription> adapterDescriptions = List.of(new AdapterDescription());
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
@@ -61,7 +60,7 @@ public class AdapterMasterManagementTest {
 
   @Test
   public void getAllAdaptersSuccess() throws AdapterException {
-    List<AdapterDescription> adapterDescriptions = List.of(new GenericAdapterStreamDescription());
+    List<AdapterDescription> adapterDescriptions = List.of(new AdapterDescription());
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);

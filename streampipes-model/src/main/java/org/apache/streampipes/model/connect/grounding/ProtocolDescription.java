@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TsModel
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class ProtocolDescription extends NamedStreamPipesEntity {
 
   @Deprecated

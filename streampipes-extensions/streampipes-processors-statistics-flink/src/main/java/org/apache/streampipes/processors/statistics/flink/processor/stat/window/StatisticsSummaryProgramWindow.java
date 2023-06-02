@@ -18,37 +18,32 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.window;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.statistics.flink.AbstractStatisticsProgram;
 import org.apache.streampipes.processors.statistics.flink.extensions.MapKeySelector;
 import org.apache.streampipes.processors.statistics.flink.extensions.SlidingEventTimeWindow;
 import org.apache.streampipes.processors.statistics.flink.extensions.TimestampMappingFunction;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.List;
 
 public class StatisticsSummaryProgramWindow extends
-    AbstractStatisticsProgram<StatisticsSummaryParametersWindow> {
+    FlinkDataProcessorProgram<StatisticsSummaryParametersWindow> {
 
   private StatisticsSummaryParamsSerializable serializableParams;
 
   public StatisticsSummaryProgramWindow(StatisticsSummaryParametersWindow params,
-                                        StatisticsSummaryParamsSerializable serializableParams,
-                                        ConfigExtractor configExtractor,
-                                        StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
-    this.streamTimeCharacteristic = TimeCharacteristic.EventTime;
+                                        StatisticsSummaryParamsSerializable serializableParams) {
+    super(params);
+    //this.streamTimeCharacteristic = TimeCharacteristic.EventTime;
     this.serializableParams = serializableParams;
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
 
     StatisticsSummaryParamsSerializable sp = new
         StatisticsSummaryParamsSerializable(serializableParams.getValueToObserve(),
