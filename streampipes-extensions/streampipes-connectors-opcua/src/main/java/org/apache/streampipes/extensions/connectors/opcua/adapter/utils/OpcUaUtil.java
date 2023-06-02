@@ -16,17 +16,17 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
+package org.apache.streampipes.extensions.connectors.opcua.adapter.utils;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.connect.iiot.adapters.opcua.OpcNode;
-import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaNodeBrowser;
-import org.apache.streampipes.connect.iiot.adapters.opcua.SpOpcUaClient;
-import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcNode;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaNodeBrowser;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.SpOpcUaClient;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;

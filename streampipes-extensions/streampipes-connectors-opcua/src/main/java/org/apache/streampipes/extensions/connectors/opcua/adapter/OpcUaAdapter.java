@@ -16,12 +16,10 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.opcua;
+package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
-import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
@@ -31,6 +29,8 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfigBuilder;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
@@ -62,17 +62,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.AVAILABLE_NODES;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.NAMESPACE_INDEX;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.NODE_ID;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_HOST;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_URL;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels.OPC_URL;
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.getSchema;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.AVAILABLE_NODES;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.NAMESPACE_INDEX;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.NODE_ID;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_HOST;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.getSchema;
 
 public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
 

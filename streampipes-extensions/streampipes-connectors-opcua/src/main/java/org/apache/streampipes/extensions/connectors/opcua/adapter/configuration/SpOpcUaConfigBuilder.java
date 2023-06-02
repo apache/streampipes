@@ -16,10 +16,10 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.opcua.configuration;
+package org.apache.streampipes.extensions.connectors.opcua.adapter.configuration;
 
-import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil;
 
 import java.util.List;
 

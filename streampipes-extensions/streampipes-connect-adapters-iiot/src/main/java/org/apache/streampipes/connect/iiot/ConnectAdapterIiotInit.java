@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.iiot;
 
-import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
@@ -32,6 +31,7 @@ import org.apache.streampipes.connect.iiot.protocol.stream.NatsProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.TubeMQProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.RocketMQProtocol;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;

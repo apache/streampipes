@@ -16,10 +16,10 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.opcua;
+package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfig;
 
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;

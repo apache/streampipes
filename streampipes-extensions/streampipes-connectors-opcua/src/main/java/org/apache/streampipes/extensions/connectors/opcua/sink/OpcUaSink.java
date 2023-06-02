@@ -16,24 +16,25 @@
  *
  */
 
-package org.apache.streampipes.sinks.databases.jvm.opcua;
+package org.apache.streampipes.extensions.connectors.opcua.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class OpcUaSink extends StreamPipesDataSink {
+public class OpcUaSink implements IStreamPipesDataSink {
 
   private static final String OPC_SERVER_KEY = "opc_host";
   private static final String OPC_PORT_KEY = "opc_port";
@@ -44,26 +45,29 @@ public class OpcUaSink extends StreamPipesDataSink {
   private OpcUa opcUa;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua")
-        .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(DataSinkType.FORWARD)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(MAPPING_PROPERTY_KEY),
-                PropertyScope.NONE).build())
-        .requiredTextParameter(Labels.withId(OPC_SERVER_KEY))
-        .requiredIntegerParameter(Labels.withId(OPC_PORT_KEY))
-        .requiredIntegerParameter(Labels.withId(OPC_NAMESPACE_INDEX_KEY))
-        .requiredTextParameter(Labels.withId(OPC_NODE_ID_KEY))
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        OpcUaSink::new,
+        DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .category(DataSinkType.FORWARD)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                    Labels.withId(MAPPING_PROPERTY_KEY),
+                    PropertyScope.NONE).build())
+            .requiredTextParameter(Labels.withId(OPC_SERVER_KEY))
+            .requiredIntegerParameter(Labels.withId(OPC_PORT_KEY))
+            .requiredIntegerParameter(Labels.withId(OPC_NAMESPACE_INDEX_KEY))
+            .requiredTextParameter(Labels.withId(OPC_NODE_ID_KEY))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataSinkParameters parameters,
+                                EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     String hostname = extractor.singleValueParameter(OPC_SERVER_KEY, String.class);
     Integer port = extractor.singleValueParameter(OPC_PORT_KEY, Integer.class);
@@ -93,7 +97,7 @@ public class OpcUaSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     this.opcUa.onDetach();
   }
 }
