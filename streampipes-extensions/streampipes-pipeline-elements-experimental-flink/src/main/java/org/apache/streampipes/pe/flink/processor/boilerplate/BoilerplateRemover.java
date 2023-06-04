@@ -20,12 +20,12 @@ package org.apache.streampipes.pe.flink.processor.boilerplate;
 
 import org.apache.streampipes.model.runtime.Event;
 
-import boilerpipe.document.TextDocument;
-import boilerpipe.extractors.CommonExtractors;
-import boilerpipe.extractors.ExtractorBase;
-import boilerpipe.sax.BoilerpipeSAXInput;
-import boilerpipe.sax.HTMLDocument;
-import boilerpipe.sax.HTMLHighlighter;
+import com.kohlschutter.boilerpipe.document.TextDocument;
+import com.kohlschutter.boilerpipe.extractors.CommonExtractors;
+import com.kohlschutter.boilerpipe.extractors.ExtractorBase;
+import com.kohlschutter.boilerpipe.sax.BoilerpipeSAXInput;
+import com.kohlschutter.boilerpipe.sax.HTMLDocument;
+import com.kohlschutter.boilerpipe.sax.HTMLHighlighter;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
