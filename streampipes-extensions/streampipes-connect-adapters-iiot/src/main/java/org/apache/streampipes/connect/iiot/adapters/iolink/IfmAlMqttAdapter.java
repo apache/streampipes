@@ -20,22 +20,22 @@ package org.apache.streampipes.connect.iiot.adapters.iolink;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.adapters.iolink.sensor.SensorVVB001;
-import org.apache.streampipes.extensions.management.connect.AdapterInterface;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
-import org.apache.streampipes.extensions.management.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.context.IAdapterRuntimeContext;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterConfiguration;
-import org.apache.streampipes.model.connect.adapter.IEventCollector;
-import org.apache.streampipes.model.connect.adapter.IParser;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.extractor.IAdapterParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -49,7 +49,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-public class IfmAlMqttAdapter implements AdapterInterface {
+public class IfmAlMqttAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.iolink";
 
@@ -58,13 +58,10 @@ public class IfmAlMqttAdapter implements AdapterInterface {
   private static final String PORTS = "ports";
   private static final String SENSOR_TYPE = "sensor_type";
 
-  private Thread thread;
   private MqttConsumer mqttConsumer;
   private MqttConfig mqttConfig;
 
-  private IParser parser;
-
-  private String sensorType = "";
+  private final IParser parser;
 
   private List<String> ports;
 
@@ -73,9 +70,9 @@ public class IfmAlMqttAdapter implements AdapterInterface {
   }
 
   @Override
-  public AdapterConfiguration declareConfig() {
+  public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID)
+        .create(ID, IfmAlMqttAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
@@ -126,7 +123,7 @@ public class IfmAlMqttAdapter implements AdapterInterface {
           }
         });
 
-    thread = new Thread(this.mqttConsumer);
+    Thread thread = new Thread(this.mqttConsumer);
     thread.start();
   }
 
@@ -144,9 +141,9 @@ public class IfmAlMqttAdapter implements AdapterInterface {
     return new SensorVVB001().getEventSchema();
   }
 
-  private void applyConfiguration(StaticPropertyExtractor extractor) {
+  private void applyConfiguration(IStaticPropertyExtractor extractor) {
     mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
-    sensorType = extractor.selectedSingleValue(SENSOR_TYPE, String.class);
+    String sensorType = extractor.selectedSingleValue(SENSOR_TYPE, String.class);
     var selectedPorts = extractor.selectedMultiValues(PORTS, String.class);
     ports = selectedPorts.stream()
         .map(port -> port.substring(5))
