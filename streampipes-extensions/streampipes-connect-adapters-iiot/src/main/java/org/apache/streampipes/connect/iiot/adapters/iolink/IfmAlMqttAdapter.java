@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.iiot.adapters.iolink;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.iolink.sensor.SensorVVB001;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
@@ -31,7 +32,9 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
@@ -100,25 +103,33 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
           try {
             InputStream in = convertByte(mqttEvent);
             parser.parse(in, (event) -> {
-              var data = (Map<String, Object>) event.get("data");
-              var payload = (Map<String, Object>) data.get("payload");
+
+              var data = getMap(event, "data");
+              var payload = getMap(data, "payload");
+
+              var deviceInfo = getMap(payload, "/deviceinfo/serialnumber");
+              var serialnumber = deviceInfo.get("data");
 
               for (int i = 0; i < ports.size(); i++) {
 
-                var portResult = ((Map<String, Object>)
-                    payload.get("/iolinkmaster/port[" + ports.get(i) + "]/iolinkdevice/pdin"));
+                var portResult = getMap(payload,
+                    "/iolinkmaster/port[%s]/iolinkdevice/pdin".formatted(ports.get(i)));
                 var eventData = (String) portResult.get("data");
 
                 var parsedEvent = sensor.parseEvent(eventData);
                 parsedEvent.put("timestamp", System.currentTimeMillis() + i);
                 parsedEvent.put("port", "port" + ports.get(i));
+                parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
 
                 collector.collect(parsedEvent);
               }
             });
           } catch (Exception e) {
-            // TODO add error message
-//            adapterRuntimeContext.getLogger().addErrorMessage();
+            adapterRuntimeContext
+                .getLogger()
+                .addErrorMessage(
+                    extractor.getAdapterDescription().getElementId(),
+                    SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
             LOG.error("Could not parse event", e);
           }
         });
@@ -141,6 +152,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
     return new SensorVVB001().getEventSchema();
   }
 
+
   private void applyConfiguration(IStaticPropertyExtractor extractor) {
     mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
     String sensorType = extractor.selectedSingleValue(SENSOR_TYPE, String.class);
@@ -148,6 +160,24 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
     ports = selectedPorts.stream()
         .map(port -> port.substring(5))
         .toList();
+  }
+
+  private Map<String, Object> getMap(Map<String, Object> event, String key) {
+    if (event.containsKey(key)) {
+      var payload = event.get(key);
+      if (payload instanceof Map) {
+        return (Map<String, Object>) event.get(key);
+      } else {
+        throw new ParseException(getErrorMessage(key));
+      }
+    } else {
+      throw new ParseException(getErrorMessage(key));
+    }
+  }
+
+  private String getErrorMessage(String key) {
+    return "The event does not contain key: %s. Please reconfigure the IOLink master to include this key".formatted(
+        key);
   }
 
   private InputStream convertByte(byte[] event) {

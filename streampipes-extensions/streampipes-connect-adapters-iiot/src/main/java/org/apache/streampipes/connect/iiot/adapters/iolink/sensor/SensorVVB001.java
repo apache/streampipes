@@ -41,6 +41,8 @@ public class SensorVVB001 implements IoLinkSensor {
   public static final String OUT_2_NAME = "out2";
   public static final String PORT_NAME = "port";
 
+  public static final String IO_LINK_MASTER_SN = "ioLinkMasterSN";
+
 
   @Override
   public GuessSchema getEventSchema() {
@@ -121,6 +123,14 @@ public class SensorVVB001 implements IoLinkSensor {
                 .build()
         )
         .sample(PORT_NAME, "port1")
+        .property(
+            PrimitivePropertyBuilder
+                .create(Datatypes.String, IO_LINK_MASTER_SN)
+                .scope(PropertyScope.DIMENSION_PROPERTY)
+                .description("This is the serial number of the IO-Link Master")
+                .build()
+        )
+        .sample(PORT_NAME, "XXXXXXXXXXXX")
         .build();
   }
 
