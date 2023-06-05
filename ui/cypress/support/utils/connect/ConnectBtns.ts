@@ -69,5 +69,13 @@ export class ConnectBtns {
         return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
     }
 
+    public static jsonArrayFieldKey() {
+        return 'undefined-arrayFieldConfig-2-key-0';
+    }
+
+    public static xmlTag() {
+        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.xml-2-tag-0';
+    }
+
     // ========================================================================
 }

@@ -106,6 +106,8 @@ public class XmlParser implements IParser {
         if (key.equals(tag)) {
           if (xml.get(tag) instanceof List) {
             return (List<Map<String, Object>>) xml.get(tag);
+          } else if (xml.get(tag) instanceof Map) {
+            return List.of((Map<String, Object>) xml.get(tag));
           } else {
             throw new ParseException("Could not parse %s with tag %s".formatted(xml, tag));
           }
