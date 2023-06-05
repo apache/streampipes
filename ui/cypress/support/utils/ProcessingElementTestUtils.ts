@@ -39,7 +39,7 @@ export class ProcessingElementTestUtils {
         let formatType;
         pipelineElementTest.inputFile.endsWith('.csv')
             ? (formatType = 'csv')
-            : (formatType = 'json_array');
+            : (formatType = 'json');
 
         FileManagementUtils.addFile(inputFile);
 
@@ -64,6 +64,12 @@ export class ProcessingElementTestUtils {
             adapterInputBuilder
                 .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
                 .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+        } else if (formatType === 'json') {
+            adapterInputBuilder.addFormatInput(
+                'checkbox',
+                'json_options-array',
+                '',
+            );
         }
 
         const adapterInput = adapterInputBuilder.build();
