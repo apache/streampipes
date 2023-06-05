@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.iiot;
 
+import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
@@ -49,6 +50,7 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
             8001)
         .registerAdapter(new MachineDataSimulatorAdapter())
         .registerAdapter(new FileReplayAdapter())
+        .registerAdapter(new IfmAlMqttAdapter())
         .registerAdapter(new RosBridgeAdapter())
         .registerAdapter(new OpcUaAdapter())
         .registerAdapter(new Plc4xS7Adapter())
