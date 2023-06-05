@@ -16,8 +16,8 @@
 #
 
 
-org.apache.streampipes.connect.iiot.adapters.iolink.title=IOLink
-org.apache.streampipes.connect.iiot.adapters.iolink.description=Consumes MQTT data representing IOLink data
+org.apache.streampipes.connect.iiot.adapters.iolink.title=ifm IOLink
+org.apache.streampipes.connect.iiot.adapters.iolink.description=Consumes MQTT data produced by an IOLink master of ifm
 
 access-mode.title=Access Mode
 access-mode.description=Provide user credentials for the MQTT broker
