@@ -63,14 +63,14 @@ streampipes:
 external:
   consul:
     appName: "consul"
-    version: "0.93.0-SNAPSHOT"
+    version: 1.14.3
     persistence:
       storageClassName: ""
       claimName: "consul-pvc"
       pvName: "consul-pv"
   couchdb:
     appName: "couchdb"
-    version: "0.93.0-SNAPSHOT"
+    version: 3.3.1
     user: "admin"
     password: "admin"
     persistence:
@@ -79,7 +79,7 @@ external:
       pvName: "couchdb-pv"
   influxdb:
     appName: "influxdb"
-    version: "0.93.0-SNAPSHOT"
+    version: 2.6
     username: "admin"
     password: "sp-admin"
     adminToken: "sp-admin"
