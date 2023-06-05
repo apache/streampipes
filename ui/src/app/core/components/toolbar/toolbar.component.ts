@@ -85,6 +85,7 @@ export class ToolbarComponent
             this.profileService
                 .getUserProfile(user.username)
                 .subscribe(userInfo => {
+                    this.authService.darkMode$.next(userInfo.darkMode);
                     this.darkMode = this.authService.darkMode$.getValue();
                     this.modifyAppearance(userInfo.darkMode);
                 });

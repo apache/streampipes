@@ -120,8 +120,8 @@ fs.writeFileSync(
     fs.readFileSync('deployment/apps.ts'),
 );
 fs.writeFileSync(
-    'src/scss/sp/sp-theme.scss',
-    fs.readFileSync('deployment/sp-theme.scss'),
+    'src/scss/_variables.scss',
+    fs.readFileSync('deployment/_variables.scss'),
 );
 fs.writeFileSync(
     'src/app/services/app.constants.ts',
