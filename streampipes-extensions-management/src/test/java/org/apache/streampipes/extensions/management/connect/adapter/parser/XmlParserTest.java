@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -48,28 +49,35 @@ public class XmlParserTest extends ParserTest {
                                + "</enclosing>"
                                + "</list>";
 
+  private final String sampleEventWithSingleObject = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>"
+      + "<list>"
+      + "<enclosing>"
+      + "<k1>v1</k1><k2>1.0</k2>"
+      + "</enclosing>"
+      + "</list>";
+
   private final String tag = "enclosing";
 
   @Test
   public void getGuessSchema() {
-    var expected = GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, K1)
-            .description("")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, K2)
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .description("")
-            .build())
-        .sample(K1, "v1")
-        .sample(K2, 1.0f)
-        .build();
+    var expected = getExpectedSchema();
 
     var parser = new XmlParser(tag);
 
     InputStream event = toStream(sampleEvent);
+
+    var result = parser.getGuessSchema(event);
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  public void getGuessSchemaWithSingleObjectInArray() {
+    var expected = getExpectedSchema();
+
+    var parser = new XmlParser(tag);
+
+    InputStream event = toStream(sampleEventWithSingleObject);
 
     var result = parser.getGuessSchema(event);
 
@@ -92,5 +100,22 @@ public class XmlParserTest extends ParserTest {
     expectedEvent.put(K1, "v2");
     expectedEvent.put(K2, 2.0f);
     verify(mockEventHandler, times(1)).handle(expectedEvent);
+  }
+
+  private GuessSchema getExpectedSchema() {
+    return GuessSchemaBuilder.create()
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.String, K1)
+            .description("")
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Float, K2)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .description("")
+            .build())
+        .sample(K1, "v1")
+        .sample(K2, 1.0f)
+        .build();
   }
 }

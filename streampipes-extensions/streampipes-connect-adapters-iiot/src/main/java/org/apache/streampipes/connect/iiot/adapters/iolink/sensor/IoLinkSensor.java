@@ -16,25 +16,14 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+package org.apache.streampipes.connect.iiot.adapters.iolink.sensor;
 
-const allTests = Cypress.env('processingElements');
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-allTests.forEach(test => {
-    const testNames = ['splitArray1'];
+import java.util.Map;
 
-    const processorTest = test as ProcessorTest;
+public interface IoLinkSensor {
+  GuessSchema getEventSchema();
 
-    if (testNames.includes(processorTest.name)) {
-        describe('Test Processor ' + test.dir, () => {
-            beforeEach('Setup Test', () => {
-                cy.initStreamPipesTest();
-            });
-
-            it('Initialize Test', () => {
-                ProcessingElementTestUtils.testElement(processorTest);
-            });
-        });
-    }
-});
+  Map<String, Object> parseEvent(String encodedEvent);
+}

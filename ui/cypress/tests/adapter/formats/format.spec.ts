@@ -21,6 +21,8 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 import { StaticPropertyUtils } from '../../../support/utils/StaticPropertyUtils';
 import { UserInputBuilder } from '../../../support/builder/UserInputBuilder';
+import { AdapterInput } from '../../../support/model/AdapterInput';
+import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 
 describe('Test adapter formats', () => {
     beforeEach('Setup Test', () => {
@@ -40,12 +42,13 @@ describe('Test adapter formats', () => {
     it('Test json object format', () => {
         // Set up test
         FileManagementUtils.addFile(baseDir + 'jsonObject.json');
+        const template = makeAdapterInputTemplate();
 
-        navigateToFormatSelection();
+        template
+            .setFormat('json')
+            .addFormatInput('checkbox', 'json_options-single_object', '');
 
-        // Set format configuration
-        ConnectBtns.json().click();
-        ConnectBtns.jsonObject().click();
+        navigateToFormatSelection(template.build());
 
         // Validate result
         validateResult(expected);
@@ -54,11 +57,13 @@ describe('Test adapter formats', () => {
     it('Test array with json objects', () => {
         // Set up test
         FileManagementUtils.addFile('connect/format/jsonArray.json');
-        navigateToFormatSelection();
+        const template = makeAdapterInputTemplate();
 
-        // Set format configuration
-        ConnectBtns.json().click();
-        ConnectBtns.jsonArray().click();
+        template
+            .setFormat('json')
+            .addFormatInput('checkbox', 'json_options-array', '');
+
+        navigateToFormatSelection(template.build());
 
         // Validate result
         validateResult(expected);
@@ -67,15 +72,14 @@ describe('Test adapter formats', () => {
     it('Test json with a field of type array', () => {
         // Set up test
         FileManagementUtils.addFile(baseDir + 'jsonArrayField.json');
-        navigateToFormatSelection();
+        const template = makeAdapterInputTemplate();
 
-        // Set format configuration
-        ConnectBtns.json().click();
-        ConnectBtns.jsonArrayField().click();
-        const arrayFieldInput = UserInputBuilder.create()
-            .add('input', 'key', 'field')
-            .build();
-        StaticPropertyUtils.input(arrayFieldInput);
+        template
+            .setFormat('json')
+            .addFormatInput('checkbox', 'json_options-array_field', '')
+            .addFormatInput('input', ConnectBtns.jsonArrayFieldKey(), 'field');
+
+        navigateToFormatSelection(template.build());
 
         // Validate result
         validateResult(expected);
@@ -90,11 +94,13 @@ describe('Test adapter formats', () => {
             v1: 4.1,
         };
         FileManagementUtils.addFile(baseDir + 'geoJson.json');
-        navigateToFormatSelection();
+        const template = makeAdapterInputTemplate();
 
-        // Set format configuration
-        ConnectBtns.json().click();
-        ConnectBtns.geoJson().click();
+        template
+            .setFormat('json')
+            .addFormatInput('checkbox', 'json_options-geojson', '');
+
+        navigateToFormatSelection(template.build());
 
         // Validate result
         validateResult(geoJsonResultEvent);
@@ -103,14 +109,12 @@ describe('Test adapter formats', () => {
     it('Test xml format', () => {
         // Set up test
         FileManagementUtils.addFile(baseDir + 'xmlObject.xml');
-        navigateToFormatSelection();
+        const template = makeAdapterInputTemplate();
+        template
+            .setFormat('xml')
+            .addFormatInput('input', ConnectBtns.xmlTag(), 'event');
 
-        // Set format configuration
-        ConnectBtns.xml().click();
-        const tagInputField = UserInputBuilder.create()
-            .add('input', 'tag', 'event')
-            .build();
-        StaticPropertyUtils.input(tagInputField);
+        navigateToFormatSelection(template.build());
 
         // Validate result
         validateResult(expected);
@@ -119,18 +123,13 @@ describe('Test adapter formats', () => {
     it('Test csv format with header', () => {
         // Set up test
         FileManagementUtils.addFile(baseDir + 'csvWithHeader.csv');
-        navigateToFormatSelection();
+        const template = makeAdapterInputTemplate();
+        template
+            .setFormat('csv')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        // Set format configuration
-        ConnectBtns.csv().click();
-        const delimiterInputField = UserInputBuilder.create()
-            .add('input', 'delimiter', ';')
-            .build();
-        StaticPropertyUtils.input(delimiterInputField);
-        const headerInputField = UserInputBuilder.create()
-            .add('checkbox', 'header', 'check')
-            .build();
-        StaticPropertyUtils.input(headerInputField);
+        navigateToFormatSelection(template.build());
 
         // Validate result
         validateResult(expected);
@@ -139,14 +138,12 @@ describe('Test adapter formats', () => {
     it('Test csv format without header', () => {
         // Set up test
         FileManagementUtils.addFile(baseDir + 'csvWithoutHeader.csv');
-        navigateToFormatSelection();
+        const template = makeAdapterInputTemplate();
+        template
+            .setFormat('csv')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';');
 
-        // Set format configuration
-        ConnectBtns.csv().click();
-        const delimiterInputField = UserInputBuilder.create()
-            .add('input', 'delimiter', ';')
-            .build();
-        StaticPropertyUtils.input(delimiterInputField);
+        navigateToFormatSelection(template.build());
 
         const expectedNoHeader = {
             key_0: 1667904471000,
@@ -163,36 +160,38 @@ describe('Test adapter formats', () => {
     it('Test csv format with comma', () => {
         // Set up test
         FileManagementUtils.addFile(baseDir + 'csvWithComma.csv');
-        navigateToFormatSelection();
+        const template = makeAdapterInputTemplate();
+        template
+            .setFormat('csv')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ',')
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        // Set format configuration
-        ConnectBtns.csv().click();
-        const delimiterInputField = UserInputBuilder.create()
-            .add('input', 'delimiter', ',')
-            .build();
-        StaticPropertyUtils.input(delimiterInputField);
-        const headerInputField = UserInputBuilder.create()
-            .add('checkbox', 'header', 'check')
-            .build();
-        StaticPropertyUtils.input(headerInputField);
+        navigateToFormatSelection(template.build());
 
         // Validate result
         validateResult(expected);
     });
 });
 
-const navigateToFormatSelection = () => {
+const navigateToFormatSelection = (adapterInput: AdapterInput) => {
     ConnectUtils.goToConnect();
 
     ConnectUtils.goToNewAdapterPage();
 
     ConnectUtils.selectAdapter('File_Stream');
 
-    ConnectUtils.configureAdapter([]);
+    ConnectUtils.configureAdapter(adapterInput);
+};
+
+const makeAdapterInputTemplate = (): AdapterBuilder => {
+    return AdapterBuilder.create('File_Stream')
+        .setName('File Stream Adapter Test')
+        .setTimestampProperty('timestamp')
+        .addProtocolInput('checkbox', 'replaceTimestamp', 'check');
 };
 
 const validateResult = expected => {
-    ConnectBtns.formatSelectionNextBtn().click();
+    //ConnectBtns.formatSelectionNextBtn().click();
     cy.dataCy('schema-preview-original-event', { timeout: 10000 }).then(
         value => {
             const jsonResult = removeWhitespaceExceptInQuotes(value.text());
