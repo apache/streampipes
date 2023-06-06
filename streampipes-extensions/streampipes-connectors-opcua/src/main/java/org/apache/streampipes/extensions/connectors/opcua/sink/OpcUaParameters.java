@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.databases.jvm.opcua;
+package org.apache.streampipes.extensions.connectors.opcua.sink;
 
 public final class OpcUaParameters {
   private final String hostname;

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
+package org.apache.streampipes.extensions.connectors.opcua.adapter.utils;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
 

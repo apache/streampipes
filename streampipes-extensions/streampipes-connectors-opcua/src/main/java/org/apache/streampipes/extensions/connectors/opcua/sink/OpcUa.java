@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.databases.jvm.opcua;
+package org.apache.streampipes.extensions.connectors.opcua.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;

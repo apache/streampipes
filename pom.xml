@@ -1411,6 +1411,7 @@
 		<module>streampipes-rest-extensions</module>
         <module>streampipes-extensions/streampipes-connectors-influx</module>
         <module>streampipes-client-api</module>
+        <module>streampipes-extensions/streampipes-connectors-opcua</module>
     </modules>
 
     <profiles>

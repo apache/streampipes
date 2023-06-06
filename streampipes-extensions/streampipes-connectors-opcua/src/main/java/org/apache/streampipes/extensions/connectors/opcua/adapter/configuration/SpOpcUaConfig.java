@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.opcua.configuration;
+package org.apache.streampipes.extensions.connectors.opcua.adapter.configuration;
 
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 

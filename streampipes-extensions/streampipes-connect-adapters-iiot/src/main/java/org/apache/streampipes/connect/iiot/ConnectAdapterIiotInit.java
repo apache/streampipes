@@ -33,6 +33,7 @@ import org.apache.streampipes.connect.iiot.protocol.stream.NatsProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.TubeMQProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.RocketMQProtocol;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
