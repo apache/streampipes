@@ -28,7 +28,7 @@
     "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts'",
     "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts'",
     "prepare": "cd ../ && husky install ./ui/.husky",
-    "postinstall": "npm run build-libraries"
+    "postinstall": "node ./deployment/prebuild.js  && npm run build-libraries"
   },
   "dependencies": {
     "@angular-architects/module-federation": "^14.3.14",
