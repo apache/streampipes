@@ -18,17 +18,17 @@
 org.apache.streampipes.sinks.databases.jvm.opcua.title=OPC-UA
 org.apache.streampipes.sinks.databases.jvm.opcua.description=Writes values in an OPC-UA server
 
-opc_host.title=Host Address
-opc_host.description=The host address of the OPC-UA server (Example: opc-ua-server.com, opc.tcp://opc-ua-server.com)
+OPC_SERVER_HOST.title=Host Address
+OPC_SERVER_HOST.description=The host address of the OPC-UA server (Example: opc-ua-server.com, opc.tcp://opc-ua-server.com)
 
-opc_port.title=Port
-opc_port.description=The port of the OPC-UA server (Example: 4840)
+OPC_SERVER_PORT.title=Port
+OPC_SERVER_PORT.description=The port of the OPC-UA server (Example: 4840)
 
-opc_namespace_index.title=Namespace Index
-opc_namespace_index.description=The number of the namespace
+NAMESPACE_INDEX.title=Namespace Index
+NAMESPACE_INDEX.description=The number of the namespace
 
-opc_node_id_index.title=Node Id
-opc_node_id_index.description=Id of the node the result should be written to
+NODE_ID.title=Node Id
+NODE_ID.description=Id of the node the result should be written to
 
-mapping_property_key.title=Event Property
-mapping_property_key.description=The event property that should be written to the OPC-UA server
+MAPPING_PROPERY.title=Event Property
+MAPPING_PROPERY.description=The event property that should be written to the OPC-UA server

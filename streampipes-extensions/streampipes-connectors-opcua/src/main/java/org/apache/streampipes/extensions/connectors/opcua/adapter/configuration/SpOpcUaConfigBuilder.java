@@ -23,6 +23,22 @@ import org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUti
 
 import java.util.List;
 
+import static org.apache.kafka.common.config.ConfigDef.Type.PASSWORD;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ACCESS_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.AVAILABLE_NODES;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NAMESPACE_INDEX;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NODE_ID;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_HOST_OR_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_HOST;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_PORT;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.UNAUTHENTICATED;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
+
 public class SpOpcUaConfigBuilder {
 
   /**
@@ -35,61 +51,77 @@ public class SpOpcUaConfigBuilder {
   public static SpOpcUaConfig from(IStaticPropertyExtractor extractor) {
 
     String selectedAlternativeConnection =
-        extractor.selectedAlternativeInternalId(OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL.name());
+        extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL.name());
     String selectedAlternativeAuthentication =
-        extractor.selectedAlternativeInternalId(OpcUaUtil.OpcUaLabels.ACCESS_MODE.name());
+        extractor.selectedAlternativeInternalId(ACCESS_MODE.name());
 
-    int namespaceIndex = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.NAMESPACE_INDEX.name(), int.class);
-    String nodeId = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.NODE_ID.name(), String.class);
+    int namespaceIndex = extractor.singleValueParameter(NAMESPACE_INDEX.name(), int.class);
+    String nodeId = extractor.singleValueParameter(NODE_ID.name(), String.class);
 
-    boolean usePullMode = extractor.selectedAlternativeInternalId(OpcUaUtil.OpcUaLabels.ADAPTER_TYPE.name())
-        .equals(OpcUaUtil.OpcUaLabels.PULL_MODE.name());
-    boolean useURL = selectedAlternativeConnection.equals(OpcUaUtil.OpcUaLabels.OPC_URL.name());
-    boolean unauthenticated = selectedAlternativeAuthentication.equals(OpcUaUtil.OpcUaLabels.UNAUTHENTICATED.name());
+    boolean usePullMode = extractor.selectedAlternativeInternalId(ADAPTER_TYPE.name())
+        .equals(PULL_MODE.name());
+    boolean useURL = selectedAlternativeConnection.equals(OPC_URL.name());
+    boolean unauthenticated = selectedAlternativeAuthentication.equals(UNAUTHENTICATED.name());
 
     Integer pullIntervalSeconds = null;
     if (usePullMode) {
       pullIntervalSeconds =
-          extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.PULLING_INTERVAL.name(), Integer.class);
+          extractor.singleValueParameter(PULLING_INTERVAL.name(), Integer.class);
     }
 
     List<String> selectedNodeNames =
-        extractor.selectedTreeNodesInternalNames(OpcUaUtil.OpcUaLabels.AVAILABLE_NODES.name(), String.class, true);
+        extractor.selectedTreeNodesInternalNames(AVAILABLE_NODES.name(), String.class, true);
 
     if (useURL && unauthenticated) {
 
       String serverAddress =
-          extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
+          extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
       return new SpOpcUaConfig(serverAddress, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
 
     } else if (!useURL && unauthenticated) {
       String serverAddress =
-          extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
+          extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class);
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
-      int port = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
+      int port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
 
-      return new SpOpcUaConfig(serverAddress, port, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+      return new SpOpcUaConfig(serverAddress,
+          port,
+          namespaceIndex,
+          nodeId,
+          pullIntervalSeconds,
+          selectedNodeNames);
     } else {
 
-      String username = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.USERNAME.name(), String.class);
-      String password = extractor.secretValue(OpcUaUtil.OpcUaLabels.PASSWORD.name());
+      String username = extractor.singleValueParameter(USERNAME.name(), String.class);
+      String password = extractor.secretValue(PASSWORD.name());
 
       if (useURL) {
         String serverAddress =
-            extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
+            extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
-        return new SpOpcUaConfig(serverAddress, namespaceIndex, nodeId, username, password, pullIntervalSeconds,
+        return new SpOpcUaConfig(serverAddress,
+            namespaceIndex,
+            nodeId,
+            username,
+            password,
+            pullIntervalSeconds,
             selectedNodeNames);
       } else {
         String serverAddress =
-            extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
+            extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class);
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
-        int port = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
+        int port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
 
-        return new SpOpcUaConfig(serverAddress, port, namespaceIndex, nodeId, username, password, pullIntervalSeconds,
+        return new SpOpcUaConfig(serverAddress,
+            port,
+            namespaceIndex,
+            nodeId,
+            username,
+            password,
+            pullIntervalSeconds,
             selectedNodeNames);
       }
     }
