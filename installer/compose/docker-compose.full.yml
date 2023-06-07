@@ -228,16 +228,6 @@ services:
     networks:
       spnet:
 
-  sources-vehicle-simulator:
-    image: "${SP_DOCKER_REGISTRY}/sources-vehicle-simulator:${SP_VERSION}"
-    depends_on:
-      - consul
-      - kafka
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
 
 volumes:
   backend:
