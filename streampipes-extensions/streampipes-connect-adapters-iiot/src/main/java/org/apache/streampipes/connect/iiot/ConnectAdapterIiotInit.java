@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.iiot;
 
 import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
-import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
