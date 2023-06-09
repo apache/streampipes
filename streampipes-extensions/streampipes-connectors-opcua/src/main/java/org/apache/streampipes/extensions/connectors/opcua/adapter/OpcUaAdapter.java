@@ -53,7 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +64,6 @@ import java.util.stream.Collectors;
 
 import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels;
 import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.AVAILABLE_NODES;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.NAMESPACE_INDEX;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.NODE_ID;
 import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_HOST;
 import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL;
 import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST;
@@ -266,11 +264,11 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
                         Labels.withId(OPC_SERVER_PORT.name()))
                 ))
         )
-        .requiredTextParameter(Labels.withId(NAMESPACE_INDEX.name()))
-        .requiredTextParameter(Labels.withId(NODE_ID.name()))
+        //TODO add dependsOn for authentication & server
         .requiredRuntimeResolvableTreeInput(
             Labels.withId(AVAILABLE_NODES.name()),
-            Arrays.asList(NAMESPACE_INDEX.name(), NODE_ID.name())
+            Collections.emptyList(),
+            true
         )
         .buildConfiguration();
   }

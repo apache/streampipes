@@ -39,9 +39,6 @@ public class SpOpcUaConfigBuilder {
     String selectedAlternativeAuthentication =
         extractor.selectedAlternativeInternalId(OpcUaUtil.OpcUaLabels.ACCESS_MODE.name());
 
-    int namespaceIndex = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.NAMESPACE_INDEX.name(), int.class);
-    String nodeId = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.NODE_ID.name(), String.class);
-
     boolean usePullMode = extractor.selectedAlternativeInternalId(OpcUaUtil.OpcUaLabels.ADAPTER_TYPE.name())
         .equals(OpcUaUtil.OpcUaLabels.PULL_MODE.name());
     boolean useURL = selectedAlternativeConnection.equals(OpcUaUtil.OpcUaLabels.OPC_URL.name());
@@ -62,7 +59,7 @@ public class SpOpcUaConfigBuilder {
           extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
-      return new SpOpcUaConfig(serverAddress, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+      return new SpOpcUaConfig(serverAddress, 1, null, pullIntervalSeconds, selectedNodeNames);
 
     } else if (!useURL && unauthenticated) {
       String serverAddress =
@@ -70,7 +67,7 @@ public class SpOpcUaConfigBuilder {
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
       int port = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 
-      return new SpOpcUaConfig(serverAddress, port, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+      return new SpOpcUaConfig(serverAddress, port, 1, null, pullIntervalSeconds, selectedNodeNames);
     } else {
 
       String username = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.USERNAME.name(), String.class);
@@ -81,7 +78,7 @@ public class SpOpcUaConfigBuilder {
             extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_URL.name(), String.class);
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
-        return new SpOpcUaConfig(serverAddress, namespaceIndex, nodeId, username, password, pullIntervalSeconds,
+        return new SpOpcUaConfig(serverAddress, 1, null, username, password, pullIntervalSeconds,
             selectedNodeNames);
       } else {
         String serverAddress =
@@ -89,7 +86,7 @@ public class SpOpcUaConfigBuilder {
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
         int port = extractor.singleValueParameter(OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
 
-        return new SpOpcUaConfig(serverAddress, port, namespaceIndex, nodeId, username, password, pullIntervalSeconds,
+        return new SpOpcUaConfig(serverAddress, port, 1, null, username, password, pullIntervalSeconds,
             selectedNodeNames);
       }
     }

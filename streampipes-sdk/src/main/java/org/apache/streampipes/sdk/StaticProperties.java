@@ -136,7 +136,8 @@ public class StaticProperties {
 
 
   public static RuntimeResolvableTreeInputStaticProperty runtimeResolvableTreeInput(Label label,
-                                                                                    List<String> dependsOn) {
+                                                                                    List<String> dependsOn,
+                                                                                    boolean resolveDynamically) {
     RuntimeResolvableTreeInputStaticProperty treeInput = new RuntimeResolvableTreeInputStaticProperty(
         label.getInternalId(),
         label.getLabel(),
