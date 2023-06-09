@@ -62,17 +62,26 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.AVAILABLE_NODES;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.NAMESPACE_INDEX;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.NODE_ID;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_HOST;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_HOST_OR_URL;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_HOST;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_PORT;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_SERVER_URL;
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.OpcUaLabels.OPC_URL;
 import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.getSchema;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ACCESS_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.AVAILABLE_NODES;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.HOST_PORT;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NAMESPACE_INDEX;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NODE_ID;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_HOST;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_HOST_OR_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_HOST;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_PORT;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PASSWORD;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.UNAUTHENTICATED;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
 
 public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
 
@@ -236,40 +245,40 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
-        .requiredAlternatives(Labels.withId(OpcUaLabels.ADAPTER_TYPE.name()),
-            Alternatives.from(Labels.withId(OpcUaLabels.PULL_MODE.name()),
+        .requiredAlternatives(Labels.withId(ADAPTER_TYPE),
+            Alternatives.from(Labels.withId(PULL_MODE),
                 StaticProperties.integerFreeTextProperty(
-                    Labels.withId(OpcUaLabels.PULLING_INTERVAL.name()))),
-            Alternatives.from(Labels.withId(OpcUaLabels.SUBSCRIPTION_MODE.name())))
-        .requiredAlternatives(Labels.withId(OpcUaLabels.ACCESS_MODE.name()),
-            Alternatives.from(Labels.withId(OpcUaLabels.UNAUTHENTICATED.name())),
-            Alternatives.from(Labels.withId(OpcUaLabels.USERNAME_GROUP.name()),
+                    Labels.withId(PULLING_INTERVAL))),
+            Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)))
+        .requiredAlternatives(Labels.withId(ACCESS_MODE),
+            Alternatives.from(Labels.withId(UNAUTHENTICATED)),
+            Alternatives.from(Labels.withId(USERNAME_GROUP),
                 StaticProperties.group(
-                    Labels.withId(OpcUaLabels.USERNAME_GROUP.name()),
+                    Labels.withId(USERNAME_GROUP),
                     StaticProperties.stringFreeTextProperty(
-                        Labels.withId(OpcUaLabels.USERNAME.name())),
-                    StaticProperties.secretValue(Labels.withId(OpcUaLabels.PASSWORD.name()))
+                        Labels.withId(USERNAME)),
+                    StaticProperties.secretValue(Labels.withId(PASSWORD))
                 ))
         )
-        .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL.name()),
+        .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
             Alternatives.from(
-                Labels.withId(OPC_URL.name()),
+                Labels.withId(OPC_URL),
                 StaticProperties.stringFreeTextProperty(
-                    Labels.withId(OPC_SERVER_URL.name()), "opc.tcp://localhost:4840"))
+                    Labels.withId(OPC_SERVER_URL), "opc.tcp://localhost:4840"))
             ,
-            Alternatives.from(Labels.withId(OPC_HOST.name()),
+            Alternatives.from(Labels.withId(OPC_HOST),
                 StaticProperties.group(
-                    Labels.withId("host-port"),
+                    Labels.withId(HOST_PORT),
                     StaticProperties.stringFreeTextProperty(
-                        Labels.withId(OPC_SERVER_HOST.name())),
+                        Labels.withId(OPC_SERVER_HOST)),
                     StaticProperties.stringFreeTextProperty(
-                        Labels.withId(OPC_SERVER_PORT.name()))
+                        Labels.withId(OPC_SERVER_PORT))
                 ))
         )
-        .requiredTextParameter(Labels.withId(NAMESPACE_INDEX.name()))
-        .requiredTextParameter(Labels.withId(NODE_ID.name()))
+        .requiredTextParameter(Labels.withId(NAMESPACE_INDEX))
+        .requiredTextParameter(Labels.withId(NODE_ID))
         .requiredRuntimeResolvableTreeInput(
-            Labels.withId(AVAILABLE_NODES.name()),
+            Labels.withId(AVAILABLE_NODES),
             Arrays.asList(NAMESPACE_INDEX.name(), NODE_ID.name())
         )
         .buildConfiguration();

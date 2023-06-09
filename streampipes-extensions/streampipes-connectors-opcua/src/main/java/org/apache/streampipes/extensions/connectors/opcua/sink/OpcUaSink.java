@@ -34,13 +34,13 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
-public class OpcUaSink implements IStreamPipesDataSink {
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.MAPPING_PROPERY;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NAMESPACE_INDEX;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NODE_ID;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_HOST;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_PORT;
 
-  private static final String OPC_SERVER_KEY = "opc_host";
-  private static final String OPC_PORT_KEY = "opc_port";
-  private static final String OPC_NAMESPACE_INDEX_KEY = "opc_namespace_index";
-  private static final String OPC_NODE_ID_KEY = "opc_node_id_index";
-  private static final String MAPPING_PROPERTY_KEY = "mapping_property_key";
+public class OpcUaSink implements IStreamPipesDataSink {
 
   private OpcUa opcUa;
 
@@ -55,12 +55,12 @@ public class OpcUaSink implements IStreamPipesDataSink {
             .requiredStream(StreamRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                    Labels.withId(MAPPING_PROPERTY_KEY),
+                    Labels.withId(MAPPING_PROPERY),
                     PropertyScope.NONE).build())
-            .requiredTextParameter(Labels.withId(OPC_SERVER_KEY))
-            .requiredIntegerParameter(Labels.withId(OPC_PORT_KEY))
-            .requiredIntegerParameter(Labels.withId(OPC_NAMESPACE_INDEX_KEY))
-            .requiredTextParameter(Labels.withId(OPC_NODE_ID_KEY))
+            .requiredTextParameter(Labels.withId(OPC_SERVER_HOST))
+            .requiredIntegerParameter(Labels.withId(OPC_SERVER_PORT))
+            .requiredIntegerParameter(Labels.withId(NAMESPACE_INDEX))
+            .requiredTextParameter(Labels.withId(NODE_ID))
             .build()
     );
   }
@@ -69,13 +69,13 @@ public class OpcUaSink implements IStreamPipesDataSink {
   public void onPipelineStarted(IDataSinkParameters parameters,
                                 EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
-    String hostname = extractor.singleValueParameter(OPC_SERVER_KEY, String.class);
-    Integer port = extractor.singleValueParameter(OPC_PORT_KEY, Integer.class);
+    String hostname = extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class);
+    Integer port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), Integer.class);
 
-    String nodeId = extractor.singleValueParameter(OPC_NODE_ID_KEY, String.class);
-    Integer nameSpaceIndex = extractor.singleValueParameter(OPC_NAMESPACE_INDEX_KEY, Integer.class);
+    String nodeId = extractor.singleValueParameter(NODE_ID.name(), String.class);
+    Integer nameSpaceIndex = extractor.singleValueParameter(NAMESPACE_INDEX.name(), Integer.class);
 
-    String mappingPropertySelector = extractor.mappingPropertyValue(MAPPING_PROPERTY_KEY);
+    String mappingPropertySelector = extractor.mappingPropertyValue(NODE_ID.name());
 
     String mappingPropertyType = "";
     try {
