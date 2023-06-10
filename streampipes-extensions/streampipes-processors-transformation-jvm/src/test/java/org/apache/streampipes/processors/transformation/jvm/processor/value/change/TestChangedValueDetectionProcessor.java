@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.value.change;
 
-
-
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -61,8 +59,10 @@ public class TestChangedValueDetectionProcessor {
     var event = this.createTestEvent();
 
     // Create event with no DIMENSION_PROPERTY
-    event.getSchemaInfo().getEventSchema().getEventProperties().get(0)
-        .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
+    event.getSchemaInfo()
+    .getEventSchema()
+    .getEventProperties().get(0)
+    .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
 
     assertEquals("l1", processor.getDimensionKey(event));
   }
@@ -86,8 +86,11 @@ public class TestChangedValueDetectionProcessor {
     // Set "s0::value" as COMPARE_FIELD_ID
     DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(processor.declareModel());
 
-    graph.getStaticProperties().stream().filter(p -> p instanceof MappingPropertyUnary)
-        .map((p -> (MappingPropertyUnary) p)).findFirst().get().setSelectedProperty("s0::value");
+    graph.getStaticProperties().stream()
+    .filter(p -> p instanceof MappingPropertyUnary)
+    .map((p -> (MappingPropertyUnary) p))
+    .findFirst().get().setSelectedProperty("s0::value");
+
     ProcessorParams params = new ProcessorParams(graph);
     processor.onInvocation(params, null, null);
 
@@ -113,8 +116,11 @@ public class TestChangedValueDetectionProcessor {
     // Set "s0::value" as COMPARE_FIELD_ID
     DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(processor.declareModel());
 
-    graph.getStaticProperties().stream().filter(p -> p instanceof MappingPropertyUnary)
-        .map((p -> (MappingPropertyUnary) p)).findFirst().get().setSelectedProperty("s0::value");
+    graph.getStaticProperties().stream()
+    .filter(p -> p instanceof MappingPropertyUnary)
+    .map((p -> (MappingPropertyUnary) p))
+    .findFirst().get().setSelectedProperty("s0::value");
+
     ProcessorParams params = new ProcessorParams(graph);
     processor.onInvocation(params, null, null);
 
@@ -143,11 +149,17 @@ public class TestChangedValueDetectionProcessor {
   private Event createTestEvent(Integer value, String location) {
 
     var eventSchema = GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder.create(Datatypes.String, "sensorId").scope(PropertyScope.DIMENSION_PROPERTY)
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.String, "sensorId")
+            .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
-        .property(PrimitivePropertyBuilder.create(Datatypes.Double, "location").scope(PropertyScope.DIMENSION_PROPERTY)
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Double, "location")
+            .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
-        .property(PrimitivePropertyBuilder.create(Datatypes.Integer, "value").scope(PropertyScope.MEASUREMENT_PROPERTY)
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Integer, "value")
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .build().eventSchema;
 
@@ -164,27 +176,16 @@ public class TestChangedValueDetectionProcessor {
     ArrayList<Event> events = new ArrayList<Event>();
 
     @Override
-    public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
-      // TODO Auto-generated method stub
-
-    }
+    public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {}
 
     @Override
-    public void unregisterConsumer(String routeId) {
-      // TODO Auto-generated method stub
-
-    }
+    public void unregisterConsumer(String routeId) {}
 
     @Override
-    public void connect() throws SpRuntimeException {
-      // TODO Auto-generated method stub
-
-    }
+    public void connect() throws SpRuntimeException {}
 
     @Override
-    public void disconnect() throws SpRuntimeException {
-      // TODO Auto-generated method stub
-    }
+    public void disconnect() throws SpRuntimeException {}
 
     @Override
     public void collect(Event event) {
