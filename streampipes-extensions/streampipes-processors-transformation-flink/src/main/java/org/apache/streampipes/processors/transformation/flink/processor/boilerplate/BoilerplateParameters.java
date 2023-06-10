@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.transformation.flink.processor.boilerplate;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class BoilerplateParameters extends EventProcessorBindingParams {
+public class BoilerplateParameters extends ProcessorParams {
 
   private String htmlProperty;
   private ExtractorMode extractorMode;

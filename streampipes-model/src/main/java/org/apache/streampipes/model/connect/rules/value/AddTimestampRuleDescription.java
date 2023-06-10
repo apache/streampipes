@@ -26,6 +26,10 @@ public class AddTimestampRuleDescription extends ValueTransformationRuleDescript
     super();
   }
 
+  public AddTimestampRuleDescription(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
+
   public AddTimestampRuleDescription(AddTimestampRuleDescription other) {
     super(other);
     this.runtimeKey = other.getRuntimeKey();

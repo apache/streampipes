@@ -19,9 +19,9 @@
 package org.apache.streampipes.processor.geo.flink.processor.gridenricher;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class SpatialGridEnrichmentParameters extends EventProcessorBindingParams {
+public class SpatialGridEnrichmentParameters extends ProcessorParams {
 
   private EnrichmentSettings enrichmentSettings;
 

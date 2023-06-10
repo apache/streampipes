@@ -41,7 +41,8 @@ base_packages = [
     "pydantic>=1.10.2",
     "requests>=2.28.1",
     "nats-py>=2.2.0",
-    "confluent-kafka>=2.0.2"
+    "confluent-kafka>=2.0.2",
+    "typing-extensions>=4.5.0"
 ]
 
 dev_packages = base_packages + [
@@ -65,7 +66,7 @@ docs_packages = [
     "mkdocs==1.4.2",
     "mkdocs-awesome-pages-plugin==2.9.0",
     "mkdocs-material==9.1.3",
-    "mkdocstrings[python]==0.21.1",
+    "mkdocstrings[python]==0.22.0",
     "pytkdocs[numpy-style]>=0.16.1",
     "mkdocs-gen-files==0.5.0",
     "mkdocs-literate-nav==0.6.0",

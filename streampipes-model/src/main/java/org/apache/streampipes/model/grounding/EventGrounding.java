@@ -38,6 +38,7 @@ public class EventGrounding {
   public EventGrounding() {
     super();
     this.transportFormats = new ArrayList<>();
+    this.transportProtocols = new ArrayList<>();
   }
 
   public EventGrounding(TransportProtocol transportProtocol, TransportFormat transportFormat) {
@@ -62,7 +63,11 @@ public class EventGrounding {
 
   @JsonIgnore
   public TransportProtocol getTransportProtocol() {
-    return transportProtocols.get(0);
+    if (transportProtocols.size() == 0) {
+      return null;
+    } else {
+      return transportProtocols.get(0);
+    }
   }
 
   public void setTransportProtocol(TransportProtocol transportProtocol) {

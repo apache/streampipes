@@ -18,29 +18,31 @@
 
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
-import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
-import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.connect.IParser;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.SendToPipeline;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERN
 import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_GROUP;
 import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_KEY;
 
-public class NatsProtocol extends BrokerProtocol {
+public class NatsProtocol implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.nats";
   private NatsConfig natsConfig;
@@ -73,39 +75,8 @@ public class NatsProtocol extends BrokerProtocol {
 
   }
 
-  public NatsProtocol(NatsConfig natsConfig,
-                      IParser parser,
-                      IFormat format) {
-    super(parser, format, natsConfig.getNatsUrls(), natsConfig.getSubject());
-    this.natsConfig = natsConfig;
-  }
-
-  @Override
-  public IProtocol getInstance(ProtocolDescription protocolDescription,
-                               IParser parser,
-                               IFormat format) {
-    StaticPropertyExtractor extractor =
-        StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
-
-    var natsConfig = NatsConfigUtils.from(extractor);
-
-    return new NatsProtocol(natsConfig, parser, format);
-  }
-
-  @Override
-  public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID)
-        .category(AdapterType.Generic)
-        .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .sourceType(AdapterSourceType.STREAM)
-        .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
-        .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
-        .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
-            getAccessModeAlternativesTwo())
-        .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
-            getConnectionPropertiesAlternativesTwo())
-        .build();
+  public void applyConfiguration(IStaticPropertyExtractor extractor) {
+    this.natsConfig = NatsConfigUtils.from(extractor);
   }
 
   public static StaticPropertyAlternative getAccessModeAlternativesOne() {
@@ -134,36 +105,52 @@ public class NatsProtocol extends BrokerProtocol {
   }
 
   @Override
-  public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
-    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder
+        .create(ID, NatsProtocol::new)
+        .withSupportedParsers(Parsers.defaultParsers())
+        .withCategory(AdapterType.Generic)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
+        .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
+        .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
+            getAccessModeAlternativesTwo())
+        .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
+            getConnectionPropertiesAlternativesTwo())
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.natsConsumer = new NatsConsumer();
     try {
-      this.natsConsumer.connect(natsConfig, new BrokerEventProcessor(stk, parser));
+      this.natsConsumer.connect(natsConfig, new BrokerEventProcessor(extractor.selectedParser(), collector));
     } catch (IOException | InterruptedException e) {
-      throw new AdapterException("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . ", e);
+      throw new AdapterException("Error when connecting to the Nats broker on "
+          + natsConfig.getNatsUrls() + " . ", e);
     }
   }
 
   @Override
-  public void stop() {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.natsConsumer.disconnect();
   }
 
   @Override
-  public String getId() {
-    return ID;
-  }
-
-  @Override
-  protected List<byte[]> getNByteElements(int n) throws ParseException {
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
     List<byte[]> elements = new ArrayList<>();
     this.natsConsumer = new NatsConsumer();
     final boolean[] completed = {false};
     InternalEventProcessor<byte[]> processor = event -> {
       elements.add(event);
-      if (elements.size() >= n) {
-        completed[0] = true;
-      }
+      completed[0] = true;
     };
 
     try {
@@ -182,7 +169,7 @@ public class NatsProtocol extends BrokerProtocol {
       }
     }
     if (elements.size() > 0) {
-      return elements;
+      return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
     } else {
       throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000
           + " seconds, is this subjects currently providing data?");

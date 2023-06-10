@@ -22,16 +22,17 @@ import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.connectors.opcua.sink.OpcUaSink;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbSink;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoSink;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbSink;
-import org.apache.streampipes.sinks.databases.jvm.opcua.OpcUaSink;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisSink;
 
@@ -62,7 +63,8 @@ public class DatabasesJvmInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .build();
   }
 }

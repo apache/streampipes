@@ -18,123 +18,102 @@
 
 package org.apache.streampipes.connect.adapters.iex;
 
-import org.apache.streampipes.connect.adapters.iex.model.IexNewsData;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
-import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.helpers.EpProperties;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.vocabulary.SO;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-public class IexCloudNewsAdapter extends IexCloudAdapter {
-
-  public static final String ID = "org.apache.streampipes.connect.adapters.iex.news";
-
-  private static final String News = "/news";
-
-  private static final String Timestamp = "timestamp";
-  private static final String Headline = "headline";
-  private static final String Source = "source";
-  private static final String Url = "url";
-  private static final String Summary = "summary";
-  private static final String Related = "related";
-  private static final String Image = "image";
-  private static final String Lang = "lang";
-  private static final String HasPaywall = "hasPaywall";
-
-  public IexCloudNewsAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-    super(adapterStreamDescription, News);
-  }
-
-  public IexCloudNewsAdapter() {
-    super();
-  }
-
-  @Override
-  protected void pullData() {
-    try {
-      IexNewsData[] rawModel = fetchResult(IexNewsData[].class);
-
-      for (IexNewsData newsData : rawModel) {
-        Map<String, Object> outMap = new HashMap<>();
-        outMap.put(Timestamp, newsData.getDatetime());
-        outMap.put(Headline, newsData.getHeadline());
-        outMap.put(Source, newsData.getSource());
-        outMap.put(Url, newsData.getUrl());
-        outMap.put(Summary, newsData.getSummary());
-        outMap.put(Related, newsData.getRelated());
-        outMap.put(Image, newsData.getImage());
-        outMap.put(Lang, newsData.getLang());
-        outMap.put(HasPaywall, newsData.getHasPaywall());
-
-        adapterPipeline.process(outMap);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Override
-  protected PollingSettings getPollingInterval() {
-    return PollingSettings.from(TimeUnit.SECONDS, 60);
-  }
-
-  @Override
-  public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .withLocales(Locales.EN)
-        .category(AdapterType.Finance, AdapterType.News)
-        .requiredSecret(Labels.withId(TOKEN_KEY))
-        .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
-        .build();
-  }
-
-  @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new IexCloudNewsAdapter(adapterDescription);
-  }
-
-  @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
-      throws AdapterException, ParseException {
-    return GuessSchemaBuilder.create()
-        .property(EpProperties.timestampProperty(Timestamp))
-        .property(EpProperties.stringEp(Labels.from("headline", "Headline",
-            "The headline of the article"), Headline, SO.TEXT))
-        .property(EpProperties.stringEp(Labels.from("source", "Source",
-            "The source of the article"), Source, SO.TEXT))
-        .property(EpProperties.stringEp(Labels.from("url", "URL",
-            "The URL of the article"), Url, SO.CONTENT_URL))
-        .property(EpProperties.stringEp(Labels.from("summary", "Summary",
-            "A short summary of the article"), Summary, SO.TEXT))
-        .property(EpProperties.stringEp(Labels.from("related", "Related",
-            "A comma-separated list of related stock symbols"), Related, SO.TEXT))
-        .property(EpProperties.stringEp(Labels.from("image", "Image",
-            "Link to an image related to the news article"), Image, SO.IMAGE))
-        .property(EpProperties.stringEp(Labels.from("lang", "Language",
-            "The language the article is writte in"), Lang, SO.IN_LANGUAGE))
-        .property(EpProperties.stringEp(Labels.from("paywall", "Has Paywall",
-                "Indicates whether the article is behind a paywall"), HasPaywall,
-            SO.TEXT))
-        .build();
-  }
-
-  @Override
-  public String getId() {
-    return ID;
-  }
-}
+//public class IexCloudNewsAdapter extends IexCloudAdapter {
+//
+//  public static final String ID = "org.apache.streampipes.connect.adapters.iex.news";
+//
+//  private static final String News = "/news";
+//
+//  private static final String Timestamp = "timestamp";
+//  private static final String Headline = "headline";
+//  private static final String Source = "source";
+//  private static final String Url = "url";
+//  private static final String Summary = "summary";
+//  private static final String Related = "related";
+//  private static final String Image = "image";
+//  private static final String Lang = "lang";
+//  private static final String HasPaywall = "hasPaywall";
+//
+//  public IexCloudNewsAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
+//    super(adapterStreamDescription, News);
+//  }
+//
+//  public IexCloudNewsAdapter() {
+//    super();
+//  }
+//
+//  @Override
+//  protected void pullData() {
+//    try {
+//      IexNewsData[] rawModel = fetchResult(IexNewsData[].class);
+//
+//      for (IexNewsData newsData : rawModel) {
+//        Map<String, Object> outMap = new HashMap<>();
+//        outMap.put(Timestamp, newsData.getDatetime());
+//        outMap.put(Headline, newsData.getHeadline());
+//        outMap.put(Source, newsData.getSource());
+//        outMap.put(Url, newsData.getUrl());
+//        outMap.put(Summary, newsData.getSummary());
+//        outMap.put(Related, newsData.getRelated());
+//        outMap.put(Image, newsData.getImage());
+//        outMap.put(Lang, newsData.getLang());
+//        outMap.put(HasPaywall, newsData.getHasPaywall());
+//
+//        adapterPipeline.process(outMap);
+//      }
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+//  }
+//
+//  @Override
+//  protected PollingSettings getPollingInterval() {
+//    return PollingSettings.from(TimeUnit.SECONDS, 60);
+//  }
+//
+//  @Override
+//  public SpecificAdapterStreamDescription declareModel() {
+//    return SpecificDataStreamAdapterBuilder.create(ID)
+//        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+//        .withLocales(Locales.EN)
+//        .category(AdapterType.Finance, AdapterType.News)
+//        .requiredSecret(Labels.withId(TOKEN_KEY))
+//        .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
+//        .build();
+//  }
+//
+//  @Override
+//  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+//    return new IexCloudNewsAdapter(adapterDescription);
+//  }
+//
+//  @Override
+//  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+//      throws AdapterException, ParseException {
+//    return GuessSchemaBuilder.create()
+//        .property(EpProperties.timestampProperty(Timestamp))
+//        .property(EpProperties.stringEp(Labels.from("headline", "Headline",
+//            "The headline of the article"), Headline, SO.TEXT))
+//        .property(EpProperties.stringEp(Labels.from("source", "Source",
+//            "The source of the article"), Source, SO.TEXT))
+//        .property(EpProperties.stringEp(Labels.from("url", "URL",
+//            "The URL of the article"), Url, SO.CONTENT_URL))
+//        .property(EpProperties.stringEp(Labels.from("summary", "Summary",
+//            "A short summary of the article"), Summary, SO.TEXT))
+//        .property(EpProperties.stringEp(Labels.from("related", "Related",
+//            "A comma-separated list of related stock symbols"), Related, SO.TEXT))
+//        .property(EpProperties.stringEp(Labels.from("image", "Image",
+//            "Link to an image related to the news article"), Image, SO.IMAGE))
+//        .property(EpProperties.stringEp(Labels.from("lang", "Language",
+//            "The language the article is writte in"), Lang, SO.IN_LANGUAGE))
+//        .property(EpProperties.stringEp(Labels.from("paywall", "Has Paywall",
+//                "Indicates whether the article is behind a paywall"), HasPaywall,
+//            SO.TEXT))
+//        .build();
+//  }
+//
+//  @Override
+//  public String getId() {
+//    return ID;
+//  }
+//}

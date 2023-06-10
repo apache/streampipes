@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.peak;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.utils.SlidingBatchWindow;
@@ -36,14 +34,12 @@ import java.util.List;
  */
 public class PeakDetectionProgram extends AbstractPatternDetectionProgram<PeakDetectionParameters> {
 
-  public PeakDetectionProgram(PeakDetectionParameters params,
-                              ConfigExtractor configExtractor,
-                              StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public PeakDetectionProgram(PeakDetectionParameters params) {
+    super(params);
   }
 
   @Override
-  protected DataStream<Event> getApplicationLogic(DataStream<Event>[] messageStream) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>[] messageStream) {
 
     Integer lag = params.getLag();
     String groupBy = params.getGroupBy();

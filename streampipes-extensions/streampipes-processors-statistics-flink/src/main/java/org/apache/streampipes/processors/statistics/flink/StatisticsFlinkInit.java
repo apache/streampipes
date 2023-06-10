@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.statistics.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.apache.streampipes.processors.statistics.flink.processor.stat.window.StatisticsSummaryControllerWindow;
@@ -54,7 +55,8 @@ public class StatisticsFlinkInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
         .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
         .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")

@@ -19,12 +19,12 @@
 package org.apache.streampipes.extensions.api.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 public interface SupportsRuntimeConfig {
 
   StaticProperty resolveConfiguration(String staticPropertyInternalName,
-                                      StaticPropertyExtractor extractor) throws SpConfigurationException;
+                                      IStaticPropertyExtractor extractor) throws SpConfigurationException;
 
 }

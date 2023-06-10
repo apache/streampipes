@@ -19,11 +19,11 @@
 package org.apache.streampipes.processors.pattern.detection.flink.processor.and;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import java.util.List;
 
-public class AndParameters extends EventProcessorBindingParams {
+public class AndParameters extends ProcessorParams {
 
   private TimeUnit timeUnit;
   private Integer timeWindow;

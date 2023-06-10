@@ -20,15 +20,13 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.util.GroundingUtils;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
@@ -73,19 +71,19 @@ public class AdapterMasterManagement {
       throws AdapterException {
 
     // Create elementId for adapter
-    String dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
+    var dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
     ad.setElementId(ElementIdGenerator.makeElementId(ad));
     ad.setCreatedAt(System.currentTimeMillis());
     ad.setCorrespondingDataStreamElementId(dataStreamElementId);
 
     // Add EventGrounding to AdapterDescription
-    EventGrounding eventGrounding = GroundingUtils.createEventGrounding();
+    var eventGrounding = GroundingUtils.createEventGrounding();
     ad.setEventGrounding(eventGrounding);
 
-    String elementId = this.adapterResourceManager.encryptAndCreate(ad);
+    var elementId = this.adapterResourceManager.encryptAndCreate(ad);
 
     // Create stream
-    SpDataStream storedDescription = new SourcesManagement().createAdapterDataStream(ad, dataStreamElementId);
+    var storedDescription = new SourcesManagement().createAdapterDataStream(ad, dataStreamElementId);
     storedDescription.setCorrespondingAdapterId(elementId);
     installDataSource(storedDescription, principalSid, true);
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
@@ -126,12 +124,10 @@ public class AdapterMasterManagement {
   public void deleteAdapter(String elementId) throws AdapterException {
 
     // Stop stream adapter
-    if (isStreamAdapter(elementId)) {
-      try {
-        stopStreamAdapter(elementId);
-      } catch (AdapterException e) {
-        LOG.info("Could not stop adapter: " + elementId, e);
-      }
+    try {
+      stopStreamAdapter(elementId);
+    } catch (AdapterException e) {
+      LOG.info("Could not stop adapter: " + elementId, e);
     }
 
     AdapterDescription adapter = adapterInstanceStorage.getAdapter(elementId);
@@ -159,37 +155,28 @@ public class AdapterMasterManagement {
   public void stopStreamAdapter(String elementId) throws AdapterException {
     AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
 
-    if (!isStreamAdapter(elementId)) {
-      throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
-    } else {
-      WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), (AdapterStreamDescription) ad);
-      ExtensionsLogProvider.INSTANCE.reset(elementId);
-    }
+    WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
+    ExtensionsLogProvider.INSTANCE.reset(elementId);
   }
 
   public void startStreamAdapter(String elementId) throws AdapterException {
 
-    AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
+    var ad = adapterInstanceStorage.getAdapter(elementId);
 
-    if (!isStreamAdapter(ad)) {
-      throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
-    } else {
+    try {
+      // Find endpoint to start adapter on
+      var baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
 
-      try {
-        // Find endpoint to start adapter on
-        String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
+      // Update selected endpoint URL of adapter
+      ad.setSelectedEndpointUrl(baseUrl);
+      adapterInstanceStorage.updateAdapter(ad);
 
-        // Update selected endpoint URL of adapter
-        ad.setSelectedEndpointUrl(baseUrl);
-        adapterInstanceStorage.updateAdapter(ad);
+      // Invoke adapter instance
+      WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
 
-        // Invoke adapter instance
-        WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
-
-        LOG.info("Started adapter " + elementId + " on: " + baseUrl);
-      } catch (NoServiceEndpointsAvailableException | URISyntaxException e) {
-        throw new AdapterException("Could not start adapter due to unavailable service endpoint", e);
-      }
+      LOG.info("Started adapter " + elementId + " on: " + baseUrl);
+    } catch (NoServiceEndpointsAvailableException | URISyntaxException e) {
+      throw new AdapterException("Could not start adapter due to unavailable service endpoint", e);
     }
   }
 
@@ -212,15 +199,6 @@ public class AdapterMasterManagement {
       LOG.error("Error while installing data source: {}", stream.getElementId(), e);
       throw new AdapterException();
     }
-  }
-
-  private boolean isStreamAdapter(String id) {
-    AdapterDescription adapterDescription = adapterInstanceStorage.getAdapter(id);
-    return isStreamAdapter(adapterDescription);
-  }
-
-  private boolean isStreamAdapter(AdapterDescription adapterDescription) {
-    return adapterDescription instanceof AdapterStreamDescription;
   }
 
   private IAdapterStorage getAdapterInstanceStorage() {

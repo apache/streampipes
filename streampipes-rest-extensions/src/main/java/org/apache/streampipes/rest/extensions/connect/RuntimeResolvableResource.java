@@ -20,7 +20,6 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.connect.Connector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.api.RuntimeResolvableRequestHandler;
@@ -49,16 +48,16 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
   public Response fetchConfigurations(@PathParam("id") String elementId,
                                       RuntimeOptionsRequest runtimeOptionsRequest) {
 
-    Connector connector = RuntimeResovable.getAdapterOrProtocol(elementId);
+    var adapter = RuntimeResovable.getAdapter(elementId);
     RuntimeOptionsResponse response;
     RuntimeResolvableRequestHandler handler = new RuntimeResolvableRequestHandler();
 
     try {
-      if (connector instanceof ResolvesContainerProvidedOptions) {
-        response = handler.handleRuntimeResponse((ResolvesContainerProvidedOptions) connector, runtimeOptionsRequest);
+      if (adapter instanceof ResolvesContainerProvidedOptions) {
+        response = handler.handleRuntimeResponse((ResolvesContainerProvidedOptions) adapter, runtimeOptionsRequest);
         return ok(response);
-      } else if (connector instanceof SupportsRuntimeConfig) {
-        response = handler.handleRuntimeResponse((SupportsRuntimeConfig) connector, runtimeOptionsRequest);
+      } else if (adapter instanceof SupportsRuntimeConfig) {
+        response = handler.handleRuntimeResponse((SupportsRuntimeConfig) adapter, runtimeOptionsRequest);
         return ok(response);
       } else {
         throw new SpRuntimeException(

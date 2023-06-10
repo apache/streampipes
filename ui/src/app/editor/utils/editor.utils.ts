@@ -18,22 +18,18 @@
 
 import { EditorConstants } from '../constants/editor.constants';
 import {
-    PipelineElementIdentifier,
     PipelineElementType,
     PipelineElementUnion,
 } from '../model/editor.model';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    SpDataSet,
     SpDataStream,
 } from '@streampipes/platform-services';
 
 export class PipelineElementTypeUtils {
     static toClassName(element: PipelineElementType): string {
-        if (element === PipelineElementType.DataSet) {
-            return EditorConstants.DATA_SET_IDENTIFIER;
-        } else if (element === PipelineElementType.DataStream) {
+        if (element === PipelineElementType.DataStream) {
             return EditorConstants.DATA_STREAM_IDENTIFIER;
         } else if (element === PipelineElementType.DataProcessor) {
             return EditorConstants.DATA_PROCESSOR_IDENTIFIER;
@@ -43,9 +39,7 @@ export class PipelineElementTypeUtils {
     }
 
     static fromClassName(className: string): PipelineElementType {
-        if (className === EditorConstants.DATA_SET_IDENTIFIER) {
-            return PipelineElementType.DataSet;
-        } else if (className === EditorConstants.DATA_STREAM_IDENTIFIER) {
+        if (className === EditorConstants.DATA_STREAM_IDENTIFIER) {
             return PipelineElementType.DataStream;
         } else if (className === EditorConstants.DATA_PROCESSOR_IDENTIFIER) {
             return PipelineElementType.DataProcessor;
@@ -67,9 +61,7 @@ export class PipelineElementTypeUtils {
     }
 
     static fromType(pipelineElement: PipelineElementUnion) {
-        if (pipelineElement instanceof SpDataSet) {
-            return PipelineElementType.DataSet;
-        } else if (pipelineElement instanceof SpDataStream) {
+        if (pipelineElement instanceof SpDataStream) {
             return PipelineElementType.DataStream;
         } else if (pipelineElement instanceof DataProcessorInvocation) {
             return PipelineElementType.DataProcessor;
@@ -81,8 +73,6 @@ export class PipelineElementTypeUtils {
     static toType(elementType: PipelineElementType) {
         if (PipelineElementType.DataStream === elementType) {
             return SpDataStream;
-        } else if (PipelineElementType.DataSet === elementType) {
-            return SpDataSet;
         } else if (PipelineElementType.DataProcessor === elementType) {
             return DataProcessorInvocation;
         } else {

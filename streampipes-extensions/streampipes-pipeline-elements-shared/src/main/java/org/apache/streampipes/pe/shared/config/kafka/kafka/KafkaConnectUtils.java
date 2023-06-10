@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.pe.shared.config.kafka.kafka;
 
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslPlainConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslSSLConfig;
@@ -25,7 +26,6 @@ import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthentica
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedSSLConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -79,7 +79,7 @@ public class KafkaConnectUtils {
     return Labels.withId(ACCESS_MODE);
   }
 
-  public static KafkaConfig getConfig(StaticPropertyExtractor extractor, boolean containsTopic) {
+  public static KafkaConfig getConfig(IStaticPropertyExtractor extractor, boolean containsTopic) {
     String brokerUrl = extractor.singleValueParameter(HOST_KEY, String.class);
     String topic = "";
     if (containsTopic) {

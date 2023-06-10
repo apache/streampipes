@@ -18,10 +18,9 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter;
 
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -33,7 +32,6 @@ import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.PropertyRequirementsBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
@@ -41,7 +39,7 @@ import org.apache.streampipes.sdk.helpers.TransformOperations;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.units.UnitProvider;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import com.github.jqudt.Unit;
 
@@ -79,11 +77,9 @@ public class MeasurementUnitConverterController extends
 
 
   @Override
-  public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(
+  public FlinkDataProcessorProgram<MeasurementUnitConverterParameters> getProgram(
       DataProcessorInvocation sepa,
-      ProcessingElementParameterExtractor extractor,
-      ConfigExtractor configExtractor,
-      StreamPipesClient streamPipesClient) {
+      ProcessingElementParameterExtractor extractor) {
 
     String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String inputUnitId = extractor.measurementUnit(convertProperty, 0);
@@ -103,11 +99,11 @@ public class MeasurementUnitConverterController extends
         outputUnit
     );
 
-    return new MeasurementUnitConverterProgram(staticParams, configExtractor, streamPipesClient);
+    return new MeasurementUnitConverterProgram(staticParams);
   }
 
   @Override
-  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+  public List<Option> resolveOptions(String requestId, IStaticPropertyExtractor parameterExtractor) {
     try {
       EventProperty linkedEventProperty = parameterExtractor.getEventPropertyBySelector(CONVERT_PROPERTY);
       if (linkedEventProperty instanceof EventPropertyPrimitive && ((EventPropertyPrimitive) linkedEventProperty)

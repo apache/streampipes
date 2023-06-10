@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.changedetection.jvm.ChangeDetectionJvmInit;
 import org.apache.streampipes.processors.enricher.jvm.EnricherJvmInit;
 import org.apache.streampipes.processors.filters.jvm.FiltersJvmInit;
@@ -40,6 +41,7 @@ import org.apache.streampipes.sinks.brokers.jvm.BrokersJvmInit;
 import org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit;
 import org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit;
 import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
+import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 public class AllPipelineElementsInit extends ExtensionsModelSubmitter {
 
@@ -53,6 +55,7 @@ public class AllPipelineElementsInit extends ExtensionsModelSubmitter {
             "StreamPipes Bundled Pipeline Elements for JVM Wrapper",
             "",
             8090)
+        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .merge(new SinksInternalJvmInit().provideServiceDefinition())
         .merge(new FiltersJvmInit().provideServiceDefinition())
         .merge(new ChangeDetectionJvmInit().provideServiceDefinition())
@@ -74,7 +77,8 @@ public class AllPipelineElementsInit extends ExtensionsModelSubmitter {
             .registerMessagingProtocols(
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
+                    new SpMqttProtocolFactory(),
+                    new SpNatsProtocolFactory())
             .build();
   }
 }

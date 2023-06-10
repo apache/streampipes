@@ -41,7 +41,7 @@ import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter
 
 public class WikipediaModelConverter {
 
-  private WikipediaModel wikipediaModel;
+  private final WikipediaModel wikipediaModel;
 
   public WikipediaModelConverter(WikipediaModel wikipediaModel) {
     this.wikipediaModel = wikipediaModel;

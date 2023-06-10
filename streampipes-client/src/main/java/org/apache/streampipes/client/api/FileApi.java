@@ -23,20 +23,23 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
 
-public class FileApi extends AbstractClientApi {
+public class FileApi extends AbstractClientApi implements IFileApi {
 
   public FileApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);
   }
 
+  @Override
   public byte[] getFileContent(String filename) {
     return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename), null).executeRequest();
   }
 
+  @Override
   public String getFileContentAsString(String filename) {
     return new String(getFileContent(filename));
   }
 
+  @Override
   public void writeToFile(String file, String fileLocation) {
     new BinaryGetRequest(clientConfig, getBaseResourcePath(file), null)
         .writeToFile(fileLocation);

@@ -19,16 +19,18 @@
 package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
-import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
+public class InfluxDbStreamAdapter implements StreamPipesAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxDbStreamAdapter.class);
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.influxdb.stream";
@@ -53,15 +55,63 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
   private Thread pollingThread;
   private int pollingInterval;
 
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    var builder = AdapterConfigurationBuilder.create(ID, InfluxDbStreamAdapter::new)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN);
+
+    InfluxConfigs.appendSharedInfluxConfig(builder);
+
+    builder.requiredIntegerParameter(Labels.withId(POLLING_INTERVAL));
+    builder.requiredSingleValueSelection(Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
+        Options.from(
+            new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
+            new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)));
+
+    return builder.buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    applyConfigurations(extractor.getStaticPropertyExtractor());
+    pollingThread = new Thread(new PollingThread(this, pollingInterval, collector));
+    pollingThread.start();
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+      throws AdapterException {
+    // Signaling the thread to stop and then disconnect from the server
+    pollingThread.interrupt();
+    try {
+      pollingThread.join();
+    } catch (InterruptedException e) {
+      throw new AdapterException("Unexpected Error while joining polling thread: " + e.getMessage());
+    }
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    applyConfigurations(extractor.getStaticPropertyExtractor());
+    return influxDbClient.getSchema();
+  }
+
   public static class PollingThread implements Runnable {
-    private int pollingInterval;
+    private final int pollingInterval;
 
-    private InfluxDbClient influxDbClient;
-    private InfluxDbStreamAdapter influxDbStreamAdapter;
+    private final InfluxDbClient influxDbClient;
 
-    PollingThread(InfluxDbStreamAdapter influxDbStreamAdapter, int pollingInterval) throws AdapterException {
+    private final IEventCollector collector;
+
+    PollingThread(InfluxDbStreamAdapter influxDbStreamAdapter,
+                  int pollingInterval,
+                  IEventCollector collector) throws AdapterException {
       this.pollingInterval = pollingInterval;
-      this.influxDbStreamAdapter = influxDbStreamAdapter;
+      this.collector = collector;
       this.influxDbClient = influxDbStreamAdapter.getInfluxDbClient();
 
       influxDbClient.connect();
@@ -75,7 +125,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
         return;
       }
       // Checking the most recent timestamp
-      // Timestamp is a string, because a long might not be big enough (it includes nano seconds)
+      // Timestamp is a string, because a long might not be big enough (it includes nanoseconds)
       String lastTimestamp;
       try {
         lastTimestamp = getNewestTimestamp();
@@ -91,7 +141,9 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
           break;
         }
         List<List<Object>> queryResult = influxDbClient.query("SELECT " + influxDbClient.getColumnsString()
-            + " FROM " + influxDbClient.getMeasurement() + " WHERE time > " + lastTimestamp + " ORDER BY time ASC ");
+                                                              + " FROM " + influxDbClient.getMeasurement()
+                                                              + " WHERE time > " + lastTimestamp
+                                                              + " ORDER BY time ASC ");
         if (queryResult.size() > 0) {
           // The last element has the highest timestamp (ordered asc) -> Set the new latest timestamp
           lastTimestamp = InfluxDbClient.getTimestamp((String) queryResult.get(queryResult.size() - 1).get(0));
@@ -100,7 +152,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
             try {
               Map<String, Object> out = influxDbClient.extractEvent(value);
               if (out != null) {
-                influxDbStreamAdapter.send(out);
+                collector.collect(out);
               }
             } catch (SpRuntimeException e) {
               LOG.error("Error: " + e.getMessage());
@@ -115,7 +167,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
     // If no entry is found, a SpRuntimeException is thrown
     String getNewestTimestamp() throws SpRuntimeException {
       List<List<Object>> queryResult = influxDbClient.query("SELECT * FROM " + influxDbClient.getMeasurement()
-          + " ORDER BY time DESC LIMIT 1");
+                                                            + " ORDER BY time DESC LIMIT 1");
       if (queryResult.size() > 0) {
         return InfluxDbClient.getTimestamp((String) queryResult.get(0).get(0));
       } else {
@@ -128,72 +180,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
     return influxDbClient;
   }
 
-  public InfluxDbStreamAdapter() {
-  }
-
-  public InfluxDbStreamAdapter(SpecificAdapterStreamDescription specificAdapterStreamDescription) {
-    super(specificAdapterStreamDescription);
-
-    getConfigurations(specificAdapterStreamDescription);
-  }
-
-  @Override
-  public SpecificAdapterStreamDescription declareModel() {
-    var builder = SpecificDataStreamAdapterBuilder.create(ID)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .withLocales(Locales.EN);
-
-    InfluxConfigs.appendSharedInfluxConfig(builder);
-
-    builder.requiredIntegerParameter(Labels.withId(POLLING_INTERVAL));
-    builder.requiredSingleValueSelection(Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
-        Options.from(
-            new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
-            new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)));
-
-    return builder.build();
-  }
-
-  @Override
-  public void startAdapter() throws AdapterException {
-    pollingThread = new Thread(new PollingThread(this, pollingInterval));
-    pollingThread.start();
-  }
-
-  @Override
-  public void stopAdapter() throws AdapterException {
-    // Signaling the thread to stop and then disconnect from the server
-    pollingThread.interrupt();
-    try {
-      pollingThread.join();
-    } catch (InterruptedException e) {
-      throw new AdapterException("Unexpected Error while joining polling thread: " + e.getMessage());
-    }
-  }
-
-  @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new InfluxDbStreamAdapter(adapterDescription);
-  }
-
-  @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
-      throws AdapterException, ParseException {
-    getConfigurations(adapterDescription);
-    return influxDbClient.getSchema();
-  }
-
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  private void send(Map<String, Object> map) {
-    adapterPipeline.process(map);
-  }
-
-  private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-    var extractor = StaticPropertyExtractor.from(adapterDescription.getConfig());
+  private void applyConfigurations(IStaticPropertyExtractor extractor) {
 
     pollingInterval = extractor.singleValueParameter(POLLING_INTERVAL, Integer.class);
     String replace = extractor.selectedSingleValueInternalName(InfluxDbClient.REPLACE_NULL_VALUES, String.class);

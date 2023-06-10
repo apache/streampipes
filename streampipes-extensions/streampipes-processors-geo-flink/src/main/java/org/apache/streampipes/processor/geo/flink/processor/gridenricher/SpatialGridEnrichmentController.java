@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processor.geo.flink.processor.gridenricher;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -36,7 +34,7 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<SpatialGridEnrichmentParameters> {
 
@@ -75,11 +73,9 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
   }
 
   @Override
-  public FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(
+  public FlinkDataProcessorProgram<SpatialGridEnrichmentParameters> getProgram(
       DataProcessorInvocation graph,
-      ProcessingElementParameterExtractor extractor,
-      ConfigExtractor configExtractor,
-      StreamPipesClient streamPipesClient) {
+      ProcessingElementParameterExtractor extractor) {
 
     Integer cellSize = extractor.singleValueParameter(CELLSIZE, Integer.class);
     String latitudePropertyName = extractor.mappingPropertyValue(MAPPING_LATITUDE);
@@ -100,7 +96,7 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
     SpatialGridEnrichmentParameters params = new SpatialGridEnrichmentParameters(graph,
         enrichmentSettings);
 
-    return new SpatialGridEnrichmentProgram(params, configExtractor, streamPipesClient);
+    return new SpatialGridEnrichmentProgram(params);
 
   }
 }

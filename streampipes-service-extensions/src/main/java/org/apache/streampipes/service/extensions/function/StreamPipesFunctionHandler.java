@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.service.extensions.function;
 
-import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
+import org.apache.streampipes.extensions.api.pe.config.IDataStreamConfiguration;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.sdk.builder.stream.DataStreamConfiguration;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,10 +62,13 @@ public enum StreamPipesFunctionHandler {
     var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     functions.forEach(function -> {
       function.getFunctionConfig().getOutputDataStreams().values().forEach(ds -> {
-        DeclarersSingleton.getInstance().add(new DataStreamDeclarer() {
+        DeclarersSingleton.getInstance().add(new IStreamPipesDataStream() {
           @Override
-          public SpDataStream declareModel() {
-            return ds;
+          public IDataStreamConfiguration declareConfig() {
+            return DataStreamConfiguration.create(
+                () -> this,
+                ds
+            );
           }
 
           @Override

@@ -16,6 +16,8 @@
  *
  */
 
+import { UserInput } from './UserInput';
+
 export class AdapterInput {
     adapterType: string;
     adapterName: string;
@@ -26,4 +28,8 @@ export class AdapterInput {
     startAdapter = true;
 
     autoAddTimestamp = false;
+
+    adapterConfiguration: UserInput[];
+    format: string;
+    formatConfiguration: UserInput[];
 }

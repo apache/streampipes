@@ -18,12 +18,12 @@
 package org.apache.streampipes.extensions.api.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 
 public interface ResolvesContainerProvidedOutputStrategy<T extends InvocableStreamPipesEntity, K
-    extends AbstractParameterExtractor<T>> {
+    extends IParameterExtractor<T>> {
 
   EventSchema resolveOutputStrategy(T processingElement, K parameterExtractor) throws SpConfigurationException;
 }

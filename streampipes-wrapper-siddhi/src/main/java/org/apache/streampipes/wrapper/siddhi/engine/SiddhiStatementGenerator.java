@@ -17,12 +17,12 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine;
 
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 
-public interface SiddhiStatementGenerator<T extends EventProcessorBindingParams> {
+public interface SiddhiStatementGenerator {
 
-  SiddhiAppConfig makeStatements(SiddhiProcessorParams<T> siddhiParams, String finalInsertIntoStreamName);
+  SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
+                                 String finalInsertIntoStreamName);
 
 }

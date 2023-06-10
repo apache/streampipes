@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.sinks.notifications.jvm.email;
 
-import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.mail.SpEmail;
@@ -31,8 +32,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import java.time.Instant;
@@ -51,7 +51,7 @@ public class EmailSink extends StreamPipesDataSink {
 
   private String originalContent;
 
-  private StreamPipesClient client;
+  private IStreamPipesClient client;
 
   @Override
   public DataSinkDescription declareModel() {

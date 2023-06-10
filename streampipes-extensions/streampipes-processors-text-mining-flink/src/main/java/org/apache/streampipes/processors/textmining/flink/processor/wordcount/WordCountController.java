@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.textmining.flink.processor.wordcount;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -34,7 +32,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 public class WordCountController extends FlinkDataProcessorDeclarer<WordCountParameters> {
 
@@ -67,16 +65,13 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
   }
 
   @Override
-  public FlinkDataProcessorRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph,
-                                                                   ProcessingElementParameterExtractor extractor,
-                                                                   ConfigExtractor configExtractor,
-                                                                   StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<WordCountParameters> getProgram(DataProcessorInvocation graph,
+                                                                   ProcessingElementParameterExtractor extractor) {
 
     String fieldName = extractor.mappingPropertyValue(WORD_COUNT_FIELD_KEY);
     Integer timeWindowValue = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
 
-    return new WordCountProgram(new WordCountParameters(graph, fieldName, timeWindowValue), configExtractor,
-        streamPipesClient);
+    return new WordCountProgram(new WordCountParameters(graph, fieldName, timeWindowValue));
 
   }
 }

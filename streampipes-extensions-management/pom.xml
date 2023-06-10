@@ -124,6 +124,10 @@
             <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>jakarta.json</artifactId>
             <version>1.1.1</version>

@@ -18,30 +18,22 @@
 package org.apache.streampipes.wrapper.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.pe.context.RuntimeContext;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
-import org.apache.streampipes.model.runtime.SchemaInfo;
-import org.apache.streampipes.model.runtime.SourceInfo;
-
-import java.util.List;
 
 public class SpRuntimeContext implements RuntimeContext {
 
-  private List<SchemaInfo> inputSchemaInfo;
-  private List<SourceInfo> sourceInfo;
+
   private String correspondingUser;
   private ConfigExtractor configExtractor;
   private StreamPipesClient streamPipesClient;
   private SpMonitoringManager spLogManager;
 
-  public SpRuntimeContext(List<SourceInfo> sourceInfo,
-                          List<SchemaInfo> inputSchemaInfo,
-                          String correspondingUser,
+  public SpRuntimeContext(String correspondingUser,
                           ConfigExtractor configExtractor,
                           StreamPipesClient streamPipesClient,
                           SpMonitoringManager spLogManager) {
-    this.inputSchemaInfo = inputSchemaInfo;
-    this.sourceInfo = sourceInfo;
     this.correspondingUser = correspondingUser;
     this.configExtractor = configExtractor;
     this.streamPipesClient = streamPipesClient;
@@ -55,16 +47,6 @@ public class SpRuntimeContext implements RuntimeContext {
   @Override
   public SpMonitoringManager getLogger() {
     return spLogManager;
-  }
-
-  @Override
-  public List<SchemaInfo> getInputSchemaInfo() {
-    return inputSchemaInfo;
-  }
-
-  @Override
-  public List<SourceInfo> getInputSourceInfo() {
-    return sourceInfo;
   }
 
   @Override

@@ -39,8 +39,6 @@ public class PipelineElementRuntimeInfo extends AbstractRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response getRuntimeInfo(SpDataStream spDataStream) {
-    // TODO currently only supported for data streams.
-    // For data sets, a dummy pipeline needs to be generated to get runtime values.
     try {
       return ok(Operations.getRuntimeInfo(spDataStream));
     } catch (SpRuntimeException e) {

@@ -18,44 +18,57 @@
 
 package org.apache.streampipes.wrapper.flink;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
-import org.apache.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
+import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.wrapper.context.generator.DataSinkContextGenerator;
+import org.apache.streampipes.wrapper.params.generator.DataSinkParameterGenerator;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class FlinkDataSinkRuntime<T extends EventSinkBindingParams> extends
-    FlinkRuntime<EventSinkRuntimeParams<T>, T, DataSinkInvocation, EventSinkRuntimeContext> {
+public class FlinkDataSinkRuntime extends FlinkRuntime<
+    IStreamPipesDataSink,
+    DataSinkInvocation,
+    EventSinkRuntimeContext,
+    IDataSinkParameterExtractor,
+    IDataSinkParameters,
+    IDataSinkProgram> implements IDataSinkRuntime {
 
   private static final long serialVersionUID = 1L;
   private static final Logger LOG = LoggerFactory.getLogger(FlinkDataSinkRuntime.class);
 
-  public FlinkDataSinkRuntime(T params,
-                              ConfigExtractor configExtractor,
-                              StreamPipesClient streamPipesClient) {
-    super(params, configExtractor, streamPipesClient);
+  public FlinkDataSinkRuntime() {
+    super(new DataSinkContextGenerator(), new DataSinkParameterGenerator());
+  }
+
+
+  @Override
+  public void appendExecutionConfig(IDataSinkProgram program,
+                                    DataStream<Event>... convertedStream) {
+    program.getSink(convertedStream);
+
   }
 
   @Override
-  public void appendExecutionConfig(DataStream<Event>... convertedStream) {
-    getSink(convertedStream);
+  protected IDataSinkProgram getFlinkProgram(IStreamPipesDataSink pipelineElement) {
+    IDataSinkProgram program;
 
+    if (pipelineElement instanceof FlinkDataSinkDeclarer<?>) {
+      program = ((FlinkDataSinkDeclarer<?>) pipelineElement)
+          .getProgram(
+              runtimeParameters.getModel(),
+              DataSinkParameterExtractor.from(runtimeParameters.getModel())
+          );
+    } else {
+      program = new FlinkDataSinkCompatProgram(pipelineElement);
+    }
+    return program;
   }
-
-  public abstract void getSink(DataStream<Event>... convertedStream1);
-
-  protected EventSinkRuntimeParams<T> makeRuntimeParams(ConfigExtractor configExtractor,
-                                                        StreamPipesClient streamPipesClient) {
-    LOG.warn(
-        "The config extractor and StreamPipes Client can currently not be accessed by"
-            + " a deployed Flink program due to non-serializable classes.");
-    return new EventSinkRuntimeParams<>(bindingParams, false, null, null);
-  }
-
 }

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
@@ -29,15 +28,15 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class SiddhiAppGenerator<T extends EventProcessorBindingParams> {
+public class SiddhiAppGenerator {
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiAppGenerator.class);
 
-  private final SiddhiProcessorParams<T> siddhiParams;
+  private final SiddhiProcessorParams siddhiParams;
   private final SiddhiAppConfig siddhiAppConfig;
   private final StringBuilder siddhiAppString;
 
-  public SiddhiAppGenerator(SiddhiProcessorParams<T> siddhiParams,
+  public SiddhiAppGenerator(SiddhiProcessorParams siddhiParams,
                             SiddhiAppConfig siddhiAppConfig) {
     this.siddhiParams = siddhiParams;
     this.siddhiAppConfig = siddhiAppConfig;
@@ -45,7 +44,7 @@ public class SiddhiAppGenerator<T extends EventProcessorBindingParams> {
   }
 
   public String generateSiddhiApp() {
-    LOG.info("Configuring event types for graph " + this.siddhiParams.getParams().getGraph().getName());
+    LOG.info("Configuring event types for graph " + this.siddhiParams.getParams().getModel().getName());
 
     this.siddhiParams.getEventTypeInfo().forEach(this::registerEventType);
     registerStatements(siddhiAppConfig);

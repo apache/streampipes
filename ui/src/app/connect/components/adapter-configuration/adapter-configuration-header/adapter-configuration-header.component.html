@@ -18,15 +18,9 @@
 
 <div fxLayout="column" fxFlex="100">
     <div fxLayout="row" fxLayoutAlign="start center">
-        <mat-icon *ngIf="!isDataStreamDescription" class="historic"
-            >lens</mat-icon
-        >
-        <mat-icon *ngIf="isDataStreamDescription" class="real-time"
-            >lens
-        </mat-icon>
+        <mat-icon class="real-time">lens </mat-icon>
         <div fxLayoutAlign="start center">
-            <p *ngIf="!isDataStreamDescription">Data Set</p>
-            <p *ngIf="isDataStreamDescription">Data Stream</p>
+            <p>Data Stream</p>
         </div>
         <span fxFlex></span>
     </div>

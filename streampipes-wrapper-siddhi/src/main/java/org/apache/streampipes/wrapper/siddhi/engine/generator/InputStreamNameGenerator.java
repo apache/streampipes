@@ -17,17 +17,17 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InputStreamNameGenerator<T extends EventProcessorBindingParams> {
+public class InputStreamNameGenerator {
 
-  private final T params;
+  private final IDataProcessorParameters params;
 
-  public InputStreamNameGenerator(T params) {
+  public InputStreamNameGenerator(IDataProcessorParameters params) {
     this.params = params;
   }
 

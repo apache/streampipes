@@ -17,10 +17,12 @@
  */
 
 package org.apache.streampipes.model.schema;
+
 import org.apache.streampipes.model.util.Cloner;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 public class EventPropertyPrimitive extends EventProperty {
 
@@ -81,4 +83,34 @@ public class EventPropertyPrimitive extends EventProperty {
     this.valueSpecification = valueSpecification;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    EventPropertyPrimitive that = (EventPropertyPrimitive) o;
+    return Objects.equals(runtimeType, that.runtimeType)
+           && Objects.equals(measurementUnit, that.measurementUnit)
+           && Objects.equals(valueSpecification, that.valueSpecification);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(runtimeType, measurementUnit, valueSpecification);
+  }
+
+  @Override
+  public String toString() {
+    return "EventPropertyPrimitive{"
+           + "runtimeType='" + runtimeType + '\''
+           + ", measurementUnit=" + measurementUnit
+           + ", valueSpecification=" + valueSpecification
+           + '}';
+  }
 }

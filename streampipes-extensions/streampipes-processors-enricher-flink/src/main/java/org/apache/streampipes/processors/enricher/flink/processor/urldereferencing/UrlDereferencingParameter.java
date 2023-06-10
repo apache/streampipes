@@ -19,9 +19,9 @@
 package org.apache.streampipes.processors.enricher.flink.processor.urldereferencing;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public class UrlDereferencingParameter extends EventProcessorBindingParams {
+public class UrlDereferencingParameter extends ProcessorParams {
 
   private String urlString;
   private String appendHtml;

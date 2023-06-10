@@ -23,7 +23,6 @@ import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.endpoint.EndpointItemFetcher;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
-import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
@@ -34,11 +33,9 @@ import org.apache.streampipes.manager.template.PipelineTemplateInvocationGenerat
 import org.apache.streampipes.manager.template.PipelineTemplateInvocationHandler;
 import org.apache.streampipes.manager.topic.WildcardTopicGenerator;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
-import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -66,10 +63,6 @@ public class Operations {
    */
   public static PipelineModificationMessage validatePipeline(Pipeline pipeline) throws Exception {
     return new PipelineVerificationHandlerV2(pipeline).verifyPipeline();
-  }
-
-  public static DataSetModificationMessage updateDataSet(SpDataSet dataSet) {
-    return new DataSetGroundingSelector(dataSet).selectGrounding();
   }
 
   public static Message verifyAndAddElement(String graphData,

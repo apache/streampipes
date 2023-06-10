@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.service.extensions;
 
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.util.ServiceDefinitionUtil;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
@@ -41,7 +40,8 @@ public class ServiceTagProvider {
   }
 
   private List<SpServiceTag> extractPipelineElementServiceTags() {
-    Collection<Declarer<?>> declarers = DeclarersSingleton.getInstance().getDeclarers().values();
+    Collection<IStreamPipesPipelineElement<?>> declarers =
+        DeclarersSingleton.getInstance().getDeclarers().values();
     List<SpServiceTag> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
     serviceTags.add(DefaultSpServiceTags.PE);
 
@@ -49,11 +49,8 @@ public class ServiceTagProvider {
   }
 
   private List<SpServiceTag> extractAdapterServiceTags() {
-    var tags = new ArrayList<SpServiceTag>();
-    Collection<IAdapter> adapters = DeclarersSingleton.getInstance().getAllAdapters();
-    Collection<IProtocol> protocols = DeclarersSingleton.getInstance().getAllProtocols();
-    tags.addAll(ServiceDefinitionUtil.extractAppIdsFromAdapters(adapters));
-    tags.addAll(ServiceDefinitionUtil.extractAppIdsFromProtocols(protocols));
+    Collection<StreamPipesAdapter> adapters = DeclarersSingleton.getInstance().getAdapters();
+    var tags = new ArrayList<>(ServiceDefinitionUtil.extractAppIdsFromAdapters(adapters));
     tags.add(DefaultSpServiceTags.CONNECT_WORKER);
 
     return tags;

@@ -18,12 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.Connector;
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 
 import java.util.Map;
@@ -31,27 +26,12 @@ import java.util.Map;
 public class RuntimeResovable {
   private static final String SP_NS = "https://streampipes.org/vocabulary/v1/";
 
-
-  public static ResolvesContainerProvidedOptions getRuntimeResolvableFormat(String id) throws IllegalArgumentException {
+  public static StreamPipesAdapter getAdapter(String id) {
     id = id.replaceAll("sp:", SP_NS);
-    Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
-
-    if (allFormats.containsKey(id)) {
-      return (ResolvesContainerProvidedOptions) allFormats.get(id);
-    } else {
-      return null;
-    }
-  }
-
-  public static Connector getAdapterOrProtocol(String id) {
-    id = id.replaceAll("sp:", SP_NS);
-    Map<String, IAdapter> allAdapters = DeclarersSingleton.getInstance().getAllAdaptersMap();
-    Map<String, IProtocol> allProtocols = DeclarersSingleton.getInstance().getAllProtocolsMap();
+    Map<String, StreamPipesAdapter> allAdapters = DeclarersSingleton.getInstance().getAdapterMap();
 
     if (allAdapters.containsKey(id)) {
       return allAdapters.get(id);
-    } else if (allProtocols.containsKey(id)) {
-      return allProtocols.get(id);
     } else {
       throw new IllegalArgumentException("Could not find adapter with id " + id);
     }

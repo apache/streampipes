@@ -19,9 +19,9 @@
 package org.apache.streampipes.extensions.connectors.influx.shared;
 
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
-import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -64,7 +64,7 @@ public class InfluxConfigs {
         );
   }
 
-  public static InfluxConnectionSettings fromExtractor(AbstractParameterExtractor<?> extractor) {
+  public static InfluxConnectionSettings fromExtractor(IParameterExtractor<?> extractor) {
     String protocol = extractor.selectedSingleValueInternalName(DATABASE_PROTOCOL, String.class);
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);

@@ -44,7 +44,7 @@ class NatsPublisher(Publisher):
         None
 
         """
-        self.nats_client = await connect(f"nats://{hostname}:{port}")
+        self.nats_client = await connect([f"nats://{hostname}:{port}"])
         logger.info(f"Connecting to NATS at {hostname}:{port}")
 
     async def publish_event(self, event: Dict[str, Any]):

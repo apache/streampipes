@@ -18,43 +18,34 @@
 package org.apache.streampipes.connect.adapters.iex;
 
 
-import org.apache.streampipes.connect.adapters.PullAdapter;
-import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
-
-import com.google.gson.Gson;
-import org.apache.http.client.fluent.Request;
-
-import java.io.IOException;
-
-public abstract class IexCloudAdapter extends PullAdapter {
-
-  protected static final String IEX_CLOUD_BASE_URL = "https://cloud.iexapis.com/stable/stock/";
-  protected static final String TOKEN = "?token=";
-
-  protected static final String TOKEN_KEY = "token";
-  protected static final String STOCK_SYMBOL_KEY = "stock-symbol";
-
-  protected String apiToken;
-  protected String stockQuote;
-  private String iexCloudInstanceUrl;
-
-
-  public IexCloudAdapter(SpecificAdapterStreamDescription adapterDescription, String restPath) {
-    super(adapterDescription);
-    ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-    this.apiToken = extractor.secretValue(TOKEN_KEY);
-    this.stockQuote = extractor.singleValue(STOCK_SYMBOL_KEY);
-    this.iexCloudInstanceUrl = IEX_CLOUD_BASE_URL + stockQuote + restPath + TOKEN + apiToken;
-
-  }
-
-  public IexCloudAdapter() {
-    super();
-  }
-
-  protected <T> T fetchResult(Class<T> classToParse) throws IOException {
-    String response = Request.Get(iexCloudInstanceUrl).execute().returnContent().asString();
-    return new Gson().fromJson(response, classToParse);
-  }
-}
+//public abstract class IexCloudAdapter extends PullAdapter {
+//
+//  protected static final String IEX_CLOUD_BASE_URL = "https://cloud.iexapis.com/stable/stock/";
+//  protected static final String TOKEN = "?token=";
+//
+//  protected static final String TOKEN_KEY = "token";
+//  protected static final String STOCK_SYMBOL_KEY = "stock-symbol";
+//
+//  protected String apiToken;
+//  protected String stockQuote;
+//  private String iexCloudInstanceUrl;
+//
+//
+//  public IexCloudAdapter(SpecificAdapterStreamDescription adapterDescription, String restPath) {
+//    super(adapterDescription);
+//    ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+//    this.apiToken = extractor.secretValue(TOKEN_KEY);
+//    this.stockQuote = extractor.singleValue(STOCK_SYMBOL_KEY);
+//    this.iexCloudInstanceUrl = IEX_CLOUD_BASE_URL + stockQuote + restPath + TOKEN + apiToken;
+//
+//  }
+//
+//  public IexCloudAdapter() {
+//    super();
+//  }
+//
+//  protected <T> T fetchResult(Class<T> classToParse) throws IOException {
+//    String response = Request.Get(iexCloudInstanceUrl).execute().returnContent().asString();
+//    return new Gson().fromJson(response, classToParse);
+//  }
+//}

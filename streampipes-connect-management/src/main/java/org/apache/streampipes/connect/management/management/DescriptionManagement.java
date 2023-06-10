@@ -19,32 +19,16 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class DescriptionManagement {
-
-  public List<FormatDescription> getFormats() {
-    Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
-
-    List<FormatDescription> result = new ArrayList<>();
-    for (IFormat f : allFormats.values()) {
-      result.add(f.declareModel());
-    }
-
-    return result;
-  }
 
   public List<AdapterDescription> getAdapters() {
     IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();

@@ -66,10 +66,11 @@ Alternatively, you can provide your credentials via environment variables.
 Simply define your credential provider as follows:
 
 ```python
->>> from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
-StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="API-KEY")
+StreamPipesApiKeyCredentials()
 ```
+This requires to set the following environment variables: `SP_API_KEY` and `SP_USERNAME`
 <br>
 
 `username` is always the username that is used to log in into StreamPipes. <br>

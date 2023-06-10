@@ -1,0 +1,44 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.file.title=File Stream
+org.apache.streampipes.connect.iiot.adapters.simulator.machine.v2.file.description=Continuously streams the content from a file.
+
+filePath.title=File
+filePath.description=File Path
+
+replaceTimestamp.title=Use current time
+replaceTimestamp.description=Replace Event Time with Current Timestamp
+
+speed.title=Replay Speed
+speed.description=
+
+speedUp.title=Speed Up
+speedUp.description=original = 1; speedup 2x = 2; half speed  =  0.5
+
+replayOnce.title=Replay Once
+replayOnce.description='yes' file is only replayed once, 'no' the file is replayed till adapter is stopped
+
+keepOriginalTime.title=Keep original time
+keepOriginalTime.description=
+
+speedUpFactor.title=Speed Up Factor
+speedUpFactor.description=
+
+fastest.title=Fastest (Ignore original time)
+fastest.description=

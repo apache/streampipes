@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.sinks.brokers.jvm.rocketmq;
 
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import static org.apache.streampipes.sinks.brokers.jvm.rocketmq.RocketMQPublisherSink.ENDPOINT_KEY;
 import static org.apache.streampipes.sinks.brokers.jvm.rocketmq.RocketMQPublisherSink.TOPIC_KEY;
@@ -28,7 +27,7 @@ public class RocketMQParameters {
   private String topic;
 
   public RocketMQParameters(SinkParams parameters) {
-    DataSinkParameterExtractor extractor = parameters.extractor();
+    var extractor = parameters.extractor();
 
     this.endpoint = extractor.singleValueParameter(ENDPOINT_KEY, String.class);
     this.topic = extractor.singleValueParameter(TOPIC_KEY, String.class);

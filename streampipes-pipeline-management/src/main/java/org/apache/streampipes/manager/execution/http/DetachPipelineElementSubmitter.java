@@ -37,11 +37,6 @@ public class DetachPipelineElementSubmitter extends PipelineElementSubmitter {
   }
 
   @Override
-  protected boolean shouldSubmitDataSets() {
-    return true;
-  }
-
-  @Override
   protected void onSuccess() {
     status.setTitle("Pipeline " + pipelineName + " successfully stopped");
   }

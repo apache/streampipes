@@ -18,10 +18,8 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -45,7 +43,7 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -103,10 +101,8 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
   }
 
   @Override
-  public FlinkDataProcessorRuntime<AggregationParameters> getRuntime(DataProcessorInvocation graph,
-                                                                     ProcessingElementParameterExtractor extractor,
-                                                                     ConfigExtractor configExtractor,
-                                                                     StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorProgram<AggregationParameters> getProgram(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor) {
 
     List<String> groupBy = extractor.mappingPropertyValues("groupBy");
 
@@ -139,7 +135,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
         selectProperties,
         timeCountWindow.equals(TIME_WINDOW_OPTION));
 
-    return new AggregationProgram(staticParam, configExtractor, streamPipesClient);
+    return new AggregationProgram(staticParam);
   }
 
   @Override

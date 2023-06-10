@@ -19,11 +19,11 @@
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import java.util.List;
 
-public class AggregationParameters extends EventProcessorBindingParams {
+public class AggregationParameters extends ProcessorParams {
 
   // timeWindow (true) or countWindow (false)
   private boolean timeWindow;

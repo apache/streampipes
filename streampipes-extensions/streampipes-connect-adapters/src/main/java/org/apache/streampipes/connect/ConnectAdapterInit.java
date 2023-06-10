@@ -20,16 +20,10 @@ package org.apache.streampipes.connect;
 
 import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
-import org.apache.streampipes.connect.adapters.gdelt.GdeltAdapter;
-import org.apache.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
-import org.apache.streampipes.connect.adapters.iex.IexCloudStockAdapter;
-import org.apache.streampipes.connect.adapters.image.set.ImageSetAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
-import org.apache.streampipes.connect.adapters.simulator.random.RandomDataSetAdapter;
-import org.apache.streampipes.connect.adapters.simulator.random.RandomDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
 import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
@@ -49,19 +43,16 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
     return SpServiceDefinitionBuilder.create("connect-adapter",
             "StreamPipes Connect Worker Main",
             "", 8001)
-        .registerAdapter(new GdeltAdapter())
+//        .registerAdapter(new GdeltAdapter())
         .registerAdapter(new CoindeskBitcoinAdapter())
         .registerAdapter(new NetioRestAdapter())
         .registerAdapter(new NetioMQTTAdapter())
-        .registerAdapter(new IexCloudNewsAdapter())
-        .registerAdapter(new IexCloudStockAdapter())
-        .registerAdapter(new RandomDataSetAdapter())
-        .registerAdapter(new RandomDataStreamAdapter())
+//        .registerAdapter(new IexCloudNewsAdapter())
+//        .registerAdapter(new IexCloudStockAdapter())
         .registerAdapter(new SlackAdapter())
         .registerAdapter(new WikipediaEditedArticlesAdapter())
         .registerAdapter(new WikipediaNewArticlesAdapter())
         .registerAdapter(new ImageStreamAdapter())
-        .registerAdapter(new ImageSetAdapter())
         .registerAdapter(new IssAdapter())
         .registerAdapter(new FlicMQTTAdapter())
         .registerAdapter(new TISensorTag())

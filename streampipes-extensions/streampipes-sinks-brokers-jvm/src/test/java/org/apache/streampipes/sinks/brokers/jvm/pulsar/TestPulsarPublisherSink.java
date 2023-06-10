@@ -19,7 +19,7 @@ package org.apache.streampipes.sinks.brokers.jvm.pulsar;
 
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

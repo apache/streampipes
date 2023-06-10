@@ -20,15 +20,13 @@ package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
-import org.apache.streampipes.extensions.api.connect.Connector;
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
-import org.apache.streampipes.extensions.api.declarer.PipelineTemplateDeclarer;
-import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
-import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
@@ -38,20 +36,20 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
-import org.apache.streampipes.vocabulary.StreamPipes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DeclarersSingleton {
+public class DeclarersSingleton implements IDeclarersSingleton {
 
   private static final Logger LOG = LoggerFactory.getLogger(DeclarersSingleton.class);
   private static final String Http = "http://";
@@ -60,17 +58,17 @@ public class DeclarersSingleton {
   private static DeclarersSingleton instance;
   private SpServiceDefinition serviceDefinition;
 
-  private Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers;
-  private Map<String, SemanticEventConsumerDeclarer> consumerDeclarers;
-  private Map<String, PipelineTemplateDeclarer> pipelineTemplateDeclarers;
-  private Map<String, DataStreamDeclarer> streamDeclarers;
-  private Map<String, IStreamPipesFunctionDeclarer> functions;
+  private final Map<String, IStreamPipesDataProcessor> dataProcessors;
+  private final Map<String, IStreamPipesDataSink> dataSinks;
+  private final Map<String, IStreamPipesDataStream> dataStreams;
+  private final Map<String, IStreamPipesFunctionDeclarer> functions;
 
-  private Map<String, TransportProtocol> supportedProtocols;
-  private Map<String, TransportFormat> supportedFormats;
+  private final Map<String, TransportProtocol> supportedProtocols;
+  private final Map<String, TransportFormat> supportedFormats;
 
-  private Map<String, IProtocol> allProtocols;
-  private Map<String, IAdapter> allAdapters;
+  private final Map<String, StreamPipesAdapter> adapters;
+
+  private List<IStreamPipesRuntimeProvider> runtimeProviders;
 
   private String serviceId;
 
@@ -80,15 +78,14 @@ public class DeclarersSingleton {
 
 
   private DeclarersSingleton() {
-    this.epaDeclarers = new HashMap<>();
-    this.consumerDeclarers = new HashMap<>();
-    this.streamDeclarers = new HashMap<>();
-    this.pipelineTemplateDeclarers = new HashMap<>();
+    this.dataProcessors = new HashMap<>();
+    this.dataSinks = new HashMap<>();
+    this.dataStreams = new HashMap<>();
     this.supportedProtocols = new HashMap<>();
     this.supportedFormats = new HashMap<>();
-    this.allProtocols = new HashMap<>();
-    this.allAdapters = new HashMap<>();
+    this.adapters = new HashMap<>();
     this.functions = new HashMap<>();
+    this.runtimeProviders = new ArrayList<>();
     this.route = "/";
   }
 
@@ -109,10 +106,9 @@ public class DeclarersSingleton {
     this.serviceId = serviceDef.getServiceId();
     this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.registerDataFormats(serviceDef.getDataFormatFactories());
-    this.allAdapters = serviceDef.getSpecificAdapters();
-    this.allProtocols = serviceDef.getAdapterProtocols();
+    this.runtimeProviders = serviceDef.getRuntimeProviders();
+    serviceDef.getAdapters().forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
     serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
-
   }
 
   private void registerConfigs(String serviceGroup,
@@ -124,66 +120,39 @@ public class DeclarersSingleton {
     spConfig.register(ConfigItem.from("SP_SERVICE_NAME", serviceName, ""));
   }
 
-  public void addDeclarers(List<Declarer<?>> allDeclarers) {
-    allDeclarers.forEach(this::add);
+  public void addDeclarers(List<IStreamPipesPipelineElement<?>> allPipelineElements) {
+    allPipelineElements.forEach(this::add);
   }
 
   @Deprecated
   /**
    * @Deprecated Use ServiceDefinitionBuilder instead
    */
-  public DeclarersSingleton add(Declarer<?> d) {
-    if (d instanceof SemanticEventProcessingAgentDeclarer) {
-      addEpaDeclarer((SemanticEventProcessingAgentDeclarer) d);
-    } else if (d instanceof DataStreamDeclarer) {
-      addStreamDeclarer((DataStreamDeclarer) d);
-    } else if (d instanceof SemanticEventConsumerDeclarer) {
-      addConsumerDeclarer((SemanticEventConsumerDeclarer) d);
-    } else if (d instanceof PipelineTemplateDeclarer) {
-      addPipelineTemplateDeclarer((PipelineTemplateDeclarer) d);
+  public DeclarersSingleton add(IStreamPipesPipelineElement<?> d) {
+    if (d instanceof IStreamPipesDataProcessor) {
+      addDataProcessor((IStreamPipesDataProcessor) d);
+    } else if (d instanceof IStreamPipesDataStream) {
+      addDataStream((IStreamPipesDataStream) d);
+    } else if (d instanceof IStreamPipesDataSink) {
+      addDataSink((IStreamPipesDataSink) d);
     }
 
     return getInstance();
   }
 
-  public Map<String, Declarer<?>> getDeclarers() {
-    Map<String, Declarer<?>> result = new HashMap<>();
-    result.putAll(epaDeclarers);
-    result.putAll(streamDeclarers);
-    result.putAll(consumerDeclarers);
-    result.putAll(pipelineTemplateDeclarers);
+  public Map<String, IStreamPipesPipelineElement<?>> getDeclarers() {
+    Map<String, IStreamPipesPipelineElement<?>> result = new HashMap<>();
+    result.putAll(dataProcessors);
+    result.putAll(dataStreams);
+    result.putAll(dataSinks);
+    //result.putAll(pipelineTemplateDeclarers);
     return result;
-  }
-
-  public void supportedProtocols(TransportProtocol... protocols) {
-    Arrays.asList(protocols).forEach(protocol ->
-        this.supportedProtocols.put(protocol.getClass().getCanonicalName(), protocol));
-  }
-
-  public void supportedFormats(TransportFormat... formats) {
-    Arrays.asList(formats).forEach(format ->
-        this.supportedFormats.put(getFormatUri(format), format));
-  }
-
-  private String getFormatUri(TransportFormat format) {
-    return format
-        .getRdfType()
-        .stream()
-        .map(URI::toString)
-        .filter(t -> !t.equals("http://www.w3.org/2000/01/rdf-schema#"))
-        .filter(t -> !t.equals(StreamPipes.TRANSPORT_FORMAT))
-        .findFirst()
-        .get();
   }
 
   public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
     SpProtocolManager.INSTANCE.register(protocol);
     this.supportedProtocols.put(protocol.getTransportProtocolClass(),
         protocol.getTransportProtocol());
-  }
-
-  public void registerProtocols(SpProtocolDefinitionFactory<?>... protocols) {
-    registerProtocols(Arrays.asList(protocols));
   }
 
   public void registerProtocols(List<SpProtocolDefinitionFactory<?>> protocols) {
@@ -204,38 +173,29 @@ public class DeclarersSingleton {
     dataFormatDefinitions.forEach(this::registerDataFormat);
   }
 
-  private void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {
-    epaDeclarers.put(epaDeclarer.declareModel().getAppId(), epaDeclarer);
+  private void addDataProcessor(IStreamPipesDataProcessor dataProcessor) {
+    dataProcessors.put(dataProcessor.declareConfig().getDescription().getAppId(), dataProcessor);
   }
 
-  private void addStreamDeclarer(DataStreamDeclarer streamDeclarer) {
-    streamDeclarers.put(streamDeclarer.declareModel().getAppId(), streamDeclarer);
-    checkAndStartExecutableStreams(streamDeclarer);
+  private void addDataStream(IStreamPipesDataStream dataStream) {
+    dataStreams.put(dataStream.declareConfig().getDescription().getAppId(), dataStream);
+    checkAndStartExecutableStreams(dataStream);
   }
 
-  private void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
-    consumerDeclarers.put(consumerDeclarer.declareModel().getAppId(), consumerDeclarer);
+  private void addDataSink(IStreamPipesDataSink dataSink) {
+    dataSinks.put(dataSink.declareConfig().getDescription().getAppId(), dataSink);
   }
 
-  private void addPipelineTemplateDeclarer(PipelineTemplateDeclarer pipelineTemplateDeclarer) {
-    pipelineTemplateDeclarers.put(pipelineTemplateDeclarer.declareModel().getAppId(),
-        pipelineTemplateDeclarer);
+  public Map<String, IStreamPipesDataProcessor> getDataProcessors() {
+    return dataProcessors;
   }
 
-  public Map<String, SemanticEventProcessingAgentDeclarer> getEpaDeclarers() {
-    return epaDeclarers;
+  public Map<String, IStreamPipesDataStream> getDataStreams() {
+    return dataStreams;
   }
 
-  public Map<String, DataStreamDeclarer> getStreamDeclarers() {
-    return streamDeclarers;
-  }
-
-  public Map<String, SemanticEventConsumerDeclarer> getConsumerDeclarers() {
-    return consumerDeclarers;
-  }
-
-  public Map<String, PipelineTemplateDeclarer> getPipelineTemplateDeclarers() {
-    return pipelineTemplateDeclarers;
+  public Map<String, IStreamPipesDataSink> getDataSinks() {
+    return dataSinks;
   }
 
   public Collection<TransportProtocol> getSupportedProtocols() {
@@ -251,47 +211,6 @@ public class DeclarersSingleton {
         .stream()
         .map(TransportFormat::new)
         .collect(Collectors.toList());
-  }
-
-  public DeclarersSingleton add(Connector c) {
-
-    if (c instanceof IProtocol) {
-      this.allProtocols.put(c.getId(), (IProtocol) c);
-    } else if (c instanceof IAdapter) {
-      this.allAdapters.put(c.getId(), (IAdapter<?>) c);
-    }
-
-    return getInstance();
-  }
-
-  public Map<String, IProtocol> getAllProtocolsMap() {
-    return this.allProtocols;
-  }
-
-  public Map<String, IAdapter> getAllAdaptersMap() {
-    return this.allAdapters;
-  }
-
-  public Collection<IProtocol> getAllProtocols() {
-    return this.allProtocols.values();
-  }
-
-  public Collection<IAdapter> getAllAdapters() {
-    return this.allAdapters.values();
-  }
-
-  public IProtocol getProtocol(String id) {
-    return getAllProtocols().stream()
-        .filter(protocol -> protocol.getId().equals(id))
-        .findAny()
-        .orElse(null);
-  }
-
-  public IAdapter getAdapter(String id) {
-    return getAllAdapters().stream()
-        .filter(adapter -> adapter.getId().equals(id))
-        .findAny()
-        .orElse(null);
   }
 
   public int getPort() {
@@ -326,7 +245,27 @@ public class DeclarersSingleton {
     return functions;
   }
 
-  private void checkAndStartExecutableStreams(DataStreamDeclarer declarer) {
+  public Collection<StreamPipesAdapter> getAdapters() {
+    return adapters.values();
+  }
+
+  public Map<String, StreamPipesAdapter> getAdapterMap() {
+    return adapters;
+  }
+
+  public void setAdapters(List<StreamPipesAdapter> adapters) {
+    adapters.forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
+  }
+
+  public Optional<StreamPipesAdapter> getAdapter(String id) {
+    return getAdapters().stream()
+        .filter(adapter -> adapter.declareConfig()
+            .getAdapterDescription()
+            .getAppId().equals(id))
+        .findFirst();
+  }
+
+  private void checkAndStartExecutableStreams(IStreamPipesDataStream declarer) {
     if (declarer.isExecutable()) {
       declarer.executeStream();
     }
@@ -343,5 +282,9 @@ public class DeclarersSingleton {
 
   public SpServiceDefinition getServiceDefinition() {
     return this.serviceDefinition;
+  }
+
+  public List<IStreamPipesRuntimeProvider> getRuntimeProviders() {
+    return runtimeProviders;
   }
 }
