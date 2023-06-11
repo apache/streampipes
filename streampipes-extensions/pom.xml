@@ -38,30 +38,22 @@
         <module>streampipes-extensions-all-jvm</module>
 
         <module>streampipes-pipeline-elements-all-jvm</module>
-        <module>streampipes-pipeline-elements-all-flink</module>
+        <module>streampipes-pipeline-elements-experimental-flink</module>
         <module>streampipes-pipeline-elements-data-simulator</module>
         <module>streampipes-pipeline-elements-shared</module>
 
-        <module>streampipes-processors-aggregation-flink</module>
         <module>streampipes-processors-change-detection-jvm</module>
-        <module>streampipes-processors-enricher-flink</module>
         <module>streampipes-processors-enricher-jvm</module>
         <module>streampipes-processors-filters-jvm</module>
         <module>streampipes-processors-filters-siddhi</module>
-        <module>streampipes-processors-geo-flink</module>
         <module>streampipes-processors-geo-jvm</module>
         <module>streampipes-processors-image-processing-jvm</module>
-        <module>streampipes-processors-pattern-detection-flink</module>
-        <module>streampipes-processors-statistics-flink</module>
-        <module>streampipes-processors-transformation-flink</module>
-        <module>streampipes-processors-text-mining-flink</module>
         <module>streampipes-processors-text-mining-jvm</module>
         <module>streampipes-processors-transformation-jvm</module>
 
         <module>streampipes-sinks-brokers-jvm</module>
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
-        <module>streampipes-sinks-databases-flink</module>
         <module>streampipes-sinks-notifications-jvm</module>
 
         <module>streampipes-sources-watertank-simulator</module>
