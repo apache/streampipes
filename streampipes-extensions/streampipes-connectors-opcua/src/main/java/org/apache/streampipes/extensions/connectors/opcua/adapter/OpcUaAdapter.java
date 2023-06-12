@@ -264,10 +264,12 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
                         Labels.withId(OPC_SERVER_PORT.name()))
                 ))
         )
-        //TODO add dependsOn for authentication & server
         .requiredRuntimeResolvableTreeInput(
             Labels.withId(AVAILABLE_NODES.name()),
-            Collections.emptyList(),
+            List.of(
+                OpcUaLabels.ADAPTER_TYPE.name(),
+                OpcUaLabels.ACCESS_MODE.name(),
+                OPC_HOST_OR_URL.name()),
             true
         )
         .buildConfiguration();

@@ -58,14 +58,7 @@
                     alternative.staticProperty !== null
                 "
             >
-                <div
-                    style="
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                        padding-left: 10px;
-                        padding-right: 10px;
-                    "
-                >
+                <div style="padding: 0 10px">
                     <sp-app-static-property
                         [adapterId]="adapterId"
                         [eventSchemas]="eventSchemas"
@@ -80,7 +73,7 @@
                         "
                         [staticProperty]="alternative.staticProperty"
                         [displayRecommended]="displayRecommended"
-                        (validateEmitter)="valueChange($event)"
+                        (updateEmitter)="handleConfigurationUpdate($event)"
                         class="test fullWidth"
                     >
                     </sp-app-static-property>

@@ -112,13 +112,14 @@ public class OpcUaNodeBrowser {
           childNode.setNodeName(node.getDisplayName().getText());
           childNode.setInternalNodeName(node.getNodeId().toParseableString());
           childNode.setDataNode(isDataNode(node));
-          childNode.setNodeMetadata(buildMetadata(node));
+          childNode.setNodeMetadata(buildMetadata(client, node));
           return childNode;
         })
         .collect(Collectors.toList());
   }
 
-  private Map<String, String> buildMetadata(UaNode node) {
+  private Map<String, String> buildMetadata(OpcUaClient client,
+                                            UaNode node) {
     var metadata = new HashMap<String, String>();
     metadata.put("NamespaceIndex", node.getNodeId().getNamespaceIndex().toString());
     metadata.put("NodeClass", node.getNodeClass().toString());
@@ -126,9 +127,14 @@ public class OpcUaNodeBrowser {
     metadata.put("BrowseName", node.getBrowseName().getName());
 
     if (node instanceof UaVariableNode) {
-      metadata.put("DataType", ((UaVariableNode) node).getDataType().toString());
+      var dataTypeNodeId = ((UaVariableNode) node).getDataType();
+      try {
+        var dataTypeNode = client.getAddressSpace().getNode(dataTypeNodeId);
+        metadata.put("DataType", dataTypeNode.getDisplayName().getText());
+      } catch (UaException e) {
+        throw new RuntimeException(e);
+      }
     }
-
 
     return metadata;
   }
