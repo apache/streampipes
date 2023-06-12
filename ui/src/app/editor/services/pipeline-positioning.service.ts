@@ -31,7 +31,7 @@ import {
 } from '@streampipes/platform-services';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { ObjectProvider } from './object-provider.service';
-import { Connection } from '@jsplumb/core';
+import { Connection } from '@jsplumb/browser-ui';
 
 @Injectable({ providedIn: 'root' })
 export class PipelinePositioningService {

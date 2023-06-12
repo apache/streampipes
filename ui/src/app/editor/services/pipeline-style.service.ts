@@ -22,7 +22,7 @@ import {
     EdgeValidationStatus,
     PipelineEdgeValidation,
 } from '@streampipes/platform-services';
-import { Endpoint } from '@jsplumb/core';
+import { Endpoint } from '@jsplumb/browser-ui';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import {
     PipelineElementConfig,
