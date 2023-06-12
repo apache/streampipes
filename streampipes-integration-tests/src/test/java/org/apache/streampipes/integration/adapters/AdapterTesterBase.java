@@ -26,6 +26,7 @@ import org.testcontainers.shaded.com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -60,6 +61,9 @@ public abstract class AdapterTesterBase implements AutoCloseable {
 
     // start the adapter instance
     adapter = startAdapter(adapterConfiguration);
+
+    // wait a second to make sure the consumer is ready
+    TimeUnit.MILLISECONDS.sleep(1000);
 
     // get events for broker
     expectedEvents = getTestEvents();
@@ -139,7 +143,7 @@ public abstract class AdapterTesterBase implements AutoCloseable {
       retry++;
     }
 
-    assertEquals(counter, expectedEvents.size());
+    assertEquals(expectedEvents.size(), counter);
   }
 
   /**

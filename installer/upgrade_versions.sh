@@ -15,6 +15,22 @@
 # limitations under the License.
 
 NEW_VERSION=$1
+# get old version from ./cli/.env
+OLD_VERSION=$(grep -oP '^SP_VERSION=\K\S*' ./cli/.env)
+
+FILES=(
+  # cli
+  "./cli/.env"
+  "./cli/README.md"
+  # compose
+  "./compose/.env"
+  "./compose/README.md"
+  # k8s
+  "./k8s/values.yaml"
+  "./k8s/Chart.yaml"
+  "./k8s/Chart.yaml"
+  "./k8s/README.md"
+)
 
 if [ "$#" -gt 1 ]; then
     fatal "Illegal number of arguments"
@@ -26,31 +42,22 @@ set_version(){
   case "$(uname -s)" in
       Darwin)
         # for MacOS
-        sed -i '' 's/SP_VERSION=.*/SP_VERSION='$NEW_VERSION'/g' ./cli/.env
-        sed -i '' 's/SP_VERSION=.*/SP_VERSION='$NEW_VERSION'/g' ./compose/.env
-        sed -i '' 's/  version: .*/  version: "'$NEW_VERSION'"/g' ./k8s/values.yaml
-        sed -i '' 's/appVersion: .*/appVersion: "'$NEW_VERSION'"/g' ./k8s/Chart.yaml
-        sed -i '' 's/version: .*/version: '$NEW_VERSION'/g' ./k8s/Chart.yaml
-
-        for opt in "${options[@]}"
+        for file in "${FILES[@]}"; 
         do
-          sed -i '' 's/\*\*Current version:\*\* .*/\*\*Current version:\*\* '$NEW_VERSION'/g' ./$opt/README.md
+          sed -i '' "s/$OLD_VERSION/$NEW_VERSION/g" "$file"
         done
         ;;
       *)
         # for Linux and Windows
-        sed -i 's/SP_VERSION=.*/SP_VERSION='$NEW_VERSION'/g' ./cli/.env
-        sed -i 's/SP_VERSION=.*/SP_VERSION='$NEW_VERSION'/g' ./compose/.env
-        sed -i 's/  version: .*/  version: "'$NEW_VERSION'"/g' ./k8s/values.yaml
-        sed -i 's/appVersion: .*/appVersion: "'$NEW_VERSION'"/g' ./k8s/Chart.yaml
-        sed -i 's/version: .*/version: '$NEW_VERSION'/g' ./k8s/Chart.yaml
-
-        for opt in "${options[@]}"
+        for file in "${FILES[@]}"; 
         do
-          sed -i 's/\*\*Current version:\*\* .*/\*\*Current version:\*\* '$NEW_VERSION'/g' ./$opt/README.md
+          sed -i "s/$OLD_VERSION/$NEW_VERSION/g" "$file"
         done
         ;;
   esac
+
 }
 
 set_version
+
+echo "Version updated from $OLD_VERSION to $NEW_VERSION"
