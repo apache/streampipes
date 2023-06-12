@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-06-09 06:04:24.
+// Generated using typescript-generator version 3.1.1185 on 2023-06-12 22:17:35.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3645,7 +3644,7 @@ export class TreeInputNode {
     children: TreeInputNode[];
     dataNode: boolean;
     internalNodeName: string;
-    nodeMetadata: { [index: string]: string };
+    nodeMetadata: { [index: string]: any };
     nodeName: string;
     selected: boolean;
 
@@ -3662,7 +3661,7 @@ export class TreeInputNode {
         );
         instance.dataNode = data.dataNode;
         instance.internalNodeName = data.internalNodeName;
-        instance.nodeMetadata = __getCopyObjectFn(__identity<string>())(
+        instance.nodeMetadata = __getCopyObjectFn(__identity<any>())(
             data.nodeMetadata,
         );
         instance.nodeName = data.nodeName;

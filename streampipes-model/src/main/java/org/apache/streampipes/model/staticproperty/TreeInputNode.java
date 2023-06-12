@@ -32,7 +32,7 @@ public class TreeInputNode {
   private String nodeName;
   private String internalNodeName;
 
-  private Map<String, String> nodeMetadata;
+  private Map<String, Object> nodeMetadata;
 
   public TreeInputNode() {
     this.children = new ArrayList<>();
@@ -96,11 +96,11 @@ public class TreeInputNode {
     this.children.add(node);
   }
 
-  public Map<String, String> getNodeMetadata() {
+  public Map<String, Object> getNodeMetadata() {
     return nodeMetadata;
   }
 
-  public void setNodeMetadata(Map<String, String> nodeMetadata) {
+  public void setNodeMetadata(Map<String, Object> nodeMetadata) {
     this.nodeMetadata = nodeMetadata;
   }
 }

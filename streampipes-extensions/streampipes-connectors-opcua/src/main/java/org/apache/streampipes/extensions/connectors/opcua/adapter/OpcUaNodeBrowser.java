@@ -28,10 +28,12 @@ import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,16 +120,18 @@ public class OpcUaNodeBrowser {
         .collect(Collectors.toList());
   }
 
-  private Map<String, String> buildMetadata(OpcUaClient client,
+  private Map<String, Object> buildMetadata(OpcUaClient client,
                                             UaNode node) {
-    var metadata = new HashMap<String, String>();
+    var metadata = new HashMap<String, Object>();
     metadata.put("NamespaceIndex", node.getNodeId().getNamespaceIndex().toString());
     metadata.put("NodeClass", node.getNodeClass().toString());
     metadata.put("Description", node.getDescription().getText());
     metadata.put("BrowseName", node.getBrowseName().getName());
+    metadata.put("DisplayName", node.getDisplayName().getText());
 
     if (node instanceof UaVariableNode) {
       var dataTypeNodeId = ((UaVariableNode) node).getDataType();
+      metadata.put("Value", String.valueOf(((UaVariableNode) node).getValue().getValue().getValue()));
       try {
         var dataTypeNode = client.getAddressSpace().getNode(dataTypeNodeId);
         metadata.put("DataType", dataTypeNode.getDisplayName().getText());

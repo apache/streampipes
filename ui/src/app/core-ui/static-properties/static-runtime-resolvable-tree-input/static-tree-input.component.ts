@@ -134,6 +134,7 @@ export class StaticRuntimeResolvableTreeInputComponent
     resetOptionsAndReload(): void {
         this.staticProperty.nextBaseNodeToResolve = undefined;
         this.staticProperty.selectedNodesInternalNames = [];
+        this.staticProperty.latestFetchedNodes = [];
         this.dataSource.data = [];
         this.loadOptionsFromRestApi();
     }
