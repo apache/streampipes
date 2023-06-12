@@ -60,9 +60,9 @@ public class TestChangedValueDetectionProcessor {
 
     // Create event with no DIMENSION_PROPERTY
     event.getSchemaInfo()
-    .getEventSchema()
-    .getEventProperties().get(0)
-    .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
+      .getEventSchema()
+      .getEventProperties().get(0)
+        .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
 
     assertEquals("l1", processor.getDimensionKey(event));
   }
