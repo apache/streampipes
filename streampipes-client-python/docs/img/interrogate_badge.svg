@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="140" height="20" role="img" aria-label="interrogate: 100%">
-    <title>interrogate: 100%</title>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="140" height="20" role="img" aria-label="interrogate: 99.7%">
+    <title>interrogate: 99.7%</title>
     <linearGradient id="s" x2="0" y2="100%">
         <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
         <stop offset="1" stop-opacity=".1"/>
@@ -15,8 +15,8 @@
     <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
         <text aria-hidden="true" x="590" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="610">interrogate</text>
         <text x="590" y="140" transform="scale(.1)" fill="#fff" textLength="610">interrogate</text>
-        <text aria-hidden="true" x="1160" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="330">100%</text>
-        <text x="1160" y="140" transform="scale(.1)" fill="#fff" textLength="330" data-interrogate="result">100%</text>
+        <text aria-hidden="true" x="1160" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="370">99.7%</text>
+        <text x="1160" y="140" transform="scale(.1)" fill="#fff" textLength="370" data-interrogate="result">99.7%</text>
     </g>
     <g id="logo-shadow" transform="matrix(0.854876,0,0,0.854876,-6.73514,1.732)">
         <g transform="matrix(0.299012,0,0,0.299012,9.70229,-6.68582)">

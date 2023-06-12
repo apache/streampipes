@@ -23,10 +23,12 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcNode;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaNodeBrowser;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.SpOpcUaClient;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfigBuilder;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
@@ -73,8 +75,8 @@ public class OpcUaUtil {
   }
 
   /***
-   * OPC UA specific implementation of {@link Adapter}
-   * @param adapterStreamDescription
+   * OPC UA specific implementation of
+   * @param extractor
    * @return guess schema
    * @throws AdapterException
    * @throws ParseException
@@ -158,9 +160,8 @@ public class OpcUaUtil {
 
 
   /***
-   * OPC UA specific implementation of {@link
-   * ResolvesContainerProvidedOptions
-   * resolveOptions(String, StaticPropertyExtractor)}.
+   * OPC UA specific implementation of
+   * {@link ResolvesContainerProvidedOptions resolveOptions(String, StaticPropertyExtractor)}.
    * @param internalName The internal name of the Static Property
    * @param parameterExtractor to extract parameters from the OPC UA config
    * @return {@code List<Option>} with available node names for the given OPC UA configuration
@@ -240,27 +241,5 @@ public class OpcUaUtil {
     }
   }
 
-  /***
-   * Enum for all possible labels in the context of OPC UA adapters
-   */
-  public enum OpcUaLabels {
-    OPC_HOST_OR_URL,
-    OPC_URL,
-    OPC_HOST,
-    OPC_SERVER_URL,
-    OPC_SERVER_HOST,
-    OPC_SERVER_PORT,
-    NAMESPACE_INDEX,
-    NODE_ID,
-    ACCESS_MODE,
-    USERNAME_GROUP,
-    USERNAME,
-    PASSWORD,
-    UNAUTHENTICATED,
-    AVAILABLE_NODES,
-    PULLING_INTERVAL,
-    ADAPTER_TYPE,
-    PULL_MODE,
-    SUBSCRIPTION_MODE;
-  }
+
 }
