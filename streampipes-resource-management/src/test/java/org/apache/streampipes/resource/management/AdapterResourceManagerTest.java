@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class AdapterResourceManagerTest {
 
     IAdapterStorage storage = mock(IAdapterStorage.class);
     AdapterResourceManager adapterResourceManager = new AdapterResourceManager(storage);
-    adapterResourceManager.encryptAndUpdate(new SpecificAdapterStreamDescription());
+    adapterResourceManager.encryptAndUpdate(new AdapterDescription());
 
     verify(storage, times(1)).updateAdapter(any());
   }

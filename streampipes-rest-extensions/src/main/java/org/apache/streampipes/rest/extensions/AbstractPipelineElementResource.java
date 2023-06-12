@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.extensions;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
@@ -50,7 +50,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractPipelineElementResource<T extends Declarer<?>> extends AbstractExtensionsResource {
+public abstract class AbstractPipelineElementResource<
+    T extends IStreamPipesPipelineElement<?>>
+    extends AbstractExtensionsResource {
 
   private static final String SLASH = "/";
 
@@ -68,7 +70,7 @@ public abstract class AbstractPipelineElementResource<T extends Declarer<?>> ext
   @Path("{appId}/assets")
   @Produces(SpMediaType.APPLICATION_ZIP)
   public Response getAssets(@PathParam("appId") String appId) {
-    List<String> includedAssets = getDeclarerById(appId).declareModel().getIncludedAssets();
+    List<String> includedAssets = getDeclarerById(appId).declareConfig().getDescription().getIncludedAssets();
     try {
       return ok(new AssetZipGenerator(appId, includedAssets).makeZip());
     } catch (IOException e) {
@@ -116,8 +118,8 @@ public abstract class AbstractPipelineElementResource<T extends Declarer<?>> ext
   }
 
   protected NamedStreamPipesEntity getById(String appId) {
-    Declarer<?> declarer = getElementDeclarers().get(appId);
-    return declarer.declareModel();
+    IStreamPipesPipelineElement<?> declarer = getElementDeclarers().get(appId);
+    return declarer.declareConfig().getDescription();
   }
 
   protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc) {

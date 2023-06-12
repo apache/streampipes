@@ -18,7 +18,6 @@
 package org.apache.streampipes.service.extensions.connect;
 
 import org.apache.streampipes.extensions.management.connect.ConnectWorkerDescriptionProvider;
-import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +26,12 @@ public class ConnectWorkerRegistrationService {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerRegistrationService.class);
 
-  public void registerWorker(SpServiceDefinition serviceDef) {
-    boolean connected = false;
+  public void registerWorker() {
+    var connected = false;
 
     while (!connected) {
-
       connected = ConnectRestClient.register(
-          new ConnectWorkerDescriptionProvider().getContainerDescription(serviceDef.getServiceGroup()));
+          new ConnectWorkerDescriptionProvider().getAdapterDescriptions());
 
       if (connected) {
         LOG.info("Successfully connected to master. Worker is now running.");

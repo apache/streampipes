@@ -22,6 +22,7 @@ import org.apache.streampipes.model.util.Cloner;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 public class EventPropertyList extends EventProperty {
 
@@ -62,5 +63,25 @@ public class EventPropertyList extends EventProperty {
 
   public void setEventProperty(EventProperty eventProperty) {
     this.eventProperty = eventProperty;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    EventPropertyList that = (EventPropertyList) o;
+    return Objects.equals(eventProperty, that.eventProperty);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(eventProperty);
   }
 }

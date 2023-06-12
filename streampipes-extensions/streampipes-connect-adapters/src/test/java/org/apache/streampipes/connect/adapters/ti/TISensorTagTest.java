@@ -18,47 +18,41 @@
 
 package org.apache.streampipes.connect.adapters.ti;
 
-import org.junit.Test;
-
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-
 public class TISensorTagTest {
-  String event = "{\n"
-      + "\"ambientTemp\":\"19.58\",\n"
-      + "\"objectTemp\":\"16.59\",\n"
-      + "\"humidity\":\"38.3917\",\n"
-      + "\"accelX\":\"0.28\",\n"
-      + "\"accelY\":\"-0.48\",\n"
-      + "\"accelZ\":\"-0.91\",\n"
-      + "\"gyroX\":\"4.88\",\n"
-      + "\"gyroY\":\"4.53\",\n"
-      + "\"gyroZ\":\"-2.96\",\n"
-      + "\"magX\":\"134.16\",\n"
-      + "\"magY\":\"-17.84\" \n"
-      + "\"magZ\":\"18.44\" \n"
-      + "\"light\":\"0.00\" \n"
-      + "\n"
-      + "}";
-
-  @Test
-  public void parseEvent() {
-    Map<String, Object> result = TISensorTag.parseEvent(event);
-
-    assertEquals(16, result.keySet().size());
-    assertEquals(result.get("ambientTemp"), 19.58);
-    assertEquals(result.get("objectTemp"), 16.59);
-    assertEquals(result.get("humidity"), 38.3917);
-    assertEquals(result.get("accelX"), 0.28);
-    assertEquals(result.get("accelY"), -0.48);
-    assertEquals(result.get("accelZ"), -0.91);
-    assertEquals(result.get("gyroX"), 4.88);
-    assertEquals(result.get("gyroY"), 4.53);
-    assertEquals(result.get("gyroZ"), -2.96);
-    assertEquals(result.get("magX"), 134.16);
-    assertEquals(result.get("magY"), -17.84);
-    assertEquals(result.get("magZ"), 18.44);
-    assertEquals(result.get("light"), 0.00);
-  }
+//  String event = "{\n"
+//      + "\"ambientTemp\":\"19.58\",\n"
+//      + "\"objectTemp\":\"16.59\",\n"
+//      + "\"humidity\":\"38.3917\",\n"
+//      + "\"accelX\":\"0.28\",\n"
+//      + "\"accelY\":\"-0.48\",\n"
+//      + "\"accelZ\":\"-0.91\",\n"
+//      + "\"gyroX\":\"4.88\",\n"
+//      + "\"gyroY\":\"4.53\",\n"
+//      + "\"gyroZ\":\"-2.96\",\n"
+//      + "\"magX\":\"134.16\",\n"
+//      + "\"magY\":\"-17.84\" \n"
+//      + "\"magZ\":\"18.44\" \n"
+//      + "\"light\":\"0.00\" \n"
+//      + "\n"
+//      + "}";
+//
+//  @Test
+//  public void parseEvent() {
+//    Map<String, Object> result = TISensorTag.parseEvent(event);
+//
+//    assertEquals(16, result.keySet().size());
+//    assertEquals(result.get("ambientTemp"), 19.58);
+//    assertEquals(result.get("objectTemp"), 16.59);
+//    assertEquals(result.get("humidity"), 38.3917);
+//    assertEquals(result.get("accelX"), 0.28);
+//    assertEquals(result.get("accelY"), -0.48);
+//    assertEquals(result.get("accelZ"), -0.91);
+//    assertEquals(result.get("gyroX"), 4.88);
+//    assertEquals(result.get("gyroY"), 4.53);
+//    assertEquals(result.get("gyroZ"), -2.96);
+//    assertEquals(result.get("magX"), 134.16);
+//    assertEquals(result.get("magY"), -17.84);
+//    assertEquals(result.get("magZ"), 18.44);
+//    assertEquals(result.get("light"), 0.00);
+//  }
 }

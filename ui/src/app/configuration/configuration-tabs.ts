@@ -32,14 +32,19 @@ export class SpConfigurationTabs {
                 itemLink: ['configuration', 'datalake'],
             },
             {
-                itemId: 'email',
-                itemTitle: 'Mail',
-                itemLink: ['configuration', 'email'],
-            },
-            {
                 itemId: 'export',
                 itemTitle: 'Export/Import',
                 itemLink: ['configuration', 'export'],
+            },
+            {
+                itemId: 'labels',
+                itemTitle: 'Labels',
+                itemLink: ['configuration', 'labels'],
+            },
+            {
+                itemId: 'email',
+                itemTitle: 'Mail',
+                itemLink: ['configuration', 'email'],
             },
             {
                 itemId: 'messaging',

@@ -69,4 +69,11 @@ public class EventSchema {
     EventSchema that = (EventSchema) o;
     return ListUtils.isEqualList(this.eventProperties, that.eventProperties);
   }
+
+  @Override
+  public String toString() {
+    return "EventSchema{"
+           + "eventProperties=" + eventProperties
+           + '}';
+  }
 }

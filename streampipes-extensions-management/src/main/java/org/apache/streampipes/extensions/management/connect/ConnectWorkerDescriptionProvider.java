@@ -17,22 +17,15 @@
  */
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -41,78 +34,47 @@ public class ConnectWorkerDescriptionProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerDescriptionProvider.class);
 
-  public List<AdapterDescription> getContainerDescription(String serviceGroup) {
-
-    List<AdapterDescription> allAdapterDescriptions = new ArrayList<>();
-    allAdapterDescriptions.addAll(getSpecificAdapterDescriptions(serviceGroup));
-    allAdapterDescriptions.addAll(getGenericAdapterDescriptions(serviceGroup));
-
-    return allAdapterDescriptions;
+  /**
+   *  Retrieves a list of all adapter descriptions that are currently registered.
+   *  @return a list of {@link AdapterDescription} objects representing the registered adapters
+   */
+  public List<AdapterDescription> getAdapterDescriptions() {
+    return getRegisteredAdapters()
+        .stream()
+        .map(adapter -> applyLocales(adapter.declareConfig().getAdapterDescription()))
+        .toList();
   }
 
-  public Optional<AdapterDescription> getAdapterDescription(String appId) {
-    List<AdapterDescription> allAdapterDescriptions = getContainerDescription("");
-    return allAdapterDescriptions
+  public Optional<AdapterDescription> getAdapterDescription(String id) {
+    return getRegisteredAdapters()
         .stream()
-        .filter(ad -> ad.getAppId().equals(appId))
+        .map(ac -> ac.declareConfig().getAdapterDescription())
+        .filter(ad -> ad.getAppId().equals(id))
         .findFirst();
   }
 
-  private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity) {
-    // TODO remove after full internationalization support has been implemented
+  /**
+   * This is a helper method to mock the Declarer Singleton in unit tests
+   * @return the registered adapters from the DeclarerSingleton
+   */
+  public Collection<StreamPipesAdapter> getRegisteredAdapters() {
+    return DeclarersSingleton.getInstance().getAdapters();
+  }
+
+
+  private AdapterDescription applyLocales(AdapterDescription entity) {
     if (entity.isIncludesLocales()) {
       LabelGenerator lg = new LabelGenerator(entity);
       try {
-        entity = lg.generateLabels();
+        entity = (AdapterDescription) lg.generateLabels();
       } catch (IOException e) {
         LOG.error("Could not load labels for: " + entity.getAppId());
       }
+    } else {
+      LOG.error(
+          "The adapter configuration of %s is missing the locales configurations. Add it to the declareConfig method"
+              .formatted(entity.getAppId()));
     }
     return entity;
-  }
-
-  private List<AdapterDescription> getSpecificAdapterDescriptions(String serviceGroup) {
-    List<AdapterDescription> result = new ArrayList<>();
-    for (IAdapter<?> a : DeclarersSingleton.getInstance().getAllAdapters()) {
-      AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel());
-      desc.setCorrespondingServiceGroup(serviceGroup);
-      result.add(desc);
-    }
-
-    return result;
-  }
-
-  private List<AdapterDescription> getGenericAdapterDescriptions(String serviceGroup) {
-    List<AdapterDescription> result = new ArrayList<>();
-
-    Collection<IProtocol> allProtocols = DeclarersSingleton.getInstance().getAllProtocols();
-
-    for (IProtocol p : allProtocols) {
-      ProtocolDescription protocolDescription = (ProtocolDescription) rewrite(p.declareModel());
-
-      if (protocolDescription.getSourceType().equals(AdapterSourceType.STREAM.toString())) {
-        GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
-        desc.setName(protocolDescription.getName());
-        desc.setDescription(protocolDescription.getDescription());
-        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
-        desc.setElementId(protocolDescription.getElementId());
-        desc.setAppId(protocolDescription.getAppId());
-        desc.setProtocolDescription(protocolDescription);
-        desc.setCorrespondingServiceGroup(serviceGroup);
-        result.add(desc);
-      } else if (protocolDescription.getSourceType().equals(AdapterSourceType.SET.toString())) {
-        GenericAdapterSetDescription desc = new GenericAdapterSetDescription();
-        desc.setName(protocolDescription.getName());
-        desc.setDescription(protocolDescription.getDescription());
-        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
-        desc.setElementId(protocolDescription.getElementId());
-        desc.setAppId(protocolDescription.getAppId());
-        desc.setProtocolDescription(protocolDescription);
-        desc.setCorrespondingServiceGroup(serviceGroup);
-        result.add(desc);
-      }
-    }
-
-    return result;
   }
 }

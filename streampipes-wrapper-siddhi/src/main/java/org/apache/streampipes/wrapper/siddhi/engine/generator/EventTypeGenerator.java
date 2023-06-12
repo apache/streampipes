@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine.generator;
 
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 
@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class EventTypeGenerator<T extends EventProcessorBindingParams> {
+public class EventTypeGenerator {
 
-  private final T params;
+  private final IDataProcessorParameters params;
 
-  public EventTypeGenerator(T params) {
+  public EventTypeGenerator(IDataProcessorParameters params) {
     this.params = params;
   }
 

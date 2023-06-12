@@ -17,12 +17,13 @@
  */
 
 import { Injectable, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { LoginModel } from '../components/login/login.model';
 import { map } from 'rxjs/operators';
 import { RegistrationModel } from '../components/register/registration.model';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable()
 export class LoginService {
@@ -48,7 +49,7 @@ export class LoginService {
         return this.http.get(
             this.platformServicesCommons.apiBasePath + '/auth/token/renew',
             {
-                headers: { ignoreLoadingBar: '' },
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
             },
         );
     }

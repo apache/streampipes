@@ -20,6 +20,7 @@ package org.apache.streampipes.sinks.brokers.jvm.kafka;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslPlainConfig;
@@ -36,11 +37,8 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
-
-import com.google.common.annotations.VisibleForTesting;
 
 import java.util.List;
 import java.util.Map;
@@ -54,16 +52,6 @@ public class KafkaPublishSink extends StreamPipesDataSink {
   private KafkaParameters params;
 
   public KafkaPublishSink() {
-  }
-
-  @VisibleForTesting
-  public KafkaPublishSink(SpKafkaProducer producer) {
-    this.producer = producer;
-  }
-
-  @VisibleForTesting
-  public SpKafkaProducer getProducer() {
-    return producer;
   }
 
   @Override

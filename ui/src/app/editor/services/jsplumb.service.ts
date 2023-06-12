@@ -30,9 +30,7 @@ import {
     DataProcessorInvocation,
     DataSinkInvocation,
     Pipeline,
-    SpDataSet,
     SpDataStream,
-    SpDataStreamUnion,
 } from '@streampipes/platform-services';
 import { JsplumbEndpointService } from './jsplumb-endpoint.service';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
@@ -105,37 +103,15 @@ export class JsplumbService {
             );
         pipelineModel.push(pipelineElementConfig);
 
-        if (pipelineElementConfig.payload instanceof SpDataSet) {
-            this.editorService
-                .updateDataSet(pipelineElement)
-                .subscribe(data => {
-                    (
-                        pipelineElementConfig.payload as SpDataSet
-                    ).eventGrounding = data.eventGrounding;
-                    (
-                        pipelineElementConfig.payload as SpDataSet
-                    ).datasetInvocationId = data.invocationId;
-
-                    setTimeout(() => {
-                        this.elementDropped(
-                            pipelineElementConfig.payload.dom,
-                            pipelineElementConfig.payload,
-                            true,
-                            false,
-                        );
-                    }, 1);
-                });
-        } else {
-            setTimeout(() => {
-                this.elementDropped(
-                    pipelineElementConfig.payload.dom,
-                    pipelineElementConfig.payload,
-                    true,
-                    false,
-                );
-                this.getBridge(false).repaintEverything();
-            }, 10);
-        }
+        setTimeout(() => {
+            this.elementDropped(
+                pipelineElementConfig.payload.dom,
+                pipelineElementConfig.payload,
+                true,
+                false,
+            );
+            this.getBridge(false).repaintEverything();
+        }, 10);
     }
 
     createElement(
@@ -282,7 +258,6 @@ export class JsplumbService {
             preview: isPreview,
             completed:
                 pipelineElement instanceof SpDataStream ||
-                pipelineElement instanceof SpDataSet ||
                 isPreview ||
                 isCompleted
                     ? PipelineElementConfigurationStatus.OK
@@ -305,9 +280,7 @@ export class JsplumbService {
     }
 
     clone(pipelineElement: PipelineElementUnion, newElementId?: string) {
-        if (pipelineElement instanceof SpDataSet) {
-            return SpDataSet.fromData(pipelineElement, new SpDataSet());
-        } else if (pipelineElement instanceof SpDataStream) {
+        if (pipelineElement instanceof SpDataStream) {
             const cloned = SpDataStream.fromData(
                 pipelineElement,
                 new SpDataStream(),
@@ -369,13 +342,6 @@ export class JsplumbService {
                 endpoints,
                 preview,
             );
-        } else if (pipelineElement instanceof SpDataSet) {
-            return this.dataSetDropped(
-                pipelineElementDomId,
-                pipelineElement as SpDataSet,
-                endpoints,
-                preview,
-            );
         } else if (pipelineElement instanceof DataProcessorInvocation) {
             return this.dataProcessorDropped(
                 pipelineElementDomId,
@@ -393,27 +359,9 @@ export class JsplumbService {
         }
     }
 
-    dataSetDropped(
-        pipelineElementDomId: string,
-        pipelineElement: SpDataSet,
-        endpoints: boolean,
-        preview: boolean,
-    ) {
-        const jsplumbBridge = this.getBridge(preview);
-        if (endpoints) {
-            const endpointOptions =
-                this.jsplumbEndpointService.getStreamEndpoint(
-                    preview,
-                    pipelineElementDomId,
-                );
-            jsplumbBridge.addEndpoint(pipelineElementDomId, endpointOptions);
-        }
-        return pipelineElementDomId;
-    }
-
     dataStreamDropped(
         pipelineElementDomId: string,
-        pipelineElement: SpDataStreamUnion,
+        pipelineElement: SpDataStream,
         endpoints: boolean,
         preview: boolean,
     ) {

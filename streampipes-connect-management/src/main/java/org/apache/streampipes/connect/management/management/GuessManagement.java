@@ -20,8 +20,8 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterEventPreviewPipeline;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -30,8 +30,6 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -54,26 +52,25 @@ public class GuessManagement {
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
-    String workerUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
-
+    var workerUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
     workerUrl = workerUrl + WorkerPaths.getGuessSchemaPath();
 
-    ObjectMapper mapper = JacksonSerializer.getObjectMapper();
-    String ad = mapper.writeValueAsString(adapterDescription);
+    var objectMapper = JacksonSerializer.getObjectMapper();
+    var description = objectMapper.writeValueAsString(adapterDescription);
     logger.info("Guess schema at: " + workerUrl);
     Response requestResponse = Request.Post(workerUrl)
-        .bodyString(ad, ContentType.APPLICATION_JSON)
+        .bodyString(description, ContentType.APPLICATION_JSON)
         .connectTimeout(1000)
         .socketTimeout(100000)
         .execute();
 
-    HttpResponse httpResponse = requestResponse.returnResponse();
-    String responseString = EntityUtils.toString(httpResponse.getEntity());
+    var httpResponse = requestResponse.returnResponse();
+    var responseString = EntityUtils.toString(httpResponse.getEntity());
 
     if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-      return mapper.readValue(responseString, GuessSchema.class);
+      return objectMapper.readValue(responseString, GuessSchema.class);
     } else {
-      var exception = mapper.readValue(responseString, SpConfigurationException.class);
+      var exception = objectMapper.readValue(responseString, SpConfigurationException.class);
       throw new WorkerAdapterException(exception.getMessage(), exception.getCause());
     }
   }

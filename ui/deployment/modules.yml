@@ -36,7 +36,7 @@ spEditor:
     link: 'editor'
     url: '/editor/:pipeline'
     title: 'Pipeline Editor'
-    description: 'The pipeline editor lets you create flexible data pipelines based on installed data streams, data sets, data processors and data sinks.'
+    description: 'The pipeline editor lets you create flexible data pipelines based on installed data streams, data processors, and data sinks.'
     icon: 'dashboard'
     homeImage: '/assets/img/home/editor.png'
     admin: false

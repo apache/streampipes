@@ -18,8 +18,8 @@
 package org.apache.streampipes.extensions.api.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 import java.util.List;
 
@@ -30,5 +30,5 @@ import java.util.List;
 public interface ResolvesContainerProvidedOptions {
 
   List<Option> resolveOptions(String staticPropertyInternalName,
-                              StaticPropertyExtractor parameterExtractor) throws SpConfigurationException;
+                              IStaticPropertyExtractor parameterExtractor) throws SpConfigurationException;
 }

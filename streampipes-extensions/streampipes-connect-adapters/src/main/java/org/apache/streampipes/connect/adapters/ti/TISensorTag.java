@@ -18,30 +18,26 @@
 
 package org.apache.streampipes.connect.adapters.ti;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
-import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.SPSensor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +45,7 @@ import static org.apache.streampipes.sdk.helpers.EpProperties.booleanEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.doubleEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
-public class TISensorTag extends SpecificDataStreamAdapter {
-
-  private Logger logger = LoggerFactory.getLogger(TISensorTag.class);
+public class TISensorTag implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.ti";
 
@@ -71,63 +65,42 @@ public class TISensorTag extends SpecificDataStreamAdapter {
   private static final String LIGHT = "light";
   private static final String KEY_1 = "key1";
   private static final String KEY_2 = "key2";
-
   private MqttConsumer mqttConsumer;
-  private MqttConfig mqttConfig;
-  private Thread thread;
-
-  public TISensorTag() {
-    super();
-  }
-
-  public TISensorTag(SpecificAdapterStreamDescription adapterDescription, MqttConfig mqttConfig) {
-    super(adapterDescription);
-    this.mqttConfig = mqttConfig;
-  }
 
   @Override
-  public SpecificAdapterStreamDescription declareModel() {
-
-    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, TISensorTag::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(AdapterType.Environment, AdapterType.OpenData)
+        .withCategory(AdapterType.Environment, AdapterType.OpenData)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
             MqttConnectUtils.getAlternativesTwo())
         .requiredTextParameter(MqttConnectUtils.getTopicLabel())
-        .build();
-
-    description.setAppId(ID);
-    return description;
+        .buildConfiguration();
   }
 
   @Override
-  public void startAdapter() throws AdapterException {
-    this.mqttConsumer = new MqttConsumer(this.mqttConfig, new EventProcessor(adapterPipeline));
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
+    MqttConfig mqttConfig = MqttConnectUtils.getMqttConfig(extractor.getStaticPropertyExtractor());
 
-    thread = new Thread(this.mqttConsumer);
+    this.mqttConsumer = new MqttConsumer(mqttConfig, new EventProcessor(collector));
+
+    Thread thread = new Thread(this.mqttConsumer);
     thread.start();
   }
 
   @Override
-  public void stopAdapter() throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) {
     this.mqttConsumer.close();
   }
 
   @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    MqttConfig mqttConfig;
-    StaticPropertyExtractor extractor =
-        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-
-    mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
-
-    return new TISensorTag(adapterDescription, mqttConfig);
-  }
-
-  @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(TIMESTAMP))
         .property(doubleEp(Labels.from(AMBIENT_TEMP, "Ambient Temperature", ""),
@@ -163,30 +136,19 @@ public class TISensorTag extends SpecificDataStreamAdapter {
         .build();
   }
 
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  private class EventProcessor implements InternalEventProcessor<byte[]> {
-    private AdapterPipeline adapterPipeline;
-
-    public EventProcessor(AdapterPipeline adapterpipeline) {
-      this.adapterPipeline = adapterpipeline;
-    }
-
+  private record EventProcessor(IEventCollector collector) implements InternalEventProcessor<byte[]> {
     @Override
     public void onEvent(byte[] payload) {
       Map<String, Object> result = parseEvent(new String(payload));
-      adapterPipeline.process(result);
+      collector.collect(result);
     }
   }
 
   /**
    * This specific parser is required since the messages on mqtt produced by the app is not always valid JSON
    *
-   * @param s
-   * @return
+   * @param s raw event from the sensor
+   * @return Map representing an event
    */
   public static Map<String, Object> parseEvent(String s) {
     Map<String, Object> result = new HashMap<>();

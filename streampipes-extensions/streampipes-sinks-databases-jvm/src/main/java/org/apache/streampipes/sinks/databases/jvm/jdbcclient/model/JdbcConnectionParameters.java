@@ -19,9 +19,10 @@
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class JdbcConnectionParameters extends EventSinkBindingParams {
+public class JdbcConnectionParameters {
+
+  private DataSinkInvocation graph;
 
   private String dbHost;
   private Integer dbPort;
@@ -43,7 +44,7 @@ public class JdbcConnectionParameters extends EventSinkBindingParams {
                                   boolean sslEnabled,
                                   String sslFactory,
                                   boolean quotedColumnNames) {
-    super(graph);
+    this.graph = graph;
     this.dbHost = dbHost;
     this.dbPort = dbPort;
     this.dbName = dbName;
@@ -90,5 +91,9 @@ public class JdbcConnectionParameters extends EventSinkBindingParams {
 
   public boolean isColumnNameQuoted() {
     return columnNameQuoted;
+  }
+
+  public DataSinkInvocation getGraph() {
+    return graph;
   }
 }

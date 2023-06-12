@@ -18,13 +18,15 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
+import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,63 +35,66 @@ import java.util.Collection;
 
 public class AdapterWorkerManagement {
 
-  private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+
+  private final RunningAdapterInstances runningAdapterInstances;
+  private final IDeclarersSingleton declarers;
+
+  private final IAdapterRuntimeContext adapterRuntimeContext;
+
+  public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances,
+                                 IDeclarersSingleton declarers,
+                                 IAdapterRuntimeContext runtimeContext) {
+    this.runningAdapterInstances = runningAdapterInstances;
+    this.declarers = declarers;
+    this.adapterRuntimeContext = runtimeContext;
+  }
 
   public Collection<AdapterDescription> getAllRunningAdapterInstances() {
-    return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
+    return runningAdapterInstances.getAllRunningAdapterDescriptions();
   }
 
-  public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+  public void invokeAdapter(AdapterDescription adapterDescription) throws AdapterException {
+    var adapter = declarers
+        .getAdapter(adapterDescription.getAppId());
 
-    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
+    if (adapter.isPresent()) {
+      var newAdapterInstance = adapter.get().declareConfig().getSupplier().get();
+      runningAdapterInstances.addAdapter(
+          adapterDescription.getElementId(),
+          newAdapterInstance,
+          adapterDescription);
 
-    RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter,
-        adapterStreamDescription);
-    adapter.startAdapter();
+      var registeredParsers = newAdapterInstance.declareConfig().getSupportedParsers();
+      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
+      var eventCollector = EventCollector.from(adapterDescription);
+
+      newAdapterInstance.onAdapterStarted(extractor, eventCollector, adapterRuntimeContext);
+    } else {
+      var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
+      LOG.error(errorMessage);
+      throw new AdapterException(errorMessage);
+    }
   }
 
-  public void stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
-    stopAdapter(adapterStreamDescription);
-  }
-
-  public void invokeSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
-
-    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
-
-    RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getElementId(), adapter, adapterSetDescription);
-
-    adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
-
-    // Start a thread to start a set adapter
-    Runnable r = () -> {
-      try {
-        adapter.startAdapter();
-      } catch (AdapterException e) {
-        e.printStackTrace();
-      }
-    };
-
-    new Thread(r).start();
-  }
-
-  public void stopSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
-    stopAdapter(adapterSetDescription);
-  }
-
-  private void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
+  public void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
 
     String elementId = adapterDescription.getElementId();
 
-    IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+    StreamPipesAdapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
     if (adapter != null) {
-      adapter.stopAdapter();
+
+      var registeredParsers = adapter.declareConfig().getSupportedParsers();
+      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
+      adapter.onAdapterStopped(extractor, adapterRuntimeContext);
     }
+
     resetMonitoring(elementId);
   }
 
   private void resetMonitoring(String elementId) {
     SpMonitoringManager.INSTANCE.reset(elementId);
   }
-
 }

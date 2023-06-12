@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
@@ -30,7 +30,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 })
 export class DeleteAdapterDialogComponent {
     @Input()
-    adapter: AdapterDescriptionUnion;
+    adapter: AdapterDescription;
 
     isInProgress = false;
     currentStatus: any;

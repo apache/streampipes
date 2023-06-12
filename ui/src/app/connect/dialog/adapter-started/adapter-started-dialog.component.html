@@ -68,7 +68,7 @@
                     fxLayout="column"
                     class="w-100"
                 >
-                    <div *ngIf="!isSetAdapter">
+                    <div>
                         <div
                             class="success-message"
                             fxFlex="100"
@@ -82,23 +82,7 @@
                             >
                         </div>
                     </div>
-                    <div *ngIf="isSetAdapter">
-                        <div
-                            class="success-message"
-                            fxFlex="100"
-                            fxLayoutAlign="center center"
-                            fxLayout="row"
-                            data-cy="sp-connect-adapter-set-success"
-                        >
-                            <i class="material-icons">done</i>
-                            <span
-                                >&nbsp;Your new data set is now available in the
-                                pipeline editor.</span
-                            >
-                        </div>
-                    </div>
-
-                    <div *ngIf="!isSetAdapter && startAdapterNow" fxFlex="100">
+                    <div *ngIf="startAdapterNow" fxFlex="100">
                         <sp-pipeline-element-runtime-info
                             [streamDescription]="streamDescription"
                             [pollingActive]="pollingActive"

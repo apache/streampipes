@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.commons;
 
-import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -33,7 +33,7 @@ public class DataExplorerUtils {
    * @param client  StreamPipes client to store measure
    * @param measure DataLakeMeasurement
    */
-  public static DataLakeMeasure sanitizeAndRegisterAtDataLake(StreamPipesClient client,
+  public static DataLakeMeasure sanitizeAndRegisterAtDataLake(IStreamPipesClient client,
                                                               DataLakeMeasure measure) throws SpRuntimeException {
     sanitizeDataLakeMeasure(measure);
     registerAtDataLake(client, measure);
@@ -41,19 +41,19 @@ public class DataExplorerUtils {
     return measure;
   }
 
-  public static DataLakeMeasure sanitizeAndUpdateAtDataLake(StreamPipesClient client,
+  public static DataLakeMeasure sanitizeAndUpdateAtDataLake(IStreamPipesClient client,
                                                             DataLakeMeasure measure) throws SpRuntimeException {
     sanitizeDataLakeMeasure(measure);
     updateAtDataLake(client, measure);
     return measure;
   }
 
-  private static void registerAtDataLake(StreamPipesClient client,
+  private static void registerAtDataLake(IStreamPipesClient client,
                                          DataLakeMeasure measure) throws SpRuntimeException {
     client.dataLakeMeasureApi().create(measure);
   }
 
-  public static void updateAtDataLake(StreamPipesClient client,
+  public static void updateAtDataLake(IStreamPipesClient client,
                                       DataLakeMeasure measure) throws SpRuntimeException {
     client.dataLakeMeasureApi().update(measure);
   }

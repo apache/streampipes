@@ -49,6 +49,7 @@ public class Labels {
   public static Label from(String internalId, String label, String description) {
     return new Label(internalId, label, description);
   }
+
   /**
    * @deprecated Externalize labels by using
    * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
@@ -69,11 +70,24 @@ public class Labels {
    * Creates a new label only with an internal id.
    * Static properties require a fully-specified label, see {@link #from(String, String, String)}
    *
+   * @deprecated Use {@link #withId(Enum)} instead
+   *
    * @param internalId The internal identifier of the element, e.g., "latitude-field-mapping"
    * @return
    */
+  @Deprecated(since = "0.93.0")
   public static Label withId(String internalId) {
     return new Label(internalId, "", "");
+  }
+
+  /**
+   * Creates a label with the string value of an enum.
+   * Static properties require a fully-specified label, see {@link #from(String, String, String)}
+   * @param internalId The internal identifier of the element, e.g., "LATITUDE-FIELD-MAPPING"
+   * @return
+   */
+  public static Label withId(Enum<?> internalId) {
+    return new Label(internalId.name(), "", "");
   }
 
   @Deprecated

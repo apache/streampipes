@@ -21,7 +21,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    SpDataSet,
     SpDataStream,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
@@ -38,7 +37,6 @@ import {
 export class PipelineElementStatisticsComponent implements OnInit {
     @Input()
     allElements: (
-        | SpDataSet
         | SpDataStream
         | DataProcessorInvocation
         | DataSinkInvocation
@@ -46,7 +44,6 @@ export class PipelineElementStatisticsComponent implements OnInit {
 
     @Input()
     pipelineElement:
-        | SpDataSet
         | SpDataStream
         | DataProcessorInvocation
         | DataSinkInvocation;
@@ -54,7 +51,6 @@ export class PipelineElementStatisticsComponent implements OnInit {
     _metricsInfo: SpMetricsEntry;
 
     currentPipelineElement:
-        | SpDataSet
         | SpDataStream
         | DataProcessorInvocation
         | DataSinkInvocation;

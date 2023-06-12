@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     EventRateTransformationRuleDescription,
     EventSchema,
     RemoveDuplicatesTransformationRuleDescription,
@@ -44,7 +44,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     /**
      * Adapter description the selected format is added to
      */
-    @Input() adapterDescription: AdapterDescriptionUnion;
+    @Input() adapterDescription: AdapterDescription;
 
     @Input() eventSchema: EventSchema;
 

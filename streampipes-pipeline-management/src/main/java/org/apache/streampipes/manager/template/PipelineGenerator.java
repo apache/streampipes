@@ -17,14 +17,11 @@
  */
 package org.apache.streampipes.manager.template;
 
-import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.message.DataSetModificationMessage;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModification;
@@ -70,14 +67,7 @@ public class PipelineGenerator {
 
   private SpDataStream prepareStream(String streamId) {
     SpDataStream stream = getStream(streamId);
-    if (stream instanceof SpDataSet) {
-      stream = new SpDataSet((SpDataSet) stream);
-      DataSetModificationMessage message = new DataSetGroundingSelector((SpDataSet) stream).selectGrounding();
-      stream.setEventGrounding(message.getEventGrounding());
-      ((SpDataSet) stream).setDatasetInvocationId(message.getInvocationId());
-    } else {
-      stream = new SpDataStream(stream);
-    }
+    stream = new SpDataStream(stream);
     stream.setDom(getDom());
     return stream;
   }

@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.client.live;
 
-public class KafkaConfig {
+import org.apache.streampipes.client.api.live.IKafkaConfig;
+
+public class KafkaConfig implements IKafkaConfig {
 
   private String kafkaHost;
   private Integer kafkaPort;
@@ -31,10 +33,12 @@ public class KafkaConfig {
     return new KafkaConfig(kafkaHost, kafkaPort);
   }
 
+  @Override
   public String getKafkaHost() {
     return kafkaHost;
   }
 
+  @Override
   public Integer getKafkaPort() {
     return kafkaPort;
   }

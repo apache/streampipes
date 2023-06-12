@@ -20,7 +20,6 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
@@ -144,7 +143,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
         .map(s -> getPipelineElementStorage().getDataStreamById(s))
-        .map(stream -> makeItem(stream, stream instanceof SpDataSet ? "set" : "stream"))
+        .map(stream -> makeItem(stream, "stream"))
         .collect(Collectors.toList());
   }
 

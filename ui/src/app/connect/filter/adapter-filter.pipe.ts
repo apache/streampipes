@@ -17,7 +17,7 @@
  */
 
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
-import { AdapterDescriptionUnion } from '@streampipes/platform-services';
+import { AdapterDescription } from '@streampipes/platform-services';
 import { AdapterFilterSettingsModel } from '../model/adapter-filter-settings.model';
 import { ConnectService } from '../services/connect.service';
 
@@ -27,9 +27,9 @@ export class AdapterFilterPipe implements PipeTransform {
     constructor(private connectService: ConnectService) {}
 
     transform(
-        adapterDescriptions: AdapterDescriptionUnion[],
+        adapterDescriptions: AdapterDescription[],
         activeFilters: AdapterFilterSettingsModel,
-    ): AdapterDescriptionUnion[] {
+    ): AdapterDescription[] {
         if (!activeFilters) {
             return adapterDescriptions;
         } else {
@@ -40,14 +40,10 @@ export class AdapterFilterPipe implements PipeTransform {
     }
 
     private meetsFilterCondition(
-        adapterDescription: AdapterDescriptionUnion,
+        adapterDescription: AdapterDescription,
         activeFilters: AdapterFilterSettingsModel,
     ): boolean {
         return (
-            this.meetsFilterTypeCondition(
-                adapterDescription,
-                activeFilters.selectedType,
-            ) &&
             this.meetsFilterCategoryCondition(
                 adapterDescription,
                 activeFilters.selectedCategory,
@@ -59,23 +55,8 @@ export class AdapterFilterPipe implements PipeTransform {
         );
     }
 
-    private meetsFilterTypeCondition(
-        adapterDescription: AdapterDescriptionUnion,
-        selectedType: string,
-    ): boolean {
-        if (selectedType === 'All types') {
-            return true;
-        } else if (selectedType === 'Data Set') {
-            return this.connectService.isDataSetDescription(adapterDescription);
-        } else if (selectedType === 'Data Stream') {
-            return !this.connectService.isDataSetDescription(
-                adapterDescription,
-            );
-        }
-    }
-
     private meetsFilterCategoryCondition(
-        adapterDescription: AdapterDescriptionUnion,
+        adapterDescription: AdapterDescription,
         selectedCategory: string,
     ): boolean {
         if (selectedCategory === 'All') {
@@ -86,7 +67,7 @@ export class AdapterFilterPipe implements PipeTransform {
     }
 
     private meetsFilterTextCondition(
-        adapterDescription: AdapterDescriptionUnion,
+        adapterDescription: AdapterDescription,
         filterTerm: string,
     ): boolean {
         if (filterTerm === undefined || filterTerm === '') {

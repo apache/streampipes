@@ -18,8 +18,7 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.tubemq;
 
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import static org.apache.streampipes.sinks.brokers.jvm.tubemq.TubeMQPublisherSink.MASTER_HOST_AND_PORT_KEY;
 import static org.apache.streampipes.sinks.brokers.jvm.tubemq.TubeMQPublisherSink.TOPIC_KEY;
@@ -30,7 +29,7 @@ public class TubeMQParameters {
   private final String topic;
 
   public TubeMQParameters(SinkParams parameters) {
-    DataSinkParameterExtractor extractor = parameters.extractor();
+    var extractor = parameters.extractor();
 
     this.masterHostAndPort = extractor.singleValueParameter(MASTER_HOST_AND_PORT_KEY, String.class);
     this.topic = extractor.singleValueParameter(TOPIC_KEY, String.class);

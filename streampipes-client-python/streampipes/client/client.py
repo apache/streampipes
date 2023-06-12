@@ -29,8 +29,12 @@ from typing import Dict, Optional
 
 from requests import Session
 from streampipes.client.config import StreamPipesClientConfig
-from streampipes.endpoint.api import DataLakeMeasureEndpoint, DataStreamEndpoint
-from streampipes.endpoint.endpoint import APIEndpoint
+from streampipes.endpoint import APIEndpoint
+from streampipes.endpoint.api import (
+    DataLakeMeasureEndpoint,
+    DataStreamEndpoint,
+    VersionEndpoint,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +130,36 @@ class StreamPipesClient:
         # name of the endpoint needs to be consistent with the Java client
         self.dataLakeMeasureApi = DataLakeMeasureEndpoint(parent_client=self)
         self.dataStreamApi = DataStreamEndpoint(parent_client=self)
+        self.versionApi = VersionEndpoint(parent_client=self)
+
+        self.server_version = self._get_server_version()
+
+    def _get_server_version(self) -> str:
+        """Connects to the StreamPipes server and retrieves its version.
+
+        In addition to querying the server version, this method implicitly checks the specified credentials.
+
+        Returns
+        -------
+        sp_version: str
+            version of the connected StreamPipes instance
+
+        """
+
+        # retrieve metadata from the API via the Streampipes server
+        # as a side effect, the specified credentials are also tested to ensure that authentication is successful.
+        version_dict = self.versionApi.get(identifier="").to_dict(use_source_names=False)
+
+        # remove SNAPSHOT-suffix if present
+        sp_version = version_dict["backend_version"].replace("-SNAPSHOT", "")
+
+        logger.info(
+            "The StreamPipes version was successfully retrieved from the backend: %s. "
+            "By means of that, authentication via the provided credentials is also tested successfully.",
+            sp_version,
+        )
+
+        return sp_version
 
     @staticmethod
     def _set_up_logging(logging_level: int) -> None:
@@ -228,14 +262,25 @@ class StreamPipesClient:
         """
 
         # get all endpoints of this client
-        available_endpoints = [
+        available_endpoints = {
             attr_name for attr_name in dir(self) if isinstance(self.__getattribute__(attr_name), APIEndpoint)
-        ]
+        }
+
+        # remove endpoints that are not suitable for the describe method
+        # this is mainly due to not providing the `all()` method
+        available_endpoints = available_endpoints.symmetric_difference(
+            {
+                "versionApi",
+            }
+        )
+
+        # ensure deterministic order
+        ordered_available_endpoints = sorted(available_endpoints)
 
         # collect the number of available resources per endpoint
         endpoint_stats = {
             (all_items := self.__getattribute__(endpoint_name).all()).__class__.__name__: len(all_items)
-            for endpoint_name in available_endpoints
+            for endpoint_name in ordered_available_endpoints
         }
 
         # sort the endpoints descending based on the number of resources
@@ -247,10 +292,10 @@ class StreamPipesClient:
             f"\nHi there!\n"
             f"You are connected to a StreamPipes instance running at "
             f"{'http://' if self.client_config.https_disabled else 'https://'}"
-            f"{self.client_config.host_address}:{self.client_config.port}.\n"
+            f"{self.client_config.host_address}:{self.client_config.port} with version {self.server_version}.\n"
             f"The following StreamPipes resources are available with this client:\n"
         )
 
         endpoint_stats_message = "\n".join(f"{count}x {name}" for name, count in sorted_endpoint_stats.items())
 
-        print(base_message + endpoint_stats_message)
+        logger.info(base_message + endpoint_stats_message)

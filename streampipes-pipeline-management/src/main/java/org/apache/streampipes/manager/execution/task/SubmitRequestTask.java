@@ -42,9 +42,8 @@ public class SubmitRequestTask implements PipelineExecutionTask {
   @Override
   public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
     var processorsAndSinks = elementProvider.getProcessorsAndSinks(executionInfo);
-    var dataSets = elementProvider.getDataSets(executionInfo);
 
-    var status = submitter.submit(processorsAndSinks, dataSets);
+    var status = submitter.submit(processorsAndSinks);
 
     executionInfo.applyPipelineOperationStatus(status);
   }

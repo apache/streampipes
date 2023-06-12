@@ -20,10 +20,10 @@ package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.routing.PipelineElementCollector;
 import org.apache.streampipes.messaging.SpProtocolDefinition;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.wrapper.routing.PipelineElementCollector;
 import org.apache.streampipes.wrapper.standalone.manager.PManager;
 
 import java.util.Map;

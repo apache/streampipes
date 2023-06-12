@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.sdt;
 
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 public class SwingingDoorTrendingFilter {
 

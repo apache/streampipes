@@ -19,7 +19,7 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     PipelineElementTemplate,
     PipelineElementTemplateService,
 } from '@streampipes/platform-services';
@@ -32,9 +32,9 @@ export abstract class AdapterTemplateConfigurationDirective {
     /**
      * Adapter description the selected format is added to
      */
-    @Input() adapterDescription: AdapterDescriptionUnion;
+    @Input() adapterDescription: AdapterDescription;
 
-    cachedAdapterDescription: AdapterDescriptionUnion;
+    cachedAdapterDescription: AdapterDescription;
 
     /**
      * Cancels the adapter configuration process
@@ -48,8 +48,8 @@ export abstract class AdapterTemplateConfigurationDirective {
     @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
     @Output()
-    updateAdapterDescriptionEmitter: EventEmitter<AdapterDescriptionUnion> =
-        new EventEmitter<AdapterDescriptionUnion>();
+    updateAdapterDescriptionEmitter: EventEmitter<AdapterDescription> =
+        new EventEmitter<AdapterDescription>();
 
     availableTemplates: PipelineElementTemplate[];
     selectedTemplate: any = false;

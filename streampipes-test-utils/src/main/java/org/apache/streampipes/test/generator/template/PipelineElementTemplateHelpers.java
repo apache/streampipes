@@ -33,7 +33,7 @@ public class PipelineElementTemplateHelpers {
     return new PipelineElementTemplate("name", "description", configs);
   }
 
-  private static PipelineElementTemplateConfig makeConfig(boolean editable, boolean displayed, Object value) {
+  public static PipelineElementTemplateConfig makeConfig(boolean editable, boolean displayed, Object value) {
     return new PipelineElementTemplateConfig(editable, displayed, value);
   }
 }

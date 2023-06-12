@@ -19,6 +19,7 @@ package org.apache.streampipes.processors.siddhi.trend;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.output.CustomOutputStrategy;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
@@ -27,6 +28,7 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
+import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 
 import org.junit.Test;
@@ -41,13 +43,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class TestTrendProcessor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TestTrendProcessor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TrendProcessor.class);
 
   @org.junit.runners.Parameterized.Parameters
   public static Iterable<Object[]> data() {
@@ -100,7 +103,7 @@ public class TestTrendProcessor {
   @Test
   public void testTrend() {
     final Integer[] actualMatchCount = {0};
-    DataProcessorDescription originalGraph = new TrendController().declareModel();
+    DataProcessorDescription originalGraph = new TrendProcessor().declareModel();
     originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
     DataProcessorInvocation graph =
@@ -110,12 +113,26 @@ public class TestTrendProcessor {
         .singletonList(EventStreamGenerator
             .makeStreamWithProperties(Collections.singletonList("randomValue"))));
 
+    graph.setOutputStrategies(
+        graph.getOutputStrategies()
+            .stream()
+            .filter(o -> o instanceof CustomOutputStrategy)
+            .peek(o -> ((CustomOutputStrategy) o).setSelectedPropertyKeys(Arrays.asList("s0::randomValue")))
+            .collect(Collectors.toList())
+    );
+
     graph.setOutputStream(EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("randomValue")));
 
     graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
         .setActualTopicName("output-topic");
-    TrendParameters params = new TrendParameters(graph, trendOperator, increase, timeWindow, "s0"
-        + "::randomValue", Arrays.asList("s0::randomValue"));
+
+    var visitor = new TrendConfigurationVisitor("s0::randomValue",
+        trendOperator,
+        increase,
+        timeWindow);
+    graph.getStaticProperties().forEach(sp -> sp.accept(visitor));
+
+    var processorParams = new DataProcessorParameterGenerator().makeParameters(graph);
 
     SiddhiDebugCallback callback = new SiddhiDebugCallback() {
       @Override
@@ -129,8 +146,8 @@ public class TestTrendProcessor {
       }
     };
 
-    Trend trend = new Trend(callback);
-    trend.onInvocation(params, null, null);
+    TrendProcessor trend = new TrendProcessor(callback);
+    trend.onPipelineStarted(processorParams, null, null);
 
     sendEvents(trend);
     LOG.info("Expected match count is {}", expectedMatchCount);
@@ -138,7 +155,7 @@ public class TestTrendProcessor {
     assertEquals(expectedMatchCount, actualMatchCount[0]);
   }
 
-  private void sendEvents(Trend trend) {
+  private void sendEvents(TrendProcessor trend) {
     List<Tuple2<Integer, Event>> events = makeEvents();
     for (Tuple2<Integer, Event> event : events) {
       LOG.info("Sending event with value " + event.v.getFieldBySelector("s0::randomValue"));

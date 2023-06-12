@@ -95,25 +95,6 @@ public abstract class EventProperty {
     return PREFIX;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    EventProperty that = (EventProperty) o;
-
-    return required == that.required
-        && index == that.index
-        && Objects.equals(label, that.label)
-        && Objects.equals(description, that.description)
-        && Objects.equals(runtimeName, that.runtimeName)
-        && Objects.equals(propertyScope, that.propertyScope)
-        && Objects.equals(runtimeId, that.runtimeId)
-        && ListUtils.isEqualList(this.domainProperties, that.domainProperties);
-  }
 
   public String getRuntimeName() {
     return runtimeName;
@@ -185,5 +166,46 @@ public abstract class EventProperty {
 
   public void setElementId(String elementId) {
     this.elementId = elementId;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(elementId, label, description, runtimeName, required, domainProperties, propertyScope, index,
+        runtimeId);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    EventProperty that = (EventProperty) o;
+
+    return required == that.required
+           && index == that.index
+           && Objects.equals(label, that.label)
+           && Objects.equals(description, that.description)
+           && Objects.equals(runtimeName, that.runtimeName)
+           && Objects.equals(propertyScope, that.propertyScope)
+           && Objects.equals(runtimeId, that.runtimeId)
+           && ListUtils.isEqualList(this.domainProperties, that.domainProperties);
+  }
+
+  @Override
+  public String toString() {
+    return "EventProperty{"
+           + "elementId='" + elementId + '\''
+           + ", label='" + label + '\''
+           + ", description='" + description + '\''
+           + ", runtimeName='" + runtimeName + '\''
+           + ", required=" + required
+           + ", domainProperties=" + domainProperties
+           + ", propertyScope='" + propertyScope + '\''
+           + ", index=" + index
+           + ", runtimeId='" + runtimeId + '\''
+           + '}';
   }
 }

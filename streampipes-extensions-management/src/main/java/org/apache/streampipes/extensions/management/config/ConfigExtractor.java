@@ -17,12 +17,11 @@
  */
 package org.apache.streampipes.extensions.management.config;
 
+import org.apache.streampipes.extensions.api.config.IConfigExtractor;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
-import java.io.Serializable;
-
-public class ConfigExtractor implements Serializable {
+public class ConfigExtractor implements IConfigExtractor {
 
   private SpConfig config;
 
@@ -30,10 +29,11 @@ public class ConfigExtractor implements Serializable {
     this.config = SpServiceDiscovery.getSpConfig(serviceGroup);
   }
 
-  public static ConfigExtractor from(String serviceGroup) {
-    return new ConfigExtractor(serviceGroup);
+  public static ConfigExtractor from(String serviceId) {
+    return new ConfigExtractor(serviceId);
   }
 
+  @Override
   public SpConfig getConfig() {
     return this.config;
   }

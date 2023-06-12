@@ -32,6 +32,8 @@ __all__ = [
     "StreamPipesApiKeyCredentials",
 ]
 
+from typing_extensions import deprecated
+
 
 class CredentialProvider(ABC):
     """Abstract implementation of a credential provider.
@@ -81,12 +83,20 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
 
     The required token can be generated via the StreamPipes UI (see the description on our [start-page](../../../).
 
+    Both parameters can either be passed as arguments or remain unset.
+    If they are not passed, they are retrieved from environment variables:
+
+    * `SP_USERNAME` is expected to contain the username
+    * `SP_API_KEY` is expected to contain the API key
+
     Parameters
     ----------
-    username: str
-        The username to which the API token is granted, e.g., `demo-user@streampipes.apche.org`.
-    api_key: str
-        The StreamPipes API key as it is displayed in the UI.
+    username: Optional[str]
+        The username to which the API token is granted, e.g., `demo-user@streampipes.apche.org`.<br>
+        If not passed, the username is retrieved from environment variable `SP_USERNAME`.
+    api_key: Optional[str]
+        The StreamPipes API key as it is displayed in the UI.<br>
+        If not passed, the api key is retrieved from environment variable `SP_API_KEY`
 
     Examples
     --------
@@ -94,9 +104,15 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
 
     """
 
+    _ENV_KEY_API = "SP_API_KEY"
+    _ENV_KEY_USERNAME = "SP_USERNAME"
+
     @classmethod
+    @deprecated("deprecated since 0.93.0; please use the class constructor instead.")
     def from_env(cls, username_env: str, api_key_env: str) -> StreamPipesApiKeyCredentials:
-        """Returns an api key provider parameterized via environment variables.
+        """DEPRECATED - use the class constructor instead
+
+        Returns an api key provider parameterized via environment variables.
 
         Parameters
         ----------
@@ -123,7 +139,7 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
             raise KeyError(
                 f"Ups, the following environment variables have not been found: "
                 f"{'`' + username_env + '`,' if username is None else ''}"
-                f"{'`' + api_key_env +'`' if api_key is None else ''}. "  # noqa: W291
+                f"{'`' + api_key_env + '`' if api_key is None else ''}. "  # noqa: W291
                 "Please check them to be properly set."
             )
 
@@ -131,11 +147,52 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
 
     def __init__(
         self,
-        username: str,
-        api_key: str,
+        username: Optional[str] = None,
+        api_key: Optional[str] = None,
     ):
-        self.username = username
-        self.api_key = api_key
+        # if both parameters are passed we can add them directly to the instance
+        if all({username, api_key}):
+            self.username = username
+            self.api_key = api_key
+
+        # otherwise we need to check if environment variables are properly set
+        else:
+            retrieved_api_key = os.environ.get(self._ENV_KEY_API, None)
+            retrieved_user_name = os.environ.get(self._ENV_KEY_USERNAME, None)
+
+            self.username = retrieved_user_name
+            self.api_key = retrieved_api_key
+
+            if username:
+                self.username = username
+
+                if retrieved_api_key is None:
+                    raise AttributeError(
+                        "API key not found in the environment variables - please provide the API key "
+                        "via the parameter `api_key` or ensure that it is passed to "
+                        f"the environment variable `{self._ENV_KEY_API}`."
+                    )
+                self.api_key = retrieved_api_key
+
+            if api_key:
+                self.api_key = api_key
+
+                if retrieved_user_name is None:
+                    raise AttributeError(
+                        "Username not found - please provide the username "
+                        "via the parameter `username` or ensure that it is passed to "
+                        f"the environment variable `{self._ENV_KEY_USERNAME}`."
+                    )
+                self.username = retrieved_user_name
+
+            if not all({self.username, self.api_key}):
+                if None in {retrieved_user_name, retrieved_api_key}:
+                    raise AttributeError(
+                        "Both parameters not found - please provide both api key and username "
+                        "either via the parameters (`api_key` and `username`) or via "
+                        f"the corresponding environment variables (`{self._ENV_KEY_API}` and "
+                        f"`{self._ENV_KEY_USERNAME}`)."
+                    )
 
     @property
     def _authentication_headers(self) -> Dict[str, str]:
@@ -146,7 +203,11 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
         Dictionary with authentication headers as string key-value pairs.
 
         """
+
+        user: str = self.username  # type: ignore  # mypy mistakenly detects this attribute as optional
+        token: str = self.api_key  # type: ignore  # mypy mistakenly detects this attribute as optional
+
         return {
-            "X-API-User": self.username,
-            "X-API-Key": self.api_key,
+            "X-API-User": user,
+            "X-API-Key": token,
         }

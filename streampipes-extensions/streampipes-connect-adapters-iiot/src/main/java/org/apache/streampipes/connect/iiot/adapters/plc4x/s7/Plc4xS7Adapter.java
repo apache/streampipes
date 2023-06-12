@@ -19,12 +19,18 @@
 package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
 
 
-import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -34,7 +40,7 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -60,7 +66,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandler {
+public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcReadResponseHandler {
 
   /**
    * A unique id to identify the Plc4xS7Adapter
@@ -86,98 +92,13 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
   private int pollingInterval;
   private List<Map<String, String>> nodes;
 
-  /**
-   * Connection to the PLC
-   */
-//    private PlcConnection plcConnection;
   private PlcDriverManager driverManager;
 
-  /**
-   * Empty constructor and a constructor with SpecificAdapterStreamDescription are mandatory
-   */
+  private PullAdapterScheduler pullAdapterScheduler;
+
+  private IEventCollector collector;
+
   public Plc4xS7Adapter() {
-  }
-
-  public Plc4xS7Adapter(SpecificAdapterStreamDescription adapterDescription) {
-    super(adapterDescription);
-  }
-
-  /**
-   * Describe the adapter adapter and define what user inputs are required.
-   * Currently, users can just select one node, this will be extended in the future
-   *
-   * @return
-   */
-  @Override
-  public SpecificAdapterStreamDescription declareModel() {
-
-    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
-        .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(AdapterType.Manufacturing)
-        .requiredTextParameter(Labels.withId(PLC_IP))
-        .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
-        .requiredCollection(Labels.withId(PLC_NODES),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
-            StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                Options.from("Bool", "Byte", "Int", "Word", "Real", "Char", "String", "Date", "Time of day",
-                    "Date and Time")))
-        .build();
-    description.setAppId(ID);
-
-    return description;
-  }
-
-  /**
-   * Takes the user input and creates the event schema. The event schema describes the properties of the event stream.
-   *
-   * @param adapterDescription
-   * @return
-   */
-  @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
-
-    // Extract user input
-    try {
-      getConfigurations(adapterDescription);
-
-      if (this.pollingInterval < 10) {
-        throw new AdapterException("Polling interval must be higher than 10. Current value: " + this.pollingInterval);
-      }
-
-      GuessSchema guessSchema = new GuessSchema();
-
-      EventSchema eventSchema = new EventSchema();
-      List<EventProperty> allProperties = new ArrayList<>();
-
-      for (Map<String, String> node : this.nodes) {
-        Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
-
-        allProperties.add(
-            PrimitivePropertyBuilder
-                .create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
-                .label(node.get(PLC_NODE_RUNTIME_NAME))
-                .description("")
-                .build());
-      }
-
-      this.before();
-      var event = readPlcDataSynchronized();
-      var preview = event
-          .entrySet()
-          .stream()
-          .collect(Collectors.toMap(Map.Entry::getKey, e ->
-              new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
-
-      eventSchema.setEventProperties(allProperties);
-      guessSchema.setEventSchema(eventSchema);
-      guessSchema.setEventPreview(List.of(preview));
-
-      return guessSchema;
-    } catch (Exception e) {
-      throw new AdapterException(e.getMessage(), e);
-    }
   }
 
   /**
@@ -185,20 +106,19 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
    *
    * @throws AdapterException
    */
-  @Override
-  protected void before() throws AdapterException {
+  private void before(IStaticPropertyExtractor extractor) throws AdapterException {
     // Extract user input
-    getConfigurations(adapterDescription);
+    getConfigurations(extractor);
 
     this.driverManager = new PooledPlcDriverManager();
     try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
       if (!plcConnection.getMetadata().canRead()) {
-        this.LOG.error("The S7 on IP: " + this.ip + " does not support reading data");
+        LOG.error("The S7 on IP: " + this.ip + " does not support reading data");
       }
     } catch (PlcConnectionException e) {
-      this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
+      LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
     } catch (Exception e) {
-      this.LOG.error("Could not close connection to S7 with ip " + this.ip, e);
+      LOG.error("Could not close connection to S7 with ip " + this.ip, e);
     }
   }
 
@@ -207,7 +127,7 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
    * pullData is called iteratively according to the polling interval defined in getPollInterval.
    */
   @Override
-  protected void pullData() {
+  public void pullData() {
     // Create PLC read request
     try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
       readPlcData(plcConnection, this);
@@ -225,7 +145,8 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
     return builder.build();
   }
 
-  private void readPlcData(PlcConnection plcConnection, PlcReadResponseHandler handler) throws PlcConnectionException {
+  private void readPlcData(
+      PlcConnection plcConnection, PlcReadResponseHandler handler) throws PlcConnectionException {
     var readRequest = makeReadRequest(plcConnection);
     // Execute the request
     CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
@@ -244,44 +165,19 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
   /**
    * Define the polling interval of this adapter. Default is to poll every second
    *
-   * @return
+   * @return PollingSettings
    */
   @Override
-  protected PollingSettings getPollingInterval() {
+  public PollingSettings getPollingInterval() {
     return PollingSettings.from(TimeUnit.MILLISECONDS, this.pollingInterval);
-  }
-
-  /**
-   * Required by StreamPipes return a new adapter instance by calling the constructor with
-   * SpecificAdapterStreamDescription
-   *
-   * @param adapterDescription
-   * @return
-   */
-  @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new Plc4xS7Adapter(adapterDescription);
-  }
-
-
-  /**
-   * Required by StreamPipes. Return the id of the adapter
-   *
-   * @return
-   */
-  @Override
-  public String getId() {
-    return ID;
   }
 
   /**
    * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
    *
-   * @param adapterDescription
+   * @param extractor StaticPropertyExtractor
    */
-  private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
-    StaticPropertyExtractor extractor =
-        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+  private void getConfigurations(IStaticPropertyExtractor extractor) throws AdapterException {
 
     this.ip = extractor.singleValueParameter(PLC_IP, String.class);
     this.pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
@@ -303,42 +199,31 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
   /**
    * Transforms PLC4X data types to datatypes supported in StreamPipes
    *
-   * @param plcType
-   * @return
+   * @param plcType String
+   * @return Datatypes
    */
   private Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
 
     String type = plcType.substring(plcType.lastIndexOf(":") + 1);
 
-    switch (type) {
-      case "BOOL":
-        return Datatypes.Boolean;
-      case "BYTE":
-      case "REAL":
-        return Datatypes.Float;
-      case "INT":
-        return Datatypes.Integer;
-      case "WORD":
-      case "TIME_OF_DAY":
-      case "DATE":
-      case "DATE_AND_TIME":
-      case "STRING":
-      case "CHAR":
-        return Datatypes.String;
-      default:
-        throw new AdapterException("Datatype " + plcType + " is not supported");
-    }
+    return switch (type) {
+      case "BOOL" -> Datatypes.Boolean;
+      case "BYTE", "REAL" -> Datatypes.Float;
+      case "INT" -> Datatypes.Integer;
+      case "WORD", "TIME_OF_DAY", "DATE", "DATE_AND_TIME", "STRING", "CHAR" -> Datatypes.String;
+      default -> throw new AdapterException("Datatype " + plcType + " is not supported");
+    };
   }
 
   @Override
   public void onReadResult(PlcReadResponse response, Throwable throwable) {
     if (throwable != null) {
       throwable.printStackTrace();
-      this.LOG.error(throwable.getMessage());
+      LOG.error(throwable.getMessage());
     } else {
       var event = makeEvent(response);
       // publish the final event
-      adapterPipeline.process(event);
+      collector.collect(event);
     }
   }
 
@@ -348,10 +233,96 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
       if (response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
         event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
       } else {
-        this.LOG.error("Error[" + node.get(PLC_NODE_NAME) + "]: "
+        LOG.error("Error[" + node.get(PLC_NODE_NAME) + "]: "
             + response.getResponseCode(node.get(PLC_NODE_NAME)).name());
       }
     }
     return event;
+  }
+
+  /**
+   * Describe the adapter and define what user inputs are required.
+   * Currently, users can just select one node, this will be extended in the future
+   *
+   * @return AdapterConfiguration
+   */
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, Plc4xS7Adapter::new)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withCategory(AdapterType.Manufacturing)
+        .requiredTextParameter(Labels.withId(PLC_IP))
+        .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
+        .requiredCollection(Labels.withId(PLC_NODES),
+            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
+            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
+            StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
+                Options.from("Bool", "Byte", "Int", "Word", "Real", "Char", "String", "Date", "Time of day",
+                    "Date and Time")))
+        .buildConfiguration();
+  }
+
+  @Override
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.before(extractor.getStaticPropertyExtractor());
+    this.collector = collector;
+    this.pullAdapterScheduler = new PullAdapterScheduler();
+    this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.pullAdapterScheduler.shutdown();
+  }
+
+  @Override
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    // Extract user input
+    try {
+      getConfigurations(extractor.getStaticPropertyExtractor());
+
+      if (this.pollingInterval < 10) {
+        throw new AdapterException("Polling interval must be higher than 10. Current value: " + this.pollingInterval);
+      }
+
+      GuessSchema guessSchema = new GuessSchema();
+
+      EventSchema eventSchema = new EventSchema();
+      List<EventProperty> allProperties = new ArrayList<>();
+
+      for (Map<String, String> node : this.nodes) {
+        Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE)
+            .toUpperCase()
+            .replaceAll(" ", "_"));
+
+        allProperties.add(
+            PrimitivePropertyBuilder
+                .create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
+                .label(node.get(PLC_NODE_RUNTIME_NAME))
+                .description("")
+                .build());
+      }
+
+      this.before(extractor.getStaticPropertyExtractor());
+      var event = readPlcDataSynchronized();
+      var preview = event
+          .entrySet()
+          .stream()
+          .collect(Collectors.toMap(Map.Entry::getKey, e ->
+              new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
+
+      eventSchema.setEventProperties(allProperties);
+      guessSchema.setEventSchema(eventSchema);
+      guessSchema.setEventPreview(List.of(preview));
+
+      return guessSchema;
+    } catch (Exception e) {
+      throw new AdapterException(e.getMessage(), e);
+    }
   }
 }

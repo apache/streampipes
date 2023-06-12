@@ -18,10 +18,10 @@
 package org.apache.streampipes.wrapper.siddhi.utils;
 
 
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 import io.siddhi.core.event.Event;
@@ -83,13 +83,13 @@ public class SiddhiUtils {
     return result;
   }
 
-  public static String getPreparedOutputTopicName(EventProcessorBindingParams params) {
+  public static String getPreparedOutputTopicName(IDataProcessorParameters params) {
     return prepareName(getOutputTopicName(params));
   }
 
-  public static String getOutputTopicName(EventProcessorBindingParams parameters) {
+  public static String getOutputTopicName(IDataProcessorParameters parameters) {
     return parameters
-        .getGraph()
+        .getModel()
         .getOutputStream()
         .getEventGrounding()
         .getTransportProtocol()

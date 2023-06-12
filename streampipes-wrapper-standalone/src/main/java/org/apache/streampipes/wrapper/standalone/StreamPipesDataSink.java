@@ -17,19 +17,49 @@
  */
 package org.apache.streampipes.wrapper.standalone;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.wrapper.runtime.EventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
-import java.util.function.Supplier;
-
-public abstract class StreamPipesDataSink extends StandaloneEventSinkDeclarer<SinkParams>
-    implements EventSink<SinkParams> {
+public abstract class StreamPipesDataSink implements IStreamPipesDataSink {
 
   @Override
-  public ConfiguredEventSink<SinkParams> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
-    Supplier<EventSink<SinkParams>> supplier = () -> this;
-    return new ConfiguredEventSink<>(new SinkParams(graph), supplier);
+  public void onPipelineStarted(IDataSinkParameters params,
+                                EventSinkRuntimeContext runtimeContext) {
+    SinkParams parameters = new SinkParams(params);
+    this.onInvocation(parameters, runtimeContext);
   }
+
+  @Override
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        () -> {
+          try {
+            return this.getClass().newInstance();
+          } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+          } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+          }
+        },
+        declareModel()
+    );
+  }
+
+  @Override
+  public void onPipelineStopped() {
+    this.onDetach();
+  }
+
+  public abstract DataSinkDescription declareModel();
+
+  public abstract void onInvocation(SinkParams parameters,
+                                    EventSinkRuntimeContext runtimeContext) throws SpRuntimeException;
+
+  public abstract void onDetach();
 }

@@ -19,5 +19,16 @@
 package org.apache.streampipes.processors.siddhi.trend;
 
 public enum TrendOperator {
-  INCREASE, DECREASE
+  INCREASE("Increase"),
+  DECREASE("Decrease");
+
+  private String label;
+
+  TrendOperator(String label) {
+    this.label = label;
+  }
+
+  public String getLabel() {
+    return label;
+  }
 }

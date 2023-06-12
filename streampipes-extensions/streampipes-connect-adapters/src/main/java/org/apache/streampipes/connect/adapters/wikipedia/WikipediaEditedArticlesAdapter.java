@@ -17,10 +17,9 @@
  */
 package org.apache.streampipes.connect.adapters.wikipedia;
 
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
@@ -30,30 +29,16 @@ public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
 
   private static final String Type = "edit";
 
-  public WikipediaEditedArticlesAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-    super(adapterStreamDescription, Type);
-  }
-
   public WikipediaEditedArticlesAdapter() {
-    super();
+    super(Type);
   }
 
   @Override
-  public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, WikipediaEditedArticlesAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(AdapterType.SocialMedia, AdapterType.OpenData)
-        .build();
-  }
-
-  @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new WikipediaEditedArticlesAdapter(adapterDescription);
-  }
-
-  @Override
-  public String getId() {
-    return ID;
+        .withCategory(AdapterType.SocialMedia, AdapterType.OpenData)
+        .buildConfiguration();
   }
 }

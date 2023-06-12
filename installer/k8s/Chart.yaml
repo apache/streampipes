@@ -14,9 +14,9 @@
 # limitations under the License.
 
 apiVersion: v1
-appVersion: "0.92.0-SNAPSHOT"
+appVersion: "0.93.0-SNAPSHOT"
 description: Self-Service Data Analytics for the Industrial IoT
 name: streampipes-helm-chart
 home: https://streampipes.apache.org
-version: 0.92.0-SNAPSHOT
+version: 0.93.0-SNAPSHOT
 icon: https://avatars1.githubusercontent.com/u/33908576

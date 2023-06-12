@@ -18,7 +18,8 @@
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
-import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe(
     'Test File Stream Adapter',
@@ -35,16 +36,16 @@ describe(
         });
 
         it('Perform Test', () => {
-            const adapterInput = GenericAdapterBuilder.create('File_Stream')
+            const adapterInput = AdapterBuilder.create('File_Stream')
                 .setName('File Stream Adapter Test')
                 .setTimestampProperty('timestamp')
                 .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
                 .setFormat('csv')
-                .addFormatInput('input', 'delimiter', ';')
-                .addFormatInput('checkbox', 'header', 'check')
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
                 .build();
 
-            ConnectUtils.testGenericStreamAdapter(adapterInput);
+            ConnectUtils.testAdapter(adapterInput);
             ConnectUtils.deleteAdapter();
         });
     },

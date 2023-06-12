@@ -21,7 +21,6 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.export.ExportItem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,14 +33,12 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   }
 
   @Override
-  public AdapterDescription modifyDocumentForExport(AdapterDescription doc) {
-    doc.setRev(null);
-    doc.setSelectedEndpointUrl(null);
-    if (doc instanceof AdapterStreamDescription) {
-      ((AdapterStreamDescription) doc).setRunning(false);
-    }
+  public AdapterDescription modifyDocumentForExport(AdapterDescription adapterDescription) {
+    adapterDescription.setRev(null);
+    adapterDescription.setSelectedEndpointUrl(null);
+    adapterDescription.setRunning(false);
 
-    return doc;
+    return adapterDescription;
   }
 
   @Override

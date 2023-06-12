@@ -43,4 +43,4 @@ To test your local version of the UI execute the following commands:
 Running `npm install` will cause a pre-commit hook to be created.
 This hook ensures that if you want to commit changes to this repository, these changes are compliant with our [formatting](https://prettier.io/) and [linting](https://eslint.org/) rules.
 
-If you see errors there, you can try to run `npm run format:fix` and `npm run lint:fix` to fix these issues automatically. Otherwise you have to run `npm run format` and `npm run lint` to get additional information about the problems.
+If you see errors there, you can try to run `npm run format:fix` and `npm run lint:fix` to fix these issues automatically. Otherwise, you have to run `npm run format` and `npm run lint` to get additional information about the problems.

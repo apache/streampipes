@@ -18,11 +18,49 @@
 
 package org.apache.streampipes.wrapper.flink;
 
-import org.apache.streampipes.wrapper.declarer.EventProcessorDeclarer;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
+import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public abstract class FlinkDataProcessorDeclarer<T extends EventProcessorBindingParams>
-    extends EventProcessorDeclarer<T, FlinkDataProcessorRuntime<T>> {
+public abstract class FlinkDataProcessorDeclarer<T extends ProcessorParams>
+    implements IStreamPipesDataProcessor {
 
 
+  @Override
+  public void onPipelineStarted(IDataProcessorParameters params,
+                                SpOutputCollector collector,
+                                EventProcessorRuntimeContext runtimeContext) {
+
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) {
+
+  }
+
+  @Override
+  public void onPipelineStopped() {
+
+  }
+
+  @Override
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        () -> this,
+        declareModel()
+    );
+  }
+
+  public abstract FlinkDataProcessorProgram<T> getProgram(DataProcessorInvocation graph,
+                                                          ProcessingElementParameterExtractor extractor);
+
+  public abstract DataProcessorDescription declareModel();
 }

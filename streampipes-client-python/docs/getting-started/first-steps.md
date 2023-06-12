@@ -67,7 +67,17 @@ Once all services are started, you can access StreamPipes via `http://localhost`
 
 #### Setup StreamPipes with Kafka as message broker
 Alternatively, you can use `docker-compose.yml` to start StreamPipes with Kafka as messaging layer.
-Therefore, you onyl need to execute the following command:
+When running locally we have to modify `services.kafka.environment` and add the ports to `services.kafka.ports`:
+```yaml
+environment:
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+  KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094
+  KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
+...
+ports:
+  - 9094:9094
+```
+Then, you need to execute the following command:
 ```bash
 docker-compose -f docker-compose.yml up -d
 ```

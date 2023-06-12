@@ -22,7 +22,7 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.Notification;
 
-public class NotificationsApi extends AbstractTypedClientApi<Notification> {
+public class NotificationsApi extends AbstractTypedClientApi<Notification> implements INotificationsApi {
 
   public NotificationsApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, Notification.class);
@@ -34,6 +34,7 @@ public class NotificationsApi extends AbstractTypedClientApi<Notification> {
         .addToPath("notifications");
   }
 
+  @Override
   public void add(Notification notification) {
     post(getBaseResourcePath(), notification);
   }

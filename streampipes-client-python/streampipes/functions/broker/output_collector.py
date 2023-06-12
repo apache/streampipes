@@ -17,7 +17,7 @@
 import asyncio
 from typing import Any, Coroutine, Dict
 
-from streampipes.functions.broker import get_broker
+from streampipes.functions.broker import Publisher, get_broker
 from streampipes.model.resource.data_stream import DataStream
 
 
@@ -32,14 +32,14 @@ class OutputCollector:
 
     Attributes
     ----------
-    broker: Broker
-        The broker instance that sends the data to StreamPipes
+    publisher: Publisher
+        The publisher instance that sends the data to StreamPipes
 
     """
 
     def __init__(self, data_stream: DataStream) -> None:
-        self.broker = get_broker(data_stream)
-        self._run_coroutine(self.broker.connect(data_stream))
+        self.publisher: Publisher = get_broker(data_stream, is_publisher=True)  # type: ignore
+        self._run_coroutine(self.publisher.connect(data_stream))
 
     def collect(self, event: Dict[str, Any]) -> None:
         """Publishes an event to the output stream.
@@ -53,7 +53,7 @@ class OutputCollector:
         -------
         None
         """
-        self._run_coroutine(self.broker.publish_event(event))
+        self._run_coroutine(self.publisher.publish_event(event))
 
     def disconnect(self) -> None:
         """Disconnects the broker of the output collector.
@@ -62,7 +62,7 @@ class OutputCollector:
         -------
         None
         """
-        self._run_coroutine(self.broker.disconnect())
+        self._run_coroutine(self.publisher.disconnect())
 
     @staticmethod
     def _run_coroutine(coroutine: Coroutine) -> None:

@@ -18,12 +18,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { ConnectService } from '../../services/connect.service';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
-import { DialogService, SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { SpConnectRoutes } from '../../connect.routes';
@@ -34,7 +33,7 @@ import { SpConnectRoutes } from '../../connect.routes';
     styleUrls: ['./data-marketplace.component.scss'],
 })
 export class DataMarketplaceComponent implements OnInit {
-    adapterDescriptions: AdapterDescriptionUnion[];
+    adapterDescriptions: AdapterDescription[];
 
     adaptersLoading = true;
     adapterLoadingError = false;
@@ -44,8 +43,6 @@ export class DataMarketplaceComponent implements OnInit {
     constructor(
         private dataMarketplaceService: AdapterService,
         private shepherdService: ShepherdService,
-        private connectService: ConnectService,
-        private dialogService: DialogService,
         private router: Router,
         private breadcrumbService: SpBreadcrumbService,
     ) {}
@@ -62,28 +59,19 @@ export class DataMarketplaceComponent implements OnInit {
         this.adaptersLoading = true;
         this.adapterDescriptions = [];
 
-        this.dataMarketplaceService.getAdapterDescriptions().subscribe(
-            allAdapters => {
+        this.dataMarketplaceService.getAdapterDescriptions().subscribe({
+            next: allAdapters => {
                 this.adapterDescriptions = allAdapters;
                 this.adapterDescriptions.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
                 this.adaptersLoading = false;
             },
-            error => {
-                console.log(error);
+            error: _ => {
                 this.adaptersLoading = false;
                 this.adapterLoadingError = true;
             },
-        );
-    }
-
-    startAdapterTutorial() {
-        this.shepherdService.startAdapterTour();
-    }
-
-    startAdapterTutorial2() {
-        this.shepherdService.startAdapterTour2();
+        });
     }
 
     startAdapterTutorial3() {
@@ -92,7 +80,6 @@ export class DataMarketplaceComponent implements OnInit {
 
     selectAdapter(appId: string) {
         this.router.navigate(['connect', 'create', appId]);
-        // this.shepherdService.trigger('select-adapter');
     }
 
     applyFilter(filter: AdapterFilterSettingsModel) {

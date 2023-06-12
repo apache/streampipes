@@ -19,8 +19,7 @@
 package org.apache.streampipes.sinks.brokers.jvm.kafka;
 
 import org.apache.streampipes.pe.shared.config.kafka.KafkaConnectUtils;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 public class KafkaParameters {
 
@@ -39,7 +38,7 @@ public class KafkaParameters {
   private final boolean useSSL;
 
   public KafkaParameters(SinkParams params) {
-    DataSinkParameterExtractor extractor = params.extractor();
+    var extractor = params.extractor();
     this.topic = extractor.singleValueParameter(KafkaConnectUtils.TOPIC_KEY, String.class);
     this.kafkaHost = extractor.singleValueParameter(KafkaConnectUtils.HOST_KEY, String.class);
     this.kafkaPort = extractor.singleValueParameter(KafkaConnectUtils.PORT_KEY, Integer.class);

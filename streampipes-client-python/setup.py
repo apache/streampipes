@@ -41,33 +41,34 @@ base_packages = [
     "pydantic>=1.10.2",
     "requests>=2.28.1",
     "nats-py>=2.2.0",
-    "confluent-kafka>=2.0.2"
+    "confluent-kafka>=2.0.2",
+    "typing-extensions>=4.5.0"
 ]
 
 dev_packages = base_packages + [
-    "autoflake==2.0.0",
+    "autoflake==2.1.0",
     "black==23.3.0",
     "blacken-docs==1.13.0",
     "flake8==6.0.0",
-    "interrogate==1.5.0",
+    "interrogate[png]==1.5.0",
     "isort==5.12.0",
-    "mypy==1.1.1",
-    "pandas-stubs==1.5.2.230105",
-    "pre-commit==3.2.0",
-    "pytest==7.2.1",
-    "pytest-cov==4.0.0",
-    "pyupgrade==3.3.1",
+    "mypy==1.3.0",
+    "pandas-stubs==2.0.0.230412",
+    "pre-commit==3.3.0",
+    "pytest==7.3.0",
+    "pytest-cov==4.1.0",
+    "pyupgrade==3.4.0",
     "types-Jinja2==2.11.9",
-    "types-requests==2.28.11.7",
+    "types-requests==2.31.0.0",
 ]
 
 docs_packages = [
     "mkdocs==1.4.2",
-    "mkdocs-awesome-pages-plugin==2.8.0",
+    "mkdocs-awesome-pages-plugin==2.9.0",
     "mkdocs-material==9.1.3",
-    "mkdocstrings[python]==0.21.1",
+    "mkdocstrings[python]==0.22.0",
     "pytkdocs[numpy-style]>=0.16.1",
-    "mkdocs-gen-files==0.4.0",
+    "mkdocs-gen-files==0.5.0",
     "mkdocs-literate-nav==0.6.0",
     "numpydoc==1.5.0",
     "mkdocs-jupyter==0.24.0",
@@ -97,7 +98,14 @@ setuptools.setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=PROJECT_URLS,
-    packages=setuptools.find_packages(exclude=("tests",)),
+    packages=setuptools.find_packages(exclude=("*tests*",)),
+    package_data={
+        "streampipes": [
+            "py.typed",
+            "*.pyi",
+            "**/*.pyi"
+        ]
+    },
     install_requires=base_packages,
     extras_require={
         "dev": dev_packages,
@@ -105,7 +113,6 @@ setuptools.setup(
         "docs": docs_packages,
         "all": dev_packages + docs_packages,
     },
-    include_package_data=True,
     license="Apache License 2.0",
     classifiers=[
         # Trove classifiers

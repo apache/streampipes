@@ -18,26 +18,41 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.nats;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.messaging.nats.NatsUtils;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.nats.NatsConfig;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-public class NatsController extends StandaloneEventSinkDeclarer<NatsParameters> {
+import io.nats.client.Connection;
+import io.nats.client.Nats;
+import io.nats.client.Options;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
+public class NatsController extends StreamPipesDataSink {
+
+  private static final Logger LOG = LoggerFactory.getLogger(NatsController.class);
 
   private static final String SUBJECT_KEY = "subject";
   private static final String URLS_KEY = "natsUrls";
@@ -54,6 +69,10 @@ public class NatsController extends StandaloneEventSinkDeclarer<NatsParameters> 
   private static final String CUSTOM_PROPERTIES = "custom-properties-alternative";
   private static final String CONNECTION_PROPERTIES_GROUP = "connection-group";
   private static final String PROPERTIES_KEY = "properties";
+
+  private String subject;
+  private Connection natsConnection;
+  private JsonDataFormatDefinition dataFormatDefinition;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -72,17 +91,6 @@ public class NatsController extends StandaloneEventSinkDeclarer<NatsParameters> 
         .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
             getConnectionPropertiesAlternativesTwo())
         .build();
-  }
-
-  @Override
-  public ConfiguredEventSink<NatsParameters> onInvocation(DataSinkInvocation graph,
-                                                          DataSinkParameterExtractor extractor) {
-
-    NatsConfig natsConfig = NatsConfigUtils.from(StaticPropertyExtractor.from(graph.getStaticProperties()));
-
-    NatsParameters params = new NatsParameters(graph, natsConfig);
-
-    return new ConfiguredEventSink<>(params, NatsPublisher::new);
   }
 
   public static StaticPropertyAlternative getAccessModeAlternativesOne() {
@@ -108,5 +116,41 @@ public class NatsController extends StandaloneEventSinkDeclarer<NatsParameters> 
         StaticProperties.group(Labels.withId(CONNECTION_PROPERTIES_GROUP),
             StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))));
 
+  }
+
+  @Override
+  public void onInvocation(SinkParams parameters,
+                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    this.dataFormatDefinition = new JsonDataFormatDefinition();
+    NatsConfig natsConfig = NatsConfigUtils.from(
+        StaticPropertyExtractor.from(parameters.getModel().getStaticProperties()));
+    this.subject = natsConfig.getSubject();
+    Options options = NatsUtils.makeNatsOptions(natsConfig);
+
+    try {
+      this.natsConnection = Nats.connect(options);
+    } catch (Exception e) {
+      LOG.error("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . " + e);
+    }
+  }
+
+  @Override
+  public void onEvent(Event inputEvent) throws SpRuntimeException {
+    try {
+      Map<String, Object> event = inputEvent.getRaw();
+      natsConnection.publish(subject, dataFormatDefinition.fromMap(event));
+    } catch (SpRuntimeException e) {
+      LOG.error("Could not publish events to Nats broker. " + e);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    try {
+      natsConnection.flush(Duration.ofMillis(50));
+      natsConnection.close();
+    } catch (TimeoutException | InterruptedException e) {
+      LOG.error("Error when disconnecting with Nats broker. " + e);
+    }
   }
 }

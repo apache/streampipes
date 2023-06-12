@@ -39,8 +39,6 @@ import { TransformationRuleService } from './services/transformation-rule.servic
 import { ConnectService } from './services/connect.service';
 import { AdapterDescriptionComponent } from './components/data-marketplace/adapter-description/adapter-description.component';
 import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
-import { FormatItemComponent } from './components/adapter-configuration/format-configuration/format-item/format-item.component';
-import { FormatListComponent } from './components/adapter-configuration/format-configuration/format-list/format-list.component';
 import { UnitProviderService } from './services/unit-provider.service';
 
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
@@ -61,15 +59,12 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
-import { FormatConfigurationComponent } from './components/adapter-configuration/format-configuration/format-configuration.component';
-import { GenericAdapterConfigurationComponent } from './components/adapter-configuration/generic-adapter-configuration/generic-adapter-configuration.component';
 import { ErrorMessageComponent } from './components/adapter-configuration/schema-editor/error-message/error-message.component';
 import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
 import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { FormatItemJsonComponent } from './components/adapter-configuration/format-configuration/format-item-json/format-item-json.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
@@ -87,9 +82,9 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
 import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/adapter-details-overview/adapter-details-overview.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
-import { SpecificAdapterConfigurationComponent } from './components/adapter-configuration/specific-adapter-configuration/specific-adapter-configuration.component';
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
 import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adapter-actions-dialog.component';
+import { AdapterSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-settings.component';
 
 @NgModule({
     imports: [
@@ -150,8 +145,10 @@ import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adap
     exports: [PipelineElementRuntimeInfoComponent, ErrorMessageComponent],
     declarations: [
         AdapterConfigurationHeaderComponent,
+        AdapterConfigurationComponent,
         AdapterDescriptionComponent,
         AdapterStartedDialog,
+        AdapterSettingsComponent,
         DataMarketplaceComponent,
         DeleteAdapterDialogComponent,
         EventSchemaComponent,
@@ -165,23 +162,18 @@ import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adap
         EventSchemaPreviewComponent,
         ExistingAdaptersComponent,
         AdapterFilterPipe,
-        FormatItemComponent,
-        FormatListComponent,
         JsonPrettyPrintPipe,
         AdapterConfigurationComponent,
         PipelineElementRuntimeInfoComponent,
         TimestampPipe,
         EditCorrectionValueComponent,
-        FormatConfigurationComponent,
-        GenericAdapterConfigurationComponent,
-        SpecificAdapterConfigurationComponent,
+        AdapterConfigurationComponent,
         ConfigurationGroupComponent,
         ErrorMessageComponent,
         LoadingMessageComponent,
         SchemaEditorHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
-        FormatItemJsonComponent,
         SpAdapterDetailsOverviewComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,
