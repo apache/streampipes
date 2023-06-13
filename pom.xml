@@ -143,7 +143,7 @@
 	<animal-sniffer-annotations.version>1.23</animal-sniffer-annotations.version>
 	<boofcv.version>0.42</boofcv.version>
 	<bcprov.version>1.70</bcprov.version>
-	<bcpkix.version>1.69</bcpkix.version>
+	<bcpkix.version>1.70</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
 	<checker-qual.version>3.28.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
