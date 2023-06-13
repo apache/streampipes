@@ -75,7 +75,11 @@ public class SpOpcUaConfigBuilder {
           extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
-      return new SpOpcUaConfig(serverAddress, 1, null, pullIntervalSeconds, selectedNodeNames);
+      return new SpOpcUaConfig(serverAddress,
+          1,
+          null,
+          pullIntervalSeconds,
+          selectedNodeNames);
 
     } else if (!useURL && unauthenticated) {
       String serverAddress =
@@ -83,7 +87,12 @@ public class SpOpcUaConfigBuilder {
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
       int port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
 
-      return new SpOpcUaConfig(serverAddress, port, 1, null, pullIntervalSeconds, selectedNodeNames);
+      return new SpOpcUaConfig(serverAddress,
+          port,
+          1,
+          null,
+          pullIntervalSeconds,
+          selectedNodeNames);
     } else {
 
       String username = extractor.singleValueParameter(USERNAME.name(), String.class);
@@ -94,7 +103,12 @@ public class SpOpcUaConfigBuilder {
             extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
-        return new SpOpcUaConfig(serverAddress, 1, null, username, password, pullIntervalSeconds,
+        return new SpOpcUaConfig(serverAddress,
+            1,
+            null,
+            username,
+            password,
+            pullIntervalSeconds,
             selectedNodeNames);
       } else {
         String serverAddress =
@@ -102,7 +116,13 @@ public class SpOpcUaConfigBuilder {
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
         int port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
 
-        return new SpOpcUaConfig(serverAddress, port, 1, null, username, password, pullIntervalSeconds,
+        return new SpOpcUaConfig(serverAddress,
+            port,
+            1,
+            null,
+            username,
+            password,
+            pullIntervalSeconds,
             selectedNodeNames);
       }
     }

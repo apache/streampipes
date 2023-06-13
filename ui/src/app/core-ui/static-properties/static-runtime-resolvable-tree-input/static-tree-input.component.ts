@@ -50,7 +50,6 @@ export class StaticRuntimeResolvableTreeInputComponent
     }
 
     hasChild = (_: number, node: TreeInputNode) => !node.dataNode;
-    //!!node.children && node.children.length > 0;
 
     ngOnInit(): void {
         this.treeControl = new NestedTreeControl<TreeInputNode>(
