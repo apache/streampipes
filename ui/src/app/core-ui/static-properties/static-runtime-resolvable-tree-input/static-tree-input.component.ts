@@ -150,12 +150,14 @@ export class StaticRuntimeResolvableTreeInputComponent
         this.staticProperty.selectedNodesInternalNames.push(
             node.internalNodeName,
         );
+        this.performValidation();
     }
 
     removeNode(node: TreeInputNode) {
         node.selected = false;
         const index = this.getSelectedNodeIndex(node.internalNodeName);
         this.staticProperty.selectedNodesInternalNames.splice(index, 1);
+        this.performValidation();
     }
 
     removeSelectedNode(selectedNodeInternalId: string): void {
