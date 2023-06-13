@@ -100,7 +100,7 @@ $mat-streampipes-accent-dark: (
     200: #4e3c93,
     300: #2a0c9a,
     400: #395481,
-    500: #83a3de,
+    500: $sp-color-accent-dark,
     600: #0303a3,
     700: #01016a,
     800: #000039,
@@ -173,10 +173,6 @@ $accent: map-get($custom-theme-light, accent);
     font-size: 11pt;
 }
 
-:root {
-    --color-loading-bar: #{mat-color($accent)};
-}
-
 .dark-mode {
     @include angular-material-theme($custom-theme-dark);
 
@@ -206,37 +202,6 @@ $accent: map-get($custom-theme-light, accent);
         background-color: rgba(255, 255, 255, 0.87);
         font-size: 12px;
     }
-
-    --color-primary: #{mat-color($primary)};
-    --color-accent: #{mat-color($accent-dark)};
-    --color-bg-0: #121212;
-    --color-bg-1: #282828;
-    --color-bg-2: #404040;
-    --color-bg-3: #424242;
-    --color-bg-4: #5f5f5f;
-    --color-bg-dialog: rgb(66, 66, 66);
-    --color-shadow: #c4c4c4;
-    --color-pe: #404040;
-    --color-default-text: rgba(255, 255, 255, 0.87);
-    --color-warn: #b36161;
-
-    --color-tab-border: #cccccc;
-
-    --color-navigation-bg: #{mat-color($primary)};
-    --color-navigation-link-text: #121212;
-    --color-navigation-text: #121212;
-    --color-navigation-selected: #{mat-color($primary)};
-    --color-navigation-hover: #{mat-color($primary, 600)};
-    --color-navigation-bg-selected: #121212;
-    --color-navigation-divider: #{mat-color($primary)};
-
-    --content-box-color: #404040;
-    --canvas-color: linear-gradient(
-            90deg,
-            rgba(50, 50, 50, 0.5) 10%,
-            transparent 0%
-        ),
-        linear-gradient(rgba(50, 50, 50, 0.5) 10%, transparent 0%);
 }
 
 .light-mode {
@@ -259,35 +224,4 @@ $accent: map-get($custom-theme-light, accent);
     .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
         line-height: 30px;
     }
-
-    --color-primary: #{mat-color($primary)};
-    --color-accent: #{mat-color($accent)};
-    --color-bg-0: #ffffff;
-    --color-bg-1: #fafafa;
-    --color-bg-2: #f1f1f1;
-    --color-bg-3: rgb(224, 224, 224);
-    --color-bg-4: rgb(212, 212, 212);
-    --color-bg-dialog: #ffffff;
-    --color-shadow: #555;
-    --color-pe: #ffffff;
-    --color-default-text: #121212;
-    --color-warn: #b71c1c;
-
-    --color-tab-border: #cccccc;
-
-    --color-navigation-bg: #{mat-color($primary)};
-    --color-navigation-link-text: #ffffff;
-    --color-navigation-text: #ffffff;
-    --color-navigation-selected: #{mat-color($primary)};
-    --color-navigation-hover: #{mat-color($primary, 600)};
-    --color-navigation-bg-selected: #ffffff;
-    --color-navigation-divider: #{mat-color($primary)};
-
-    --content-box-color: rgb(156, 156, 156);
-    --canvas-color: linear-gradient(
-            90deg,
-            rgba(208, 208, 208, 0.5) 10%,
-            transparent 0%
-        ),
-        linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
 }

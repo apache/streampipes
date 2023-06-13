@@ -1,0 +1,132 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+$sp-color-primary: rgb(57, 181, 74);
+$sp-color-primary-600: #06c12a;
+
+$sp-color-accent: #1b1464;
+
+$sp-color-accent-light-blue: rgb(59, 92, 149);
+$sp-color-accent-light: rgb(156, 156, 156);
+$sp-color-accent-light-transparent: rgba(156, 156, 156, 0.4);
+
+$sp-color-accent-dark: #83a3de;
+
+$sp-color-stream: #ffeb3b;
+$sp-color-set: #ffa23b;
+$sp-color-processor: #009688;
+$sp-color-sink: #3f51b5;
+
+$sp-color-error: #b71c1c;
+
+body {
+    --color-data-view: rgb(122, 206, 227);
+    --color-dashboard: rgb(76, 115, 164);
+    --color-adapter: rgb(182, 140, 97);
+    --color-data-source: #ffa23b;
+    --color-pipeline: rgb(102, 185, 114);
+    --color-measurement: rgb(39, 164, 155);
+    --color-file: rgb(163, 98, 190);
+
+    --button-border-radius: 5px;
+    --iconbar-width: 35px;
+    --navbar-icon-border-radius: 0;
+    --navbar-icon-padding: 0;
+}
+
+:root {
+    --color-loading-bar: #{$sp-color-accent};
+}
+
+.dark-mode {
+    --color-primary: #{$sp-color-primary};
+    --color-accent: #{$sp-color-accent-dark};
+    --color-bg-outer: var(--color-bg-1);
+    --color-bg-page-container: var(--color-bg-0);
+    --color-bg-main-panel-header: var(--color-bg-0);
+    --color-bg-main-panel-content: var(--color-bg-0);
+    --color-bg-navbar-icon: inherit;
+    --color-bg-navbar-icon-selected: inherit;
+    --color-bg-0: #121212;
+    --color-bg-1: #282828;
+    --color-bg-2: #404040;
+    --color-bg-3: #424242;
+    --color-bg-4: #5f5f5f;
+    --color-bg-dialog: rgb(66, 66, 66);
+    --color-shadow: #c4c4c4;
+    --color-pe: #404040;
+    --color-default-text: rgba(255, 255, 255, 0.87);
+    --color-warn: #b36161;
+
+    --color-tab-border: #cccccc;
+
+    --color-navigation-bg: var(--color-primary);
+    --color-navigation-link-text: var(--color-bg-0);
+    --color-navigation-text: #121212;
+    --color-navigation-selected: #{$sp-color-primary};
+    --color-navigation-hover: #{$sp-color-primary-600};
+    --color-navigation-bg-selected: var(--color-bg-1);
+    --color-navigation-divider: #{$sp-color-primary};
+
+    --content-box-color: #404040;
+    --canvas-color: linear-gradient(
+            90deg,
+            rgba(50, 50, 50, 0.5) 10%,
+            transparent 0%
+        ),
+        linear-gradient(rgba(50, 50, 50, 0.5) 10%, transparent 0%);
+}
+
+.light-mode {
+    --color-primary: #{$sp-color-primary};
+    --color-accent: #{$sp-color-accent};
+    --color-bg-outer: var(--color-bg-1);
+    --color-bg-page-container: var(--color-bg-0);
+    --color-bg-main-panel-header: var(--color-bg-0);
+    --color-bg-main-panel-content: var(--color-bg-0);
+    --color-bg-navbar-icon: inherit;
+    --color-bg-navbar-icon-selected: inherit;
+    --color-bg-0: #ffffff;
+    --color-bg-1: #fafafa;
+    --color-bg-2: #f1f1f1;
+    --color-bg-3: rgb(224, 224, 224);
+    --color-bg-4: rgb(212, 212, 212);
+    --color-bg-dialog: #ffffff;
+    --color-shadow: #555;
+    --color-pe: #ffffff;
+    --color-default-text: #121212;
+    --color-warn: #b71c1c;
+
+    --color-tab-border: #cccccc;
+
+    --color-navigation-bg: var(--color-primary);
+    --color-navigation-link-text: var(--color-bg-0);
+    --color-navigation-text: #ffffff;
+    --color-navigation-selected: #{$sp-color-primary};
+    --color-navigation-hover: #{$sp-color-primary-600};
+    --color-navigation-bg-selected: var(--color-bg-1);
+    --color-navigation-divider: var(--color-primary);
+
+    --content-box-color: rgb(156, 156, 156);
+    --canvas-color: linear-gradient(
+            90deg,
+            rgba(208, 208, 208, 0.5) 10%,
+            transparent 0%
+        ),
+        linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
+}

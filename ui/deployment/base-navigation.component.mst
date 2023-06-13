@@ -27,7 +27,7 @@ export abstract class BaseNavigationComponent {
   activePageName: string;
   activePage: any;
 
-  authenticated: boolean = true;
+  authenticated = true;
 
   public menu = [
     {

@@ -120,10 +120,6 @@ fs.writeFileSync(
     fs.readFileSync('deployment/apps.ts'),
 );
 fs.writeFileSync(
-    'src/scss/sp/sp-theme.scss',
-    fs.readFileSync('deployment/sp-theme.scss'),
-);
-fs.writeFileSync(
     'src/app/services/app.constants.ts',
     fs.readFileSync('deployment/app-constants.ts', 'utf8'),
 );
@@ -145,10 +141,10 @@ fs.writeFileSync(
 );
 console.log('Moved: favicon');
 fs.writeFileSync(
-    'src/scss/sp/sp-theme.scss',
-    fs.readFileSync('deployment/sp-theme.scss', 'utf8'),
+    'src/scss/_variables.scss',
+    fs.readFileSync('deployment/_variables.scss', 'utf8'),
 );
-console.log('Moved: theme file');
+console.log('Moved: styling variables file');
 fs.writeFileSync(
     'webpack.partial.dev.js',
     fs.readFileSync('deployment/webpack.partial.dev.js', 'utf8'),
