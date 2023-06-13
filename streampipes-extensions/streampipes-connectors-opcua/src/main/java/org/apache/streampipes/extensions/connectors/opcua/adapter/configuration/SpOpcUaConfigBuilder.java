@@ -76,8 +76,6 @@ public class SpOpcUaConfigBuilder {
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
       return new SpOpcUaConfig(serverAddress,
-          1,
-          null,
           pullIntervalSeconds,
           selectedNodeNames);
 
@@ -89,8 +87,6 @@ public class SpOpcUaConfigBuilder {
 
       return new SpOpcUaConfig(serverAddress,
           port,
-          1,
-          null,
           pullIntervalSeconds,
           selectedNodeNames);
     } else {
@@ -104,8 +100,6 @@ public class SpOpcUaConfigBuilder {
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
         return new SpOpcUaConfig(serverAddress,
-            1,
-            null,
             username,
             password,
             pullIntervalSeconds,
@@ -118,8 +112,6 @@ public class SpOpcUaConfigBuilder {
 
         return new SpOpcUaConfig(serverAddress,
             port,
-            1,
-            null,
             username,
             password,
             pullIntervalSeconds,
