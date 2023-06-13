@@ -24,14 +24,29 @@ import java.util.Properties;
 
 public class AutoOffsetResetConfig implements KafkaConfigAppender {
 
-    private final String autoOffsetResetConfig;
+    private String autoOffsetResetConfig;
 
     @Override
     public void appendConfig(Properties props) {
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetResetConfig);
+        if (autoOffsetResetConfig != null) {
+            props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetResetConfig);
+        }
     }
 
     public AutoOffsetResetConfig(String autoOffsetResetConfig) {
+        this.autoOffsetResetConfig = autoOffsetResetConfig;
+    }
+
+    public AutoOffsetResetConfig() {
+
+    }
+
+
+    public String getAutoOffsetResetConfig() {
+        return autoOffsetResetConfig;
+    }
+
+    public void setAutoOffsetResetConfig(String autoOffsetResetConfig) {
         this.autoOffsetResetConfig = autoOffsetResetConfig;
     }
 }
