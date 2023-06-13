@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.pe.shared.config.kafka;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslPlainConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslSSLConfig;
@@ -49,6 +51,11 @@ public class KafkaConnectUtils {
 
   private static final String HIDE_INTERNAL_TOPICS = "hide-internal-topics";
 
+  public static final String AUTO_OFFSET_RESET_CONFIG = ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
+  public static final String EARLIEST = "earliest";
+  public static final String LATEST = "latest";
+  public static final String NONE = "none";
+
   public static Label getTopicLabel() {
     return Labels.withId(TOPIC_KEY);
   }
@@ -71,6 +78,10 @@ public class KafkaConnectUtils {
 
   public static Label getAccessModeLabel() {
     return Labels.withId(ACCESS_MODE);
+  }
+
+  public static Label getAutoOffsetResetConfigLabel() {
+    return Labels.withId(AUTO_OFFSET_RESET_CONFIG);
   }
 
   public static KafkaConfig getConfig(StaticPropertyExtractor extractor, boolean containsTopic) {
@@ -101,8 +112,10 @@ public class KafkaConnectUtils {
           ? new KafkaSecurityUnauthenticatedSSLConfig() :
           new KafkaSecurityUnauthenticatedPlainConfig();
     }
+    String autoOffset = extractor.selectedAlternativeInternalId(AUTO_OFFSET_RESET_CONFIG);
+    AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig(autoOffset);
 
-    return new KafkaConfig(brokerUrl, port, topic, securityConfig);
+    return new KafkaConfig(brokerUrl, port, topic, securityConfig, autoOffsetResetConfig);
   }
 
   private static boolean isUseSSL(String authentication) {
@@ -135,5 +148,18 @@ public class KafkaConnectUtils {
         StaticProperties.group(Labels.withId(KafkaConnectUtils.USERNAME_GROUP),
             StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConnectUtils.USERNAME_KEY)),
             StaticProperties.secretValue(Labels.withId(KafkaConnectUtils.PASSWORD_KEY))));
+  }
+
+
+  public static StaticPropertyAlternative getAlternativesLatest() {
+    return Alternatives.from(Labels.withId(LATEST));
+  }
+
+  public static StaticPropertyAlternative getAlternativesEarliest() {
+    return Alternatives.from(Labels.withId(EARLIEST));
+  }
+
+  public static StaticPropertyAlternative getAlternativesNone() {
+    return Alternatives.from(Labels.withId(NONE));
   }
 }

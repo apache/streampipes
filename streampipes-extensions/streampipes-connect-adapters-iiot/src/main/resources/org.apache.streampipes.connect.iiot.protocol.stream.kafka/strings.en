@@ -59,3 +59,15 @@ value-deserialization.description=
 
 hide-internal-topics.title=Hide internal topics
 hide-internal-topics.description=Do not show topics that are only used internally
+
+auto.offset.reset.title=Auto Offset Reset
+auto.offset.reset.description=Auto Offset Reset config
+
+earliest.title=Earliest
+earliest.description=
+
+latest.title=Latest
+latest.description=
+
+none.title=None
+none.description=

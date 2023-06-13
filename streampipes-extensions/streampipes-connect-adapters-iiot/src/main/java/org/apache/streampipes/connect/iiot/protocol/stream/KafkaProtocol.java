@@ -33,6 +33,7 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -43,7 +44,6 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.pe.shared.config.kafka.kafka.KafkaConfig;
 import org.apache.streampipes.pe.shared.config.kafka.kafka.KafkaConnectUtils;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
@@ -144,7 +144,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
 
-        .requiredAlternatives(Labels.withId(KafkaConnectUtils.ACCESS_MODE),
+        .requiredAlternatives(KafkaConnectUtils.getAccessModeLabel(),
             KafkaConnectUtils.getAlternativeUnauthenticatedPlain(),
             KafkaConnectUtils.getAlternativeUnauthenticatedSSL(),
             KafkaConnectUtils.getAlternativesSaslPlain(),
@@ -158,6 +158,10 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
         .requiredSingleValueSelectionFromContainer(KafkaConnectUtils.getTopicLabel(), Arrays.asList(
             KafkaConnectUtils.HOST_KEY,
             KafkaConnectUtils.PORT_KEY))
+        .requiredAlternatives(KafkaConnectUtils.getAutoOffsetResetConfigLabel(),
+                KafkaConnectUtils.getAlternativesEarliest(),
+                KafkaConnectUtils.getAlternativesLatest(),
+                KafkaConnectUtils.getAlternativesNone())
         .buildConfiguration();
   }
 
@@ -171,12 +175,17 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     protocol.setBrokerHostname(config.getKafkaHost());
     protocol.setTopicDefinition(new SimpleTopicDefinition(config.getTopic()));
 
+    List<KafkaConfigAppender> kafkaConfigAppenderList = new ArrayList<>(2);
+    kafkaConfigAppenderList.add(this.config.getSecurityConfig());
+    kafkaConfigAppenderList.add(this.config.getAutoOffsetResetConfig());
+
     this.kafkaConsumer = new SpKafkaConsumer(protocol,
         config.getTopic(),
         new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
           collector.collect(event);
         }),
-        Collections.singletonList(this.config.getSecurityConfig()));
+        kafkaConfigAppenderList
+        );
 
     thread = new Thread(this.kafkaConsumer);
     thread.start();
