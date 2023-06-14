@@ -86,7 +86,6 @@ export class StaticRuntimeResolvableOneOfInputComponent
         ) {
             error = undefined;
         }
-        console.log(error);
         this.parentForm.controls[this.staticProperty.internalName].setErrors(
             error,
         );

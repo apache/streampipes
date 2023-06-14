@@ -16,14 +16,14 @@
  *
  */
 
-import { JsPlumbInstance } from '@jsplumb/core';
-import { JsplumbBridge } from './jsplumb-bridge.service';
-import { Injectable } from '@angular/core';
 import {
     BrowserJsPlumbInstance,
     ContainmentType,
+    JsPlumbInstance,
     newInstance,
 } from '@jsplumb/browser-ui';
+import { Injectable } from '@angular/core';
+import { JsplumbBridge } from './jsplumb-bridge.service';
 import { PipelineElementDraggedService } from './pipeline-element-dragged.service';
 import { JsplumbConfigService } from './jsplumb-config.service';
 

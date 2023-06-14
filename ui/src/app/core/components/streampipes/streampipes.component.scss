@@ -20,11 +20,12 @@
 
 .iconbar {
     background: var(--color-navigation-bg);
+    width: var(--iconbar-width);
 }
 
 .base {
     color: var(--color-default-text);
-    background: var(--color-bg-0);
+    background: var(--color-bg-outer);
 }
 
 .sp-toolbar-outer {

@@ -51,9 +51,9 @@ import {
 import { ObjectProvider } from '../../services/object-provider.service';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import {
+    ConfirmDialogComponent,
     DialogService,
     PanelType,
-    ConfirmDialogComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
@@ -62,14 +62,12 @@ import { forkJoin } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import {
-    EVENT_CONNECTION_ABORT,
-    EVENT_CONNECTION_DRAG,
-} from '@jsplumb/browser-ui';
-import {
     EVENT_CONNECTION,
+    EVENT_CONNECTION_ABORT,
     EVENT_CONNECTION_DETACHED,
+    EVENT_CONNECTION_DRAG,
     EVENT_CONNECTION_MOVED,
-} from '@jsplumb/core';
+} from '@jsplumb/browser-ui';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 
 @Component({

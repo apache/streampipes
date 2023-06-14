@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-05-29 18:04:19.
+// Generated using typescript-generator version 3.1.1185 on 2023-06-12 22:17:35.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3139,7 +3139,11 @@ export class RuntimeResolvableOneOfStaticProperty extends OneOfStaticProperty {
 export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty';
     'dependsOn': string[];
+    'latestFetchedNodes': TreeInputNode[];
+    'nextBaseNodeToResolve': string;
     'nodes': TreeInputNode[];
+    'resolveDynamically': boolean;
+    'selectedNodesInternalNames': string[];
 
     static 'fromData'(
         data: RuntimeResolvableTreeInputStaticProperty,
@@ -3154,7 +3158,15 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
         instance.dependsOn = __getCopyArrayFn(__identity<string>())(
             data.dependsOn,
         );
+        instance.latestFetchedNodes = __getCopyArrayFn(TreeInputNode.fromData)(
+            data.latestFetchedNodes,
+        );
+        instance.nextBaseNodeToResolve = data.nextBaseNodeToResolve;
         instance.nodes = __getCopyArrayFn(TreeInputNode.fromData)(data.nodes);
+        instance.resolveDynamically = data.resolveDynamically;
+        instance.selectedNodesInternalNames = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.selectedNodesInternalNames);
         return instance;
     }
 }
@@ -3632,6 +3644,7 @@ export class TreeInputNode {
     children: TreeInputNode[];
     dataNode: boolean;
     internalNodeName: string;
+    nodeMetadata: { [index: string]: any };
     nodeName: string;
     selected: boolean;
 
@@ -3648,6 +3661,9 @@ export class TreeInputNode {
         );
         instance.dataNode = data.dataNode;
         instance.internalNodeName = data.internalNodeName;
+        instance.nodeMetadata = __getCopyObjectFn(__identity<any>())(
+            data.nodeMetadata,
+        );
         instance.nodeName = data.nodeName;
         instance.selected = data.selected;
         return instance;

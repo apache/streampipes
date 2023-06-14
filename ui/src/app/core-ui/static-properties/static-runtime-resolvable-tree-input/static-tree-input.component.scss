@@ -28,9 +28,64 @@
 }
 
 .sp-tree .mat-nested-tree-node div[role='group'] {
-    padding-left: 40px;
+    padding-left: 20px;
+    min-height: 24px;
 }
 
 .sp-tree div[role='group'] > .mat-tree-node {
-    padding-left: 40px;
+    padding-left: 20px;
+    min-height: 30px;
+}
+
+.mat-nested-tree-node {
+    min-height: 30px;
+}
+
+.tree-input-header {
+    background: var(--color-bg-2);
+    height: 40px;
+    padding: 5px;
+    border-bottom: 1px solid var(--color-bg-3);
+}
+
+.tree-input-section {
+    border: 1px solid var(--color-bg-3);
+    margin-top: 10px;
+}
+
+.color-primary {
+    color: var(--color-primary);
+}
+
+.icon-button {
+    cursor: pointer;
+    color: var(--color-accent);
+}
+
+.node-metadata {
+    border-bottom: 1px solid var(--color-bg-3);
+    color: var(--color-default-text);
+    padding: 10px;
+}
+
+.node-name {
+    font-weight: bold;
+}
+
+.selected-node {
+    padding: 10px;
+    border-bottom: 1px solid var(--color-bg-3);
+}
+
+.selected-node:nth-child(odd) {
+    background: var(--color-bg-1);
+}
+
+.selected-node:nth-child(even) {
+    background: var(--color-bg-2);
+}
+
+.selected-node {
+    padding: 5px;
+    border: 1px solid var(--color-bg-3);
 }

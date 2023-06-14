@@ -27,10 +27,18 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
   private List<String> dependsOn;
   private List<TreeInputNode> nodes;
 
+  private boolean resolveDynamically;
+  private String nextBaseNodeToResolve;
+  private List<TreeInputNode> latestFetchedNodes;
+
+  private List<String> selectedNodesInternalNames;
+
   public RuntimeResolvableTreeInputStaticProperty() {
     super(StaticPropertyType.RuntimeResolvableTreeInputStaticProperty);
     this.dependsOn = new ArrayList<>();
     this.nodes = new ArrayList<>();
+    this.latestFetchedNodes = new ArrayList<>();
+    this.selectedNodesInternalNames = new ArrayList<>();
   }
 
   public RuntimeResolvableTreeInputStaticProperty(String internalName,
@@ -39,12 +47,17 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
     super(StaticPropertyType.RuntimeResolvableTreeInputStaticProperty, internalName, label, description);
     this.dependsOn = new ArrayList<>();
     this.nodes = new ArrayList<>();
+    this.latestFetchedNodes = new ArrayList<>();
+    this.selectedNodesInternalNames = new ArrayList<>();
   }
 
   public RuntimeResolvableTreeInputStaticProperty(RuntimeResolvableTreeInputStaticProperty other) {
     super(other);
     this.dependsOn = other.getDependsOn();
     this.nodes = other.getNodes().stream().map(TreeInputNode::new).collect(Collectors.toList());
+    this.latestFetchedNodes = other.getLatestFetchedNodes();
+    this.selectedNodesInternalNames = other.getSelectedNodesInternalNames();
+    this.nextBaseNodeToResolve = other.getNextBaseNodeToResolve();
   }
 
   @Override
@@ -66,5 +79,37 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
 
   public void setDependsOn(List<String> dependsOn) {
     this.dependsOn = dependsOn;
+  }
+
+  public boolean isResolveDynamically() {
+    return resolveDynamically;
+  }
+
+  public void setResolveDynamically(boolean resolveDynamically) {
+    this.resolveDynamically = resolveDynamically;
+  }
+
+  public String getNextBaseNodeToResolve() {
+    return nextBaseNodeToResolve;
+  }
+
+  public void setNextBaseNodeToResolve(String nextBaseNodeToResolve) {
+    this.nextBaseNodeToResolve = nextBaseNodeToResolve;
+  }
+
+  public List<TreeInputNode> getLatestFetchedNodes() {
+    return latestFetchedNodes;
+  }
+
+  public void setLatestFetchedNodes(List<TreeInputNode> latestFetchedNodes) {
+    this.latestFetchedNodes = latestFetchedNodes;
+  }
+
+  public List<String> getSelectedNodesInternalNames() {
+    return selectedNodesInternalNames;
+  }
+
+  public void setSelectedNodesInternalNames(List<String> selectedNodesInternalNames) {
+    this.selectedNodesInternalNames = selectedNodesInternalNames;
   }
 }

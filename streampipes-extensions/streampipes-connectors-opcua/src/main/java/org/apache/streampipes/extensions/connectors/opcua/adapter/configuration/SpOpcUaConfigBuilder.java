@@ -55,9 +55,6 @@ public class SpOpcUaConfigBuilder {
     String selectedAlternativeAuthentication =
         extractor.selectedAlternativeInternalId(ACCESS_MODE.name());
 
-    int namespaceIndex = extractor.singleValueParameter(NAMESPACE_INDEX.name(), int.class);
-    String nodeId = extractor.singleValueParameter(NODE_ID.name(), String.class);
-
     boolean usePullMode = extractor.selectedAlternativeInternalId(ADAPTER_TYPE.name())
         .equals(PULL_MODE.name());
     boolean useURL = selectedAlternativeConnection.equals(OPC_URL.name());
@@ -78,7 +75,9 @@ public class SpOpcUaConfigBuilder {
           extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
       serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
-      return new SpOpcUaConfig(serverAddress, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
+      return new SpOpcUaConfig(serverAddress,
+          pullIntervalSeconds,
+          selectedNodeNames);
 
     } else if (!useURL && unauthenticated) {
       String serverAddress =
@@ -88,8 +87,6 @@ public class SpOpcUaConfigBuilder {
 
       return new SpOpcUaConfig(serverAddress,
           port,
-          namespaceIndex,
-          nodeId,
           pullIntervalSeconds,
           selectedNodeNames);
     } else {
@@ -103,8 +100,6 @@ public class SpOpcUaConfigBuilder {
         serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
 
         return new SpOpcUaConfig(serverAddress,
-            namespaceIndex,
-            nodeId,
             username,
             password,
             pullIntervalSeconds,
@@ -117,8 +112,6 @@ public class SpOpcUaConfigBuilder {
 
         return new SpOpcUaConfig(serverAddress,
             port,
-            namespaceIndex,
-            nodeId,
             username,
             password,
             pullIntervalSeconds,

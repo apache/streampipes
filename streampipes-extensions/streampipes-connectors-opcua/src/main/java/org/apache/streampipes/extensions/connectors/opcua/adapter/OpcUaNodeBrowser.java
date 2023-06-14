@@ -26,20 +26,24 @@ import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
+import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class OpcUaNodeBrowser {
 
@@ -72,19 +76,14 @@ public class OpcUaNodeBrowser {
         .collect(Collectors.toList());
   }
 
-  public List<TreeInputNode> buildNodeTreeFromOrigin() throws UaException, ExecutionException, InterruptedException {
-    NodeId origin = spOpcConfig.getOriginNodeId();
+  public List<TreeInputNode> buildNodeTreeFromOrigin(String nextBaseNodeToResolve)
+      throws UaException, ExecutionException, InterruptedException {
 
-    UaNode parentNode = getAddressSpace().getNode(origin);
-    List<TreeInputNode> nodes = new ArrayList<>();
-    TreeInputNode parentInput = new TreeInputNode();
-    parentInput.setInternalNodeName(parentNode.getNodeId().toParseableString());
-    parentInput.setDataNode(isDataNode(parentNode));
-    parentInput.setNodeName(parentNode.getDisplayName().getText());
-    buildTreeAsync(client, parentInput).get();
-    nodes.add(parentInput);
+    var requestsRootNode = Objects.isNull(nextBaseNodeToResolve);
+    var currentNodeId = requestsRootNode
+        ? Identifiers.RootFolder : NodeId.parse(nextBaseNodeToResolve);
 
-    return nodes;
+    return findChildren(client, currentNodeId);
   }
 
   private OpcNode toOpcNode(String nodeName) throws UaException {
@@ -104,23 +103,44 @@ public class OpcUaNodeBrowser {
     throw new UaException(StatusCode.BAD, "Node is not of type BaseDataVariableTypeNode");
   }
 
-  private CompletableFuture<Void> buildTreeAsync(OpcUaClient client, TreeInputNode tree) {
-    NodeId nodeId = NodeId.parse(tree.getInternalNodeName());
-    return client.getAddressSpace().browseNodesAsync(nodeId).thenCompose(nodes -> {
-      nodes.forEach(node -> {
-        TreeInputNode childNode = new TreeInputNode();
-        childNode.setNodeName(node.getDisplayName().getText());
-        childNode.setInternalNodeName(node.getNodeId().toParseableString());
-        childNode.setDataNode(isDataNode(node));
-        tree.addChild(childNode);
+  private List<TreeInputNode> findChildren(OpcUaClient client,
+                                           NodeId nodeId) throws UaException {
+    return client
+        .getAddressSpace()
+        .browseNodes(nodeId)
+        .stream()
+        .map(node -> {
+          TreeInputNode childNode = new TreeInputNode();
+          childNode.setNodeName(node.getDisplayName().getText());
+          childNode.setInternalNodeName(node.getNodeId().toParseableString());
+          childNode.setDataNode(isDataNode(node));
+          childNode.setNodeMetadata(buildMetadata(client, node));
+          return childNode;
+        })
+        .collect(Collectors.toList());
+  }
 
-      });
+  private Map<String, Object> buildMetadata(OpcUaClient client,
+                                            UaNode node) {
+    var metadata = new HashMap<String, Object>();
+    metadata.put("NamespaceIndex", node.getNodeId().getNamespaceIndex().toString());
+    metadata.put("NodeClass", node.getNodeClass().toString());
+    metadata.put("Description", node.getDescription().getText());
+    metadata.put("BrowseName", node.getBrowseName().getName());
+    metadata.put("DisplayName", node.getDisplayName().getText());
 
-      Stream<CompletableFuture<Void>> futures =
-          tree.getChildren().stream().map(child -> buildTreeAsync(client, child));
+    if (node instanceof UaVariableNode) {
+      var dataTypeNodeId = ((UaVariableNode) node).getDataType();
+      metadata.put("Value", String.valueOf(((UaVariableNode) node).getValue().getValue().getValue()));
+      try {
+        var dataTypeNode = client.getAddressSpace().getNode(dataTypeNodeId);
+        metadata.put("DataType", dataTypeNode.getDisplayName().getText());
+      } catch (UaException e) {
+        throw new RuntimeException(e);
+      }
+    }
 
-      return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
-    });
+    return metadata;
   }
 
   private AddressSpace getAddressSpace() {

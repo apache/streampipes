@@ -30,9 +30,8 @@ src/app/core/components/base-navigation.component.ts
 src/assets/img/sp/logo.png
 src/assets/img/sp/logo-navigation.png
 src/assets/img/favicon/favicon-96x96.png
-src/scss/sp/sp-theme.scss
 webpack.partial.dev.js
-
+src/scss/_variables.scss
 # compiled output
 /dist
 /dist-server
