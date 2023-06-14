@@ -53,7 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -275,11 +275,13 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
                         Labels.withId(OPC_SERVER_PORT))
                 ))
         )
-        .requiredTextParameter(Labels.withId(NAMESPACE_INDEX))
-        .requiredTextParameter(Labels.withId(NODE_ID))
         .requiredRuntimeResolvableTreeInput(
-            Labels.withId(AVAILABLE_NODES),
-            Arrays.asList(NAMESPACE_INDEX.name(), NODE_ID.name())
+            Labels.withId(AVAILABLE_NODES.name()),
+            List.of(
+                ADAPTER_TYPE.name(),
+                ACCESS_MODE.name(),
+                OPC_HOST_OR_URL.name()),
+            true
         )
         .buildConfiguration();
   }

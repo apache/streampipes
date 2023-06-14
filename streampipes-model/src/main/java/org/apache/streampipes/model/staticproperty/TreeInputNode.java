@@ -19,7 +19,9 @@
 package org.apache.streampipes.model.staticproperty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TreeInputNode {
@@ -30,8 +32,11 @@ public class TreeInputNode {
   private String nodeName;
   private String internalNodeName;
 
+  private Map<String, Object> nodeMetadata;
+
   public TreeInputNode() {
     this.children = new ArrayList<>();
+    this.nodeMetadata = new HashMap<>();
   }
 
   public TreeInputNode(TreeInputNode other) {
@@ -40,6 +45,7 @@ public class TreeInputNode {
     this.nodeName = other.getNodeName();
     this.internalNodeName = other.getInternalNodeName();
     this.children = other.getChildren().stream().map(TreeInputNode::new).collect(Collectors.toList());
+    this.nodeMetadata = other.getNodeMetadata();
   }
 
   public boolean hasChildren() {
@@ -88,5 +94,13 @@ public class TreeInputNode {
 
   public void addChild(TreeInputNode node) {
     this.children.add(node);
+  }
+
+  public Map<String, Object> getNodeMetadata() {
+    return nodeMetadata;
+  }
+
+  public void setNodeMetadata(Map<String, Object> nodeMetadata) {
+    this.nodeMetadata = nodeMetadata;
   }
 }

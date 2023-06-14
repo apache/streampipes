@@ -16,17 +16,46 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { StaticPropertyGroup } from '@streampipes/platform-services';
+import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Component({
     selector: 'sp-app-static-group',
     templateUrl: './static-group.component.html',
     styleUrls: ['./static-group.component.css'],
 })
-export class StaticGroupComponent extends AbstractStaticPropertyRenderer<StaticPropertyGroup> {
+export class StaticGroupComponent
+    extends AbstractStaticPropertyRenderer<StaticPropertyGroup>
+    implements OnInit
+{
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    private hasInput: boolean;
+    dependentStaticProperties: Map<string, boolean> = new Map<
+        string,
+        boolean
+    >();
+
+    handleConfigurationUpdate(event: ConfigurationInfo): void {
+        this.dependentStaticProperties.set(
+            event.staticPropertyInternalName,
+            event.configured,
+        );
+        if (
+            Array.from(this.dependentStaticProperties.values()).every(
+                v => v === true,
+            )
+        ) {
+            this.emitUpdate(true);
+        } else {
+            this.emitUpdate(false);
+        }
+    }
+
+    ngOnInit(): void {
+        this.staticProperty.staticProperties.forEach(sp => {
+            this.dependentStaticProperties.set(sp.internalName, false);
+        });
+    }
 }

@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -186,7 +187,14 @@ public class OpcUaUtil {
       spOpcUaClient.connect();
       OpcUaNodeBrowser nodeBrowser =
           new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
-      config.setNodes(nodeBrowser.buildNodeTreeFromOrigin());
+
+      var nodes = nodeBrowser.buildNodeTreeFromOrigin(config.getNextBaseNodeToResolve());
+      if (Objects.isNull(config.getNextBaseNodeToResolve())) {
+        config.setNodes(nodes);
+      } else {
+        config.setLatestFetchedNodes(nodes);
+      }
+
 
       return config;
     } catch (UaException e) {
