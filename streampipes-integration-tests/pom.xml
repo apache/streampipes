@@ -81,7 +81,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
-      <version>1.17.4</version>
+      <version>1.18.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
