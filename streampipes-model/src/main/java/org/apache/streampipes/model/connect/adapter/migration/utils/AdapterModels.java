@@ -16,26 +16,21 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.utils;
-
-import org.apache.streampipes.service.core.migrations.v093.migrator.AdapterMigrator;
-import org.apache.streampipes.service.core.migrations.v093.migrator.GenericAdapterMigrator;
-import org.apache.streampipes.service.core.migrations.v093.migrator.MigrationHelpers;
-import org.apache.streampipes.service.core.migrations.v093.migrator.SpecificAdapterMigrator;
+package org.apache.streampipes.model.connect.adapter.migration.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AdapterMigrationUtils {
+public class AdapterModels {
 
-  private static final String GENERIC_SET =
+  public static final String GENERIC_SET =
       "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
-  private static final String SPECIFIC_SET =
+  public static final String SPECIFIC_SET =
       "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription";
-  private static final String GENERIC_STREAM =
+  public static final String GENERIC_STREAM =
       "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
-  private static final String SPECIFIC_STREAM =
+  public static final String SPECIFIC_STREAM =
       "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription";
 
   public static final String NEW_MODEL =
@@ -56,12 +51,11 @@ public class AdapterMigrationUtils {
               deprecatedAdapterStreamClasses.stream())
           .collect(Collectors.toList());
 
-  public static AdapterMigrator getAdapterMigrator(String adapterType) {
-    if (adapterType.equals(GENERIC_STREAM)) {
-      return new GenericAdapterMigrator(new MigrationHelpers());
-    } else {
-      return new SpecificAdapterMigrator(new MigrationHelpers());
-    }
+  public static boolean shouldMigrate(String adapterClassName) {
+    return deprecatedAdapterClasses.contains(adapterClassName);
   }
 
+  public static boolean isSetAdapter(String adapterClassName) {
+    return AdapterModels.deprecatedAdapterSetClasses.contains(adapterClassName);
+  }
 }
