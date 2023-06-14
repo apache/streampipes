@@ -27,6 +27,7 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.StatusCodes;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -134,8 +135,16 @@ public class OpcUaNodeBrowser {
       metadata.put("Value", String.valueOf(((UaVariableNode) node).getValue().getValue().getValue()));
       try {
         var dataTypeNode = client.getAddressSpace().getNode(dataTypeNodeId);
+        var value = client.readValue(0, TimestampsToReturn.Both, node.getNodeId()).get();
+        metadata.put("SourceTime", value.getSourceTime().getJavaDate().toString());
+        metadata.put("ServerTime", value.getServerTime().getJavaDate().toString());
+        var statusCode = value.getStatusCode().getValue();
+        var statusCodeName = StatusCodes.lookup(statusCode).get();
+        if (statusCodeName.length > 0) {
+          metadata.put("Status", statusCodeName[0]);
+        }
         metadata.put("DataType", dataTypeNode.getDisplayName().getText());
-      } catch (UaException e) {
+      } catch (UaException | ExecutionException | InterruptedException e) {
         throw new RuntimeException(e);
       }
     }
