@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.pe.shared.config.kafka;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+
+
 import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslPlainConfig;
@@ -31,6 +32,8 @@ import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 public class KafkaConnectUtils {
 
@@ -112,8 +115,9 @@ public class KafkaConnectUtils {
           ? new KafkaSecurityUnauthenticatedSSLConfig() :
           new KafkaSecurityUnauthenticatedPlainConfig();
     }
-    String autoOffset = extractor.selectedAlternativeInternalId(AUTO_OFFSET_RESET_CONFIG);
-    AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig(autoOffset);
+
+    String auto = extractor.selectedAlternativeInternalId(AUTO_OFFSET_RESET_CONFIG);
+    AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig(auto);
 
     return new KafkaConfig(brokerUrl, port, topic, securityConfig, autoOffsetResetConfig);
   }

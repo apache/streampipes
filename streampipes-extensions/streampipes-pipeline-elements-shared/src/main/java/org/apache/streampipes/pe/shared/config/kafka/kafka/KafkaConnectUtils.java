@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.pe.shared.config.kafka.kafka;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
@@ -27,11 +26,12 @@ import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslSSLConfi
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedPlainConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedSSLConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 public class KafkaConnectUtils {
 
@@ -123,16 +123,10 @@ public class KafkaConnectUtils {
           new KafkaSecurityUnauthenticatedPlainConfig();
     }
 
-    StaticPropertyAlternatives staticProperty = (StaticPropertyAlternatives) extractor.getStaticPropertyByName(AUTO_OFFSET_RESET_CONFIG);
 
-    AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig();
-    for (StaticPropertyAlternative s : staticProperty.getAlternatives()) {
-      if (s.getSelected()) {
-          autoOffsetResetConfig.setAutoOffsetResetConfig(s.getElementId());
-          break;
-      }
-    }
 
+    String auto = extractor.selectedAlternativeInternalId(AUTO_OFFSET_RESET_CONFIG);
+    AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig(auto);
 
     return new KafkaConfig(brokerUrl, port, topic, securityConfig, autoOffsetResetConfig);
   }

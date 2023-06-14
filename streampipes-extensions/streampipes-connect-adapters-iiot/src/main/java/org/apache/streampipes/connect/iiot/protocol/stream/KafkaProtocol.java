@@ -41,6 +41,7 @@ import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.pe.shared.config.kafka.kafka.KafkaConfig;
 import org.apache.streampipes.pe.shared.config.kafka.kafka.KafkaConnectUtils;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -89,6 +90,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     final Properties props = new Properties();
 
     kafkaConfig.getSecurityConfig().appendConfig(props);
+    kafkaConfig.getAutoOffsetResetConfig().appendConfig(props);
 
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
         kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort());
@@ -137,6 +139,10 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
 
   @Override
   public IAdapterConfiguration declareConfig() {
+
+    StaticPropertyAlternative latestAlternative = KafkaConnectUtils.getAlternativesLatest();
+    latestAlternative.setSelected(true);
+
     return AdapterConfigurationBuilder
         .create(ID, KafkaProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
@@ -160,7 +166,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
             KafkaConnectUtils.PORT_KEY))
         .requiredAlternatives(KafkaConnectUtils.getAutoOffsetResetConfigLabel(),
                 KafkaConnectUtils.getAlternativesEarliest(),
-                KafkaConnectUtils.getAlternativesLatest(),
+                latestAlternative,
                 KafkaConnectUtils.getAlternativesNone())
         .buildConfiguration();
   }
