@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -65,28 +66,6 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
     return getDataStreamResourceManager().findAllAsInvocation();
   }
 
-  @GET
-  @Path("/own")
-  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
-  @JacksonSerialized
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public List<SpDataStream> getOwn() {
-    return getDataStreamResourceManager().findAllAsInvocation();
-  }
-
-  @DELETE
-  @Path("/own/{elementId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public Response removeOwn(@PathParam("elementId") String elementId) {
-    getDataStreamResourceManager().delete(elementId);
-    return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
-  }
-
   @DELETE
   @Path("/{elementId}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -102,8 +81,12 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  public SpDataStream getElement(@PathParam("elementId") String elementId) {
-    return getDataStreamResourceManager().findAsInvocation(elementId);
+  public Response getElement(@PathParam("elementId") String elementId) {
+    try {
+      return ok(getDataStreamResourceManager().findAsInvocation(elementId));
+    } catch (IllegalArgumentException e) {
+      return badRequest(StreamPipesErrorMessage.from(e));
+    }
   }
 
   @POST

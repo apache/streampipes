@@ -18,8 +18,9 @@
 
 import { Injectable } from '@angular/core';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable()
 export class RestApi {
@@ -44,13 +45,13 @@ export class RestApi {
 
     configured(): Observable<any> {
         return this.$http.get(this.getServerUrl() + '/setup/configured', {
-            headers: { ignoreLoadingBar: '' },
+            context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         });
     }
 
     getUnreadNotificationsCount(): Observable<any> {
         return this.$http.get(this.urlApiBase() + '/notifications/count', {
-            headers: { ignoreLoadingBar: '' },
+            context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         });
     }
 

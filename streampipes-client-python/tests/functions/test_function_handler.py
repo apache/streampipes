@@ -14,13 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
 from json.encoder import JSONEncoder
 from typing import Any, Dict, List, Tuple
 from unittest import TestCase
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, call, patch
 
 from streampipes.client.client import StreamPipesClient, StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.functions.broker.broker_handler import (
+    SupportedBroker,
+    UnsupportedBrokerError,
+)
 from streampipes.functions.function_handler import FunctionHandler
 from streampipes.functions.registration import Registration
 from streampipes.functions.streampipes_function import StreamPipesFunction
@@ -83,7 +88,7 @@ class TestFunctionOutput(StreamPipesFunction):
         self.stopped = True
 
 
-class TestMessage:
+class TestNatsMessage:
     def __init__(self, data) -> None:
         self.data = JSONEncoder().encode(data).encode()
 
@@ -99,115 +104,53 @@ class TestMessageIterator:
     async def __anext__(self):
         if self.i < len(self.test_data) - 1:
             self.i += 1
-            return TestMessage(self.test_data[self.i])
+            return TestNatsMessage(self.test_data[self.i])
+        else:
+            raise StopAsyncIteration
+
+
+class TestKafkaMessage:
+    def __init__(self, data) -> None:
+        self.data = JSONEncoder().encode(data).encode()
+
+    def value(self):
+        return self.data
+
+
+class TestKafkaMessageContainer:
+    def __init__(self, test_data) -> None:
+        self.test_data = test_data
+        self.i = -1
+
+    def get_data(self, *args, **kwargs):
+        if self.i < len(self.test_data) - 1:
+            self.i += 1
+            return TestKafkaMessage(self.test_data[self.i])
         else:
             raise StopAsyncIteration
 
 
 class TestFunctionHandler(TestCase):
     def setUp(self) -> None:
-        # set example responses from endpoints
-        self.data_stream: Dict[str, Any] = {
-            "elementId": "urn:streampipes.apache.org:eventstream:uPDKLI",
-            "name": "Test",
-            "description": "",
-            "iconUrl": None,
-            "appId": None,
-            "includesAssets": False,
-            "includesLocales": False,
-            "includedAssets": [],
-            "includedLocales": [],
-            "applicationLinks": [],
-            "internallyManaged": True,
-            "connectedTo": None,
-            "eventGrounding": {
-                "elementId": "urn:streampipes.apache.org:spi:eventgrounding:TwGIQA",
-                "transportProtocols": [
-                    {
-                        "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-                        "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
-                        "brokerHostname": "nats",
-                        "topicDefinition": {
-                            "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
-                            "actualTopicName": "test1",
-                        },
-                        "port": 4222,
-                    }
-                ],
-                "transportFormats": [
-                    {
-                        "elementId": "urn:streampipes.apache.org:spi:transportformat:CMGsLP",
-                        "rdfType": ["http://sepa.event-processing.org/sepa#json"],
-                    }
-                ],
-            },
-            "eventSchema": {
-                "elementId": "urn:streampipes.apache.org:spi:eventschema:rARlLX",
-                "eventProperties": [
-                    {
-                        "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:yogPNV",
-                        "label": "Density",
-                        "description": "Denotes the current density of the fluid",
-                        "runtimeName": "density",
-                        "required": False,
-                        "domainProperties": ["http://schema.org/Number"],
-                        "eventPropertyQualities": [],
-                        "requiresEventPropertyQualities": [],
-                        "propertyScope": "MEASUREMENT_PROPERTY",
-                        "index": 5,
-                        "runtimeId": None,
-                        "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
-                        "measurementUnit": None,
-                        "valueSpecification": None,
-                    },
-                    {
-                        "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:GjZgFg",
-                        "label": "Temperature",
-                        "description": "Denotes the current temperature in degrees celsius",
-                        "runtimeName": "temperature",
-                        "required": False,
-                        "domainProperties": ["http://schema.org/Number"],
-                        "eventPropertyQualities": [],
-                        "requiresEventPropertyQualities": [],
-                        "propertyScope": "MEASUREMENT_PROPERTY",
-                        "index": 4,
-                        "runtimeId": None,
-                        "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
-                        "measurementUnit": "http://codes.wmo.int/common/unit/degC",
-                        "valueSpecification": {
-                            "elementId": "urn:streampipes.apache.org:spi:quantitativevalue:ZQSJfk",
-                            "minValue": 0,
-                            "maxValue": 100,
-                            "step": 0.1,
-                        },
-                    },
-                    {
-                        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
-                        "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:NRKdap",
-                        "label": "Timestamp",
-                        "description": "The current timestamp value",
-                        "runtimeName": "timestamp",
-                        "required": False,
-                        "domainProperties": ["http://schema.org/DateTime"],
-                        "eventPropertyQualities": [],
-                        "requiresEventPropertyQualities": [],
-                        "propertyScope": "HEADER_PROPERTY",
-                        "index": 0,
-                        "runtimeId": None,
-                        "runtimeType": "http://www.w3.org/2001/XMLSchema#long",
-                        "measurementUnit": None,
-                        "valueSpecification": None,
-                    },
-                ],
-            },
-            "measurementCapability": None,
-            "measurementObject": None,
-            "index": 0,
-            "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect.iiot...",
-            "category": None,
-            "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
-            "dom": None,
+        attributes = {
+            "density": RuntimeType.FLOAT.value,
+            "temperature": RuntimeType.FLOAT.value,
+            "timestamp": RuntimeType.INTEGER.value,
         }
+        stream_id = "urn:streampipes.apache.org:eventstream:uPDKLI"
+
+        data_stream1 = create_data_stream("Test_NATS", attributes=attributes, stream_id=stream_id)
+        data_stream1.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test1"
+        self.data_stream_nats: Dict[str, Any] = data_stream1.to_dict()
+
+        data_stream2 = create_data_stream(
+            "Test_Kafka", attributes=attributes, stream_id=stream_id, broker=SupportedBroker.KAFKA
+        )
+        data_stream2.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test1"
+        self.data_stream_kafka: Dict[str, Any] = data_stream2.to_dict()
+
+        data_stream1.event_grounding.transport_protocols[0].class_name = "None"
+        self.data_stream_unsupported_broker = data_stream1.to_dict()
 
         self.test_stream_data1 = [
             {"density": 10.3, "temperature": 20.5, "timestamp": 1670000001000},
@@ -228,17 +171,18 @@ class TestFunctionHandler(TestCase):
             {"density": 3.6, "temperature": 30.4, "timestamp": 1670000007000},
         ]
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
+    @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_function_handler(self, http_session: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_handler_nats(self, server_version: MagicMock, http_session: MagicMock, get_messages: MagicMock, connection: AsyncMock):
         http_session_mock = MagicMock()
-        http_session_mock.get.return_value.json.return_value = self.data_stream
+        http_session_mock.get.return_value.json.return_value = self.data_stream_nats
         http_session.return_value = http_session_mock
 
-        nats_broker.return_value = TestMessageIterator(self.test_stream_data1)
+        server_version.return_value = {"backendVersion": '0.x.y'}
+
+        get_messages.return_value = TestMessageIterator(self.test_stream_data1)
 
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
@@ -255,7 +199,7 @@ class TestFunctionHandler(TestCase):
 
         self.assertEqual(test_function.context.client, client)
         self.assertDictEqual(
-            test_function.context.schema, {self.data_stream["elementId"]: DataStream(**self.data_stream)}
+            test_function.context.schema, {self.data_stream_nats["elementId"]: DataStream(**self.data_stream_nats)}
         )
         self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
         self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
@@ -263,21 +207,82 @@ class TestFunctionHandler(TestCase):
         self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
-    @patch("streampipes.endpoint.endpoint.APIEndpoint.get", autospec=True)
-    def test_function_handler_two_streams(self, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
+    @patch("streampipes.functions.broker.kafka.kafka_consumer.KafkaConnection", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_handler_kafka(self, server_version: MagicMock, http_session: MagicMock, connection: MagicMock):
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.json.return_value = self.data_stream_kafka
+        http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": '0.x.y'}
+
+        connection_mock = MagicMock()
+        connection_mock.poll.side_effect = TestKafkaMessageContainer(self.test_stream_data1).get_data
+        connection.return_value = connection_mock
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        registration = Registration()
+        test_function = TestFunction()
+        registration.register(test_function)
+        function_handler = FunctionHandler(registration, client)
+        function_handler.initializeFunctions()
+
+        self.assertEqual(test_function.context.client, client)
+        self.assertDictEqual(
+            test_function.context.schema, {self.data_stream_kafka["elementId"]: DataStream(**self.data_stream_kafka)}
+        )
+        self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
+        self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
+
+        self.assertListEqual(test_function.data, self.test_stream_data1)
+        self.assertTrue(test_function.stopped)
+
+    @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_handler_unsupported_broker(self, server_version: MagicMock, http_session: MagicMock, connection: AsyncMock):
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.json.return_value = self.data_stream_unsupported_broker
+        http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        registration = Registration()
+        test_function = TestFunction()
+        registration.register(test_function)
+        function_handler = FunctionHandler(registration, client)
+        with self.assertRaises(UnsupportedBrokerError):
+            function_handler.initializeFunctions()
+
+    @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
+    @patch("streampipes.endpoint.api.DataStreamEndpoint.get", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_two_streams_nats(self, server_version: MagicMock, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         def get_stream(endpoint, stream_id):
             if stream_id == "urn:streampipes.apache.org:eventstream:uPDKLI":
-                return DataStream(**self.data_stream)
+                return DataStream(**self.data_stream_nats)
             elif stream_id == "urn:streampipes.apache.org:eventstream:HHoidJ":
-                data_stream = DataStream(**self.data_stream)
+                data_stream = DataStream(**self.data_stream_nats)
                 data_stream.element_id = stream_id
                 data_stream.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test2"
                 return data_stream
 
+        server_version.return_value = {"backendVersion": "0.x.y"}
         endpoint.side_effect = get_stream
 
         def get_message(broker):
@@ -318,15 +323,16 @@ class TestFunctionHandler(TestCase):
         self.assertListEqual(test_function2.data2, self.test_stream_data2)
         self.assertTrue(test_function2.stopped)
 
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.disconnect", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.createSubscription", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker._makeConnection", autospec=True)
+    @patch("streampipes.functions.broker.nats.nats_publisher.connect", autospec=True)
+    @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
     @patch("streampipes.functions.streampipes_function.time", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.get_message", autospec=True)
-    @patch("streampipes.functions.broker.nats_broker.NatsBroker.publish_event", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.publish_event", autospec=True)
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_function_output_stream(
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_output_stream_nats(
         self,
+            server_version: MagicMock,
         http_session: MagicMock,
         pulish_event: MagicMock,
         get_message: MagicMock,
@@ -334,8 +340,10 @@ class TestFunctionHandler(TestCase):
         *args: Tuple[AsyncMock]
     ):
         http_session_mock = MagicMock()
-        http_session_mock.get.return_value.json.return_value = self.data_stream
+        http_session_mock.get.return_value.json.return_value = self.data_stream_nats
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         output_events = []
 
@@ -364,7 +372,70 @@ class TestFunctionHandler(TestCase):
 
         self.assertEqual(test_function.context.client, client)
         self.assertDictEqual(
-            test_function.context.schema, {self.data_stream["elementId"]: DataStream(**self.data_stream)}
+            test_function.context.schema, {self.data_stream_nats["elementId"]: DataStream(**self.data_stream_nats)}
+        )
+        self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
+        self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
+        self.assertTrue(test_function.stopped)
+
+        self.assertListEqual(output_events, [{"number": i, "timestamp": 0} for i in range(len(self.test_stream_data1))])
+
+    @patch("streampipes.functions.broker.kafka.kafka_publisher.Producer", autospec=True)
+    @patch("streampipes.functions.streampipes_function.time", autospec=True)
+    @patch("streampipes.functions.broker.kafka.kafka_consumer.KafkaConnection", autospec=True)
+    @patch("streampipes.functions.broker.KafkaPublisher.publish_event", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_output_stream_kafka(
+        self,
+            server_version: MagicMock,
+        http_session: MagicMock,
+        pulish_event: MagicMock,
+        connection: MagicMock,
+        time: MagicMock,
+        producer: MagicMock,
+    ):
+        os.environ["BROKER-HOST"] = "localhost"
+        os.environ["KAFKA-PORT"] = "9094"
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.json.return_value = self.data_stream_kafka
+        http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        output_events = []
+
+        def save_event(self, event: Dict[str, Any]):
+            output_events.append(event)
+
+        pulish_event.side_effect = save_event
+        connection_mock = MagicMock()
+        connection_mock.poll.side_effect = TestKafkaMessageContainer(self.test_stream_data1).get_data
+        connection.return_value = connection_mock
+        time.side_effect = lambda: 0
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        output_stream = create_data_stream(
+            "test", attributes={"number": RuntimeType.INTEGER.value}, broker=SupportedBroker.KAFKA
+        )
+        test_function = TestFunctionOutput(
+            function_definition=FunctionDefinition().add_output_data_stream(output_stream)
+        )
+        registration = Registration()
+        registration.register(test_function)
+        function_handler = FunctionHandler(registration, client)
+        function_handler.initializeFunctions()
+
+        producer.assert_has_calls(calls=[call({"bootstrap.servers": "localhost:9094"})])
+        self.assertEqual(test_function.context.client, client)
+        self.assertDictEqual(
+            test_function.context.schema, {self.data_stream_kafka["elementId"]: DataStream(**self.data_stream_kafka)}
         )
         self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
         self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)

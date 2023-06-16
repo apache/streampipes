@@ -28,7 +28,7 @@ from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 from streampipes.endpoint.endpoint import MessagingEndpoint, _error_code_to_message
 from streampipes.endpoint.exceptions import MessagingEndpointNotConfiguredError
-from streampipes.functions.broker.nats_broker import NatsBroker
+from streampipes.functions.broker import NatsConsumer
 from streampipes.model.container.resource_container import (
     StreamPipesDataModelError,
     StreamPipesResourceContainerJSONError,
@@ -115,7 +115,7 @@ class TestStreamPipesEndpoints(TestCase):
                             "topicDefinition": {
                                 "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
                                 "actualTopicName": "org.apache.streampipes.connect."
-                                "fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                                                   "fc22b8f6-698a-4127-aa71-e11854dc57c5",
                             },
                             "port": 4222,
                         }
@@ -170,7 +170,7 @@ class TestStreamPipesEndpoints(TestCase):
                 "measurementObject": None,
                 "index": 0,
                 "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect."
-                "iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
+                                          "iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
                 "category": None,
                 "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "dom": None,
@@ -188,10 +188,13 @@ class TestStreamPipesEndpoints(TestCase):
         self.data_lake_measure_all_json_validation = json.dumps(self.dlm_all_manipulated)
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_endpoint_get(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_get(self, server_version: MagicMock, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_get
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
@@ -206,7 +209,7 @@ class TestStreamPipesEndpoints(TestCase):
             calls=[
                 call().get(
                     url="https://localhost:80/streampipes-backend/api/v2/streams/urn:streampipes."
-                    "apache.org:eventstream:uPDKLI"
+                        "apache.org:eventstream:uPDKLI"
                 )
             ],
             any_order=True,
@@ -215,9 +218,12 @@ class TestStreamPipesEndpoints(TestCase):
         self.assertEqual(result.to_dict(use_source_names=True), self.data_stream_get)
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_endpoint_post(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_post(self, server_version: MagicMock, http_session: MagicMock):
         http_session_mock = MagicMock()
         http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
@@ -235,7 +241,11 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_endpoint_data_stream_happy_path(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_data_stream_happy_path(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_stream_all_json
         http_session.return_value = http_session_mock
@@ -301,7 +311,11 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_endpoint_data_lake_measure_happy_path(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_data_lake_measure_happy_path(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_lake_measure_all_json
         http_session.return_value = http_session_mock
@@ -350,7 +364,11 @@ class TestStreamPipesEndpoints(TestCase):
         self.assertEqual(2, result_pd["num_event_properties"][0])
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_endpoint_data_lake_measure_bad_return_code(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_data_lake_measure_bad_return_code(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         response_mock = MagicMock()
         response_mock.status_code = 405
         response_mock.text = "Test error"
@@ -376,7 +394,11 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_endpoint_data_lake_measure_json_error(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_data_lake_measure_json_error(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_lake_measure_all_json_error
         http_session.return_value = http_session_mock
@@ -392,7 +414,11 @@ class TestStreamPipesEndpoints(TestCase):
             client.dataLakeMeasureApi.all()
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_endpoint_data_lake_measure_validation_error(self, http_session: MagicMock):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_data_lake_measure_validation_error(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.text = self.data_lake_measure_all_json_validation
         http_session.return_value = http_session_mock
@@ -411,22 +437,34 @@ class TestStreamPipesEndpoints(TestCase):
 
 
 class TestMessagingEndpoint(TestCase):
-    client = StreamPipesClient(
-        client_config=StreamPipesClientConfig(
-            credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
-            host_address="localhost",
+
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_messaging_endpoint_happy_path(self, _: MagicMock):
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
         )
-    )
 
-    def test_messaging_endpoint_happy_path(self):
-        demo_endpoint = MessagingEndpoint(parent_client=self.client)
 
-        demo_endpoint.configure(broker=NatsBroker())
+        demo_endpoint = MessagingEndpoint(parent_client=client)
 
-        self.assertTrue(isinstance(demo_endpoint.broker, NatsBroker))
+        demo_endpoint.configure(broker=NatsConsumer())
 
-    def test_messaging_endpoint_missing_configure(self):
-        demo_endpoint = MessagingEndpoint(parent_client=self.client)
+        self.assertTrue(isinstance(demo_endpoint.broker, NatsConsumer))
+
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_messaging_endpoint_missing_configure(self, _:MagicMock):
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        demo_endpoint = MessagingEndpoint(parent_client=client)
 
         with self.assertRaises(MessagingEndpointNotConfiguredError):
             demo_endpoint.broker

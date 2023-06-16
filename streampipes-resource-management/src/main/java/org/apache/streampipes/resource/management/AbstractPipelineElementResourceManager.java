@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<String, W>,
@@ -43,6 +44,7 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
   public List<X> findAllAsInvocation() {
     return findAll()
         .stream()
+        .filter(Objects::nonNull)
         .map(this::toInvocation)
         .collect(Collectors.toList());
   }
@@ -52,7 +54,12 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
   }
 
   public X findAsInvocation(String elementId) {
-    return toInvocation(find(elementId));
+    var element = find(elementId);
+    if (Objects.nonNull(element)) {
+      return toInvocation(find(elementId));
+    } else {
+      throw new IllegalArgumentException("Could not find element with id " + elementId);
+    }
   }
 
   public void delete(String elementId) {

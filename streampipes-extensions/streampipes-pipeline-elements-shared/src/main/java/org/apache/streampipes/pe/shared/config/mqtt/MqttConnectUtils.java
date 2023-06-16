@@ -52,8 +52,12 @@ public class MqttConnectUtils {
   }
 
   public static StaticPropertyAlternative getAlternativesOne() {
-    //return Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", ""));
     return Alternatives.from(Labels.withId(ANONYMOUS_ACCESS));
+
+  }
+
+  public static StaticPropertyAlternative getAlternativesOne(boolean selected) {
+    return Alternatives.from(Labels.withId(ANONYMOUS_ACCESS), selected);
 
   }
 

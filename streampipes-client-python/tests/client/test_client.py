@@ -17,7 +17,9 @@
 import json
 from collections import namedtuple
 from unittest import TestCase
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import patch, MagicMock, call
+
+from requests import Response
 
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
@@ -26,7 +28,11 @@ from streampipes.endpoint.api import DataLakeMeasureEndpoint
 
 
 class TestStreamPipesClient(TestCase):
-    def test_client_init(self):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_client_init(self, server_version: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         result = StreamPipesClient(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
@@ -48,7 +54,11 @@ class TestStreamPipesClient(TestCase):
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "http://localhost:80/streampipes-backend/")
 
-    def test_client_create(self):
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_client_create(self, server_version: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
         result = StreamPipesClient.create(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
@@ -71,13 +81,21 @@ class TestStreamPipesClient(TestCase):
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
 
-    @patch("builtins.print")
+    @patch("streampipes.client.client.logger", autospec=True)
     @patch("streampipes.endpoint.endpoint.APIEndpoint._make_request", autospec=True)
-    def test_client_describe(self, make_request: MagicMock, mocked_print: MagicMock):
+    def test_client_describe(self, make_request: MagicMock, mocked_logger: MagicMock):
+
+        class MockResponse:
+            def __init__(self, text):
+                self.text = text
+
+            def json(self):
+                return json.loads(self.text)
+
         def simulate_response(*args, **kwargs):
-            Response = namedtuple("Response", ["text"])
+
             if "measurements" in kwargs["url"]:
-                return Response(
+                return MockResponse(
                     json.dumps(
                         [
                             {
@@ -90,10 +108,14 @@ class TestStreamPipesClient(TestCase):
                     )
                 )
             if "streams" in kwargs["url"]:
-                return Response(
+                return MockResponse(
                     json.dumps(
                         [{"elementId": "test-stream", "name": "test", "eventGrounding": {"transportProtocols": []}}]
                     )
+                )
+            if "versions" in kwargs["url"]:
+                return MockResponse(
+                    json.dumps({"backendVersion": "SP-dev"})
                 )
 
         make_request.side_effect = simulate_response
@@ -106,10 +128,10 @@ class TestStreamPipesClient(TestCase):
             )
         ).describe()
 
-        mocked_print.assert_has_calls(
+        mocked_logger.info.assert_has_calls(
             calls=[
                 call(
-                    "\nHi there!\nYou are connected to a StreamPipes instance running at https://localhost:443.\n"
+                    "\nHi there!\nYou are connected to a StreamPipes instance running at https://localhost:443 with version SP-dev.\n"
                     "The following StreamPipes resources are available with this client:\n"
                     "1x DataLakeMeasures\n1x DataStreams"
                 ),

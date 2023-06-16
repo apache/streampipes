@@ -97,7 +97,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     String zookeeperHost = protocol.getZookeeperHost() + ":" + protocol.getZookeeperPort();
 
     try {
-      createKafaTopic(protocol);
+      createKafkaTopic(protocol);
     } catch (ExecutionException | InterruptedException e) {
       LOG.error("Could not create topic: " + topic + " on broker " + zookeeperHost);
     }
@@ -113,7 +113,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
    *
    * @param settings The settings to connect to a Kafka broker
    */
-  private void createKafaTopic(KafkaTransportProtocol settings) throws ExecutionException, InterruptedException {
+  private void createKafkaTopic(KafkaTransportProtocol settings) throws ExecutionException, InterruptedException {
 
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);

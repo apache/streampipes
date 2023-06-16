@@ -24,14 +24,23 @@ Please make sure you have a recent version of [node](https://nodejs.org/en/) and
 
 To build the ui, perform the following steps:
 
-```
+```bash
     npm install
     npm run build
 ```
+
+To test your local version of the UI execute the following commands:
+
+```bash
+    npm install
+    npm start
+```
+
+(be aware that this requires a StreamPipes instance that runs without the UI, read more [here](https://cwiki.apache.org/confluence/display/STREAMPIPES/UI))
 
 ### Formatting and Linting
 
 Running `npm install` will cause a pre-commit hook to be created.
 This hook ensures that if you want to commit changes to this repository, these changes are compliant with our [formatting](https://prettier.io/) and [linting](https://eslint.org/) rules.
 
-If you see errors there, you can try to run `npm run format:fix` and `npm run lint:fix` to fix these issues automatically. Otherwise you have to run `npm run format` and `npm run lint` to get additional information about the problems.
+If you see errors there, you can try to run `npm run format:fix` and `npm run lint:fix` to fix these issues automatically. Otherwise, you have to run `npm run format` and `npm run lint` to get additional information about the problems.

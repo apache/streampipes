@@ -38,6 +38,19 @@ theme:
     - navigation.indexes
     - navigation.tracking
   font: false
+  palette:
+
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
 
 extra:
   social:
@@ -87,6 +100,9 @@ plugins:
       version_selector: true
       css_dir: css
       javascript_dir: js
+  - search:
+      lang:
+        - en
 
 extra_css:
   - stylesheets/extra.css

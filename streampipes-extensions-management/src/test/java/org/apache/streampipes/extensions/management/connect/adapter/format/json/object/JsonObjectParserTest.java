@@ -18,12 +18,15 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.object;
 
+import org.apache.streampipes.extensions.management.connect.adapter.TestUtils;
+
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 
 import static org.apache.streampipes.extensions.management.connect.adapter.TestUtils.makeJsonObject;
@@ -59,6 +62,15 @@ public class JsonObjectParserTest {
     String parsedStringEventOne = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
 
     assertEquals("{\"one\":1}", parsedStringEventOne);
+  }
+
+  @Test
+  public void parseNestedSchemaWithNullValues() {
+    JsonObjectParser parser = new JsonObjectParser();
+
+    var guessInfo = parser.getSchemaAndSample(Collections.singletonList(TestUtils.makeNestedJsonObject().getBytes()));
+
+    assertEquals(guessInfo.getEventSchema().getEventProperties().size(), 1);
   }
 
   private InputStream getInputStream(String s) {

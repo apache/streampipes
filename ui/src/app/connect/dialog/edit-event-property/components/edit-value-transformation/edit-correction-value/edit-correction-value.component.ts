@@ -30,7 +30,8 @@ export class EditCorrectionValueComponent {
     operators = [
         { value: 'MULTIPLY', viewValue: 'Multiply' },
         { value: 'ADD', viewValue: 'Add' },
-        { value: 'SUBSTRACT', viewValue: 'Substract' },
+        { value: 'SUBTRACT', viewValue: 'Subtract' },
+        { value: 'DIVIDE', viewValue: 'Divide' },
     ];
 
     constructor() {}

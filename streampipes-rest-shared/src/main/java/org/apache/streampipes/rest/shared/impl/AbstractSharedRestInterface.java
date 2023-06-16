@@ -31,12 +31,15 @@ public abstract class AbstractSharedRestInterface {
     return error(entity, 400);
   }
 
+  protected <T> Response notFound(T entity) {
+    return error(entity, 404);
+  }
+
   protected <T> Response serverError(T entity) {
     return error(entity, 500);
   }
 
-  protected <T> Response error(T entity,
-                               Integer statusCode) {
+  protected <T> Response error(T entity, Integer statusCode) {
     return Response
         .status(statusCode)
         .entity(entity)

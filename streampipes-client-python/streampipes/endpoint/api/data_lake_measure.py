@@ -26,7 +26,7 @@ from pydantic import BaseModel, Extra, Field, StrictInt, ValidationError, valida
 from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.container import DataLakeMeasures
 from streampipes.model.container.resource_container import ResourceContainer
-from streampipes.model.resource import DataLakeSeries
+from streampipes.model.resource.query_result import QueryResult
 
 __all__ = [
     "DataLakeMeasureEndpoint",
@@ -158,9 +158,9 @@ class MeasurementGetQueryConfig(BaseModel):
 class DataLakeMeasureEndpoint(APIEndpoint):
     """Implementation of the DataLakeMeasure endpoint.
 
-    This endpoint provides an interfact to all data stored in the StreamPipes data lake.
+    This endpoint provides an interface to all data stored in the StreamPipes data lake.
 
-    Consequently, it allows uerying metadata about available data sets (see `all()` method).
+    Consequently, it allows querying metadata about available data sets (see `all()` method).
     The metadata is returned as an instance of [`DataLakeMeasures`][streampipes.model.container.DataLakeMeasures].
 
     In addition, the endpoint provides direct access to the data stored in the data laka by querying a
@@ -275,7 +275,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         return config
 
     @property
-    def _resource_cls(self) -> Type[DataLakeSeries]:
+    def _resource_cls(self) -> Type[QueryResult]:
         """
         Additional reference to resource class.
         This endpoint deviates from the desired relationship
@@ -283,7 +283,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         the return type of the get endpoint.
         Therefore, this is only a temporary implementation and will be removed soon.
         """
-        return DataLakeSeries
+        return QueryResult
 
     @property
     def _container_cls(self) -> Type[ResourceContainer]:
@@ -298,7 +298,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         return "api", "v4", "datalake", "measurements"
 
-    def get(self, identifier: str, **kwargs: Optional[Dict[str, Any]]) -> DataLakeSeries:
+    def get(self, identifier: str, **kwargs: Optional[Dict[str, Any]]) -> QueryResult:
         """Queries the specified data lake measure from the API.
 
         By default, the maximum number of returned records is 1000.
@@ -332,4 +332,4 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         url += measurement_get_config.build_query_string()
 
         response = self._make_request(request_method=self._parent_client.request_session.get, url=url)
-        return self._resource_cls.from_json(json_string=response.text)
+        return self._resource_cls(**response.json())

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-extensions</artifactId>
-        <version>0.91.1-SNAPSHOT</version>
+        <version>0.92.0</version>
     </parent>
 
     <artifactId>streampipes-connect-adapters</artifactId>
@@ -37,19 +37,15 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-shared</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-extensions</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
 
         <!-- External dependencies -->
-        <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_annotations</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>

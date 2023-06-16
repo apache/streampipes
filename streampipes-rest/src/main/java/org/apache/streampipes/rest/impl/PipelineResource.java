@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl;
 
-
 import org.apache.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.apache.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.apache.streampipes.commons.exceptions.NoMatchingProtocolException;
@@ -76,63 +75,23 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @Operation(summary = "Get all pipelines of the current user",
-      tags = {"Pipeline"},
-      responses = {
-          @ApiResponse(content = {
-              @Content(
+  @Operation(summary = "Get all pipelines of the current user", tags = {"Pipeline"}, responses = {
+      @ApiResponse(content = {
+          @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
-          })})
+                  array = @ArraySchema(schema = @Schema(implementation = Pipeline.class))
+          )})})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> get() {
     return PipelineManager.getAllPipelines();
   }
 
-  /**
-   * @deprecated use {@link #get()} instead.
-   */
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/own")
-  @JacksonSerialized
-  @Operation(summary = "Get all pipelines assigned to the current user",
-      tags = {"Pipeline"},
-      responses = {
-          @ApiResponse(content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
-          })})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public List<Pipeline> getOwn() {
-    return PipelineManager.getAllPipelines();
-  }
-
-  /**
-   * @deprecated use {@link #get()} instead.
-   */
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/system")
-  @JacksonSerialized
-  @Operation(summary = "Get all system pipelines assigned to the current user",
-      tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
-  @Deprecated(since = "0.71.0", forRemoval = true)
-  public Response getSystemPipelines() {
-    return ok(getPipelineStorage().getSystemPipelines());
-  }
-
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{pipelineId}/status")
   @JacksonSerialized
-  @Operation(summary = "Get the pipeline status of a given pipeline",
-      tags = {"Pipeline"})
+  @Operation(summary = "Get the pipeline status of a given pipeline", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   public Response getPipelineStatus(@PathParam("pipelineId") String pipelineId) {
     return ok(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
@@ -142,8 +101,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Path("/{pipelineId}")
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @Operation(summary = "Delete a pipeline with a given id",
-      tags = {"Pipeline"})
+  @Operation(summary = "Delete a pipeline with a given id", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_PRIVILEGE)
   public Response removeOwn(@PathParam("pipelineId") String pipelineId) {
     PipelineManager.deletePipeline(pipelineId);
@@ -154,19 +112,23 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Path("/{pipelineId}")
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @Operation(summary = "Get a specific pipeline with the given id",
-      tags = {"Pipeline"})
+  @Operation(summary = "Get a specific pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   public Response getElement(@PathParam("pipelineId") String pipelineId) {
-    return ok(PipelineManager.getPipeline(pipelineId));
+    Pipeline foundPipeline = PipelineManager.getPipeline(pipelineId);
+
+    if (foundPipeline == null) {
+      return notFound("Pipeline with " + pipelineId + " not found.");
+    } else {
+      return ok(PipelineManager.getPipeline(pipelineId));
+    }
   }
 
   @Path("/{pipelineId}/start")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @Operation(summary = "Start the pipeline with the given id",
-      tags = {"Pipeline"})
+  @Operation(summary = "Start the pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public Response start(@PathParam("pipelineId") String pipelineId) {
     try {
@@ -183,28 +145,24 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @Operation(summary = "Stop the pipeline with the given id",
-      tags = {"Pipeline"})
+  @Operation(summary = "Stop the pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public Response stop(@PathParam("pipelineId") String pipelineId,
-                       @QueryParam("forceStop") @DefaultValue("false") boolean forceStop) {
+             @QueryParam("forceStop") @DefaultValue("false") boolean forceStop) {
     try {
       PipelineOperationStatus status = PipelineManager.stopPipeline(pipelineId, forceStop);
       return ok(status);
-    } catch
-    (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
-      return constructErrorMessage(
-          new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(),
-              e.getMessage()));
+      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
+          NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
     }
   }
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @Operation(summary = "Store a new pipeline",
-      tags = {"Pipeline"})
+  @Operation(summary = "Store a new pipeline", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public Response addPipeline(Pipeline pipeline) {
 
@@ -221,21 +179,17 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Hidden
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   @PostAuthorize("hasPermission(returnObject, 'READ')")
-  public PipelineElementRecommendationMessage recommend(Pipeline pipeline,
-                                                        @PathParam("recId") String baseRecElement) {
+  public PipelineElementRecommendationMessage recommend(Pipeline pipeline, @PathParam("recId") String baseRecElement) {
     try {
       return Operations.findRecommendedElements(pipeline, baseRecElement);
     } catch (JsonSyntaxException e) {
-      throw new WebApplicationException(badRequest(new Notification(NotificationType.UNKNOWN_ERROR,
-          e.getMessage())));
+      throw new WebApplicationException(badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage())));
     } catch (NoSuitableSepasAvailableException e) {
-      throw new WebApplicationException(badRequest(new Notification(NotificationType.NO_SEPA_FOUND,
-          e.getMessage())));
+      throw new WebApplicationException(badRequest(new Notification(NotificationType.NO_SEPA_FOUND, e.getMessage())));
     } catch (Exception e) {
       e.printStackTrace();
       throw new WebApplicationException(
-          serverError(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
-              e.getMessage()))));
+          serverError(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()))));
     }
   }
 
@@ -261,26 +215,20 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(Operations.validatePipeline(pipeline));
     } catch (JsonSyntaxException e) {
-      return badRequest(new Notification(NotificationType.UNKNOWN_ERROR,
-          e.getMessage()));
+      return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
     } catch (NoMatchingSchemaException e) {
-      return badRequest(new Notification(NotificationType.NO_VALID_CONNECTION,
-          e.getMessage()));
+      return badRequest(new Notification(NotificationType.NO_VALID_CONNECTION, e.getMessage()));
     } catch (NoMatchingFormatException e) {
-      return badRequest(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION,
-          e.getMessage()));
+      return badRequest(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION, e.getMessage()));
     } catch (NoMatchingProtocolException e) {
-      return badRequest(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION,
-          e.getMessage()));
+      return badRequest(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION, e.getMessage()));
     } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException e) {
-      return serverError(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE
-          , e.getMessage()));
+      return serverError(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE, e.getMessage()));
     } catch (InvalidConnectionException e) {
       return badRequest(e.getErrorLog());
     } catch (Exception e) {
       e.printStackTrace();
-      return serverError(new Notification(NotificationType.UNKNOWN_ERROR,
-          e.getMessage()));
+      return serverError(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
     }
   }
 
@@ -288,11 +236,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Path("/{pipelineId}")
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @Operation(summary = "Update an existing pipeline",
-      tags = {"Pipeline"})
+  @Operation(summary = "Update an existing pipeline", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  public Response overwritePipeline(@PathParam("pipelineId") String pipelineId,
-                                    Pipeline pipeline) {
+  public Response overwritePipeline(@PathParam("pipelineId") String pipelineId, Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
@@ -312,14 +258,10 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/contains/{elementId}")
   @JacksonSerialized
-  @Operation(summary = "Returns all pipelines that contain the element with the elementId",
-      tags = {"Pipeline"},
-      responses = {
-          @ApiResponse(content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
-          })})
+  @Operation(summary = "Returns all pipelines that contain the element with the elementId", tags = {
+      "Pipeline"}, responses = {@ApiResponse(content = {
+        @Content(mediaType = "application/json",
+          array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))})})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> getPipelinesContainingElement(@PathParam("elementId") String elementId) {

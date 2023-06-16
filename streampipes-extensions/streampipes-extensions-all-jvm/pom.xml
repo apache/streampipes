@@ -20,7 +20,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.91.1-SNAPSHOT</version>
+        <version>0.92.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-extensions</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-all-jvm</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
             <classifier>embed</classifier>
         </dependency>
 
@@ -54,20 +54,20 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters-iiot</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
             <classifier>embed</classifier>
         </dependency>
 
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-nats</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
 
         <!-- Dependency convergence -->

@@ -19,7 +19,6 @@
 package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.ps.DataLakeImageResource;
-import org.apache.streampipes.ps.DataLakeMeasureResourceV3;
 import org.apache.streampipes.ps.DataLakeMeasureResourceV4;
 import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.ps.DataLakeResourceV4;
@@ -120,7 +119,6 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         DataLakeWidgetResource.class,
         DataLakeImageResource.class,
         DataLakeResourceV3.class,
-        DataLakeMeasureResourceV3.class,
         DataLakeMeasureResourceV4.class,
         DataStream.class,
         EmailConfigurationResource.class,

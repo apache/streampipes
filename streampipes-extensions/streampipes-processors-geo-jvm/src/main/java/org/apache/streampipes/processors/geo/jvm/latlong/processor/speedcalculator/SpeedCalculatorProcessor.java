@@ -49,7 +49,7 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
   private static final String LATITUDE_KEY = "latitude-key";
   private static final String LONGITUDE_KEY = "longitude-key";
   private static final String COUNT_WINDOW_KEY = "count-window-key";
-  private static final String SPEED_KEY = "speed-key";
+  private static final String SPEED_RUNTIME_NAME = "speed";
   private String latitudeFieldMapper;
   private String longitudeFieldMapper;
   private String timestampFieldMapper;
@@ -75,7 +75,7 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
         .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_KEY))
         .outputStrategy(
             OutputStrategies.append(PrimitivePropertyBuilder
-                .create(Datatypes.Float, SPEED_KEY)
+                .create(Datatypes.Float, SPEED_RUNTIME_NAME)
                 .domainProperty(SO.NUMBER)
                 .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour"))
                 .build())
@@ -98,7 +98,7 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
     if (this.buffer.isFull()) {
       Event firstEvent = (Event) buffer.get();
       double speed = calculateSpeed(firstEvent, event);
-      event.addField(SPEED_KEY, speed);
+      event.addField(SPEED_RUNTIME_NAME, speed);
       collector.collect(event);
     }
     this.buffer.add(event);

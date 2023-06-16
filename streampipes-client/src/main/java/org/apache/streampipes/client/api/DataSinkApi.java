@@ -27,6 +27,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
     implements CRUDApi<String, DataSinkInvocation> {
@@ -36,7 +37,7 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
   }
 
   @Override
-  public DataSinkInvocation get(String s) {
+  public Optional<DataSinkInvocation> get(String s) {
     return getSingle(getBaseResourcePath().addToPath(s));
   }
 
@@ -100,7 +101,6 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("actions")
-        .addToPath("own");
+        .addToPath("actions");
   }
 }

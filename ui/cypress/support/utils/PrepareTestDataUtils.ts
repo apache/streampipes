@@ -19,7 +19,6 @@
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
-import { UserInputBuilder } from '../builder/UserInputBuilder';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -38,7 +37,9 @@ export class PrepareTestDataUtils {
             storeInDataLake,
         );
 
-        ConnectUtils.addGenericStreamAdapter(adapter);
+        ConnectUtils.addGenericAdapter(adapter);
+
+        ConnectUtils.startAdapter(adapter, true);
     }
 
     private static getDataLakeTestAdapter(
@@ -53,7 +54,8 @@ export class PrepareTestDataUtils {
                 'radio',
                 'speed',
                 'fastest_\\(ignore_original_time\\)',
-            );
+            )
+            .addProtocolInput('radio', 'replayonce', 'yes');
 
         if (format === 'csv') {
             adapterBuilder

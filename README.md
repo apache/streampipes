@@ -19,7 +19,7 @@
 [![Github Actions](https://img.shields.io/github/actions/workflow/status/apache/streampipes/build.yml)](https://github.com/apache/streampipes/actions/)
 [![Docker pulls](https://img.shields.io/docker/pulls/apachestreampipes/backend.svg)](https://hub.docker.com/r/apachestreampipes/backend/)
 ![](https://img.shields.io/badge/java--version-17-blue.svg)
-[![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)
+[![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-service-core.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-service-core.svg)
 [![License](https://img.shields.io/github/license/apache/streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Last commit](https://img.shields.io/github/last-commit/apache/streampipes.svg)]()
 [![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
@@ -137,7 +137,7 @@ Quick Links:
 To properly build the StreamPipes core, the following tools should be installed:
 
 ### Prerequisites
-* Java 17 JDK (minimum)
+* Java 17 JDK (We officially only support Java 17, JDKs above 17 might work as well, but we don't provide any guarantee)
 * Maven (tested with 3.8)
 * NodeJS + NPM (tested with v12+/ v6+)
 * Docker + Docker-Compose
@@ -154,7 +154,6 @@ To build the ui, switch to the ``ui`` folder and perform the following steps:
 
 ```
     npm install
-    # for NPM > v7, run npm install --legacy-peer-deps
     npm run build
 ```
 
@@ -176,7 +175,7 @@ The source code of all included pipeline elements and adapters can be found [her
 You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/extend-tutorial-data-processors.html) can be used to integrate your existing processing logic into StreamPipes. 
 Pipeline elements are packaged as Docker images and can be installed at runtime, whenever your requirements change.
 
-👉 Check our developer guide at [https://streampipes.apache.org/docs/docs/extend-setup.html](https://streampipes.apache.org/docs/docs/extend-setup.html).
+👉 Check our [developer guide](https://streampipes.apache.org/docs/docs/extend-setup.html).
 
 ## Bugs and Feature Requests
 
@@ -206,7 +205,7 @@ Here are some first steps in case you want to contribute:
 * Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
 * Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
 * Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
-* Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
+* Have a look at our developer [wiki](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
 
 Have fun!
 

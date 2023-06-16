@@ -43,7 +43,6 @@
     <div class="table-container">
         <table
             mat-table
-            mat-sort
             *ngIf="showData"
             [dataSource]="dataSource"
             matSort
@@ -84,7 +83,7 @@
                 "
                 [cdkColumnDef]="element.fullDbName"
             >
-                <div *ngIf="!isTimestamp(element)">
+                <div *ngIf="!(element.fullDbName === 'time')">
                     <th
                         mat-header-cell
                         mat-sort-header
@@ -120,5 +119,13 @@
             ></tr>
             <tr mat-row *matRowDef="let row; columns: columnNames"></tr>
         </table>
+        <mat-paginator
+            color="accent"
+            [length]="100"
+            [pageSize]="500"
+            [pageSizeOptions]="[10, 20, 50, 100, 500, 1000]"
+            aria-label="Select page"
+        >
+        </mat-paginator>
     </div>
 </div>

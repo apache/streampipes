@@ -16,9 +16,7 @@
 [environment:pipeline-element]
 backend
 consul
-extensions-all-jvm
 couchdb
 ui
-sources-watertank-simulator
 nats
 influxdb

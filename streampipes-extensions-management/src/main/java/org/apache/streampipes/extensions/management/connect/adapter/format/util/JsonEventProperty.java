@@ -22,6 +22,7 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.slf4j.Logger;
@@ -39,27 +40,15 @@ public class JsonEventProperty {
   public static EventProperty getEventProperty(String key, Object o) {
     EventProperty resultProperty = null;
 
-    LOG.info("Key: " + key);
-    LOG.info("Class: " + o.getClass());
-    LOG.info("Primitive: " + o.getClass().isPrimitive());
-    LOG.info("Array: " + o.getClass().isArray());
-    LOG.info("TypeName: " + o.getClass().getTypeName());
-
-
-
-    if (o.getClass().equals(Boolean.class)) {
-      resultProperty = new EventPropertyPrimitive();
-      resultProperty.setRuntimeName(key);
-      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.BOOLEAN.toString());
+    if (o == null) {
+      resultProperty = makePrimitiveProperty(key, XSD.STRING.toString());
+    } else if (o.getClass().equals(Boolean.class)) {
+      resultProperty = makePrimitiveProperty(key, XSD.BOOLEAN.toString());
     } else if (o.getClass().equals(String.class)) {
-      resultProperty = new EventPropertyPrimitive();
-      resultProperty.setRuntimeName(key);
-      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.STRING.toString());
+      resultProperty = makePrimitiveProperty(key, XSD.STRING.toString());
     } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)
         || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)) {
-      resultProperty = new EventPropertyPrimitive();
-      resultProperty.setRuntimeName(key);
-      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.FLOAT.toString());
+      resultProperty = makePrimitiveProperty(key, XSD.FLOAT.toString());
     } else if (o.getClass().equals(LinkedHashMap.class)) {
       resultProperty = new EventPropertyNested();
       resultProperty.setRuntimeName(key);
@@ -96,5 +85,15 @@ public class JsonEventProperty {
     }
 
     return resultProperty;
+  }
+
+  private static EventProperty makePrimitiveProperty(String key,
+                                                     String runtimeType) {
+    var property = new EventPropertyPrimitive();
+    property.setRuntimeName(key);
+    property.setRuntimeType(runtimeType);
+    property.setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
+
+    return property;
   }
 }

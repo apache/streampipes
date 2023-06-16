@@ -25,7 +25,7 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class FunctionContextGenerator {
 
@@ -60,6 +60,7 @@ public class FunctionContextGenerator {
     return this.streamIds
         .stream()
         .map(streamId -> client.streams().get(streamId))
-        .collect(Collectors.toList());
+        .flatMap(Optional::stream)
+        .toList();
   }
 }

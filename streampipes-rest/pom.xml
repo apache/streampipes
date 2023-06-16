@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.91.1-SNAPSHOT</version>
+        <version>0.92.0</version>
     </parent>
     <name>StreamPipes REST API</name>
     <artifactId>streampipes-rest</artifactId>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -43,79 +43,75 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-data-explorer</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-data-export</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-measurement-units</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-mail</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-management</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-shared</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-serializers-json</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-discovery</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-user-management</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-core-base</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-management</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
 
         <!-- External dependencies -->
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>retrofit</artifactId>
-        </dependency>
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations-jakarta</artifactId>
@@ -135,16 +131,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy-agent</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -169,6 +155,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                        checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                    </propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

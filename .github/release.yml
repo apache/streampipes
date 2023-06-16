@@ -20,15 +20,18 @@ changelog:
     labels:
       - no release note
   categories:
+    - title: StreamPipes Connect 🔌
+      labels:
+          - connect
     - title: StreamPipes Core 🥑
       labels:
         - backend
-    - title: StreamPipes Connect 🔌
-      labels:
-        - connect
-    - title: StreamPipes Pipeline elements ⚙️
+    - title: StreamPipes Pipeline Elements ⚙️
       labels:
         - pipeline elements
+    - title: StreamPipes Python 🐍
+      labels:
+        - python
     - title: StreamPipes UI 🖥️
       labels:
         - ui

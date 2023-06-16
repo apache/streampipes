@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.91.1-SNAPSHOT</version>
+        <version>0.92.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -37,12 +37,12 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk-bundle</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-flink</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -79,11 +79,6 @@
 
         <!-- Dependency convergence -->
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.scala-lang.modules</groupId>
             <artifactId>scala-xml_2.11</artifactId>
             <scope>test</scope>
@@ -98,7 +93,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-test-utils</artifactId>
-            <version>0.91.1-SNAPSHOT</version>
+            <version>0.92.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -126,11 +126,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Path("{userId}/appearance/mode/{darkMode}")
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateAppearanceMode(@PathParam("userId") String userId,
-                                       @PathParam("darkMode") boolean darkMode) {
-    String authenticatedUserId = getAuthenticatedUsername();
-    if (authenticatedUserId != null) {
-      UserAccount user = getUser(authenticatedUserId);
+  public Response updateAppearanceMode(@PathParam("darkMode") boolean darkMode) {
+    String authenticatedUsername = getAuthenticatedUsername();
+    if (authenticatedUsername != null) {
+      UserAccount user = getUser(authenticatedUsername);
       user.setDarkMode(darkMode);
       getUserStorage().updateUser(user);
 
@@ -145,8 +144,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response registerUser(UserAccount userAccount) {
-    // TODO check if userId is already taken
     try {
       if (getUserStorage().getUser(userAccount.getUsername()) == null) {
         String property = userAccount.getPassword();
@@ -171,8 +170,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response registerService(ServiceAccount serviceAccount) {
-    // TODO check if userId is already taken
     if (getUserStorage().getUser(serviceAccount.getUsername()) == null) {
       serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(serviceAccount.getClientSecret()));
       serviceAccount.setSecretEncrypted(true);
@@ -188,10 +187,15 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  public Response createNewApiToken(@PathParam("userId") String userId,
+  public Response createNewApiToken(@PathParam("userId") String username,
                                     RawUserApiToken rawToken) {
-    RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(userId, rawToken);
-    return ok(generatedToken);
+    String authenticatedUserName = getAuthenticatedUsername();
+    if (authenticatedUserName.equals(username)) {
+      RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken);
+      return ok(generatedToken);
+    } else {
+      return statusMessage(Notifications.error("User not found"));
+    }
   }
 
   @PUT
@@ -200,7 +204,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateUserAccountDetails(@PathParam("principalId") String principalId,
                                            UserAccount user) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
       updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
@@ -218,7 +222,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateUsername(@PathParam("principalId") String principalId,
                                  UserAccount user) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
       try {
@@ -252,7 +256,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updatePassword(@PathParam("principalId") String principalId,
                                  ChangePasswordRequest passwordRequest) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
     if (principalId.equals(authenticatedUserId) || isAdmin()) {
       try {
@@ -280,7 +284,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateServiceAccountDetails(@PathParam("principalId") String principalId,
                                               ServiceAccount user) {
-    String authenticatedUserId = getAuthenticatedUsername();
+    String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);
       user.setRev(existingUser.getRev());

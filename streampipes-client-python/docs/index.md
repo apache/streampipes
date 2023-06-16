@@ -16,13 +16,9 @@
   ~
 -->
 
+![StreamPipes Logo with Python](./img/streampipes-python.png#only-light)
+![StreamPipes Logo with Python](./img/streampipes-python-dark.png#only-dark)
 
-<h1 align="center">
-  <br>
-   <img src="./img/streampipes-python.png"
-   alt="StreamPipes Logo with Python" title="Apache StreamPipes Logo with Python" width="75%"/>
-  <br>
-</h1>
 <h4 align="center"><a href="https://github.com/apache/streampipes">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore IoT data streams.</h4>
 
 <br>

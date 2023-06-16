@@ -28,6 +28,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvocation>
     implements CRUDApi<String, DataProcessorInvocation> {
@@ -39,12 +40,11 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("sepas")
-        .addToPath("own");
+        .addToPath("sepas");
   }
 
   @Override
-  public DataProcessorInvocation get(String s) {
+  public Optional<DataProcessorInvocation> get(String s) {
     return getSingle(getBaseResourcePath().addToPath(s));
   }
 

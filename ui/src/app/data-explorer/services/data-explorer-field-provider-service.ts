@@ -194,10 +194,7 @@ export class DataExplorerFieldProviderService {
                 runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
                 runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
                 runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-                runtimeType === 'https://schema.org/Number' ||
-                runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
-                runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
-                runtimeType === 'https://www.w3.org/2001/XMLSchema#integer'
+                runtimeType === 'http://www.w3.org/2001/XMLSchema#long'
             );
         } else {
             return false;

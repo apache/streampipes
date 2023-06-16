@@ -17,6 +17,7 @@
 
 .PHONY: check
 check: mypy lint unit-tests
+	interrogate -vv --fail-under 100 --omit-covered-files --ignore-init-method --ignore-module --ignore-magic --ignore-regex test_* --ignore-regex Test*  --generate-badge ./docs/img --badge-format svg --badge-style flat
 
 .PHONY: doc
 doc:

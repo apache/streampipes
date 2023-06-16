@@ -16,15 +16,14 @@
 #
 import os
 from abc import ABC, abstractmethod
-from typing import Any, AsyncIterator, Dict
 
 from streampipes.model.resource.data_stream import DataStream
 
 
 class Broker(ABC):
-    """Abstract implementation of a broker.
+    """Abstract implementation of a broker for consumer and publisher.
 
-    A broker allows both to subscribe to a data stream and to publish events to a data stream.
+    It contains the basic logic to connect to a data stream.
     """
 
     async def connect(self, data_stream: DataStream) -> None:
@@ -43,12 +42,15 @@ class Broker(ABC):
         transport_protocol = data_stream.event_grounding.transport_protocols[0]
         self.topic_name = transport_protocol.topic_definition.actual_topic_name
         hostname = transport_protocol.broker_hostname
+        port = transport_protocol.port
         if "BROKER-HOST" in os.environ.keys():
             hostname = os.environ["BROKER-HOST"]
-        await self._makeConnection(hostname, transport_protocol.port)
+            if "Kafka" in transport_protocol.class_name and "KAFKA-PORT" in os.environ.keys():
+                port = int(os.environ["KAFKA-PORT"])
+        await self._make_connection(hostname, port)
 
     @abstractmethod
-    async def _makeConnection(self, hostname: str, port: int) -> None:
+    async def _make_connection(self, hostname: str, port: int) -> None:
         """Helper function to connect to a server.
 
         Parameters
@@ -65,47 +67,11 @@ class Broker(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    async def createSubscription(self) -> None:
-        """Creates a subscription to a data stream.
-
-        Returns
-        -------
-        None
-        """
-        raise NotImplementedError  # pragma: no cover
-
-    @abstractmethod
-    async def publish_event(self, event: Dict[str, Any]) -> None:
-        """Publish an event to a connected data stream.
-
-        Parameters
-        ----------
-        event: Dict[str, Any]
-            The event to be published.
-
-        Returns
-        -------
-        None
-        """
-        raise NotImplementedError  # pragma: no cover
-
-    @abstractmethod
     async def disconnect(self) -> None:
         """Closes the connection to the server.
 
         Returns
         -------
         None
-        """
-        raise NotImplementedError  # pragma: no cover
-
-    @abstractmethod
-    def get_message(self) -> AsyncIterator:
-        """Get the published messages of the subscription.
-
-        Returns
-        -------
-        iterator: AsyncIterator
-            An async iterator for the messages.
         """
         raise NotImplementedError  # pragma: no cover

@@ -18,10 +18,11 @@
 package org.apache.streampipes.client.api;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CRUDApi<K, V> {
 
-  V get(K id);
+  Optional<V> get(K id);
 
   List<V> all();
 

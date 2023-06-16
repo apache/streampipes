@@ -17,13 +17,16 @@
  */
 package org.apache.streampipes.client.api;
 
+
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRUDApi<String, Pipeline> {
 
@@ -32,7 +35,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
   }
 
   @Override
-  public Pipeline get(String pipelineId) {
+  public Optional<Pipeline> get(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId));
   }
 
@@ -43,12 +46,13 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
    */
   @Override
   public List<Pipeline> all() {
-    return getAll(getBaseResourcePath().addToPath("own"));
+    return getAll(getBaseResourcePath());
   }
+
 
   @Override
   public void create(Pipeline element) {
-
+    post(getBaseResourcePath(), element, SuccessMessage.class);
   }
 
   /**

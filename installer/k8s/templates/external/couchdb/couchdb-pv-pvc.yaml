@@ -14,27 +14,13 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: couchdb-pv
-spec:
-  storageClassName: local-storage-couchdb
-  capacity:
-    storage: 50M
-  accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
-  persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
-  hostPath:
-    path: {{ .Values.hostPath }}/couchdb
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: couchdb
-  name: couchdb-pvc
+    app: {{ .Values.external.couchdb.appName }}
+  name: {{ .Values.external.couchdb.persistence.claimName }}
 spec:
-  storageClassName: local-storage-couchdb
+  storageClassName: {{ .Values.external.couchdb.persistence.storageClassName }}
   accessModes:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:

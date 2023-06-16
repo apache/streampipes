@@ -16,6 +16,6 @@
 #
 #
 
-VERSION = (0, 91, 0)  # pragma: no cover
+VERSION = (0, 92, 0)  # pragma: no cover
 
 __version__ = ".".join(map(str, VERSION))  # noqa: F401 # pragma: no cover
