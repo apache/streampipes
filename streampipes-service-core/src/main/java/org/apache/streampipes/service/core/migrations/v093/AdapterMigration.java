@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.service.core.migrations.v093;
 
+import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
+import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.v093.migrator.AdapterMigrator;
 import org.apache.streampipes.service.core.migrations.v093.migrator.GenericAdapterMigrator;
-import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
 import org.apache.streampipes.service.core.migrations.v093.migrator.SpecificAdapterMigrator;
-import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.google.gson.JsonObject;
