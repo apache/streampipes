@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.filter;
+package org.apache.streampipes.service.core.filter;
 
 import org.apache.streampipes.commons.constants.HttpConstants;
 import org.apache.streampipes.model.client.user.Principal;

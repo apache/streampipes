@@ -15,37 +15,35 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.assets;
 
-import org.apache.commons.io.FileUtils;
+package org.apache.streampipes.model.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Objects;
 
-public class DocumentationParser {
+public class ListUtils {
 
-  private File file;
-  private String appId;
-
-  public DocumentationParser(File file, String appId) {
-    this.file = file;
-    this.appId = appId;
-  }
-
-
-  public void replaceImageUrls() {
-    try {
-      String fileContents = getFileContents();
-      String newFileContents = new ImagePathReplacer(fileContents, appId).replaceContent();
-      FileUtils.writeStringToFile(file, newFileContents, StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      e.printStackTrace();
+  public static boolean isEqualList(final Collection<?> list1, final Collection<?> list2) {
+    if (list1 == list2) {
+      return true;
     }
-  }
+    if (list1 == null || list2 == null || list1.size() != list2.size()) {
+      return false;
+    }
 
-  private String getFileContents() throws IOException {
-    return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-  }
+    final Iterator<?> it1 = list1.iterator();
+    final Iterator<?> it2 = list2.iterator();
 
+    while (it1.hasNext() && it2.hasNext()) {
+      final Object obj1 = it1.next();
+      final Object obj2 = it2.next();
+
+      if (!Objects.equals(obj1, obj2)) {
+        return false;
+      }
+    }
+
+    return !(it1.hasNext() || it2.hasNext());
+  }
 }

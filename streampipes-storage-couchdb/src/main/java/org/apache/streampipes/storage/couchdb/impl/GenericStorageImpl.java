@@ -26,7 +26,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.UrlEscapers;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Request;
 
@@ -52,8 +51,8 @@ public class GenericStorageImpl implements IGenericStorage {
 
   @Override
   public List<Map<String, Object>> findAll(String type) throws IOException {
-    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType?" + UrlEscapers.urlPathSegmentEscaper()
-        .escape("startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true");
+    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType?" + Utils
+        .escapePathSegment("startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true");
     Map<String, Object> queryResult = this.queryDocuments(query);
 
     List<Map<String, Object>> rows = (List<Map<String, Object>>) queryResult.get("rows");

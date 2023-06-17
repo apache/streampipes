@@ -22,8 +22,6 @@ package org.apache.streampipes.dataexplorer.param.model;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
 
-import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,8 +54,8 @@ public class SelectClauseParams implements IQueryStatement {
     }
   }
 
-  public static SelectClauseParams from(@Nullable String columns,
-                                        @Nullable String aggregationFunction) {
+  public static SelectClauseParams from(String columns,
+                                        String aggregationFunction) {
     return new SelectClauseParams(columns, aggregationFunction);
   }
 
