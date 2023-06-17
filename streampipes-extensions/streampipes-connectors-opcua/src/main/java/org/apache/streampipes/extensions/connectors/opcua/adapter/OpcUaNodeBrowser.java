@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
-import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfig;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaTypes;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.model.OpcNode;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
@@ -29,7 +30,6 @@ import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.StatusCodes;
 import org.eclipse.milo.opcua.stack.core.UaException;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
@@ -49,12 +49,12 @@ import java.util.stream.Collectors;
 public class OpcUaNodeBrowser {
 
   private final OpcUaClient client;
-  private final SpOpcUaConfig spOpcConfig;
+  private final OpcUaConfig spOpcConfig;
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaNodeBrowser.class);
 
   public OpcUaNodeBrowser(OpcUaClient client,
-                          SpOpcUaConfig spOpcUaClientConfig) {
+                          OpcUaConfig spOpcUaClientConfig) {
     this.client = client;
     this.spOpcConfig = spOpcUaClientConfig;
   }

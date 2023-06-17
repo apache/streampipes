@@ -29,8 +29,12 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfigBuilder;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil;
+import org.apache.streampipes.extensions.connectors.opcua.client.SpOpcUaClient;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
+import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.model.OpcNode;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
@@ -53,7 +57,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,26 +65,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaUtil.getSchema;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ACCESS_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.AVAILABLE_NODES;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.HOST_PORT;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NAMESPACE_INDEX;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NODE_ID;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_HOST;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_HOST_OR_URL;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_HOST;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_PORT;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_URL;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_URL;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PASSWORD;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_MODE;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.UNAUTHENTICATED;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil.getSchema;
 
 public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
 
@@ -89,7 +77,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaAdapter.class);
 
   private int pullingIntervalMilliSeconds;
-  private SpOpcUaClient spOpcUaClient;
+  private SpOpcUaClient<OpcUaAdapterConfig> spOpcUaClient;
   private List<OpcNode> allNodes;
   private List<NodeId> allNodeIds;
   private int numberProperties;
@@ -129,11 +117,11 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
 
       for (OpcNode node : this.allNodes) {
-        this.allNodeIds.add(node.nodeId);
+        this.allNodeIds.add(node.getNodeId());
       }
 
-      if (spOpcUaClient.inPullMode()) {
-        this.pullingIntervalMilliSeconds = spOpcUaClient.getPullIntervalMilliSeconds();
+      if (spOpcUaClient.getSpOpcConfig().inPullMode()) {
+        this.pullingIntervalMilliSeconds = spOpcUaClient.getSpOpcConfig().getPullIntervalMilliSeconds();
       } else {
         this.numberProperties = this.allNodeIds.size();
         this.spOpcUaClient.createListSubscription(this.allNodeIds, this);
@@ -213,11 +201,13 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    this.spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(extractor.getStaticPropertyExtractor()));
+    this.spOpcUaClient = new SpOpcUaClient<>(
+        SpOpcUaConfigExtractor.extractAdapterConfig(extractor.getStaticPropertyExtractor())
+    );
     this.collector = collector;
     this.prepareAdapter(extractor);
 
-    if (this.spOpcUaClient.inPullMode()) {
+    if (this.spOpcUaClient.getSpOpcConfig().inPullMode()) {
       this.pullAdapterScheduler = new PullAdapterScheduler();
       this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
     }
@@ -228,7 +218,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.spOpcUaClient.disconnect();
 
-    if (this.spOpcUaClient.inPullMode()) {
+    if (this.spOpcUaClient.getSpOpcConfig().inPullMode()) {
       this.pullAdapterScheduler.shutdown();
     }
   }
@@ -241,7 +231,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, OpcUaAdapter::new)
+    var builder = AdapterConfigurationBuilder.create(ID, OpcUaAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
@@ -249,41 +239,9 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
             Alternatives.from(Labels.withId(PULL_MODE),
                 StaticProperties.integerFreeTextProperty(
                     Labels.withId(PULLING_INTERVAL))),
-            Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)))
-        .requiredAlternatives(Labels.withId(ACCESS_MODE),
-            Alternatives.from(Labels.withId(UNAUTHENTICATED)),
-            Alternatives.from(Labels.withId(USERNAME_GROUP),
-                StaticProperties.group(
-                    Labels.withId(USERNAME_GROUP),
-                    StaticProperties.stringFreeTextProperty(
-                        Labels.withId(USERNAME)),
-                    StaticProperties.secretValue(Labels.withId(PASSWORD))
-                ))
-        )
-        .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
-            Alternatives.from(
-                Labels.withId(OPC_URL),
-                StaticProperties.stringFreeTextProperty(
-                    Labels.withId(OPC_SERVER_URL), "opc.tcp://localhost:4840"))
-            ,
-            Alternatives.from(Labels.withId(OPC_HOST),
-                StaticProperties.group(
-                    Labels.withId(HOST_PORT),
-                    StaticProperties.stringFreeTextProperty(
-                        Labels.withId(OPC_SERVER_HOST)),
-                    StaticProperties.stringFreeTextProperty(
-                        Labels.withId(OPC_SERVER_PORT))
-                ))
-        )
-        .requiredRuntimeResolvableTreeInput(
-            Labels.withId(AVAILABLE_NODES.name()),
-            List.of(
-                ADAPTER_TYPE.name(),
-                ACCESS_MODE.name(),
-                OPC_HOST_OR_URL.name()),
-            true
-        )
-        .buildConfiguration();
+            Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)));
+    SharedUserConfiguration.appendSharedOpcUaConfig(builder, true);
+    return builder.buildConfiguration();
   }
 
 

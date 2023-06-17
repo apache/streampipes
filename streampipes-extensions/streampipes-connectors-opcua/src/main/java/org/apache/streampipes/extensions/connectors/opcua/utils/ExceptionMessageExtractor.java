@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter.utils;
+package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.eclipse.milo.opcua.stack.core.UaException;
 

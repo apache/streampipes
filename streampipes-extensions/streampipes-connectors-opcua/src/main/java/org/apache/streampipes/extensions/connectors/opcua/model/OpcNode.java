@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter;
+package org.apache.streampipes.extensions.connectors.opcua.model;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
 

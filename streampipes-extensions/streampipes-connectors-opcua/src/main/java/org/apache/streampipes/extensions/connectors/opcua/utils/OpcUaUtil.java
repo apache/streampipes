@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter.utils;
+package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -24,11 +24,11 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcNode;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaNodeBrowser;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.SpOpcUaClient;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfigBuilder;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
+import org.apache.streampipes.extensions.connectors.opcua.client.SpOpcUaClient;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.model.OpcNode;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
@@ -89,7 +89,9 @@ public class OpcUaUtil {
     Map<String, FieldStatusInfo> fieldStatusInfos = new HashMap<>();
     List<EventProperty> allProperties = new ArrayList<>();
 
-    SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(extractor.getStaticPropertyExtractor()));
+    SpOpcUaClient<OpcUaConfig> spOpcUaClient = new SpOpcUaClient<>(
+        SpOpcUaConfigExtractor.extractSharedConfig(extractor.getStaticPropertyExtractor(), new OpcUaConfig())
+    );
 
     try {
       spOpcUaClient.connect();
@@ -181,7 +183,9 @@ public class OpcUaUtil {
       return config;
     }
 
-    SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(parameterExtractor));
+    SpOpcUaClient spOpcUaClient = new SpOpcUaClient(
+        SpOpcUaConfigExtractor.extractSharedConfig(parameterExtractor, new OpcUaConfig())
+    );
 
     try {
       spOpcUaClient.connect();

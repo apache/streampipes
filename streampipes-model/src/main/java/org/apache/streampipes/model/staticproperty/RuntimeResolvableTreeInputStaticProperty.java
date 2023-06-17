@@ -28,6 +28,7 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
   private List<TreeInputNode> nodes;
 
   private boolean resolveDynamically;
+  private boolean multiSelection;
   private String nextBaseNodeToResolve;
   private List<TreeInputNode> latestFetchedNodes;
 
@@ -58,6 +59,7 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
     this.latestFetchedNodes = other.getLatestFetchedNodes();
     this.selectedNodesInternalNames = other.getSelectedNodesInternalNames();
     this.nextBaseNodeToResolve = other.getNextBaseNodeToResolve();
+    this.multiSelection = other.isMultiSelection();
   }
 
   @Override
@@ -111,5 +113,13 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
 
   public void setSelectedNodesInternalNames(List<String> selectedNodesInternalNames) {
     this.selectedNodesInternalNames = selectedNodesInternalNames;
+  }
+
+  public boolean isMultiSelection() {
+    return multiSelection;
+  }
+
+  public void setMultiSelection(boolean multiSelection) {
+    this.multiSelection = multiSelection;
   }
 }
