@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.export.utils;
 
-import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
 import org.apache.streampipes.model.connect.adapter.migration.GenericAdapterConverter;
 import org.apache.streampipes.model.connect.adapter.migration.IAdapterConverter;
 import org.apache.streampipes.model.connect.adapter.migration.SpecificAdapterConverter;
+import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
