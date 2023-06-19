@@ -33,6 +33,7 @@ PROJECT_URLS = {
     "Documentation": "https://streampipes.apache.org/docs/docs/python/latest/",
     "Bug Tracker": "https://github.com/apache/streampipes/issues",
     "Source Code": "https://github.com/apache/streampipes",
+    "Changelog": "https://github.com/apache/streampipes/releases",
 }
 
 # Package requirements.
