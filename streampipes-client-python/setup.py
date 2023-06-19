@@ -58,7 +58,7 @@ dev_packages = base_packages + [
     "pre-commit==3.3.0",
     "pytest==7.3.0",
     "pytest-cov==4.1.0",
-    "pyupgrade==3.6.0",
+    "pyupgrade==3.7.0",
     "types-Jinja2==2.11.9",
     "types-requests==2.31.0.0",
 ]
