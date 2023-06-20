@@ -216,6 +216,12 @@ public class Utils {
     return append(Request.Put(route).bodyString(payload, ContentType.APPLICATION_JSON));
   }
 
+  public static Request putRequest(String route,
+                                   byte[] payload,
+                                   String contentType) {
+    return append(Request.Put(route).bodyByteArray(payload, ContentType.getByMimeType(contentType)));
+  }
+
   private static Environment getEnvironment() {
     return Environments.getEnvironment();
   }
