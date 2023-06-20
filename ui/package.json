@@ -56,7 +56,7 @@
     "@swimlane/ngx-charts": "^20.4.1",
     "angular-datatables": "^14.0.2",
     "angular-gridster2": "^14.1.2",
-    "angular-plotly.js": "^4.0.4",
+    "angular-plotly.js": "^5.0.0",
     "angular2-uuid": "1.1.1",
     "codemirror": "^5.65.11",
     "console-browserify": "^1.2.0",
