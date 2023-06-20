@@ -41,7 +41,8 @@ base_packages = [
     "pandas>=1.5.1",
     "pydantic>=1.10.2",
     "requests>=2.28.1",
-    "nats-py>=2.2.0",
+    "nats-py>=2.2.0;  python_version <= '3.10'",
+    "nats-py>=2.3.0;  python_version == '3.11'",
     "confluent-kafka>=2.0.2",
     "typing-extensions>=4.5.0"
 ]
@@ -130,8 +131,9 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Scientific/Engineering"
     ],
     ext_modules=[],
-    keywords='streampipes, iot, iiot, analytics, stream-processing, apache',
+    keywords='streampipes, iot, iiot, analytics, stream-processing, online-ml, apache',
 )
