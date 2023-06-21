@@ -42,7 +42,7 @@
 	<asm.version>9.4</asm.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
-	<commons-codec.version>1.11</commons-codec.version>
+	<commons-codec.version>1.15</commons-codec.version>
 	<commons-collections.version>3.2.2</commons-collections.version>
 	<commons-io.version>2.11.0</commons-io.version>
 	<commons-lang3.version>3.12.0</commons-lang3.version>

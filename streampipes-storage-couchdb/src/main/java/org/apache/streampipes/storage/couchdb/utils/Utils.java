@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
 
+import com.google.common.net.UrlEscapers;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.fluent.Request;
@@ -33,6 +34,10 @@ public class Utils {
 
   public static CouchDbClient getCouchDbDataProcessorDescriptionClient() {
     return getCouchDbGsonClient("data-processor");
+  }
+
+  public static String escapePathSegment(String urlSegment) {
+    return UrlEscapers.urlPathSegmentEscaper().escape(urlSegment);
   }
 
   public static CouchDbClient getCouchDbDataStreamDescriptionClient() {

@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
+import org.apache.streampipes.commons.resources.Resources;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
@@ -117,14 +116,10 @@ public class Labels {
   }
 
   private static Properties loadProperties(String filename) throws IOException {
-    URL url = Resources.getResource(filename);
+    URL url = Resources.asUrl(filename);
     final Properties props = new Properties();
 
-    final ByteSource byteSource = Resources.asByteSource(url);
-    InputStream inputStream = null;
-
-    inputStream = byteSource.openBufferedStream();
-    props.load(inputStream);
+    props.load(url.openStream());
     return props;
   }
 
