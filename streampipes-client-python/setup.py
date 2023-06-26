@@ -56,7 +56,7 @@ dev_packages = base_packages + [
     "mypy==1.4.0",
     "pandas-stubs==2.0.0.230412",
     "pre-commit==3.3.0",
-    "pytest==7.3.0",
+    "pytest==7.4.0",
     "pytest-cov==4.1.0",
     "pyupgrade==3.7.0",
     "types-Jinja2==2.11.9",
