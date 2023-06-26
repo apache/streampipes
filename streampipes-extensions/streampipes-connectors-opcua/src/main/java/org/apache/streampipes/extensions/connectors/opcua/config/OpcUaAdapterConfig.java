@@ -16,23 +16,21 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter.utils;
+package org.apache.streampipes.extensions.connectors.opcua.config;
 
-import org.eclipse.milo.opcua.stack.core.UaException;
+public class OpcUaAdapterConfig extends OpcUaConfig {
 
-public class ExceptionMessageExtractor {
+  private Integer pullIntervalMilliSeconds;
 
-  public static String getDescription(UaException e) {
-    String[] parts = e.getMessage().split(", ");
-    if (parts.length > 1) {
-      String[] kv = parts[1].split("=");
-      if (kv.length > 1) {
-        return kv[1];
-      } else {
-        return parts[1];
-      }
-    } else {
-      return e.getMessage();
-    }
+  public Integer getPullIntervalMilliSeconds() {
+    return pullIntervalMilliSeconds;
+  }
+
+  public void setPullIntervalMilliSeconds(Integer pullIntervalMilliSeconds) {
+    this.pullIntervalMilliSeconds = pullIntervalMilliSeconds;
+  }
+
+  public boolean inPullMode() {
+    return pullIntervalMilliSeconds != null;
   }
 }

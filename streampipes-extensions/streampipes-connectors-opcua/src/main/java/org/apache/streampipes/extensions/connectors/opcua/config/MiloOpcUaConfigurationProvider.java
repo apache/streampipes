@@ -16,10 +16,9 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter;
+package org.apache.streampipes.extensions.connectors.opcua.config;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfig;
 
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
@@ -37,7 +36,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MiloOpcUaConfigurationProvider {
 
-  public OpcUaClientConfig makeClientConfig(SpOpcUaConfig spOpcConfig)
+  public OpcUaClientConfig makeClientConfig(OpcUaConfig spOpcConfig)
       throws ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
     String opcServerUrl = spOpcConfig.getOpcServerURL();
     List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(opcServerUrl).get();
@@ -61,7 +60,7 @@ public class MiloOpcUaConfigurationProvider {
   }
 
   private OpcUaClientConfig buildConfig(EndpointDescription endpoint,
-                                        SpOpcUaConfig spOpcConfig) {
+                                        OpcUaConfig spOpcConfig) {
 
     OpcUaClientConfigBuilder builder = defaultBuilder(endpoint);
     if (!spOpcConfig.isUnauthenticated()) {

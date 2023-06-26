@@ -18,14 +18,21 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.sink;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
+import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
@@ -35,33 +42,28 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.MAPPING_PROPERY;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NAMESPACE_INDEX;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.NODE_ID;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_HOST;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_PORT;
 
-public class OpcUaSink implements IStreamPipesDataSink {
+public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
   private OpcUa opcUa;
 
   @Override
   public IDataSinkConfiguration declareConfig() {
+    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.FORWARD)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                Labels.withId(MAPPING_PROPERY),
+                PropertyScope.NONE).build());
+
+    SharedUserConfiguration.appendSharedOpcUaConfig(builder, false);
+
     return DataSinkConfiguration.create(
         OpcUaSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.FORWARD)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                    Labels.withId(MAPPING_PROPERY),
-                    PropertyScope.NONE).build())
-            .requiredTextParameter(Labels.withId(OPC_SERVER_HOST))
-            .requiredIntegerParameter(Labels.withId(OPC_SERVER_PORT))
-            .requiredIntegerParameter(Labels.withId(NAMESPACE_INDEX))
-            .requiredTextParameter(Labels.withId(NODE_ID))
-            .build()
+        builder.build()
     );
   }
 
@@ -69,13 +71,9 @@ public class OpcUaSink implements IStreamPipesDataSink {
   public void onPipelineStarted(IDataSinkParameters parameters,
                                 EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
-    String hostname = extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class);
-    Integer port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), Integer.class);
+    var config = SpOpcUaConfigExtractor.extractSinkConfig(extractor);
 
-    String nodeId = extractor.singleValueParameter(NODE_ID.name(), String.class);
-    Integer nameSpaceIndex = extractor.singleValueParameter(NAMESPACE_INDEX.name(), Integer.class);
-
-    String mappingPropertySelector = extractor.mappingPropertyValue(NODE_ID.name());
+    String mappingPropertySelector = extractor.mappingPropertyValue(MAPPING_PROPERY.name());
 
     String mappingPropertyType = "";
     try {
@@ -84,8 +82,12 @@ public class OpcUaSink implements IStreamPipesDataSink {
       e.printStackTrace();
     }
 
-    OpcUaParameters params = new OpcUaParameters(hostname, port, nodeId, nameSpaceIndex,
-        mappingPropertySelector, mappingPropertyType);
+    OpcUaParameters params = new OpcUaParameters(
+        config,
+        mappingPropertySelector,
+        mappingPropertyType,
+        config.getSelectedNodeNames().get(0)
+    );
 
     this.opcUa = new OpcUa();
     this.opcUa.onInvocation(params);
@@ -99,5 +101,11 @@ public class OpcUaSink implements IStreamPipesDataSink {
   @Override
   public void onPipelineStopped() {
     this.opcUa.onDetach();
+  }
+
+  @Override
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName,
+                                             IStaticPropertyExtractor extractor) throws SpConfigurationException {
+    return OpcUaUtil.resolveConfiguration(staticPropertyInternalName, extractor);
   }
 }

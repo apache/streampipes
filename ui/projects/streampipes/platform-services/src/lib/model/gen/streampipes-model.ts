@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-06-12 22:17:35.
+// Generated using typescript-generator version 3.1.1185 on 2023-06-17 23:53:33.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3140,6 +3140,7 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty';
     'dependsOn': string[];
     'latestFetchedNodes': TreeInputNode[];
+    'multiSelection': boolean;
     'nextBaseNodeToResolve': string;
     'nodes': TreeInputNode[];
     'resolveDynamically': boolean;
@@ -3161,6 +3162,7 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
         instance.latestFetchedNodes = __getCopyArrayFn(TreeInputNode.fromData)(
             data.latestFetchedNodes,
         );
+        instance.multiSelection = data.multiSelection;
         instance.nextBaseNodeToResolve = data.nextBaseNodeToResolve;
         instance.nodes = __getCopyArrayFn(TreeInputNode.fromData)(data.nodes);
         instance.resolveDynamically = data.resolveDynamically;

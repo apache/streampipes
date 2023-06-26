@@ -16,39 +16,23 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter.utils;
+package org.apache.streampipes.extensions.connectors.opcua.utils;
 
+import org.eclipse.milo.opcua.stack.core.UaException;
 
-import jakarta.annotation.Nullable;
+public class ExceptionMessageExtractor {
 
-/**
- * Enum that maintains different variants of OPC UA nodes. <br>
- * Not yet completed. <br>
- */
-public enum OpcUaNodeVariants {
-  Property(68),
-  EUInformation(887);
-
-  // ID as specified in OPC UA standard
-  private final int id;
-
-  private OpcUaNodeVariants(int id) {
-    this.id = id;
-  }
-
-  public int getId() {
-    return this.id;
-  }
-
-  @Nullable
-  public static OpcUaNodeVariants from(int id) {
-    switch (id) {
-      case 68:
-        return Property;
-      case 887:
-        return EUInformation;
-      default:
-        return null;
+  public static String getDescription(UaException e) {
+    String[] parts = e.getMessage().split(", ");
+    if (parts.length > 1) {
+      String[] kv = parts[1].split("=");
+      if (kv.length > 1) {
+        return kv[1];
+      } else {
+        return parts[1];
+      }
+    } else {
+      return e.getMessage();
     }
   }
 }

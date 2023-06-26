@@ -16,11 +16,13 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter;
+package org.apache.streampipes.extensions.connectors.opcua.client;
 
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
+import org.apache.streampipes.extensions.connectors.opcua.config.MiloOpcUaConfigurationProvider;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
@@ -54,16 +56,16 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 /***
  * Wrapper class for all OPC UA specific stuff.
  */
-public class SpOpcUaClient {
+public class SpOpcUaClient<T extends OpcUaConfig> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SpOpcUaClient.class);
 
   private OpcUaClient client;
-  private final SpOpcUaConfig spOpcConfig;
+  private final T spOpcConfig;
 
   private static final AtomicLong clientHandles = new AtomicLong(1L);
 
-  public SpOpcUaClient(SpOpcUaConfig config) {
+  public SpOpcUaClient(T config) {
     this.spOpcConfig = config;
   }
 
@@ -158,12 +160,8 @@ public class SpOpcUaClient {
       requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
     }
 
-    UaSubscription.ItemCreationCallback onItemCreated = new UaSubscription.ItemCreationCallback() {
-      @Override
-      public void onItemCreated(UaMonitoredItem item, int i) {
-        item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
-      }
-    };
+    UaSubscription.ItemCreationCallback onItemCreated =
+        (item, i) -> item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
     List<UaMonitoredItem> items = subscription.createMonitoredItems(
         TimestampsToReturn.Both,
         requests,
@@ -180,15 +178,7 @@ public class SpOpcUaClient {
     }
   }
 
-  public boolean inPullMode() {
-    return !(spOpcConfig.getPullIntervalMilliSeconds() == null);
-  }
-
-  public int getPullIntervalMilliSeconds() {
-    return spOpcConfig.getPullIntervalMilliSeconds();
-  }
-
-  public SpOpcUaConfig getSpOpcConfig() {
+  public T getSpOpcConfig() {
     return spOpcConfig;
   }
 }
