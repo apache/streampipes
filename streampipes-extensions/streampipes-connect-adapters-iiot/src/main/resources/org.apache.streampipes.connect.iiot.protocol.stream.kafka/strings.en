@@ -59,3 +59,15 @@ value-deserialization.description=
 
 hide-internal-topics.title=Hide internal topics
 hide-internal-topics.description=Do not show topics that are only used internally
+
+auto.offset.reset.title=Auto Offset Reset
+auto.offset.reset.description=Configure the starting offset for consumer consumption when there is no initial offset in Kafka or when the current offset does not exist
+
+earliest.title=Earliest
+earliest.description=Offsets are initialized to the earliest
+
+latest.title=Latest
+latest.description=Offsets are initialized to the Latest
+
+none.title=None
+none.description=Consumer throws exceptions

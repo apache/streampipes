@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.pe.shared.config.kafka;
 
+import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 
 public class KafkaConfig {
@@ -27,16 +28,18 @@ public class KafkaConfig {
   private String topic;
 
   KafkaSecurityConfig securityConfig;
-
+  AutoOffsetResetConfig autoOffsetResetConfig;
 
   public KafkaConfig(String kafkaHost,
                      Integer kafkaPort,
                      String topic,
-                     KafkaSecurityConfig securityConfig) {
+                     KafkaSecurityConfig securityConfig,
+                     AutoOffsetResetConfig autoOffsetResetConfig) {
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;
     this.topic = topic;
     this.securityConfig = securityConfig;
+    this.autoOffsetResetConfig = autoOffsetResetConfig;
   }
 
   public String getKafkaHost() {
@@ -69,6 +72,14 @@ public class KafkaConfig {
 
   public void setSecurityConfig(KafkaSecurityConfig securityConfig) {
     this.securityConfig = securityConfig;
+  }
+
+  public void setAutoOffsetResetConfig(AutoOffsetResetConfig autoOffsetResetConfig) {
+    this.autoOffsetResetConfig = autoOffsetResetConfig;
+  }
+
+  public AutoOffsetResetConfig getAutoOffsetResetConfig() {
+    return autoOffsetResetConfig;
   }
 
 }
