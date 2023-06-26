@@ -15,37 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.assets;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.streampipes.commons.resources.Resources;
 
-import java.io.File;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class DocumentationParser {
+import static junit.framework.TestCase.assertEquals;
 
-  private File file;
-  private String appId;
+public class TestResources {
 
-  public DocumentationParser(File file, String appId) {
-    this.file = file;
-    this.appId = appId;
+  @Test
+  public void testResourceLoader() throws IOException {
+    String filename = "test.txt";
+    String content = Resources.asString(filename, StandardCharsets.UTF_8);
+    assertEquals("HelloWorld", content.replaceAll("\\s+",""));
   }
-
-
-  public void replaceImageUrls() {
-    try {
-      String fileContents = getFileContents();
-      String newFileContents = new ImagePathReplacer(fileContents, appId).replaceContent();
-      FileUtils.writeStringToFile(file, newFileContents, StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private String getFileContents() throws IOException {
-    return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-  }
-
 }

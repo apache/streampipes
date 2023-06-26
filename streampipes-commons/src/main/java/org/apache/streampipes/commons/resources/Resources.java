@@ -15,28 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail.utils;
 
-import org.apache.streampipes.commons.resources.Resources;
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.GeneralConfig;
+package org.apache.streampipes.commons.resources;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.net.URL;
+import java.nio.charset.Charset;
 
-public class MailUtils {
+public class Resources {
 
-  public static String extractBaseUrl() {
-    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
-
-    return config.getProtocol() + "://" + config.getHostname() + ":" + config.getPort();
+  public static String asString(String resourceName,
+                                Charset charset) throws IOException {
+    return IOUtils.resourceToString(resourceName, charset, ClassLoader.getSystemClassLoader());
   }
 
-  public static String extractAppName() {
-    return BackendConfig.INSTANCE.getGeneralConfig().getAppName();
-  }
-
-  public static String readResourceFileToString(String filename) throws IOException {
-    return Resources.asString(filename, StandardCharsets.UTF_8);
+  public static URL asUrl(String resourceName) throws IOException {
+    return IOUtils.resourceToURL(resourceName, ClassLoader.getSystemClassLoader());
   }
 }

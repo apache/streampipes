@@ -34,6 +34,9 @@ and the amazing universe of data analytics libraries in Python. </p>
 <br>
 
 <p align="center">
+<a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">
+    <img src="https://img.shields.io/github/license/apache/streampipes.svg" alt="License Apache 2.0">
+</a>
 <a href="https://github.com/apache/streampipes/tree/dev/streampipes-client-python" target="_blank">
     <img src="https://img.shields.io/pypi/pyversions/streampipes" alt="Supported Python versions">
 </a>

@@ -20,11 +20,11 @@ package org.apache.streampipes.dataexplorer.query.writer;
 
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 
-import com.google.common.base.Charsets;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -46,7 +46,7 @@ public class TestConfiguredCsvOutputWriter extends TestConfiguredOutputWriter {
       }
 
       writer.afterLastItem(outputStream);
-      assertEquals(Expected, outputStream.toString(Charsets.UTF_8));
+      assertEquals(Expected, outputStream.toString(StandardCharsets.UTF_8));
     }
   }
 }

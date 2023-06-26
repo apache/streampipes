@@ -42,7 +42,7 @@
 	<asm.version>9.4</asm.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
-	<commons-codec.version>1.11</commons-codec.version>
+	<commons-codec.version>1.15</commons-codec.version>
 	<commons-collections.version>3.2.2</commons-collections.version>
 	<commons-io.version>2.11.0</commons-io.version>
 	<commons-lang3.version>3.12.0</commons-lang3.version>
@@ -54,7 +54,7 @@
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
 	<fst.version>2.57</fst.version>
 	<geojson-jackson.version>1.14</geojson-jackson.version>
-	<guava.version>31.1-jre</guava.version>
+	<guava.version>32.0.1-jre</guava.version>
 	<gson.version>2.10</gson.version>
 	<hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
 	<httpclient.version>4.5.13</httpclient.version>
@@ -115,7 +115,7 @@
 	<simple-java-mail.version>7.8.0</simple-java-mail.version>
 	<slf4j.version>2.0.6</slf4j.version>
 	<snakeyaml.version>1.33</snakeyaml.version>
-	<snappy-java.version>1.1.7.7</snappy-java.version>
+	<snappy-java.version>1.1.10.1</snappy-java.version>
 	<spring.version>6.0.8</spring.version>
 	<spring-boot.version>3.1.0</spring-boot.version>
 	<spring-security.version>6.0.3</spring-security.version>
@@ -130,7 +130,7 @@
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
-	<mockito.version>5.3.1</mockito.version>
+	<mockito.version>5.4.0</mockito.version>
 	<powermock.version>2.0.9</powermock.version>
 	<rest-assured.version>2.9.0</rest-assured.version>
 	<wiremock.version>2.27.2</wiremock.version>
@@ -205,7 +205,7 @@
 	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
 	<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
 	<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-	<maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
+	<maven.dependency.check.plugin.version>8.3.1</maven.dependency.check.plugin.version>
 	<maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
 	<maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
 	<mave-release-plugin.version>3.0.0-M5</mave-release-plugin.version>

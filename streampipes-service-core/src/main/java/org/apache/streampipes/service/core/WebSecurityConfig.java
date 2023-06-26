@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.service.core;
 
-import org.apache.streampipes.rest.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
+import org.apache.streampipes.service.core.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
