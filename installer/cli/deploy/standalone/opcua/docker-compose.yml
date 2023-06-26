@@ -21,6 +21,7 @@ services:
       - ./config-generated/:/appdata
     ports:
       - 50000:50000
+    command: --ut=true
     logging:
       driver: "json-file"
       options:
