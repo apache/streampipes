@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 public class OpcUaNodeMetadataExtractorTest {
 
-  private final String date = "Tue Jan 02 23:52:56 CET 1601";
+  private final String date = new DateTime(1687762000000L).getJavaDate().toString();
 
   @Test
   public void testExtractDescription() {
