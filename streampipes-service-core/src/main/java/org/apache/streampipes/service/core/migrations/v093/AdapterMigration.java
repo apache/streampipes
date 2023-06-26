@@ -18,9 +18,12 @@
 
 package org.apache.streampipes.service.core.migrations.v093;
 
+import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
+import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.service.core.migrations.v093.migrator.MigrationHelpers;
-import org.apache.streampipes.service.core.migrations.v093.utils.AdapterMigrationUtils;
+import org.apache.streampipes.service.core.migrations.v093.migrator.AdapterMigrator;
+import org.apache.streampipes.service.core.migrations.v093.migrator.GenericAdapterMigrator;
+import org.apache.streampipes.service.core.migrations.v093.migrator.SpecificAdapterMigrator;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.google.gson.JsonObject;
@@ -31,6 +34,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.GENERIC_STREAM;
 
 public class AdapterMigration implements Migration {
 
@@ -61,7 +66,7 @@ public class AdapterMigration implements Migration {
     findDocsToMigrate(adapterInstanceClient, adapterInstanceUri, adaptersToMigrate);
     findDocsToMigrate(adapterDescriptionClient, adapterDescriptionUri, adapterDescriptionsToDelete);
 
-    return adaptersToMigrate.size() > 0  || adapterDescriptionsToDelete.size() > 0;
+    return adaptersToMigrate.size() > 0 || adapterDescriptionsToDelete.size() > 0;
   }
 
   private void findDocsToMigrate(CouchDbClient adapterClient,
@@ -73,7 +78,7 @@ public class AdapterMigration implements Migration {
       rows.getAsJsonArray().forEach(row -> {
         var doc = row.getAsJsonObject().get("doc").getAsJsonObject();
         var docType = doc.get("type").getAsString();
-        if (shouldMigrate(docType)) {
+        if (AdapterModels.shouldMigrate(docType)) {
           collector.add(doc);
         }
       });
@@ -105,12 +110,10 @@ public class AdapterMigration implements Migration {
 
     adaptersToMigrate.forEach(adapter -> {
       var adapterType = adapter.get("type").getAsString();
-      if (isSetAdapter(adapterType)) {
+      if (AdapterModels.isSetAdapter(adapterType)) {
         LOG.warn("Data Set adapters are no longer supported and can't be migrated - consult docs for an alternative");
       } else {
-        AdapterMigrationUtils
-            .getAdapterMigrator(adapterType)
-            .migrate(adapterInstanceClient, adapter);
+        getAdapterMigrator(adapterType).migrate(adapterInstanceClient, adapter);
       }
     });
 
@@ -126,18 +129,11 @@ public class AdapterMigration implements Migration {
     return client.getDBUri().toString() + "_all_docs" + "?include_docs=true";
   }
 
-  private boolean isSetAdapter(String adapterClassName) {
-    return AdapterMigrationUtils.deprecatedAdapterSetClasses.contains(adapterClassName);
-  }
-
-  private boolean shouldMigrate(String adapterClassName) {
-    return AdapterMigrationUtils.deprecatedAdapterClasses.contains(adapterClassName);
-  }
-
-  public static void main(String[] args) throws IOException {
-    var migrator = new AdapterMigration();
-    if (migrator.shouldExecute()) {
-      migrator.executeMigration();
+  private AdapterMigrator getAdapterMigrator(String adapterType) {
+    if (adapterType.equals(GENERIC_STREAM)) {
+      return new GenericAdapterMigrator(new MigrationHelpers());
+    } else {
+      return new SpecificAdapterMigrator(new MigrationHelpers());
     }
   }
 }

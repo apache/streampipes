@@ -28,6 +28,7 @@ import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.export.utils.ImportAdapterMigrationUtils;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -70,7 +71,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleAdapter(String document, String adapterId) throws JsonProcessingException {
     if (shouldStore(adapterId, config.getAdapters())) {
-      new AdapterResolver().writeDocument(document, config.isOverrideBrokerSettings());
+      var convertedDoc = ImportAdapterMigrationUtils.checkAndPerformMigration(document);
+      new AdapterResolver().writeDocument(convertedDoc, config.isOverrideBrokerSettings());
       permissionsToStore.add(new PermissionInfo(adapterId, AdapterDescription.class));
     }
   }

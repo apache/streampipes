@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.utils;
+package org.apache.streampipes.model.connect.adapter.migration.utils;
 
 public class FormatIds {
   public static final String JSON = "Json";

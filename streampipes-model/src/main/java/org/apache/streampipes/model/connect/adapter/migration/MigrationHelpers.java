@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.migrator;
+package org.apache.streampipes.model.connect.adapter.migration;
 
-import org.apache.streampipes.service.core.migrations.v093.utils.AdapterMigrationUtils;
+import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -40,12 +40,13 @@ public class MigrationHelpers {
     return adapter.get(REV).getAsString();
   }
 
-  public void updateType(JsonObject adapter) {
-    adapter.add("type", new JsonPrimitive(AdapterMigrationUtils.NEW_MODEL));
+  public void updateType(JsonObject adapter,
+                         String typeFieldName) {
+    adapter.add(typeFieldName, new JsonPrimitive(AdapterModels.NEW_MODEL));
   }
 
   public void updateFieldType(JsonObject adapter) {
-    adapter.add("field_type", new JsonPrimitive(AdapterMigrationUtils.NEW_MODEL));
+    adapter.add("field_type", new JsonPrimitive(AdapterModels.NEW_MODEL));
   }
 
   public String getAdapterName(JsonObject adapter) {

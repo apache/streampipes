@@ -16,11 +16,25 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.format;
+package org.apache.streampipes.model.connect.adapter.migration;
 
 import com.google.gson.JsonObject;
 
-public interface FormatMigrator {
+public class SpecificAdapterConverter implements IAdapterConverter {
 
-  void migrate(JsonObject newFormatProperties);
+  private final MigrationHelpers helpers;
+  private final String typeFieldName;
+
+  public SpecificAdapterConverter(boolean importMode) {
+    this.helpers = new MigrationHelpers();
+    this.typeFieldName = importMode ? "@class" : "type";
+  }
+
+  @Override
+  public JsonObject convert(JsonObject adapter) {
+    helpers.updateType(adapter, typeFieldName);
+    helpers.updateFieldType(adapter);
+
+    return adapter;
+  }
 }

@@ -16,10 +16,14 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.utils;
+package org.apache.streampipes.model.connect.adapter.migration.format;
 
-public class DocumentKeys {
+import com.google.gson.JsonObject;
 
-  public static final String INTERNAL_NAME = "internalName";
-  public static final String ALTERNATIVES = "alternatives";
+public class EmptyFormatMigrator implements FormatMigrator {
+
+  @Override
+  public void migrate(JsonObject newFormatProperties) {
+
+  }
 }
