@@ -19,12 +19,10 @@
 package org.apache.streampipes.messaging;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 
-public interface EventConsumer<T extends TransportProtocol> {
+public interface EventConsumer {
 
-  void connect(T protocolSettings, InternalEventProcessor<byte[]> eventProcessor) throws
-      SpRuntimeException;
+  void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException;
 
   void disconnect() throws SpRuntimeException;
 

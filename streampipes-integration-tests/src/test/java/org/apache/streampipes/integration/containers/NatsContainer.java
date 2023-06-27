@@ -16,22 +16,34 @@
  *
  */
 
-package org.apache.streampipes.messaging.nats;
+package org.apache.streampipes.integration.containers;
 
-import org.apache.streampipes.messaging.EventConsumer;
-import org.apache.streampipes.messaging.EventProducer;
-import org.apache.streampipes.messaging.SpProtocolDefinition;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 
-public class SpNatsProtocol implements SpProtocolDefinition<NatsTransportProtocol> {
+public class NatsContainer extends GenericContainer<NatsContainer> {
 
-  @Override
-  public EventConsumer getConsumer(NatsTransportProtocol transportProtocol) {
-    return new NatsConsumer(transportProtocol);
+  protected static final int NATS_PORT = 4222;
+
+  public NatsContainer() {
+    super("nats:latest");
   }
 
-  @Override
-  public EventProducer getProducer(NatsTransportProtocol transportProtocol) {
-    return new NatsPublisher(transportProtocol);
+  public void start() {
+    this.withExposedPorts(NATS_PORT);
+    this.waitingFor(new LogMessageWaitStrategy().withRegEx(".*Server is ready.*"));
+    super.start();
+  }
+
+  public String getBrokerHost() {
+    return getHost();
+  }
+
+  public Integer getBrokerPort() {
+    return getMappedPort(NATS_PORT);
+  }
+
+  public String getBrokerUrl() {
+    return getBrokerHost() + ":" + getBrokerPort();
   }
 }

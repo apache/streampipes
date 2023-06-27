@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.integration.containers.PulsarContainer;
 import org.apache.streampipes.integration.containers.PulsarDevContainer;
+import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
@@ -34,7 +35,6 @@ import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,17 +93,7 @@ public class PulsarAdapterTester extends AdapterTesterBase {
 
   @Override
   public List<Map<String, Object>> getTestEvents() {
-    List<Map<String, Object>> result = new ArrayList<>();
-
-    for (int i = 0; i < 3; i++) {
-      result.add(
-          Map.of(
-              "timestamp", i,
-              "value", "test-data")
-      );
-    }
-
-    return result;
+    return Utils.getSimpleTestEvents();
   }
 
   @Override

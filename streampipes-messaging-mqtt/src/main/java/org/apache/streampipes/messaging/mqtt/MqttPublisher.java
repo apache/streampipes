@@ -25,17 +25,21 @@ import org.fusesource.mqtt.client.QoS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MqttPublisher extends AbstractMqttConnector implements EventProducer<MqttTransportProtocol> {
+public class MqttPublisher extends AbstractMqttConnector implements EventProducer {
 
   private static final Logger LOG = LoggerFactory.getLogger(MqttPublisher.class);
 
   private String currentTopic;
 
+  public MqttPublisher(MqttTransportProtocol protocol) {
+    super(protocol);
+  }
+
   @Override
-  public void connect(MqttTransportProtocol protocolSettings) throws SpRuntimeException {
+  public void connect() throws SpRuntimeException {
     try {
-      this.createBrokerConnection(protocolSettings);
-      this.currentTopic = protocolSettings.getTopicDefinition().getActualTopicName();
+      this.createBrokerConnection(protocol);
+      this.currentTopic = protocol.getTopicDefinition().getActualTopicName();
     } catch (Exception e) {
       throw new SpRuntimeException(e);
     }

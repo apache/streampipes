@@ -18,8 +18,15 @@
 
 package org.apache.streampipes.client.api.live;
 
-public interface IKafkaConfig {
-  String getKafkaHost();
+import org.apache.streampipes.model.runtime.Event;
 
-  Integer getKafkaPort();
+import java.util.Map;
+
+public interface IConfiguredEventProducer {
+
+  void publish(Event event);
+
+  void publish(Map<String, Object> event);
+
+  void close();
 }

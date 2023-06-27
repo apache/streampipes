@@ -15,31 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.live;
 
-import org.apache.streampipes.client.api.live.IKafkaConfig;
+package org.apache.streampipes.integration.containers;
 
-public class KafkaConfig implements IKafkaConfig {
-
-  private String kafkaHost;
-  private Integer kafkaPort;
-
-  private KafkaConfig(String kafkaHost, Integer kafkaPort) {
-    this.kafkaHost = kafkaHost;
-    this.kafkaPort = kafkaPort;
-  }
-
-  public static KafkaConfig create(String kafkaHost, Integer kafkaPort) {
-    return new KafkaConfig(kafkaHost, kafkaPort);
-  }
+public class NatsDevContainer extends NatsContainer {
 
   @Override
-  public String getKafkaHost() {
-    return kafkaHost;
-  }
-
-  @Override
-  public Integer getKafkaPort() {
-    return kafkaPort;
+  public String getBrokerHost() {
+    return "localhost";
   }
 }

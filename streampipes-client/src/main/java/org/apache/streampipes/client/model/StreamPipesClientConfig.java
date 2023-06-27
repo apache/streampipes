@@ -20,23 +20,21 @@ package org.apache.streampipes.client.model;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
+import org.apache.streampipes.dataformat.SpDataFormatManager;
+import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
+import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StreamPipesClientConfig implements IStreamPipesClientConfig {
 
-  private ClientConnectionUrlResolver connectionConfig;
-  private ObjectMapper serializer;
-  private List<SpDataFormatFactory> registeredDataFormats;
+  private final ClientConnectionUrlResolver connectionConfig;
+  private final ObjectMapper serializer;
 
   public StreamPipesClientConfig(ClientConnectionUrlResolver connectionConfig) {
     this.connectionConfig = connectionConfig;
     this.serializer = JacksonSerializer.getObjectMapper();
-    this.registeredDataFormats = new ArrayList<>();
   }
 
   @Override
@@ -46,12 +44,12 @@ public class StreamPipesClientConfig implements IStreamPipesClientConfig {
 
   @Override
   public void addDataFormat(SpDataFormatFactory spDataFormatFactory) {
-    this.registeredDataFormats.add(spDataFormatFactory);
+    SpDataFormatManager.INSTANCE.register(spDataFormatFactory);
   }
 
   @Override
-  public List<SpDataFormatFactory> getRegisteredDataFormats() {
-    return registeredDataFormats;
+  public void addTransportProtocol(SpProtocolDefinitionFactory<?> protocolDefinitionFactory) {
+    SpProtocolManager.INSTANCE.register(protocolDefinitionFactory);
   }
 
   @Override
