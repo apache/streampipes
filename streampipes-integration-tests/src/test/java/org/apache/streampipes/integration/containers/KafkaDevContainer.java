@@ -15,32 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.integration.adapters;
 
-import org.junit.Test;
+package org.apache.streampipes.integration.containers;
 
-public class AdaptersTest {
-
-
-//  @Test
-//  public void testPulsarAdapter() throws Exception {
-//    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-//      pulsarAdapterTester.run();
-//    }
-//  }
-
-  @Test
-  public void testMqttAdapter() throws Exception {
-    try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
-      mqttAdapterTester.run();
-    }
+public class KafkaDevContainer  extends KafkaContainer{
+  @Override
+  public void start() {
+    // do nothing
   }
 
+  public String getBrokerHost() {
+    return "localhost";
+  }
 
-  @Test
-  public void testKafkaAdapter() throws Exception {
-    try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
-      kafkaAdapterTester.run();
-    }
+  public Integer getBrokerPort() {
+    return 9093;
   }
 }
