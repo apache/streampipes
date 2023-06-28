@@ -15,32 +15,41 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.integration.adapters;
 
-import org.junit.Test;
+package org.apache.streampipes.integration.containers;
 
-public class AdaptersTest {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testcontainers.utility.DockerImageName;
 
 
-//  @Test
-//  public void testPulsarAdapter() throws Exception {
-//    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-//      pulsarAdapterTester.run();
-//    }
-//  }
+public class KafkaContainer extends org.testcontainers.containers.KafkaContainer {
 
-  @Test
-  public void testMqttAdapter() throws Exception {
-    try (MqttAdapterTester mqttAdapterTester = new MqttAdapterTester()) {
-      mqttAdapterTester.run();
-    }
+  Logger logger = LoggerFactory.getLogger(KafkaContainer.class);
+
+  private static final int KAFKA_PORT = 9093;
+
+
+  public KafkaContainer() {
+    super(DockerImageName.parse("confluentinc/cp-kafka"));
   }
 
 
-  @Test
-  public void testKafkaAdapter() throws Exception {
-    try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
-      kafkaAdapterTester.run();
-    }
+  public void start() {
+    super.start();
   }
+
+  public String getBrokerHost() {
+    return getHost();
+  }
+
+  public Integer getBrokerPort() {
+    return getMappedPort(KAFKA_PORT);
+  }
+
+  public String getHttpUrl() {
+    return "http://" + getHost() + ":" + getBrokerPort();
+  }
+
+
 }
