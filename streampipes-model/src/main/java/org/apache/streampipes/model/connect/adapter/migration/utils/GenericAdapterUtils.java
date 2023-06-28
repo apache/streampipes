@@ -16,16 +16,16 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.utils;
+package org.apache.streampipes.model.connect.adapter.migration.utils;
 
-import org.apache.streampipes.service.core.migrations.v093.format.FormatMigrator;
-import org.apache.streampipes.service.core.migrations.v093.migrator.MigrationHelpers;
+import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
+import org.apache.streampipes.model.connect.adapter.migration.format.FormatMigrator;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import static org.apache.streampipes.service.core.migrations.v093.utils.DocumentKeys.INTERNAL_NAME;
+import static org.apache.streampipes.model.connect.adapter.migration.utils.DocumentKeys.INTERNAL_NAME;
 
 public class GenericAdapterUtils {
 

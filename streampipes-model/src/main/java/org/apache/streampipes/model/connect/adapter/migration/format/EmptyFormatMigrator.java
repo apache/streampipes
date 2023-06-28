@@ -16,11 +16,14 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.format;
+package org.apache.streampipes.model.connect.adapter.migration.format;
 
 import com.google.gson.JsonObject;
 
-public interface FormatMigrator {
+public class EmptyFormatMigrator implements FormatMigrator {
 
-  void migrate(JsonObject newFormatProperties);
+  @Override
+  public void migrate(JsonObject newFormatProperties) {
+
+  }
 }

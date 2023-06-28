@@ -19,10 +19,10 @@
 package org.apache.streampipes.model.schema;
 
 import org.apache.streampipes.model.util.ElementIdGenerator;
+import org.apache.streampipes.model.util.ListUtils;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.apache.commons.collections.ListUtils;
 
 import java.net.URI;
 import java.util.ArrayList;

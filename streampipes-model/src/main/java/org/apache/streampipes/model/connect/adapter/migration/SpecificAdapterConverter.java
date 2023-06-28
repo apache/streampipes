@@ -16,34 +16,25 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.format;
+package org.apache.streampipes.model.connect.adapter.migration;
 
 import com.google.gson.JsonObject;
 
-public class XmlFormatMigrator implements FormatMigrator {
-  private final JsonObject formatDescription;
+public class SpecificAdapterConverter implements IAdapterConverter {
 
-  public XmlFormatMigrator(JsonObject formatDescription) {
-    this.formatDescription = formatDescription;
+  private final MigrationHelpers helpers;
+  private final String typeFieldName;
+
+  public SpecificAdapterConverter(boolean importMode) {
+    this.helpers = new MigrationHelpers();
+    this.typeFieldName = importMode ? "@class" : "type";
   }
 
   @Override
-  public void migrate(JsonObject newFormatProperties) {
-    var tagValue = this.formatDescription.getAsJsonObject()
-        .get("config").getAsJsonArray()
-        .get(0).getAsJsonObject()
-        .get("properties").getAsJsonObject()
-        .get("value").getAsString();
-    newFormatProperties
-        .getAsJsonObject("properties")
-        .get("staticProperties")
-        .getAsJsonArray()
-        .get(0)
-        .getAsJsonObject()
-        .get("properties")
-        .getAsJsonObject()
-        .addProperty("value", tagValue);
+  public JsonObject convert(JsonObject adapter) {
+    helpers.updateType(adapter, typeFieldName);
+    helpers.updateFieldType(adapter);
 
-
+    return adapter;
   }
 }

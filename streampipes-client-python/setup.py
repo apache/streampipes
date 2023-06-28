@@ -33,6 +33,7 @@ PROJECT_URLS = {
     "Documentation": "https://streampipes.apache.org/docs/docs/python/latest/",
     "Bug Tracker": "https://github.com/apache/streampipes/issues",
     "Source Code": "https://github.com/apache/streampipes",
+    "Changelog": "https://github.com/apache/streampipes/releases",
 }
 
 # Package requirements.
@@ -46,18 +47,18 @@ base_packages = [
 ]
 
 dev_packages = base_packages + [
-    "autoflake==2.1.0",
+    "autoflake==2.2.0",
     "black==23.3.0",
     "blacken-docs==1.14.0",
     "flake8==6.0.0",
     "interrogate[png]==1.5.0",
     "isort==5.12.0",
-    "mypy==1.3.0",
+    "mypy==1.4.0",
     "pandas-stubs==2.0.0.230412",
     "pre-commit==3.3.0",
-    "pytest==7.3.0",
+    "pytest==7.4.0",
     "pytest-cov==4.1.0",
-    "pyupgrade==3.6.0",
+    "pyupgrade==3.7.0",
     "types-Jinja2==2.11.9",
     "types-requests==2.31.0.0",
 ]

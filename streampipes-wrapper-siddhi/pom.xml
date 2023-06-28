@@ -70,6 +70,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                		checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                	</propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -16,10 +16,28 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.utils;
+package org.apache.streampipes.messaging.kafka.config;
 
-public class DocumentKeys {
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
-  public static final String INTERNAL_NAME = "internalName";
-  public static final String ALTERNATIVES = "alternatives";
+import java.util.Properties;
+
+public class AutoOffsetResetConfig implements KafkaConfigAppender {
+
+  private final String autoOffsetResetConfig;
+
+  @Override
+  public void appendConfig(Properties props) {
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetResetConfig);
+  }
+
+  public AutoOffsetResetConfig(String autoOffsetResetConfig) {
+    this.autoOffsetResetConfig = autoOffsetResetConfig;
+  }
+
+
+  public String getAutoOffsetResetConfig() {
+    return autoOffsetResetConfig;
+  }
+
 }

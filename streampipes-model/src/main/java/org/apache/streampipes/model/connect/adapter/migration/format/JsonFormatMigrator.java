@@ -16,16 +16,16 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.format;
+package org.apache.streampipes.model.connect.adapter.migration.format;
 
-import org.apache.streampipes.service.core.migrations.v093.migrator.MigrationHelpers;
+import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import static org.apache.streampipes.service.core.migrations.v093.utils.DocumentKeys.ALTERNATIVES;
-import static org.apache.streampipes.service.core.migrations.v093.utils.DocumentKeys.INTERNAL_NAME;
-import static org.apache.streampipes.service.core.migrations.v093.utils.FormatIds.JSON_ARRAY_KEY_NEW_KEY;
+import static org.apache.streampipes.model.connect.adapter.migration.utils.DocumentKeys.ALTERNATIVES;
+import static org.apache.streampipes.model.connect.adapter.migration.utils.DocumentKeys.INTERNAL_NAME;
+import static org.apache.streampipes.model.connect.adapter.migration.utils.FormatIds.JSON_ARRAY_KEY_NEW_KEY;
 
 public class JsonFormatMigrator implements FormatMigrator {
 
@@ -67,7 +67,5 @@ public class JsonFormatMigrator implements FormatMigrator {
             }
           }
         });
-
-
   }
 }

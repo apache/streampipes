@@ -16,14 +16,22 @@
  *
  */
 
-package org.apache.streampipes.service.core.migrations.v093.format;
+package org.apache.streampipes.commons.resources;
 
-import com.google.gson.JsonObject;
+import org.apache.commons.io.IOUtils;
 
-public class EmptyFormatMigrator implements FormatMigrator {
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
 
-  @Override
-  public void migrate(JsonObject newFormatProperties) {
+public class Resources {
 
+  public static String asString(String resourceName,
+                                Charset charset) throws IOException {
+    return IOUtils.resourceToString(resourceName, charset, ClassLoader.getSystemClassLoader());
+  }
+
+  public static URL asUrl(String resourceName) throws IOException {
+    return IOUtils.resourceToURL(resourceName, ClassLoader.getSystemClassLoader());
   }
 }
