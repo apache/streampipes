@@ -29,6 +29,7 @@ import org.apache.streampipes.messaging.SpProtocolDefinition;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.context.generator.DataProcessorContextGenerator;
@@ -72,10 +73,12 @@ public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
       }
 
       var outputProtocol = pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportProtocol();
-      var outputFormatConverter = getDataFormatConverter();
-      var outputProducer = getOutputProtocol().getProducer();
-      this.outputCollector = new KafkaStreamsOutputCollector(outputProtocol, outputFormatConverter, outputProducer);
-      this.outputCollector.connect();
+      if (outputProtocol instanceof KafkaTransportProtocol) {
+        var outputFormatConverter = getDataFormatConverter();
+        var outputProducer = getOutputProtocol().getProducer((KafkaTransportProtocol) outputProtocol);
+        this.outputCollector = new KafkaStreamsOutputCollector(outputFormatConverter, outputProducer);
+        this.outputCollector.connect();
+      }
 
       stream
           .flatMapValues((ValueMapper<String, Iterable<Map<String, Object>>>) s ->
@@ -106,10 +109,11 @@ public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
         .orElseThrow();
   }
 
-  private SpProtocolDefinition<?> getOutputProtocol() {
+  private SpProtocolDefinition<KafkaTransportProtocol> getOutputProtocol() {
     return SpProtocolManager
         .INSTANCE
-        .findDefinition(pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportProtocol())
+        .findDefinition((KafkaTransportProtocol)
+            pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportProtocol())
         .orElseThrow();
   }
 
