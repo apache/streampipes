@@ -51,7 +51,7 @@ public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
     IDataProcessorParameterExtractor,
     IDataProcessorParameters> implements IDataProcessorRuntime {
 
-  private KafkaStreamsOutputCollector<?> outputCollector;
+  private KafkaStreamsOutputCollector outputCollector;
 
   public KafkaStreamsDataProcessorRuntime() {
     super(new DataProcessorContextGenerator(), new DataProcessorParameterGenerator());
