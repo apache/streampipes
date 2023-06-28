@@ -163,8 +163,8 @@ public class KafkaAdapterTester extends AdapterTesterBase {
         kafkaContainer.getBrokerHost(),
         kafkaContainer.getBrokerPort(),
         TOPIC);
-    SpKafkaProducer publisher = new SpKafkaProducer();
-    publisher.connect(kafkaSettings);
+    SpKafkaProducer publisher = new SpKafkaProducer(kafkaSettings);
+    publisher.connect();
     return publisher;
   }
 
