@@ -32,20 +32,17 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> implements IAdapterPipelineElement {
 
   protected AdapterDescription adapterDescription;
   protected SpDataFormatDefinition dataFormatDefinition;
   protected T protocol;
-  private EventProducer<T> producer;
+  private final EventProducer producer;
 
   public SendToBrokerAdapterSink(AdapterDescription adapterDescription,
-                                 Supplier<EventProducer<T>> producerSupplier,
                                  Class<T> protocolClass) {
     this.adapterDescription = adapterDescription;
-    this.producer = producerSupplier.get();
     this.protocol = protocolClass.cast(adapterDescription
         .getEventGrounding()
         .getTransportProtocol());
@@ -53,6 +50,8 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
     if (getEnvironment().getSpDebug().getValueOrDefault()) {
       modifyProtocolForDebugging(this.protocol);
     }
+
+    this.producer = makeProducer(this.protocol);
 
     TransportFormat transportFormat = adapterDescription
         .getEventGrounding()
@@ -63,7 +62,7 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
         new TransportFormatSelector(transportFormat).getDataFormatDefinition();
 
     try {
-      producer.connect(protocol);
+      producer.connect();
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }
@@ -90,17 +89,9 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
     producer.publish(event);
   }
 
-  public abstract void modifyProtocolForDebugging(T transportProtocol);
+  protected abstract EventProducer makeProducer(T protocol);
 
-  public void changeTransportProtocol(T transportProtocol) {
-    try {
-      modifyProtocolForDebugging(transportProtocol);
-      producer.disconnect();
-      producer.connect(transportProtocol);
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
-    }
-  }
+  public abstract void modifyProtocolForDebugging(T protocol);
 
   private Environment getEnvironment() {
     return Environments.getEnvironment();

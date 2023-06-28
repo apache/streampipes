@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.runtime;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.messaging.mqtt.MqttConsumer;
@@ -31,20 +32,16 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public enum PipelineElementRuntimeInfoFetcher {
   INSTANCE;
 
-  Logger logger = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
-
   private static final int FETCH_INTERVAL_MS = 300;
   private final Map<String, SpDataFormatConverter> converterMap;
-  private Environment env;
+  private final Environment env;
 
   PipelineElementRuntimeInfoFetcher() {
     this.converterMap = new HashMap<>();
@@ -91,7 +88,7 @@ public enum PipelineElementRuntimeInfoFetcher {
     long timeout = 0;
     while (result[0] == null && timeout < 6000) {
       try {
-        Thread.sleep(FETCH_INTERVAL_MS);
+        TimeUnit.MILLISECONDS.sleep(FETCH_INTERVAL_MS);
         timeout = timeout + 300;
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -101,39 +98,25 @@ public enum PipelineElementRuntimeInfoFetcher {
 
   private String getLatestEventFromJms(JmsTransportProtocol protocol,
                                        SpDataFormatConverter converter) throws SpRuntimeException {
-    final String[] result = {null};
-    ActiveMQConsumer consumer = new ActiveMQConsumer();
-    consumer.connect(protocol, event -> {
-      result[0] = converter.convert(event);
-      consumer.disconnect();
-    });
-
-    waitForEvent(result);
-
-    return result[0];
+    return getLatestEvent(new ActiveMQConsumer(protocol), converter);
   }
 
   private String getLatestEventFromMqtt(MqttTransportProtocol protocol,
                                         SpDataFormatConverter converter) throws SpRuntimeException {
-    final String[] result = {null};
-    MqttConsumer mqttConsumer = new MqttConsumer();
-    mqttConsumer.connect(protocol, event -> {
-      result[0] = converter.convert(event);
-      mqttConsumer.disconnect();
-    });
-
-    waitForEvent(result);
-
-    return result[0];
+    return getLatestEvent(new MqttConsumer(protocol), converter);
   }
 
   private String getLatestEventFromNats(NatsTransportProtocol protocol,
                                         SpDataFormatConverter converter) throws SpRuntimeException {
+    return getLatestEvent(new NatsConsumer(protocol), converter);
+  }
+
+  private String getLatestEvent(EventConsumer consumer,
+                                SpDataFormatConverter converter) {
     final String[] result = {null};
-    NatsConsumer natsConsumer = new NatsConsumer();
-    natsConsumer.connect(protocol, event -> {
+    consumer.connect(event -> {
       result[0] = converter.convert(event);
-      natsConsumer.disconnect();
+      consumer.disconnect();
     });
 
     waitForEvent(result);

@@ -16,22 +16,25 @@
  *
  */
 
-package org.apache.streampipes.messaging.nats;
+package org.apache.streampipes.integration.utils;
 
-import org.apache.streampipes.messaging.EventConsumer;
-import org.apache.streampipes.messaging.EventProducer;
-import org.apache.streampipes.messaging.SpProtocolDefinition;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-public class SpNatsProtocol implements SpProtocolDefinition<NatsTransportProtocol> {
+public class Utils {
 
-  @Override
-  public EventConsumer getConsumer(NatsTransportProtocol transportProtocol) {
-    return new NatsConsumer(transportProtocol);
-  }
+  public static List<Map<String, Object>> getSimpleTestEvents() {
+    List<Map<String, Object>> result = new ArrayList<>();
 
-  @Override
-  public EventProducer getProducer(NatsTransportProtocol transportProtocol) {
-    return new NatsPublisher(transportProtocol);
+    for (int i = 0; i < 3; i++) {
+      result.add(
+          Map.of(
+              "timestamp", i,
+              "value", "test-data")
+      );
+    }
+
+    return result;
   }
 }

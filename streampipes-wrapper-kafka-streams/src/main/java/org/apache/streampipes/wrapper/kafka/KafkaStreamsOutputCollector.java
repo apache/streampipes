@@ -23,24 +23,20 @@ import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
 
 import java.util.Map;
 
-public class KafkaStreamsOutputCollector<T extends TransportProtocol> implements SpOutputCollector {
+public class KafkaStreamsOutputCollector implements SpOutputCollector {
 
   private String topic;
 
-  private final T transportProtocol;
-  private final EventProducer<T> outputProducer;
+  private final EventProducer outputProducer;
   private final SpDataFormatDefinition outputFormatConverter;
 
 
-  public KafkaStreamsOutputCollector(T transportProtocol,
-                                     SpDataFormatDefinition outputFormatConverter,
-                                     EventProducer<T> outputProducer) {
-    this.transportProtocol = transportProtocol;
+  public KafkaStreamsOutputCollector(SpDataFormatDefinition outputFormatConverter,
+                                     EventProducer outputProducer) {
     this.outputFormatConverter = outputFormatConverter;
     this.outputProducer = outputProducer;
   }
@@ -63,7 +59,7 @@ public class KafkaStreamsOutputCollector<T extends TransportProtocol> implements
 
   @Override
   public void connect() throws SpRuntimeException {
-    this.outputProducer.connect(transportProtocol);
+    this.outputProducer.connect();
   }
 
   @Override

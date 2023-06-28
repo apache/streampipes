@@ -34,7 +34,7 @@ import javax.jms.Session;
 import java.io.Serializable;
 
 public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
-    EventConsumer<JmsTransportProtocol>,
+    EventConsumer,
     AutoCloseable, Serializable {
 
   private Session session;
@@ -42,6 +42,10 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   private InternalEventProcessor<byte[]> eventProcessor;
 
   private Boolean connected = false;
+
+  public ActiveMQConsumer(JmsTransportProtocol protocol) {
+    super(protocol);
+  }
 
   private void initListener() {
     try {
@@ -58,15 +62,15 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   }
 
   @Override
-  public void connect(JmsTransportProtocol protocolSettings, InternalEventProcessor<byte[]>
+  public void connect(InternalEventProcessor<byte[]>
       eventProcessor) throws SpRuntimeException {
-    String url = ActiveMQUtils.makeActiveMqUrl(protocolSettings);
+    String url = ActiveMQUtils.makeActiveMqUrl(protocol);
 
     try {
       this.eventProcessor = eventProcessor;
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
       consumer = session.createConsumer(session.createTopic(
-          protocolSettings.getTopicDefinition().getActualTopicName())
+          protocol.getTopicDefinition().getActualTopicName())
       );
       initListener();
       this.connected = true;

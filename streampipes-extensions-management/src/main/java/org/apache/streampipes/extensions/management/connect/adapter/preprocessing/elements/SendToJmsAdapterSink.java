@@ -18,6 +18,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
@@ -26,7 +27,12 @@ public class SendToJmsAdapterSink extends SendToBrokerAdapterSink<JmsTransportPr
     implements IAdapterPipelineElement {
 
   public SendToJmsAdapterSink(AdapterDescription adapterDescription) {
-    super(adapterDescription, ActiveMQPublisher::new, JmsTransportProtocol.class);
+    super(adapterDescription, JmsTransportProtocol.class);
+  }
+
+  @Override
+  protected EventProducer makeProducer(JmsTransportProtocol protocol) {
+    return new ActiveMQPublisher(protocol);
   }
 
   @Override

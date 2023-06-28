@@ -15,31 +15,17 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.live;
 
-import org.apache.streampipes.client.api.live.IKafkaConfig;
+package org.apache.streampipes.client.api.live;
 
-public class KafkaConfig implements IKafkaConfig {
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
-  private String kafkaHost;
-  private Integer kafkaPort;
+public interface IBrokerConfigOverride {
 
-  private KafkaConfig(String kafkaHost, Integer kafkaPort) {
-    this.kafkaHost = kafkaHost;
-    this.kafkaPort = kafkaPort;
-  }
+  void overrideHostname(TransportProtocol protocol);
 
-  public static KafkaConfig create(String kafkaHost, Integer kafkaPort) {
-    return new KafkaConfig(kafkaHost, kafkaPort);
-  }
+  void overridePort(TransportProtocol protocol);
 
-  @Override
-  public String getKafkaHost() {
-    return kafkaHost;
-  }
-
-  @Override
-  public Integer getKafkaPort() {
-    return kafkaPort;
-  }
+  void overrideKafkaHostname(KafkaTransportProtocol protocol);
 }

@@ -16,10 +16,12 @@
  *
  */
 
-package org.apache.streampipes.client.api.live;
+package org.apache.streampipes.integration.containers;
 
-public interface IKafkaConfig {
-  String getKafkaHost();
+public class NatsDevContainer extends NatsContainer {
 
-  Integer getKafkaPort();
+  @Override
+  public String getBrokerHost() {
+    return "localhost";
+  }
 }

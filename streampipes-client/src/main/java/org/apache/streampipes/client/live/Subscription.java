@@ -16,22 +16,23 @@
  *
  */
 
-package org.apache.streampipes.messaging.nats;
+package org.apache.streampipes.client.live;
 
+import org.apache.streampipes.client.api.live.ISubscription;
 import org.apache.streampipes.messaging.EventConsumer;
-import org.apache.streampipes.messaging.EventProducer;
-import org.apache.streampipes.messaging.SpProtocolDefinition;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
-public class SpNatsProtocol implements SpProtocolDefinition<NatsTransportProtocol> {
+public class Subscription implements ISubscription {
 
-  @Override
-  public EventConsumer getConsumer(NatsTransportProtocol transportProtocol) {
-    return new NatsConsumer(transportProtocol);
+  private final EventConsumer consumer;
+
+  public Subscription(EventConsumer consumer) {
+    this.consumer = consumer;
   }
 
   @Override
-  public EventProducer getProducer(NatsTransportProtocol transportProtocol) {
-    return new NatsPublisher(transportProtocol);
+  public void unsubscribe() {
+    if (consumer.isConnected()) {
+      consumer.disconnect();
+    }
   }
 }

@@ -21,7 +21,6 @@ package org.apache.streampipes.messaging.jms;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
@@ -36,7 +35,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 
-public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
+public class ActiveMQPublisher extends ActiveMQConnectionProvider implements EventProducer {
 
   private static final Logger LOG = LoggerFactory.getLogger(ActiveMQPublisher.class);
 
@@ -46,43 +45,14 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 
   private boolean connected = false;
 
-  public ActiveMQPublisher() {
-
-  }
-
-  @Deprecated
-  public ActiveMQPublisher(String url, String topic) {
-    JmsTransportProtocol protocol = new JmsTransportProtocol();
-    protocol.setBrokerHostname(url.substring(0, url.lastIndexOf(":")));
-    protocol.setPort(Integer.parseInt(url.substring(url.lastIndexOf(":") + 1, url.length())));
-    protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
-    try {
-      connect(protocol);
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public ActiveMQPublisher(String host, int port, String topic) {
-    JmsTransportProtocol protocol = new JmsTransportProtocol();
-    protocol.setBrokerHostname(host);
-    protocol.setPort(port);
-    protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
-    try {
-      connect(protocol);
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void sendText(String message) throws JMSException {
-    publish(message.getBytes());
+  public ActiveMQPublisher(JmsTransportProtocol protocol) {
+    super(protocol);
   }
 
   @Override
-  public void connect(JmsTransportProtocol protocolSettings) throws SpRuntimeException {
+  public void connect() throws SpRuntimeException {
 
-    String url = ActiveMQUtils.makeActiveMqUrl(protocolSettings);
+    String url = ActiveMQUtils.makeActiveMqUrl(protocol);
     ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
     boolean co = false;
@@ -98,7 +68,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
     try {
       this.session = connection
           .createSession(false, Session.AUTO_ACKNOWLEDGE);
-      this.producer = session.createProducer(session.createTopic(protocolSettings
+      this.producer = session.createProducer(session.createTopic(protocol
           .getTopicDefinition()
           .getActualTopicName()));
       this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
@@ -106,9 +76,8 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
       this.connected = true;
     } catch (JMSException e) {
       throw new SpRuntimeException("could not connect to activemq broker. Broker: '"
-          + protocolSettings.getBrokerHostname() + "' Port: " + protocolSettings.getPort());
+          + protocol.getBrokerHostname() + "' Port: " + protocol.getPort());
     }
-
   }
 
   @Override
@@ -130,9 +99,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
       session.close();
       connection.close();
       this.connected = false;
-      //logger.info("ActiveMQ connection closed successfully.");
     } catch (JMSException e) {
-      //logger.warn("Could not close ActiveMQ connection.");
       throw new SpRuntimeException("could not disconnect from activemq broker");
     }
   }

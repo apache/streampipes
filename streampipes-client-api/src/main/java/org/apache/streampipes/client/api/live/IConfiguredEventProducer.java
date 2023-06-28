@@ -16,31 +16,17 @@
  *
  */
 
-package org.apache.streampipes.wrapper.flink.status;
+package org.apache.streampipes.client.api.live;
 
-import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
+import org.apache.streampipes.model.runtime.Event;
 
-import com.google.gson.Gson;
+import java.util.Map;
 
-import java.io.Serializable;
+public interface IConfiguredEventProducer {
 
-public class PipelineElementStatusSender implements Serializable {
+  void publish(Event event);
 
-  private SpKafkaProducer kafkaProducer;
+  void publish(Map<String, Object> event);
 
-  private String errorTopic;
-  private String statsTopic;
-
-  private Gson gson;
-
-  public PipelineElementStatusSender(SpKafkaProducer kafkaProducer, String errorTopic,
-                                     String statsTopic) {
-
-    this.kafkaProducer = kafkaProducer;
-    this.errorTopic = errorTopic;
-    this.statsTopic = statsTopic;
-
-    this.gson = new Gson();
-  }
-
+  void close();
 }
