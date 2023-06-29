@@ -178,7 +178,7 @@
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
-	<inlong.version>1.6.0</inlong.version>
+	<inlong.version>1.7.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 	<maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
