@@ -28,6 +28,7 @@ streampipes:
     port: 8030
     persistence:
       storageClassName: ""
+      storageSize: "1Gi"
       claimName: "backend-pvc"
       pvName: "backend-pv"
     service:
@@ -35,7 +36,7 @@ streampipes:
       port: 8030
   ui:
     appName: "ui"
-    resolverActive: true
+    resolverActive: false
     # DNS resolver when using the Nginx proxy
     resolver: "kube-dns.kube-system.svc.cluster.local"
     service:
@@ -51,7 +52,7 @@ streampipes:
     host: ""
   # Ingressroute for running StreamPipes behind Traefik
   ingressroute:
-    active: false
+    active: true
     annotations: {}
     entryPoints:
       - web
@@ -66,6 +67,7 @@ external:
     version: 1.14.3
     persistence:
       storageClassName: ""
+      storageSize: "1Gi"
       claimName: "consul-pvc"
       pvName: "consul-pv"
   couchdb:
@@ -75,6 +77,7 @@ external:
     password: "admin"
     persistence:
       storageClassName: ""
+      storageSize: "1Gi"
       claimName: "couchdb-pvc"
       pvName: "couchdb-pv"
   influxdb:
@@ -89,6 +92,8 @@ external:
     initMode: "setup"
     persistence:
       storageClassName: ""
+      storageSize: "1Gi"
+      storageSizeV1: "1Gi"
       claimName: "influxdb2-pvc"
       claimNameV1: "influxdb-pvc"
       pvName: "influxdb2-pv"
