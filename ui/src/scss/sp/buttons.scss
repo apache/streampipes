@@ -30,7 +30,7 @@
     display: inline-block;
     vertical-align: middle;
     border: 0;
-    border-radius: 3px;
+    border-radius: var(--button-border-radius) !important;
     cursor: pointer;
     font-family: inherit;
     font-weight: bold;

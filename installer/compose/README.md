@@ -19,7 +19,7 @@
 StreamPipes Compose is a simple collection of user-friendly `docker-compose` files that easily lets gain first-hand experience with Apache StreamPipes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.92.0-SNAPSHOT
+**Current version:** 0.93.0-SNAPSHOT
 <!-- END do not edit -->
 
 > **NOTE**: We recommend StreamPipes Compose to only use for initial try-out and testing. If you are a developer and want to develop new pipeline elements or core feature, use the [StreamPipes CLI](../cli).

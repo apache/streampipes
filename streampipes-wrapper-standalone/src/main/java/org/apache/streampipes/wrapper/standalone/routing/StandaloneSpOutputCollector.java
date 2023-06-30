@@ -19,7 +19,8 @@
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
@@ -28,7 +29,6 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 import org.slf4j.Logger;
@@ -42,14 +42,14 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneSpOutputCollector.class);
 
-  private final EventProducer<T> producer;
+  private final EventProducer producer;
   private final String resourceId;
 
   public StandaloneSpOutputCollector(T protocol,
                                      TransportFormat format,
                                      String resourceId) throws SpRuntimeException {
     super(protocol, format);
-    this.producer = protocolDefinition.getProducer();
+    this.producer = protocolDefinition.getProducer(protocol);
     this.resourceId = resourceId;
   }
 
@@ -67,15 +67,15 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
 
   @Override
   public void connect() throws SpRuntimeException {
-    if (!protocolDefinition.getProducer().isConnected()) {
-      protocolDefinition.getProducer().connect(transportProtocol);
+    if (!producer.isConnected()) {
+      producer.connect();
     }
   }
 
   @Override
   public void disconnect() throws SpRuntimeException {
-    if (protocolDefinition.getProducer().isConnected()) {
-      protocolDefinition.getProducer().disconnect();
+    if (producer.isConnected()) {
+      producer.disconnect();
       ProtocolManager.removeOutputCollector(transportProtocol);
     }
   }

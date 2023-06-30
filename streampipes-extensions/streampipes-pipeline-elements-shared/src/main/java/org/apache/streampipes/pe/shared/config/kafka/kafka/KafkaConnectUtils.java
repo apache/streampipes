@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.pe.shared.config.kafka.kafka;
 
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslPlainConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslSSLConfig;
@@ -25,10 +27,11 @@ import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthentica
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedSSLConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 public class KafkaConnectUtils {
 
@@ -55,6 +58,11 @@ public class KafkaConnectUtils {
 
   private static final String HIDE_INTERNAL_TOPICS = "hide-internal-topics";
 
+  public static final String AUTO_OFFSET_RESET_CONFIG = ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
+  public static final String EARLIEST = "earliest";
+  public static final String LATEST = "latest";
+  public static final String NONE = "none";
+
   public static Label getTopicLabel() {
     return Labels.withId(TOPIC_KEY);
   }
@@ -79,7 +87,12 @@ public class KafkaConnectUtils {
     return Labels.withId(ACCESS_MODE);
   }
 
-  public static KafkaConfig getConfig(StaticPropertyExtractor extractor, boolean containsTopic) {
+  public static Label getAutoOffsetResetConfigLabel() {
+    return Labels.withId(AUTO_OFFSET_RESET_CONFIG);
+  }
+
+
+  public static KafkaConfig getConfig(IStaticPropertyExtractor extractor, boolean containsTopic) {
     String brokerUrl = extractor.singleValueParameter(HOST_KEY, String.class);
     String topic = "";
     if (containsTopic) {
@@ -93,7 +106,7 @@ public class KafkaConnectUtils {
 
     KafkaSecurityConfig securityConfig;
 
-    //KafkaSerializerConfig serializerConfig = new KafkaSerializerByteArrayConfig();
+    //KafkaSerializerConfig serializerConfig = new KafkaSerializerByteArrayConfig()
 
     // check if a user for the authentication is defined
     if (authentication.equals(KafkaConnectUtils.SASL_SSL) || authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
@@ -110,7 +123,12 @@ public class KafkaConnectUtils {
           new KafkaSecurityUnauthenticatedPlainConfig();
     }
 
-    return new KafkaConfig(brokerUrl, port, topic, securityConfig);
+
+
+    String auto = extractor.selectedAlternativeInternalId(AUTO_OFFSET_RESET_CONFIG);
+    AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig(auto);
+
+    return new KafkaConfig(brokerUrl, port, topic, securityConfig, autoOffsetResetConfig);
   }
 
   private static boolean isUseSSL(String authentication) {
@@ -143,5 +161,18 @@ public class KafkaConnectUtils {
         StaticProperties.group(Labels.withId(KafkaConnectUtils.USERNAME_GROUP),
             StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConnectUtils.USERNAME_KEY)),
             StaticProperties.secretValue(Labels.withId(KafkaConnectUtils.PASSWORD_KEY))));
+  }
+
+
+  public static StaticPropertyAlternative getAlternativesLatest() {
+    return Alternatives.from(Labels.withId(LATEST));
+  }
+
+  public static StaticPropertyAlternative getAlternativesEarliest() {
+    return Alternatives.from(Labels.withId(EARLIEST));
+  }
+
+  public static StaticPropertyAlternative getAlternativesNone() {
+    return Alternatives.from(Labels.withId(NONE));
   }
 }

@@ -29,16 +29,20 @@ import org.fusesource.mqtt.client.Topic;
 import java.io.Serializable;
 
 public class MqttConsumer extends AbstractMqttConnector implements
-    EventConsumer<MqttTransportProtocol>,
+    EventConsumer,
     AutoCloseable, Serializable {
 
+  public MqttConsumer(MqttTransportProtocol protocol) {
+    super(protocol);
+  }
+
   @Override
-  public void connect(MqttTransportProtocol protocolSettings, InternalEventProcessor<byte[]> eventProcessor)
+  public void connect(InternalEventProcessor<byte[]> eventProcessor)
       throws SpRuntimeException {
 
     try {
-      this.createBrokerConnection(protocolSettings);
-      Topic[] topics = {new Topic(protocolSettings.getTopicDefinition().getActualTopicName(), QoS.AT_LEAST_ONCE)};
+      this.createBrokerConnection(protocol);
+      Topic[] topics = {new Topic(protocol.getTopicDefinition().getActualTopicName(), QoS.AT_LEAST_ONCE)};
       connection.subscribe(topics);
       new Thread(new ConsumerThread(eventProcessor)).start();
 

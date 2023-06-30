@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.management.locales;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.output.AppendOutputStrategy;
 import org.apache.streampipes.model.output.FixedOutputStrategy;
@@ -30,14 +29,20 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import static org.apache.streampipes.extensions.management.util.LocalesUtil.makePath;
 
 public class LabelGenerator {
+
+  private static final Logger LOG = LoggerFactory.getLogger(LabelGenerator.class);
 
   private static final String Delimiter = ".";
   private static final String Title = "title";
@@ -55,20 +60,9 @@ public class LabelGenerator {
       desc.setName(getTitle(props, desc.getAppId()));
       desc.setDescription(getDescription(props, desc.getAppId()));
 
-      if (isAdapter() || isProtocol()) {
-        List<StaticProperty> properties;
-        if (isAdapter()) {
-          properties = ((AdapterDescription) desc).getConfig();
-        } else {
-          properties = ((ProtocolDescription) desc).getConfig();
-        }
-        if (properties != null) {
-          properties.forEach(sp -> {
-            generateLabels(props, sp);
-          });
-        }
+      if (isAdapter()) {
+        ((AdapterDescription) desc).getConfig().forEach(sp -> generateLabels(props, sp));
       }
-
 
       if (isConsumable()) {
         ((ConsumableStreamPipesEntity) desc).getStaticProperties().forEach(sp -> {
@@ -91,14 +85,16 @@ public class LabelGenerator {
           }
         });
       }
+    } else {
+      LOG.error("Could not find assets directory to generate labels for app id:" + desc.getAppId());
     }
 
     return desc;
   }
 
   private StaticProperty generateLabels(Properties props, StaticProperty sp) {
-    sp.setLabel(getTitle(props, sp.getInternalName()));
-    sp.setDescription(getDescription(props, sp.getInternalName()));
+    sp.setLabel(getTitle(props, sp.getInternalName(), sp.getLabel()));
+    sp.setDescription(getDescription(props, sp.getInternalName(), sp.getDescription()));
     if (sp instanceof CollectionStaticProperty) {
 
       if (((CollectionStaticProperty) sp).getMembers() != null) {
@@ -114,8 +110,8 @@ public class LabelGenerator {
 
     } else if (sp instanceof StaticPropertyGroup) {
       ((StaticPropertyGroup) sp).getStaticProperties().forEach(g -> {
-        g.setLabel(getTitle(props, g.getInternalName()));
-        g.setDescription(getDescription(props, g.getInternalName()));
+        g.setLabel(getTitle(props, g.getInternalName(), g.getLabel()));
+        g.setDescription(getDescription(props, g.getInternalName(), g.getDescription()));
       });
     } else if (sp instanceof StaticPropertyAlternatives) {
       ((StaticPropertyAlternatives) sp).getAlternatives().forEach(a -> {
@@ -132,7 +128,7 @@ public class LabelGenerator {
 
   private Properties makeProperties() throws IOException {
     Properties props = new Properties();
-    props.load(loadResource());
+    props.load(new InputStreamReader(loadResource(), StandardCharsets.UTF_8));
 
     return props;
   }
@@ -164,11 +160,6 @@ public class LabelGenerator {
     return desc instanceof AdapterDescription;
   }
 
-  private boolean isProtocol() {
-    return desc instanceof ProtocolDescription;
-  }
-
-
   private InputStream loadResource() {
     if (desc.getIncludedLocales().size() > 0) {
       return getResourceFile(desc.getIncludedLocales().get(0));
@@ -177,16 +168,24 @@ public class LabelGenerator {
     }
   }
 
+  private String getTitle(Properties props, String id, String defaultValue) {
+    return getValue(props, Title, id, defaultValue);
+  }
+
   private String getTitle(Properties props, String id) {
-    return getValue(props, Title, id);
+    return getValue(props, Title, id, "");
   }
 
   private String getDescription(Properties props, String id) {
-    return getValue(props, Description, id);
+    return getValue(props, Description, id, "");
   }
 
-  private String getValue(Properties props, String type, String id) {
-    return props.getProperty(id + Delimiter + type, "");
+  private String getDescription(Properties props, String id, String defaultValue) {
+    return getValue(props, Description, id, defaultValue);
+  }
+
+  private String getValue(Properties props, String type, String id, String defaultValue) {
+    return props.getProperty(id + Delimiter + type, defaultValue);
   }
 
 

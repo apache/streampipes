@@ -19,7 +19,6 @@
 package org.apache.streampipes.manager.execution.provider;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.List;
@@ -34,8 +33,4 @@ public class CurrentPipelineElementProvider implements PipelineElementProvider {
     return executionInfo.getProcessorsAndSinks();
   }
 
-  @Override
-  public List<SpDataSet> getDataSets(PipelineExecutionInfo executionInfo) {
-    return executionInfo.getDataSets();
-  }
 }

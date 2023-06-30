@@ -18,3 +18,9 @@ dist
 
 # Ignore csv files required for e2e tests
 cypress/fixtures/**/*.csv
+
+# Ignore files that are overriden from the prebuild script
+src/app/app-routing.module.ts
+src/app/appng5.module.ts
+src/app/core/components/base-navigation.component.ts
+src/app/home/home.service.ts

@@ -31,7 +31,6 @@ export class SpConnectFilterToolbarComponent implements OnInit {
     filterChangedEmitter: EventEmitter<AdapterFilterSettingsModel> =
         new EventEmitter<AdapterFilterSettingsModel>();
 
-    adapterTypes: string[] = ['All types', 'Data Set', 'Data Stream'];
     adapterCategories: any;
 
     currentFilter: AdapterFilterSettingsModel = {

@@ -17,30 +17,35 @@
  */
 package org.apache.streampipes.wrapper.flink.converter;
 
+import org.apache.streampipes.extensions.api.pe.param.IInternalRuntimeParameters;
+import org.apache.streampipes.extensions.api.pe.param.IPipelineElementParameters;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.wrapper.params.runtime.RuntimeParams;
+import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
 import java.util.Map;
 
-public class MapToEventConverter<T extends RuntimeParams<?, ?, ?>> implements
+public class MapToEventConverter<T extends IPipelineElementParameters<?, ?>> implements
     FlatMapFunction<Map<String,
         Object>, Event> {
 
   private static final long serialVersionUID = 1L;
 
-  private T runtimeParams;
-  private String sourceId;
+  private final T runtimeParams;
+  private final String sourceId;
+
+  private final IInternalRuntimeParameters internalRuntimeParameters;
 
   public MapToEventConverter(String sourceId, T runtimeParams) {
     this.sourceId = sourceId;
     this.runtimeParams = runtimeParams;
+    this.internalRuntimeParameters = new InternalRuntimeParameters();
   }
 
   @Override
   public void flatMap(Map<String, Object> inMap, Collector<Event> collector) throws Exception {
-    collector.collect(runtimeParams.makeEvent(inMap, sourceId));
+    collector.collect(internalRuntimeParameters.makeEvent(runtimeParams, inMap, sourceId));
   }
 }

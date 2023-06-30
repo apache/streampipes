@@ -17,9 +17,11 @@
 """Manages processor life cycle"""
 import logging
 import abc
+from deprectaed import deprecated
 from streampipes.declarer import DeclarerSingleton
 
 
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class ProcessorDispatcher(object):
     __metaclass__ = abc.ABC
 

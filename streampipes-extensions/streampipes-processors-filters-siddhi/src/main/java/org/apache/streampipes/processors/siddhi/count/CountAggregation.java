@@ -41,7 +41,6 @@ import org.apache.streampipes.wrapper.siddhi.query.InsertIntoClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.siddhi.query.expression.SiddhiTimeUnit;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 public class CountAggregation extends StreamPipesSiddhiProcessor {
 
@@ -84,7 +83,7 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
                                         String finalInsertIntoStreamName) {
     Integer timeWindowSize = siddhiParams.getParams().extractor().singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String scale = siddhiParams.getParams().extractor().selectedSingleValueInternalName(SCALE_KEY, String.class);

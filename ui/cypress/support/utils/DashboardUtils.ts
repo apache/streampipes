@@ -25,6 +25,15 @@ export class DashboardUtils {
         cy.dataCy('show-dashboard-' + dashboardName).click();
     }
 
+    public static showStandaloneDashboard(dashboardName: string) {
+        cy.dataCy('show-dashboard-' + dashboardName).click();
+        cy.location('href').then(url => {
+            const dashboardId = url.substring(url.lastIndexOf('/') + 1);
+            cy.visit(`#/standalone/${dashboardId}`);
+            cy.wait(2000);
+        });
+    }
+
     public static addAndEditDashboard(dashboardName: string) {
         cy.dataCy('new-dashboard-btn').click();
         cy.dataCy('dashboard-name-input').type(dashboardName);

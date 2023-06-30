@@ -21,89 +21,60 @@ from unittest.mock import MagicMock, call, patch
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes.model.resource.data_lake_series import (
-    StreamPipesUnsupportedDataLakeSeries,
-)
+from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries
 
 
 class TestDataLakeSeries(TestCase):
     def setUp(self) -> None:
-        self.series_regular = {
-            "total": 1,
-            "headers": [
-                "time",
-                "changeDetectedHigh",
-                "changeDetectedLow",
-                "cumSumHigh",
-                "cumSumLow",
-                "level",
-                "overflow",
-                "sensorId",
-                "underflow",
+        self.base_headers = [
+            "changeDetectedHigh",
+            "changeDetectedLow",
+            "cumSumHigh",
+            "cumSumLow",
+            "level",
+            "overflow",
+            "sensorId",
+            "underflow",
+        ]
+
+        self.headers = ["time"] + self.base_headers
+
+        self.headers_expected = ["timestamp"] + self.base_headers
+
+        self.data_series = {
+            "total": 2,
+            "rows": [
+                [
+                    "2022-11-05T14:47:50.838Z",
+                    False,
+                    False,
+                    "0.0",
+                    "0.0",
+                    73.37740325927734,
+                    False,
+                    "level01",
+                    False,
+                ],
+                [
+                    "2022-11-05T14:47:54.906Z",
+                    False,
+                    False,
+                    "0.0",
+                    "-0.38673634857474815",
+                    70.03279876708984,
+                    False,
+                    "level01",
+                    False,
+                ],
             ],
-            "allDataSeries": [
-                {
-                    "total": 2,
-                    "rows": [
-                        [
-                            "2022-11-05T14:47:50.838Z",
-                            False,
-                            False,
-                            "0.0",
-                            "0.0",
-                            73.37740325927734,
-                            False,
-                            "level01",
-                            False,
-                        ],
-                        [
-                            "2022-11-05T14:47:54.906Z",
-                            False,
-                            False,
-                            "0.0",
-                            "-0.38673634857474815",
-                            70.03279876708984,
-                            False,
-                            "level01",
-                            False,
-                        ],
-                    ],
-                    "tags": None,
-                    "headers": [
-                        "time",
-                        "changeDetectedHigh",
-                        "changeDetectedLow",
-                        "cumSumHigh",
-                        "cumSumLow",
-                        "level",
-                        "overflow",
-                        "sensorId",
-                        "underflow",
-                    ],
-                }
-            ],
+            "tags": None,
+            "headers": self.headers,
         }
 
-        self.series_missing = {
-            "total": 1,
-            "headers": [
-                "time",
-                "changeDetectedHigh",
-                "changeDetectedLow",
-                "cumSumHigh",
-                "cumSumLow",
-                "level",
-                "overflow",
-                "sensorId",
-                "underflow",
-            ],
-            "allDataSeries": [],
-        }
-
-    @patch("streampipes.client.client.Session", autospec=True)
-    def test_to_pandas(self, http_session: MagicMock):
+    @staticmethod
+    def get_result_as_panda(http_session: MagicMock, data: dict):
         http_session_mock = MagicMock()
-        http_session_mock.get.return_value.text = json.dumps(self.series_regular)
+        http_session_mock.get.return_value.json.return_value = data
         http_session.return_value = http_session_mock
 
         client = StreamPipesClient(
@@ -112,6 +83,7 @@ class TestDataLakeSeries(TestCase):
                 host_address="localhost",
             )
         )
+
         result = client.dataLakeMeasureApi.get(identifier="test")
 
         http_session.assert_has_calls(
@@ -119,36 +91,71 @@ class TestDataLakeSeries(TestCase):
             any_order=True,
         )
 
-        result_pd = result.to_pandas()
+        return result.to_pandas()
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_to_pandas(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        query_result = {
+            "total": 1,
+            "headers": self.headers,
+            "spQueryStatus": "OK",
+            "allDataSeries": [
+                self.data_series
+            ],
+        }
+
+        result_pd = self.get_result_as_panda(http_session, query_result)
 
         self.assertEqual(2, len(result_pd))
         self.assertListEqual(
-            [
-                "time",
-                "changeDetectedHigh",
-                "changeDetectedLow",
-                "cumSumHigh",
-                "cumSumLow",
-                "level",
-                "overflow",
-                "sensorId",
-                "underflow",
-            ],
+            self.headers_expected,
             list(result_pd.columns),
         )
         self.assertEqual(73.37740325927734, result_pd["level"][0])
 
     @patch("streampipes.client.client.Session", autospec=True)
-    def test_to_pandas_unsupported_series(self, http_session: MagicMock):
-        http_session_mock = MagicMock()
-        http_session_mock.get.return_value.text = json.dumps(self.series_missing)
-        http_session.return_value = http_session_mock
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_group_by_to_pandas(self, server_version: MagicMock, http_session: MagicMock):
 
-        client = StreamPipesClient(
-            client_config=StreamPipesClientConfig(
-                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
-                host_address="localhost",
-            )
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        query_result = {
+            "total": 2,
+            "headers": self.headers,
+            "spQueryStatus": "OK",
+            "allDataSeries": [
+                self.data_series,
+                self.data_series
+            ],
+        }
+
+        result_pd = self.get_result_as_panda(http_session, query_result)
+
+        self.assertEqual(4, len(result_pd))
+        self.assertListEqual(
+            self.headers_expected,
+            list(result_pd.columns),
         )
-        with self.assertRaises(StreamPipesUnsupportedDataLakeSeries):
-            client.dataLakeMeasureApi.get(identifier="test")
+        self.assertEqual(70.03279876708984, result_pd["level"][3])
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_different_headers_exception(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        query_result = {
+            "total": 1,
+            "headers": ['one'],
+            "spQueryStatus": "OK",
+            "allDataSeries": [
+                self.data_series
+            ],
+        }
+
+        with self.assertRaises(StreamPipesUnsupportedDataSeries):
+            self.get_result_as_panda(http_session, query_result)

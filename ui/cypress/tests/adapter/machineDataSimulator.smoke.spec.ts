@@ -17,22 +17,20 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+describe('Test Machine Data Simulator Adapter', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
 
     it('Perform Test', () => {
-        const adapterInput = SpecificAdapterBuilder.create(
-            'Machine_Data_Simulator',
-        )
+        const adapterInput = AdapterBuilder.create('Machine_Data_Simulator')
             .setName('Machine Data Simulator Test')
             .addInput('input', 'wait-time-ms', '1000')
             .build();
 
-        ConnectUtils.testSpecificStreamAdapter(adapterInput);
+        ConnectUtils.testAdapter(adapterInput);
         ConnectUtils.deleteAdapter();
     });
 });

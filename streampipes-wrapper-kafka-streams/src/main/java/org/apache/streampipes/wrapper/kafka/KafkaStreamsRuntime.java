@@ -18,39 +18,75 @@
 package org.apache.streampipes.wrapper.kafka;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.context.IContextGenerator;
+import org.apache.streampipes.extensions.api.pe.context.RuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IParameterGenerator;
+import org.apache.streampipes.extensions.api.pe.param.IPipelineElementParameters;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.wrapper.context.RuntimeContext;
 import org.apache.streampipes.wrapper.distributed.runtime.DistributedRuntime;
-import org.apache.streampipes.wrapper.params.binding.BindingParams;
-import org.apache.streampipes.wrapper.params.runtime.RuntimeParams;
+import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
 
-import java.util.Map;
 import java.util.Properties;
 
-@SuppressWarnings("checkstyle:ClassTypeParameterName")
-public abstract class KafkaStreamsRuntime<RP extends RuntimeParams<B, I, RC>, B extends
-    BindingParams<I>, I extends InvocableStreamPipesEntity, RC extends RuntimeContext> extends
-    DistributedRuntime<RP, B, I, RC> {
+public abstract class KafkaStreamsRuntime<
+    PeT extends IStreamPipesPipelineElement<?>,
+    IvT extends InvocableStreamPipesEntity,
+    RcT extends RuntimeContext,
+    ExT extends IParameterExtractor<IvT>,
+    PepT extends IPipelineElementParameters<IvT, ExT>>
+    extends DistributedRuntime<PeT, IvT, RcT, ExT, PepT>
+    implements IStreamPipesRuntime<PeT, IvT> {
 
   Properties config;
   KafkaStreams streams;
 
-  KafkaStreamsRuntime(RP runtimeParams) {
-    super(runtimeParams);
+  protected IvT pipelineElementInvocation;
+  protected PeT pipelineElement;
+  protected PepT runtimeParameters;
+
+  protected RcT runtimeContext;
+
+  protected InternalRuntimeParameters internalRuntimeParameters;
+
+  public KafkaStreamsRuntime(IContextGenerator<RcT, IvT> contextGenerator,
+                             IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+    super(contextGenerator, parameterGenerator);
   }
 
   @Override
+  public void startRuntime(IvT pipelineElementInvocation,
+                           PeT pipelineElement,
+                           PepT runtimeParameters,
+                           RcT runtimeContext) {
+    this.pipelineElementInvocation = pipelineElementInvocation;
+    this.pipelineElement = pipelineElement;
+    this.runtimeParameters = runtimeParameters;
+    this.runtimeContext = runtimeContext;
+    this.internalRuntimeParameters = new InternalRuntimeParameters();
+    prepareRuntime();
+    bindRuntime();
+  }
+
+  @Override
+  public void stopRuntime() {
+    streams.close();
+    afterStop();
+  }
+
   public void prepareRuntime() throws SpRuntimeException {
     config = new Properties();
-    config.put(StreamsConfig.APPLICATION_ID_CONFIG, gneerateApplicationId(runtimeParams.getBindingParams()
-        .getGraph()
+    config.put(StreamsConfig.APPLICATION_ID_CONFIG, gneerateApplicationId(runtimeParameters
+        .getModel()
         .getElementId()));
-    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getKafkaUrl(runtimeParams.getBindingParams().getGraph()
+    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getKafkaUrl(runtimeParameters
+        .getModel()
         .getInputStreams().get(0)));
     config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -60,17 +96,7 @@ public abstract class KafkaStreamsRuntime<RP extends RuntimeParams<B, I, RC>, B 
     return elementId.replaceAll("/", "-").replaceAll(":", "-");
   }
 
-  @Override
-  public void postDiscard() throws SpRuntimeException {
+  protected abstract void bindRuntime();
 
-  }
-
-  @Override
-  public void discardRuntime() throws SpRuntimeException {
-    streams.close();
-  }
-
-  protected abstract KStream<String, Map<String, Object>> getApplicationLogic(KStream<String, Map<String, Object>>...
-                                                                                  inputStreams);
-
+  protected abstract void afterStop();
 }

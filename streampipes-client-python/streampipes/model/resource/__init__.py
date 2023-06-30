@@ -16,13 +16,15 @@
 #
 
 from .data_lake_measure import DataLakeMeasure
-from .data_lake_series import DataLakeSeries
+from .data_series import DataSeries
 from .data_stream import DataStream
 from .function_definition import FunctionDefinition
+from .version import Version
 
 __all__ = [
     "DataLakeMeasure",
-    "DataLakeSeries",
+    "DataSeries",
     "DataStream",
     "FunctionDefinition",
+    "Version",
 ]

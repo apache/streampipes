@@ -17,112 +17,36 @@
  */
 
 import { Injectable } from '@angular/core';
-import {
-    AdapterDescription,
-    EventSchema,
-    GenericAdapterSetDescription,
-    GenericAdapterStreamDescription,
-    SpecificAdapterSetDescription,
-    SpecificAdapterStreamDescription,
-    AdapterDescriptionUnion,
-} from '@streampipes/platform-services';
 
 @Injectable()
 export class ConnectService {
-    isDataStreamDescription(adapter: AdapterDescription): boolean {
-        return (
-            adapter instanceof SpecificAdapterStreamDescription ||
-            adapter instanceof GenericAdapterStreamDescription
-        );
-    }
-
-    isDataSetDescription(adapter: AdapterDescription): boolean {
-        return (
-            adapter instanceof SpecificAdapterSetDescription ||
-            adapter instanceof GenericAdapterSetDescription
-        );
-    }
-
-    isGenericDescription(adapter: AdapterDescription): boolean {
-        return (
-            adapter instanceof GenericAdapterSetDescription ||
-            adapter instanceof GenericAdapterStreamDescription
-        );
-    }
-
-    isSpecificDescription(adapter: AdapterDescription): boolean {
-        return (
-            adapter instanceof SpecificAdapterSetDescription ||
-            adapter instanceof SpecificAdapterStreamDescription
-        );
-    }
-
-    getEventSchema(adapter: AdapterDescription): EventSchema {
-        let eventSchema: EventSchema;
-
-        if (adapter instanceof GenericAdapterSetDescription) {
-            eventSchema =
-                (adapter as GenericAdapterSetDescription).dataSet.eventSchema ||
-                new EventSchema();
-        } else if (adapter instanceof SpecificAdapterSetDescription) {
-            eventSchema =
-                (adapter as SpecificAdapterSetDescription).dataSet
-                    .eventSchema || new EventSchema();
-        } else if (adapter instanceof GenericAdapterStreamDescription) {
-            eventSchema =
-                (adapter as GenericAdapterStreamDescription).dataStream
-                    .eventSchema || new EventSchema();
-        } else if (adapter instanceof SpecificAdapterStreamDescription) {
-            eventSchema =
-                (adapter as SpecificAdapterStreamDescription).dataStream
-                    .eventSchema || new EventSchema();
-        } else {
-            eventSchema = new EventSchema();
-        }
-
-        if (
-            eventSchema &&
-            eventSchema.eventProperties &&
-            eventSchema.eventProperties.length > 0
-        ) {
-            return eventSchema;
-        } else {
-            eventSchema.eventProperties = [];
-            return eventSchema;
-        }
-    }
-
-    cloneAdapterDescription(
-        toClone: AdapterDescriptionUnion,
-    ): AdapterDescriptionUnion {
-        let result: AdapterDescriptionUnion;
-
-        if (this.isGenericDescription(toClone)) {
-            if (toClone instanceof GenericAdapterStreamDescription) {
-                result = GenericAdapterStreamDescription.fromData(
-                    toClone,
-                    new GenericAdapterStreamDescription(),
-                );
-            } else if (toClone instanceof GenericAdapterSetDescription) {
-                result = GenericAdapterSetDescription.fromData(
-                    toClone,
-                    new GenericAdapterSetDescription(),
-                );
-            }
-        } else {
-            if (toClone instanceof SpecificAdapterStreamDescription) {
-                result = SpecificAdapterStreamDescription.fromData(
-                    toClone,
-                    new SpecificAdapterStreamDescription(),
-                );
-            } else if (toClone instanceof SpecificAdapterSetDescription) {
-                result = SpecificAdapterSetDescription.fromData(
-                    toClone,
-                    new SpecificAdapterSetDescription(),
-                );
-            }
-        }
-
-        return result;
-    }
+    // isGenericDescription(adapter: AdapterDescription): boolean {
+    //     return adapter instanceof GenericAdapterStreamDescription;
+    // }
+    // getEventSchema(adapter: AdapterDescription): EventSchema {
+    //     let eventSchema: EventSchema;
+    //
+    //     if (adapter instanceof GenericAdapterStreamDescription) {
+    //         eventSchema =
+    //             (adapter as GenericAdapterStreamDescription).dataStream
+    //                 .eventSchema || new EventSchema();
+    //     } else if (adapter instanceof SpecificAdapterStreamDescription) {
+    //         eventSchema =
+    //             (adapter as SpecificAdapterStreamDescription).dataStream
+    //                 .eventSchema || new EventSchema();
+    //     } else {
+    //         eventSchema = new EventSchema();
+    //     }
+    //
+    //     if (
+    //         eventSchema &&
+    //         eventSchema.eventProperties &&
+    //         eventSchema.eventProperties.length > 0
+    //     ) {
+    //         return eventSchema;
+    //     } else {
+    //         eventSchema.eventProperties = [];
+    //         return eventSchema;
+    //     }
+    // }
 }

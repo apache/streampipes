@@ -31,25 +31,33 @@ import io.nats.client.Subscription;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class NatsConsumer extends AbstractNatsConnector implements EventConsumer<NatsTransportProtocol> {
+public class NatsConsumer extends AbstractNatsConnector implements EventConsumer {
 
   private Dispatcher dispatcher;
   private Subscription subscription;
+  private NatsConfig natsConfig;
+
+  public NatsConsumer(NatsTransportProtocol protocol) {
+    this.natsConfig = makeNatsConfig(protocol);
+  }
+
+  public NatsConsumer(NatsConfig natsConfig) {
+    this.natsConfig = natsConfig;
+  }
 
   public void connect(NatsConfig natsConfig,
                       InternalEventProcessor<byte[]> eventProcessor) throws IOException, InterruptedException {
-    makeBrokerConnection(natsConfig);
-    createSubscription(eventProcessor);
+    this.natsConfig = natsConfig;
+    connect(eventProcessor);
   }
 
   @Override
-  public void connect(NatsTransportProtocol protocolSettings,
-                      InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
+  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
     try {
-      makeBrokerConnection(protocolSettings);
+      makeBrokerConnection(natsConfig);
       createSubscription(eventProcessor);
     } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+      throw new SpRuntimeException(e);
     }
   }
 

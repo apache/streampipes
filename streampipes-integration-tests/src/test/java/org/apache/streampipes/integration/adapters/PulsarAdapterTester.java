@@ -17,24 +17,24 @@
  */
 package org.apache.streampipes.integration.adapters;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.format.json.object.JsonObjectFormat;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.integration.containers.PulsarContainer;
 import org.apache.streampipes.integration.containers.PulsarDevContainer;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription;
-import org.apache.streampipes.sdk.builder.adapter.GenericDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
-import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.integration.utils.Utils;
+import org.apache.streampipes.manager.template.AdapterTemplateHandler;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
-import com.google.common.collect.Maps;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
-import org.junit.Assert;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.pulsar.client.api.PulsarClientException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,56 +55,68 @@ public class PulsarAdapterTester extends AdapterTesterBase {
   }
 
   @Override
-  public AdapterDescription prepareAdapter() {
+  public IAdapterConfiguration prepareAdapter() {
+    IAdapterConfiguration configuration = new PulsarProtocol().declareConfig();
 
-    return GenericDataStreamAdapterBuilder
-        .create(PulsarProtocol.ID)
-        .format(new JsonObjectFormat()
-            .declareModel())
-        .protocol(ProtocolDescriptionBuilder.create(PulsarProtocol.ID)
-            .requiredTextParameter(
-                Labels.withId(PulsarProtocol.PULSAR_BROKER_HOST),
-                pulsarContainer.getBrokerHost())
-            .requiredIntegerParameter(
-                Labels.withId(PulsarProtocol.PULSAR_BROKER_PORT),
-                pulsarContainer.getBrokerPort())
-            .requiredTextParameter(
-                Labels.withId(PulsarProtocol.PULSAR_TOPIC), TOPIC)
-            .requiredTextParameter(
-                Labels.withId(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME), "test-sub")
-            .build())
-        .addRules(List.of(new DebugSinkRuleDescription()))
-        .build();
+    Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
+    configs.put(PulsarProtocol.PULSAR_BROKER_HOST,
+        new PipelineElementTemplateConfig(true, true, pulsarContainer.getBrokerHost()));
+    configs.put(PulsarProtocol.PULSAR_BROKER_PORT,
+        new PipelineElementTemplateConfig(true, false, pulsarContainer.getBrokerPort()));
+    configs.put(PulsarProtocol.PULSAR_TOPIC,
+        new PipelineElementTemplateConfig(true, false, TOPIC));
+    configs.put(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME,
+        new PipelineElementTemplateConfig(true, false, "test-sub"));
+
+    var template = new PipelineElementTemplate("name", "description", configs);
+
+    var desc =
+        new AdapterTemplateHandler(template,
+            configuration.getAdapterDescription(),
+            true)
+            .applyTemplateOnPipelineElement();
+
+    ((StaticPropertyAlternatives) (desc)
+        .getConfig()
+        .get(4))
+        .getAlternatives()
+        .get(0)
+        .setSelected(true);
+
+    return configuration;
   }
 
   @Override
-  public List<Map<String, Object>> generateData() throws Exception {
-    List<Map<String, Object>> result = new ArrayList<>();
+  public StreamPipesAdapter getAdapterInstance() {
+    return new PulsarProtocol();
+  }
+
+  @Override
+  public List<Map<String, Object>> getTestEvents() {
+    return Utils.getSimpleTestEvents();
+  }
+
+  @Override
+  public void publishEvents(List<Map<String, Object>> events) {
     try (PulsarClient client = PulsarClient.builder().serviceUrl(
             String.format("pulsar://%s:%s", pulsarContainer.getBrokerHost(),
                 pulsarContainer.getBrokerPort()))
         .build();
          Producer<byte[]> producer = client.newProducer().topic(TOPIC).create()) {
-      ObjectMapper objectMapper = new ObjectMapper();
+      var objectMapper = new ObjectMapper();
 
-      for (int i = 0; i < 3; i++) {
-        var dataMap = new HashMap<String, Object>();
-        dataMap.put("timestamp", i);
-        dataMap.put("value", "test-data");
-        byte[] data = objectMapper.writeValueAsBytes(dataMap);
-        producer.sendAsync(data);
-        result.add(dataMap);
-      }
+      events.forEach(event -> {
+        try {
+          var serializedEvent = objectMapper.writeValueAsBytes(event);
+          producer.sendAsync(serializedEvent);
+        } catch (JsonProcessingException e) {
+          throw new RuntimeException(e);
+        }
+      });
+
       producer.flush();
-    }
-    return result;
-  }
-
-  @Override
-  public void validateData(List<Map<String, Object>> expectedData) throws Exception {
-    for (Map<String, Object> expected : expectedData) {
-      Map<String, Object> actual = takeEvent();
-      Assert.assertTrue(Maps.difference(expected, actual).areEqual());
+    } catch (PulsarClientException e) {
+      throw new RuntimeException(e);
     }
   }
 

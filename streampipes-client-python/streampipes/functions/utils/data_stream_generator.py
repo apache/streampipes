@@ -18,7 +18,13 @@
 from enum import Enum
 from typing import Dict, Optional
 
-from streampipes.model.common import EventProperty, EventSchema
+from streampipes.functions.broker import SupportedBroker
+from streampipes.model.common import (
+    EventGrounding,
+    EventProperty,
+    EventSchema,
+    TransportProtocol,
+)
 from streampipes.model.resource.data_stream import DataStream
 
 
@@ -44,7 +50,12 @@ class RuntimeType(Enum):
 
 
 # TODO Use an more general approach to create a data stream
-def create_data_stream(name: str, attributes: Dict[str, str], stream_id: Optional[str] = None):
+def create_data_stream(
+    name: str,
+    attributes: Dict[str, str],
+    stream_id: Optional[str] = None,
+    broker: SupportedBroker = SupportedBroker.NATS,
+):
     """Creates a data stream
 
     Parameters
@@ -83,6 +94,19 @@ def create_data_stream(name: str, attributes: Dict[str, str], stream_id: Optiona
         ]
     )
 
-    if not stream_id:
-        return DataStream(name=name, event_schema=event_schema)
-    return DataStream(element_id=stream_id, name=name, event_schema=event_schema)
+    transport_protocols = [TransportProtocol()]
+    if broker == SupportedBroker.KAFKA:
+        transport_protocols = [
+            TransportProtocol(
+                class_name="org.apache.streampipes.model.grounding.KafkaTransportProtocol",  # type: ignore
+                broker_hostname="kafka",
+                port=9092,
+            )
+        ]
+
+    data_stream = DataStream(
+        name=name, event_schema=event_schema, event_grounding=EventGrounding(transport_protocols=transport_protocols)
+    )
+    if stream_id:
+        data_stream.element_id = stream_id
+    return data_stream

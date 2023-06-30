@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.92.0-SNAPSHOT</version>
+        <version>0.93.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

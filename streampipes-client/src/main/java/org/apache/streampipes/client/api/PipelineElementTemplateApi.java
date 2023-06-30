@@ -22,16 +22,17 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineElementTemplate>
-    implements CRUDApi<String, PipelineElementTemplate> {
+    implements IPipelineElementTemplateApi {
 
   public PipelineElementTemplateApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, PipelineElementTemplate.class);
   }
 
   @Override
-  public PipelineElementTemplate get(String id) {
+  public Optional<PipelineElementTemplate> get(String id) {
     return getSingle(getBaseResourcePath().addToPath(id));
   }
 

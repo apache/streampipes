@@ -18,39 +18,35 @@
 package org.apache.streampipes.connect.iiot.protocol.stream.rocketmq;
 
 
-import org.apache.streampipes.connect.iiot.protocol.stream.BrokerProtocol;
-import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
-import org.apache.streampipes.extensions.api.connect.IFormat;
-import org.apache.streampipes.extensions.api.connect.IParser;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
-import org.apache.streampipes.extensions.management.connect.SendToPipeline;
-import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.messaging.InternalEventProcessor;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.connect.iiot.protocol.stream.BrokerEventProcessor;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
-import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
 import org.apache.rocketmq.client.apis.consumer.PushConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-public class RocketMQProtocol extends BrokerProtocol {
+public class RocketMQProtocol implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.rocketmq";
 
@@ -58,8 +54,8 @@ public class RocketMQProtocol extends BrokerProtocol {
   public static final String ENDPOINT_KEY = "rocketmq-endpoint";
   public static final String CONSUMER_GROUP_KEY = "rocketmq-consumer-group";
 
-  private Logger logger = LoggerFactory.getLogger(RocketMQProtocol.class);
-
+  private String endpoint;
+  private String topic;
   private String consumerGroup;
 
   private Thread thread;
@@ -68,45 +64,44 @@ public class RocketMQProtocol extends BrokerProtocol {
   public RocketMQProtocol() {
   }
 
-  public RocketMQProtocol(IParser parser, IFormat format, String brokerUrl, String topic, String consumerGroup) {
-    super(parser, format, brokerUrl, topic);
-    this.consumerGroup = consumerGroup;
+  public void applyConfiguration(IStaticPropertyExtractor extractor) {
+    this.endpoint = extractor.singleValueParameter(ENDPOINT_KEY, String.class);
+    this.topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
+    this.consumerGroup = extractor.singleValueParameter(CONSUMER_GROUP_KEY, String.class);
   }
 
   @Override
-  public IProtocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-    ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-    String endpoint = extractor.singleValue(ENDPOINT_KEY, String.class);
-    String topic = extractor.singleValue(TOPIC_KEY, String.class);
-    String consumerGroup = extractor.singleValue(CONSUMER_GROUP_KEY, String.class);
-
-    return new RocketMQProtocol(parser, format, endpoint, topic, consumerGroup);
-  }
-
-  @Override
-  public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder
+        .create(ID, RocketMQProtocol::new)
+        .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
-        .category(AdapterType.Generic)
-        .sourceType(AdapterSourceType.STREAM)
+        .withCategory(AdapterType.Generic)
         .requiredTextParameter(Labels.withId(ENDPOINT_KEY))
         .requiredTextParameter(Labels.withId(TOPIC_KEY))
         .requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY))
-        .build();
+        .buildConfiguration();
   }
 
   @Override
-  public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
-    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-    this.rocketMQConsumer = new RocketMQConsumer(brokerUrl, topic, consumerGroup, new EventProcessor(stk));
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    this.rocketMQConsumer = new RocketMQConsumer(
+        endpoint,
+        topic,
+        consumerGroup,
+        new BrokerEventProcessor(extractor.selectedParser(), collector));
 
     thread = new Thread(this.rocketMQConsumer);
     thread.start();
   }
 
   @Override
-  public void stop() {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     try {
       rocketMQConsumer.stop();
     } catch (IOException e) {
@@ -115,20 +110,16 @@ public class RocketMQProtocol extends BrokerProtocol {
   }
 
   @Override
-  public String getId() {
-    return ID;
-  }
-
-  @Override
-  protected List<byte[]> getNByteElements(int n) throws ParseException {
-    List<byte[]> nEventsByte = new ArrayList<>(n);
-    CountDownLatch latch = new CountDownLatch(n);
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    List<byte[]> nEventsByte = new ArrayList<>(1);
+    CountDownLatch latch = new CountDownLatch(1);
+    this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
     PushConsumer consumer = null;
     try {
-      consumer = RocketMQUtils.createConsumer(brokerUrl, topic, consumerGroup, messageView -> {
-        InputStream inputStream = new ByteArrayInputStream(messageView.getBody().array());
-        nEventsByte.addAll(parser.parseNEvents(inputStream, n));
+      consumer = RocketMQUtils.createConsumer(endpoint, topic, consumerGroup, messageView -> {
+        nEventsByte.add(messageView.getBody().array());
 
         latch.countDown();
         return ConsumeResult.SUCCESS;
@@ -139,7 +130,7 @@ public class RocketMQProtocol extends BrokerProtocol {
         if (consumer != null) {
           consumer.close();
         }
-      } catch (IOException ex) {
+      } catch (IOException ignored) {
       }
       throw new ParseException("Failed to fetch messages.", e);
     }
@@ -155,23 +146,6 @@ public class RocketMQProtocol extends BrokerProtocol {
       e.printStackTrace();
     }
 
-    return nEventsByte;
-  }
-
-  private class EventProcessor implements InternalEventProcessor<byte[]> {
-    private SendToPipeline stk;
-
-    public EventProcessor(SendToPipeline stk) {
-      this.stk = stk;
-    }
-
-    @Override
-    public void onEvent(byte[] payload) {
-      try {
-        parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
-      } catch (ParseException e) {
-        logger.error("Error while parsing: " + e.getMessage());
-      }
-    }
+    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(nEventsByte.get(0)));
   }
 }

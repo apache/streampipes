@@ -21,8 +21,9 @@ package org.apache.streampipes.rest.extensions.pe;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
-import org.apache.streampipes.extensions.api.declarer.InvocableDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.config.IPipelineElementConfiguration;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
@@ -51,7 +52,11 @@ import jakarta.ws.rs.core.MediaType;
 
 import java.util.Map;
 
-public abstract class InvocablePipelineElementResource<K extends InvocableStreamPipesEntity, T extends Declarer<?>,
+public abstract class InvocablePipelineElementResource<
+    K extends InvocableStreamPipesEntity,
+    T extends IStreamPipesPipelineElement<PcT>,
+    PcT extends IPipelineElementConfiguration<?, T>,
+    V extends IStreamPipesRuntime<T, K>,
     W extends AbstractParameterExtractor<K>> extends AbstractPipelineElementResource<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
@@ -73,38 +78,31 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   public jakarta.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId,
                                                  K graph) {
 
-    try {
-      if (isDebug()) {
-        LOG.info("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
-        graph = createGroundingDebugInformation(graph);
-      }
+    if (isDebug()) {
+      LOG.info("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
+      graph = createGroundingDebugInformation(graph);
+    }
 
-      InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
+    T declarer = getDeclarerById(elementId).declareConfig().getSupplier().get();
 
-      if (declarer != null) {
-        String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
-        if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
-          RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
-          Response resp =
-              RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceGroup());
-          if (!resp.isSuccess()) {
-            LOG.error("Could not invoke pipeline element {} due to the following error: {}",
-                graph.getName(),
-                resp.getOptionalMessage());
-            RunningInstances.INSTANCE.remove(runningInstanceId);
-          }
-          return ok(resp);
-        } else {
-          LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.",
-              graph.getName(), runningInstanceId);
-          Response resp = new Response(graph.getElementId(), true);
-          return ok(resp);
+    if (declarer != null) {
+      String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+      if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
+        Response resp = invokeRuntime(runningInstanceId, declarer, graph);
+        if (!resp.isSuccess()) {
+          LOG.error("Could not invoke pipeline element {} due to the following error: {}",
+              graph.getName(),
+              resp.getOptionalMessage());
+          RunningInstances.INSTANCE.remove(runningInstanceId);
         }
-
+        return ok(resp);
+      } else {
+        LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.",
+            graph.getName(), runningInstanceId);
+        Response resp = new Response(graph.getElementId(), true);
+        return ok(resp);
       }
-    } catch (InstantiationException | IllegalAccessException e) {
-      e.printStackTrace();
-      return ok(new Response(elementId, false, e.getMessage()));
+
     }
 
     return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
@@ -170,10 +168,10 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   public jakarta.ws.rs.core.Response detach(@PathParam("elementId") String elementId,
                                           @PathParam("runningInstanceId") String runningInstanceId) {
 
-    InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
+    IStreamPipesRuntime<?, ?> runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
 
     if (runningInstance != null) {
-      Response resp = runningInstance.detachRuntime(runningInstanceId, getServiceGroup());
+      Response resp = runningInstance.onRuntimeDetached(runningInstanceId);
 
       if (resp.isSuccess()) {
         RunningInstances.INSTANCE.remove(runningInstanceId);
@@ -195,6 +193,12 @@ public abstract class InvocablePipelineElementResource<K extends InvocableStream
   protected abstract W getExtractor(K graph);
 
   protected abstract K createGroundingDebugInformation(K graph);
+
+  protected abstract V getRuntime();
+
+  protected abstract Response invokeRuntime(String instanceId,
+                                            T pipelineElement,
+                                            K graph);
 
   private Boolean isDebug() {
     return Environments.getEnvironment().getSpDebug().getValueOrDefault();

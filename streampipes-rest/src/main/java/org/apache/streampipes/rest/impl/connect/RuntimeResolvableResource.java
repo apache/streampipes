@@ -20,10 +20,10 @@ package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
@@ -39,6 +39,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 
 @Path("/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
@@ -59,8 +60,6 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
   @Consumes(MediaType.APPLICATION_JSON)
   public Response fetchConfigurations(@PathParam("id") String appId,
                                       RuntimeOptionsRequest runtimeOptionsRequest) {
-
-    // TODO add solution for formats
 
     try {
       String workerEndpoint = workerUrlProvider.getWorkerBaseUrl(appId);

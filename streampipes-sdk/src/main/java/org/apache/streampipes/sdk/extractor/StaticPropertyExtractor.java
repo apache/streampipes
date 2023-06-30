@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.sdk.extractor;
 
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -24,7 +25,8 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSinkInvocation> {
+public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSinkInvocation>
+    implements IStaticPropertyExtractor {
 
   public StaticPropertyExtractor(DataSinkInvocation sepaElement) {
     super(sepaElement);

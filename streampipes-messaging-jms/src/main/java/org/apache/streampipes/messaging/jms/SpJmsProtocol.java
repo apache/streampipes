@@ -24,21 +24,14 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
 public class SpJmsProtocol implements SpProtocolDefinition<JmsTransportProtocol> {
 
-  private final EventConsumer<JmsTransportProtocol> jmsConsumer;
-  private final EventProducer<JmsTransportProtocol> jmsProducer;
 
-  public SpJmsProtocol() {
-    this.jmsConsumer = new ActiveMQConsumer();
-    this.jmsProducer = new ActiveMQPublisher();
+  @Override
+  public EventConsumer getConsumer(JmsTransportProtocol transportProtocol) {
+    return new ActiveMQConsumer(transportProtocol);
   }
 
   @Override
-  public EventConsumer<JmsTransportProtocol> getConsumer() {
-    return jmsConsumer;
-  }
-
-  @Override
-  public EventProducer<JmsTransportProtocol> getProducer() {
-    return jmsProducer;
+  public EventProducer getProducer(JmsTransportProtocol transportProtocol) {
+    return new ActiveMQPublisher(transportProtocol);
   }
 }

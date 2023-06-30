@@ -17,44 +17,142 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.AdapterUtils;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.DebugAdapterSink;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
+
+import org.testcontainers.shaded.com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AdapterTesterBase implements AutoCloseable {
-  Adapter adapter;
+  private StreamPipesAdapter adapter;
 
-  public Adapter startAdapter(AdapterDescription adapterDescription) throws AdapterException {
-    DeclarersSingleton.getInstance().add(new PulsarProtocol());
-    Adapter adapter = (Adapter) AdapterUtils.setAdapter(adapterDescription);
-    adapter.startAdapter();
-    this.adapter = adapter;
-    return adapter;
+  private List<Map<String, Object>> expectedEvents;
+
+  private int counter;
+
+  /**
+   Executes the test procedure for the adapter integration test.
+   This method performs the necessary actions to test the full integraion of adapters with third party services.
+   <ul>
+   <li>First, it prepares the environment for the integration test by setting up a service (e.g., a Docker container)
+   that the adapter will interact with. This ensures a controlled and consistent test environment.</li>
+   <li>Next, it prepares the adapter being tested, configuring it with the necessary parameters and dependencies.</li>
+   <li>Then, it generates sample data that simulates real-world scenarios to be processed by the adapter.</li>
+   <li>Finally, it validates that the sample data is correctly processed by the adapter, ensuring that the integration
+   is functioning as expected. This may involve verifying the transformed output or checking the interactions
+   with the service.</li>
+   </ul>
+   * @throws Exception exception when data can not be produced
+   */
+  public void run() throws Exception {
+    // prepare the third party docker service for the test (e.g. MQTT Broker)
+    startAdapterService();
+
+    // generate the AdapterConfiguration for the test adapter
+    IAdapterConfiguration adapterConfiguration = prepareAdapter();
+
+    // start the adapter instance
+    adapter = startAdapter(adapterConfiguration);
+
+    // wait a second to make sure the consumer is ready
+    TimeUnit.MILLISECONDS.sleep(1000);
+
+    // get events for broker
+    expectedEvents = getTestEvents();
+
+    // send events to thrird party service
+    publishEvents(expectedEvents);
+
+    // validate that events where send correctly
+    validate(expectedEvents);
   }
 
+  /**
+   * Start the adapter and inject a collector that validates that the events are created correctly by the adapter
+   * under test
+   * @param adapterConfiguration configuration for the final adapter
+   * @return an instance of the adapter
+   * @throws AdapterException when adapter can not be started
+   */
+  public StreamPipesAdapter startAdapter(IAdapterConfiguration adapterConfiguration) throws AdapterException {
+    var adapter = getAdapterInstance();
+
+    var registeredParsers = adapterConfiguration.getSupportedParsers();
+    var extractor = AdapterParameterExtractor.from(adapterConfiguration.getAdapterDescription(), registeredParsers);
+
+
+    adapter.onAdapterStarted(extractor, (event -> {
+      // This collector validates that the events are sent correctly and within the right order
+      assertTrue(Maps.difference(event, expectedEvents.get(counter)).areEqual());
+      counter++;
+    }), null);
+    return adapter;
+
+  }
+
+  /**
+   * Starts the third party service to test the adapter (e.g. MQTT broker in docker service)
+   * @throws Exception when service can not be started
+   */
   public abstract void startAdapterService() throws Exception;
 
-  public abstract AdapterDescription prepareAdapter() throws Exception;
+  /**
+   * Create the AdapterConfiguration that initializes the adapter instance
+   * @return AdapterConfiguration
+   */
+  public abstract IAdapterConfiguration prepareAdapter() throws AdapterException;
 
-  public abstract List<Map<String, Object>> generateData() throws Exception;
+  /**
+   * Create an instance of the adpater
+   * @return AdapterInterface
+   */
+  public abstract StreamPipesAdapter getAdapterInstance();
 
-  public abstract void validateData(List<Map<String, Object>> data) throws Exception;
+  /**
+   * Create the list of events that should be emitted by the adapter
+   * @return List of events
+   */
+  public abstract List<Map<String, Object>> getTestEvents();
 
-  public Map<String, Object> takeEvent() throws InterruptedException {
-    return ((DebugAdapterSink) adapter.getAdapterPipeline().getPipelineSink()).takeEvent();
+  /**
+   * Publish the events to the third party service (e.g. message broker)
+   * @param events to publish
+   * @throws Exception when events can not be published to service
+   */
+  public abstract void publishEvents(List<Map<String, Object>> events) throws Exception;
+
+  /**
+   * Validates that the total amount of events is equal to the expected amount within a specific timeframe.
+   * If the expected amount is not reached within the specified timeframe, the test fails.
+   * The correctness of the events itself is already validated within the collector
+   * @param expectedEvents list of the expected events
+   * @throws InterruptedException when there is an error on wait
+   */
+  public void validate(List<Map<String, Object>> expectedEvents) throws InterruptedException {
+    int retry = 0;
+    while (counter != expectedEvents.size() && retry < 5) {
+      Thread.sleep(1000);
+      retry++;
+    }
+
+    assertEquals(expectedEvents.size(), counter);
   }
 
+  /**
+   * Used to stop the adapter in case there was an error
+   * @throws AdapterException when adapter can not be stopped
+   */
   public void stopAdapter() throws AdapterException {
     if (adapter != null) {
-      adapter.stopAdapter();
+      adapter.onAdapterStopped(null, null);
     }
   }
-
 }

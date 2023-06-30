@@ -21,6 +21,282 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+# [0.92.0]
+
+## What's Changed
+
+### Enhancement 🌟
+
+* [[#1564](https://github.com/apache/streampipes/issues/1564)]: Add feature to assign labels to StreamPipes resources
+* [[#1522](https://github.com/apache/streampipes/issues/1522)]: Return 404 if requested pipeline does not exist
+* [[#1520](https://github.com/apache/streampipes/issues/1520)]: Map http 404 to Java Optional.empty in Java Client
+* [[#1518](https://github.com/apache/streampipes/issues/1518)]: Compiling maven submodule with checkstyle check
+* [[#1467](https://github.com/apache/streampipes/pull/1467)]: Implement create method in Java client PipelineApi
+* [[#1405](https://github.com/apache/streampipes/issues/1405)]: Enable search for Python docs
+* [[#1339](https://github.com/apache/streampipes/pull/1339)]: Support backend-only development mode (#1327)
+* [[#1319](https://github.com/apache/streampipes/pull/1319)]: chore(ui): provide some more references for support in the 'about' view
+* [[#1307](https://github.com/apache/streampipes/issues/1307)]: Geometry Validation processor
+* [[#1296](https://github.com/apache/streampipes/issues/1296)]: Swinging Door Trending (SDT) Filter Processor
+* [[#1272](https://github.com/apache/streampipes/issues/1272)]: Buffer Processor
+* [[#1261](https://github.com/apache/streampipes/issues/1261)]: Add Python changes to release notes
+* [[#1259](https://github.com/apache/streampipes/issues/1259)]: Verify authentication on startup of Python client
+* [[#1113](https://github.com/apache/streampipes/issues/1113)]: Add buttons to start and stop all adapters
+* [[#1107](https://github.com/apache/streampipes/issues/1107)]: Build Github worfklow with OSV scanner
+* [[#1101](https://github.com/apache/streampipes/issues/1101)]: Extend StreamPipes API by a health-check endpoint
+
+
+### Bug fixes 🧰
+
+* [[#1547](https://github.com/apache/streampipes/issues/1547)]: standalone dashborad empty
+* [[#1527](https://github.com/apache/streampipes/issues/1527)]: Fix logo url of email templates
+* [[#1501](https://github.com/apache/streampipes/pull/1501)]: [hotfix] Fix handling of count queries in data explorer
+* [[#1479](https://github.com/apache/streampipes/issues/1479)]: Truncate does not work in data lake configuration
+* [[#1439](https://github.com/apache/streampipes/issues/1439)]: Past data exists twice in raw widget
+* [[#1391](https://github.com/apache/streampipes/issues/1391)]: Data Explorer filter doesn't work for boolean and `false` value
+* [[#1333](https://github.com/apache/streampipes/issues/1333)]: Endpoint to receive pipelines is broken
+* [[#1329](https://github.com/apache/streampipes/issues/1329)]: Data Lake measurements endpoint returns no data series when no data between `startDate` and `endDate`
+* [[#1327](https://github.com/apache/streampipes/issues/1327)]: Failed to start local backend enviroment
+* [[#1308](https://github.com/apache/streampipes/issues/1308)]: [CI] label-pr workflow fails on fork-based PRs
+* [[#1291](https://github.com/apache/streampipes/issues/1291)]: Can't aggregate calculation results of the Math processing element
+* [[#1199](https://github.com/apache/streampipes/issues/1199)]: UI Semantik Type field is too small to see full term
+* [[#793](https://github.com/apache/streampipes/issues/793)]: Empty string as API token name
+
+
+### Breaking Change 💣
+
+* [[#1040](https://github.com/apache/streampipes/issues/1040)]: Change Event Runtime Name of geometry field
+
+
+### Deprecation ⚠️
+
+* [[#1115](https://github.com/apache/streampipes/discussions/1115)] **IMPORTANT** In the future we will remove support for data set adapters
+
+
+### Documentation & Website 📚
+
+* [[#1623](https://github.com/apache/streampipes/pull/1623)]: chore: mark streampipes-wrapper-python as deprecated
+* [[#1535](https://github.com/apache/streampipes/pull/1535)]: Add vulnerability report
+* [[#1442](https://github.com/apache/streampipes/issues/1442)]: Extend Python docs with dark mode
+* [[#1415](https://github.com/apache/streampipes/pull/1415)]: [doc](readme)Enhancement in some Hyperlinks.
+* [[#1411](https://github.com/apache/streampipes/issues/1411)]: Create custom error page for Python docs
+* [[#1405](https://github.com/apache/streampipes/issues/1405)]: Enable search for Python docs
+* [[#1327](https://github.com/apache/streampipes/issues/1327)]: Failed to start local backend enviroment
+* [[#1326](https://github.com/apache/streampipes/pull/1326)]: chore(docs): add information on how to develop the UI locally
+* [[#1051](https://github.com/apache/streampipes/issues/1051)]: Add further badges to README of Python client
+
+
+### Dependency Updates 📦
+
+* [[#1623](https://github.com/apache/streampipes/pull/1623)]: chore: mark streampipes-wrapper-python as deprecated
+* [[#1577](https://github.com/apache/streampipes/pull/1577)]: Bump tubemq-client from 1.5.0 to 1.6.0
+* [[#1574](https://github.com/apache/streampipes/pull/1574)]: Bump amqp-client from 5.16.0 to 5.17.0
+* [[#1571](https://github.com/apache/streampipes/pull/1571)]: Remove guice from dependencies
+* [[#1570](https://github.com/apache/streampipes/pull/1570)]: Bump annotations from 16.0.2 to 24.0.1
+* [[#1566](https://github.com/apache/streampipes/pull/1566)]: Bump mypy from 1.2.0 to 1.3.0 in /streampipes-client-python
+* [[#1562](https://github.com/apache/streampipes/pull/1562)]: Bump jackson-databind from 2.14.1 to 2.15.0
+* [[#1560](https://github.com/apache/streampipes/pull/1560)]: Bump google-maps-services from 2.1.2 to 2.2.0
+* [[#1559](https://github.com/apache/streampipes/pull/1559)]: Bump pyupgrade from 3.3.1 to 3.4.0 in /streampipes-client-python
+* [[#1558](https://github.com/apache/streampipes/pull/1558)]: Bump types-requests from 2.29.0.0 to 2.30.0.0 in /streampipes-client-python
+* [[#1552](https://github.com/apache/streampipes/pull/1552)]: Bump opencsv from 5.5.2 to 5.7.1
+* [[#1550](https://github.com/apache/streampipes/pull/1550)]: Bump commons-compress from 1.22 to 1.23.0
+* [[#1549](https://github.com/apache/streampipes/pull/1549)]: Bump engine.io and socket.io in /ui
+* [[#1545](https://github.com/apache/streampipes/pull/1545)]: Bump consul from 1.17.6 to 1.18.0
+* [[#1542](https://github.com/apache/streampipes/pull/1542)]: Bump jackson.version from 2.14.1 to 2.15.0
+* [[#1541](https://github.com/apache/streampipes/pull/1541)]: Bump pre-commit from 3.2.0 to 3.3.0 in /streampipes-client-python
+* [[#1540](https://github.com/apache/streampipes/pull/1540)]: Bump flask from 1.1.2 to 2.3.2 in /streampipes-wrapper-python
+* [[#1539](https://github.com/apache/streampipes/pull/1539)]: chore(deps): bump several dependencies to resolve vulnerability issues
+* [[#1536](https://github.com/apache/streampipes/pull/1536)]: Bump types-requests from 2.28.11.7 to 2.29.0.0 in /streampipes-client-python
+* [[#1525](https://github.com/apache/streampipes/pull/1525)]: Bump mkdocs-gen-files from 0.4.0 to 0.5.0 in /streampipes-client-python
+* [[#1516](https://github.com/apache/streampipes/pull/1516)]: Bump karma-chrome-launcher from 3.1.1 to 3.2.0 in /ui/projects/streampipes/platform-services
+* [[#1512](https://github.com/apache/streampipes/pull/1512)]: Bump jetty-server from 10.0.10 to 10.0.14
+* [[#1511](https://github.com/apache/streampipes/pull/1511)]: Bump spring-core from 6.0.7 to 6.0.8 & spring-bot from 3.0.5 to 3.0.6 & spring-security from 6.0.2 to 6.0.3
+* [[#1510](https://github.com/apache/streampipes/pull/1510)]: Bump type-parser from 0.7.0 to 0.8.1
+* [[#1507](https://github.com/apache/streampipes/pull/1507)]: Bump maven-plugin-plugin from 3.7.0 to 3.8.1
+* [[#1506](https://github.com/apache/streampipes/pull/1506)]: Bump pandas-stubs from 1.5.2.230105 to 2.0.0.230412 in /streampipes-client-python
+* [[#1503](https://github.com/apache/streampipes/pull/1503)]: Bump peter-evans/create-pull-request from 4 to 5
+* [[#1502](https://github.com/apache/streampipes/pull/1502)]: Bump mkdocs-awesome-pages-plugin from 2.8.0 to 2.9.0 in /streampipes-client-python
+* [[#1499](https://github.com/apache/streampipes/pull/1499)]: Bump log4j.version from 2.19.0 to 2.20.0
+* [[#1498](https://github.com/apache/streampipes/pull/1498)]: Bump pytest from 7.2.1 to 7.3.0 in /streampipes-client-python
+* [[#1472](https://github.com/apache/streampipes/pull/1472)]: Bump rdf4j.version from 3.5.0 to 3.7.7
+
+
+### Uncategorized ❓
+
+* [[#1532](https://github.com/apache/streampipes/pull/1532)]: [hotfix] exclude versions file from pydocs update
+* [[#1524](https://github.com/apache/streampipes/pull/1524)]: feature: add workflow that stales PRs
+* [[#1517](https://github.com/apache/streampipes/pull/1517)]: [FEATURE] add division as operation for data harmonization rules
+* [[#1504](https://github.com/apache/streampipes/issues/1504)]: Data streams are removed from pipelines when exported
+* [[#1497](https://github.com/apache/streampipes/pull/1497)]: [hotfix] Move sp-split-section to shared-ui module
+* [[#1484](https://github.com/apache/streampipes/pull/1484)]: [hotfix] Improve handling of count queries, improve table widget
+* [[#1478](https://github.com/apache/streampipes/issues/1478)]: Distinguish between Consumer and Publisher for the broker
+* [[#1475](https://github.com/apache/streampipes/issues/1475)]: Fulfill PEP 561 compatibility
+* [[#1465](https://github.com/apache/streampipes/pull/1465)]: [hotfix] Fix configuration for pipeline element development
+* [[#1445](https://github.com/apache/streampipes/pull/1445)]: Improve Log info in Processor Test
+* [[#1433](https://github.com/apache/streampipes/pull/1433)]: update archetypes template
+* [[#1428](https://github.com/apache/streampipes/pull/1428)]: Maintain the same directory structure for source and test
+* [[#1406](https://github.com/apache/streampipes/issues/1406)]: Cleanup data explorer query management
+* [[#1385](https://github.com/apache/streampipes/issues/1385)]: Remove unused features from data explorer module
+* [[#1383](https://github.com/apache/streampipes/issues/1383)]: Introduce environment variable to provide path to file storage of backend
+* [[#1368](https://github.com/apache/streampipes/pull/1368)]: Improve create client model script
+* [[#1367](https://github.com/apache/streampipes/issues/1367)]: Add `QueryResult` as data type for `DataLakeMeasureEndpoint`
+* [[#1362](https://github.com/apache/streampipes/issues/1362)]: Support Kafka in Python client
+* [[#1361](https://github.com/apache/streampipes/pull/1361)]: Fix UI container cannot resolve backend IP correctly
+* [[#1350](https://github.com/apache/streampipes/pull/1350)]: [hotfix] Use try-with-resource way to fix the potential InfluxDB connection leak in `DataExplorerQueryV4#executeQuery`
+* [[#1336](https://github.com/apache/streampipes/issues/1336)]: Create builder for SpQueryResult
+* [[#1311](https://github.com/apache/streampipes/pull/1311)]: chore(ci): improve caching for dependencies in pr-validation workflow
+* [[#1293](https://github.com/apache/streampipes/issues/1293)]: Rename java module name `streampipes-extensions-management`
+* [[#1264](https://github.com/apache/streampipes/issues/1264)]: CLI Installer clean does not delete volumes anymore
+* [[#841](https://github.com/apache/streampipes/issues/841)]: Include supported Java versions in CI
+* [[#777](https://github.com/apache/streampipes/issues/777)]: 1-class processor model and stylechecks on all processors.geo.jvm
+* [[#655](https://github.com/apache/streampipes/issues/655)]: Support change of username and password in profile view
+
+
+# [0.91.0]
+
+## Appreciation
+We would like to express our sincere thanks to Котко Владислав for helping us fix a potential security vulnerability.
+In February 2023, he pointed out to us that @streampipes could be a potential target for dependency confusion in NPM.
+As a result, we have taken all necessary countermeasures so that there is no longer a threat.
+We are very grateful for the support and professional handling.
+
+## What's Changed
+
+### Enhancement 🌟
+
+* [[#1375](https://github.com/apache/streampipes/issues/1375)]: Versioning for Python docs
+* [[#1363](https://github.com/apache/streampipes/pull/1363)]: Add support for the Kafka broker in Python
+* [[#1254](https://github.com/apache/streampipes/issues/1254)]: Adapt data lake measure endpoint's `get()` method to process query parameter in Python
+* [[#1191](https://github.com/apache/streampipes/pull/1191)]: [#1190] Apache TubeMQ (InLong) Adapter & Sink
+* [[#1182](https://github.com/apache/streampipes/issues/1182)]: Output data streams for python functions
+* [[#1149](https://github.com/apache/streampipes/pull/1149)]: Extend REST API by endpoint to get a specific function definition
+* [[#1133](https://github.com/apache/streampipes/issues/1133)]: Support output streams in functions
+* [[#1121](https://github.com/apache/streampipes/issues/1121)]: Add option for single file replay in FileStreamAdapter
+* [[#1099](https://github.com/apache/streampipes/pull/1099)]: [hotfix] Fix failing e2e tests
+* [[#1096](https://github.com/apache/streampipes/issues/1096)]: Improve structure of pipeline execution
+* [[#1091](https://github.com/apache/streampipes/issues/1091)]: Reduce warnings on service startup
+* [[#1085](https://github.com/apache/streampipes/issues/1085)]: Refactor `FileStreamProtocol`
+* [[#1081](https://github.com/apache/streampipes/pull/1081)]: restrict appearance of dependabot PRs
+* [[#1077](https://github.com/apache/streampipes/issues/1077)]: Remove legacy method `getNElements` in `IProtocol`
+* [[#1069](https://github.com/apache/streampipes/pull/1069)]: Sp 1065
+* [[#1065](https://github.com/apache/streampipes/issues/1065)]: Provide e2e tests to validate the different formats of generic adapters
+* [[#1050](https://github.com/apache/streampipes/pull/1050)]: Extend metadata for python client publishing
+* [[#1031](https://github.com/apache/streampipes/pull/1031)]: [hotfix] Remove unused message interface
+* [[#1026](https://github.com/apache/streampipes/issues/1026)]: Fix JUnit tests and activate them in build pipeline
+* [[#881](https://github.com/apache/streampipes/pull/881)]: Enable dependabot for ui and bump all minor versions
+* [[#859](https://github.com/apache/streampipes/issues/859)]: Create PR validation workflow for streampipes-website
+* [[#854](https://github.com/apache/streampipes/issues/854)]: Implement StreamPipesFunctions for Python Client
+* [[#792](https://github.com/apache/streampipes/issues/792)]: Rename Python Client
+* [[#569](https://github.com/apache/streampipes/issues/569)]: Reorganize streampipes-container modules
+
+### Bug fixes 🧰
+
+* [[#1423](https://github.com/apache/streampipes/issues/1423)]: Update Archetypes to reflect module structure
+* [[#1274](https://github.com/apache/streampipes/issues/1274)]: Messaging protocol is not overridden when importing data
+* [[#1267](https://github.com/apache/streampipes/pull/1267)]: Fix logging configuration (#1266)
+* [[#1266](https://github.com/apache/streampipes/issues/1266)]: Fix logging configuration
+* [[#1146](https://github.com/apache/streampipes/issues/1146)]: Session based implementation of IoTDB sink (fix issues in current JDBC based implementation)
+* [[#964](https://github.com/apache/streampipes/issues/964)]: CLI command `env` outputs success message in case of an error
+* [[#962](https://github.com/apache/streampipes/issues/962)]: Example code in docs for Python code is rendered as markdown
+* [[#959](https://github.com/apache/streampipes/issues/959)]: Siddhi processors could not be started in a pipeline
+* [[#878](https://github.com/apache/streampipes/issues/878)]: Fix README.md
+* [[#862](https://github.com/apache/streampipes/issues/862)]: fix speed calculation divide by 0 error
+* [[#858](https://github.com/apache/streampipes/issues/858)]: Remove checkboxes from issue templates
+
+### Breaking changes 💣
+
+* [[#958](https://github.com/apache/streampipes/issues/958)]: Extract REST resource classes from extensions services into own module
+* [[#957](https://github.com/apache/streampipes/pull/957)]: Use ExtensionsModelSubmitter over StandaloneModelSubmitter (#956)
+* [[#956](https://github.com/apache/streampipes/issues/956)]: Remove deprecated module streampipes-container-standalone
+* [[#569](https://github.com/apache/streampipes/issues/569)]: Reorganize streampipes-container modules
+
+### Deprecation ⚠️
+
+* [[#953](https://github.com/apache/streampipes/issues/953)]: Improve handling of Consul env variables
+* [[#883](https://github.com/apache/streampipes/pull/883)]: Add checkstyle to streampipes-wrapper-* modules (#820)
+
+### Documentation & Website 📚
+
+* [[#1496](https://github.com/apache/streampipes/pull/1496)]: [hotfix] Adapt broken image links in Python docs
+* [[#1419](https://github.com/apache/streampipes/pull/1419)]: docs: spring cleaning for Python docs
+* [[#1409](https://github.com/apache/streampipes/pull/1409)]: docs: add matomo tracking to python docs
+* [[#1375](https://github.com/apache/streampipes/issues/1375)]: Versioning for Python docs
+* [[#1364](https://github.com/apache/streampipes/pull/1364)]: chore: fix example code & add disclaimer for doc versioning
+* [[#1253](https://github.com/apache/streampipes/issues/1253)]: Update links in Python example notebooks
+* [[#1228](https://github.com/apache/streampipes/pull/1228)]: chore(python-client): rename python package to `streampipes`
+* [[#1167](https://github.com/apache/streampipes/pull/1167)]: refactor: remove outdated readme files
+* [[#962](https://github.com/apache/streampipes/issues/962)]: Example code in docs for Python code is rendered as markdown
+* [[#878](https://github.com/apache/streampipes/issues/878)]: Fix README.md
+* [[#859](https://github.com/apache/streampipes/issues/859)]: Create PR validation workflow for streampipes-website
+* [[#858](https://github.com/apache/streampipes/issues/858)]: Remove checkboxes from issue templates
+
+### Dependency Updates 📦
+
+* [[#1424](https://github.com/apache/streampipes/issues/1424)]: Add `slf4j-api` to `streampipes-service-base` module
+* [[#1419](https://github.com/apache/streampipes/pull/1419)]: docs: spring cleaning for Python docs
+* [[#1363](https://github.com/apache/streampipes/pull/1363)]: Add support for the Kafka broker in Python
+* [[#1356](https://github.com/apache/streampipes/pull/1356)]: chore: reify project url in package metadata
+* [[#1228](https://github.com/apache/streampipes/pull/1228)]: chore(python-client): rename python package to `streampipes`
+* [[#1158](https://github.com/apache/streampipes/issues/1158)]: Replace `consul-client` library with `consul-api` library
+* [[#1081](https://github.com/apache/streampipes/pull/1081)]: restrict appearance of dependabot PRs
+* [[#1080](https://github.com/apache/streampipes/pull/1080)]: chore: Bump @auth0/angular-jwt from 5.0.2 to 5.1.2 in /ui
+* [[#1060](https://github.com/apache/streampipes/pull/1060)]: Upgrade Siddhi version to v5.1.27
+* [[#1016](https://github.com/apache/streampipes/pull/1016)]: Bump Spring versions, migrate Spring Security classes (#1015)
+* [[#1015](https://github.com/apache/streampipes/issues/1015)]: Bump Spring Boot to v3
+* [[#911](https://github.com/apache/streampipes/pull/911)]: chore: remove peer dependencies and use postinstall
+
+### Uncategorized ❓
+
+* [[#1263](https://github.com/apache/streampipes/pull/1263)]: feature(gh-actions): create workflow that provides python docs as artifact weekly
+* [[#1258](https://github.com/apache/streampipes/issues/1258)]: Simplify/restructure data stream generator
+* [[#1230](https://github.com/apache/streampipes/issues/1230)]: Build GitHub workflow to deploy Python library to Pypi
+* [[#1229](https://github.com/apache/streampipes/pull/1229)]: chore(gh-actions): configure custom label for GitHub actions
+* [[#1227](https://github.com/apache/streampipes/pull/1227)]: chore(asf-yaml): add basic branch protection setup
+* [[#1223](https://github.com/apache/streampipes/issues/1223)]: Harmonize handling of environment variables
+* [[#1220](https://github.com/apache/streampipes/pull/1220)]: chore(gh-actions): improve pr labeling workflow
+* [[#1200](https://github.com/apache/streampipes/issues/1200)]: Refactor InfluxDB adapter and sink
+* [[#1197](https://github.com/apache/streampipes/issues/1197)]: Update actions versions in GitHub workflow
+* [[#1162](https://github.com/apache/streampipes/issues/1162)]: Change GitHub notification settings in .asf.yaml
+* [[#1157](https://github.com/apache/streampipes/issues/1157)]: Upgrade third-party services
+* [[#1147](https://github.com/apache/streampipes/pull/1147)]: refactor: further clean up python data model & introduce function definition
+* [[#1140](https://github.com/apache/streampipes/issues/1140)]: Redirect to previous view after login
+* [[#1132](https://github.com/apache/streampipes/issues/1132)]:  Update e2e tests to use FileStream adapter instead of FileSet
+* [[#1126](https://github.com/apache/streampipes/pull/1126)]: refactor: introduce messaging endpoint for python client
+* [[#1114](https://github.com/apache/streampipes/issues/1114)]: Create an adapter without starting it
+* [[#1104](https://github.com/apache/streampipes/issues/1104)]: Add GitHub wofklow that tags PR
+* [[#1100](https://github.com/apache/streampipes/pull/1100)]: chore: adapt setup of python dependencies
+* [[#1098](https://github.com/apache/streampipes/pull/1098)]: [hotfix] add stream example to Mkdocs
+* [[#1088](https://github.com/apache/streampipes/issues/1088)]: Python MkDocs use old StreamPipes logo
+* [[#1058](https://github.com/apache/streampipes/issues/1058)]: Cleanup Streampipes model classes
+* [[#1048](https://github.com/apache/streampipes/pull/1048)]: remove outdated maven profile
+* [[#1028](https://github.com/apache/streampipes/pull/1028)]:  [hotfix] Add checkstyle to module wrapper-siddhi
+* [[#1027](https://github.com/apache/streampipes/pull/1027)]: Sp 1026
+* [[#1013](https://github.com/apache/streampipes/issues/1013)]: Update Java version to 17
+* [[#1008](https://github.com/apache/streampipes/pull/1008)]: Chore/align pom structure
+* [[#989](https://github.com/apache/streampipes/pull/989)]: chore: introduce another layer of abstraction for endpoints
+* [[#973](https://github.com/apache/streampipes/pull/973)]: extend python unit tests to Windows
+* [[#955](https://github.com/apache/streampipes/issues/955)]: Add e2e test to validate that API docs work
+* [[#954](https://github.com/apache/streampipes/pull/954)]: Improve handling of Consul env variables (#953)
+* [[#909](https://github.com/apache/streampipes/pull/909)]: Chore/refactor class hierarchy python client
+* [[#907](https://github.com/apache/streampipes/pull/907)]: Add example junit test to archetype extensions-jvm
+* [[#877](https://github.com/apache/streampipes/issues/877)]: Apply UI linting to all modules
+* [[#876](https://github.com/apache/streampipes/pull/876)]: Add ci job for formatting and linting
+* [[#846](https://github.com/apache/streampipes/pull/846)]: Add example files python client
+* [[#820](https://github.com/apache/streampipes/issues/820)]: Enable check style for the project
+* [[#797](https://github.com/apache/streampipes/issues/797)]: Implementing possibility for reprojection Coordinates
+* [[#771](https://github.com/apache/streampipes/issues/771)]: UI linting as pre-commit hook
+
+## New Contributors
+* @kulbachcedric made their first contribution in https://github.com/apache/streampipes/pull/134
+* @smlabt made their first contribution in https://github.com/apache/streampipes/pull/875
+* @Ndace-hash made their first contribution in https://github.com/apache/streampipes/pull/921
+* @jadireddi made their first contribution in https://github.com/apache/streampipes/pull/1049
+* @CryoSolace made their first contribution in https://github.com/apache/streampipes/pull/1059
+* @parthsali made their first contribution in https://github.com/apache/streampipes/pull/1095
+* @Harry262530 made their first contribution in https://github.com/apache/streampipes/pull/1142
+* @WaterLemons2k made their first contribution in https://github.com/apache/streampipes/pull/1205
+
+
 # [0.90.0]
 
 ## What's Changed

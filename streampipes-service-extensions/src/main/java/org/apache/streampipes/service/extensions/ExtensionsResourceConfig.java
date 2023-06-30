@@ -28,7 +28,6 @@ import org.apache.streampipes.rest.extensions.monitoring.MonitoringResource;
 import org.apache.streampipes.rest.extensions.pe.DataProcessorPipelineElementResource;
 import org.apache.streampipes.rest.extensions.pe.DataSinkPipelineElementResource;
 import org.apache.streampipes.rest.extensions.pe.DataStreamPipelineElementResource;
-import org.apache.streampipes.rest.extensions.pe.PipelineTemplateResource;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.apache.streampipes.service.base.rest.BaseResourceConfig;
 import org.apache.streampipes.service.base.rest.ServiceHealthResource;
@@ -57,7 +56,6 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
         DataProcessorPipelineElementResource.class,
         DataStreamPipelineElementResource.class,
         WelcomePage.class,
-        PipelineTemplateResource.class,
 
         ServiceHealthResource.class,
         JacksonSerializationProvider.class,

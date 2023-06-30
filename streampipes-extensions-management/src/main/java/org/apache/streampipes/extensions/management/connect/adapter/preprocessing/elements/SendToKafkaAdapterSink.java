@@ -18,6 +18,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -26,7 +27,12 @@ public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTranspo
     implements IAdapterPipelineElement {
 
   public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
-    super(adapterDescription, SpKafkaProducer::new, KafkaTransportProtocol.class);
+    super(adapterDescription, KafkaTransportProtocol.class);
+  }
+
+  @Override
+  protected EventProducer makeProducer(KafkaTransportProtocol protocol) {
+    return new SpKafkaProducer(protocol);
   }
 
   @Override

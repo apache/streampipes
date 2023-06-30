@@ -22,20 +22,23 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 
 import java.util.Map;
 
-public class CustomRequestApi extends AbstractClientApi {
+public class CustomRequestApi extends AbstractClientApi implements ICustomRequestApi {
 
   public CustomRequestApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);
   }
 
+  @Override
   public <T> void sendPost(String apiPath, T payload) {
     post(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
   }
 
+  @Override
   public <T> T sendGet(String apiPath, Class<T> responseClass) {
     return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass);
   }
 
+  @Override
   public <T> T sendGet(String apiPath, Map<String, String> queryParameters, Class<T> responseClass) {
     return getSingle(
         StreamPipesApiPath.fromStreamPipesBasePath(apiPath)

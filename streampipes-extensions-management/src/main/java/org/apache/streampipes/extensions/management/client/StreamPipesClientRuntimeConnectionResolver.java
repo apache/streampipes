@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.extensions.management.client;
 
-import org.apache.streampipes.client.credentials.CredentialsProvider;
+import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
+import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 import org.apache.streampipes.client.credentials.StreamPipesTokenCredentials;
-import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;

@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.92.0-SNAPSHOT</version>
+        <version>0.93.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -70,6 +70,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                		checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                	</propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

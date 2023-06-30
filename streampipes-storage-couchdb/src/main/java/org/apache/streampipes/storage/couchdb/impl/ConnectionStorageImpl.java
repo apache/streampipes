@@ -24,7 +24,6 @@ import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import com.google.common.net.UrlEscapers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -67,8 +66,8 @@ public class ConnectionStorageImpl extends AbstractDao<Connection> implements
   }
 
   private String buildQuery(String from) {
-    String escapedPath = UrlEscapers.urlPathSegmentEscaper()
-        .escape("startkey=[\"" + from + "\"]&endkey=[\"" + from + "\", {}]&group=true");
+    String escapedPath = Utils
+        .escapePathSegment("startkey=[\"" + from + "\"]&endkey=[\"" + from + "\", {}]&group=true");
     return couchDbClientSupplier.get().getDBUri() + "_design/connection/_view/frequent?" + escapedPath;
   }
 
@@ -98,7 +97,8 @@ public class ConnectionStorageImpl extends AbstractDao<Connection> implements
 
   private Optional<JsonObject> getFrequentConnections(String query) {
     try {
-      return Optional.of((JsonObject) new JsonParser().parse(Request.Get(query).execute().returnContent().asString()));
+      var request = Utils.append(Request.Get(query));
+      return Optional.of((JsonObject) new JsonParser().parse(request.execute().returnContent().asString()));
     } catch (IOException e) {
       e.printStackTrace();
       return Optional.empty();

@@ -42,10 +42,7 @@ export class AdapterDescriptionComponent implements OnInit {
     createTemplateEmitter: EventEmitter<AdapterDescription> =
         new EventEmitter<AdapterDescription>();
 
-    deleting = false;
     className = '';
-    isDataSetDescription = false;
-    isDataStreamDescription = false;
     isRunningAdapter = false;
     adapterLabel: string;
 
@@ -61,11 +58,6 @@ export class AdapterDescriptionComponent implements OnInit {
         if (this.adapter.name == null) {
             this.adapter.name = '';
         }
-        this.isDataSetDescription = this.connectService.isDataSetDescription(
-            this.adapter,
-        );
-        this.isDataStreamDescription =
-            this.connectService.isDataStreamDescription(this.adapter);
         this.isRunningAdapter =
             this.adapter.elementId !== undefined &&
             !(this.adapter as any).isTemplate;
@@ -73,20 +65,12 @@ export class AdapterDescriptionComponent implements OnInit {
         this.className = this.getClassName();
     }
 
-    isGenericDescription(): boolean {
-        return this.connectService.isGenericDescription(this.adapter);
-    }
-
     getClassName() {
         let className = this.isRunningAdapter
             ? 'adapter-box'
             : 'adapter-description-box';
 
-        if (this.isDataSetDescription) {
-            className += ' adapter-box-set';
-        } else {
-            className += ' adapter-box-stream';
-        }
+        className += ' adapter-box-stream';
 
         return className;
     }
@@ -106,15 +90,15 @@ export class AdapterDescriptionComponent implements OnInit {
     removeAdapter(): void {
         this.dataMarketplaceService
             .deleteAdapterDescription(this.adapter.elementId)
-            .subscribe(
-                _ => {
+            .subscribe({
+                next: () => {
                     this.updateAdapterEmitter.emit();
                 },
-                _ => {
+                error: () => {
                     this._snackBar.open(
                         'Cannot delete an adapter which has an active instance running.',
                     );
                 },
-            );
+            });
     }
 }

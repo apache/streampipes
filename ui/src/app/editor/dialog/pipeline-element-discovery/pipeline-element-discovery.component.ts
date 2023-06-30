@@ -22,7 +22,6 @@ import { JsplumbService } from '../../services/jsplumb.service';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    SpDataSet,
     SpDataStream,
 } from '@streampipes/platform-services';
 import {
@@ -75,8 +74,6 @@ export class PipelineElementDiscoveryComponent implements OnInit {
             return 'sepa';
         } else if (possibleElement instanceof DataSinkInvocation) {
             return 'action';
-        } else if (possibleElement instanceof SpDataSet) {
-            return 'set';
         } else if (possibleElement instanceof SpDataStream) {
             return 'stream';
         }

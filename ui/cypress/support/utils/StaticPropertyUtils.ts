@@ -23,7 +23,7 @@ export class StaticPropertyUtils {
         // Configure Properties
         configs.forEach(config => {
             if (config.type === 'checkbox') {
-                cy.dataCy(config.selector).children().click();
+                cy.dataCy(config.selector).children().click({ force: true });
             } else if (config.type === 'button') {
                 cy.dataCy(config.selector).click();
             } else if (config.type === 'drop-down') {

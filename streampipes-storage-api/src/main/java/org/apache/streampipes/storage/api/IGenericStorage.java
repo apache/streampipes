@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.storage.api;
 
+import org.apache.streampipes.model.file.GenericStorageAttachment;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -35,4 +37,9 @@ public interface IGenericStorage {
   Map<String, Object> update(String id, String payload) throws IOException;
 
   void delete(String id, String rev) throws IOException;
+
+  void createAttachment(String docId, String attachmentName, String contentType, byte[] payload, String rev)
+      throws IOException;
+
+  GenericStorageAttachment findAttachment(String docId, String attachmentName) throws IOException;
 }

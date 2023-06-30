@@ -15,9 +15,12 @@
 # limitations under the License.
 #
 import sys, os
+from deprecated import deprecated
 sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 
 from streampipes.model.base.named_streampipes_Entity import NamedStreamPipesEntity
 
+
+@deprecated(version='0.92.0', reason="Please switch to StreamPipes Python (see README)")
 class ConsumableStreamPipesEntity(NamedStreamPipesEntity):
     pass

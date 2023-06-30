@@ -25,6 +25,7 @@ import {
     RuntimeResolvableTreeInputStaticProperty,
     StaticProperty,
     StaticPropertyUnion,
+    TreeInputNode,
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
@@ -67,7 +68,7 @@ export abstract class BaseRuntimeResolvableInput<
         }
     }
 
-    loadOptionsFromRestApi() {
+    loadOptionsFromRestApi(node?: TreeInputNode) {
         const resolvableOptionsParameterRequest = new RuntimeOptionsRequest();
         resolvableOptionsParameterRequest.staticProperties =
             this.staticProperties;
@@ -101,7 +102,7 @@ export abstract class BaseRuntimeResolvableInput<
                     msg.staticProperty,
                 );
                 if (this.isRuntimeResolvableProperty(property)) {
-                    this.afterOptionsLoaded(this.parse(property));
+                    this.afterOptionsLoaded(this.parse(property), node);
                 }
                 this.loading = false;
                 this.showOptions = true;
@@ -145,7 +146,7 @@ export abstract class BaseRuntimeResolvableInput<
 
     abstract parse(staticProperty: StaticPropertyUnion): T;
 
-    abstract afterOptionsLoaded(staticProperty: T);
+    abstract afterOptionsLoaded(staticProperty: T, node?: TreeInputNode);
 
     abstract afterErrorReceived();
 }

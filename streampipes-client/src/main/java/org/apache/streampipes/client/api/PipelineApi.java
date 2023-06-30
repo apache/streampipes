@@ -17,22 +17,25 @@
  */
 package org.apache.streampipes.client.api;
 
+
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
+import java.util.Optional;
 
-public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRUDApi<String, Pipeline> {
+public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPipelineApi {
 
   public PipelineApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, Pipeline.class);
   }
 
   @Override
-  public Pipeline get(String pipelineId) {
+  public Optional<Pipeline> get(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId));
   }
 
@@ -46,9 +49,10 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
     return getAll(getBaseResourcePath());
   }
 
+
   @Override
   public void create(Pipeline element) {
-
+    post(getBaseResourcePath(), element, SuccessMessage.class);
   }
 
   /**
@@ -72,6 +76,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
    * @param pipelineId The id of the pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
+  @Override
   public PipelineOperationStatus start(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("start"), PipelineOperationStatus.class);
   }
@@ -82,6 +87,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
    * @param pipeline The pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
+  @Override
   public PipelineOperationStatus start(Pipeline pipeline) {
     return start(pipeline.getPipelineId());
   }
@@ -92,6 +98,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
    * @param pipeline The pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
+  @Override
   public PipelineOperationStatus stop(Pipeline pipeline) {
     return stop(pipeline.getPipelineId());
   }
@@ -102,6 +109,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRU
    * @param pipelineId The id of the pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
+  @Override
   public PipelineOperationStatus stop(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("stop"), PipelineOperationStatus.class);
   }

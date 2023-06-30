@@ -58,6 +58,9 @@ import { SpDataExportImportComponent } from './export/data-export-import.compone
 import { SpDataExportDialogComponent } from './export/export-dialog/data-export-dialog.component';
 import { SpDataImportDialogComponent } from './export/import-dialog/data-import-dialog.component';
 import { SpDataExportItemComponent } from './export/export-dialog/data-export-item/data-export-item.component';
+import { SpEditLabelComponent } from './label-configuration/edit-label/edit-label.component';
+import { SpLabelConfigurationComponent } from './label-configuration/label-configuration.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
     imports: [
@@ -103,6 +106,10 @@ import { SpDataExportItemComponent } from './export/export-dialog/data-export-it
                         component: SpDataExportImportComponent,
                     },
                     {
+                        path: 'labels',
+                        component: SpLabelConfigurationComponent,
+                    },
+                    {
                         path: 'messaging',
                         component: MessagingConfigurationComponent,
                     },
@@ -118,6 +125,7 @@ import { SpDataExportItemComponent } from './export/export-dialog/data-export-it
             },
         ]),
         SharedUiModule,
+        ColorPickerModule,
     ],
     declarations: [
         ConsulServiceComponent,
@@ -143,6 +151,8 @@ import { SpDataExportItemComponent } from './export/export-dialog/data-export-it
         SpDataExportDialogComponent,
         SpDataExportItemComponent,
         SpDataImportDialogComponent,
+        SpEditLabelComponent,
+        SpLabelConfigurationComponent,
     ],
     providers: [ConfigurationService],
 })

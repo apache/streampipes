@@ -103,11 +103,7 @@
                                         matTooltipPosition="above"
                                         data-cy="start-adapter"
                                         (click)="startAdapter(adapter)"
-                                        *ngIf="
-                                            connectService.isDataStreamDescription(
-                                                adapter
-                                            ) && !adapter.running
-                                        "
+                                        *ngIf="!adapter.running"
                                     >
                                         <i class="material-icons">play_arrow</i>
                                     </button>
@@ -118,11 +114,7 @@
                                         matTooltipPosition="above"
                                         data-cy="stop-adapter"
                                         (click)="stopAdapter(adapter)"
-                                        *ngIf="
-                                            connectService.isDataStreamDescription(
-                                                adapter
-                                            ) && adapter.running
-                                        "
+                                        *ngIf="adapter.running"
                                     >
                                         <i class="material-icons">stop</i>
                                     </button>
@@ -171,63 +163,6 @@
                                         [alt]="adapter.name"
                                         [src]="adapter.icon"
                                     />
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="adapterType">
-                                <th mat-header-cell *matHeaderCellDef>Type</th>
-                                <td mat-cell *matCellDef="let adapter">
-                                    <div
-                                        class="type-data"
-                                        fxLayout="row"
-                                        fxLayoutAlign="start start"
-                                    >
-                                        <div
-                                            fxLayout="row"
-                                            fxLayoutAlign="center center"
-                                        >
-                                            <mat-icon
-                                                *ngIf="
-                                                    connectService.isDataSetDescription(
-                                                        adapter
-                                                    )
-                                                "
-                                                class="historic"
-                                            >
-                                                lens
-                                            </mat-icon>
-                                            <mat-icon
-                                                *ngIf="
-                                                    connectService.isDataStreamDescription(
-                                                        adapter
-                                                    )
-                                                "
-                                                class="real-time"
-                                            >
-                                                lens
-                                            </mat-icon>
-                                            <div
-                                                fxFlex="100"
-                                                fxLayoutAlign="center center"
-                                            >
-                                                <span
-                                                    *ngIf="
-                                                        connectService.isDataSetDescription(
-                                                            adapter
-                                                        )
-                                                    "
-                                                    >&nbsp;Data Set</span
-                                                >
-                                                <span
-                                                    *ngIf="
-                                                        connectService.isDataStreamDescription(
-                                                            adapter
-                                                        )
-                                                    "
-                                                    >&nbsp;Data Stream</span
-                                                >
-                                            </div>
-                                        </div>
-                                    </div>
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="lastModified">

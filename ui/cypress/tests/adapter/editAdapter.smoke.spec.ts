@@ -18,7 +18,7 @@
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
-import { UserInputBuilder } from '../../support/builder/UserInputBuilder';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -42,11 +42,14 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
 
-        // Change adapter configurations
-        const newUserConfiguration = UserInputBuilder.create()
-            .add('input', 'wait-time-ms', '2000')
-            .add('radio', 'selected', 'simulator-option-pressure')
+        const newUserConfiguration = AdapterBuilder.create(
+            'Machine_Data_Simulator',
+        )
+            // .setName(name)
+            .addInput('input', 'wait-time-ms', '2000')
+            .addInput('radio', 'selected', 'simulator-option-pressure')
             .build();
+
         ConnectUtils.configureAdapter(newUserConfiguration);
 
         cy.get('.schema-validation-text-warning').contains('Edit mode');

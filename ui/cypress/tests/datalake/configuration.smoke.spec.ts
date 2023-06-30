@@ -39,10 +39,13 @@ describe('Test Truncate data in datalake', () => {
             .should('be.visible')
             .click();
 
-        // Check if amount of events is zero
+        // Check if amount of events is zero. The should('have.text, '0') is required to check for text equality
         cy.dataCy('datalake-number-of-events', { timeout: 10000 })
             .should('be.visible')
-            .contains('0');
+            .should($element => {
+                const text = $element.text().trim();
+                expect(text).to.equal('0');
+            });
     });
 });
 

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
+import org.apache.streampipes.model.file.GenericStorageAttachment;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -26,7 +27,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.UrlEscapers;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Request;
 
@@ -52,8 +52,8 @@ public class GenericStorageImpl implements IGenericStorage {
 
   @Override
   public List<Map<String, Object>> findAll(String type) throws IOException {
-    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType?" + UrlEscapers.urlPathSegmentEscaper()
-        .escape("startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true");
+    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType?" + Utils
+        .escapePathSegment("startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true");
     Map<String, Object> queryResult = this.queryDocuments(query);
 
     List<Map<String, Object>> rows = (List<Map<String, Object>>) queryResult.get("rows");
@@ -101,6 +101,25 @@ public class GenericStorageImpl implements IGenericStorage {
   public void delete(String id, String rev) throws IOException {
     Request req = Utils.deleteRequest(getDatabaseRoute() + SLASH + id + "?rev=" + rev);
     Content content = executeAndReturnContent(req);
+  }
+
+  @Override
+  public void createAttachment(String docId,
+                               String attachmentName,
+                               String contentType,
+                               byte[] payload,
+                               String rev) throws IOException {
+    Request req = Utils.putRequest(
+            getDatabaseRoute() + SLASH + docId + SLASH + attachmentName + "?rev=" + rev, payload, contentType
+    );
+    executeAndReturnContent(req);
+  }
+
+  @Override
+  public GenericStorageAttachment findAttachment(String docId, String attachmentName) throws IOException {
+    Request req = Utils.getRequest(getDatabaseRoute() + SLASH + docId + SLASH + attachmentName);
+    Content content =  executeAndReturnContent(req);
+    return new GenericStorageAttachment(content.getType().getMimeType(), content.asBytes());
   }
 
   private Map<String, Object> queryDocuments(String route) throws IOException {

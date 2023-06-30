@@ -49,8 +49,8 @@ public class JmsFlinkProducer extends RichSinkFunction<Map<String, Object>> {
   @Override
   public void open(Configuration configuration) throws Exception {
     try {
-      publisher = new ActiveMQPublisher();
-      publisher.connect(protocol);
+      publisher = new ActiveMQPublisher(protocol);
+      publisher.connect();
     } catch (Exception e) {
       throw new Exception("Failed to open Jms connection: " + e.getMessage(), e);
     }

@@ -19,7 +19,6 @@
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    SpDataSet,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { InjectionToken } from '@angular/core';
@@ -78,7 +77,6 @@ export interface TabsModel {
 }
 
 export type PipelineElementUnion =
-    | SpDataSet
     | SpDataStream
     | DataProcessorInvocation
     | DataSinkInvocation;
@@ -91,7 +89,6 @@ export const PIPELINE_ELEMENT_TOKEN = new InjectionToken<{}>('pipelineElement');
 
 export type PipelineElementIdentifier =
     | 'org.apache.streampipes.model.SpDataStream'
-    | 'org.apache.streampipes.model.SpDataSet'
     | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
     | 'org.apache.streampipes.model.graph.DataSinkInvocation';
 

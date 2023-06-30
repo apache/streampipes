@@ -86,6 +86,9 @@ npm-debug.log
 ui/src/assets/lib/apps/*
 ui/.angular
 
+# Template file for UI theming variables
+ui/src/scss/_variables.scss
+
 # compiled output
 ui/dist
 ui/dist/**

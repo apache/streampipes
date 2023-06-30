@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
 import {
     RuntimeResolvableTreeInputStaticProperty,
@@ -25,13 +25,8 @@ import {
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import {
-    AbstractControl,
-    UntypedFormControl,
-    ValidationErrors,
-    ValidatorFn,
-} from '@angular/forms';
+import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'sp-runtime-resolvable-tree-input',
@@ -45,12 +40,16 @@ export class StaticRuntimeResolvableTreeInputComponent
     treeControl = new NestedTreeControl<TreeInputNode>(node => node.children);
     dataSource = new MatTreeNestedDataSource<TreeInputNode>();
 
+    selectedNodeMetadata: Record<string, string>;
+    selectedNodeId: string;
+
+    @ViewChild('tree') tree: MatTree<TreeInputNode>;
+
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);
     }
 
-    hasChild = (_: number, node: TreeInputNode) =>
-        !!node.children && node.children.length > 0;
+    hasChild = (_: number, node: TreeInputNode) => !node.dataNode;
 
     ngOnInit(): void {
         this.treeControl = new NestedTreeControl<TreeInputNode>(
@@ -83,40 +82,24 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     afterOptionsLoaded(
         staticProperty: RuntimeResolvableTreeInputStaticProperty,
+        node: TreeInputNode,
     ) {
-        this.staticProperty.nodes = staticProperty.nodes;
-        this.dataSource.data = this.staticProperty.nodes;
+        if (
+            staticProperty.latestFetchedNodes &&
+            staticProperty.latestFetchedNodes.length > 0
+        ) {
+            this.staticProperty.latestFetchedNodes =
+                staticProperty.latestFetchedNodes;
+            node.children = staticProperty.latestFetchedNodes;
+        } else {
+            this.staticProperty.nodes = staticProperty.nodes;
+            this.dataSource.data = this.staticProperty.nodes;
+        }
+        const data = this.dataSource.data.slice();
+        this.dataSource.data = null;
+        this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
+        this.dataSource.data = [...data];
         this.performValidation();
-    }
-
-    toggleNodeSelection(node: TreeInputNode) {
-        node.selected = !node.selected;
-        this.performValidation();
-    }
-
-    toggleAllNodeSelection(node: any) {
-        const descendants = this.treeControl.getDescendants(node);
-        const newState = !node.selected;
-        node.selected = newState;
-        descendants.forEach(d => (d.selected = newState));
-        this.performValidation();
-    }
-
-    descendantsAllSelected(node: TreeInputNode) {
-        const descendants = this.treeControl.getDescendants(node);
-        const allSelected =
-            descendants.length > 0 &&
-            descendants.every(child => {
-                return child.selected;
-            });
-        node.selected = allSelected;
-        return allSelected;
-    }
-
-    descendantsPartiallySelected(node: TreeInputNode) {
-        const descendants = this.treeControl.getDescendants(node);
-        const result = descendants.some(child => child.selected);
-        return result && !this.descendantsAllSelected(node);
     }
 
     performValidation() {
@@ -130,9 +113,7 @@ export class StaticRuntimeResolvableTreeInputComponent
     }
 
     anyNodeSelected(): boolean {
-        return (
-            this.dataSource.data.find(d => this.anySelected(d)) !== undefined
-        );
+        return this.staticProperty.selectedNodesInternalNames.length > 0;
     }
 
     anySelected(node: TreeInputNode): boolean {
@@ -147,5 +128,57 @@ export class StaticRuntimeResolvableTreeInputComponent
         this.staticProperty.nodes = [];
         this.dataSource.data = [];
         this.performValidation();
+    }
+
+    resetOptionsAndReload(): void {
+        this.staticProperty.nextBaseNodeToResolve = undefined;
+        this.staticProperty.selectedNodesInternalNames = [];
+        this.staticProperty.latestFetchedNodes = [];
+        this.dataSource.data = [];
+        this.loadOptionsFromRestApi();
+    }
+
+    loadChildren(node: TreeInputNode, expanded: boolean): void {
+        this.staticProperty.nextBaseNodeToResolve = node.internalNodeName;
+        if (expanded) {
+            this.loadOptionsFromRestApi(node);
+        }
+    }
+
+    addNode(node: TreeInputNode) {
+        node.selected = true;
+        this.staticProperty.selectedNodesInternalNames.push(
+            node.internalNodeName,
+        );
+        this.performValidation();
+    }
+
+    removeNode(node: TreeInputNode) {
+        node.selected = false;
+        const index = this.getSelectedNodeIndex(node.internalNodeName);
+        this.staticProperty.selectedNodesInternalNames.splice(index, 1);
+        this.performValidation();
+    }
+
+    removeSelectedNode(selectedNodeInternalId: string): void {
+        const index = this.getSelectedNodeIndex(selectedNodeInternalId);
+        this.staticProperty.selectedNodesInternalNames.splice(index, 1);
+    }
+
+    isNodeSelected(node: TreeInputNode) {
+        return this.getSelectedNodeIndex(node.internalNodeName) > -1;
+    }
+
+    getSelectedNodeIndex(internalNodeName: string) {
+        return this.staticProperty.selectedNodesInternalNames.indexOf(
+            internalNodeName,
+        );
+    }
+
+    hasDataChildren(node: TreeInputNode) {
+        return (
+            node.children.length > 0 &&
+            node.children.find(c => c.dataNode) !== undefined
+        );
     }
 }

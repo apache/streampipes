@@ -18,31 +18,30 @@
 
 package org.apache.streampipes.connect.adapters.flic;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
-import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Map;
 
-public class FlicMQTTAdapter extends SpecificDataStreamAdapter {
+public class FlicMQTTAdapter implements StreamPipesAdapter {
 
   private MqttConsumer mqttConsumer;
-  private MqttConfig mqttConfig;
   private Thread thread;
 
   /**
@@ -50,103 +49,57 @@ public class FlicMQTTAdapter extends SpecificDataStreamAdapter {
    */
   public static final String ID = "org.apache.streampipes.connect.adapters.flic.mqtt";
 
-  /**
-   * Empty constructor and a constructor with SpecificAdapterStreamDescription are mandatory
-   */
-  public FlicMQTTAdapter() {
-  }
-
-  public FlicMQTTAdapter(SpecificAdapterStreamDescription adapterDescription) {
-    super(adapterDescription);
-  }
-
-
-  /**
-   * Describe the adapter adapter and define what user inputs are required.
-   *
-   * @return
-   */
   @Override
-  public SpecificAdapterStreamDescription declareModel() {
-
-    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, FlicMQTTAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(AdapterType.Energy)
+        .withCategory(AdapterType.Energy)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
             MqttConnectUtils.getAlternativesTwo())
         .requiredTextParameter(MqttConnectUtils.getTopicLabel())
-        .build();
-    description.setAppId(ID);
-
-    return description;
-  }
-
-  /**
-   * Takes the user input and creates the event schema. The event schema describes the properties of the event stream.
-   *
-   * @param adapterDescription
-   * @return
-   */
-  @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
-    return FlicUtils.getFlicSchema();
+        .buildConfiguration();
   }
 
   @Override
-  public void startAdapter() throws AdapterException {
-    StaticPropertyExtractor extractor =
-        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-
-    this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
-    this.mqttConsumer = new MqttConsumer(this.mqttConfig, new EventProcessor(adapterPipeline));
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    MqttConfig mqttConfig = MqttConnectUtils.getMqttConfig(extractor.getStaticPropertyExtractor());
+    this.mqttConsumer = new MqttConsumer(mqttConfig, new EventProcessor(collector));
 
     thread = new Thread(this.mqttConsumer);
     thread.start();
   }
 
   @Override
-  public void stopAdapter() throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.mqttConsumer.close();
   }
 
-  /**
-   * Required by StreamPipes return a new adapter instance by calling the constructor
-   * with SpecificAdapterStreamDescription
-   *
-   * @param adapterDescription
-   * @return
-   */
   @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new FlicMQTTAdapter(adapterDescription);
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    return FlicUtils.getFlicSchema();
   }
 
+  private static class EventProcessor implements InternalEventProcessor<byte[]> {
+    private final Gson gson;
+    private final IEventCollector collector;
 
-  /**
-   * Required by StreamPipes. Return the id of the adapter
-   *
-   * @return
-   */
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  private class EventProcessor implements InternalEventProcessor<byte[]> {
-    private AdapterPipeline adapterPipeline;
-
-    public EventProcessor(AdapterPipeline adapterpipeline) {
-      this.adapterPipeline = adapterpipeline;
+    public EventProcessor(IEventCollector collector) {
+      this.collector = collector;
+      this.gson = new Gson();
     }
 
     @Override
     public void onEvent(byte[] payload) {
       String s = new String(payload);
-      FlicOutput output = new Gson().fromJson(s, FlicOutput.class);
+      FlicOutput output = gson.fromJson(s, FlicOutput.class);
       Map<String, Object> event = FlicUtils.getEvent(output);
-      adapterPipeline.process(event);
+      collector.collect(event);
     }
   }
 }

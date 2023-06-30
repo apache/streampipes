@@ -19,14 +19,18 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -34,12 +38,8 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class BooleanCounterProcessor extends StreamPipesDataProcessor {
+public class BooleanCounterProcessor implements IStreamPipesDataProcessor {
   public static final String FIELD_ID = "field";
   public static final String FLANK_ID = "flank";
   public static final String COUNT_FIELD_ID = "countField";
@@ -47,7 +47,6 @@ public class BooleanCounterProcessor extends StreamPipesDataProcessor {
   private static final String FLANK_UP = "FALSE -> TRUE";
   private static final String FLANK_DOWN = "TRUE -> FALSE";
   private static final String BOTH = "BOTH";
-  private static Logger log;
   private String fieldName;
   /**
    * Defines which boolean changes should be counted
@@ -58,36 +57,39 @@ public class BooleanCounterProcessor extends StreamPipesDataProcessor {
   private int flankUp;
   private boolean fieldValueOfLastEvent;
   private int counter;
+
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.counter")
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        BooleanCounterProcessor::new,
+        ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.counter")
             .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.COUNT_OPERATOR)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.booleanReq(),
-                            Labels.withId(FIELD_ID),
-                            PropertyScope.NONE)
-                    .build())
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.booleanReq(),
+                    Labels.withId(FIELD_ID),
+                    PropertyScope.NONE)
+                .build())
 
             .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
             .outputStrategy(OutputStrategies
-                    .append(EpProperties
-                            .numberEp(
-                                    Labels.withId(COUNT_FIELD_ID),
-                                      COUNT_FIELD_RUNTIME_NAME,
-                                      "http://schema.org/Number")
-              ))
-              .build();
+                .append(EpProperties
+                    .numberEp(
+                        Labels.withId(COUNT_FIELD_ID),
+                        COUNT_FIELD_RUNTIME_NAME,
+                        "http://schema.org/Number")
+                ))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    ProcessingElementParameterExtractor extractor = parameters.extractor();
-    log = parameters.getGraph().getLogger(BooleanCounterProcessor.class);
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                                SpOutputCollector collector,
+                                EventProcessorRuntimeContext runtimeContext) {
+    IDataProcessorParameterExtractor extractor = parameters.extractor();
     String flank = extractor.selectedSingleValue(FLANK_ID, String.class);
     this.fieldName = extractor.mappingPropertyValue(FIELD_ID);
     this.flankUp = 0;
@@ -135,6 +137,7 @@ public class BooleanCounterProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
+
   }
 }

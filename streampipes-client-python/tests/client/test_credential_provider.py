@@ -21,6 +21,16 @@ from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 
 
 class TestStreamPipesApiKeyCredentials(TestCase):
+
+    @staticmethod
+    def _clear_envs():
+
+        if StreamPipesApiKeyCredentials._ENV_KEY_API in os.environ.keys():
+            del os.environ[StreamPipesApiKeyCredentials._ENV_KEY_API]
+
+        if StreamPipesApiKeyCredentials._ENV_KEY_USERNAME in os.environ.keys():
+            del os.environ[StreamPipesApiKeyCredentials._ENV_KEY_USERNAME]
+
     def test_api_key_credentials(self):
         credentials = StreamPipesApiKeyCredentials(username="test-user", api_key="test-key")
         result = credentials.make_headers()
@@ -34,14 +44,69 @@ class TestStreamPipesApiKeyCredentials(TestCase):
 
         self.assertDictEqual(expected_extended, result_extended)
 
-    def test_api_key_from_env(self):
-        os.environ["USER"] = "user"
-        os.environ["KEY"] = "api-key"
-        credentials = StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="KEY")
+    def test_pass_credentials(self):
+        credentials = StreamPipesApiKeyCredentials(username="username", api_key="api-key")
 
-        self.assertEqual("user", credentials.username)
+        self.assertEqual("username", credentials.username)
         self.assertEqual("api-key", credentials.api_key)
 
-    def test_api_key_from_env_not_set(self):
-        with self.assertRaises(KeyError):
-            StreamPipesApiKeyCredentials.from_env(username_env="test", api_key_env="key")
+    def test_pass_credentials_envs_set(self):
+
+        os.environ[StreamPipesApiKeyCredentials._ENV_KEY_API] = "another-api-key"
+        os.environ[StreamPipesApiKeyCredentials._ENV_KEY_USERNAME] = "another-user-name"
+
+        credentials = StreamPipesApiKeyCredentials(username="username", api_key="api-key")
+
+        self.assertEqual("username", credentials.username)
+        self.assertEqual("api-key", credentials.api_key)
+
+    def test_pass_username(self):
+
+        self._clear_envs()
+        os.environ[StreamPipesApiKeyCredentials._ENV_KEY_API] = "another-api-key"
+
+        credentials = StreamPipesApiKeyCredentials(username="username")
+
+        self.assertEqual("username", credentials.username)
+        self.assertEqual("another-api-key", credentials.api_key)
+
+    def test_pass_username_api_key_not_set(self):
+
+        self._clear_envs()
+
+        with self.assertRaises(AttributeError):
+            StreamPipesApiKeyCredentials(username="username")
+
+    def test_pass_api_key(self):
+
+        self._clear_envs()
+        os.environ[StreamPipesApiKeyCredentials._ENV_KEY_USERNAME] = "another-username"
+
+        credentials = StreamPipesApiKeyCredentials(api_key="api-key")
+
+        self.assertEqual("another-username", credentials.username)
+        self.assertEqual("api-key", credentials.api_key)
+
+    def test_pass_api_key_username_not_set(self):
+
+        self._clear_envs()
+
+        with self.assertRaises(AttributeError):
+            StreamPipesApiKeyCredentials(api_key="api-key")
+
+    def test_nothing_set(self):
+
+        self._clear_envs()
+
+        with self.assertRaises(AttributeError):
+            StreamPipesApiKeyCredentials()
+
+    def test_all_from_envs(self):
+
+        os.environ[StreamPipesApiKeyCredentials._ENV_KEY_API] = "another-api-key"
+        os.environ[StreamPipesApiKeyCredentials._ENV_KEY_USERNAME] = "another-username"
+
+        credentials = StreamPipesApiKeyCredentials()
+
+        self.assertEqual("another-username", credentials.username)
+        self.assertEqual("another-api-key", credentials.api_key)

@@ -17,26 +17,29 @@
  */
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.client.live.EventProcessor;
-import org.apache.streampipes.client.live.KafkaConfig;
+import org.apache.streampipes.client.api.live.EventProcessor;
+import org.apache.streampipes.client.api.live.IBrokerConfigOverride;
+import org.apache.streampipes.client.api.live.IConfiguredEventProducer;
+import org.apache.streampipes.client.api.live.ISubscription;
+import org.apache.streampipes.client.live.ProducerManager;
 import org.apache.streampipes.client.live.SubscriptionManager;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.Message;
 
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Optional;
 
-public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implements CRUDApi<String, SpDataStream> {
+public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implements IDataStreamApi {
 
   public DataStreamApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, SpDataStream.class);
   }
 
   @Override
-  public SpDataStream get(String streamId) {
+  public Optional<SpDataStream> get(String streamId) {
     return getSingle(StreamPipesApiPath.fromBaseApiPath()
         .addToPath("streams").addToPath(streamId));
   }
@@ -54,7 +57,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   /**
    * Directly install a new data stream
    *
-   * @param stream   The data stream to add
+   * @param stream The data stream to add
    */
   @Override
   public void create(SpDataStream stream) {
@@ -76,15 +79,21 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
 
   }
 
+  @Override
+  public IConfiguredEventProducer getProducer(SpDataStream stream) {
+    return new ProducerManager(stream.getEventGrounding()).makeProducer();
+  }
+
   /**
    * Subscribe to a data stream
    *
    * @param stream   The data stream to subscribe to
    * @param callback The callback where events will be received
    */
-  public SpKafkaConsumer subscribe(SpDataStream stream,
-                                   EventProcessor callback) {
-    return new SubscriptionManager(clientConfig, stream.getEventGrounding(), callback).subscribe();
+  @Override
+  public ISubscription subscribe(SpDataStream stream,
+                                 EventProcessor callback) {
+    return new SubscriptionManager(stream.getEventGrounding(), callback).subscribe();
   }
 
   /**
@@ -94,10 +103,11 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
    * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
    * @param callback    The callback where events will be received
    */
-  public SpKafkaConsumer subscribe(SpDataStream stream,
-                                   KafkaConfig kafkaConfig,
-                                   EventProcessor callback) {
-    return new SubscriptionManager(clientConfig, kafkaConfig, stream.getEventGrounding(), callback).subscribe();
+  @Override
+  public ISubscription subscribe(SpDataStream stream,
+                                 IBrokerConfigOverride kafkaConfig,
+                                 EventProcessor callback) {
+    return new SubscriptionManager(kafkaConfig, stream.getEventGrounding(), callback).subscribe();
   }
 
   @Override

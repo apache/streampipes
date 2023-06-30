@@ -18,11 +18,10 @@
 package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
-import org.apache.streampipes.extensions.api.connect.Connector;
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.IProtocol;
-import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
@@ -88,29 +87,21 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
-  public SpServiceDefinitionBuilder registerPipelineElement(Declarer<?> declarer) {
-    this.serviceDefinition.addDeclarer(declarer);
+  public SpServiceDefinitionBuilder registerPipelineElement(IStreamPipesPipelineElement<?> pipelineElement) {
+    this.serviceDefinition.addDeclarer(pipelineElement);
     return this;
   }
 
-  public SpServiceDefinitionBuilder registerPipelineElements(Declarer<?>... declarers) {
+  public SpServiceDefinitionBuilder registerPipelineElements(IStreamPipesPipelineElement<?>... declarers) {
     this.serviceDefinition.addDeclarers(Arrays.asList(declarers));
     return this;
   }
 
-  public SpServiceDefinitionBuilder registerAdapter(Connector protocolOrAdapter) {
-    if (protocolOrAdapter instanceof IProtocol) {
-      this.serviceDefinition.addAdapterProtocol((IProtocol) protocolOrAdapter);
-    } else if (protocolOrAdapter instanceof IAdapter<?>) {
-      this.serviceDefinition.addSpecificAdapter((IAdapter<?>) protocolOrAdapter);
-    }
+  public SpServiceDefinitionBuilder registerAdapter(StreamPipesAdapter adapter) {
+    this.serviceDefinition.addAdapter(adapter);
     return this;
   }
 
-  public SpServiceDefinitionBuilder registerAdapters(Connector... protocolOrAdapter) {
-    Arrays.asList(protocolOrAdapter).forEach(this::registerAdapter);
-    return this;
-  }
 
   public SpServiceDefinitionBuilder registerMessagingFormat(SpDataFormatFactory dataFormatDefinition) {
     this.serviceDefinition.addDataFormatFactory(dataFormatDefinition);
@@ -134,8 +125,7 @@ public class SpServiceDefinitionBuilder {
 
   public SpServiceDefinitionBuilder merge(SpServiceDefinition other) {
     this.serviceDefinition.addDeclarers(other.getDeclarers());
-    this.serviceDefinition.addAdapterProtocols(other.getAdapterProtocols());
-    this.serviceDefinition.addSpecificAdapters(other.getSpecificAdapters());
+    this.serviceDefinition.addAdapters(other.getAdapters());
     other.getKvConfigs().values().forEach(value -> {
       if (this.serviceDefinition.getKvConfigs().containsKey(value.getKey())) {
         LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.",
@@ -148,6 +138,11 @@ public class SpServiceDefinitionBuilder {
 
   public SpServiceDefinitionBuilder registerFunction(IStreamPipesFunctionDeclarer function) {
     this.serviceDefinition.addStreamPipesFunction(function);
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerRuntimeProvider(IStreamPipesRuntimeProvider runtimeProvider) {
+    this.serviceDefinition.addRuntimeProvider(runtimeProvider);
     return this;
   }
 

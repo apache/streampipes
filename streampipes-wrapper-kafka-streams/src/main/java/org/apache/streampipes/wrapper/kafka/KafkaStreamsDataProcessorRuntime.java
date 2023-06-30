@@ -18,15 +18,23 @@
 package org.apache.streampipes.wrapper.kafka;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatManager;
+import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
+import org.apache.streampipes.messaging.SpProtocolDefinition;
+import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.context.generator.DataProcessorContextGenerator;
 import org.apache.streampipes.wrapper.kafka.converter.JsonToMapFormat;
-import org.apache.streampipes.wrapper.kafka.converter.MapToJsonFormat;
-import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
+import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -36,23 +44,25 @@ import org.apache.kafka.streams.kstream.ValueMapper;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public abstract class KafkaStreamsDataProcessorRuntime<T extends
-    EventProcessorBindingParams>
-    extends KafkaStreamsRuntime<EventProcessorRuntimeParams<T>, T,
-    DataProcessorInvocation, EventProcessorRuntimeContext> {
+public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
+    IStreamPipesDataProcessor,
+    DataProcessorInvocation,
+    EventProcessorRuntimeContext,
+    IDataProcessorParameterExtractor,
+    IDataProcessorParameters> implements IDataProcessorRuntime {
 
+  private KafkaStreamsOutputCollector outputCollector;
 
-  public KafkaStreamsDataProcessorRuntime(EventProcessorRuntimeParams<T> runtimeParams) {
-    super(runtimeParams);
+  public KafkaStreamsDataProcessorRuntime() {
+    super(new DataProcessorContextGenerator(), new DataProcessorParameterGenerator());
   }
-
 
   @Override
   public void bindRuntime() throws SpRuntimeException {
     try {
-      prepareRuntime();
+      pipelineElement.onPipelineStarted(runtimeParameters, null, runtimeContext);
       StreamsBuilder builder = new StreamsBuilder();
-      SpDataStream inputStream = runtimeParams.getBindingParams().getGraph().getInputStreams().get(0);
+      SpDataStream inputStream = pipelineElementInvocation.getInputStreams().get(0);
       TransportProtocol protocol = protocol(inputStream);
       KStream<String, String> stream;
 
@@ -62,13 +72,22 @@ public abstract class KafkaStreamsDataProcessorRuntime<T extends
         stream = builder.stream(Pattern.compile(replaceWildcardWithPatternFormat(getTopic(inputStream))));
       }
 
-      KStream<String, Map<String, Object>> mapFormat = stream.flatMapValues((ValueMapper<String, Iterable<Map<String,
-          Object>>>) s -> new JsonToMapFormat(getGraph()).apply(s));
+      var outputProtocol = pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportProtocol();
+      if (outputProtocol instanceof KafkaTransportProtocol) {
+        var outputFormatConverter = getDataFormatConverter();
+        var outputProducer = getOutputProtocol().getProducer((KafkaTransportProtocol) outputProtocol);
+        this.outputCollector = new KafkaStreamsOutputCollector(outputFormatConverter, outputProducer);
+        this.outputCollector.connect();
+      }
 
-      KStream<String, String> outStream = getApplicationLogic(mapFormat).flatMapValues(new
-          MapToJsonFormat());
-      outStream.to(getTopic(runtimeParams.getBindingParams().getGraph()
-          .getOutputStream()));
+      stream
+          .flatMapValues((ValueMapper<String, Iterable<Map<String, Object>>>) s ->
+              new JsonToMapFormat(pipelineElementInvocation).apply(s))
+          .foreach((key, rawEvent) -> {
+            var event = internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, getTopic(inputStream));
+            pipelineElement.onEvent(event, outputCollector);
+          });
+
       streams = new KafkaStreams(builder.build(), config);
 
       streams.start();
@@ -76,5 +95,27 @@ public abstract class KafkaStreamsDataProcessorRuntime<T extends
       throw new SpRuntimeException(e.getMessage());
     }
   }
+
+  @Override
+  protected void afterStop() {
+    this.pipelineElement.onPipelineStopped();
+    this.outputCollector.disconnect();
+  }
+
+  private SpDataFormatDefinition getDataFormatConverter() {
+    return SpDataFormatManager
+        .INSTANCE
+        .findDefinition(pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportFormats().get(0))
+        .orElseThrow();
+  }
+
+  private SpProtocolDefinition<KafkaTransportProtocol> getOutputProtocol() {
+    return SpProtocolManager
+        .INSTANCE
+        .findDefinition((KafkaTransportProtocol)
+            pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportProtocol())
+        .orElseThrow();
+  }
+
 
 }

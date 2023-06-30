@@ -20,7 +20,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.92.0-SNAPSHOT</version>
+        <version>0.93.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,18 +41,13 @@
         <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
         <maven-invoker-plugin.version>3.4.0</maven-invoker-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-        <maven-plugin-plugin.version>3.7.0</maven-plugin-plugin.version>
+        <maven-plugin-plugin.version>3.8.1</maven-plugin-plugin.version>
         <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.google.inject</groupId>
-                <artifactId>guice</artifactId>
-                <version>${guice.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-aether-provider</artifactId>
@@ -81,10 +76,6 @@
             <artifactId>maven-core</artifactId>
             <scope>provided</scope>
             <exclusions>
-                <exclusion>
-                    <groupId>com.google.inject</groupId>
-                    <artifactId>guice</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
                     <artifactId>plexus-container-default</artifactId>

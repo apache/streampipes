@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.sinks.internal.jvm;
 
-import org.apache.streampipes.dataexplorer.commons.configs.CouchDbConfigurations;
-import org.apache.streampipes.dataexplorer.commons.configs.DataExplorerConfigurations;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -29,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
 import org.apache.streampipes.sinks.internal.jvm.notification.NotificationProducer;
@@ -52,9 +51,8 @@ public class SinksInternalJvmInit extends ExtensionsModelSubmitter {
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory())
-        .addConfigs(DataExplorerConfigurations.getDefaults())
-        .addConfigs(CouchDbConfigurations.getDefaults())
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
         .build();
 
 

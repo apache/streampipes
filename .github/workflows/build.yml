@@ -108,13 +108,13 @@ jobs:
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:${{ env.MVN_VERSION }}
 
-      - name: Build and Push Docker Image pipeline-elements-all-flink
+      - name: Build and Push Docker Image pipeline-elements-experimental-flink
         uses: docker/build-push-action@v4
         with:
-          context: ./streampipes-extensions/streampipes-pipeline-elements-all-flink
+          context: ./streampipes-extensions/streampipes-pipeline-elements-experimental-flink
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           push: true
-          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-flink:${{ env.MVN_VERSION }}
+          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-experimental-flink:${{ env.MVN_VERSION }}
 
       - name: Build and Push Docker Image extensions-all-iiot
         uses: docker/build-push-action@v4

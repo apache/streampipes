@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.92.0-SNAPSHOT</version>
+        <version>0.93.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,28 +32,28 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-security-jwt</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-storage-management</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

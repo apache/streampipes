@@ -19,7 +19,6 @@
 package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.ps.DataLakeImageResource;
-import org.apache.streampipes.ps.DataLakeMeasureResourceV3;
 import org.apache.streampipes.ps.DataLakeMeasureResourceV4;
 import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.ps.DataLakeResourceV4;
@@ -70,7 +69,6 @@ import org.apache.streampipes.rest.impl.connect.AdapterResource;
 import org.apache.streampipes.rest.impl.connect.DescriptionResource;
 import org.apache.streampipes.rest.impl.connect.GuessResource;
 import org.apache.streampipes.rest.impl.connect.RuntimeResolvableResource;
-import org.apache.streampipes.rest.impl.connect.SourcesResource;
 import org.apache.streampipes.rest.impl.connect.UnitResource;
 import org.apache.streampipes.rest.impl.connect.WorkerAdministrationResource;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
@@ -120,7 +118,6 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         DataLakeWidgetResource.class,
         DataLakeImageResource.class,
         DataLakeResourceV3.class,
-        DataLakeMeasureResourceV3.class,
         DataLakeMeasureResourceV4.class,
         DataStream.class,
         EmailConfigurationResource.class,
@@ -173,7 +170,6 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         // Connect Master
         AdapterResource.class,
         DescriptionResource.class,
-        SourcesResource.class,
         GuessResource.class,
 
         UnitResource.class,

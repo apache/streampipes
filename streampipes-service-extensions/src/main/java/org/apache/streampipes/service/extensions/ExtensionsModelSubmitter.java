@@ -50,7 +50,7 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
 
   @Override
   public void afterServiceRegistered(SpServiceDefinition serviceDef) {
-    new ConnectWorkerRegistrationService().registerWorker(serviceDef);
+    new ConnectWorkerRegistrationService().registerWorker();
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
   }
 

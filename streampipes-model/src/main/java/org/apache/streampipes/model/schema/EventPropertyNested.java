@@ -22,6 +22,7 @@ import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EventPropertyNested extends EventProperty {
 
@@ -62,4 +63,23 @@ public class EventPropertyNested extends EventProperty {
     this.eventProperties = eventProperties;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    EventPropertyNested that = (EventPropertyNested) o;
+    return Objects.equals(eventProperties, that.eventProperties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(eventProperties);
+  }
 }

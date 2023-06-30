@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.schema;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Enumeration extends ValueSpecification {
 
@@ -71,5 +72,21 @@ public class Enumeration extends ValueSpecification {
     this.runtimeValues = runtimeValues;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Enumeration that = (Enumeration) o;
+    return Objects.equals(label, that.label) && Objects.equals(description, that.description)
+           && Objects.equals(runtimeValues, that.runtimeValues);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(label, description, runtimeValues);
+  }
 }

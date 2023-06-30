@@ -28,7 +28,6 @@ import java.util.List;
 
 @TsModel
 @JsonSubTypes({
-    @JsonSubTypes.Type(DataSetModificationMessage.class),
     @JsonSubTypes.Type(ErrorMessage.class),
     @JsonSubTypes.Type(SuccessMessage.class),
     @JsonSubTypes.Type(PipelineModificationMessage.class),

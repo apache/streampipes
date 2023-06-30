@@ -17,7 +17,7 @@
  */
 
 .mat-mdc-icon-button.iconbar-size {
-    width: 35px;
+    width: var(--iconbar-width);
     height: 40px;
 }
 

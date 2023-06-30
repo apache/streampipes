@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.92.0-SNAPSHOT</version>
+        <version>0.93.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>streampipes-archetype-pe-processors-flink</artifactId>
@@ -51,6 +51,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                		checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                	</propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

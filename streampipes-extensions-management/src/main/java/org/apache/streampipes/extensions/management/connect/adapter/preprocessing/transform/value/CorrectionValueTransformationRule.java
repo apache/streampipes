@@ -49,26 +49,22 @@ public class CorrectionValueTransformationRule implements ValueTransformationRul
     if (eventKey.size() == 1) {
       try {
         Object obj = event.get(eventKey.get(0));
-        double old = 0d;
+        double old;
         if (obj instanceof Number) {
           old = ((Number) obj).doubleValue();
+        } else {
+          throw new RuntimeException(
+              String.format("Selected property `%s` does not contain a numeric value: `%s", eventKey.get(0), obj)
+          );
         }
 
-        double corrected = 0d;
-        switch (operator) {
-          case "MULTIPLY":
-            corrected = old * correctionValue;
-            break;
-          case "ADD":
-            corrected = old + correctionValue;
-            break;
-          case "SUBSTRACT":
-            corrected = old - correctionValue;
-            break;
-          default:
-            corrected = old;
-            break;
-        }
+        double corrected = switch (operator) {
+          case "MULTIPLY" -> old * correctionValue;
+          case "ADD" -> old + correctionValue;
+          case "SUBTRACT" -> old - correctionValue;
+          case "DIVIDE" -> old / correctionValue;
+          default -> old;
+        };
 
         event.put(eventKey.get(0), corrected);
       } catch (ClassCastException e) {

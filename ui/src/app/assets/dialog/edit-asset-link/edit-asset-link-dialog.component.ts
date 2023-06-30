@@ -19,25 +19,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
-    AdapterDescriptionUnion,
-    SpDataStream,
     AdapterService,
     AssetLink,
     AssetLinkType,
-    Dashboard,
     DashboardService,
-    DataLakeMeasure,
     DatalakeRestService,
     DataViewDataExplorerService,
     GenericStorageService,
-    Pipeline,
     PipelineService,
     PipelineElementService,
-    FileMetadata,
     FilesService,
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
-import { zip } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 

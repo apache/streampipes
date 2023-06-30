@@ -18,15 +18,14 @@
 """
 Specific implementation of the StreamPipes API's data stream endpoints.
 """
-from typing import Tuple, Type
-
-from streampipes.endpoint.endpoint import APIEndpoint
-from streampipes.model.container import DataStreams
 
 __all__ = [
     "DataStreamEndpoint",
 ]
+from typing import Tuple, Type
 
+from streampipes.endpoint.endpoint import APIEndpoint
+from streampipes.model.container import DataStreams
 from streampipes.model.container.resource_container import ResourceContainer
 
 

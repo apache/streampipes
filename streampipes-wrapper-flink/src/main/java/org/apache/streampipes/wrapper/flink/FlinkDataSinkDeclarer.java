@@ -18,10 +18,45 @@
 
 package org.apache.streampipes.wrapper.flink;
 
-import org.apache.streampipes.wrapper.declarer.EventSinkDeclarer;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
-public abstract class FlinkDataSinkDeclarer<T extends EventSinkBindingParams>
-    extends EventSinkDeclarer<T, FlinkDataSinkRuntime<T>> {
+public abstract class FlinkDataSinkDeclarer<T extends SinkParams>
+    implements IStreamPipesDataSink {
 
+  @Override
+  public void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
+
+  }
+
+  @Override
+  public void onEvent(Event event) {
+
+  }
+
+  @Override
+  public void onPipelineStopped() {
+
+  }
+
+  @Override
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        () -> this,
+        declareModel()
+    );
+  }
+
+  public abstract FlinkDataSinkProgram<T> getProgram(DataSinkInvocation graph,
+                                                     IDataSinkParameterExtractor extractor);
+
+  public abstract DataSinkDescription declareModel();
 }
