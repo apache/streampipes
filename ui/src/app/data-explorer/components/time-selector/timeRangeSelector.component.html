@@ -39,7 +39,8 @@
             <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
         </button>
         <mat-form-field
-            class="start-date form-field-margin smaller-font-size"
+            fxLayoutAlign="center center"
+            class="start-date form-field-margin smaller-font-size form-field-smaller"
             color="accent"
             appearance="outline"
         >
@@ -54,7 +55,8 @@
             <owl-date-time #dt1></owl-date-time>
         </mat-form-field>
         <mat-form-field
-            class="end-date form-field-margin form-field-size-smaller"
+            fxLayoutAlign="center center"
+            class="end-date form-field-margin form-field-smaller"
             color="accent"
             appearance="outline"
         >
@@ -70,7 +72,7 @@
         </mat-form-field>
         <button
             mat-button
-            class="button-icon icon-button-font-size"
+            class="button-icon icon-button-font-size ml--5 mr--5"
             color="accent"
         >
             <mat-icon (click)="increaseTime()">navigate_next</mat-icon>
