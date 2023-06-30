@@ -32,17 +32,17 @@
   },
   "dependencies": {
     "@angular-architects/module-federation": "^15.0.3",
-    "@angular/animations": "^15.1.5",
-    "@angular/cdk": "^15.1.5",
-    "@angular/common": "^15.1.5",
-    "@angular/compiler": "^15.1.5",
-    "@angular/core": "^15.1.5",
+    "@angular/animations": "^15.2.9",
+    "@angular/cdk": "^15.2.9",
+    "@angular/common": "^15.2.9",
+    "@angular/compiler": "^15.2.9",
+    "@angular/core": "^15.2.9",
     "@ngbracket/ngx-layout": "^15.0.1-beta.42-aa93e27",
-    "@angular/forms": "^15.1.5",
-    "@angular/material": "^15.1.5",
-    "@angular/platform-browser": "^15.1.5",
-    "@angular/platform-browser-dynamic": "^15.1.5",
-    "@angular/router": "^15.1.5",
+    "@angular/forms": "^15.2.9",
+    "@angular/material": "^15.2.9",
+    "@angular/platform-browser": "^15.2.9",
+    "@angular/platform-browser-dynamic": "^15.2.9",
+    "@angular/router": "^15.2.9",
     "@asymmetrik/ngx-leaflet": "^15.0.1",
     "@auth0/angular-jwt": "^5.1.2",
     "@circlon/angular-tree-component": "^11.0.4",
@@ -74,7 +74,7 @@
     "lodash": "4.17.21",
     "material-icons": "^1.13.1",
     "ngx-color-picker": "^14.0.0",
-    "ngx-echarts": "^15.0.1",
+    "ngx-echarts": "^15.0.3",
     "ngx-quill": "^20.0.1",
     "ngx-showdown": "6.0.0",
     "plotly.js": "^2.20.0",
@@ -96,11 +96,11 @@
     "@angular-eslint/eslint-plugin-template": "^15.2.0",
     "@angular-eslint/schematics": "^15.2.1",
     "@angular-eslint/template-parser": "^15.2.0",
-    "@angular/cli": "^15.1.6",
-    "@angular/compiler-cli": "^15.1.5",
+    "@angular/cli": "^15.2.9",
+    "@angular/compiler-cli": "^15.2.9",
     "@cypress/webpack-batteries-included-preprocessor": "2.4.1",
     "@cypress/webpack-preprocessor": "5.17.0",
-    "@ngtools/webpack": "^15.1.6",
+    "@ngtools/webpack": "^15.2.9",
     "@types/angular": "^1.8.4",
     "@types/jasmine": "~4.3.1",
     "@types/jqueryui": "^1.12.16",
@@ -147,7 +147,7 @@
   },
   "overrides": {
     "@angular-architects/module-federation": {
-      "@angular-architects/module-federation-runtime": "15.0.0"
+      "@angular-architects/module-federation-runtime": "15.0.3"
     }
   }
 }
