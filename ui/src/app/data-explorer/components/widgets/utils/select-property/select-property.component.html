@@ -16,7 +16,12 @@
   ~
   -->
 
-<mat-form-field fxFlex="100" color="accent">
+<mat-form-field
+    fxFlex="100"
+    color="accent"
+    appearance="outline"
+    class="form-field-small"
+>
     <mat-label>{{ this.label }}</mat-label>
     <mat-select
         [ngModel]="selectedProperty"

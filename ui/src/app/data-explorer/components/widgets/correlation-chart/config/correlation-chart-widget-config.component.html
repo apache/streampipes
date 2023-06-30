@@ -16,9 +16,14 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100" fxLayout="column" class="form-field-small">
     <h5>Correlation Plot Type</h5>
-    <mat-form-field class="marginColorField" color="accent" fxFlex="35">
+    <mat-form-field
+        appearance="outline"
+        class="marginColorField"
+        color="accent"
+        fxFlex="35"
+    >
         <mat-select
             [(value)]="
                 currentlyConfiguredWidget.visualizationConfig.displayType

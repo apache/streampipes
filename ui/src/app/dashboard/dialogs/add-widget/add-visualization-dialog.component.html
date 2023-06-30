@@ -126,13 +126,12 @@
             color="accent"
             (click)="next()"
             [disabled]="'configure-widget' === page && !formValid"
+            *ngIf="page === 'configure-widget'"
             data-cy="dashboard-new-widget-next-btn"
         >
-            <span *ngIf="!editMode && 'configure-widget' === page">Create</span>
-            <span *ngIf="editMode && 'configure-widget' === page">Save</span>
-            <span *ngIf="editMode === null && !('configure-widget' === page)"
-                >Next</span
-            >
+            {{ !editMode && 'configure-widget' === page ? 'Create' : '' }}
+            {{ editMode && 'configure-widget' === page ? 'Save' : '' }}
+            {{ editMode == null && 'configure-widget' === page ? 'Next' : '' }}
         </button>
     </div>
 </div>

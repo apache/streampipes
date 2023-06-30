@@ -78,6 +78,21 @@ mat-form-field.mat-mdc-form-field.form-field-size-smaller {
     .mat-mdc-select-value-text {
         font-size: 11pt;
     }
+
+    .mat-mdc-text-field-wrapper
+        .mat-mdc-form-field-flex
+        .mat-mdc-floating-label {
+        top: 14px;
+    }
+
+    .mat-mdc-text-field-wrapper
+        .mat-mdc-form-field-flex
+        .mdc-notched-outline--upgraded
+        .mdc-floating-label--float-above {
+        --mat-mdc-form-field-label-transform: translateY(-21.75px)
+            scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
+        transform: var(--mat-mdc-form-field-label-transform);
+    }
 }
 
 .form-field-medium {

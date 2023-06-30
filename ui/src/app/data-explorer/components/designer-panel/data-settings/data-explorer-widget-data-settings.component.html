@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-medium">
+<div fxFlex="100" fxLayout="column" class="form-field-small">
     <mat-accordion fxFlex="100" class="data-source-selection-panel">
         <mat-expansion-panel
             [expanded]="step === 0"
@@ -88,7 +88,6 @@
                         <mat-form-field
                             color="accent"
                             fxFlex="100"
-                            class="mr-5"
                             appearance="outline"
                             *ngIf="sourceConfig.sourceType === 'pipeline'"
                         >
@@ -114,6 +113,7 @@
                         <mat-form-field
                             color="accent"
                             fxFlex="100"
+                            appearance="outline"
                             *ngIf="sourceConfig.sourceType === 'measurement'"
                         >
                             <mat-select
@@ -169,10 +169,9 @@
                     <div
                         fxLayout="column"
                         fxFlex="100"
-                        class="mr-5"
                         *ngIf="sourceConfig.queryType === 'raw'"
                     >
-                        <div class="form-field-small">
+                        <div class="form-field-small mb-10">
                             <mat-form-field
                                 fxFlex="100"
                                 color="accent"
@@ -188,7 +187,7 @@
                                 />
                             </mat-form-field>
                         </div>
-                        <div class="form-field-small">
+                        <div class="form-field-small mb-10">
                             <mat-form-field
                                 fxFlex="100"
                                 color="accent"
