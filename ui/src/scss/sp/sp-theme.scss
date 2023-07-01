@@ -16,23 +16,11 @@
  *
  */
 
-/**
- *
- * Note: to change this file, change sp-theme.scss in deployment folder
- * changes in the root folder will be overridden by prebuild script
- *
- */
-
 @use '@angular/material' as mat;
 
 @import '@angular/material/theming';
 @import '../variables';
 
-@include mat.core();
-/*
- TODO(mdc-migration): Remove legacy-core once all legacy components are migrated
- */
-@include mat.legacy-core();
 @include mat.core();
 
 .nav-input {
@@ -197,6 +185,10 @@ $accent: map-get($custom-theme-light, accent);
 .small .mat-tab-label-content {
     text-transform: none;
     font-size: 11pt;
+}
+
+.mdc-tab__text-label {
+    font-family: 'Roboto-Medium';
 }
 
 .dark-mode {

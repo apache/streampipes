@@ -76,6 +76,10 @@
     margin-bottom: 10px;
 }
 
+.mb-15 {
+    margin-bottom: 15px;
+}
+
 .mr-10 {
     margin-right: 10px;
 }
@@ -186,7 +190,7 @@ img {
     border: 0;
 }
 
-.mat-expansion-panel-body {
+.mat-mdc-expansion-panel-body {
     padding: 0 !important;
 }
 
@@ -219,11 +223,13 @@ img {
     padding-bottom: 0;
 }
 
-.large-checkbox .mat-checkbox-inner-container {
+.large-checkbox .mat-mdc-checkbox-inner-container {
     width: 20px;
     height: 20px;
 }
 
-.mat-menu-panel.large-menu {
-    max-width: none;
+.cdk-overlay-pane {
+    .large-menu.mat-mdc-menu-panel {
+        max-width: none;
+    }
 }
