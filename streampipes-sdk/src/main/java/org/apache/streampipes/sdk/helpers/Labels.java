@@ -69,12 +69,10 @@ public class Labels {
    * Creates a new label only with an internal id.
    * Static properties require a fully-specified label, see {@link #from(String, String, String)}
    *
-   * @deprecated Use {@link #withId(Enum)} instead
    *
    * @param internalId The internal identifier of the element, e.g., "latitude-field-mapping"
-   * @return
+   * @return Label
    */
-  @Deprecated(since = "0.93.0")
   public static Label withId(String internalId) {
     return new Label(internalId, "", "");
   }
