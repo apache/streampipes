@@ -21,62 +21,68 @@
 
 package ${package}.pe.${packageName};
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 
-public class ${classNamePrefix}DataProcessor extends StreamPipesDataProcessor {
+public class ${classNamePrefix}DataProcessor implements IStreamPipesDataProcessor {
 
   private String exampleText;
 
   private static final String EXAMPLE_KEY = "example-key";
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("${package}.pe.${packageName}.processor")
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+      ${classNamePrefix}DataProcessor::new,
+      ProcessingElementBuilder.create("${package}.pe.${packageName}.processor")
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.AGGREGATE)
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
+          .create()
+          .requiredProperty(EpRequirements.anyProperty())
+          .build()
+        )
         .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
-        .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder.create(Datatypes.String, "appendedText").build()))
-        .build();
-    }
-
-  @Override
-  public void onInvocation(ProcessorParams processorParams,
-                           SpOutputCollector out,
-                           EventProcessorRuntimeContext ctx) throws SpRuntimeException {
-
-    this.exampleText = processorParams.extractor().singleValueParameter(EXAMPLE_KEY, String.class);
+        .outputStrategy(OutputStrategies.append(
+          PrimitivePropertyBuilder.create(Datatypes.String, "appendedText").build())
+        )
+      .build()
+    );
   }
 
   @Override
-  public void onEvent(Event event, SpOutputCollector out) {
+  public void onPipelineStarted(IDataProcessorParameters params,
+                                SpOutputCollector collector,
+                                EventProcessorRuntimeContext runtimeContext) {
+    this.exampleText = params.extractor().singleValueParameter(EXAMPLE_KEY, String.class);
+  }
+
+  @Override
+  public void onEvent(Event event,
+                      SpOutputCollector collector) {
     event.addField("appendedText", exampleText);
-    out.collect(event);
+    collector.collect(event);
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
 
   }
 }

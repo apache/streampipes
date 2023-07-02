@@ -21,47 +21,49 @@
 
 package ${package}.pe.${packageName};
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 
-public class ${classNamePrefix}DataSink extends StreamPipesDataSink {
+public class ${classNamePrefix}DataSink implements IStreamPipesDataSink {
 
-private String exampleText;
+  private String exampleText;
 
-private static final String EXAMPLE_KEY = "example-key";
+  private static final String EXAMPLE_KEY = "example-key";
+
 
   @Override
-  public DataSinkDescription declareModel(){
-    return DataSinkBuilder.create("${package}.pe.${packageName}.sink")
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+      ${classNamePrefix}DataSink::new,
+      DataSinkBuilder.create("${package}.pe.${packageName}.sink")
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .category(DataSinkType.UNCATEGORIZED)
         .requiredStream(StreamRequirementsBuilder
         .create()
-        .requiredProperty(EpRequirements.anyProperty())
-        .build())
+          .requiredProperty(EpRequirements.anyProperty())
+          .build())
         .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
-        .build();
+        .build()
+    );
   }
 
   @Override
-  public void onInvocation(SinkParams sinkParams,
-                           EventSinkRuntimeContext ctx) throws SpRuntimeException {
-
-    this.exampleText = sinkParams.extractor().singleValueParameter(EXAMPLE_KEY, String.class);
+  public void onPipelineStarted(IDataSinkParameters params,
+                                EventSinkRuntimeContext runtimeContext) {
+    this.exampleText = params.extractor().singleValueParameter(EXAMPLE_KEY, String.class);
   }
 
   @Override
@@ -70,7 +72,8 @@ private static final String EXAMPLE_KEY = "example-key";
   }
 
   @Override
-  public void onDetach(){
+  public void onPipelineStopped() {
 
   }
+
 }
