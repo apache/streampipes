@@ -17,13 +17,15 @@
  */
 
 import { UserInput } from '../model/UserInput';
+import { userInfo } from 'os';
 
 export class StaticPropertyUtils {
     public static input(configs: UserInput[]) {
         // Configure Properties
         configs.forEach(config => {
+            console.log(config);
             if (config.type === 'checkbox') {
-                cy.dataCy(config.selector).children().click({ force: true });
+                this.clickCheckbox(config);
             } else if (config.type === 'button') {
                 cy.dataCy(config.selector).click();
             } else if (config.type === 'drop-down') {
@@ -33,11 +35,7 @@ export class StaticPropertyUtils {
                     .contains(config.value)
                     .click();
             } else if (config.type === 'radio') {
-                cy.dataCy(
-                    config.selector.replace(' ', '_').toLowerCase() +
-                        '-' +
-                        config.value.replace(' ', '_').toLowerCase(),
-                ).click();
+                this.clickRadio(config);
             } else if (config.type === 'click') {
                 cy.dataCy(config.selector).click({ force: true });
             } else if (config.type === 'code-input') {
@@ -50,6 +48,26 @@ export class StaticPropertyUtils {
             } else {
                 cy.dataCy(config.selector).type(config.value);
             }
+        });
+    }
+
+    private static clickCheckbox(input: UserInput) {
+        this.clickSelectionInput(input.selector, '.mdc-checkbox');
+    }
+
+    private static clickRadio(input: UserInput) {
+        let selector = input.selector.replace(' ', '_').toLowerCase();
+        if (input.value !== '') {
+            selector =
+                selector + '-' + input.value.replace(' ', '_').toLowerCase();
+        }
+        console.log(selector);
+        this.clickSelectionInput(selector, '.mdc-radio');
+    }
+
+    private static clickSelectionInput(selector: string, cssClassName: string) {
+        cy.dataCy(selector).within(() => {
+            cy.get(cssClassName).click();
         });
     }
 }

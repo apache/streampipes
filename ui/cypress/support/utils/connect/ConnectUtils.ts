@@ -129,7 +129,10 @@ export class ConnectUtils {
 
     public static configureFormat(adapterInput: AdapterInput) {
         if (adapterInput.format) {
-            cy.dataCy('format-' + adapterInput.format).click();
+            cy.dataCy('format-' + adapterInput.format) // Find the element with the data-cy attribute
+                .within(() => {
+                    cy.get('.mdc-radio').click();
+                });
 
             StaticPropertyUtils.input(adapterInput.formatConfiguration);
         }

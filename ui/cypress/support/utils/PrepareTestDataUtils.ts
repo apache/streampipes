@@ -66,7 +66,7 @@ export class PrepareTestDataUtils {
         } else {
             adapterBuilder
                 .setFormat('json')
-                .addFormatInput('checkbox', 'json_options-array', '');
+                .addFormatInput('radio', 'json_options-array', '');
         }
 
         adapterBuilder.setStartAdapter(true);
