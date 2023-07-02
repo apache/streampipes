@@ -131,7 +131,7 @@
         >
             {{ !editMode && 'configure-widget' === page ? 'Create' : '' }}
             {{ editMode && 'configure-widget' === page ? 'Save' : '' }}
-            {{ editMode == null && 'configure-widget' === page ? 'Next' : '' }}
+            {{ editMode === null && 'configure-widget' === page ? 'Next' : '' }}
         </button>
     </div>
 </div>
