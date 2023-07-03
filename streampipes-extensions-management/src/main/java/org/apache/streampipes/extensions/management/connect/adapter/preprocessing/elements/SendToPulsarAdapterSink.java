@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.pulsar.PulsarProducer;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
@@ -27,7 +28,12 @@ public class SendToPulsarAdapterSink extends SendToBrokerAdapterSink<PulsarTrans
     implements IAdapterPipelineElement {
 
   public SendToPulsarAdapterSink(AdapterDescription adapterDescription) {
-    super(adapterDescription, PulsarProducer::new, PulsarTransportProtocol.class);
+    super(adapterDescription, PulsarTransportProtocol.class);
+  }
+
+  @Override
+  protected EventProducer makeProducer(PulsarTransportProtocol protocol) {
+    return new PulsarProducer(protocol);
   }
 
   @Override

@@ -25,21 +25,25 @@ import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 
 public class SpPulsarProtocol implements SpProtocolDefinition<PulsarTransportProtocol> {
 
-  private final EventConsumer<PulsarTransportProtocol> pulsarConsumer;
-  private final EventProducer<PulsarTransportProtocol> pulsarProducer;
+  private EventConsumer pulsarConsumer;
+  private EventProducer pulsarProducer;
 
   public SpPulsarProtocol() {
-    this.pulsarConsumer = new PulsarConsumer();
-    this.pulsarProducer = new PulsarProducer();
   }
 
   @Override
-  public EventConsumer<PulsarTransportProtocol> getConsumer() {
+  public EventConsumer getConsumer(PulsarTransportProtocol protocol) {
+    if (this.pulsarConsumer == null) {
+      this.pulsarConsumer = new PulsarConsumer(protocol);
+    }
     return this.pulsarConsumer;
   }
 
   @Override
-  public EventProducer<PulsarTransportProtocol> getProducer() {
+  public EventProducer getProducer(PulsarTransportProtocol protocol) {
+    if (this.pulsarProducer == null) {
+      this.pulsarProducer = new PulsarProducer(protocol);
+    }
     return this.pulsarProducer;
   }
 }

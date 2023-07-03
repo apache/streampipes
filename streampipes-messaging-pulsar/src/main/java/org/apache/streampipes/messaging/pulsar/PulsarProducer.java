@@ -26,14 +26,20 @@ import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 
+import java.io.Serializable;
 
-public class PulsarProducer implements EventProducer<PulsarTransportProtocol> {
+public class PulsarProducer implements EventProducer, Serializable {
 
   private PulsarClient pulsarClient;
   private Producer<byte[]> producer;
+  private PulsarTransportProtocol protocolSettings;
+
+  public PulsarProducer(PulsarTransportProtocol protocolSettings) {
+    this.protocolSettings = protocolSettings;
+  }
 
   @Override
-  public void connect(PulsarTransportProtocol protocolSettings) throws SpRuntimeException {
+  public void connect() throws SpRuntimeException {
     try {
       // TODO: the pulsarClient may need to move to PulsarTransportProtocol
       pulsarClient = PulsarClient.builder()

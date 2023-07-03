@@ -154,8 +154,8 @@ public enum PipelineElementRuntimeInfoFetcher {
   private String getLatestEventFromPulsar(PulsarTransportProtocol protocol,
                                           SpDataFormatConverter converter) throws SpRuntimeException {
     final String[] result = {null};
-    PulsarConsumer consumer = new PulsarConsumer();
-    consumer.connect(protocol, event -> {
+    PulsarConsumer consumer = new PulsarConsumer(protocol);
+    consumer.connect(event -> {
       result[0] = converter.convert(event);
       consumer.disconnect();
     });

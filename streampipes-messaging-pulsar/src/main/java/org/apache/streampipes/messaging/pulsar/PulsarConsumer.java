@@ -29,14 +29,18 @@ import org.apache.pulsar.client.api.MessageListener;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 
-public class PulsarConsumer implements EventConsumer<PulsarTransportProtocol> {
+public class PulsarConsumer implements EventConsumer {
 
   private PulsarClient pulsarClient;
   private Consumer<byte[]> consumer;
+  private PulsarTransportProtocol protocolSettings;
+
+  public PulsarConsumer(PulsarTransportProtocol protocolSettings) {
+    this.protocolSettings = protocolSettings;
+  }
 
   @Override
-  public void connect(PulsarTransportProtocol protocolSettings,
-                      InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
+  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
     try {
       String serviceURL = "";
       if (!protocolSettings.getBrokerHostname().startsWith("pulsar://")) {
