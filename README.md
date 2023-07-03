@@ -22,11 +22,13 @@
 [![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-service-core.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-service-core.svg)
 [![License](https://img.shields.io/github/license/apache/streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Last commit](https://img.shields.io/github/last-commit/apache/streampipes.svg)]()
-[![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
 [![Apache StreamPipes](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/q1jdu2&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/q1jdu2/runs)
 [![Contributors](https://img.shields.io/github/contributors/apache/streampipes)](https://github.com/apache/streampipes/graphs/contributors)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/apache/streampipes)
 [![GitHub issues by-label](https://img.shields.io/github/issues/apache/streampipes/good%20first%20issue)](https://github.com/apache/streampipes/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+<br>
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/company/apache-streampipes)
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/StreamPipes)
 
 <h1 align="center">
   <br>

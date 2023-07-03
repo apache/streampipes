@@ -43,7 +43,7 @@ class NatsConsumer(Consumer):
         None
 
         """
-        self.nats_client = await connect(f"nats://{hostname}:{port}")
+        self.nats_client = await connect([f"nats://{hostname}:{port}"])
         logger.info(f"Connecting to NATS at {hostname}:{port}")
 
     async def _create_subscription(self) -> None:

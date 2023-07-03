@@ -23,7 +23,6 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 
 import org.apache.http.client.fluent.Request;
-import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -47,7 +46,7 @@ public class EndpointItemParser {
   private String parseURIContent(String url) throws IOException {
     return Request
         .Get(url)
-        .addHeader("Accept", MediaType.APPLICATION_JSON_VALUE)
+        .addHeader("Accept", "application/json")
         .execute()
         .returnContent()
         .asString();

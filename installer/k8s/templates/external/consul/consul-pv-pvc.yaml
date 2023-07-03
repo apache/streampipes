@@ -25,4 +25,4 @@ spec:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: 20M
+      storage: {{ .Values.external.consul.persistence.storageSize }}

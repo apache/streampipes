@@ -46,15 +46,14 @@ import {
     PipelineEdgeValidation,
     PipelineModificationMessage,
     PipelinePreviewModel,
-    SpDataSet,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import {
+    ConfirmDialogComponent,
     DialogService,
     PanelType,
-    ConfirmDialogComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
@@ -63,14 +62,12 @@ import { forkJoin } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import {
-    EVENT_CONNECTION_ABORT,
-    EVENT_CONNECTION_DRAG,
-} from '@jsplumb/browser-ui';
-import {
     EVENT_CONNECTION,
+    EVENT_CONNECTION_ABORT,
     EVENT_CONNECTION_DETACHED,
+    EVENT_CONNECTION_DRAG,
     EVENT_CONNECTION_MOVED,
-} from '@jsplumb/core';
+} from '@jsplumb/browser-ui';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 
 @Component({
@@ -267,29 +264,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         this.showMixedStreamAlert();
                     } else {
                         this.rawPipelineModel.push(pipelineElementConfig);
-                        if (pipelineElementConfig.type === 'set') {
-                            setTimeout(() => {
-                                this.editorService
-                                    .updateDataSet(
-                                        pipelineElementConfig.payload,
-                                    )
-                                    .subscribe(data => {
-                                        (
-                                            pipelineElementConfig.payload as SpDataSet
-                                        ).eventGrounding = data.eventGrounding;
-                                        (
-                                            pipelineElementConfig.payload as SpDataSet
-                                        ).datasetInvocationId =
-                                            data.invocationId;
-                                        this.jsplumbService.dataStreamDropped(
-                                            pipelineElementConfig.payload.dom,
-                                            pipelineElementConfig.payload as SpDataSet,
-                                            true,
-                                            false,
-                                        );
-                                    });
-                            }, 0);
-                        } else if (pipelineElementConfig.type === 'stream') {
+
+                        if (pipelineElementConfig.type === 'stream') {
                             this.checkTopicModel(pipelineElementConfig);
                         } else if (pipelineElementConfig.type === 'sepa') {
                             setTimeout(() => {

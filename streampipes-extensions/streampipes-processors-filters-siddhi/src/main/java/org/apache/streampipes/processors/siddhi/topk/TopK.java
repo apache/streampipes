@@ -17,12 +17,12 @@
  */
 package org.apache.streampipes.processors.siddhi.topk;
 
+import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -46,7 +46,6 @@ import org.apache.streampipes.wrapper.siddhi.query.OrderByClause;
 import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.siddhi.query.expression.SiddhiTimeUnit;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 
 import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 
@@ -97,9 +96,9 @@ public class TopK extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams<ProcessorParams> siddhiParams,
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
                                         String finalInsertIntoStreamName) {
-    ProcessingElementParameterExtractor extractor = siddhiParams.getParams().extractor();
+    IDataProcessorParameterExtractor extractor = siddhiParams.getParams().extractor();
     Integer windowSize = extractor.singleValueParameter(WINDOW_SIZE, Integer.class);
     String valueSelector = extractor.mappingPropertyValue(VALUE_KEY);
     String countSelector = extractor.mappingPropertyValue(COUNT_KEY);

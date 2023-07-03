@@ -16,8 +16,6 @@
  *
  */
 
-@import './_variables';
-
 @import '~@circlon/angular-tree-component/css/angular-tree-component.css';
 @import '~datatables.net-dt/css/jquery.dataTables.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
@@ -46,18 +44,15 @@
 @import './sp/pipeline-element-loading';
 @import './sp/pipeline-element';
 @import './sp/pipeline-validation';
-@import './sp/animations.ng1';
 @import './sp/mat-tab';
 @import './sp/dialog.ng5';
 @import './sp/feedback.ng1';
-@import './sp/pipeline-assembly.scss';
 @import './sp/widgets.scss';
 @import './sp/progress-bar.scss';
 @import './sp/jsplumb';
 
 @import './sp/layout';
 
-@import './sp/input.ng1';
 @import './sp/documentation.ng1';
 @import './sp/stepper';
 

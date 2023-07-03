@@ -1,16 +1,11 @@
 {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [125.6, 10.1]
-      },
-      "properties": {
-        "timestamp": 1667904471000,
-        "v1": 4.1
-      }
-    }
-  ]
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [125.6, 10.1]
+  },
+  "properties": {
+    "timestamp": 1667904471000,
+    "v1": 4.1
+  }
 }

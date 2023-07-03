@@ -19,11 +19,12 @@
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
+import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
+import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.wrapper.routing.RawDataProcessor;
-import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 public class StandaloneSpInputCollector<T extends TransportProtocol> extends
@@ -32,10 +33,13 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
     InternalEventProcessor<byte[]>, SpInputCollector {
 
   private final Boolean singletonEngine;
+  private final EventConsumer consumer;
 
-  public StandaloneSpInputCollector(T protocol, TransportFormat format,
+  public StandaloneSpInputCollector(T protocol,
+                                    TransportFormat format,
                                     Boolean singletonEngine) throws SpRuntimeException {
     super(protocol, format);
+    this.consumer = protocolDefinition.getConsumer(protocol);
     this.singletonEngine = singletonEngine;
   }
 
@@ -54,16 +58,16 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
 
   @Override
   public void connect() throws SpRuntimeException {
-    if (!protocolDefinition.getConsumer().isConnected()) {
-      protocolDefinition.getConsumer().connect(transportProtocol, this);
+    if (!consumer.isConnected()) {
+      consumer.connect(this);
     }
   }
 
   @Override
   public void disconnect() throws SpRuntimeException {
-    if (protocolDefinition.getConsumer().isConnected()) {
+    if (consumer.isConnected()) {
       if (consumers.size() == 0) {
-        protocolDefinition.getConsumer().disconnect();
+        consumer.disconnect();
         ProtocolManager.removeInputCollector(transportProtocol);
       }
     }

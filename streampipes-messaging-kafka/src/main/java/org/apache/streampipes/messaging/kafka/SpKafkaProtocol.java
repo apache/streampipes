@@ -25,21 +25,13 @@ import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 public class SpKafkaProtocol implements SpProtocolDefinition<KafkaTransportProtocol> {
 
-  private final EventConsumer<KafkaTransportProtocol> kafkaConsumer;
-  private final EventProducer<KafkaTransportProtocol> kafkaProducer;
-
-  public SpKafkaProtocol() {
-    this.kafkaConsumer = new SpKafkaConsumer();
-    this.kafkaProducer = new SpKafkaProducer();
+  @Override
+  public EventConsumer getConsumer(KafkaTransportProtocol transportProtocol) {
+    return new SpKafkaConsumer(transportProtocol);
   }
 
   @Override
-  public EventConsumer<KafkaTransportProtocol> getConsumer() {
-    return kafkaConsumer;
-  }
-
-  @Override
-  public EventProducer<KafkaTransportProtocol> getProducer() {
-    return kafkaProducer;
+  public EventProducer getProducer(KafkaTransportProtocol transportProtocol) {
+    return new SpKafkaProducer(transportProtocol);
   }
 }

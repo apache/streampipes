@@ -27,7 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationProcessor;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperProcessor;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentProcessor;
@@ -56,7 +56,7 @@ public class ImageProcessingJvmInit extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
-            new SpPulsarProtocolFactory())
+            new SpNatsProtocolFactory())
         .build();
   }
 }

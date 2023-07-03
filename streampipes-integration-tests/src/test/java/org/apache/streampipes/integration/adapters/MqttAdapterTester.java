@@ -18,30 +18,29 @@
 
 package org.apache.streampipes.integration.adapters;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.protocol.stream.MqttProtocol;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.format.json.object.JsonObjectFormat;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.integration.containers.MosquittoContainer;
 import org.apache.streampipes.integration.containers.MosquittoDevContainer;
+import org.apache.streampipes.integration.utils.Utils;
+import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
-import org.apache.streampipes.sdk.builder.adapter.GenericDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
-import org.apache.streampipes.sdk.helpers.Labels;
 
-import com.google.common.collect.Maps;
-import org.junit.Assert;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class MqttAdapterTester extends AdapterTesterBase {
 
@@ -50,73 +49,95 @@ public class MqttAdapterTester extends AdapterTesterBase {
   private static final String TOPIC = "testtopic";
 
   @Override
-  public void startAdapterService() throws Exception {
+  public void startAdapterService() {
     if (Objects.equals(System.getenv("TEST_MODE"), "dev")) {
       mosquittoContainer = new MosquittoDevContainer();
     } else {
       mosquittoContainer = new MosquittoContainer();
     }
+
     mosquittoContainer.start();
   }
 
   @Override
-  public AdapterDescription prepareAdapter() throws Exception {
-    return GenericDataStreamAdapterBuilder
-        .create(MqttProtocol.ID)
-        .format(new JsonObjectFormat()
-            .declareModel())
-        .protocol(ProtocolDescriptionBuilder.create(MqttProtocol.ID)
-            .requiredTextParameter(
-                Labels.withId(MqttConnectUtils.BROKER_URL),
-                mosquittoContainer.getBrokerUrl())
-            .requiredTextParameter(
-                Labels.withId(MqttConnectUtils.TOPIC), TOPIC)
-            .requiredAlternatives(
-                MqttConnectUtils.getAccessModeLabel(),
-                MqttConnectUtils.getAlternativesOne(true),
-                MqttConnectUtils.getAlternativesTwo())
-            .build())
-        .addRules(List.of(new DebugSinkRuleDescription()))
-        .build();
+  public IAdapterConfiguration prepareAdapter() {
+
+    IAdapterConfiguration configuration = new MqttProtocol().declareConfig();
+
+    Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
+    configs.put(MqttConnectUtils.TOPIC,
+        new PipelineElementTemplateConfig(true, true, TOPIC));
+    configs.put(MqttConnectUtils.BROKER_URL,
+        new PipelineElementTemplateConfig(true, false, mosquittoContainer.getBrokerUrl()));
+
+    var template = new PipelineElementTemplate("name", "description", configs);
+
+    var desc =
+        new AdapterTemplateHandler(template,
+            configuration.getAdapterDescription(),
+            true)
+            .applyTemplateOnPipelineElement();
+
+    // Set authentication mode to unauthenticated
+    ((StaticPropertyAlternatives) desc
+        .getConfig()
+        .get(1))
+        .getAlternatives()
+        .get(0)
+        .setSelected(true);
+
+    // Set format to Json
+    ((StaticPropertyAlternatives) (desc)
+        .getConfig()
+        .get(3))
+        .getAlternatives()
+        .get(0)
+        .setSelected(true);
+
+    return configuration;
   }
 
   @Override
-  public List<Map<String, Object>> generateData() throws Exception {
-    TimeUnit.SECONDS.sleep(2);
-    List<Map<String, Object>> result = new ArrayList<>();
-    MqttTransportProtocol mqttSettings = makeMqttSettings();
-    MqttPublisher publisher = new MqttPublisher();
-    publisher.connect(mqttSettings);
+  public StreamPipesAdapter getAdapterInstance() {
+    return new MqttProtocol();
+  }
 
-    ObjectMapper objectMapper = new ObjectMapper();
+  @Override
+  public List<Map<String, Object>> getTestEvents() {
+    return Utils.getSimpleTestEvents();
+  }
 
-    for (int i = 0; i < 3; i++) {
-      var dataMap = new HashMap<String, Object>();
-      dataMap.put("timestamp", i);
-      dataMap.put("value", "test-data");
-      byte[] data = objectMapper.writeValueAsBytes(dataMap);
-      publisher.publish(data);
-      result.add(dataMap);
-    }
+
+  @Override
+  public void publishEvents(List<Map<String, Object>> events) {
+    var publisher = getMqttPublisher();
+    var objectMapper = new ObjectMapper();
+
+    events.forEach(event -> {
+      try {
+        var serializedEvent = objectMapper.writeValueAsBytes(event);
+        publisher.publish(serializedEvent);
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException(e);
+      }
+    });
 
     publisher.disconnect();
-    return result;
   }
 
-  private MqttTransportProtocol makeMqttSettings() {
-    return new MqttTransportProtocol(mosquittoContainer.getBrokerHost(), mosquittoContainer.getBrokerPort(), TOPIC);
+  @NotNull
+  private MqttPublisher getMqttPublisher() {
+    MqttTransportProtocol mqttSettings = new MqttTransportProtocol(
+        mosquittoContainer.getBrokerHost(),
+        mosquittoContainer.getBrokerPort(),
+        TOPIC);
+    MqttPublisher publisher = new MqttPublisher(mqttSettings);
+    publisher.connect();
+    return publisher;
   }
 
   @Override
-  public void validateData(List<Map<String, Object>> expectedData) throws Exception {
-    for (Map<String, Object> expected : expectedData) {
-      Map<String, Object> actual = takeEvent();
-      Assert.assertTrue(Maps.difference(expected, actual).areEqual());
-    }
-  }
-
-  @Override
-  public void close() throws Exception {
+  public void close() {
     if (mosquittoContainer != null) {
       mosquittoContainer.stop();
     }

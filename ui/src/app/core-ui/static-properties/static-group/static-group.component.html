@@ -27,6 +27,7 @@
         [eventSchemas]="eventSchemas"
         [staticProperty]="property"
         [displayRecommended]="displayRecommended"
+        (updateEmitter)="handleConfigurationUpdate($event)"
         class="test fullWidth"
     >
     </sp-app-static-property>

@@ -18,24 +18,67 @@
 
 package org.apache.streampipes.wrapper.runtime;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.api.pe.context.IContextGenerator;
+import org.apache.streampipes.extensions.api.pe.context.RuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IParameterGenerator;
+import org.apache.streampipes.extensions.api.pe.param.IPipelineElementParameters;
+import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
+import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
-import org.apache.commons.lang3.RandomStringUtils;
+public abstract class PipelineElementRuntime<
+    PeT extends IStreamPipesPipelineElement<?>,
+    IvT extends InvocableStreamPipesEntity,
+    RcT extends RuntimeContext,
+    ExT extends IParameterExtractor<IvT>,
+    PepT extends IPipelineElementParameters<IvT, ExT>>
+    implements IStreamPipesRuntime<PeT, IvT> {
 
-public abstract class PipelineElementRuntime {
+  protected String elementId;
 
-  protected String instanceId;
+  IContextGenerator<RcT, IvT> contextGenerator;
+  IParameterGenerator<IvT, ExT, PepT> parameterGenerator;
 
-  public PipelineElementRuntime() {
-    this.instanceId = RandomStringUtils.randomAlphabetic(8);
+  public PipelineElementRuntime(IContextGenerator<RcT, IvT> contextGenerator,
+                                IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+    this.contextGenerator = contextGenerator;
+    this.parameterGenerator = parameterGenerator;
   }
 
-  public abstract void prepareRuntime() throws SpRuntimeException;
+  @Override
+  public Response onRuntimeInvoked(String instanceId,
+                                   PeT pipelineElement,
+                                   IvT pipelineElementInvocation) {
+    try {
+      var context = contextGenerator.makeContext(pipelineElementInvocation);
+      var parameters = parameterGenerator.makeParameters(pipelineElementInvocation);
+      elementId = pipelineElementInvocation.getElementId();
+      startRuntime(pipelineElementInvocation, pipelineElement, parameters, context);
+      return new Response(elementId, true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new Response(elementId, false, e.getMessage());
+    }
+  }
 
-  public abstract void postDiscard() throws SpRuntimeException;
+  @Override
+  public Response onRuntimeDetached(String instanceId) {
+    try {
+      stopRuntime();
+      return new Response(elementId, true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new Response(elementId, false, e.getMessage());
+    }
+  }
 
-  public abstract void bindRuntime() throws SpRuntimeException;
+  public abstract void startRuntime(IvT pipelineElementInvocation,
+                                    PeT pipelineElement,
+                                    PepT runtimeParameters,
+                                    RcT runtimeContext);
 
-  public abstract void discardRuntime() throws SpRuntimeException;
+  public abstract void stopRuntime();
 
 }

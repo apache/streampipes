@@ -27,13 +27,13 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
-import org.apache.streampipes.processors.textmining.jvm.processor.chunker.ChunkerController;
-import org.apache.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionController;
-import org.apache.streampipes.processors.textmining.jvm.processor.namefinder.NameFinderController;
-import org.apache.streampipes.processors.textmining.jvm.processor.partofspeech.PartOfSpeechController;
-import org.apache.streampipes.processors.textmining.jvm.processor.sentencedetection.SentenceDetectionController;
-import org.apache.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerController;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
+import org.apache.streampipes.processors.textmining.jvm.processor.chunker.ChunkerProcessor;
+import org.apache.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionProcessor;
+import org.apache.streampipes.processors.textmining.jvm.processor.namefinder.NameFinderProcessor;
+import org.apache.streampipes.processors.textmining.jvm.processor.partofspeech.PartOfSpeechProcessor;
+import org.apache.streampipes.processors.textmining.jvm.processor.sentencedetection.SentenceDetectionProcessor;
+import org.apache.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerProcessor;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class TextMiningJvmInit extends ExtensionsModelSubmitter {
@@ -48,12 +48,12 @@ public class TextMiningJvmInit extends ExtensionsModelSubmitter {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.textmining.jvm",
             "Processors Text Mining JVM", "",
             8090)
-        .registerPipelineElements(new LanguageDetectionController(),
-            new TokenizerController(),
-            new PartOfSpeechController(),
-            new ChunkerController(),
-            new NameFinderController(),
-            new SentenceDetectionController())
+        .registerPipelineElements(new LanguageDetectionProcessor(),
+            new TokenizerProcessor(),
+            new PartOfSpeechProcessor(),
+            new ChunkerProcessor(),
+            new NameFinderProcessor(),
+            new SentenceDetectionProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
@@ -63,7 +63,7 @@ public class TextMiningJvmInit extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
-            new SpPulsarProtocolFactory())
+            new SpNatsProtocolFactory())
         .build();
   }
 }

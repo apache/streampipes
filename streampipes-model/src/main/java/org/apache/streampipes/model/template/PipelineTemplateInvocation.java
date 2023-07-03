@@ -32,7 +32,7 @@ public class PipelineTemplateInvocation {
 
   private String kviName;
 
-  private String dataSetId;
+  private String dataStreamId;
 
   private String pipelineTemplateId;
 
@@ -47,7 +47,7 @@ public class PipelineTemplateInvocation {
 
   public PipelineTemplateInvocation(PipelineTemplateInvocation other) {
     this.kviName = other.getKviName();
-    this.dataSetId = other.getDataSetId();
+    this.dataStreamId = other.getDataStreamId();
     this.pipelineTemplateId = other.getPipelineTemplateId();
 
     if (other.getStaticProperties() != null) {
@@ -63,12 +63,12 @@ public class PipelineTemplateInvocation {
     this.kviName = kviName;
   }
 
-  public String getDataSetId() {
-    return dataSetId;
+  public String getDataStreamId() {
+    return dataStreamId;
   }
 
-  public void setDataSetId(String dataSetId) {
-    this.dataSetId = dataSetId;
+  public void setDataStreamId(String dataStreamId) {
+    this.dataStreamId = dataStreamId;
   }
 
   public List<StaticProperty> getStaticProperties() {

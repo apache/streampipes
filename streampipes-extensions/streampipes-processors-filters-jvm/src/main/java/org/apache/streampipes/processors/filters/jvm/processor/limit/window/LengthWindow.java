@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
 
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 import java.util.ArrayList;
 import java.util.List;

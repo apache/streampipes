@@ -18,15 +18,18 @@
 
 package org.apache.streampipes.sdk.extractor;
 
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 
-public class DataSinkParameterExtractor extends AbstractParameterExtractor<DataSinkInvocation> {
+public class DataSinkParameterExtractor
+    extends AbstractParameterExtractor<DataSinkInvocation>
+    implements IDataSinkParameterExtractor {
 
   public DataSinkParameterExtractor(DataSinkInvocation pipelineElement) {
     super(pipelineElement);
   }
 
-  public static DataSinkParameterExtractor from(DataSinkInvocation pipelineElement) {
+  public static IDataSinkParameterExtractor from(DataSinkInvocation pipelineElement) {
     return new DataSinkParameterExtractor(pipelineElement);
   }
 }

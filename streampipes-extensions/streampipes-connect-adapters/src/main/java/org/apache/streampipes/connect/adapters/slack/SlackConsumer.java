@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.connect.adapters.slack;
 
-import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
 
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -30,12 +30,13 @@ import java.util.Map;
 
 public class SlackConsumer implements Runnable {
 
-  private AdapterPipeline adapterPipeline;
-  private String apiToken;
+  private final IEventCollector collector;
+  private final String apiToken;
   private SlackSession session;
 
-  public SlackConsumer(AdapterPipeline adapterPipeline, String slackApiToken) {
-    this.adapterPipeline = adapterPipeline;
+  public SlackConsumer(IEventCollector collector,
+                       String slackApiToken) {
+    this.collector = collector;
     this.apiToken = slackApiToken;
   }
 
@@ -53,7 +54,7 @@ public class SlackConsumer implements Runnable {
         outEvent.put("author", messageSender.getUserName());
         outEvent.put("message", messageContent);
 
-        adapterPipeline.process(outEvent);
+        collector.collect(outEvent);
       }
     };
 

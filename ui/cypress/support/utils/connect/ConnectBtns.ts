@@ -40,48 +40,6 @@ export class ConnectBtns {
         return cy.dataCy('store-edit-adapter');
     }
 
-    public static formatSelectionNextBtn() {
-        return cy
-            .dataCy('sp-format-selection-next-button')
-            .contains('Next')
-            .parent();
-    }
-
-    // =====================  Format button options  ==========================
-    public static json() {
-        return cy.dataCy('connect-select-json-formats');
-    }
-
-    public static jsonArrayField() {
-        return cy.dataCy('array_field');
-    }
-
-    public static geoJson() {
-        return cy.dataCy('geojson');
-    }
-
-    public static jsonObject() {
-        return cy.dataCy('single_object');
-    }
-
-    public static jsonArray() {
-        return cy.dataCy('array');
-    }
-
-    public static xml() {
-        return cy.dataCy('xml');
-    }
-
-    public static csv() {
-        return cy.dataCy('csv');
-    }
-
-    public static image() {
-        return cy.dataCy('image');
-    }
-
-    // =================================================================
-
     // =====================  Adapter settings btns  ==========================
     public static adapterSettingsStartAdapter() {
         return cy.dataCy('adapter-settings-start-adapter-btn');
@@ -97,6 +55,26 @@ export class ConnectBtns {
 
     public static stopAllAdapters() {
         return cy.dataCy('stop-all-adapters-btn');
+    }
+
+    // ========================================================================
+
+    // =====================  Format configurations  ==========================
+
+    public static csvDelimiter() {
+        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-delimiter-0';
+    }
+
+    public static csvHeader() {
+        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
+    }
+
+    public static jsonArrayFieldKey() {
+        return 'undefined-arrayFieldConfig-2-key-0';
+    }
+
+    public static xmlTag() {
+        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.xml-2-tag-0';
     }
 
     // ========================================================================

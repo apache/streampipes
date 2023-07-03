@@ -19,19 +19,20 @@
 package org.apache.streampipes.connect.iiot.adapters.ros;
 
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
-import org.apache.streampipes.extensions.management.connect.adapter.format.json.object.JsonObjectParser;
-import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -44,8 +45,6 @@ import com.google.gson.JsonParser;
 import edu.wpi.rail.jrosbridge.Ros;
 import edu.wpi.rail.jrosbridge.Service;
 import edu.wpi.rail.jrosbridge.Topic;
-import edu.wpi.rail.jrosbridge.callback.TopicCallback;
-import edu.wpi.rail.jrosbridge.messages.Message;
 import edu.wpi.rail.jrosbridge.services.ServiceRequest;
 import edu.wpi.rail.jrosbridge.services.ServiceResponse;
 
@@ -54,9 +53,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class RosBridgeAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
+public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerProvidedOptions {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.ros";
 
@@ -68,63 +68,17 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter implements Resol
   private String host;
   private int port;
 
-  private Ros ros;
 
-  private JsonObjectParser jsonObjectParser;
+  private final ObjectMapper mapper = new ObjectMapper();
+
+  private Ros ros;
 
   public RosBridgeAdapter() {
   }
 
-  public RosBridgeAdapter(SpecificAdapterStreamDescription adapterDescription) {
-    super(adapterDescription);
-
-    getConfigurations(adapterDescription);
-
-    this.jsonObjectParser = new JsonObjectParser();
-  }
-
   @Override
-  public SpecificAdapterStreamDescription declareModel() {
-    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
-        .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(AdapterType.Manufacturing)
-        .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
-        .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
-        .requiredSingleValueSelectionFromContainer(Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
-        .build();
-
-    return description;
-  }
-
-  @Override
-  public void startAdapter() throws AdapterException {
-    this.ros = new Ros(this.host, this.port);
-    this.ros.connect();
-
-    String topicType = getMethodType(this.ros, this.topic);
-
-    ObjectMapper mapper = new ObjectMapper();
-    Topic echoBack = new Topic(ros, this.topic, topicType);
-    echoBack.subscribe(new TopicCallback() {
-      @Override
-      public void handleMessage(Message message) {
-
-
-        try {
-          Map<String, Object> result = mapper.readValue(message.toString(), HashMap.class);
-          adapterPipeline.process(result);
-        } catch (JsonProcessingException e) {
-          e.printStackTrace();
-        }
-      }
-    });
-
-
-  }
-
-  @Override
-  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
+  public List<Option> resolveOptions(String requestId,
+                                     IStaticPropertyExtractor extractor) {
     String rosBridgeHost = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
     Integer rosBridgePort = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);
 
@@ -136,45 +90,50 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter implements Resol
     return topics.stream().map(Option::new).collect(Collectors.toList());
   }
 
-  private class GetNEvents implements Runnable {
-
-    private String topic;
-    private String topicType;
-    private Ros ros;
-
-    private List<byte[]> events;
-
-    public GetNEvents(String topic, String topicType, Ros ros) {
-      this.topic = topic;
-      this.topicType = topicType;
-      this.ros = ros;
-      this.events = new ArrayList<>();
-    }
-
-    @Override
-    public void run() {
-      Topic echoBack = new Topic(ros, this.topic, topicType);
-      echoBack.subscribe(new TopicCallback() {
-        @Override
-        public void handleMessage(Message message) {
-          events.add(message.toString().getBytes());
-        }
-      });
-    }
-
-    public List<byte[]> getEvents() {
-      return this.events;
-    }
+  @Override
+  public IAdapterConfiguration declareConfig() {
+    return AdapterConfigurationBuilder.create(ID, RosBridgeAdapter::new)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withCategory(AdapterType.Manufacturing)
+        .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
+        .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
+        .requiredSingleValueSelectionFromContainer(
+            Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
+        .buildConfiguration();
   }
 
   @Override
-  public void stopAdapter() throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor,
+                               IEventCollector collector,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    getConfigurations(extractor.getStaticPropertyExtractor());
+    this.ros = new Ros(this.host, this.port);
+    this.ros.connect();
+
+    String topicType = getMethodType(this.ros, this.topic);
+
+    Topic echoBack = new Topic(ros, this.topic, topicType);
+    echoBack.subscribe(message -> {
+      try {
+        Map<String, Object> result = mapper.readValue(message.toString(), HashMap.class);
+        collector.collect(result);
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  @Override
+  public void onAdapterStopped(IAdapterParameterExtractor extractor,
+                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.ros.disconnect();
   }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
-    getConfigurations(adapterDescription);
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    getConfigurations(extractor.getStaticPropertyExtractor());
 
 
     Ros ros = new Ros(host, port);
@@ -193,7 +152,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter implements Resol
 
     while (getNEvents.getEvents().size() < 1) {
       try {
-        Thread.sleep(100);
+        TimeUnit.MILLISECONDS.sleep(100);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -203,22 +162,39 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter implements Resol
 
     ros.disconnect();
 
-    EventSchema eventSchema = this.jsonObjectParser.getEventSchema(getNEvents.getEvents());
+    try {
+      Map<String, Object> event = mapper.readValue(getNEvents.getEvents().get(0), HashMap.class);
+      return new ParserUtils().getGuessSchema(event);
 
-    GuessSchema guessSchema = new GuessSchema();
-
-    guessSchema.setEventSchema(eventSchema);
-    return guessSchema;
+    } catch (JsonProcessingException e) {
+      throw new AdapterException("Could not guess event schema for %s".formatted(getNEvents.getEvents().get(0)), e);
+    }
   }
 
-  @Override
-  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new RosBridgeAdapter(adapterDescription);
-  }
+  private class GetNEvents implements Runnable {
 
-  @Override
-  public String getId() {
-    return ID;
+    private final String topic;
+    private final String topicType;
+    private final Ros ros;
+
+    private final List<String> events;
+
+    public GetNEvents(String topic, String topicType, Ros ros) {
+      this.topic = topic;
+      this.topicType = topicType;
+      this.ros = ros;
+      this.events = new ArrayList<>();
+    }
+
+    @Override
+    public void run() {
+      Topic echoBack = new Topic(ros, this.topic, topicType);
+      echoBack.subscribe(message -> events.add(message.toString()));
+    }
+
+    public List<String> getEvents() {
+      return this.events;
+    }
   }
 
   private String getMethodType(Ros ros, String topic) {
@@ -230,11 +206,10 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter implements Resol
     return ob.get("type").getAsString();
   }
 
-  private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-    ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-    this.host = extractor.singleValue(ROS_HOST_KEY, String.class);
-    this.topic = extractor.selectedSingleValueOption(TOPIC_KEY);
-    this.port = extractor.singleValue(ROS_PORT_KEY, Integer.class);
+  private void getConfigurations(IStaticPropertyExtractor extractor) {
+    this.host = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
+    this.topic = extractor.selectedSingleValue(TOPIC_KEY, String.class);
+    this.port = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);
   }
 
   // Ignore for now, but is interesting for future implementations

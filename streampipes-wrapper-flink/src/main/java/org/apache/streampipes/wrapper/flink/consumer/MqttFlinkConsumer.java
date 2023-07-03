@@ -19,7 +19,6 @@ package org.apache.streampipes.wrapper.flink.consumer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.mqtt.MqttConsumer;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
@@ -36,15 +35,13 @@ public class MqttFlinkConsumer implements SourceFunction<Map<String, Object>>, S
 
   private static final Logger LOG = LoggerFactory.getLogger(MqttFlinkConsumer.class);
 
-  private final MqttTransportProtocol protocol;
   private final MqttConsumer mqttConsumer;
   private final SpDataFormatDefinition spDataFormatDefinition;
   private final Queue<byte[]> queue;
   private Boolean isRunning;
 
   public MqttFlinkConsumer(MqttTransportProtocol protocol, SpDataFormatDefinition spDataFormatDefinition) {
-    this.protocol = protocol;
-    this.mqttConsumer = new MqttConsumer();
+    this.mqttConsumer = new MqttConsumer(protocol);
     this.spDataFormatDefinition = spDataFormatDefinition;
     this.queue = new LinkedBlockingQueue<>();
   }
@@ -52,12 +49,7 @@ public class MqttFlinkConsumer implements SourceFunction<Map<String, Object>>, S
   @Override
   public void run(SourceContext<Map<String, Object>> sourceContext) throws Exception {
     this.isRunning = true;
-    this.mqttConsumer.connect(protocol, new InternalEventProcessor<byte[]>() {
-      @Override
-      public void onEvent(byte[] event) {
-        queue.add(event);
-      }
-    });
+    this.mqttConsumer.connect(event -> queue.add(event));
 
     while (isRunning) {
       if (!queue.isEmpty()) {

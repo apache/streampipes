@@ -18,7 +18,7 @@
 
 import { Directive } from '@angular/core';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterService,
     Dashboard,
     DashboardService,
@@ -43,7 +43,7 @@ export abstract class BaseAssetLinksDirective {
     dashboards: Dashboard[];
     dataLakeMeasures: DataLakeMeasure[];
     dataSources: SpDataStream[];
-    adapters: AdapterDescriptionUnion[];
+    adapters: AdapterDescription[];
     files: FileMetadata[];
 
     allResources: any[] = [];

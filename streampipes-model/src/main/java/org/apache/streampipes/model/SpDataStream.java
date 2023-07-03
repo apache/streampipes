@@ -22,15 +22,10 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(SpDataStream.class),
-    @JsonSubTypes.Type(SpDataSet.class)
-})
 public class SpDataStream extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = -5732549347563182863L;

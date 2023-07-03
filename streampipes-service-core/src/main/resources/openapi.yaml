@@ -7,7 +7,7 @@ prettyPrint: true
 cacheTTL: 0
 openAPI:
   info:
-    version: '0.91.0'
+    version: '0.93.0'
     title: Apache StreamPipes API
     description: 'This is the documentation of the Apache StreamPipes developer API.'
     contact:

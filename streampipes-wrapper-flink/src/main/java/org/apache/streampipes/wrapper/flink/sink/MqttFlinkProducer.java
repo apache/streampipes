@@ -49,8 +49,8 @@ public class MqttFlinkProducer extends RichSinkFunction<Map<String, Object>> {
   @Override
   public void open(Configuration configuration) throws Exception {
     try {
-      publisher = new MqttPublisher();
-      publisher.connect(protocol);
+      publisher = new MqttPublisher(protocol);
+      publisher.connect();
     } catch (Exception e) {
       throw new Exception("Failed to open Mqtt connection: " + e.getMessage(), e);
     }

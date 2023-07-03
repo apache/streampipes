@@ -19,6 +19,7 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -31,8 +32,7 @@ import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,7 +89,7 @@ public class TestBooleanCounterProcessor {
   @Test
   public void testBooleanCounter() {
     BooleanCounterProcessor booleanCounter = new BooleanCounterProcessor();
-    DataProcessorDescription originalGraph = booleanCounter.declareModel();
+    DataProcessorDescription originalGraph = booleanCounter.declareConfig().getDescription();
     originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
     DataProcessorInvocation graph =
@@ -128,7 +128,7 @@ public class TestBooleanCounterProcessor {
       public void disconnect() throws SpRuntimeException {}
     };
 
-    booleanCounter.onInvocation(params, spOut, null);
+    booleanCounter.onPipelineStarted(params, spOut, null);
     Integer counter = sendEvents(booleanCounter, spOut);
     LOG.info("Expected match count is {}", expectedBooleanCount);
     LOG.info("Actual match count is {}", counter);

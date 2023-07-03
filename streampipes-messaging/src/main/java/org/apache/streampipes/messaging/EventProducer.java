@@ -19,13 +19,12 @@
 package org.apache.streampipes.messaging;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.io.Serializable;
 
-public interface EventProducer<T extends TransportProtocol> extends Serializable {
+public interface EventProducer extends Serializable {
 
-  void connect(T protocolSettings) throws SpRuntimeException;
+  void connect() throws SpRuntimeException;
 
   void publish(byte[] event);
 

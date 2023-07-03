@@ -17,8 +17,8 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 import { ParameterUtils } from '../../support/utils/ParameterUtils';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Test OPC-UA Adapter Pull Mode', () => {
     beforeEach('Setup Test', () => {
@@ -28,7 +28,7 @@ describe('Test OPC-UA Adapter Pull Mode', () => {
     it('Perform Test', () => {
         const adapterInput = getAdapterBuilder(true);
 
-        ConnectUtils.testSpecificStreamAdapter(adapterInput);
+        ConnectUtils.testAdapter(adapterInput);
     });
 });
 
@@ -40,14 +40,14 @@ describe('Test OPC-UA Adapter Subscription Mode', () => {
     it('Perform Test', () => {
         const adapterInput = getAdapterBuilder(false);
 
-        ConnectUtils.testSpecificStreamAdapter(adapterInput);
+        ConnectUtils.testAdapter(adapterInput);
     });
 });
 
 const getAdapterBuilder = (pullMode: boolean) => {
     const host: string = ParameterUtils.get('localhost', 'opcua');
 
-    const builder = SpecificAdapterBuilder.create('OPC_UA').setName(
+    const builder = AdapterBuilder.create('OPC_UA').setName(
         'OPC UA Test ' + (pullMode ? '(Pull)' : '(Subscription)'),
     );
 
@@ -71,8 +71,7 @@ const getAdapterBuilder = (pullMode: boolean) => {
         .addInput('button', 'button-Telemetry')
         .addInput('button', 'button-Anomaly')
         .addInput('checkbox', 'DipData', 'check')
-        .addInput('checkbox', 'NegativeTrendData', 'check')
-        .withAutoAddedTimestamp();
+        .addInput('checkbox', 'NegativeTrendData', 'check');
 
     return builder.build();
 };

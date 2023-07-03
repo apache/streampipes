@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.schema;
 
+import java.util.Objects;
+
 public class QuantitativeValue extends ValueSpecification {
 
   private Float minValue;
@@ -67,4 +69,21 @@ public class QuantitativeValue extends ValueSpecification {
     this.step = step;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    QuantitativeValue that = (QuantitativeValue) o;
+    return Objects.equals(minValue, that.minValue) && Objects.equals(maxValue, that.maxValue)
+           && Objects.equals(step, that.step);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(minValue, maxValue, step);
+  }
 }

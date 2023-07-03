@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
@@ -58,8 +58,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public Response addAdapter(AdapterDescription adapterDescription) {
-    String principalSid = getAuthenticatedUserSid();
-    String username = getAuthenticatedUsername();
+    var principalSid = getAuthenticatedUserSid();
+    var username = getAuthenticatedUsername();
     String adapterId;
     LOG.info("User: " + username + " starts adapter " + adapterDescription.getElementId());
 
@@ -79,9 +79,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public Response updateAdapter(AdapterDescription adapterDescription) {
-    //TODO: The adapterDescription.eventGrouding.transportProtocols may be a array list with one null element
-    String principalSid = getAuthenticatedUserSid();
-    String username = getAuthenticatedUsername();
+    var principalSid = getAuthenticatedUserSid();
+    var username = getAuthenticatedUsername();
     LOG.info("User: " + username + " updates adapter " + adapterDescription.getElementId());
 
     try {

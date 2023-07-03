@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.92.0-SNAPSHOT</version>
+        <version>0.93.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,43 +31,48 @@
         <!-- StreamPipes Dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-client-api</artifactId>
+            <version>0.93.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-json</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-cbor</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-fst</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <artifactId>streampipes-messaging</artifactId>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-security-jwt</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-serializers-json</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -78,10 +83,6 @@
         </dependency>
 
         <!-- 3rd party Dependencies -->
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

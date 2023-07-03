@@ -18,11 +18,14 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.extensions.api.connect.IAdapter;
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
-import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,39 +35,59 @@ import java.util.Optional;
 
 public class GuessManagement {
 
-  private static Logger logger = LoggerFactory.getLogger(GuessManagement.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
+
+  private IAdapterGuessSchemaContext guessSchemaContext;
+
+  public GuessManagement() {
+  }
+
+  public GuessManagement(IAdapterGuessSchemaContext guessSchemaContext) {
+    this.guessSchemaContext = guessSchemaContext;
+  }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
+    var adapter = getDeclarerSingleton()
+        .getAdapter(adapterDescription.getAppId());
 
-    logger.info("Start guessing schema for: " + adapterDescription.getAppId());
-    IAdapter adapter = AdapterUtils.setAdapter(adapterDescription);
+    if (adapter.isPresent()) {
+      var adapterInstance = adapter.get();
 
-    GuessSchema guessSchema;
-    try {
-      guessSchema = adapter.getSchema(adapterDescription);
+      LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
 
-      for (int i = 0; i < guessSchema.getEventSchema().getEventProperties().size(); i++) {
-        guessSchema.getEventSchema().getEventProperties().get(i).setIndex(i);
+      // get registered parser of adapter
+      var registeredParsers = adapterInstance.declareConfig().getSupportedParsers();
+
+      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
+
+      try {
+        var schema = adapterInstance
+            .onSchemaRequested(extractor, guessSchemaContext);
+        LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
+
+        return schema;
+      } catch (ParseException e) {
+        LOG.error(e.toString());
+
+        String errorClass = "";
+        Optional<StackTraceElement> stackTraceElement = Arrays.stream(e.getStackTrace()).findFirst();
+        if (stackTraceElement.isPresent()) {
+          String[] errorClassLong = stackTraceElement.get().getClassName().split("\\.");
+          errorClass = errorClassLong[errorClassLong.length - 1] + ": ";
+        }
+        throw new ParseException(errorClass + e.getMessage());
+      } catch (Exception e) {
+        throw new AdapterException(e.getMessage(), e);
       }
 
-      logger.info("Successfully guessed schema for: " + adapterDescription.getAppId());
-    } catch (ParseException e) {
-      logger.error(e.toString());
-
-      String errorClass = "";
-      Optional<StackTraceElement> stackTraceElement = Arrays.stream(e.getStackTrace()).findFirst();
-      if (stackTraceElement.isPresent()) {
-        String[] errorClassLong = stackTraceElement.get().getClassName().split("\\.");
-        errorClass = errorClassLong[errorClassLong.length - 1] + ": ";
-      }
-
-      throw new ParseException(errorClass + e.getMessage());
-    } catch (Exception e) {
-      throw new AdapterException(e.getMessage(), e);
+    } else {
+      throw new AdapterException("Adapter with app id %s was not be found".formatted(adapterDescription.getAppId()));
     }
 
-    return guessSchema;
+  }
 
+  public IDeclarersSingleton getDeclarerSingleton() {
+    return DeclarersSingleton.getInstance();
   }
 
 }

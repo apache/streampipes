@@ -23,29 +23,29 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.92.0-SNAPSHOT</version>
+        <version>0.93.0-SNAPSHOT</version>
     </parent>
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-shared</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-logging</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-vocabulary</artifactId>
-            <version>0.92.0-SNAPSHOT</version>
+            <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <!-- External dependencies -->
         <dependency>
@@ -71,9 +71,15 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+          <scope>test</scope>
+      </dependency>
         <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -122,6 +128,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                		checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                	</propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

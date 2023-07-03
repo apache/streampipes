@@ -27,7 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry.BufferGeomProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint.BufferPointProcessor;
@@ -89,7 +89,7 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
-            new SpPulsarProtocolFactory())
+            new SpNatsProtocolFactory())
         .addConfig(ConfigKeys.GOOGLE_API_KEY, "", "Google Maps API key")
         .build();
   }

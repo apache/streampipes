@@ -22,7 +22,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sinks.brokers.jvm.mqtt.common.MqttOptions;
 import org.apache.streampipes.sinks.brokers.jvm.mqtt.common.MqttUtils;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;

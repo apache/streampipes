@@ -25,21 +25,13 @@ import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
 public class SpNatsProtocol implements SpProtocolDefinition<NatsTransportProtocol> {
 
-  private final EventConsumer<NatsTransportProtocol> natsConsumer;
-  private final EventProducer<NatsTransportProtocol> natsProducer;
-
-  public SpNatsProtocol() {
-    this.natsConsumer = new NatsConsumer();
-    this.natsProducer = new NatsPublisher();
+  @Override
+  public EventConsumer getConsumer(NatsTransportProtocol transportProtocol) {
+    return new NatsConsumer(transportProtocol);
   }
 
   @Override
-  public EventConsumer<NatsTransportProtocol> getConsumer() {
-    return this.natsConsumer;
-  }
-
-  @Override
-  public EventProducer<NatsTransportProtocol> getProducer() {
-    return this.natsProducer;
+  public EventProducer getProducer(NatsTransportProtocol transportProtocol) {
+    return new NatsPublisher(transportProtocol);
   }
 }

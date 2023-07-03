@@ -29,7 +29,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class InfluxConnectorsInit extends ExtensionsModelSubmitter {
@@ -46,8 +46,7 @@ public class InfluxConnectorsInit extends ExtensionsModelSubmitter {
             8090)
         .registerPipelineElements(
             new InfluxDbSink())
-        .registerAdapters(
-            new InfluxDbStreamAdapter())
+        .registerAdapter(new InfluxDbStreamAdapter())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
@@ -57,7 +56,7 @@ public class InfluxConnectorsInit extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
-            new SpPulsarProtocolFactory())
+            new SpNatsProtocolFactory())
         .build();
   }
 }

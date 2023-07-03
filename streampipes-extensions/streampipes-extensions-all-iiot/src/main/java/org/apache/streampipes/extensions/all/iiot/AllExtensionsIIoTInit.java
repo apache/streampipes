@@ -41,6 +41,7 @@ import org.apache.streampipes.sinks.brokers.jvm.BrokersJvmInit;
 import org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit;
 import org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit;
 import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
+import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
 
@@ -64,6 +65,7 @@ public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
         .merge(new DatabasesJvmInit().provideServiceDefinition())
         .merge(new SinksNotificationsJvmInit().provideServiceDefinition())
         .merge(new InfluxConnectorsInit().provideServiceDefinition())
+        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

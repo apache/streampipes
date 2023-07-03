@@ -26,4 +26,4 @@ spec:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: 250Mi
+      storage: {{ .Values.external.influxdb.persistence.storageSize }}

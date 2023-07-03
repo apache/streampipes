@@ -29,8 +29,6 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import com.google.common.collect.Streams;
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -129,10 +127,10 @@ public class PipelineManager {
         .collect(Collectors.toList());
   }
 
-  private static Stream<NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
-    return Streams.concat(pipeline.getStreams().stream(),
-        pipeline.getActions().stream(),
-        pipeline.getSepas().stream());
+  private static Stream<? extends NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
+    return Stream.concat(
+        Stream.concat(pipeline.getStreams().stream(), pipeline.getSepas().stream()),
+        pipeline.getActions().stream());
   }
 
   private static void preparePipelineBasics(String username,

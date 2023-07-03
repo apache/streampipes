@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, Serializable {
+public class SpKafkaProducer implements EventProducer, Serializable {
 
 
   private static final String COLON = ":";
@@ -53,12 +53,14 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
   private String brokerUrl;
   private String topic;
   private Producer<String, byte[]> producer;
+  private KafkaTransportProtocol protocol;
 
   private boolean connected = false;
 
   private static final Logger LOG = LoggerFactory.getLogger(SpKafkaProducer.class);
 
-  public SpKafkaProducer() {
+  public SpKafkaProducer(KafkaTransportProtocol protocol) {
+    this.protocol = protocol;
   }
 
   // TODO backwards compatibility, remove later
@@ -90,7 +92,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
   }
 
   @Override
-  public void connect(KafkaTransportProtocol protocol) {
+  public void connect() {
     LOG.info("Kafka producer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
     this.brokerUrl = protocol.getBrokerHostname() + ":" + protocol.getKafkaPort();
     this.topic = protocol.getTopicDefinition().getActualTopicName();

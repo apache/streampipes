@@ -90,5 +90,4 @@ public class FlowRate2Stream extends AbstractAlreadyExistingStream {
             "org.apache.streampipes.examples.flowrate2"))
         .build();
   }
-
 }

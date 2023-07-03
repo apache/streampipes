@@ -19,7 +19,6 @@ package org.apache.streampipes.resource.management.secret;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class SecretService {
 
-  private SecretVisitor visitor;
+  private final SecretVisitor visitor;
 
   public SecretService(ISecretHandler secretHandler) {
     this.visitor = new SecretVisitor(secretHandler);
@@ -41,10 +40,6 @@ public class SecretService {
   public void apply(AdapterDescription adapterDescription) {
     if (adapterDescription.getConfig() != null) {
       applyConfig(adapterDescription.getConfig());
-    }
-
-    if (adapterDescription instanceof GenericAdapterDescription) {
-      applyConfig(((GenericAdapterDescription) adapterDescription).getProtocolDescription().getConfig());
     }
   }
 

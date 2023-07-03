@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
+import org.apache.streampipes.commons.resources.Resources;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
@@ -49,6 +48,7 @@ public class Labels {
   public static Label from(String internalId, String label, String description) {
     return new Label(internalId, label, description);
   }
+
   /**
    * @deprecated Externalize labels by using
    * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
@@ -69,11 +69,22 @@ public class Labels {
    * Creates a new label only with an internal id.
    * Static properties require a fully-specified label, see {@link #from(String, String, String)}
    *
+   *
    * @param internalId The internal identifier of the element, e.g., "latitude-field-mapping"
-   * @return
+   * @return Label
    */
   public static Label withId(String internalId) {
     return new Label(internalId, "", "");
+  }
+
+  /**
+   * Creates a label with the string value of an enum.
+   * Static properties require a fully-specified label, see {@link #from(String, String, String)}
+   * @param internalId The internal identifier of the element, e.g., "LATITUDE-FIELD-MAPPING"
+   * @return
+   */
+  public static Label withId(Enum<?> internalId) {
+    return new Label(internalId.name(), "", "");
   }
 
   @Deprecated
@@ -103,14 +114,10 @@ public class Labels {
   }
 
   private static Properties loadProperties(String filename) throws IOException {
-    URL url = Resources.getResource(filename);
+    URL url = Resources.asUrl(filename);
     final Properties props = new Properties();
 
-    final ByteSource byteSource = Resources.asByteSource(url);
-    InputStream inputStream = null;
-
-    inputStream = byteSource.openBufferedStream();
-    props.load(inputStream);
+    props.load(url.openStream());
     return props;
   }
 

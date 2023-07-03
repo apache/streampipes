@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.client.http;
 
+import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.http.header.Headers;
-import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -40,15 +39,9 @@ public abstract class PipelineElementSubmitter {
     this.status = new PipelineOperationStatus(pipelineId, pipelineName);
   }
 
-  public PipelineOperationStatus submit(List<InvocableStreamPipesEntity> processorsAndSinks,
-                                        List<SpDataSet> dataSets) {
+  public PipelineOperationStatus submit(List<InvocableStreamPipesEntity> processorsAndSinks) {
     // First, try handling all data processors and sinks
     processorsAndSinks.forEach(g -> status.addPipelineElementStatus(submitElement(g)));
-
-    // Then,submit data sets always for detach operation and otherwise only in case of success
-    if (shouldSubmitDataSets()) {
-      dataSets.forEach(dataSet -> status.addPipelineElementStatus(submitElement(dataSet)));
-    }
 
     applySuccess(processorsAndSinks);
     return status;
@@ -73,8 +66,6 @@ public abstract class PipelineElementSubmitter {
   }
 
   protected abstract PipelineElementStatus submitElement(EndpointSelectable pipelineElement);
-
-  protected abstract boolean shouldSubmitDataSets();
 
   protected abstract void onSuccess();
 

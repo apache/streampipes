@@ -6,7 +6,7 @@
       <env name="SP_FLINK_DEBUG" value="true" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.pe.flink.AllFlinkPipelineElementsInit" />
-    <module name="streampipes-pipeline-elements-all-flink" />
+    <module name="streampipes-pipeline-elements-experimental-flink" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

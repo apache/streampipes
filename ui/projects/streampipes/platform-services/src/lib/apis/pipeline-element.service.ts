@@ -22,7 +22,6 @@ import { Observable } from 'rxjs';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
-    SpDataSet,
     SpDataStream,
 } from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
@@ -61,14 +60,7 @@ export class PipelineElementService {
         return this.http.get(this.dataStreamsUrl).pipe(
             map(data => {
                 return (data as []).map(dpi => {
-                    if (
-                        dpi['@class'] ===
-                        'org.apache.streampipes.model.SpDataSet'
-                    ) {
-                        return SpDataSet.fromData(dpi);
-                    } else {
-                        return SpDataStream.fromData(dpi);
-                    }
+                    return SpDataStream.fromData(dpi);
                 });
             }),
         );
@@ -77,13 +69,7 @@ export class PipelineElementService {
     getDataStreamByElementId(elementId: string): Observable<SpDataStream> {
         return this.http.get(`${this.dataStreamsUrl}/${elementId}`).pipe(
             map(data => {
-                if (
-                    data['@class'] === 'org.apache.streampipes.model.SpDataSet'
-                ) {
-                    return SpDataSet.fromData(data as any);
-                } else {
-                    return SpDataStream.fromData(data as any);
-                }
+                return SpDataStream.fromData(data as any);
             }),
         );
     }

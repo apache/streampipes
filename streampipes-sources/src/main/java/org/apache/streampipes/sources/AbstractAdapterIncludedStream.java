@@ -18,11 +18,14 @@
 
 package org.apache.streampipes.sources;
 
-import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
+import org.apache.streampipes.extensions.api.pe.config.IDataStreamConfiguration;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.sdk.builder.stream.DataStreamConfiguration;
 
-public abstract class AbstractAdapterIncludedStream implements DataStreamDeclarer {
+public abstract class AbstractAdapterIncludedStream implements IStreamPipesDataStream {
 
   @Override
   public boolean isExecutable() {
@@ -32,4 +35,14 @@ public abstract class AbstractAdapterIncludedStream implements DataStreamDeclare
   public ConfigExtractor configExtractor() {
     return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
   }
+
+  @Override
+  public IDataStreamConfiguration declareConfig() {
+    return DataStreamConfiguration.create(
+        () -> this,
+        declareModel()
+    );
+  }
+
+  public abstract SpDataStream declareModel();
 }

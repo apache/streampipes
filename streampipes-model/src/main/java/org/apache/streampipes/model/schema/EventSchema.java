@@ -19,8 +19,7 @@
 package org.apache.streampipes.model.schema;
 
 import org.apache.streampipes.model.util.Cloner;
-
-import org.apache.commons.collections.ListUtils;
+import org.apache.streampipes.model.util.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,5 +67,12 @@ public class EventSchema {
     }
     EventSchema that = (EventSchema) o;
     return ListUtils.isEqualList(this.eventProperties, that.eventProperties);
+  }
+
+  @Override
+  public String toString() {
+    return "EventSchema{"
+           + "eventProperties=" + eventProperties
+           + '}';
   }
 }

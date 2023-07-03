@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.sinks.brokers.jvm.pulsar;
 
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import static org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink.PULSAR_HOST_KEY;
 import static org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink.PULSAR_PORT_KEY;
@@ -30,7 +29,7 @@ public class PulsarParameters {
   private String topic;
 
   public PulsarParameters(SinkParams parameters) {
-    DataSinkParameterExtractor extractor = parameters.extractor();
+    var extractor = parameters.extractor();
 
     this.pulsarHost = extractor.singleValueParameter(PULSAR_HOST_KEY, String.class);
     this.pulsarPort = extractor.singleValueParameter(PULSAR_PORT_KEY, Integer.class);

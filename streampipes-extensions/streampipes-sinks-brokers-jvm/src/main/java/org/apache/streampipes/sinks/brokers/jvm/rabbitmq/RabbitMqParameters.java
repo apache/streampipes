@@ -18,10 +18,7 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
-
-public class RabbitMqParameters extends EventSinkBindingParams {
+public class RabbitMqParameters {
 
   private String rabbitMqHost;
   private Integer rabbitMqPort;
@@ -30,9 +27,8 @@ public class RabbitMqParameters extends EventSinkBindingParams {
   private String rabbitMqPassword;
   private String exchangeName;
 
-  public RabbitMqParameters(DataSinkInvocation graph, String rabbitMqHost, Integer rabbitMqPort, String rabbitMqTopic,
+  public RabbitMqParameters(String rabbitMqHost, Integer rabbitMqPort, String rabbitMqTopic,
                             String rabbitMqUser, String rabbitMqPassword, String exchangeName) {
-    super(graph);
     this.rabbitMqHost = rabbitMqHost;
     this.rabbitMqPort = rabbitMqPort;
     this.rabbitMqTopic = rabbitMqTopic;

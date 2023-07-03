@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
-import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;

@@ -24,16 +24,15 @@ import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
 import org.apache.streampipes.client.api.FileApi;
+import org.apache.streampipes.client.api.IAdminApi;
+import org.apache.streampipes.client.api.ICustomRequestApi;
+import org.apache.streampipes.client.api.IPipelineElementTemplateApi;
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.client.api.NotificationsApi;
 import org.apache.streampipes.client.api.PipelineApi;
 import org.apache.streampipes.client.api.PipelineElementTemplateApi;
-import org.apache.streampipes.client.api.SupportsDataProcessorApi;
-import org.apache.streampipes.client.api.SupportsDataSinkApi;
-import org.apache.streampipes.client.api.SupportsDataStreamApi;
-import org.apache.streampipes.client.api.SupportsPipelineApi;
-import org.apache.streampipes.client.api.SupportsPipelineElementTemplateApi;
-import org.apache.streampipes.client.credentials.CredentialsProvider;
-import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
+import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
+import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
 import org.apache.streampipes.client.paths.ApiPath;
@@ -41,16 +40,11 @@ import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
-import java.io.Serializable;
-
-public class StreamPipesClient implements SupportsPipelineApi,
-    SupportsPipelineElementTemplateApi,
-    SupportsDataSinkApi,
-    SupportsDataStreamApi,
-    SupportsDataProcessorApi,
-    Serializable {
+public class StreamPipesClient implements
+    IStreamPipesClient {
 
   private static final Integer SP_DEFAULT_PORT = 80;
 
@@ -136,18 +130,27 @@ public class StreamPipesClient implements SupportsPipelineApi,
    *
    * @param spDataFormatFactory The data format factory
    */
+  @Override
   public void registerDataFormat(SpDataFormatFactory spDataFormatFactory) {
     this.config.addDataFormat(spDataFormatFactory);
   }
 
+  @Override
+  public void registerProtocol(SpProtocolDefinitionFactory<?> spProtocolDefinitionFactory) {
+    this.config.addTransportProtocol(spProtocolDefinitionFactory);
+  }
+
+  @Override
   public CredentialsProvider getCredentials() {
     return config.getConnectionConfig().getCredentials();
   }
 
+  @Override
   public StreamPipesClientConfig getConfig() {
     return config;
   }
 
+  @Override
   public ClientConnectionUrlResolver getConnectionConfig() {
     return config.getConnectionConfig();
   }
@@ -168,7 +171,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
    * @return {@link org.apache.streampipes.client.api.PipelineElementTemplateApi}
    */
   @Override
-  public PipelineElementTemplateApi pipelineElementTemplates() {
+  public IPipelineElementTemplateApi pipelineElementTemplates() {
     return new PipelineElementTemplateApi(config);
   }
 
@@ -195,34 +198,40 @@ public class StreamPipesClient implements SupportsPipelineApi,
   /**
    * Get API to work with data processors
    *
-   * @return {@link org.apache.streampipes.client.api.DataProcessorApi}
+   * @return {@link DataProcessorApi}
    */
   @Override
   public DataProcessorApi processors() {
     return new DataProcessorApi(config);
   }
 
-  public CustomRequestApi customRequest() {
+  @Override
+  public ICustomRequestApi customRequest() {
     return new CustomRequestApi(config);
   }
 
-  public AdminApi adminApi() {
+  @Override
+  public IAdminApi adminApi() {
     return new AdminApi(config);
   }
 
+  @Override
   public NotificationsApi notificationsApi() {
     return new NotificationsApi(config);
   }
 
+  @Override
   public DataLakeMeasureApi dataLakeMeasureApi() {
     return new DataLakeMeasureApi(config);
   }
 
+  @Override
   public void deliverEmail(SpEmail email) {
-    CustomRequestApi api = customRequest();
+    ICustomRequestApi api = customRequest();
     api.sendPost(ApiPath.EMAIL_RESOURCE, email);
   }
 
+  @Override
   public FileApi fileApi() {
     return new FileApi(config);
   }

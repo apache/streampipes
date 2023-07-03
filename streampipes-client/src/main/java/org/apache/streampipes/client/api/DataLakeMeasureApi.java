@@ -26,12 +26,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
-    implements CRUDApi<String, DataLakeMeasure> {
+    implements IDataLakeMeasureApi {
 
   public DataLakeMeasureApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataLakeMeasure.class);
   }
 
+  @Override
   public Optional<DataLakeMeasure> get(String id) {
     return getSingle(getBaseResourcePath().addToPath(id));
   }

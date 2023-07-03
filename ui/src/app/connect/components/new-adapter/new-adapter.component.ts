@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-    AdapterDescriptionUnion,
+    AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
@@ -34,7 +34,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 export class NewAdapterComponent implements OnInit {
     initialized = false;
     adapterTypeName = '';
-    adapter: AdapterDescriptionUnion = undefined;
+    adapter: AdapterDescription = undefined;
 
     constructor(
         private breadcrumbService: SpBreadcrumbService,
@@ -49,7 +49,7 @@ export class NewAdapterComponent implements OnInit {
                 a => a.appId === this.route.snapshot.params.appId,
             );
             this.adapterTypeName = adapter.name;
-            this.adapter = this.connectService.cloneAdapterDescription(adapter);
+            this.adapter = AdapterDescription.fromData(adapter);
 
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(

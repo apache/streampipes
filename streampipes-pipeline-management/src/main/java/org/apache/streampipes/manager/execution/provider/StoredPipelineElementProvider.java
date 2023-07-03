@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.execution.provider;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.manager.storage.RunningPipelineElementStorage;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.ArrayList;
@@ -40,12 +39,4 @@ public class StoredPipelineElementProvider implements PipelineElementProvider {
     }
   }
 
-  @Override
-  public List<SpDataSet> getDataSets(PipelineExecutionInfo executionInfo) {
-    if (RunningPipelineElementStorage.runningDataSets.containsKey(executionInfo.getPipelineId())) {
-      return RunningPipelineElementStorage.runningDataSets.get(executionInfo.getPipelineId());
-    } else {
-      return new ArrayList<>();
-    }
-  }
 }

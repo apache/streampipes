@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddValuePipelineElement;
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.DebugAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToBrokerAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
@@ -36,7 +35,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.preprocessin
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
 import org.apache.streampipes.model.config.SpProtocol;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
@@ -80,11 +78,6 @@ public class AdapterPipelineGenerator {
           pipelineElements,
           getAdapterSink(adapterDescription),
           adapterDescription.getEventSchema());
-    }
-
-    DebugSinkRuleDescription debugSinkRuleDescription = getDebugRule(adapterDescription.getRules());
-    if (debugSinkRuleDescription != null) {
-      return new AdapterPipeline(pipelineElements, new DebugAdapterSink(), adapterDescription.getEventSchema());
     }
 
     return new AdapterPipeline(pipelineElements, adapterDescription.getEventSchema());
@@ -148,10 +141,6 @@ public class AdapterPipelineGenerator {
 
   private AddValueTransformationRuleDescription getAddValueRule(List<TransformationRuleDescription> rules) {
     return getRule(rules, AddValueTransformationRuleDescription.class);
-  }
-
-  private DebugSinkRuleDescription getDebugRule(List<TransformationRuleDescription> rules) {
-    return getRule(rules, DebugSinkRuleDescription.class);
   }
 
   private <T extends TransformationRuleDescription> T getRule(List<TransformationRuleDescription> rules,

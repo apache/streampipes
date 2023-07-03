@@ -18,12 +18,20 @@
 
 package org.apache.streampipes.messaging.jms;
 
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
 
 public abstract class ActiveMQConnectionProvider {
+
+  protected JmsTransportProtocol protocol;
+
+  public ActiveMQConnectionProvider(JmsTransportProtocol protocol) {
+    this.protocol = protocol;
+  }
 
   protected Connection startJmsConnection(String url) {
     try {

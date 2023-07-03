@@ -1,0 +1,69 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+org.apache.streampipes.connect.iiot.adapters.opcua.title=OPC UA
+org.apache.streampipes.connect.iiot.adapters.opcua.description=Reads values from an OPC-UA server
+
+
+OPC_HOST_OR_URL.title=OPC Server
+OPC_HOST_OR_URL.description=
+
+OPC_URL.title=URL
+OPC_URL.description=
+
+OPC_HOST.title=Host/Port
+OPC_HOST.description=
+
+OPC_SERVER_URL.title=URL
+OPC_SERVER_URL.description=Example: opc.tcp://test-server.com:4840,
+
+OPC_SERVER_HOST.title=Host
+OPC_SERVER_HOST.description=Example: test-server.com, opc.tcp://test-server.com)
+
+OPC_SERVER_PORT.title=Port
+OPC_SERVER_PORT.description=Example: 4840
+
+ACCESS_MODE.title=Security Level
+ACCESS_MODE.description=Select the OPC UA security level for the connection
+
+USERNAME_GROUP.title=Sign (username & password)
+USERNAME_GROUP.description=
+
+UNAUTHENTICATED.title=None
+UNAUTHENTICATED.description=
+
+USERNAME.title=Username
+USERNAME.description=
+
+PASSWORD.title=Password
+PASSWORD.description=
+
+AVAILABLE_NODES.title=Available Nodes
+AVAILABLE_NODES.description=Select the nodes that are relevant for you. Please ensure to select one option each for access mode and OPC UA server and to specify the polling interval
+
+PULLING_INTERVAL.title=Pull Interval
+PULLING_INTERVAL.description=Timespan between data retrieval, in milliseconds
+
+ADAPTER_TYPE.title=Adapter Type
+ADAPTER_TYPE.description=Select whether the adapter pulls data regularly or listens to subscriptions
+
+PULL_MODE.title=Pull mode
+PULL_MODE.description=
+
+SUBSCRIPTION_MODE.title=Subscription mode
+SUBSCRIPTION_MODE.description=

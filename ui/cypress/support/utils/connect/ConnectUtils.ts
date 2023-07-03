@@ -16,30 +16,22 @@
  *
  */
 
-import { UserInput } from '../../model/UserInput';
 import { StaticPropertyUtils } from '../StaticPropertyUtils';
-import { SpecificAdapterInput } from '../../model/SpecificAdapterInput';
-import { GenericAdapterInput } from '../../model/GenericAdapterInput';
-import { SpecificAdapterBuilder } from '../../builder/SpecificAdapterBuilder';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
-import { GenericAdapterBuilder } from '../../builder/GenericAdapterBuilder';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
+import { AdapterBuilder } from '../../builder/AdapterBuilder';
 
 export class ConnectUtils {
-    public static testSpecificStreamAdapter(
-        adapterConfiguration: SpecificAdapterInput,
-    ) {
+    public static testAdapter(adapterConfiguration: AdapterInput) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
 
         ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
-        ConnectUtils.configureAdapter(
-            adapterConfiguration.adapterConfiguration,
-        );
+        ConnectUtils.configureAdapter(adapterConfiguration);
 
         if (adapterConfiguration.timestampProperty) {
             ConnectEventSchemaUtils.markPropertyAsTimestamp(
@@ -56,32 +48,14 @@ export class ConnectUtils {
         ConnectUtils.startStreamAdapter(adapterConfiguration);
     }
 
-    public static testGenericStreamAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
-        ConnectUtils.addGenericStreamAdapter(adapterConfiguration);
-    }
-
-    public static addGenericStreamAdapter(
-        adapterConfiguration: GenericAdapterInput,
-    ) {
-        ConnectUtils.addGenericAdapter(adapterConfiguration);
-
-        ConnectUtils.startStreamAdapter(adapterConfiguration);
-    }
-
-    public static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
+    public static addAdapter(adapterConfiguration: AdapterInput) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
 
         ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
-        ConnectUtils.configureAdapter(
-            adapterConfiguration.protocolConfiguration,
-        );
-
-        ConnectUtils.configureFormat(adapterConfiguration);
+        ConnectUtils.configureAdapter(adapterConfiguration);
 
         if (adapterConfiguration.dimensionProperties.length > 0) {
             adapterConfiguration.dimensionProperties.forEach(
@@ -104,7 +78,7 @@ export class ConnectUtils {
         name: string,
         persist: boolean = false,
     ) {
-        const builder = SpecificAdapterBuilder.create('Machine_Data_Simulator')
+        const builder = AdapterBuilder.create('Machine_Data_Simulator')
             .setName(name)
             .addInput('input', 'wait-time-ms', '1000');
 
@@ -120,7 +94,7 @@ export class ConnectUtils {
 
         ConnectUtils.selectAdapter(configuration.adapterType);
 
-        ConnectUtils.configureAdapter(configuration.adapterConfiguration);
+        ConnectUtils.configureAdapter(configuration);
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
@@ -140,9 +114,11 @@ export class ConnectUtils {
         cy.get('#' + name).click();
     }
 
-    public static configureAdapter(configs: UserInput[]) {
+    public static configureAdapter(adapterInput: AdapterInput) {
         cy.wait(2000);
-        StaticPropertyUtils.input(configs);
+        StaticPropertyUtils.input(adapterInput.adapterConfiguration);
+
+        this.configureFormat(adapterInput);
 
         // Next Button should not be disabled
         cy.get('button').contains('Next').parent().should('not.be.disabled');
@@ -151,23 +127,12 @@ export class ConnectUtils {
         cy.get('button').contains('Next').parent().click();
     }
 
-    public static configureFormat(adapterConfiguration: GenericAdapterInput) {
-        // Select format
-        if (adapterConfiguration.format.indexOf('json') !== -1) {
-            ConnectBtns.json().click();
-            if (adapterConfiguration.format.indexOf('object') !== -1) {
-                ConnectBtns.jsonObject().click();
-            } else {
-                ConnectBtns.jsonArray().click();
-            }
-        } else {
-            cy.dataCy(adapterConfiguration.format).click();
+    public static configureFormat(adapterInput: AdapterInput) {
+        if (adapterInput.format) {
+            cy.dataCy('format-' + adapterInput.format).click();
+
+            StaticPropertyUtils.input(adapterInput.formatConfiguration);
         }
-
-        StaticPropertyUtils.input(adapterConfiguration.formatConfiguration);
-
-        // Click next
-        ConnectBtns.formatSelectionNextBtn().click();
     }
 
     public static finishEventSchemaConfiguration() {
@@ -240,7 +205,7 @@ export class ConnectUtils {
     }
 
     public static setUpPreprocessingRuleTest(): AdapterInput {
-        const adapterConfiguration = GenericAdapterBuilder.create('File_Stream')
+        const adapterConfiguration = AdapterBuilder.create('File_Stream')
             .setStoreInDataLake()
             .setTimestampProperty('timestamp')
             .addProtocolInput(
@@ -251,17 +216,14 @@ export class ConnectUtils {
             .addProtocolInput('radio', 'replayonce', 'yes')
             .setName('Adapter to test rules')
             .setFormat('csv')
-            .addFormatInput('input', 'delimiter', ';')
-            .addFormatInput('checkbox', 'header', 'check')
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
             .build();
 
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
         ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
-        ConnectUtils.configureAdapter(
-            adapterConfiguration.protocolConfiguration,
-        );
-        ConnectUtils.configureFormat(adapterConfiguration);
+        ConnectUtils.configureAdapter(adapterConfiguration);
 
         // wait till schema is shown
         cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should(

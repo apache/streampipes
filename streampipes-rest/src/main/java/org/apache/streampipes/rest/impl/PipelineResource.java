@@ -27,7 +27,6 @@ import org.apache.streampipes.commons.exceptions.RemoteServerNotAccessibleExcept
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
-import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.client.exception.InvalidConnectionException;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
@@ -191,17 +190,6 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       throw new WebApplicationException(
           serverError(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()))));
     }
-  }
-
-  @Path("/update/dataset")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @Hidden
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  public Response updateDataSet(SpDataSet spDataSet) {
-    return ok(Operations.updateDataSet(spDataSet));
   }
 
   @Path("/update")

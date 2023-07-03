@@ -20,7 +20,6 @@
     <div fxFlex fxLayout="column" class="content">
         <div>
             <mat-radio-group
-                *ngIf="staticProperty.alternatives.length > 1"
                 class="radio-group"
                 (change)="radioSelectionChange($event)"
                 required
@@ -45,14 +44,6 @@
                     </label>
                 </mat-radio-button>
             </mat-radio-group>
-
-            <!-- TODO: Remove hack -->
-            <mat-checkbox
-                *ngIf="staticProperty.alternatives.length === 1"
-                [(ngModel)]="staticProperty.alternatives[0].selected"
-            >
-                {{ staticProperty.alternatives[0].label }}
-            </mat-checkbox>
         </div>
 
         <div
@@ -67,14 +58,7 @@
                     alternative.staticProperty !== null
                 "
             >
-                <div
-                    style="
-                        padding-top: 0px;
-                        padding-bottom: 0px;
-                        padding-left: 10px;
-                        padding-right: 10px;
-                    "
-                >
+                <div style="padding: 0 10px">
                     <sp-app-static-property
                         [adapterId]="adapterId"
                         [eventSchemas]="eventSchemas"
@@ -89,7 +73,7 @@
                         "
                         [staticProperty]="alternative.staticProperty"
                         [displayRecommended]="displayRecommended"
-                        (validateEmitter)="valueChange($event)"
+                        (updateEmitter)="handleConfigurationUpdate($event)"
                         class="test fullWidth"
                     >
                     </sp-app-static-property>

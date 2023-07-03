@@ -16,12 +16,15 @@
   ~
   -->
 
-<div [ngClass]="darkMode ? 'dark-mode base-style' : 'light-mode base-style'">
+<div
+    [ngClass]="darkMode ? 'dark-mode base-style' : 'light-mode base-style'"
+    @fadeSlideInOut
+>
     <div class="sp-toolbar-outer">
         <sp-toolbar></sp-toolbar>
     </div>
     <div style="display: flex; flex-direction: row; height: calc(100vh - 40px)">
-        <div style="width: 35px; color: white" class="iconbar">
+        <div style="color: white" class="iconbar">
             <sp-iconbar></sp-iconbar>
         </div>
         <div style="width: 100%; height: 100%; overflow-y: auto" class="base">

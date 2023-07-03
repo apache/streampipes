@@ -101,8 +101,6 @@ export class EndpointItemComponent implements OnInit {
     findItemTypeTitle() {
         if (this.item.type === 'stream') {
             this.itemTypeTitle = 'Data Stream';
-        } else if (this.item.type === 'set') {
-            this.itemTypeTitle = 'Data Set';
         } else if (this.item.type === 'sepa') {
             this.itemTypeTitle = 'Data Processor';
         } else {
