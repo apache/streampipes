@@ -1732,7 +1732,7 @@
 
                         <!-- External files -->
                         <exclude>
-                            streampipes-extensions/streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**
+							streampipes-extensions/streampipes-pipeline-elements-experimental-flink/src/main/java/com/kohlschutter/boilerpipe/**
                         </exclude>
                         <exclude>
                             streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
