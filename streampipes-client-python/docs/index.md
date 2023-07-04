@@ -20,6 +20,18 @@
 ![StreamPipes Logo with Python](./img/streampipes-python-dark.png#only-dark)
 
 <h4 align="center"><a href="https://github.com/apache/streampipes">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore IoT data streams.</h4>
+<br>
+
+!!! danger "Dependency issue with StreamPipes Python 0.92.0"
+
+    In StreamPipes Python `0.92.0` there is a problem with the required dependencies.<br>
+    Pydantic has recently released the new version `2.0` with many exciting improvements, but also some breaking changes. 
+    Unfortunately, we didn't limit our requirements strictly enough, so yydantic `2.0` is installed together with streampipes, which is not (yet) compatible.<br>
+    To fix this bug, simply run the following command after installing streampipes, or adjust your dependencies accordingly:
+
+    ```python
+    pip install pydantic<2.0 pydantic_core<2.0
+    ```
 
 <br>
 <h3 align="center">Apache StreamPipes for Python 🐍</h3>
@@ -32,9 +44,11 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-<p align="center"><b>💡 The current version of this Python library is still a beta version.<br>
-This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.</b>
-</p>
+!!! warning "StreamPipes Python is in beta"
+
+    The current version of this Python library is still a beta version.<br>
+    This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.
+
 ---
 
 ## ⚡️ Quickstart
@@ -95,6 +109,10 @@ This requires to set the following environment variables: `SP_API_KEY` and `SP_U
 <br>
 
 `username` is always the username that is used to log in into StreamPipes. <br>
-The `api_key` can be generated within the UI as demonstrated below:
 
-![Howto API Key](./img/how-to-get-api-key.gif)
+??? tip "How to get your StreamPipes API key"
+
+    The `api_key` can be generated within the UI as demonstrated below:
+    <br>
+    
+    ![Howto API Key](./img/how-to-get-api-key.gif)
