@@ -30,7 +30,7 @@
     To fix this bug, simply run the following command after installing streampipes, or adjust your dependencies accordingly:
 
     ```python
-    pip install pydantic<2.0 pydantic_core<2.0
+    pip install "pydantic<2.0" "pydantic_core<2.0"
     ```
 
 <br>
