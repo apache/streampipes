@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.nats.NatsPublisher;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
@@ -27,7 +28,12 @@ public class SendToNatsAdapterSink extends SendToBrokerAdapterSink<NatsTransport
     implements IAdapterPipelineElement {
 
   public SendToNatsAdapterSink(AdapterDescription adapterDescription) {
-    super(adapterDescription, NatsPublisher::new, NatsTransportProtocol.class);
+    super(adapterDescription, NatsTransportProtocol.class);
+  }
+
+  @Override
+  protected EventProducer makeProducer(NatsTransportProtocol protocol) {
+    return new NatsPublisher(protocol);
   }
 
   @Override

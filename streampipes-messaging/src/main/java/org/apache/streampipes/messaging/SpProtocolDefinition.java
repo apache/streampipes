@@ -22,7 +22,8 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 
 public interface SpProtocolDefinition<T extends TransportProtocol> {
 
-  EventConsumer<T> getConsumer();
+  EventConsumer getConsumer(T transportProtocol);
 
-  EventProducer<T> getProducer();
+  EventProducer getProducer(T transportProtocol);
+
 }

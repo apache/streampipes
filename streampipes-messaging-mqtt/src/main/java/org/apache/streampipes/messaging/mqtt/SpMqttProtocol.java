@@ -24,21 +24,13 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
 public class SpMqttProtocol implements SpProtocolDefinition<MqttTransportProtocol> {
 
-  private final EventConsumer<MqttTransportProtocol> mqttConsumer;
-  private final EventProducer<MqttTransportProtocol> mqttProducer;
-
-  public SpMqttProtocol() {
-    this.mqttConsumer = new MqttConsumer();
-    this.mqttProducer = new MqttPublisher();
+  @Override
+  public EventConsumer getConsumer(MqttTransportProtocol transportProtocol) {
+    return new MqttConsumer(transportProtocol);
   }
 
   @Override
-  public EventConsumer<MqttTransportProtocol> getConsumer() {
-    return this.mqttConsumer;
-  }
-
-  @Override
-  public EventProducer<MqttTransportProtocol> getProducer() {
-    return this.mqttProducer;
+  public EventProducer getProducer(MqttTransportProtocol transportProtocol) {
+    return new MqttPublisher(transportProtocol);
   }
 }

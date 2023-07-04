@@ -19,7 +19,6 @@ package org.apache.streampipes.wrapper.flink.consumer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
@@ -36,15 +35,13 @@ public class JmsFlinkConsumer implements SourceFunction<Map<String, Object>>, Se
 
   private static final Logger LOG = LoggerFactory.getLogger(JmsFlinkConsumer.class);
 
-  private JmsTransportProtocol protocol;
   private ActiveMQConsumer activeMQConsumer;
   private SpDataFormatDefinition spDataFormatDefinition;
   private Boolean isRunning;
   private Queue<byte[]> queue;
 
   public JmsFlinkConsumer(JmsTransportProtocol protocol, SpDataFormatDefinition spDataFormatDefinition) {
-    this.protocol = protocol;
-    this.activeMQConsumer = new ActiveMQConsumer();
+    this.activeMQConsumer = new ActiveMQConsumer(protocol);
     this.spDataFormatDefinition = spDataFormatDefinition;
     this.queue = new LinkedBlockingQueue<>();
   }
@@ -52,12 +49,7 @@ public class JmsFlinkConsumer implements SourceFunction<Map<String, Object>>, Se
   @Override
   public void run(SourceContext<Map<String, Object>> sourceContext) throws Exception {
     this.isRunning = true;
-    this.activeMQConsumer.connect(protocol, new InternalEventProcessor<byte[]>() {
-      @Override
-      public void onEvent(byte[] event) {
-        queue.add(event);
-      }
-    });
+    this.activeMQConsumer.connect(event -> queue.add(event));
 
     while (isRunning) {
       if (!queue.isEmpty()) {

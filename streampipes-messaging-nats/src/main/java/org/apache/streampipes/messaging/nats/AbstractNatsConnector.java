@@ -45,6 +45,14 @@ public abstract class AbstractNatsConnector {
     this.subject = protocol.getTopicDefinition().getActualTopicName();
   }
 
+  protected NatsConfig makeNatsConfig(NatsTransportProtocol protocol) {
+    var natsConfig = new NatsConfig();
+    natsConfig.setNatsUrls(makeBrokerUrl(protocol));
+    natsConfig.setSubject(protocol.getTopicDefinition().getActualTopicName());
+
+    return natsConfig;
+  }
+
   protected void disconnect() throws InterruptedException, TimeoutException {
     natsConnection.flush(Duration.ofMillis(50));
     natsConnection.close();

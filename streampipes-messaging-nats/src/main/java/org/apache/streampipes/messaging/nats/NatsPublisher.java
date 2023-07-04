@@ -27,12 +27,18 @@ import io.nats.client.Connection;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class NatsPublisher extends AbstractNatsConnector implements EventProducer<NatsTransportProtocol> {
+public class NatsPublisher extends AbstractNatsConnector implements EventProducer {
+
+  private final NatsTransportProtocol protocol;
+
+  public NatsPublisher(NatsTransportProtocol protocol) {
+    this.protocol = protocol;
+  }
 
   @Override
-  public void connect(NatsTransportProtocol protocolSettings) throws SpRuntimeException {
+  public void connect() throws SpRuntimeException {
     try {
-      makeBrokerConnection(protocolSettings);
+      makeBrokerConnection(protocol);
     } catch (IOException | InterruptedException e) {
       e.printStackTrace();
     }

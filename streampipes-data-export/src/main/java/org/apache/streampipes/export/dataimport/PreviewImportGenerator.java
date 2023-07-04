@@ -26,18 +26,22 @@ import org.apache.streampipes.export.resolver.DataViewResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.export.utils.ImportAdapterMigrationUtils;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
 public class PreviewImportGenerator extends ImportGenerator<AssetExportConfiguration> {
 
-  private AssetExportConfiguration importConfig;
+  private static final Logger LOG = LoggerFactory.getLogger(PreviewImportGenerator.class);
+  private final AssetExportConfiguration importConfig;
 
   public PreviewImportGenerator() {
     super();
@@ -56,14 +60,20 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   @Override
   protected void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws JsonProcessingException {
     Map<String, Object> assetDescription = this.defaultMapper.readValue(asString(previewFiles.get(assetId)),
-        new TypeReference<Map<String, Object>>() {
+        new TypeReference<>() {
         });
     importConfig.addAsset(new ExportItem(assetId, String.valueOf(assetDescription.get("assetName")), true));
   }
 
   @Override
-  protected void handleAdapter(String document, String adapterId) throws JsonProcessingException {
-    addExportItem(adapterId, new AdapterResolver().readDocument(document).getName(), importConfig::addAdapter);
+  protected void handleAdapter(String document,
+                               String adapterId) throws JsonProcessingException {
+    try {
+      var convertedDoc = ImportAdapterMigrationUtils.checkAndPerformMigration(document);
+      addExportItem(adapterId, new AdapterResolver().readDocument(convertedDoc).getName(), importConfig::addAdapter);
+    } catch (IllegalArgumentException e) {
+      LOG.warn("Skipping import of data set adapter {}", adapterId);
+    }
   }
 
   @Override

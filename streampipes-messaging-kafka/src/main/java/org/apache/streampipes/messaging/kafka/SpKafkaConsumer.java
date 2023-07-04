@@ -43,12 +43,12 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, Runnable,
+public class SpKafkaConsumer implements EventConsumer, Runnable,
     Serializable {
 
   private String topic;
   private InternalEventProcessor<byte[]> eventProcessor;
-  private KafkaTransportProtocol protocol;
+  private final KafkaTransportProtocol protocol;
   private volatile boolean isRunning;
   private Boolean patternTopic = false;
 
@@ -56,8 +56,8 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   private static final Logger LOG = LoggerFactory.getLogger(SpKafkaConsumer.class);
 
-  public SpKafkaConsumer() {
-
+  public SpKafkaConsumer(KafkaTransportProtocol protocol) {
+    this.protocol = protocol;
   }
 
   public SpKafkaConsumer(KafkaTransportProtocol protocol,
@@ -119,15 +119,13 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   }
 
   @Override
-  public void connect(KafkaTransportProtocol protocol, InternalEventProcessor<byte[]>
-      eventProcessor)
-      throws SpRuntimeException {
+  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
     LOG.info("Kafka consumer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
     if (protocol.getTopicDefinition() instanceof WildcardTopicDefinition) {
       this.patternTopic = true;
     }
     this.eventProcessor = eventProcessor;
-    this.protocol = protocol;
+
     this.topic = protocol.getTopicDefinition().getActualTopicName();
     this.isRunning = true;
 
