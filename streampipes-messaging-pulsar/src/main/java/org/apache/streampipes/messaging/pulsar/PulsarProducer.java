@@ -74,6 +74,6 @@ public class PulsarProducer implements EventProducer, Serializable {
 
   @Override
   public boolean isConnected() {
-    return producer.isConnected();
+    return producer != null && producer.isConnected();
   }
 }
