@@ -16,8 +16,6 @@
  *
  */
 
-@import 'src/scss/sp/colors';
-
 #formWrapper {
     height: 60px;
 }
@@ -34,5 +32,5 @@ form {
 ::ng-deep.mat-accent ::ng-deep.mat-slider-track-fill,
 .mat-accent ::ng-deep.mat-slider-thumb,
 .mat-accent ::ng-deep.mat-slider-thumb-label {
-    background-color: $sp-color-accent;
+    background-color: var(--color-accent);
 }
