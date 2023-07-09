@@ -31,6 +31,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,8 +66,9 @@ public class PipelineManager {
   public static String addPipeline(String principalSid,
                                    Pipeline pipeline) {
 
-    // call by reference bad smell
-    String pipelineId = UUIDGenerator.generateUuid();
+    String pipelineId = Objects.isNull(pipeline.getPipelineId())
+        ? UUIDGenerator.generateUuid()
+        : pipeline.getPipelineId();
     preparePipelineBasics(principalSid, pipeline, pipelineId);
     Operations.storePipeline(pipeline);
 

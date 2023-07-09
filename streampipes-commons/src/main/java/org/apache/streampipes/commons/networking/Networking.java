@@ -28,19 +28,27 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Objects;
 
 public class Networking {
 
   private static final Logger LOG = LoggerFactory.getLogger(Networking.class);
 
   private static final String DEFAULT_LOCALHOST_IP = "127.0.0.1";
+  private static String lastSelectedHostname;
 
   public static String getHostname() throws UnknownHostException {
     var svcHostname = getEnvironment().getServiceHost();
     String selectedAddress;
     if (svcHostname.exists()) {
       selectedAddress = svcHostname.getValue();
-      LOG.info("Using IP from provided environment variable {}: {}", svcHostname.getEnvVariableName(), selectedAddress);
+      if (Objects.isNull(lastSelectedHostname)) {
+        LOG.info(
+            "Using IP from provided environment variable {}: {}",
+            svcHostname.getEnvVariableName(),
+            selectedAddress
+        );
+      }
     } else {
       selectedAddress = InetAddress.getLocalHost().getHostAddress();
 
@@ -50,9 +58,12 @@ public class Networking {
         selectedAddress = getIpAddressForOsx();
       }
 
-      LOG.info("Using auto-discovered IP: {}", selectedAddress);
+      if (Objects.isNull(lastSelectedHostname) || !selectedAddress.equals(lastSelectedHostname)) {
+        LOG.info("Using auto-discovered IP: {}", selectedAddress);
+      }
     }
 
+    lastSelectedHostname = selectedAddress;
     return selectedAddress;
   }
 
