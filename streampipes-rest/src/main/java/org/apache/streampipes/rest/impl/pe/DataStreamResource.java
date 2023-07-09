@@ -85,7 +85,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(getDataStreamResourceManager().findAsInvocation(elementId));
     } catch (IllegalArgumentException e) {
-      return badRequest(StreamPipesErrorMessage.from(e));
+      return notFound(StreamPipesErrorMessage.from(e));
     }
   }
 

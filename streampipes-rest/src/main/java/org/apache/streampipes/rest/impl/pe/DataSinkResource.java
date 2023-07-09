@@ -84,7 +84,7 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(getDataSinkResourceManager().findAsInvocation(elementId));
     } catch (IllegalArgumentException e) {
-      return badRequest(StreamPipesErrorMessage.from(e));
+      return notFound(StreamPipesErrorMessage.from(e));
     }
   }
 
