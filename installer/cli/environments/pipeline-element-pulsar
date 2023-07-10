@@ -19,4 +19,4 @@ consul
 couchdb
 ui
 influxdb
-# TODO: Need to add pulsar docker compose
+pulsar

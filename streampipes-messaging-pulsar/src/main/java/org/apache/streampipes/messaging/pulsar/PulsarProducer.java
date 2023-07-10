@@ -41,7 +41,6 @@ public class PulsarProducer implements EventProducer, Serializable {
   @Override
   public void connect() throws SpRuntimeException {
     try {
-      // TODO: the pulsarClient may need to move to PulsarTransportProtocol
       pulsarClient = PulsarClient.builder()
           .serviceUrl(protocolSettings.getBrokerHostname())
           .build();

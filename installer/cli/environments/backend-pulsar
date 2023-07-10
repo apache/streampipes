@@ -18,3 +18,4 @@ consul
 couchdb
 influxdb
 ui-custom-conf
+pulsar

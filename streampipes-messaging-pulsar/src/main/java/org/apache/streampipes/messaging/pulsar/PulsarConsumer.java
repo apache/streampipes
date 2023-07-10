@@ -44,7 +44,6 @@ public class PulsarConsumer implements EventConsumer {
     try {
       String serviceURL = "";
       if (!protocolSettings.getBrokerHostname().startsWith("pulsar://")) {
-        // TODO: Add support for 'pulsar+ssl://'
         serviceURL = "pulsar://" + protocolSettings.getBrokerHostname();
       } else {
         serviceURL = protocolSettings.getBrokerHostname();
@@ -73,7 +72,7 @@ public class PulsarConsumer implements EventConsumer {
       consumer.close();
       pulsarClient.close();
     } catch (PulsarClientException e) {
-      throw new SpRuntimeException(e);
+      // throw new SpRuntimeException(e);
     }
   }
 
