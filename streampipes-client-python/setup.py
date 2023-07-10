@@ -41,7 +41,7 @@ base_packages = [
     "pandas~=1.5.1",
     "pydantic~=1.10.2",
     "requests~=2.28.1",
-    "nats-py~=2.2.0",
+    "nats-py>=2.2,<2.4",
     "confluent-kafka~=2.0.2",
     "typing-extensions~=4.5.0",
 ]
