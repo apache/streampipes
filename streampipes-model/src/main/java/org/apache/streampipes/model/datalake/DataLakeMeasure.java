@@ -35,7 +35,9 @@ public class DataLakeMeasure {
   public static final String ASSERTION_ERROR_MESSAGE = "timestamp field requires a stream prefix (e.g. s0::timestamp)";
   private static final String STREAM_PREFIX_DELIMITER = "::";
 
+  @JsonProperty("elementId")
   protected @SerializedName("_id") String elementId;
+
   @JsonProperty("_rev")
   private @SerializedName("_rev") String rev;
 
