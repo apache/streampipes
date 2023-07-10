@@ -83,7 +83,7 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(getDataProcessorResourceManager().findAsInvocation(elementId));
     } catch (IllegalArgumentException e) {
-      return badRequest(StreamPipesErrorMessage.from(e));
+      return notFound(StreamPipesErrorMessage.from(e));
     }
   }
 
