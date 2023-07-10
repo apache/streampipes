@@ -116,7 +116,7 @@
     "compression-webpack-plugin": "^10.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "csv-string": "^4.1.1",
-    "cypress": "^12.8.1",
+    "cypress": "^12.17.0",
     "cypress-file-upload": "^5.0.8",
     "eslint": "8.37.0",
     "eslint-config-prettier": "^8.8.0",
