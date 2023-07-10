@@ -38,7 +38,7 @@ PROJECT_URLS = {
 
 # Package requirements.
 base_packages = [
-    "pandas~=1.5",
+    "pandas>=1.5,<3.0",
     "pydantic~=1.10",
     "requests~=2.28",
     "nats-py~=2.2",
