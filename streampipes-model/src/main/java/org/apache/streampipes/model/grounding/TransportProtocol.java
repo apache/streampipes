@@ -28,7 +28,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(JmsTransportProtocol.class),
     @JsonSubTypes.Type(KafkaTransportProtocol.class),
     @JsonSubTypes.Type(MqttTransportProtocol.class),
-    @JsonSubTypes.Type(NatsTransportProtocol.class)
+    @JsonSubTypes.Type(NatsTransportProtocol.class),
+    @JsonSubTypes.Type(PulsarTransportProtocol.class)
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class TransportProtocol {

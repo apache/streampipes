@@ -1936,7 +1936,8 @@ export class TransportProtocol {
         | 'org.apache.streampipes.model.grounding.JmsTransportProtocol'
         | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
         | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.NatsTransportProtocol';
+        | 'org.apache.streampipes.model.grounding.NatsTransportProtocol'
+        | 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
     'brokerHostname': string;
     'elementId': string;
     'topicDefinition': TopicDefinitionUnion;
@@ -1973,6 +1974,8 @@ export class TransportProtocol {
                 return MqttTransportProtocol.fromData(data);
             case 'org.apache.streampipes.model.grounding.NatsTransportProtocol':
                 return NatsTransportProtocol.fromData(data);
+            case 'org.apache.streampipes.model.grounding.PulsarTransportProtocol':
+                return PulsarTransportProtocol.fromData(data);
         }
     }
 }
@@ -2259,6 +2262,22 @@ export class NatsTransportProtocol extends TransportProtocol {
         const instance = target || new NatsTransportProtocol();
         super.fromData(data, instance);
         instance.port = data.port;
+        return instance;
+    }
+}
+
+export class PulsarTransportProtocol extends TransportProtocol {
+    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
+
+    static 'fromData'(
+        data: PulsarTransportProtocol,
+        target?: PulsarTransportProtocol,
+    ): PulsarTransportProtocol {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PulsarTransportProtocol();
+        super.fromData(data, instance);
         return instance;
     }
 }
@@ -3902,7 +3921,8 @@ export type TransportProtocolUnion =
     | JmsTransportProtocol
     | KafkaTransportProtocol
     | MqttTransportProtocol
-    | NatsTransportProtocol;
+    | NatsTransportProtocol
+    | PulsarTransportProtocol;
 
 export type ValidationInfoLevel = 'INFO' | 'ERROR';
 
