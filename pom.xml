@@ -174,7 +174,6 @@
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
 	<scala-lang.version>2.13.10</scala-lang.version>
-	<scala-lang-xml.version>1.3.0</scala-lang-xml.version>
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
@@ -1013,12 +1012,6 @@
 					<groupId>org.apache.qpid</groupId>
 					<artifactId>proton-j</artifactId>
 					<version>${proton-j.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.scala-lang.modules</groupId>
-					<artifactId>scala-xml_2.11</artifactId>
-					<version>${scala-lang-xml.version}</version>
-					<scope>test</scope>
 				</dependency>
 				<!-- External Connect dependencies -->
 				<dependency>
