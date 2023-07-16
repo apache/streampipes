@@ -23,7 +23,6 @@ export class StaticPropertyUtils {
     public static input(configs: UserInput[]) {
         // Configure Properties
         configs.forEach(config => {
-            console.log(config);
             if (config.type === 'checkbox') {
                 this.clickCheckbox(config);
             } else if (config.type === 'button') {
@@ -61,7 +60,6 @@ export class StaticPropertyUtils {
             selector =
                 selector + '-' + input.value.replace(' ', '_').toLowerCase();
         }
-        console.log(selector);
         this.clickSelectionInput(selector, '.mdc-radio');
     }
 

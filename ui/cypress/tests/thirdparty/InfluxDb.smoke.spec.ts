@@ -38,7 +38,7 @@ describe('Test InfluxDB Integration', () => {
             .addInput('input', 'db_port', '8086')
             .addInput('input', 'db_name', 'sp')
             .addInput('input', 'db_measurement', dbName)
-            .addInput('select', 'db_authentication-token', 'check')
+            .addInput('radio', 'db_authentication-token', '')
             .addInput('input', 'undefined-db_token-0', 'sp-admin')
             .addInput('input', 'batch_interval_actions', '2')
             .addInput(
@@ -55,7 +55,7 @@ describe('Test InfluxDB Integration', () => {
             .addInput('input', 'db_port', '8086')
             .addInput('input', 'db_name', 'sp')
             .addInput('input', 'db_measurement', dbName)
-            .addInput('select', 'db_authentication-token', 'check')
+            .addInput('radio', 'db_authentication-token', '')
             .addInput('input', 'undefined-db_token-0', 'sp-admin')
             .addInput('input', 'pollingInterval', '200')
             .build();
