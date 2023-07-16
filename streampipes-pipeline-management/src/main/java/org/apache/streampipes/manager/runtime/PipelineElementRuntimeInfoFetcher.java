@@ -25,11 +25,13 @@ import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.messaging.mqtt.MqttConsumer;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
+import org.apache.streampipes.messaging.pulsar.PulsarConsumer;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 
 import java.util.HashMap;
@@ -67,6 +69,8 @@ public enum PipelineElementRuntimeInfoFetcher {
       return getLatestEventFromJms((JmsTransportProtocol) protocol, converter);
     } else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof MqttTransportProtocol) {
       return getLatestEventFromMqtt((MqttTransportProtocol) protocol, converter);
+    } else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof PulsarTransportProtocol) {
+      return getLatestEventFromPulsar((PulsarTransportProtocol) protocol, converter);
     } else {
       return getLatestEventFromNats((NatsTransportProtocol) protocol, converter);
     }
@@ -143,6 +147,20 @@ public enum PipelineElementRuntimeInfoFetcher {
     waitForEvent(result);
 
     kafkaConsumer.disconnect();
+
+    return result[0];
+  }
+
+  private String getLatestEventFromPulsar(PulsarTransportProtocol protocol,
+                                          SpDataFormatConverter converter) throws SpRuntimeException {
+    final String[] result = {null};
+    PulsarConsumer consumer = new PulsarConsumer(protocol);
+    consumer.connect(event -> {
+      result[0] = converter.convert(event);
+      consumer.disconnect();
+    });
+
+    waitForEvent(result);
 
     return result[0];
   }

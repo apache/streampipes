@@ -38,18 +38,18 @@ PROJECT_URLS = {
 
 # Package requirements.
 base_packages = [
-    "pandas>=1.5.1",
-    "pydantic>=1.10.2,<2",
-    "requests>=2.28.1",
-    "nats-py>=2.2.0",
-    "confluent-kafka>=2.0.2",
-    "typing-extensions>=4.5.0"
+    "pandas~=1.5",
+    "pydantic~=1.10",
+    "requests~=2.28",
+    "nats-py~=2.2",
+    "confluent-kafka~=2.0",
+    "typing-extensions~=4.5",
 ]
 
 dev_packages = base_packages + [
     "autoflake==2.2.0",
-    "black==23.3.0",
-    "blacken-docs==1.14.0",
+    "black==23.7.0",
+    "blacken-docs==1.15.0",
     "flake8==6.0.0",
     "interrogate[png]==1.5.0",
     "isort==5.12.0",
@@ -58,7 +58,7 @@ dev_packages = base_packages + [
     "pre-commit==3.3.0",
     "pytest==7.4.0",
     "pytest-cov==4.1.0",
-    "pyupgrade==3.7.0",
+    "pyupgrade==3.9.0",
     "types-Jinja2==2.11.9",
     "types-requests==2.31.0.0",
 ]

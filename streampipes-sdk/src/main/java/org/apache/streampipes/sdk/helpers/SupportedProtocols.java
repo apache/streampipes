@@ -21,6 +21,7 @@ package org.apache.streampipes.sdk.helpers;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 
 public class SupportedProtocols {
 
@@ -52,6 +53,10 @@ public class SupportedProtocols {
    */
   public static MqttTransportProtocol mqtt() {
     return new MqttTransportProtocol();
+  }
+
+  public static PulsarTransportProtocol pulsar() {
+    return new PulsarTransportProtocol();
   }
 
 }

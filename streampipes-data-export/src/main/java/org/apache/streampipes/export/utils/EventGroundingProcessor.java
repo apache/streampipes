@@ -18,11 +18,13 @@
 
 package org.apache.streampipes.export.utils;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.config.SpProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 public class EventGroundingProcessor {
@@ -47,8 +49,12 @@ public class EventGroundingProcessor {
       return makeKafkaProtocol();
     } else if (isProtocol(configuredProtocol, MqttTransportProtocol.class)) {
       return makeMqttProtocol();
-    } else {
+    } else if (isProtocol(configuredProtocol, NatsTransportProtocol.class)) {
       return makeNatsProtocol();
+    } else if (isProtocol(configuredProtocol, PulsarTransportProtocol.class)) {
+      return makePulsarProtocol();
+    } else {
+      throw new SpRuntimeException("Not recognized protocol: " + configuredProtocol.getName());
     }
   }
 
@@ -76,6 +82,12 @@ public class EventGroundingProcessor {
     var protocol = new NatsTransportProtocol();
     protocol.setBrokerHostname(BackendConfig.INSTANCE.getNatsHost());
     protocol.setPort(BackendConfig.INSTANCE.getNatsPort());
+    return protocol;
+  }
+
+  private PulsarTransportProtocol makePulsarProtocol() {
+    var protocol = new PulsarTransportProtocol();
+    protocol.setBrokerHostname(BackendConfig.INSTANCE.getNatsHost());
     return protocol;
   }
 

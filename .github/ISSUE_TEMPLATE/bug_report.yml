@@ -43,7 +43,7 @@ body:
       description: What Apache StreamPipes version are you using?
       multiple: false
       options:
-        - "0.91.0"
+        - "0.92.0"
         - "dev (current development state)"
         - "Other StreamPipes version (please specify below)"
 

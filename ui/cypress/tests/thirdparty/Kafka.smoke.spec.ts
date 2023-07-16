@@ -56,7 +56,7 @@ describe('Test Kafka Integration', () => {
             .addProtocolInput('input', 'host', host)
             .addProtocolInput('input', 'port', port)
             .addProtocolInput('click', 'sp-reload', '')
-            .addProtocolInput('select', topicName, 'check')
+            .addProtocolInput('checkbox', topicName, 'check')
             .setFormat('json')
             .addFormatInput('checkbox', 'json_options-single_object', '')
             .build();
