@@ -192,12 +192,6 @@ $accent: map-get($custom-theme-light, accent);
 }
 
 .dark-mode {
-    //@include angular-material-theme($custom-theme-dark);
-    @include mat.all-component-themes($custom-theme-dark);
-    /*
- TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated
- */
-    @include mat.all-legacy-component-themes($custom-theme-dark);
     @include mat.all-component-themes($custom-theme-dark);
 
     .base-style {
@@ -229,14 +223,8 @@ $accent: map-get($custom-theme-light, accent);
 }
 
 .light-mode {
-    //@include angular-material-theme($custom-theme-light);
     @include mat.core-theme($custom-theme-light);
     @include mat.all-component-typographies();
-    @include mat.all-component-themes($custom-theme-light);
-    /*
- TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated
- */
-    @include mat.all-legacy-component-themes($custom-theme-light);
     @include mat.all-component-themes($custom-theme-light);
 
     .base-style {
@@ -255,5 +243,23 @@ $accent: map-get($custom-theme-light, accent);
 
     .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
         line-height: 30px;
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        background: var(--color-bg-0);
+        border: 1px solid var(--color-bg-3);
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled)
+        .mdc-line-ripple::before {
+        border-bottom-color: var(--color-bg-3);
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+        background: var(--color-bg-3);
+    }
+
+    .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+        transform: none;
     }
 }
