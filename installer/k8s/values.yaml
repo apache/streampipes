@@ -27,7 +27,7 @@ streampipes:
     appName: "backend"
     port: 8030
     persistence:
-      storageClassName: ""
+      storageClassName: "hostpath"
       storageSize: "1Gi"
       claimName: "backend-pvc"
       pvName: "backend-pv"
@@ -36,7 +36,7 @@ streampipes:
       port: 8030
   ui:
     appName: "ui"
-    resolverActive: false
+    resolverActive: true
     # DNS resolver when using the Nginx proxy
     resolver: "kube-dns.kube-system.svc.cluster.local"
     service:
@@ -76,7 +76,7 @@ external:
     user: "admin"
     password: "admin"
     persistence:
-      storageClassName: ""
+      storageClassName: "hostpath"
       storageSize: "1Gi"
       claimName: "couchdb-pvc"
       pvName: "couchdb-pv"
@@ -91,7 +91,7 @@ external:
     # For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
     initMode: "setup"
     persistence:
-      storageClassName: ""
+      storageClassName: "hostpath"
       storageSize: "1Gi"
       storageSizeV1: "1Gi"
       claimName: "influxdb2-pvc"
