@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-06-17 23:53:33.
+// Generated using typescript-generator version 3.1.1185 on 2023-07-16 11:54:46.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -144,7 +145,7 @@ export class AdapterDescription extends NamedStreamPipesEntity {
 }
 
 export class AdapterEventPreview {
-    inputData: { [index: string]: GuessTypeInfo };
+    inputData: string;
     rules: TransformationRuleDescriptionUnion[];
 
     static fromData(
@@ -155,9 +156,7 @@ export class AdapterEventPreview {
             return data;
         }
         const instance = target || new AdapterEventPreview();
-        instance.inputData = __getCopyObjectFn(GuessTypeInfo.fromData)(
-            data.inputData,
-        );
+        instance.inputData = data.inputData;
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
@@ -1892,7 +1891,7 @@ export class FunctionId {
 
 export class GuessSchema {
     '@class': 'org.apache.streampipes.model.connect.guess.GuessSchema';
-    'eventPreview': { [index: string]: GuessTypeInfo }[];
+    'eventPreview': string[];
     'eventSchema': EventSchema;
     'fieldStatusInfo': { [index: string]: FieldStatusInfo };
 
@@ -1902,31 +1901,13 @@ export class GuessSchema {
         }
         const instance = target || new GuessSchema();
         instance['@class'] = data['@class'];
-        instance.eventPreview = __getCopyArrayFn(
-            __getCopyObjectFn(GuessTypeInfo.fromData),
-        )(data.eventPreview);
+        instance.eventPreview = __getCopyArrayFn(__identity<string>())(
+            data.eventPreview,
+        );
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.fieldStatusInfo = __getCopyObjectFn(FieldStatusInfo.fromData)(
             data.fieldStatusInfo,
         );
-        return instance;
-    }
-}
-
-export class GuessTypeInfo {
-    type: string;
-    value: any;
-
-    static fromData(
-        data: GuessTypeInfo,
-        target?: GuessTypeInfo,
-    ): GuessTypeInfo {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new GuessTypeInfo();
-        instance.type = data.type;
-        instance.value = data.value;
         return instance;
     }
 }
@@ -2262,22 +2243,6 @@ export class NatsTransportProtocol extends TransportProtocol {
         const instance = target || new NatsTransportProtocol();
         super.fromData(data, instance);
         instance.port = data.port;
-        return instance;
-    }
-}
-
-export class PulsarTransportProtocol extends TransportProtocol {
-    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
-
-    static 'fromData'(
-        data: PulsarTransportProtocol,
-        target?: PulsarTransportProtocol,
-    ): PulsarTransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PulsarTransportProtocol();
-        super.fromData(data, instance);
         return instance;
     }
 }
@@ -2998,6 +2963,22 @@ export class ProtocolDescription extends NamedStreamPipesEntity {
             data.config,
         );
         instance.sourceType = data.sourceType;
+        return instance;
+    }
+}
+
+export class PulsarTransportProtocol extends TransportProtocol {
+    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
+
+    static 'fromData'(
+        data: PulsarTransportProtocol,
+        target?: PulsarTransportProtocol,
+    ): PulsarTransportProtocol {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PulsarTransportProtocol();
+        super.fromData(data, instance);
         return instance;
     }
 }

@@ -23,19 +23,24 @@ import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
-import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventSchema;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
-  private List<IAdapterPipelineElement> pipelineElements;
-  private Map<String, GuessTypeInfo> event;
+  private final List<IAdapterPipelineElement> pipelineElements;
+  private final String event;
+
+  private ObjectMapper objectMapper;
 
   public AdapterEventPreviewPipeline(AdapterEventPreview previewRequest) {
+    this.objectMapper = new ObjectMapper();
     this.pipelineElements = new AdapterPipelineGeneratorBase().makeAdapterPipelineElements(previewRequest.getRules());
     this.event = previewRequest.getInputData();
   }
@@ -67,18 +72,11 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
     return null;
   }
 
-  public Map<String, GuessTypeInfo> makePreview() {
-    Map<String, Object> ev = this.event
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getValue()));
+  public String makePreview() throws JsonProcessingException {
+    var ev = objectMapper.readValue(event, HashMap.class);
     this.process(ev);
 
-    return ev
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(Map.Entry::getKey,
-            e -> new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
+    return this.objectMapper.writeValueAsString(ev);
   }
 
   @Override

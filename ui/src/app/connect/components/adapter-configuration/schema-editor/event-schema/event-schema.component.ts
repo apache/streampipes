@@ -35,9 +35,8 @@ import {
     EventPropertyNested,
     EventPropertyPrimitive,
     EventSchema,
-    GuessSchema,
     FieldStatusInfo,
-    GuessTypeInfo,
+    GuessSchema,
     StreamPipesErrorMessage,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
@@ -108,8 +107,8 @@ export class EventSchemaComponent implements OnChanges {
     validEventSchema = false;
     schemaErrorHints: UserErrorMessage[] = [];
 
-    eventPreview: Record<string, GuessTypeInfo>[];
-    desiredPreview: Record<string, GuessTypeInfo>;
+    eventPreview: string[];
+    desiredPreview: Record<string, any>;
     fieldStatusInfo: Record<string, FieldStatusInfo>;
 
     options: ITreeOptions = {
