@@ -39,7 +39,7 @@ PROJECT_URLS = {
 # Package requirements.
 base_packages = [
     "pandas~=1.5",
-    "pydantic~=1.10",
+    "pydantic>=1.10,<3.0",
     "requests~=2.28",
     "nats-py~=2.2",
     "confluent-kafka~=2.0",
