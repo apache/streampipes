@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100" fxLayout="column" class="form-field-small">
     <h5>Latitude</h5>
     <sp-select-property
         [availableProperties]="fieldProvider.numericFields"
@@ -40,7 +40,7 @@
     </sp-select-property>
 
     <h5>Map Zoom</h5>
-    <mat-form-field fxFlex="100" color="accent">
+    <mat-form-field fxFlex="100" color="accent" appearance="outline">
         <mat-label>
             <!-- <mat-icon>Zoom</mat-icon> -->
             <span>enter zoom value</span></mat-label
@@ -65,7 +65,7 @@
     </mat-checkbox>
 
     <h5>Marker or Trace</h5>
-    <mat-form-field color="accent" fxFlex="100">
+    <mat-form-field color="accent" fxFlex="100" appearance="outline">
         <!-- <mat-label>Marker or Trace</mat-label> -->
         <mat-select
             [(value)]="
@@ -112,6 +112,7 @@
     </h5>
     <mat-form-field
         color="accent"
+        appearance="outline"
         fxFlex="100"
         *ngIf="
             currentlyConfiguredWidget.visualizationConfig
