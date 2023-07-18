@@ -35,7 +35,7 @@ public abstract class StreamPipesServiceBase {
   public static final String AUTO_GENERATED_SERVICE_ID = RandomStringUtils.randomAlphanumeric(6);
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesServiceBase.class);
 
-  protected void startStreamPipesService(Class<?> serviceClass,
+  public void startStreamPipesService(Class<?> serviceClass,
                                          String serviceGroup,
                                          String serviceId,
                                          BaseNetworkingConfig networkingConfig) throws UnknownHostException {

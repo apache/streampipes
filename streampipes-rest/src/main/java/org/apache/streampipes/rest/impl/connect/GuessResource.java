@@ -28,6 +28,7 @@ import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +78,11 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response getAdapterEventPreview(AdapterEventPreview previewRequest) {
-    return ok(managementService.performAdapterEventPreview(previewRequest));
+    try {
+      return ok(managementService.performAdapterEventPreview(previewRequest));
+    } catch (JsonProcessingException e) {
+      return badRequest();
+    }
   }
 }
 

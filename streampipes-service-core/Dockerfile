@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:17-jre-focal
+FROM eclipse-temurin:17-jre-alpine
 
-COPY target/streampipes-backend.jar  /streampipes-backend.jar
+COPY target/streampipes-core.jar  /streampipes-core.jar
 
-ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]
+ENTRYPOINT ["java", "-jar", "/streampipes-core.jar"]
