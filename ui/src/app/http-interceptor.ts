@@ -23,22 +23,22 @@ import {
     HttpRequest,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './services/auth.service';
 import { Injectable } from '@angular/core';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Injectable()
 export class HttpInterceptorProvider implements HttpInterceptor {
-    constructor(private authService: AuthService) {}
+    constructor(private currentUserService: CurrentUserService) {}
 
     intercept(
         req: HttpRequest<any>,
         next: HttpHandler,
     ): Observable<HttpEvent<any>> {
-        if (this.authService.authToken$.getValue()) {
+        if (this.currentUserService.authToken$.getValue()) {
             const clonedReq = req.clone({
                 headers: req.headers.set(
                     'Authorization',
-                    'Bearer ' + this.authService.authToken$.getValue(),
+                    'Bearer ' + this.currentUserService.authToken$.getValue(),
                 ),
             });
             return next.handle(clonedReq);

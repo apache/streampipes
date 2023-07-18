@@ -25,7 +25,10 @@ import {
     AdapterMonitoringService,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.routes';
 
 @Component({
@@ -40,14 +43,14 @@ export class SpAdapterDetailsMetricsComponent
     adapterMetrics: SpMetricsEntry;
 
     constructor(
-        authService: AuthService,
+        currentUserService: CurrentUserService,
         activatedRoute: ActivatedRoute,
         adapterService: AdapterService,
         adapterMonitoringService: AdapterMonitoringService,
         breadcrumbService: SpBreadcrumbService,
     ) {
         super(
-            authService,
+            currentUserService,
             activatedRoute,
             adapterService,
             adapterMonitoringService,

@@ -20,6 +20,7 @@
 import { NavigationEnd, Router } from '@angular/router';
 import { PageName } from '../../_enums/page-name.enum';
 import { AuthService } from '../../services/auth.service';
+import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
 
 export abstract class BaseNavigationComponent {
@@ -68,13 +69,14 @@ export abstract class BaseNavigationComponent {
 
 
   constructor(protected authService: AuthService,
+              protected currentUserService: CurrentUserService,
               protected router: Router,
               private appConstants: AppConstants) {
 
     }
 
     onInit() {
-      this.authService.user$.subscribe(user => {
+      this.currentUserService.user$.subscribe(user => {
         this.menu.forEach(m => m.visible = this.isNavItemVisible(m.pageNames));
         this.admin.forEach(m => m.visible = this.isNavItemVisible(m.pageNames));
         this.notificationsVisible = this.isNavItemVisible([PageName.NOTIFICATIONS]);

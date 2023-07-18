@@ -24,6 +24,7 @@ import {
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 import {
+    CurrentUserService,
     DialogService,
     PanelType,
     SpBreadcrumbService,
@@ -60,6 +61,7 @@ export class DataExplorerDashboardOverviewComponent
         private dashboardService: DataViewDataExplorerService,
         public dialogService: DialogService,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private router: Router,
         private breadcrumbService: SpBreadcrumbService,
     ) {}
@@ -68,16 +70,18 @@ export class DataExplorerDashboardOverviewComponent
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpDataExplorerRoutes.BASE),
         );
-        this.authSubscription = this.authService.user$.subscribe(user => {
-            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
-            );
-            this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW,
-            );
-            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-            this.displayedColumns = ['name', 'actions'];
-        });
+        this.authSubscription = this.currentUserService.user$.subscribe(
+            user => {
+                this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+                    UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+                );
+                this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
+                    UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW,
+                );
+                this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+                this.displayedColumns = ['name', 'actions'];
+            },
+        );
 
         this.getDashboards();
     }
