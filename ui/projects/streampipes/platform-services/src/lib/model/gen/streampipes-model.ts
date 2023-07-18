@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-06-17 23:53:33.
+// Generated using typescript-generator version 3.1.1185 on 2023-07-18 09:45:12.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -2266,22 +2267,6 @@ export class NatsTransportProtocol extends TransportProtocol {
     }
 }
 
-export class PulsarTransportProtocol extends TransportProtocol {
-    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
-
-    static 'fromData'(
-        data: PulsarTransportProtocol,
-        target?: PulsarTransportProtocol,
-    ): PulsarTransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PulsarTransportProtocol();
-        super.fromData(data, instance);
-        return instance;
-    }
-}
-
 export class Notification {
     additionalInformation: string;
     description: string;
@@ -3002,6 +2987,22 @@ export class ProtocolDescription extends NamedStreamPipesEntity {
     }
 }
 
+export class PulsarTransportProtocol extends TransportProtocol {
+    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
+
+    static 'fromData'(
+        data: PulsarTransportProtocol,
+        target?: PulsarTransportProtocol,
+    ): PulsarTransportProtocol {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PulsarTransportProtocol();
+        super.fromData(data, instance);
+        return instance;
+    }
+}
+
 export class QuantitativeValue extends ValueSpecification {
     '@class': 'org.apache.streampipes.model.schema.QuantitativeValue';
     'maxValue': number;
@@ -3208,6 +3209,26 @@ export class SecretStaticProperty extends StaticProperty {
         super.fromData(data, instance);
         instance.encrypted = data.encrypted;
         instance.value = data.value;
+        return instance;
+    }
+}
+
+export class ShortUserInfo {
+    displayName: string;
+    email: string;
+    principalId: string;
+
+    static fromData(
+        data: ShortUserInfo,
+        target?: ShortUserInfo,
+    ): ShortUserInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ShortUserInfo();
+        instance.displayName = data.displayName;
+        instance.email = data.email;
+        instance.principalId = data.principalId;
         return instance;
     }
 }
