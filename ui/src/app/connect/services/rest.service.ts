@@ -27,7 +27,6 @@ import {
     AdapterDescription,
     AdapterEventPreview,
     GuessSchema,
-    GuessTypeInfo,
     PlatformServicesCommons,
     SpDataStream,
 } from '@streampipes/platform-services';
@@ -56,13 +55,13 @@ export class RestService {
 
     getAdapterEventPreview(
         adapterEventPreview: AdapterEventPreview,
-    ): Observable<Record<string, GuessTypeInfo>> {
+    ): Observable<Record<string, any>> {
         return this.http
             .post(
                 `${this.connectPath}/master/guess/schema/preview`,
                 adapterEventPreview,
             )
-            .pipe(map(response => response as Record<string, GuessTypeInfo>));
+            .pipe(map(response => response as Record<string, any>));
     }
 
     getSourceDetails(sourceElementId): Observable<SpDataStream> {

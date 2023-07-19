@@ -19,7 +19,7 @@
 import { NgModule } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 import { StreampipesComponent } from './components/streampipes/streampipes.component';
 import { MatButtonModule } from '@angular/material/button';

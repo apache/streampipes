@@ -22,9 +22,9 @@
         fxFlex="100"
         fxLayoutAlign="start center"
         fxLayout="row"
-        class="pl-10"
+        class="pl-10 form-field-small"
     >
-        <div fxFlex="100" fxLayout="row">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button
                 mat-button
                 mat-raised-button
@@ -48,7 +48,6 @@
                 &nbsp;Uninstall selected
             </button>
             <button
-                mat-button
                 mat-icon-button
                 color="accent"
                 class="mr-10"
@@ -59,7 +58,6 @@
                 <i class="material-icons">queue</i>
             </button>
             <button
-                mat-button
                 mat-icon-button
                 color="accent"
                 class="mr-10"
@@ -72,50 +70,58 @@
         </div>
         <span fxFlex></span>
         <div fxLayoutAlign="start center" fxLayout="row">
-            <mat-form-field color="accent">
-                <mat-select
-                    [(value)]="selectedCategory"
-                    (selectionChange)="filterByCatergory($event)"
-                >
-                    <mat-option [value]="'all'"> All </mat-option>
-                    <mat-option [value]="'set'"> Sets </mat-option>
-                    <mat-option [value]="'stream'"> Streams </mat-option>
-                    <mat-option [value]="'sepa'"> Processors </mat-option>
-                    <mat-option [value]="'action'"> Sinks </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="form-field-small">
+                <mat-form-field color="accent" appearance="outline">
+                    <mat-select
+                        [(value)]="selectedCategory"
+                        (selectionChange)="filterByCatergory($event)"
+                    >
+                        <mat-option [value]="'all'"> All </mat-option>
+                        <mat-option [value]="'set'"> Sets </mat-option>
+                        <mat-option [value]="'stream'"> Streams </mat-option>
+                        <mat-option [value]="'sepa'"> Processors </mat-option>
+                        <mat-option [value]="'action'"> Sinks </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
         <div class="ml-10" fxLayoutAlign="start center" fxLayout="row">
-            <mat-icon>search</mat-icon>
-
-            <mat-form-field
-                class="form-style"
-                color="accent"
-                floatLabel="never"
-            >
-                <input
-                    matInput
-                    placeholder="Find Element"
-                    value=""
-                    [(ngModel)]="filterTerm"
-                    name="something"
-                />
-            </mat-form-field>
+            <div class="form-field-small">
+                <mat-form-field
+                    class="form-style"
+                    color="accent"
+                    appearance="outline"
+                >
+                    <input
+                        matInput
+                        placeholder="Find Element"
+                        value=""
+                        [(ngModel)]="filterTerm"
+                        name="something"
+                    />
+                    <mat-icon matPrefix>search</mat-icon>
+                </mat-form-field>
+            </div>
         </div>
         <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
-            <mat-form-field color="accent">
-                <mat-select [(value)]="selectedInstallationStatus">
-                    <mat-option [value]="'all'">
-                        Available & Installed
-                    </mat-option>
-                    <mat-option [value]="'installed'"> Installed </mat-option>
-                    <mat-option [value]="'available'"> Available </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="form-field-small">
+                <mat-form-field color="accent" appearance="outline">
+                    <mat-select [(value)]="selectedInstallationStatus">
+                        <mat-option [value]="'all'">
+                            Available & Installed
+                        </mat-option>
+                        <mat-option [value]="'installed'">
+                            Installed
+                        </mat-option>
+                        <mat-option [value]="'available'">
+                            Available
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
         <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
             <button
-                mat-button
                 mat-icon-button
                 color="accent"
                 (click)="getEndpointItems()"
@@ -126,7 +132,6 @@
             </button>
         </div>
         <button
-            mat-button
             mat-icon-button
             color="accent"
             (click)="showManageRdfEndpointsDialog()"

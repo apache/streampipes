@@ -39,9 +39,13 @@
         fxFlex="100"
         fxLayout="column"
     >
-        <div fxFlex="100" fxLayout="column">
+        <div fxFlex="100" fxLayout="column" class="form-field-small">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                <mat-form-field color="accent" class="w-140-px mr-5">
+                <mat-form-field
+                    color="accent"
+                    class="w-140-px mr-5"
+                    appearance="outline"
+                >
                     <mat-label>Field</mat-label>
                     <mat-select
                         [(value)]="filter.field"
@@ -58,7 +62,11 @@
                         >
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field color="accent" class="w-50-px mr-5">
+                <mat-form-field
+                    color="accent"
+                    class="w-60-px mr-5"
+                    appearance="outline"
+                >
                     <mat-select
                         [(value)]="filter.operator"
                         (selectionChange)="updateWidget()"
@@ -86,6 +94,7 @@
                 </mat-form-field>
                 <mat-form-field
                     color="accent"
+                    appearance="outline"
                     class="w-140-px mr-5"
                     *ngIf="
                         !filter.field ||
@@ -105,6 +114,7 @@
                 </mat-form-field>
                 <mat-form-field
                     color="accent"
+                    appearance="outline"
                     class="w-140-px mr-5"
                     *ngIf="
                         filter.field && tagValues.has(filter.field.runtimeName)

@@ -33,13 +33,17 @@
                             "
                         >
                             <div
-                                mat-list-avatar
+                                matListItemAvatar
                                 class="pipeline-avatar sp-accent-bg"
                             >
                                 {{ iconText(pipeline.measureName) }}
                             </div>
-                            <h4 mat-line>{{ pipeline.pipelineName }}</h4>
-                            <p mat-line>{{ pipeline.measureName }}</p>
+                            <span matListItemTitle>{{
+                                pipeline.pipelineName
+                            }}</span>
+                            <span matListItemLine>{{
+                                pipeline.measureName
+                            }}</span>
                         </mat-list-item>
                     </mat-list>
                 </div>
@@ -57,7 +61,7 @@
                             "
                         >
                             <div
-                                mat-list-avatar
+                                matListItemAvatar
                                 class="pipeline-avatar sp-accent-bg"
                             >
                                 <span *ngIf="!widget.widgetIconName">{{
@@ -67,8 +71,12 @@
                                     ><i class="{{ widget.widgetIconName }}"></i
                                 ></span>
                             </div>
-                            <h4 mat-line>{{ widget.widgetLabel }}</h4>
-                            <p mat-line>{{ widget.widgetDescription }}</p>
+                            <span matListItemTitle>{{
+                                widget.widgetLabel
+                            }}</span>
+                            <span matListItemLine>{{
+                                widget.widgetDescription
+                            }}</span>
                         </mat-list-item>
                     </mat-list>
                 </div>
@@ -118,13 +126,12 @@
             color="accent"
             (click)="next()"
             [disabled]="'configure-widget' === page && !formValid"
+            *ngIf="page === 'configure-widget'"
             data-cy="dashboard-new-widget-next-btn"
         >
-            <span *ngIf="!editMode && 'configure-widget' === page">Create</span>
-            <span *ngIf="editMode && 'configure-widget' === page">Save</span>
-            <span *ngIf="editMode === null && !('configure-widget' === page)"
-                >Next</span
-            >
+            {{ !editMode && 'configure-widget' === page ? 'Create' : '' }}
+            {{ editMode && 'configure-widget' === page ? 'Save' : '' }}
+            {{ editMode === null && 'configure-widget' === page ? 'Next' : '' }}
         </button>
     </div>
 </div>

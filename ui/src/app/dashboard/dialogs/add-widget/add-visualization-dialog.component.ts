@@ -79,7 +79,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     dashboard: Dashboard;
 
     selectedType: any;
-    page: any = 'select-pipeline';
+    page = 'select-pipeline';
     dialogTitle: string;
 
     parentForm: UntypedFormGroup;

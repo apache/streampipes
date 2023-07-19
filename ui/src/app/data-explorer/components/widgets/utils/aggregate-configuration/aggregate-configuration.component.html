@@ -21,9 +21,14 @@
         fxFlex="100"
         fxLayout="column"
         fxLayoutAlign="start center"
-        class="ml-0 mr-0"
+        class="ml-0 mr-5 form-field-small"
     >
-        <mat-form-field fxFlex="100" class="w-100" color="accent">
+        <mat-form-field
+            appearance="outline"
+            fxFlex="100"
+            class="w-100"
+            color="accent"
+        >
             <mat-select
                 [(value)]="queryConfig.aggregationTimeUnit"
                 class="w-100"
@@ -37,7 +42,12 @@
             </mat-select>
             <mat-label>Unit</mat-label>
         </mat-form-field>
-        <mat-form-field fxFlex="100" class="w-100" color="accent">
+        <mat-form-field
+            appearance="outline"
+            fxFlex="100"
+            class="w-100"
+            color="accent"
+        >
             <input
                 matInput
                 type="number"
