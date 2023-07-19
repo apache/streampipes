@@ -16,16 +16,18 @@
  *
  */
 
-import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import {
     AdapterDescription,
     AdapterService,
     AdapterMonitoringService,
 } from '@streampipes/platform-services';
-import { SpNavigationItem } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpNavigationItem,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { SpAdapterDetailsTabs } from './adapter-details-tabs';
-import { SpBreadcrumbService } from '../../../../../projects/streampipes/shared-ui/src/lib/services/breadcrumb.service';
 
 export abstract class SpAbstractAdapterDetailsDirective {
     currentAdapterId: string;
@@ -33,7 +35,7 @@ export abstract class SpAbstractAdapterDetailsDirective {
     adapter: AdapterDescription;
 
     constructor(
-        protected authService: AuthService,
+        protected currentUserService: CurrentUserService,
         protected activatedRoute: ActivatedRoute,
         protected adapterService: AdapterService,
         protected adapterMonitoringService: AdapterMonitoringService,
@@ -41,7 +43,7 @@ export abstract class SpAbstractAdapterDetailsDirective {
     ) {}
 
     onInit(): void {
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             const elementId = this.activatedRoute.snapshot.params.elementId;
             if (elementId) {
                 this.tabs = new SpAdapterDetailsTabs().getTabs(elementId);

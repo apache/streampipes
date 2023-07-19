@@ -16,28 +16,35 @@
  *
  */
 
-import { Component } from '@angular/core';
-import { UserAccount } from '@streampipes/platform-services';
-import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
-import { Observable } from 'rxjs';
+import { UserInfo } from '@streampipes/platform-services';
+import { Injectable } from '@angular/core';
 
-@Component({
-    selector: 'sp-security-user-config',
-    templateUrl: './security-user-config.component.html',
-    styleUrls: ['./security-user-config.component.scss'],
-})
-export class SecurityUserConfigComponent extends AbstractSecurityPrincipalConfig<UserAccount> {
-    displayedColumns: string[] = ['username', 'fullName', 'edit'];
+const TOKEN_KEY = 'auth-token';
+const USER_KEY = 'auth-user';
 
-    getObservable(): Observable<UserAccount[]> {
-        return this.userAdminService.getAllUserAccounts();
+@Injectable({ providedIn: 'root' })
+export class JwtTokenStorageService {
+    constructor() {}
+
+    clearTokens(): void {
+        window.localStorage.clear();
     }
 
-    editUser(account: UserAccount) {
-        this.openEditDialog(account, true);
+    public saveToken(token: string): void {
+        window.localStorage.removeItem(TOKEN_KEY);
+        window.localStorage.setItem(TOKEN_KEY, token);
     }
 
-    getNewInstance(): UserAccount {
-        return new UserAccount();
+    public getToken(): string {
+        return localStorage.getItem(TOKEN_KEY);
+    }
+
+    public saveUser(user: UserInfo): void {
+        window.localStorage.removeItem(USER_KEY);
+        window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+    }
+
+    public getUser(): UserInfo {
+        return JSON.parse(localStorage.getItem(USER_KEY));
     }
 }

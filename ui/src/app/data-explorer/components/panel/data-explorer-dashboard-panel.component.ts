@@ -42,6 +42,7 @@ import {
 import { DataExplorerDashboardSlideViewComponent } from '../widget-view/slide-view/data-explorer-dashboard-slide-view.component';
 import {
     ConfirmDialogComponent,
+    CurrentUserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
@@ -104,6 +105,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private timeSelectionService: TimeSelectionService,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private dashboardService: DataViewDataExplorerService,
         private route: ActivatedRoute,
         private dataViewService: DataViewDataExplorerService,
@@ -120,7 +122,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
         this.getDashboard(params.id, startTime, endTime);
 
-        this.authSubscription = this.authService.user$.subscribe(_ => {
+        this.authSubscription = this.currentUserService.user$.subscribe(_ => {
             this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
             );

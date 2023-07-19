@@ -64,6 +64,7 @@ import org.apache.streampipes.rest.impl.admin.ExtensionsServiceEndpointResource;
 import org.apache.streampipes.rest.impl.admin.GeneralConfigurationResource;
 import org.apache.streampipes.rest.impl.admin.PermissionResource;
 import org.apache.streampipes.rest.impl.admin.PipelineElementImport;
+import org.apache.streampipes.rest.impl.admin.UserAdminResource;
 import org.apache.streampipes.rest.impl.admin.UserGroupResource;
 import org.apache.streampipes.rest.impl.connect.AdapterResource;
 import org.apache.streampipes.rest.impl.connect.DescriptionResource;
@@ -153,6 +154,7 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         RestorePasswordResource.class,
         ServiceHealthResource.class,
         UserResource.class,
+        UserAdminResource.class,
         Version.class,
 
         VisualizablePipelineResource.class,

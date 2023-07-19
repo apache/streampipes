@@ -16,33 +16,22 @@
  *
  */
 
-import { UserInfo } from '@streampipes/platform-services';
+package org.apache.streampipes.rest.utils;
 
-const TOKEN_KEY = 'auth-token';
-const USER_KEY = 'auth-user';
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.UserAccount;
 
-export class JwtTokenStorageService {
-    constructor() {}
+import java.util.List;
 
-    clearTokens(): void {
-        window.localStorage.clear();
+public class Utils {
+
+  public static void removeCredentials(Principal principal) {
+    if (principal instanceof UserAccount) {
+      ((UserAccount) principal).setPassword("");
     }
+  }
 
-    public saveToken(token: string): void {
-        window.localStorage.removeItem(TOKEN_KEY);
-        window.localStorage.setItem(TOKEN_KEY, token);
-    }
-
-    public getToken(): string {
-        return localStorage.getItem(TOKEN_KEY);
-    }
-
-    public saveUser(user: UserInfo): void {
-        window.localStorage.removeItem(USER_KEY);
-        window.localStorage.setItem(USER_KEY, JSON.stringify(user));
-    }
-
-    public getUser(): UserInfo {
-        return JSON.parse(localStorage.getItem(USER_KEY));
-    }
+  public static void removeCredentials(List<Principal> principals) {
+    principals.forEach(Utils::removeCredentials);
+  }
 }

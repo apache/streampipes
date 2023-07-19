@@ -25,8 +25,6 @@ import { NotificationCountService } from './notification-count-service';
 import { PropertySelectorService } from './property-selector.service';
 import { ElementIconText } from './get-element-icon-text.service';
 import { AppConstants } from './app.constants';
-import { JwtTokenStorageService } from './jwt-token-storage.service';
-import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SecurePipe } from './secure.pipe';
 
 @NgModule({
@@ -37,12 +35,10 @@ import { SecurePipe } from './secure.pipe';
         RestApi,
         AuthService,
         ElementIconText,
-        JwtTokenStorageService,
         ShepherdService,
         TourProviderService,
         NotificationCountService,
         PropertySelectorService,
-        PlatformServicesModule,
         SecurePipe,
     ],
     exports: [SecurePipe],

@@ -32,6 +32,7 @@ import { MatSort } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-pipeline-overview',
@@ -76,13 +77,14 @@ export class PipelineOverviewComponent implements OnInit {
     constructor(
         public pipelineOperationsService: PipelineOperationsService,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
     ) {
         this.starting = false;
         this.stopping = false;
     }
 
     ngOnInit() {
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,

@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-07-16 11:54:46.
+// Generated using typescript-generator version 3.1.1185 on 2023-07-19 22:10:18.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3189,6 +3189,26 @@ export class SecretStaticProperty extends StaticProperty {
         super.fromData(data, instance);
         instance.encrypted = data.encrypted;
         instance.value = data.value;
+        return instance;
+    }
+}
+
+export class ShortUserInfo {
+    displayName: string;
+    email: string;
+    principalId: string;
+
+    static fromData(
+        data: ShortUserInfo,
+        target?: ShortUserInfo,
+    ): ShortUserInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ShortUserInfo();
+        instance.displayName = data.displayName;
+        instance.email = data.email;
+        instance.principalId = data.principalId;
         return instance;
     }
 }

@@ -29,6 +29,7 @@ import { AppConstants } from '../../../services/app.constants';
 import { Subscription, timer } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { NotificationCountService } from '../../../services/notification-count-service';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-toolbar',
@@ -52,14 +53,15 @@ export class ToolbarComponent
 
     constructor(
         router: Router,
+        authService: AuthService,
         private profileService: ProfileService,
         private restApi: RestApi,
         private overlay: OverlayContainer,
-        authService: AuthService,
+        currentUserService: CurrentUserService,
         appConstants: AppConstants,
         public notificationCountService: NotificationCountService,
     ) {
-        super(authService, router, appConstants);
+        super(authService, currentUserService, router, appConstants);
     }
 
     ngOnInit(): void {
@@ -76,7 +78,7 @@ export class ToolbarComponent
                 this.unreadNotificationCount = count;
             },
         );
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             const displayName = user.displayName;
             this.userEmail =
                 displayName.length > 33
@@ -85,17 +87,18 @@ export class ToolbarComponent
             this.profileService
                 .getUserProfile(user.username)
                 .subscribe(userInfo => {
-                    this.authService.darkMode$.next(userInfo.darkMode);
-                    this.darkMode = this.authService.darkMode$.getValue();
+                    this.currentUserService.darkMode$.next(userInfo.darkMode);
+                    this.darkMode =
+                        this.currentUserService.darkMode$.getValue();
                     this.modifyAppearance(userInfo.darkMode);
                 });
         });
 
         this.appearanceControl = new UntypedFormControl(
-            this.authService.darkMode$.getValue(),
+            this.currentUserService.darkMode$.getValue(),
         );
         this.appearanceControl.valueChanges.subscribe(darkMode => {
-            this.authService.darkMode$.next(darkMode);
+            this.currentUserService.darkMode$.next(darkMode);
             this.modifyAppearance(darkMode);
         });
         super.onInit();

@@ -21,8 +21,12 @@ import { ProfileService } from '../../profile.service';
 import { BasicProfileSettings } from '../basic-profile-settings';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
-import { JwtTokenStorageService } from '../../../services/jwt-token-storage.service';
-import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    DialogRef,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { ChangeEmailDialogComponent } from '../../dialog/change-email/change-email-dialog.component';
 import { ChangePasswordDialogComponent } from '../../dialog/change-password/change-password-dialog.component';
 import { Router } from '@angular/router';
@@ -44,15 +48,15 @@ export class GeneralProfileSettingsComponent
         authService: AuthService,
         profileService: ProfileService,
         appConstants: AppConstants,
-        tokenService: JwtTokenStorageService,
+        currentUserService: CurrentUserService,
         private dialogService: DialogService,
         private router: Router,
     ) {
-        super(profileService, appConstants, tokenService, authService);
+        super(profileService, appConstants, currentUserService, authService);
     }
 
     ngOnInit(): void {
-        this.authService.darkMode$.subscribe(
+        this.currentUserService.darkMode$.subscribe(
             darkMode => (this.darkMode = darkMode),
         );
         this.receiveUserData();
@@ -60,17 +64,17 @@ export class GeneralProfileSettingsComponent
 
     ngOnDestroy(): void {
         if (!this.darkModeChanged) {
-            this.authService.darkMode$.next(this.originalDarkMode);
+            this.currentUserService.darkMode$.next(this.originalDarkMode);
         }
     }
 
     changeModePreview(value: boolean) {
-        this.authService.darkMode$.next(value);
+        this.currentUserService.darkMode$.next(value);
     }
 
     onUserDataReceived() {
         this.originalDarkMode = this.userData.darkMode;
-        this.authService.darkMode$.next(this.userData.darkMode);
+        this.currentUserService.darkMode$.next(this.userData.darkMode);
     }
 
     updateAppearanceMode() {
