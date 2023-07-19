@@ -40,10 +40,11 @@
     <div
         fxFlex="100"
         fxLayout="row"
+        fxLayoutGap="10px"
         *ngFor="let ep of outputStrategy.eventProperties; let i = index"
     >
         <div fxLayout="column" fxFlex="30">
-            <mat-form-field fxFlex>
+            <mat-form-field fxFlex color="accent">
                 <mat-label>Runtime name</mat-label>
                 <input
                     [(ngModel)]="ep.runtimeName"
@@ -54,7 +55,7 @@
             </mat-form-field>
         </div>
         <div fxLayout="column" fxFlex="30">
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="example-full-width" color="accent">
                 <mat-label>Runtime type</mat-label>
                 <mat-select
                     [(ngModel)]="ep.runtimeType"
@@ -71,7 +72,7 @@
             </mat-form-field>
         </div>
         <div fxLayout="column" fxFlex="30">
-            <mat-form-field fxFlex>
+            <mat-form-field fxFlex color="accent">
                 <mat-label>Semantic type</mat-label>
                 <input
                     [(ngModel)]="ep.domainProperties[0]"

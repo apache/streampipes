@@ -18,10 +18,7 @@
 
 <div fxLayout="column" class="page-container">
     <div fxLayout="column" fxFlex="100" *ngIf="dashboardLoaded">
-        <div
-            class="fixed-height data-explorer-options page-container-nav"
-            fxLayout="row"
-        >
+        <div class="data-explorer-options page-container-nav" fxLayout="row">
             <div
                 class="data-explorer-options-item pl-10"
                 fxLayout="row"
@@ -29,7 +26,6 @@
                 style="border-right: 2px solid var(--color-bg-2)"
             >
                 <button
-                    mat-button
                     mat-icon-button
                     color="accent"
                     matTooltip="Back"
@@ -47,7 +43,6 @@
                 *ngIf="editMode"
             >
                 <button
-                    mat-button
                     mat-icon-button
                     color="accent"
                     matTooltip="Save"
@@ -58,7 +53,6 @@
                     <mat-icon>save</mat-icon>
                 </button>
                 <button
-                    mat-button
                     mat-icon-button
                     color="accent"
                     matTooltip="Discard"
@@ -68,7 +62,6 @@
                     <i class="material-icons">undo</i>
                 </button>
                 <button
-                    mat-button
                     mat-icon-button
                     matTooltip="Add widget"
                     color="accent"

@@ -20,7 +20,7 @@ import { CategoryAlreadyInPipelinePipe } from './category-already-in-pipeline.fi
 import { PipelineOperationsService } from './services/pipeline-operations.service';
 import { PipelinesComponent } from './pipelines.component';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
