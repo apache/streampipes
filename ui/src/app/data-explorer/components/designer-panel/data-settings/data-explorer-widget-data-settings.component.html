@@ -92,6 +92,7 @@
                             *ngIf="sourceConfig.sourceType === 'pipeline'"
                         >
                             <mat-select
+                                [panelClass]="'form-field-small'"
                                 [(value)]="sourceConfig.measureName"
                                 (selectionChange)="
                                     updateMeasure(sourceConfig, $event.value)
@@ -105,7 +106,7 @@
                                     <span class="pipeline-name">{{
                                         pipeline.pipelineName
                                     }}</span
-                                    >&nbsp;&nbsp;{{ pipeline.measureName }}
+                                    ><br />{{ pipeline.measureName }}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

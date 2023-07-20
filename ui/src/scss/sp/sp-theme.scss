@@ -187,10 +187,6 @@ $accent: map-get($custom-theme-light, accent);
     font-size: 11pt;
 }
 
-.mdc-tab__text-label {
-    font-family: 'Roboto-Medium';
-}
-
 .dark-mode {
     @include mat.all-component-themes($custom-theme-dark);
 
@@ -227,6 +223,10 @@ $accent: map-get($custom-theme-light, accent);
     @include mat.all-component-typographies();
     @include mat.all-component-themes($custom-theme-light);
 
+    .small-form-field-density {
+        @include mat.form-field-density(-3);
+    }
+
     .base-style {
         color: #121212;
         background: #ffffff;
@@ -261,5 +261,11 @@ $accent: map-get($custom-theme-light, accent);
 
     .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
         transform: none;
+    }
+
+    .form-field-small {
+        .mdc-list-item__primary-text {
+            font-size: 14px;
+        }
     }
 }

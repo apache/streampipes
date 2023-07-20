@@ -150,3 +150,11 @@
     color: #cdcdcd;
     background: rgba(0, 0, 0, 0);
 }
+
+.mdc-button__label {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-family: 'Roboto-Medium', sans-serif;
+    letter-spacing: 0.7px;
+    font-size: 13px;
+}
