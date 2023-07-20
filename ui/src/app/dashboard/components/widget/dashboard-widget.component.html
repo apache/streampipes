@@ -254,7 +254,7 @@
                     *ngIf="configuredWidget.widgetType === 'status'"
                     class="h-100 p-0"
                 >
-                    <sp-status-widget
+                    <sp-dashboard-status-widget
                         [itemWidth]="itemWidth"
                         #activeWidget
                         [itemHeight]="itemHeight"
@@ -264,7 +264,7 @@
                         [widgetConfig]="configuredWidget"
                         [widgetDataConfig]="widgetDataConfig"
                         class="h-100"
-                    ></sp-status-widget>
+                    ></sp-dashboard-status-widget>
                 </div>
                 <div
                     *ngIf="configuredWidget.widgetType === 'bar-race'"

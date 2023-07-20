@@ -24,7 +24,7 @@ import { StatusWidgetConfig } from './status-config';
 import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-status-widget',
+    selector: 'sp-dashboard-status-widget',
     templateUrl: './status-widget.component.html',
     styleUrls: ['./status-widget.component.scss'],
 })
@@ -61,18 +61,20 @@ export class StatusWidgetComponent
     }
 
     protected onEvent(events: any[]) {
-        this.active = true;
-        const timestamp = new Date().getTime();
-        this.lastTimestamp = timestamp;
-        setTimeout(() => {
-            if (this.lastTimestamp <= timestamp) {
-                this.active = false;
-            }
-        }, this.interval * 1000);
+        if (events.length > 0) {
+            const timestamp = new Date().getTime();
+            this.lastTimestamp = new Date(
+                events[0][BaseStreamPipesWidget.TIMESTAMP_KEY],
+            ).getTime();
+            this.active =
+                this.lastTimestamp >= timestamp - this.interval * 1000;
+        } else {
+            this.active = false;
+        }
     }
 
     protected onSizeChanged(width: number, height: number) {
-        const size: string = Math.min(width, height) * 0.6 + 'px';
+        const size: string = Math.min(width, height) * 0.5 + 'px';
         this.statusLightWidth = size;
         this.statusLightHeight = size;
     }
