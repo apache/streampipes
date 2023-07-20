@@ -21,15 +21,15 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
-import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterEventPreviewPipeline;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class GuessManagement {
 
@@ -75,7 +74,7 @@ public class GuessManagement {
     }
   }
 
-  public Map<String, GuessTypeInfo> performAdapterEventPreview(AdapterEventPreview previewRequest) {
+  public String performAdapterEventPreview(AdapterEventPreview previewRequest) throws JsonProcessingException {
     return new AdapterEventPreviewPipeline(previewRequest).makePreview();
   }
 }

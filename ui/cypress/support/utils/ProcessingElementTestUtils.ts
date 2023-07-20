@@ -66,7 +66,7 @@ export class ProcessingElementTestUtils {
                 .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
         } else if (formatType === 'json') {
             adapterInputBuilder.addFormatInput(
-                'checkbox',
+                'radio',
                 'json_options-array',
                 '',
             );

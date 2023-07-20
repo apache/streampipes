@@ -26,7 +26,10 @@ import {
     SpLogEntry,
 } from '@streampipes/platform-services';
 import { AuthService } from '../../../services/auth.service';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
 
 @Component({
@@ -45,10 +48,17 @@ export class PipelineLogsComponent
         activatedRoute: ActivatedRoute,
         pipelineService: PipelineService,
         authService: AuthService,
+        currentUserService: CurrentUserService,
         breadcrumbService: SpBreadcrumbService,
         private pipelineMonitoringService: PipelineMonitoringService,
     ) {
-        super(activatedRoute, pipelineService, authService, breadcrumbService);
+        super(
+            activatedRoute,
+            pipelineService,
+            authService,
+            currentUserService,
+            breadcrumbService,
+        );
     }
 
     ngOnInit(): void {

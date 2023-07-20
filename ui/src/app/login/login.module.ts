@@ -19,7 +19,7 @@
 import { NgModule } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './components/login/login.component';
 import { SetupComponent } from './components/setup/setup.component';

@@ -52,7 +52,6 @@
                         }}</span>
                         <div fxLayoutAlign="end center" fxFlex *ngIf="editMode">
                             <button
-                                mat-button
                                 mat-icon-button
                                 (click)="addAsset(node)"
                                 color="accent"
@@ -60,7 +59,6 @@
                                 <i class="material-icons">add</i>
                             </button>
                             <button
-                                mat-button
                                 mat-icon-button
                                 (click)="deleteAsset(node)"
                                 color="accent"
@@ -107,7 +105,6 @@
                                 *ngIf="editMode"
                             >
                                 <button
-                                    mat-button
                                     mat-icon-button
                                     (click)="addAsset(node)"
                                     color="accent"

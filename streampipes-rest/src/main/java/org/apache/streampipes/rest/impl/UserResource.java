@@ -18,9 +18,9 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.mail.MailSender;
+import org.apache.streampipes.model.ShortUserInfo;
 import org.apache.streampipes.model.client.user.ChangePasswordRequest;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.ServiceAccount;
@@ -29,6 +29,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.utils.Utils;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -45,15 +46,12 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users")
@@ -63,18 +61,14 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response getAllUsers(@QueryParam("type") String principalType) {
-    List<Principal> allPrincipals = new ArrayList<>();
-    if (principalType != null && principalType.equals(PrincipalType.USER_ACCOUNT.name())) {
-      allPrincipals.addAll(getUserStorage().getAllUserAccounts());
-    } else if (principalType != null && principalType.equals(PrincipalType.SERVICE_ACCOUNT.name())) {
-      allPrincipals.addAll(getUserStorage().getAllServiceAccounts());
-    } else {
-      allPrincipals.addAll(getUserStorage().getAllUsers());
-    }
-    removeCredentials(allPrincipals);
-    return ok(allPrincipals);
+  public Response listUsers() {
+    var users = getUserStorage()
+        .getAllUserAccounts()
+        .stream()
+        .map(u -> ShortUserInfo.create(u.getPrincipalId(), u.getUsername(), u.getFullName()))
+        .collect(Collectors.toList());
+
+    return ok(users);
   }
 
 
@@ -84,7 +78,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getUserDetails(@PathParam("principalId") String principalId) {
     Principal principal = getPrincipalById(principalId);
-    removeCredentials(principal);
+    Utils.removeCredentials(principal);
 
     if (principal != null) {
       return ok(principal);
@@ -99,7 +93,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getUserDetailsByName(@PathParam("username") String username) {
     Principal principal = getPrincipal(username);
-    removeCredentials(principal);
+    Utils.removeCredentials(principal);
 
     if (principal != null) {
       return ok(principal);
@@ -347,16 +341,6 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
   private Principal getPrincipalById(String principalId) {
     return getUserStorage().getUserById(principalId);
-  }
-
-  private void removeCredentials(List<Principal> principals) {
-    principals.forEach(this::removeCredentials);
-  }
-
-  private void removeCredentials(Principal principal) {
-    if (principal instanceof UserAccount) {
-      ((UserAccount) principal).setPassword("");
-    }
   }
 
   private void replacePermissions(Principal principal, Principal existingPrincipal) {

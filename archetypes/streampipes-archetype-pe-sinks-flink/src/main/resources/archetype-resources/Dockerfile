@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM adoptopenjdk/openjdk8-openj9:alpine
+FROM eclipse-temurin:17-jre-alpine
 
 COPY ./target/${artifactId}.jar  /streampipes-processing-element-container.jar
 

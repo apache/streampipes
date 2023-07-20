@@ -39,12 +39,16 @@ export class DataDownloadDialogUtils {
         // download-customInterval, download-all, download-visible
         cy.dataCy(
             `download-configuration-${exportConfig.dataExportConfig.dataRangeConfiguration}`,
-        ).click();
+        ).within(() => {
+            cy.get('.mdc-radio').click();
+        });
 
         // download-ignore, download-emtpy
         cy.dataCy(
             `download-configuration-${exportConfig.dataExportConfig.missingValueBehaviour}`,
-        ).click();
+        ).within(() => {
+            cy.get('.mdc-radio').click();
+        });
 
         // click next
         cy.dataCy('download-configuration-next-btn').click();
@@ -52,14 +56,18 @@ export class DataDownloadDialogUtils {
         // Format
         cy.dataCy(
             `download-configuration-${exportConfig.formatExportConfig.exportFormat}`,
-        ).click();
+        ).within(() => {
+            cy.get('.mdc-radio').click();
+        });
         if ('delimiter' in exportConfig.formatExportConfig) {
             cy.dataCy(
                 `download-configuration-delimiter-${
                     (exportConfig.formatExportConfig as CsvFormatExportConfig)
                         .delimiter
                 }`,
-            ).click();
+            ).within(() => {
+                cy.get('.mdc-radio').click();
+            });
         }
 
         // click next

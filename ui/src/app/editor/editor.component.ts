@@ -24,6 +24,7 @@ import {
     PipelineElementUnion,
 } from './model/editor.model';
 import {
+    CurrentUserService,
     DialogService,
     PanelType,
     SpBreadcrumbService,
@@ -64,6 +65,7 @@ export class EditorComponent implements OnInit {
         private editorService: EditorService,
         private pipelineElementService: PipelineElementService,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private dialogService: DialogService,
         private shepherdService: ShepherdService,
         private activatedRoute: ActivatedRoute,
@@ -100,7 +102,7 @@ export class EditorComponent implements OnInit {
     }
 
     checkForTutorial() {
-        const currentUser = this.authService.getCurrentUser();
+        const currentUser = this.currentUserService.getCurrentUser();
         if (currentUser.showTutorial && !this.isTutorialOpen) {
             if (this.requiredPipelineElementsForTourPresent()) {
                 this.isTutorialOpen = true;

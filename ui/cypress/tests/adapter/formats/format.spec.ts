@@ -46,7 +46,7 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('checkbox', 'json_options-single_object', '');
+            .addFormatInput('radio', 'json_options-single_object', '');
 
         navigateToFormatSelection(template.build());
 
@@ -61,7 +61,7 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('checkbox', 'json_options-array', '');
+            .addFormatInput('radio', 'json_options-array', '');
 
         navigateToFormatSelection(template.build());
 
@@ -76,7 +76,7 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('checkbox', 'json_options-array_field', '')
+            .addFormatInput('radio', 'json_options-array_field', '')
             .addFormatInput('input', ConnectBtns.jsonArrayFieldKey(), 'field');
 
         navigateToFormatSelection(template.build());
@@ -98,7 +98,7 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('checkbox', 'json_options-geojson', '');
+            .addFormatInput('radio', 'json_options-geojson', '');
 
         navigateToFormatSelection(template.build());
 

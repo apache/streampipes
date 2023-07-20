@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.commons;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,10 +38,6 @@ public class Utils {
     List<T> result = new ArrayList<>();
     Collections.addAll(result, objects);
     return result;
-  }
-
-  public static String getRandomString() {
-    return RandomStringUtils.randomAlphabetic(10);
   }
 
   /**

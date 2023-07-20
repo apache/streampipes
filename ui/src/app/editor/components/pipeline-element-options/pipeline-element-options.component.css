@@ -15,3 +15,56 @@
  * limitations under the License.
  *
  */
+
+.options-button {
+    cursor: pointer;
+    position: absolute;
+    height: 30%;
+    width: 30%;
+    border-radius: 20%;
+    box-shadow: 0 0 3px var(--color-accent);
+    text-align: center;
+    padding: 1px 1px;
+    background-color: var(--color-accent);
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.mat-mdc-icon-button.options-icon-button {
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 0;
+    padding: 0;
+}
+
+.options-icon-size {
+    font-size: 20px;
+    line-height: 25px;
+}
+
+.customize-button {
+    left: 2%;
+    top: -35%;
+}
+
+.delete-button {
+    left: 73%;
+    top: -35%;
+    background-color: darkred;
+    box-shadow: 0 0 3px darkred;
+}
+
+.help-button {
+    left: 37.5%;
+    top: -35%;
+}
+
+.recommended-button {
+    left: 53%;
+    top: 85%;
+}
+
+.possible-button {
+    left: 18%;
+    top: 85%;
+}

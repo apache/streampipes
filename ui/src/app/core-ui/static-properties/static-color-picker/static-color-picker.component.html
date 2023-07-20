@@ -17,20 +17,18 @@
   -->
 <div [formGroup]="parentForm" id="formWrapper">
     <div fxFlex="100" fxLayout="row">
-        <mat-form-field color="accent">
-            <input
-                matInput
-                [(colorPicker)]="staticProperty.selectedColor"
-                (colorPickerChange)="
-                    parentForm.get(staticProperty.internalName).setValue($event)
-                "
-                [cpPosition]="'bottom'"
-                formControlName="{{ fieldName }}"
-                [style.background]="staticProperty.selectedColor"
-                required
-                (blur)="emitUpdate()"
-                [cpPresetColors]="presetColors"
-            />
-        </mat-form-field>
+        <input
+            matInput
+            [(colorPicker)]="staticProperty.selectedColor"
+            (colorPickerChange)="
+                parentForm.get(staticProperty.internalName).setValue($event)
+            "
+            [cpPosition]="'bottom'"
+            formControlName="{{ fieldName }}"
+            [style.background]="staticProperty.selectedColor"
+            required
+            (blur)="emitUpdate()"
+            [cpPresetColors]="presetColors"
+        />
     </div>
 </div>

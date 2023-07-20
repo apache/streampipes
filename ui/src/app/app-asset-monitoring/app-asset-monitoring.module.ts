@@ -17,7 +17,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 
 import { AppAssetMonitoringComponent } from './app-asset-monitoring.component';

@@ -21,7 +21,7 @@ import { HomeComponent } from './home.component';
 import { HomeService } from './home.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 import { StatusComponent } from './components/status.component';
 import { MatDividerModule } from '@angular/material/divider';

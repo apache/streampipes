@@ -24,7 +24,7 @@
                 fxLayout="column"
                 style="margin: 5px; width: 100%"
             >
-                <mat-form-field class="full-width" color="accent">
+                <mat-form-field class="w-100" floatLabel="auto" color="accent">
                     <mat-label>Data View Name</mat-label>
                     <input
                         matInput
@@ -32,7 +32,7 @@
                         [(ngModel)]="dashboard.name"
                     />
                 </mat-form-field>
-                <mat-form-field class="full-width" color="accent">
+                <mat-form-field class="w-100" color="accent">
                     <mat-label>Description</mat-label>
                     <input matInput [(ngModel)]="dashboard.description" />
                 </mat-form-field>

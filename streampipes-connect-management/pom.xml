@@ -31,7 +31,17 @@
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-connect-shared</artifactId>
+            <version>0.93.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-measurement-units</artifactId>
+            <version>0.93.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-service-discovery-api</artifactId>
             <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>

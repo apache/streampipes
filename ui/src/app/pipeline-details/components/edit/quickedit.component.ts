@@ -34,7 +34,10 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
@@ -62,11 +65,18 @@ export class QuickEditComponent
         activatedRoute: ActivatedRoute,
         pipelineService: PipelineService,
         authService: AuthService,
+        currentUserService: CurrentUserService,
         private fb: UntypedFormBuilder,
         private changeDetectorRef: ChangeDetectorRef,
         breadcrumbService: SpBreadcrumbService,
     ) {
-        super(activatedRoute, pipelineService, authService, breadcrumbService);
+        super(
+            activatedRoute,
+            pipelineService,
+            authService,
+            currentUserService,
+            breadcrumbService,
+        );
     }
 
     ngOnInit() {

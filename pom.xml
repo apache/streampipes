@@ -174,7 +174,6 @@
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
 	<scala-lang.version>2.13.10</scala-lang.version>
-	<scala-lang-xml.version>1.0.5</scala-lang-xml.version>
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
@@ -1014,12 +1013,6 @@
 					<artifactId>proton-j</artifactId>
 					<version>${proton-j.version}</version>
 				</dependency>
-				<dependency>
-					<groupId>org.scala-lang.modules</groupId>
-					<artifactId>scala-xml_2.11</artifactId>
-					<version>${scala-lang-xml.version}</version>
-					<scope>test</scope>
-				</dependency>
 				<!-- External Connect dependencies -->
 				<dependency>
 					<groupId>com.google.j2objc</groupId>
@@ -1344,45 +1337,56 @@
         <module>archetypes/streampipes-archetype-extensions-jvm</module>
         <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
         <module>archetypes/streampipes-archetype-pe-processors-flink</module>
-        <module>streampipes-service-core</module>
         <module>streampipes-client</module>
+		<module>streampipes-client-api</module>
         <module>streampipes-commons</module>
         <module>streampipes-config</module>
-        <module>streampipes-extensions-api</module>
         <module>streampipes-connect-management</module>
+		<module>streampipes-connect-shared</module>
+		<module>streampipes-extensions-api</module>
         <module>streampipes-extensions-management</module>
-        <module>streampipes-service-extensions</module>
         <module>streampipes-data-explorer</module>
+		<module>streampipes-data-explorer-commons</module>
+		<module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-cbor</module>
         <module>streampipes-dataformat-fst</module>
         <module>streampipes-dataformat-json</module>
         <module>streampipes-dataformat-smile</module>
         <module>streampipes-extensions</module>
+		<module>streampipes-integration-tests</module>
         <module>streampipes-logging</module>
+		<module>streampipes-mail</module>
         <module>streampipes-maven-plugin</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
         <module>streampipes-messaging-mqtt</module>
+		<module>streampipes-messaging-nats</module>
         <module>streampipes-messaging-pulsar</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
         <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
-        <module>streampipes-sources</module>
+		<module>streampipes-resource-management</module>
+		<module>streampipes-rest-extensions</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-core-base</module>
         <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
+		<module>streampipes-sdk-bundle</module>
+		<module>streampipes-sources</module>
         <module>streampipes-security-jwt</module>
         <module>streampipes-serializers-json</module>
         <module>streampipes-service-base</module>
+		<module>streampipes-service-core</module>
+		<module>streampipes-service-core-nats</module>
         <module>streampipes-service-discovery</module>
         <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>
+		<module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-storage-couchdb</module>
@@ -1396,18 +1400,7 @@
         <module>streampipes-wrapper-python</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-mail</module>
-        <module>streampipes-resource-management</module>
-        <module>streampipes-sdk-bundle</module>
-        <module>streampipes-data-explorer-commons</module>
-        <module>streampipes-data-export</module>
-        <module>streampipes-messaging-nats</module>
-        <module>streampipes-integration-tests</module>
-		<module>streampipes-rest-extensions</module>
-        <module>streampipes-extensions/streampipes-connectors-influx</module>
-        <module>streampipes-client-api</module>
-        <module>streampipes-extensions/streampipes-connectors-opcua</module>
-    </modules>
+	</modules>
 
     <profiles>
         <profile>

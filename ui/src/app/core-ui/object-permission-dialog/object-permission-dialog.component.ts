@@ -34,6 +34,7 @@ import {
     UserAccount,
     UserService,
     UserGroupService,
+    UserAdminService,
 } from '@streampipes/platform-services';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, zip } from 'rxjs';
@@ -80,6 +81,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
         private dialogRef: DialogRef<ObjectPermissionDialogComponent>,
         private permissionsService: PermissionsService,
         private userService: UserService,
+        private userAdminService: UserAdminService,
         private groupService: UserGroupService,
     ) {
         this.grantedGroupAuthorities = [];
@@ -104,8 +106,8 @@ export class ObjectPermissionDialogComponent implements OnInit {
 
     loadUsersAndGroups() {
         zip(
-            this.userService.getAllUserAccounts(),
-            this.userService.getAllServiceAccounts(),
+            this.userAdminService.getAllUserAccounts(),
+            this.userAdminService.getAllServiceAccounts(),
             this.groupService.getAllUserGroups(),
             this.permissionsService.getPermissionsForObject(
                 this.objectInstanceId,

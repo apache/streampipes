@@ -18,41 +18,31 @@
 
 import { RestApi } from './rest-api.service';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { JwtTokenStorageService } from './jwt-token-storage.service';
-import { UserInfo } from '@streampipes/platform-services';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
 import { PageName } from '../_enums/page-name.enum';
 import { RoleModel } from '../_models/auth.model';
+import {
+    JwtTokenStorageService,
+    CurrentUserService,
+} from '@streampipes/shared-ui';
 
 @Injectable()
 export class AuthService {
-    public authToken$: BehaviorSubject<string> = new BehaviorSubject<string>(
-        undefined,
-    );
-    public user$: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(
-        undefined,
-    );
-    public isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-        false,
-    );
-    public darkMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-        false,
-    );
-
     constructor(
         private restApi: RestApi,
         private tokenStorage: JwtTokenStorageService,
+        private currentUserService: CurrentUserService,
         private router: Router,
         private loginService: LoginService,
     ) {
         if (this.authenticated()) {
-            this.authToken$.next(tokenStorage.getToken());
-            this.user$.next(tokenStorage.getUser());
-            this.isLoggedIn$.next(true);
+            this.currentUserService.authToken$.next(tokenStorage.getToken());
+            this.currentUserService.user$.next(tokenStorage.getUser());
+            this.currentUserService.isLoggedIn$.next(true);
         } else {
             this.logout();
         }
@@ -65,22 +55,19 @@ export class AuthService {
         const decodedToken = jwtHelper.decodeToken(data.accessToken);
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(decodedToken.user);
-        this.authToken$.next(data.accessToken);
-        this.user$.next(decodedToken.user);
+        this.currentUserService.authToken$.next(data.accessToken);
+        this.currentUserService.user$.next(decodedToken.user);
     }
 
     public logout() {
         this.tokenStorage.clearTokens();
-        this.authToken$.next(undefined);
-    }
-
-    public getCurrentUser(): UserInfo {
-        return this.user$.getValue() || this.tokenStorage.getUser();
+        this.currentUserService.authToken$.next(undefined);
     }
 
     public authenticated(): boolean {
         const token =
-            this.authToken$.getValue() || this.tokenStorage.getToken();
+            this.currentUserService.authToken$.getValue() ||
+            this.tokenStorage.getToken();
         const jwtHelper: JwtHelperService = new JwtHelperService({});
 
         return (
@@ -113,7 +100,7 @@ export class AuthService {
     }
 
     scheduleTokenRenew() {
-        this.authToken$
+        this.currentUserService.authToken$
             .pipe(
                 filter((token: any) => !!token),
                 map((token: any) =>
@@ -137,7 +124,7 @@ export class AuthService {
     }
 
     watchTokenExpiration() {
-        this.authToken$
+        this.currentUserService.authToken$
             .pipe(
                 filter((token: any) => !!token),
                 map((token: any) =>
@@ -154,7 +141,7 @@ export class AuthService {
     }
 
     getUserRoles(): string[] {
-        return this.getCurrentUser().roles;
+        return this.currentUserService.getCurrentUser().roles;
     }
 
     public hasRole(role: RoleModel): boolean {

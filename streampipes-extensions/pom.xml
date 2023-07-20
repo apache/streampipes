@@ -34,6 +34,9 @@
         <module>streampipes-connect-adapters</module>
         <module>streampipes-connect-adapters-iiot</module>
 
+        <module>streampipes-connectors-influx</module>
+        <module>streampipes-connectors-opcua</module>
+
         <module>streampipes-extensions-all-iiot</module>
         <module>streampipes-extensions-all-jvm</module>
 

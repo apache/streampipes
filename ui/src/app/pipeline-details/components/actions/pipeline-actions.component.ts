@@ -16,19 +16,13 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    Inject,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { Pipeline } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-pipeline-actions',
@@ -50,10 +44,11 @@ export class PipelineActionsComponent implements OnInit {
         public pipelineOperationsService: PipelineOperationsService,
         private router: Router,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
     ) {}
 
     ngOnInit() {
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             this.hasPipelineDeletePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_DELETE_PIPELINE,
             );

@@ -92,8 +92,9 @@ export class StaticPropertyComponent implements OnInit {
 
     ngOnInit() {
         this.showLabel =
-            !(this.staticProperty instanceof StaticPropertyGroup) ||
-            (this.staticProperty as StaticPropertyGroup).showLabel;
+            (!(this.staticProperty instanceof StaticPropertyGroup) ||
+                (this.staticProperty as StaticPropertyGroup).showLabel) &&
+            this.staticProperty.label !== '';
     }
 
     isCodeInputStaticProperty(val) {
