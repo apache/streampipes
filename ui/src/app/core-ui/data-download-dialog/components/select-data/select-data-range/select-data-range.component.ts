@@ -44,10 +44,10 @@ export class SelectDataRangeComponent implements OnInit {
     }
 
     initDateSelection() {
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() - 5);
-        this.datePickerSelection[0] = new Date();
-        this.datePickerSelection[1] = endDate;
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 5);
+        this.datePickerSelection[0] = startDate;
+        this.datePickerSelection[1] = new Date();
         this.dataExportConfig.dateRange = new DateRange(
             this.datePickerSelection[0],
             this.datePickerSelection[1],
