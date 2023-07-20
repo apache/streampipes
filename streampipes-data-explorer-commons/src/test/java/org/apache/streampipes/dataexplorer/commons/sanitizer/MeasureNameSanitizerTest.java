@@ -41,4 +41,13 @@ public class MeasureNameSanitizerTest {
 
     assertEquals(expected, sanitizedMeasureName);
   }
+
+  @Test
+  public void testMultipleCharacters() {
+    String originalMeasureName = "t?\"est_001=";
+    String expected = "t__est_001_";
+    String sanitizedMeasureName = new MeasureNameSanitizer().sanitize(originalMeasureName);
+
+    assertEquals(expected, sanitizedMeasureName);
+  }
 }

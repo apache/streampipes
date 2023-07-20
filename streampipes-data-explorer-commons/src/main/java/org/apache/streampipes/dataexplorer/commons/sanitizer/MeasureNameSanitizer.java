@@ -23,7 +23,10 @@ import java.util.List;
 public class MeasureNameSanitizer {
 
   private final List<String> forbiddenChars = List.of(
-      "/"
+      "/",
+      "?",
+      "=",
+      "\""
   );
 
   private final String replacement = "_";
