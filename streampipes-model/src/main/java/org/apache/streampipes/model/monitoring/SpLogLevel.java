@@ -18,5 +18,9 @@
 
 package org.apache.streampipes.model.monitoring;
 
-public class StreamPipesStatistics {
+public enum SpLogLevel {
+
+  INFO,
+  WARN,
+  ERROR
 }

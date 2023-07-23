@@ -20,12 +20,11 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
-import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
@@ -51,8 +50,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   public AdapterWorkerResource() {
     adapterManagement = new AdapterWorkerManagement(
         RunningAdapterInstances.INSTANCE,
-        DeclarersSingleton.getInstance(),
-        new AdapterContextGenerator().makeRuntimeContext()
+        DeclarersSingleton.getInstance()
     );
   }
 
@@ -83,7 +81,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       return ok(Notifications.success(responseMessage));
     } catch (AdapterException e) {
       logger.error("Error while starting adapter with id " + adapterStreamDescription.getUri(), e);
-      return serverError(StreamPipesErrorMessage.from(e));
+      return serverError(SpLogMessage.from(e));
     }
   }
 
@@ -107,7 +105,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       return ok(Notifications.success(responseMessage));
     } catch (AdapterException e) {
       logger.error("Error while stopping adapter with id " + adapterStreamDescription.getElementId(), e);
-      return serverError(StreamPipesErrorMessage.from(e));
+      return serverError(SpLogMessage.from(e));
     }
   }
 

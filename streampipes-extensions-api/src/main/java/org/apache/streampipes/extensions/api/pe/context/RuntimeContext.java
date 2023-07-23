@@ -19,11 +19,11 @@ package org.apache.streampipes.extensions.api.pe.context;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.extensions.api.config.IConfigExtractor;
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 
 public interface RuntimeContext {
 
-  SpMonitoringManager getLogger();
+  IExtensionsLogger getLogger();
 
   String getCorrespondingUser();
 

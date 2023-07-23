@@ -18,7 +18,45 @@
 
 package org.apache.streampipes.extensions.api.monitoring;
 
-import org.slf4j.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface IPipelineElementLogger extends Logger {
+public class FixedSizeList<T> {
+  private final int maxSize;
+  private final List<T> list;
+
+  public FixedSizeList(int maxSize) {
+    if (maxSize <= 0) {
+      throw new IllegalArgumentException("Max size must be greater than zero.");
+    }
+    this.maxSize = maxSize;
+    this.list = new ArrayList<>();
+  }
+
+  public void add(T element) {
+    list.add(0, element);
+    if (list.size() > maxSize) {
+      list.remove(list.size() - 1);
+    }
+  }
+
+  public T get(int index) {
+    return list.get(index);
+  }
+
+  public int size() {
+    return list.size();
+  }
+
+  public List<T> getAllItems() {
+    return this.list;
+  }
+
+  public void clear() {
+    this.list.clear();
+  }
 }
+
+
+
+

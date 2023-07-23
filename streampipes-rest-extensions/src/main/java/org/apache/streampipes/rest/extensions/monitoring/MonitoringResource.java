@@ -37,7 +37,7 @@ public class MonitoringResource extends AbstractExtensionsResource {
     try {
       return ok(SpMonitoringManager.INSTANCE.getMonitoringInfo());
     } finally {
-      //SpLogManager.INSTANCE.clearAllLogs();
+      SpMonitoringManager.INSTANCE.clearAllLogs();
     }
   }
 }

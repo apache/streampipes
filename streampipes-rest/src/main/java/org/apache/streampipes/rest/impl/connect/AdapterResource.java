@@ -20,9 +20,9 @@ package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -121,7 +121,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       return ok(Notifications.success("Adapter started"));
     } catch (AdapterException e) {
       LOG.error("Could not stop adapter with id " + adapterId, e);
-      return serverError(StreamPipesErrorMessage.from(e));
+      return serverError(SpLogMessage.from(e));
     }
   }
 
@@ -136,7 +136,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       return ok(Notifications.success("Adapter stopped"));
     } catch (AdapterException e) {
       LOG.error("Could not start adapter with id " + adapterId, e);
-      return serverError(StreamPipesErrorMessage.from(e));
+      return serverError(SpLogMessage.from(e));
     }
   }
 

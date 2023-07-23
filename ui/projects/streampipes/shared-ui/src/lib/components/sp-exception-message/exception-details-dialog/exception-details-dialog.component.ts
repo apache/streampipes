@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { StreamPipesErrorMessage } from '@streampipes/platform-services';
+import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
 
 @Component({
@@ -30,7 +30,7 @@ import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
 })
 export class SpExceptionDetailsDialogComponent implements OnInit {
     @Input()
-    message: StreamPipesErrorMessage;
+    message: SpLogMessage;
 
     @Input()
     title: string;

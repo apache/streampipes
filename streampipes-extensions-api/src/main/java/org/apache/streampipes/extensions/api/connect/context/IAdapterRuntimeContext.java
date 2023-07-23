@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.extensions.api.connect.context;
 
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 
 public interface IAdapterRuntimeContext extends IAdapterGuessSchemaContext {
 
-  SpMonitoringManager getLogger();
+  IExtensionsLogger getLogger();
 
 }

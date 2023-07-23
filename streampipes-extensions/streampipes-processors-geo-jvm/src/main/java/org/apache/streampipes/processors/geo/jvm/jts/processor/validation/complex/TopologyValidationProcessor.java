@@ -23,9 +23,9 @@ import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpJtsGeoemtryException;
@@ -120,7 +120,7 @@ public class TopologyValidationProcessor extends StreamPipesDataProcessor {
       if (isLogOutput) {
         SpMonitoringManager.INSTANCE.addErrorMessage(params.getGraph().getElementId(),
             SpLogEntry.from(System.currentTimeMillis(),
-                StreamPipesErrorMessage.from(new SpJtsGeoemtryException(
+                SpLogMessage.from(new SpJtsGeoemtryException(
                     validator.getValidationError().toString()))));
       }
     }
