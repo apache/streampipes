@@ -15,7 +15,7 @@
 
 # lite or full (default: lite)
 deployment: lite
-preferredBroker: "kafka"
+preferredBroker: "nats"
 pullPolicy: "Always"
 restartPolicy: Always
 persistentVolumeReclaimPolicy: "Delete"
