@@ -248,7 +248,7 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.elementId =
             'http://eventProperty.de/timestamp/' + UUID.UUID();
 
-        eventProperty.runtimeName = 'timenpm stamp';
+        eventProperty.runtimeName = 'timestamp';
         eventProperty.label = 'Timestamp';
         eventProperty.description = 'The current timestamp value';
         eventProperty.domainProperties = ['http://schema.org/DateTime'];
