@@ -70,8 +70,9 @@
                     }"
                 >
                     <div
-                        mat-list-avatar
+                        matListItemAvatar
                         class="notification-avatar sp-accent-bg"
+                        style="background: var(--color-accent)"
                     >
                         {{
                             elementIconText.getElementIconText(
@@ -79,8 +80,12 @@
                             )
                         }}
                     </div>
-                    <h4 mat-line>{{ existingNotification.pipelineName }}</h4>
-                    <p mat-line>{{ existingNotification.notificationTitle }}</p>
+                    <h4 matListItemTitle>
+                        {{ existingNotification.pipelineName }}
+                    </h4>
+                    <p matListItemLine>
+                        {{ existingNotification.notificationTitle }}
+                    </p>
                     <div class="new-notification-info-panel">
                         <div
                             class="new-notification-info"
