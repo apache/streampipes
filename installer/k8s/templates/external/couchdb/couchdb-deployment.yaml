@@ -27,6 +27,7 @@ spec:
       labels:
         app: {{ .Values.external.couchdb.appName }}
     spec:
+      restartPolicy: {{ .Values.restartPolicy }}
       volumes:
         - name: {{ .Values.external.couchdb.persistence.pvName }}
           persistentVolumeClaim:
@@ -41,7 +42,28 @@ spec:
             - name: COUCHDB_PASSWORD
               value: {{ .Values.external.couchdb.password }}
           ports:
-            - containerPort: 5984
+            - containerPort: {{ .Values.external.couchdb.prot }}
           volumeMounts:
             - mountPath: "/opt/couchdb/data"
               name: {{ .Values.external.couchdb.persistence.pvName }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.external.couchdb.prot }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.external.couchdb.prot }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.external.couchdb.prot }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

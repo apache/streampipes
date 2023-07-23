@@ -28,6 +28,7 @@ spec:
       labels:
         app: zookeeper
     spec:
+      restartPolicy: {{ .Values.restartPolicy }}
       volumes:
         - name: zookeeper-pv
           persistentVolumeClaim:
@@ -39,8 +40,35 @@ spec:
           image: fogsyio/zookeeper:{{ .Values.external.zookeeperVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 2181
+            - containerPort: {{ .Values.external.zookeeperProt }}
           volumeMounts:
             - mountPath: "/opt/zookeeper-{{ .Values.external.zookeeperVersion }}/data"
               name: zookeeper-pv
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - echo ruok | nc localhost {{ .Values.external.zookeeperProt }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - echo ruok | nc localhost {{ .Values.external.zookeeperProt }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - echo ruok | nc localhost {{ .Values.external.zookeeperProt }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
 {{- end }}
