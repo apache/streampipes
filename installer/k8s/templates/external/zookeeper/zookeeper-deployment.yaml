@@ -40,7 +40,7 @@ spec:
           image: fogsyio/zookeeper:{{ .Values.external.zookeeperVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.external.zookeeperProt }}
+            - containerPort: {{ .Values.external.zookeeperPort }}
           volumeMounts:
             - mountPath: "/opt/zookeeper-{{ .Values.external.zookeeperVersion }}/data"
               name: zookeeper-pv
@@ -49,7 +49,7 @@ spec:
               command:
                 - sh
                 - -c
-                - echo ruok | nc localhost {{ .Values.external.zookeeperProt }}
+                - echo ruok | nc localhost {{ .Values.external.zookeeperPort }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
@@ -58,7 +58,7 @@ spec:
               command:
                 - sh
                 - -c
-                - echo ruok | nc localhost {{ .Values.external.zookeeperProt }}
+                - echo ruok | nc localhost {{ .Values.external.zookeeperPort }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
@@ -67,7 +67,7 @@ spec:
               command:
                 - sh
                 - -c
-                - echo ruok | nc localhost {{ .Values.external.zookeeperProt }}
+                - echo ruok | nc localhost {{ .Values.external.zookeeperPort }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}

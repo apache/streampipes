@@ -42,28 +42,28 @@ spec:
             - name: COUCHDB_PASSWORD
               value: {{ .Values.external.couchdb.password }}
           ports:
-            - containerPort: {{ .Values.external.couchdb.prot }}
+            - containerPort: {{ .Values.external.couchdb.port }}
           volumeMounts:
             - mountPath: "/opt/couchdb/data"
               name: {{ .Values.external.couchdb.persistence.pvName }}
           livenessProbe:
             httpGet:
               path: /
-              port: {{ .Values.external.couchdb.prot }}
+              port: {{ .Values.external.couchdb.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /
-              port: {{ .Values.external.couchdb.prot }}
+              port: {{ .Values.external.couchdb.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           startupProbe:
             httpGet:
               path: /
-              port: {{ .Values.external.couchdb.prot }}
+              port: {{ .Values.external.couchdb.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}

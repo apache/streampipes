@@ -40,9 +40,9 @@ spec:
           image: influxdb:{{ .Values.external.influxdb.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.external.influxdb.prot1 }}
-            - containerPort: {{ .Values.external.influxdb.prot2 }}
-            - containerPort: {{ .Values.external.influxdb.prot3 }}
+            - containerPort: {{ .Values.external.influxdb.port1 }}
+            - containerPort: {{ .Values.external.influxdb.port2 }}
+            - containerPort: {{ .Values.external.influxdb.port3 }}
           env:
             - name: INFLUXDB_DATA_ENGINE
               value: "tsm1"
@@ -70,21 +70,21 @@ spec:
           livenessProbe:
             httpGet:
               path: /ping
-              port: {{ .Values.external.influxdb.prot2 }}
+              port: {{ .Values.external.influxdb.port2 }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /ping
-              port: {{ .Values.external.influxdb.prot2 }}
+              port: {{ .Values.external.influxdb.port2 }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           startupProbe:
             httpGet:
               path: /ping
-              port: {{ .Values.external.influxdb.prot2 }}
+              port: {{ .Values.external.influxdb.port2 }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}

@@ -73,8 +73,8 @@ external:
   consul:
     appName: "consul"
     version: 1.14.3
-    prot1: 8500
-    prot2: 8600
+    port1: 8500
+    port2: 8600
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
@@ -82,14 +82,14 @@ external:
       pvName: "consul-pv"
     service:
       name: "consul"
-      prot1: 8500
-      prot2: 8600
+      port1: 8500
+      port2: 8600
   couchdb:
     appName: "couchdb"
     version: 3.3.1
     user: "admin"
     password: "admin"
-    prot: 5984
+    port: 5984
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
@@ -113,20 +113,20 @@ external:
       claimNameV1: "influxdb-pvc"
       pvName: "influxdb2-pv"
       pvNameV1: "influxdb-pv"
-    prot1: 8083
-    prot2: 8086
-    prot3: 8090
+    port1: 8083
+    port2: 8086
+    port3: 8090
   nats:
     appName: "nats"
-    prot: 4222
+    port: 4222
     service:
       type: "NodePort"
       externalTrafficPolicy: "Local"
     version:
   kafkaVersion: 2.2.0
-  kafkaProt: 9092
+  kafkaPort: 9092
   zookeeperVersion: 3.4.13
-  zookeeperProt: 2181
+  zookeeperPort: 2181
 
 
 

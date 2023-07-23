@@ -38,22 +38,22 @@ spec:
           image: nats
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.external.nats.prot}}
+            - containerPort: {{ .Values.external.nats.port}}
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.external.nats.prot}}
+              port: {{ .Values.external.nats.port}}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.external.nats.prot}}
+              port: {{ .Values.external.nats.port}}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           startupProbe:
             tcpSocket:
-              port: {{ .Values.external.nats.prot}}
+              port: {{ .Values.external.nats.port}}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
