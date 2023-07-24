@@ -54,8 +54,8 @@ public class Init extends ExtensionsModelSubmitter {
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerPipelineElement(new ${classNamePrefix}DataProcessor())
         .registerPipelineElement(new ${classNamePrefix}DataSink())
-        .registerAdapter(new ExampleGenericAdapter())
-        .registerAdapter(new ExampleSpecificAdapter())
+        .registerAdapter(new ${classNamePrefix}GenericAdapter())
+        .registerAdapter(new ${classNamePrefix}SpecificAdapter())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
