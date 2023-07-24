@@ -31,6 +31,7 @@ spec:
         - name: nginx-conf
           configMap:
             name: nginx-conf
+      restartPolicy: {{ .Values.restartPolicy }}
       containers:
         - name: {{ .Values.streampipes.ui.appName }}
           image: {{ .Values.streampipes.registry }}/ui:{{ .Values.streampipes.version }}
@@ -41,3 +42,24 @@ spec:
             - name: nginx-conf
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
+          readinessProbe:
+            httpGet:
+              path: /#/login
+              port: {{ .Values.streampipes.ui.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /#/login
+              port: {{ .Values.streampipes.ui.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /#/login
+              port: {{ .Values.streampipes.ui.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

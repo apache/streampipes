@@ -28,6 +28,7 @@ spec:
       labels:
         app: kafka
     spec:
+      restartPolicy: {{ .Values.restartPolicy }}
       initContainers:
         - name: init-wait-consul
           image: alpine
@@ -41,7 +42,7 @@ spec:
           image: fogsyio/kafka:{{ .Values.external.kafkaVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 9092
+            - containerPort: {{ .Values.external.kafkaPort }}
           volumeMounts:
             - mountPath: "/kafka"
               name: kafka-pv
@@ -49,13 +50,13 @@ spec:
             # Known issue with kafka running in kubernetes:
             # https://github.com/wurstmeister/kafka-docker/issues/122
             - name: KAFKA_PORT
-              value: "9092"
+              value: "{{ .Values.external.kafkaProt }}"
             - name: KAFKA_ZOOKEEPER_CONNECT
-              value: "zookeeper:2181"
+              value: "zookeeper:{{ .Values.external.zookeeperPort }}"
             - name: KAFKA_LISTENERS
-              value: "PLAINTEXT://:9092"
+              value: "PLAINTEXT://:{{ .Values.external.kafkaPort }}"
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://kafka:9092"
+              value: "PLAINTEXT://kafka:{{ .Values.external.kafkaProt }}"
             - name: KAFKA_INTER_BROKER_LISTENER_NAME
               value: "PLAINTEXT"
             - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
@@ -66,4 +67,22 @@ spec:
               value: "5000012"
             - name: KAFKA_REPLICA_FETCH_MAX_BYTES
               value: "10000000"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.external.kafkaPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.external.kafkaPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.external.kafkaPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
 {{- end }}

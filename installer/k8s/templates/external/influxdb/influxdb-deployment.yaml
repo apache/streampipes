@@ -27,6 +27,7 @@ spec:
       labels:
         app: {{ .Values.external.influxdb.appName }}
     spec:
+      restartPolicy: {{ .Values.restartPolicy }}
       volumes:
         - name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
           persistentVolumeClaim:
@@ -39,9 +40,9 @@ spec:
           image: influxdb:{{ .Values.external.influxdb.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 8083
-            - containerPort: 8086
-            - containerPort: 8090
+            - containerPort: {{ .Values.external.influxdb.port1 }}
+            - containerPort: {{ .Values.external.influxdb.port2 }}
+            - containerPort: {{ .Values.external.influxdb.port3 }}
           env:
             - name: INFLUXDB_DATA_ENGINE
               value: "tsm1"
@@ -66,3 +67,24 @@ spec:
               name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
             - mountPath: "/var/lib/influxdb2"
               name: {{ .Values.external.influxdb.persistence.pvName }}
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.external.influxdb.port2 }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.external.influxdb.port2 }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.external.influxdb.port2 }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
