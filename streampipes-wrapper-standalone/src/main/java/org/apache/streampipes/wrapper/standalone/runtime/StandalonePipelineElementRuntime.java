@@ -31,9 +31,7 @@ import org.apache.streampipes.extensions.api.pe.routing.PipelineElementCollector
 import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
@@ -58,10 +56,13 @@ public abstract class StandalonePipelineElementRuntime<
   protected PeT pipelineElement;
   protected IInternalRuntimeParameters internalRuntimeParameters;
 
+  protected final SpMonitoringManager monitoringManager;
+
   public StandalonePipelineElementRuntime(IContextGenerator<RcT, IvT> contextGenerator,
                                           IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
     super(contextGenerator, parameterGenerator);
     this.internalRuntimeParameters = new InternalRuntimeParameters();
+    this.monitoringManager = SpMonitoringManager.INSTANCE;
   }
 
   @Override
@@ -80,13 +81,12 @@ public abstract class StandalonePipelineElementRuntime<
   @Override
   public void stopRuntime() {
     this.inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
-    resetCounter(runtimeContext.getLogger(), instanceId);
+    resetCounter(instanceId);
     afterStop();
   }
 
-  protected void resetCounter(SpMonitoringManager manager,
-                              String resourceId) throws SpRuntimeException {
-    manager.resetCounter(resourceId);
+  protected void resetCounter(String resourceId) throws SpRuntimeException {
+    monitoringManager.resetCounter(resourceId);
   }
 
   protected List<SpInputCollector> getInputCollectors(List<SpDataStream> inputStreams) throws SpRuntimeException {
@@ -99,12 +99,8 @@ public abstract class StandalonePipelineElementRuntime<
     return inputCollectors;
   }
 
-  protected void addLogEntry(SpMonitoringManager manager,
-                             String elementId,
-                             RuntimeException e) {
-    manager.addErrorMessage(
-        elementId,
-        SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+  protected void addLogEntry(RuntimeException e) {
+    runtimeContext.getLogger().error(e);
   }
 
   protected void connectInputCollectors() {

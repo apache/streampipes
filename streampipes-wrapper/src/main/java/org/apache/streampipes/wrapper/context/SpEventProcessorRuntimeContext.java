@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.wrapper.context;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.client.api.IStreamPipesClient;
+import org.apache.streampipes.extensions.api.config.IConfigExtractor;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 
 import java.io.Serializable;
 
@@ -29,14 +29,9 @@ public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements
 
 
   public SpEventProcessorRuntimeContext(String correspondingUser,
-                                        ConfigExtractor configExtractor,
-                                        StreamPipesClient streamPipesClient,
-                                        SpMonitoringManager logManager) {
-    super(correspondingUser, configExtractor, streamPipesClient, logManager);
+                                        IConfigExtractor configExtractor,
+                                        IStreamPipesClient streamPipesClient,
+                                        IExtensionsLogger extensionsLogger) {
+    super(correspondingUser, configExtractor, streamPipesClient, extensionsLogger);
   }
-
-  public SpEventProcessorRuntimeContext() {
-    super();
-  }
-
 }

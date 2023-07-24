@@ -23,6 +23,7 @@ import {
     RuntimeResolvableAnyStaticProperty,
     RuntimeResolvableOneOfStaticProperty,
     RuntimeResolvableTreeInputStaticProperty,
+    SpLogMessage,
     StaticProperty,
     StaticPropertyUnion,
     TreeInputNode,
@@ -31,7 +32,6 @@ import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
 import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
@@ -50,7 +50,7 @@ export abstract class BaseRuntimeResolvableInput<
     showOptions = false;
     loading = false;
     error = false;
-    errorMessage: StreamPipesErrorMessage;
+    errorMessage: SpLogMessage;
     dependentStaticProperties: any = new Map();
 
     constructor(private runtimeResolvableService: RuntimeResolvableService) {
@@ -111,8 +111,7 @@ export abstract class BaseRuntimeResolvableInput<
                 this.loading = false;
                 this.showOptions = true;
                 this.error = true;
-                this.errorMessage =
-                    errorMessage.error as StreamPipesErrorMessage;
+                this.errorMessage = errorMessage.error as SpLogMessage;
                 this.afterErrorReceived();
             },
         );

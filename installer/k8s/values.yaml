@@ -17,8 +17,12 @@
 deployment: lite
 preferredBroker: "nats"
 pullPolicy: "Always"
+restartPolicy: Always
 persistentVolumeReclaimPolicy: "Delete"
 persistentVolumeAccessModes: "ReadWriteOnce"
+initialDelaySeconds: 60
+periodSeconds: 30
+failureThreshold: 30
 
 streampipes:
   version: "0.93.0-SNAPSHOT"
@@ -61,20 +65,31 @@ streampipes:
     certResolverActive: true
     certResolver: ""
 
+extensions:
+  iiot:
+    port: 8090
+
 external:
   consul:
     appName: "consul"
     version: 1.14.3
+    port1: 8500
+    port2: 8600
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
       claimName: "consul-pvc"
       pvName: "consul-pv"
+    service:
+      name: "consul"
+      port1: 8500
+      port2: 8600
   couchdb:
     appName: "couchdb"
     version: 3.3.1
     user: "admin"
     password: "admin"
+    port: 5984
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
@@ -98,14 +113,20 @@ external:
       claimNameV1: "influxdb-pvc"
       pvName: "influxdb2-pv"
       pvNameV1: "influxdb-pv"
+    port1: 8083
+    port2: 8086
+    port3: 8090
   nats:
     appName: "nats"
+    port: 4222
     service:
       type: "NodePort"
       externalTrafficPolicy: "Local"
     version:
   kafkaVersion: 2.2.0
+  kafkaPort: 9092
   zookeeperVersion: 3.4.13
+  zookeeperPort: 2181
 
 
 

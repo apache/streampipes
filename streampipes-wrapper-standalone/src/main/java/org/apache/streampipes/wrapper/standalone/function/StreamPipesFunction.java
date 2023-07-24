@@ -29,9 +29,9 @@ import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
@@ -136,7 +136,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     var functionId = this.getFunctionConfig().getFunctionId();
     SpMonitoringManager.INSTANCE.addErrorMessage(
         functionId.getId(),
-        SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+        SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e)));
   }
 
   private void initializeProducers() {

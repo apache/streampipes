@@ -31,9 +31,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.Image
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -199,8 +197,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     } catch (AdapterException e) {
       adapterRuntimeContext
           .getLogger()
-          .addErrorMessage(extractor.getAdapterDescription().getElementId(),
-              SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+          .error(e);
     }
   }
 

@@ -30,7 +30,9 @@
                     <h5 *ngIf="messageTimestamp" class="mr-15">
                         {{ messageTimestamp | date : 'short' }}
                     </h5>
-                    <h5 fxFlex class="color-warn">{{ message.title }}</h5>
+                    <h5 fxFlex class="color-warn">
+                        {{ message.title || 'Error' }}
+                    </h5>
                 </div>
                 <span fxFlex></span>
                 <div fxLayoutAlign="end center" *ngIf="showDetails">

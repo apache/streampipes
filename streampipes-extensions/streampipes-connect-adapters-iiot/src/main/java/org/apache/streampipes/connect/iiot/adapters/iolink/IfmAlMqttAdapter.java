@@ -32,9 +32,7 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
 import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
@@ -127,9 +125,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
           } catch (Exception e) {
             adapterRuntimeContext
                 .getLogger()
-                .addErrorMessage(
-                    extractor.getAdapterDescription().getElementId(),
-                    SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+                .error(e);
             LOG.error("Could not parse event", e);
           }
         });

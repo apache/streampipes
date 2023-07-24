@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-07-19 22:10:18.
+// Generated using typescript-generator version 3.1.1185 on 2023-07-23 10:14:46.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3325,7 +3325,7 @@ export class SpDataStreamContainer {
 }
 
 export class SpLogEntry {
-    errorMessage: StreamPipesErrorMessage;
+    errorMessage: SpLogMessage;
     timestamp: number;
 
     static fromData(data: SpLogEntry, target?: SpLogEntry): SpLogEntry {
@@ -3333,10 +3333,29 @@ export class SpLogEntry {
             return data;
         }
         const instance = target || new SpLogEntry();
-        instance.errorMessage = StreamPipesErrorMessage.fromData(
-            data.errorMessage,
-        );
+        instance.errorMessage = SpLogMessage.fromData(data.errorMessage);
         instance.timestamp = data.timestamp;
+        return instance;
+    }
+}
+
+export class SpLogMessage {
+    cause: string;
+    detail: string;
+    fullStackTrace: string;
+    level: SpLogLevel;
+    title: string;
+
+    static fromData(data: SpLogMessage, target?: SpLogMessage): SpLogMessage {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpLogMessage();
+        instance.cause = data.cause;
+        instance.detail = data.detail;
+        instance.fullStackTrace = data.fullStackTrace;
+        instance.level = data.level;
+        instance.title = data.title;
         return instance;
     }
 }
@@ -3517,30 +3536,6 @@ export class StreamPipesApplicationPackage {
         instance.requiredProcessorAppIds = __getCopyArrayFn(
             __identity<string>(),
         )(data.requiredProcessorAppIds);
-        return instance;
-    }
-}
-
-export class StreamPipesErrorMessage {
-    cause: string;
-    detail: string;
-    fullStackTrace: string;
-    level: string;
-    title: string;
-
-    static fromData(
-        data: StreamPipesErrorMessage,
-        target?: StreamPipesErrorMessage,
-    ): StreamPipesErrorMessage {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new StreamPipesErrorMessage();
-        instance.cause = data.cause;
-        instance.detail = data.detail;
-        instance.fullStackTrace = data.fullStackTrace;
-        instance.level = data.level;
-        instance.title = data.title;
         return instance;
     }
 }
@@ -3851,6 +3846,8 @@ export type PipelineHealthStatus = 'OK' | 'REQUIRES_ATTENTION' | 'FAILURE';
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
+
+export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
 

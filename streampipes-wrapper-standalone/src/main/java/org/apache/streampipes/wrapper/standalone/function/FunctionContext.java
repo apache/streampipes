@@ -19,11 +19,11 @@
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.Collection;
@@ -40,6 +40,7 @@ public class FunctionContext {
   private ConfigExtractor config;
 
   private Map<String, SpOutputCollector> outputCollectors;
+  private IExtensionsLogger extensionsLogger;
 
   public FunctionContext() {
     this.streams = new HashMap<>();
@@ -56,6 +57,7 @@ public class FunctionContext {
     this.functionId = functionId;
     this.outputCollectors = outputCollectors;
     this.client = client;
+    this.extensionsLogger = new ExtensionsLogger(functionId);
   }
 
   public Collection<SpDataStream> getStreams() {
@@ -78,8 +80,8 @@ public class FunctionContext {
     return functionId;
   }
 
-  public void log(SpLogEntry logEntry) {
-    SpMonitoringManager.INSTANCE.addErrorMessage(functionId, logEntry);
+  public IExtensionsLogger getLogger() {
+    return extensionsLogger;
   }
 
   public Map<String, SpOutputCollector> getOutputCollectors() {
