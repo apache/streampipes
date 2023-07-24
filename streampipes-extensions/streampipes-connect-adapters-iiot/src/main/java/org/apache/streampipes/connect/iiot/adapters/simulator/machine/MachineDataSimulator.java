@@ -19,7 +19,6 @@ package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
-import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,15 +32,10 @@ public class MachineDataSimulator implements Runnable {
 
   private Boolean running;
 
-  public MachineDataSimulator(IEventCollector collector, Integer waitTimeMs, String selectedSimulatorOption) {
+  public MachineDataSimulator(IEventCollector collector,
+                              Integer waitTimeMs,
+                              String selectedSimulatorOption) {
     this.collector = collector;
-    this.waitTimeMs = waitTimeMs;
-    this.selectedSimulatorOption = selectedSimulatorOption;
-    this.running = true;
-  }
-
-  @Deprecated
-  public MachineDataSimulator(AdapterPipeline adapterPipeline, Integer waitTimeMs, String selectedSimulatorOption) {
     this.waitTimeMs = waitTimeMs;
     this.selectedSimulatorOption = selectedSimulatorOption;
     this.running = true;

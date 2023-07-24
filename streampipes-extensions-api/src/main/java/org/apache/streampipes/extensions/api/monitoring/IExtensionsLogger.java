@@ -16,36 +16,22 @@
  *
  */
 
-package org.apache.streampipes.model.monitoring;
+package org.apache.streampipes.extensions.api.monitoring;
 
-public class StreamPipesRuntimeError {
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 
-  private long timestamp;
-  private String title;
-  private String message;
+public interface IExtensionsLogger {
 
-  private String stackTrace;
+  void log(SpLogMessage logMessage);
 
-  public StreamPipesRuntimeError(long timestamp, String title, String message, String stackTrace) {
-    this.timestamp = timestamp;
-    this.title = title;
-    this.message = message;
-    this.stackTrace = stackTrace;
-  }
+  void error(Exception e);
 
-  public long getTimestamp() {
-    return timestamp;
-  }
+  void error(String details,
+             Exception e);
 
-  public String getTitle() {
-    return title;
-  }
+  void info(String title,
+            String details);
 
-  public String getMessage() {
-    return message;
-  }
-
-  public String getStackTrace() {
-    return stackTrace;
-  }
+  void warn(String title,
+            String details);
 }

@@ -16,39 +16,80 @@
  *
  */
 
-package org.apache.streampipes.model;
+package org.apache.streampipes.model.monitoring;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @TsModel
-public class StreamPipesErrorMessage {
+public class SpLogMessage {
 
-  private String level;
+  private SpLogLevel level;
   private String title;
   private String detail;
 
   private String cause;
   private String fullStackTrace;
 
-  public StreamPipesErrorMessage() {
+  public static SpLogMessage from(Exception exception) {
+    return from(exception, "");
+  }
+
+  public static SpLogMessage from(Exception exception,
+                                  String detail) {
+    String cause = exception.getCause() != null ? exception.getCause().getMessage() : exception.getMessage();
+    return new SpLogMessage(
+        SpLogLevel.ERROR,
+        exception.getMessage(),
+        detail,
+        ExceptionUtils.getStackTrace(exception),
+        cause);
+  }
+
+  public static SpLogMessage info(String title,
+                                  String details) {
+    return new SpLogMessage(
+        SpLogLevel.INFO,
+        title,
+        details
+    );
+  }
+
+  public static SpLogMessage warn(String title,
+                                  String details) {
+    return new SpLogMessage(
+        SpLogLevel.WARN,
+        title,
+        details
+    );
+  }
+
+  public SpLogMessage() {
 
   }
 
-  public StreamPipesErrorMessage(String level,
-                                 String title,
-                                 String detail) {
+  public SpLogMessage(SpLogMessage other) {
+    this.level = other.getLevel();
+    this.detail = other.getDetail();
+    this.title = other.getTitle();
+    this.cause = other.getCause();
+    this.fullStackTrace = other.getFullStackTrace();
+  }
+
+  public SpLogMessage(SpLogLevel level,
+                      String title,
+                      String detail) {
     this.level = level;
     this.title = title;
     this.detail = detail;
   }
 
-  public StreamPipesErrorMessage(String level,
-                                 String title,
-                                 String detail,
-                                 String fullStackTrace,
-                                 String cause) {
+  public SpLogMessage(SpLogLevel level,
+                      String title,
+                      String detail,
+                      String fullStackTrace,
+                      String cause) {
     this.level = level;
     this.title = title;
     this.detail = detail;
@@ -56,21 +97,11 @@ public class StreamPipesErrorMessage {
     this.cause = cause;
   }
 
-  public static StreamPipesErrorMessage from(Exception exception) {
-    String cause = exception.getCause() != null ? exception.getCause().getMessage() : exception.getMessage();
-    return new StreamPipesErrorMessage(
-        "error",
-        exception.getMessage(),
-        "",
-        ExceptionUtils.getStackTrace(exception),
-        cause);
-  }
-
-  public String getLevel() {
+  public SpLogLevel getLevel() {
     return level;
   }
 
-  public void setLevel(String level) {
+  public void setLevel(SpLogLevel level) {
     this.level = level;
   }
 

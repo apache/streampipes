@@ -23,8 +23,8 @@ import {
     AdapterMonitoringService,
     PipelineElementService,
     SpMetricsEntry,
-    StreamPipesErrorMessage,
     PipelineService,
+    SpLogMessage,
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
@@ -161,10 +161,7 @@ export class ExistingAdaptersComponent implements OnInit {
         });
     }
 
-    openAdapterStatusErrorDialog(
-        message: StreamPipesErrorMessage,
-        title: string,
-    ) {
+    openAdapterStatusErrorDialog(message: SpLogMessage, title: string) {
         this.dialogService.open(SpExceptionDetailsDialogComponent, {
             panelType: PanelType.STANDARD_PANEL,
             title: 'Adapter Status',

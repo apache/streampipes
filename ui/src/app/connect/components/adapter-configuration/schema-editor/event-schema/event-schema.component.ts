@@ -37,7 +37,7 @@ import {
     EventSchema,
     FieldStatusInfo,
     GuessSchema,
-    StreamPipesErrorMessage,
+    SpLogMessage,
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
@@ -102,7 +102,7 @@ export class EventSchemaComponent implements OnChanges {
     isLoading = false;
     isError = false;
     isPreviewEnabled = false;
-    errorMessage: StreamPipesErrorMessage;
+    errorMessage: SpLogMessage;
     nodes: EventProperty[] = new Array<EventProperty>();
     validEventSchema = false;
     schemaErrorHints: UserErrorMessage[] = [];

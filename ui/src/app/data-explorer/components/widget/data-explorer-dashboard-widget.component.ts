@@ -35,6 +35,7 @@ import {
     DataLakeMeasure,
     DataViewDataExplorerService,
     DateRange,
+    SpLogMessage,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { DataDownloadDialogComponent } from '../../../core-ui/data-download-dialog/data-download-dialog.component';
@@ -51,7 +52,6 @@ import {
     DialogService,
     PanelType,
 } from '@streampipes/shared-ui';
-import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -111,7 +111,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     widgetTypeChangedSubscription: Subscription;
     intervalSubscription: Subscription;
 
-    errorMessage: StreamPipesErrorMessage;
+    errorMessage: SpLogMessage;
 
     componentRef: ComponentRef<BaseWidgetData<any>>;
 
