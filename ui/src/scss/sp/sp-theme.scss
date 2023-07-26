@@ -268,4 +268,11 @@ $accent: map-get($custom-theme-light, accent);
             font-size: 14px;
         }
     }
+
+    .form-field-small-min-width {
+        min-width: 130px;
+        .mdc-list-item__primary-text {
+            font-size: 14px;
+        }
+    }
 }

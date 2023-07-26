@@ -51,6 +51,7 @@
                         [(value)]="filter.field"
                         (selectionChange)="updateWidget()"
                         [compareWith]="compare"
+                        panelClass="form-field-small"
                         data-cy="design-panel-data-settings-filter-field"
                     >
                         <mat-option
@@ -69,6 +70,7 @@
                 >
                     <mat-select
                         [(value)]="filter.operator"
+                        panelClass="form-field-smalls"
                         (selectionChange)="updateWidget()"
                         data-cy="design-panel-data-settings-filter-operator"
                     >
