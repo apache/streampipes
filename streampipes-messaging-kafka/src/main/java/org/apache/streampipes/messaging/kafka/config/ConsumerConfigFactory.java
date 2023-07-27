@@ -33,6 +33,7 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
   private static final Integer FETCH_MAX_BYTES_CONFIG_DEFAULT = 52428800;
   private static final String KEY_DESERIALIZER_CLASS_CONFIG_DEFAULT = ByteArrayDeserializer.class.getName();
   private static final String VALUE_DESERIALIZER_CLASS_CONFIG_DEFAULT = ByteArrayDeserializer.class.getName();
+  private static final String AUTO_OFFSET_RESET_CONFIG_DEFAULT = "latest";
 
   public ConsumerConfigFactory(KafkaTransportProtocol protocol) {
     super(protocol);
@@ -55,7 +56,7 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
 
 
     props.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
-
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, AUTO_OFFSET_RESET_CONFIG_DEFAULT);
     return props;
   }
 }

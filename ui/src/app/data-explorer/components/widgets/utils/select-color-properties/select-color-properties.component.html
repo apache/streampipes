@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100" fxLayout="column" class="form-field-small">
     <div fxLayout="row" fxLayoutAlign="start center">
         <span class="data-explorer-header">Fields </span>
         <div fxLayout="row" fxLayoutAlign="start center">
@@ -63,33 +63,30 @@
             }}
         </mat-checkbox>
         <div fxFlex fxLayoutAlign="end center" *ngIf="isSelected(field)">
+            <input
+                class="color-field"
+                [(colorPicker)]="
+                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
+                        field.fullDbName + field.sourceIndex.toString()
+                    ]
+                "
+                [style.background]="
+                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
+                        field.fullDbName + field.sourceIndex.toString()
+                    ]
+                "
+                required
+                [cpPosition]="'bottom'"
+                [cpPresetColors]="presetColors"
+                (colorPickerSelect)="triggerDataRefresh()"
+                autocomplete="off"
+            />
             <mat-form-field
-                class="marginColorFieldRight"
+                appearance="outline"
+                class="marginColorField"
                 color="accent"
-                fxFlex="5"
+                fxFlex="60"
             >
-                <input
-                    matInput
-                    [(colorPicker)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .chosenColor[
-                            field.fullDbName + field.sourceIndex.toString()
-                        ]
-                    "
-                    [style.background]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .chosenColor[
-                            field.fullDbName + field.sourceIndex.toString()
-                        ]
-                    "
-                    required
-                    [cpPosition]="'bottom'"
-                    [cpPresetColors]="presetColors"
-                    (colorPickerSelect)="triggerDataRefresh()"
-                    autocomplete="off"
-                />
-            </mat-form-field>
-            <mat-form-field class="marginColorField" color="accent" fxFlex="60">
                 <input
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
@@ -101,7 +98,12 @@
                     (input)="onFilterChange($event.target.value, field)"
                 />
             </mat-form-field>
-            <mat-form-field class="marginColorField" color="accent" fxFlex="35">
+            <mat-form-field
+                appearance="outline"
+                class="marginColorField"
+                color="accent"
+                fxFlex="35"
+            >
                 <mat-select
                     [(value)]="
                         currentlyConfiguredWidget.visualizationConfig
@@ -127,7 +129,7 @@
         style="margin-left: 1px; margin-right: 1px"
         *ngFor="let field of availableProperties"
         fxLayout="column"
-        class="field-scroll-panel"
+        class="field-scroll-panel mb-10"
     >
         <div fxFlex fxLayoutAlign="start center" *ngIf="isSelected(field)">
             <b>{{
@@ -137,7 +139,9 @@
                     field.measure +
                     ')'
             }}</b>
+            <span fxFlex></span>
             <mat-form-field
+                appearance="outline"
                 color="accent"
                 fxFlex="60"
                 class="marginColorFieldMore"

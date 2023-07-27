@@ -130,21 +130,25 @@ fs.writeFileSync(
     fs.readFileSync(config['login']['logo']),
 );
 console.log('Moved: logo.png');
+
 fs.writeFileSync(
     'src/assets/img/sp/logo-navigation.png',
     fs.readFileSync(config['login']['logo-navigation']),
 );
 console.log('Moved: sp-logo-navigation.png');
+
 fs.writeFileSync(
     'src/assets/img/favicon/favicon-96x96.png',
     fs.readFileSync(config['login']['favicon']),
 );
 console.log('Moved: favicon');
+
 fs.writeFileSync(
     'src/scss/_variables.scss',
     fs.readFileSync('deployment/_variables.scss', 'utf8'),
 );
 console.log('Moved: styling variables file');
+
 fs.writeFileSync(
     'webpack.partial.dev.js',
     fs.readFileSync('deployment/webpack.partial.dev.js', 'utf8'),
@@ -154,7 +158,7 @@ console.log('Moved: webpack dev config');
 if (process.env.THEME_LOC !== undefined) {
     console.log('Using custom-provided theme ' + process.env.THEME_LOC);
     fs.writeFileSync(
-        'src/scss/sp/sp-theme.scss',
+        'src/scss/_variables.scss',
         fs.readFileSync(process.env.THEME_LOC, 'utf8'),
     );
 }
@@ -164,7 +168,7 @@ if (process.env.LOGO_HEADER_LOC !== undefined) {
         'Using custom-provided header logo ' + process.env.LOGO_HEADER_LOC,
     );
     fs.writeFileSync(
-        'src/assets/img/login/logo.png',
+        'src/assets/img/sp/logo.png',
         fs.readFileSync(process.env.LOGO_HEADER_LOC),
     );
 }

@@ -18,8 +18,8 @@
 
 @import '../../../../scss/_variables.scss';
 
-::ng-deep .mat-progress-bar-fill::after {
-    background: $sp-color-accent;
+::ng-deep .mdc-linear-progress__bar-inner {
+    border-color: $sp-color-accent !important;
 }
 
 .sp-progress {

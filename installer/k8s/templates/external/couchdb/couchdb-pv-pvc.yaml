@@ -25,4 +25,4 @@ spec:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: 50M
+      storage: {{ .Values.external.couchdb.persistence.storageSize }}

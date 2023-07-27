@@ -30,6 +30,7 @@ import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-vi
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import {
     ConfirmDialogComponent,
+    CurrentUserService,
     DialogService,
     PanelType,
     SpBreadcrumbService,
@@ -76,6 +77,7 @@ export class DashboardPanelComponent implements OnInit {
         private refreshDashboardService: RefreshDashboardService,
         private route: ActivatedRoute,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private breadcrumbService: SpBreadcrumbService,
     ) {}
 
@@ -83,7 +85,7 @@ export class DashboardPanelComponent implements OnInit {
         const params = this.route.snapshot.params;
         const queryParams = this.route.snapshot.queryParams;
 
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             const hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );

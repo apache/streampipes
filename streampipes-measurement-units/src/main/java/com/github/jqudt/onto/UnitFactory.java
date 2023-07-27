@@ -13,7 +13,6 @@ import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -90,8 +89,6 @@ public class UnitFactory {
 							unit.setType(new URI(typeURI.stringValue()));
 						}
 					}
-				} else {
-					// System.out.println("Ignoring: " + statement);
 				}
 			}
 			unit.setMultiplier(multiplier);
@@ -100,27 +97,6 @@ public class UnitFactory {
 		}
 
 		return unit;
-	}
-
-	public List<Unit> findUnits(String symbol) {
-		if (symbol == null) throw new IllegalArgumentException("The symbol cannot be null");
-
-		ValueFactory f = ValueFactoryImpl.getInstance();
-		Model statements = repos.filter(null, QUDT.ABBREVIATION, f.createLiteral(symbol, XMLSchema.STRING));
-		if (statements.isEmpty()) return Collections.emptyList();
-		List<Unit> foundUnits = new ArrayList<>();
-		for (Statement statement : statements) {
-			Object type = statement.getSubject();
-			try {
-				if (type instanceof org.eclipse.rdf4j.model.URI) {
-					org.eclipse.rdf4j.model.URI typeURI = (org.eclipse.rdf4j.model.URI)type;
-					foundUnits.add(getUnit(typeURI.toString()));
-				}
-			} catch (Exception exception) {
-				// ignore
-			}
-		}
-		return foundUnits;
 	}
 
 	public List<String> getURIs(String type) {

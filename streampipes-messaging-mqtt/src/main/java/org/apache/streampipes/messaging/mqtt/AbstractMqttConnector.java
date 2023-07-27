@@ -28,6 +28,12 @@ public class AbstractMqttConnector {
   protected BlockingConnection connection;
   protected boolean connected = false;
 
+  protected final MqttTransportProtocol protocol;
+
+  public AbstractMqttConnector(MqttTransportProtocol protocol) {
+    this.protocol = protocol;
+  }
+
   protected void createBrokerConnection(MqttTransportProtocol protocolSettings) throws Exception {
     this.mqtt = new MQTT();
     this.mqtt.setHost(makeBrokerUrl(protocolSettings));

@@ -27,9 +27,28 @@ spec:
       labels:
         app: extensions-all-iiot
     spec:
+      restartPolicy: {{ .Values.restartPolicy }}
       containers:
         - name: extensions-all-iiot
           image: {{ .Values.streampipes.registry }}/extensions-all-iiot:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 8090
+            - containerPort: {{ .Values.extensions.iiot.port }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.extensions.iiot.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.extensions.iiot.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.extensions.iiot.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

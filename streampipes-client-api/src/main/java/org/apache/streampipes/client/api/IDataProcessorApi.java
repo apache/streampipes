@@ -21,10 +21,9 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.api.annotation.NotYetImplemented;
 import org.apache.streampipes.client.api.constants.InputStreamIndex;
 import org.apache.streampipes.client.api.live.EventProcessor;
-import org.apache.streampipes.client.api.live.IKafkaConfig;
-import org.apache.streampipes.messaging.EventConsumer;
+import org.apache.streampipes.client.api.live.IBrokerConfigOverride;
+import org.apache.streampipes.client.api.live.ISubscription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,19 +48,19 @@ public interface IDataProcessorApi extends CRUDApi<String, DataProcessorInvocati
   @NotYetImplemented
   void update(DataProcessorInvocation element);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(DataProcessorInvocation processor,
-                            EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor,
+                          EventProcessor callback);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(DataProcessorInvocation processor,
-                            IKafkaConfig kafkaConfig,
-                            EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor,
+                          IBrokerConfigOverride brokerConfigOverride,
+                          EventProcessor callback);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(DataProcessorInvocation processor,
-                                                  InputStreamIndex index,
-                                                  EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor,
+                          InputStreamIndex index,
+                          EventProcessor callback);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(DataProcessorInvocation processor,
-                            InputStreamIndex index,
-                            IKafkaConfig kafkaConfig,
-                            EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor,
+                          InputStreamIndex index,
+                          IBrokerConfigOverride brokerConfigOverride,
+                          EventProcessor callback);
 }

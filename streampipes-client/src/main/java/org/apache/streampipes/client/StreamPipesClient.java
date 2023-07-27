@@ -40,6 +40,7 @@ import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
 public class StreamPipesClient implements
@@ -132,6 +133,11 @@ public class StreamPipesClient implements
   @Override
   public void registerDataFormat(SpDataFormatFactory spDataFormatFactory) {
     this.config.addDataFormat(spDataFormatFactory);
+  }
+
+  @Override
+  public void registerProtocol(SpProtocolDefinitionFactory<?> spProtocolDefinitionFactory) {
+    this.config.addTransportProtocol(spProtocolDefinitionFactory);
   }
 
   @Override

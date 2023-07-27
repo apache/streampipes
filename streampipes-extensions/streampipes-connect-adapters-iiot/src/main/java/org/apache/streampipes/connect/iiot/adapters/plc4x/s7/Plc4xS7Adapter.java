@@ -32,15 +32,14 @@ import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -64,7 +63,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcReadResponseHandler {
 
@@ -290,9 +288,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
         throw new AdapterException("Polling interval must be higher than 10. Current value: " + this.pollingInterval);
       }
 
-      GuessSchema guessSchema = new GuessSchema();
-
-      EventSchema eventSchema = new EventSchema();
+      GuessSchemaBuilder builder = GuessSchemaBuilder.create();
       List<EventProperty> allProperties = new ArrayList<>();
 
       for (Map<String, String> node : this.nodes) {
@@ -310,17 +306,11 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
 
       this.before(extractor.getStaticPropertyExtractor());
       var event = readPlcDataSynchronized();
-      var preview = event
-          .entrySet()
-          .stream()
-          .collect(Collectors.toMap(Map.Entry::getKey, e ->
-              new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
 
-      eventSchema.setEventProperties(allProperties);
-      guessSchema.setEventSchema(eventSchema);
-      guessSchema.setEventPreview(List.of(preview));
+      builder.properties(allProperties);
+      builder.preview(event);
 
-      return guessSchema;
+      return builder.build();
     } catch (Exception e) {
       throw new AdapterException(e.getMessage(), e);
     }

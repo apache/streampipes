@@ -19,8 +19,8 @@
 package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -85,7 +85,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(getDataStreamResourceManager().findAsInvocation(elementId));
     } catch (IllegalArgumentException e) {
-      return badRequest(StreamPipesErrorMessage.from(e));
+      return notFound(SpLogMessage.from(e));
     }
   }
 

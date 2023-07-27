@@ -27,7 +27,6 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class EndpointItemFetcher {
   private List<ExtensionsServiceEndpointItem> getEndpointItems(ExtensionsServiceEndpoint e) {
     try {
       String result = Request.Get(e.getEndpointUrl())
-          .addHeader(new BasicHeader("Accept", MediaType.APPLICATION_JSON_VALUE))
+          .addHeader(new BasicHeader("Accept", "application/json"))
           .connectTimeout(1000)
           .execute()
           .returnContent()

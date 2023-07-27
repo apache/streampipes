@@ -20,15 +20,10 @@ package org.apache.streampipes.manager.runtime;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
-import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.apache.streampipes.messaging.mqtt.MqttConsumer;
-import org.apache.streampipes.messaging.nats.NatsConsumer;
+import org.apache.streampipes.messaging.EventConsumer;
+import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 
 import org.slf4j.Logger;
@@ -36,15 +31,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public enum PipelineElementRuntimeInfoFetcher {
   INSTANCE;
 
-  Logger logger = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
 
   private static final int FETCH_INTERVAL_MS = 300;
   private final Map<String, SpDataFormatConverter> converterMap;
-  private Environment env;
+  private final Environment env;
 
   PipelineElementRuntimeInfoFetcher() {
     this.converterMap = new HashMap<>();
@@ -56,7 +52,11 @@ public enum PipelineElementRuntimeInfoFetcher {
     var protocol = spDataStream.getEventGrounding().getTransportProtocol();
     if (env.getSpDebug().getValueOrDefault()) {
       protocol.setBrokerHostname("localhost");
+      if (protocol instanceof KafkaTransportProtocol) {
+        ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+      }
     }
+
     if (!converterMap.containsKey(topic)) {
       this.converterMap.put(topic,
           new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
@@ -64,14 +64,18 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     var converter = converterMap.get(topic);
 
-    if (spDataStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
-      return getLatestEventFromKafka((KafkaTransportProtocol) protocol, converter, topic);
-    } else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof JmsTransportProtocol) {
-      return getLatestEventFromJms((JmsTransportProtocol) protocol, converter);
-    } else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof MqttTransportProtocol) {
-      return getLatestEventFromMqtt((MqttTransportProtocol) protocol, converter);
+    var protocolDefinitionOpt = SpProtocolManager
+        .INSTANCE
+        .findDefinition(spDataStream.getEventGrounding().getTransportProtocol());
+
+    if (protocolDefinitionOpt.isPresent()) {
+      var consumer = protocolDefinitionOpt.get().getConsumer(protocol);
+      return getLatestEvent(consumer, converter);
+
     } else {
-      return getLatestEventFromNats((NatsTransportProtocol) protocol, converter);
+      LOG.error("Error while fetching data for preview - protocol {} not found - did you register the protocol? ",
+          protocol.getClass().getCanonicalName());
+      throw new SpRuntimeException("Protocol not found");
     }
   }
 
@@ -91,7 +95,7 @@ public enum PipelineElementRuntimeInfoFetcher {
     long timeout = 0;
     while (result[0] == null && timeout < 6000) {
       try {
-        Thread.sleep(FETCH_INTERVAL_MS);
+        TimeUnit.MILLISECONDS.sleep(FETCH_INTERVAL_MS);
         timeout = timeout + 300;
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -99,11 +103,10 @@ public enum PipelineElementRuntimeInfoFetcher {
     }
   }
 
-  private String getLatestEventFromJms(JmsTransportProtocol protocol,
-                                       SpDataFormatConverter converter) throws SpRuntimeException {
+  private String getLatestEvent(EventConsumer consumer,
+                                SpDataFormatConverter converter) {
     final String[] result = {null};
-    ActiveMQConsumer consumer = new ActiveMQConsumer();
-    consumer.connect(protocol, event -> {
+    consumer.connect(event -> {
       result[0] = converter.convert(event);
       consumer.disconnect();
     });
@@ -112,60 +115,4 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     return result[0];
   }
-
-  private String getLatestEventFromMqtt(MqttTransportProtocol protocol,
-                                        SpDataFormatConverter converter) throws SpRuntimeException {
-    final String[] result = {null};
-    MqttConsumer mqttConsumer = new MqttConsumer();
-    mqttConsumer.connect(protocol, event -> {
-      result[0] = converter.convert(event);
-      mqttConsumer.disconnect();
-    });
-
-    waitForEvent(result);
-
-    return result[0];
-  }
-
-  private String getLatestEventFromNats(NatsTransportProtocol protocol,
-                                        SpDataFormatConverter converter) throws SpRuntimeException {
-    final String[] result = {null};
-    NatsConsumer natsConsumer = new NatsConsumer();
-    natsConsumer.connect(protocol, event -> {
-      result[0] = converter.convert(event);
-      natsConsumer.disconnect();
-    });
-
-    waitForEvent(result);
-
-    return result[0];
-  }
-
-  private String getLatestEventFromKafka(KafkaTransportProtocol protocol,
-                                         SpDataFormatConverter converter,
-                                         String topic) throws SpRuntimeException {
-    final String[] result = {null};
-    // Change kafka config when running in development mode
-    if (getEnvironment().getSpDebug().getValueOrDefault()) {
-      protocol.setKafkaPort(9094);
-    }
-
-    SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(protocol, topic, event -> {
-      result[0] = converter.convert(event);
-    });
-
-    Thread t = new Thread(kafkaConsumer);
-    t.start();
-
-    waitForEvent(result);
-
-    kafkaConsumer.disconnect();
-
-    return result[0];
-  }
-
-  private Environment getEnvironment() {
-    return Environments.getEnvironment();
-  }
-
 }

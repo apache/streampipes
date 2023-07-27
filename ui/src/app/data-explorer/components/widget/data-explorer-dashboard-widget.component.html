@@ -63,7 +63,6 @@
                     {{ loadingTime }}s
                 </div>
                 <button
-                    mat-button
                     mat-icon-button
                     [matMenuTriggerFor]="menu"
                     aria-label="More options"
@@ -95,7 +94,6 @@
                     </button>
                 </mat-menu>
                 <button
-                    mat-button
                     mat-icon-button
                     *ngIf="editMode"
                     (click)="downloadDataAsFile()"
@@ -110,7 +108,6 @@
                     <mat-icon>get_app</mat-icon>
                 </button>
                 <button
-                    mat-button
                     mat-icon-button
                     [class.mat-raised-button]="
                         currentlyConfiguredWidgetId === configuredWidget._id
@@ -131,7 +128,6 @@
                     <mat-icon>edit</mat-icon>
                 </button>
                 <button
-                    mat-button
                     mat-icon-button
                     (click)="removeWidget()"
                     matTooltip="Delete widget"
@@ -146,6 +142,7 @@
             </div>
         </div>
         <div
+            fxLayout="column"
             class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100 mw-100"
         >
             <ng-template spWidgetHost class="h-100 p-0"></ng-template>

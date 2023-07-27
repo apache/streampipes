@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 
 import java.io.Serializable;
@@ -28,17 +28,17 @@ import java.io.Serializable;
 public class SpAdapterRuntimeContext extends SpAdapterGuessSchemaContext
     implements IAdapterRuntimeContext, Serializable {
 
-  private SpMonitoringManager monitoringManager;
+  private final IExtensionsLogger extensionsLogger;
 
-  public SpAdapterRuntimeContext(SpMonitoringManager monitoringManager,
+  public SpAdapterRuntimeContext(IExtensionsLogger extensionsLogger,
                                  ConfigExtractor configExtractor,
                                  StreamPipesClient streamPipesClient) {
     super(configExtractor, streamPipesClient);
-    this.monitoringManager = monitoringManager;
+    this.extensionsLogger = extensionsLogger;
   }
 
   @Override
-  public SpMonitoringManager getLogger() {
-    return monitoringManager;
+  public IExtensionsLogger getLogger() {
+    return extensionsLogger;
   }
 }

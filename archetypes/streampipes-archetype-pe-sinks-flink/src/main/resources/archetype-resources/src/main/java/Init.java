@@ -30,6 +30,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
@@ -58,7 +59,8 @@ public class Init extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
-            new SpNatsProtocolFactory())
+            new SpNatsProtocolFactory()),
+            new SpPulsarProtocolFactory())
         .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
         .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
         .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")

@@ -46,7 +46,7 @@
                     type="submit"
                     [disabled]="backgroundImagePresent"
                 >
-                    <i class="material-icons">file_upload</i>&nbsp;Add image
+                    <mat-icon>file_upload</mat-icon>&nbsp;<span>Add image</span>
                 </button>
             </div>
             <div>
@@ -55,7 +55,7 @@
                     mat-button
                     (click)="openAddPipelineDialog()"
                 >
-                    <i class="material-icons">add</i>&nbsp;Add value
+                    <mat-icon>add</mat-icon>&nbsp;Add value
                 </button>
             </div>
             <div>
@@ -65,10 +65,9 @@
                     >
                 </button>
             </div>
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+            <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                 <button
                     color="accent"
-                    mat-button
                     mat-icon-button
                     (click)="clearCanvas()"
                     matTooltip="Clear"

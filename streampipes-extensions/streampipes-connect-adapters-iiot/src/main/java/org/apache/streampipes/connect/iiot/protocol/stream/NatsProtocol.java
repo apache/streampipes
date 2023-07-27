@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -43,7 +44,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -126,10 +126,10 @@ public class NatsProtocol implements StreamPipesAdapter {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    this.natsConsumer = new NatsConsumer();
+    this.natsConsumer = new NatsConsumer(natsConfig);
     try {
-      this.natsConsumer.connect(natsConfig, new BrokerEventProcessor(extractor.selectedParser(), collector));
-    } catch (IOException | InterruptedException e) {
+      this.natsConsumer.connect(new BrokerEventProcessor(extractor.selectedParser(), collector));
+    } catch (SpRuntimeException e) {
       throw new AdapterException("Error when connecting to the Nats broker on "
           + natsConfig.getNatsUrls() + " . ", e);
     }
@@ -146,7 +146,7 @@ public class NatsProtocol implements StreamPipesAdapter {
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     List<byte[]> elements = new ArrayList<>();
-    this.natsConsumer = new NatsConsumer();
+    this.natsConsumer = new NatsConsumer(natsConfig);
     final boolean[] completed = {false};
     InternalEventProcessor<byte[]> processor = event -> {
       elements.add(event);
@@ -154,8 +154,8 @@ public class NatsProtocol implements StreamPipesAdapter {
     };
 
     try {
-      this.natsConsumer.connect(natsConfig, processor);
-    } catch (IOException | InterruptedException e) {
+      this.natsConsumer.connect(processor);
+    } catch (SpRuntimeException e) {
       throw new ParseException("Could not connect to Nats broker", e);
     }
 

@@ -42,7 +42,7 @@
 	<asm.version>9.4</asm.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
-	<commons-codec.version>1.11</commons-codec.version>
+	<commons-codec.version>1.15</commons-codec.version>
 	<commons-collections.version>3.2.2</commons-collections.version>
 	<commons-io.version>2.11.0</commons-io.version>
 	<commons-lang3.version>3.12.0</commons-lang3.version>
@@ -66,7 +66,7 @@
 	<jackson.version>2.15.0</jackson.version>
 	<jackson.databind.version>2.15.0</jackson.databind.version>
 	<jakarta-annotation.version>2.1.1</jakarta-annotation.version>
-	<jakarta-activation-api.version>1.2.2</jakarta-activation-api.version>
+	<jakarta-activation-api.version>2.1.2</jakarta-activation-api.version>
 	<jakarta-json-api.version>2.1.1</jakarta-json-api.version>
 	<jakarta-inject-api.version>2.0.1</jakarta-inject-api.version>
 	<jakarta-mail.version>2.0.1</jakarta-mail.version>
@@ -78,8 +78,8 @@
 	<jakarta-json.version>2.0.1</jakarta-json.version>
 	<jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
 	<jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
-	<javassist.version>3.25.0-GA</javassist.version>
-	<jboss-logging.version>3.4.0.Final</jboss-logging.version>
+	<javassist.version>3.29.2-GA</javassist.version>
+	<jboss-logging.version>3.5.2.Final</jboss-logging.version>
 	<jboss-logging-annotations.version>2.2.1.Final</jboss-logging-annotations.version>
 	<jboss-logging-processor.version>2.2.1.Final</jboss-logging-processor.version>
 	<jersey.version>3.1.0</jersey.version>
@@ -102,7 +102,6 @@
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
 	<objenesis.version>3.3</objenesis.version>
-	<okio.version>1.16.0</okio.version>
 	<okhttp.version>3.12.2</okhttp.version>
 	<osgi.version>6.0.0</osgi.version>
 	<plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
@@ -116,9 +115,9 @@
 	<slf4j.version>2.0.6</slf4j.version>
 	<snakeyaml.version>1.33</snakeyaml.version>
 	<snappy-java.version>1.1.10.1</snappy-java.version>
-	<spring.version>6.0.8</spring.version>
+	<spring.version>6.0.10</spring.version>
 	<spring-boot.version>3.1.0</spring-boot.version>
-	<spring-security.version>6.0.3</spring-security.version>
+	<spring-security.version>6.1.1</spring-security.version>
 	<swagger.version>2.2.7</swagger.version>
 	<type-parser.version>0.8.1</type-parser.version>
 	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
@@ -139,7 +138,7 @@
 	<maven.compiler.source>17</maven.compiler.source>
 	<maven.compiler.target>17</maven.compiler.target>
 
-	<amqp-client.version>5.17.0</amqp-client.version>
+	<amqp-client.version>5.18.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.23</animal-sniffer-annotations.version>
 	<boofcv.version>0.42</boofcv.version>
 	<bcprov.version>1.70</bcprov.version>
@@ -153,7 +152,7 @@
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
 	<google-maps-services.version>2.2.0</google-maps-services.version>
-	<graalvm.js.version>22.3.1</graalvm.js.version>
+	<graalvm.js.version>23.0.0</graalvm.js.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
 	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
@@ -175,11 +174,10 @@
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
 	<scala-lang.version>2.13.10</scala-lang.version>
-	<scala-lang-xml.version>1.0.5</scala-lang-xml.version>
-	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
+	<scala-parser-combinators.version>2.2.0</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
-	<inlong.version>1.6.0</inlong.version>
+	<inlong.version>1.7.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 	<maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -192,16 +190,16 @@
 	<eclipse.milo.version>0.6.9</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>9.31</nimbus-jose-jwt.version>
-	<opencsv.version>5.7.1</opencsv.version>
+	<opencsv.version>5.8</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.21.12</protobuf.version>
 	<proton-j.version>0.34.0</proton-j.version>
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
 	<checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-	<checkstyle.version>10.6.0</checkstyle.version>
-	<extra-enforcer-rules.version>1.6.1</extra-enforcer-rules.version>
-	<formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
+	<checkstyle.version>10.12.1</checkstyle.version>
+	<extra-enforcer-rules.version>1.7.0</extra-enforcer-rules.version>
+	<formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
 	<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
 	<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
 	<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
@@ -321,11 +319,6 @@
 					<groupId>com.orbitz.consul</groupId>
 					<artifactId>consul-client</artifactId>
 					<version>${consul-client.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>com.squareup.okio</groupId>
-					<artifactId>okio</artifactId>
-					<version>${okio.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>com.squareup.okhttp3</groupId>
@@ -1020,12 +1013,6 @@
 					<artifactId>proton-j</artifactId>
 					<version>${proton-j.version}</version>
 				</dependency>
-				<dependency>
-					<groupId>org.scala-lang.modules</groupId>
-					<artifactId>scala-xml_2.11</artifactId>
-					<version>${scala-lang-xml.version}</version>
-					<scope>test</scope>
-				</dependency>
 				<!-- External Connect dependencies -->
 				<dependency>
 					<groupId>com.google.j2objc</groupId>
@@ -1350,44 +1337,56 @@
         <module>archetypes/streampipes-archetype-extensions-jvm</module>
         <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
         <module>archetypes/streampipes-archetype-pe-processors-flink</module>
-        <module>streampipes-service-core</module>
         <module>streampipes-client</module>
+		<module>streampipes-client-api</module>
         <module>streampipes-commons</module>
         <module>streampipes-config</module>
-        <module>streampipes-extensions-api</module>
         <module>streampipes-connect-management</module>
+		<module>streampipes-connect-shared</module>
+		<module>streampipes-extensions-api</module>
         <module>streampipes-extensions-management</module>
-        <module>streampipes-service-extensions</module>
         <module>streampipes-data-explorer</module>
+		<module>streampipes-data-explorer-commons</module>
+		<module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-cbor</module>
         <module>streampipes-dataformat-fst</module>
         <module>streampipes-dataformat-json</module>
         <module>streampipes-dataformat-smile</module>
         <module>streampipes-extensions</module>
+		<module>streampipes-integration-tests</module>
         <module>streampipes-logging</module>
+		<module>streampipes-mail</module>
         <module>streampipes-maven-plugin</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
         <module>streampipes-messaging-mqtt</module>
+		<module>streampipes-messaging-nats</module>
+        <module>streampipes-messaging-pulsar</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
         <module>streampipes-model-shared</module>
         <module>streampipes-platform-services</module>
         <module>streampipes-pipeline-management</module>
-        <module>streampipes-sources</module>
+		<module>streampipes-resource-management</module>
+		<module>streampipes-rest-extensions</module>
         <module>streampipes-rest</module>
         <module>streampipes-rest-core-base</module>
         <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
+		<module>streampipes-sdk-bundle</module>
+		<module>streampipes-sources</module>
         <module>streampipes-security-jwt</module>
         <module>streampipes-serializers-json</module>
         <module>streampipes-service-base</module>
+		<module>streampipes-service-core</module>
+		<module>streampipes-service-core-nats</module>
         <module>streampipes-service-discovery</module>
         <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>
+		<module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-storage-couchdb</module>
@@ -1401,18 +1400,7 @@
         <module>streampipes-wrapper-python</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-mail</module>
-        <module>streampipes-resource-management</module>
-        <module>streampipes-sdk-bundle</module>
-        <module>streampipes-data-explorer-commons</module>
-        <module>streampipes-data-export</module>
-        <module>streampipes-messaging-nats</module>
-        <module>streampipes-integration-tests</module>
-		<module>streampipes-rest-extensions</module>
-        <module>streampipes-extensions/streampipes-connectors-influx</module>
-        <module>streampipes-client-api</module>
-        <module>streampipes-extensions/streampipes-connectors-opcua</module>
-    </modules>
+	</modules>
 
     <profiles>
         <profile>

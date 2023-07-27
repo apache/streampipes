@@ -25,14 +25,14 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.NotificationsResourceManager;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import com.google.common.collect.Streams;
-
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,8 +67,9 @@ public class PipelineManager {
   public static String addPipeline(String principalSid,
                                    Pipeline pipeline) {
 
-    // call by reference bad smell
-    String pipelineId = UUIDGenerator.generateUuid();
+    String pipelineId = Objects.isNull(pipeline.getPipelineId())
+        ? UUIDGenerator.generateUuid()
+        : pipeline.getPipelineId();
     preparePipelineBasics(principalSid, pipeline, pipelineId);
     Operations.storePipeline(pipeline);
 
@@ -111,7 +112,11 @@ public class PipelineManager {
    * @param pipelineId of pipeline to be deleted
    */
   public static void deletePipeline(String pipelineId) {
-    getPipelineStorage().deletePipeline(pipelineId);
+    var pipeline = getPipeline(pipelineId);
+    if (Objects.nonNull(pipeline)) {
+      getPipelineStorage().deletePipeline(pipelineId);
+      new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
+    }
   }
 
 
@@ -129,10 +134,10 @@ public class PipelineManager {
         .collect(Collectors.toList());
   }
 
-  private static Stream<NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
-    return Streams.concat(pipeline.getStreams().stream(),
-        pipeline.getActions().stream(),
-        pipeline.getSepas().stream());
+  private static Stream<? extends NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
+    return Stream.concat(
+        Stream.concat(pipeline.getStreams().stream(), pipeline.getSepas().stream()),
+        pipeline.getActions().stream());
   }
 
   private static void preparePipelineBasics(String username,

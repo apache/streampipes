@@ -25,7 +25,7 @@ import { PortalModule } from '@angular/cdk/portal';
 import { MatButtonModule } from '@angular/material/button';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { SpBasicViewComponent } from './components/basic-view/basic-view.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpBasicNavTabsComponent } from './components/basic-nav-tabs/basic-nav-tabs.component';
@@ -35,6 +35,7 @@ import { SpBasicHeaderTitleComponent } from './components/basic-header-title/hea
 import { SpExceptionMessageComponent } from './components/sp-exception-message/sp-exception-message.component';
 import { SpExceptionDetailsDialogComponent } from './components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 import { SplitSectionComponent } from './components/split-section/split-section.component';
 import { SpLabelComponent } from './components/sp-label/sp-label.component';
 
@@ -62,6 +63,7 @@ import { SpLabelComponent } from './components/sp-label/sp-label.component';
         MatTooltipModule,
         PortalModule,
         OverlayModule,
+        MatDialogModule,
     ],
     exports: [
         ConfirmDialogComponent,

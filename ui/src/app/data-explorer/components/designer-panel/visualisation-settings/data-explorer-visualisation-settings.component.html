@@ -16,11 +16,14 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
-        <span class="data-explorer-header">Visualization Type</span>
-        <mat-form-field color="accent" fxFlex="100">
-            <mat-label>Select visualization</mat-label>
+<div fxFlex="100" fxLayout="column" class="form-field-small">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        class="data-explorer-options-panel pr-5"
+    >
+        <span class="data-explorer-header mb-10">Visualization Type</span>
+        <mat-form-field appearance="outline" color="accent" fxFlex="100">
             <mat-select
                 [(value)]="currentlyConfiguredWidget.widgetType"
                 (selectionChange)="triggerWidgetTypeChange($event)"
@@ -35,7 +38,11 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        class="data-explorer-options-panel pr-5"
+    >
         <span class="data-explorer-header">Configuration</span>
         <div
             *ngIf="currentlyConfiguredWidget.widgetType === 'table'"

@@ -19,9 +19,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Pipe({
     name: 'secure',
@@ -30,7 +30,7 @@ export class SecurePipe implements PipeTransform {
     constructor(
         private http: HttpClient,
         private sanitizer: DomSanitizer,
-        private authService: AuthService,
+        private currentUserService: CurrentUserService,
     ) {}
 
     transform(url): Observable<SafeUrl> {
@@ -39,7 +39,7 @@ export class SecurePipe implements PipeTransform {
                 responseType: 'blob',
                 headers: {
                     Authorization:
-                        'Bearer ' + this.authService.authToken$.value,
+                        'Bearer ' + this.currentUserService.authToken$.value,
                 },
             })
             .pipe(

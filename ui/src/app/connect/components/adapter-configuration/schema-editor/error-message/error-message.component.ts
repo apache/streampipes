@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { StreamPipesErrorMessage } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { SpLogMessage } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-error-message',
@@ -25,7 +25,7 @@ import { StreamPipesErrorMessage } from '../../../../../../../projects/streampip
     styleUrls: ['./error-message.component.scss'],
 })
 export class ErrorMessageComponent {
-    @Input() errorMessage: StreamPipesErrorMessage;
+    @Input() errorMessage: SpLogMessage;
 
     showErrorMessage = false;
 

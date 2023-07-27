@@ -103,11 +103,16 @@
                 >{{ fieldStatusInfo[originalRuntimeName].fieldStatus }}</span
             >
         </div>
-        <div *ngIf="isPrimitive" fxLayoutAlign="end center">
-            <mat-form-field class="small-select" color="accent">
+        <div *ngIf="isPrimitive" fxLayoutAlign="center center">
+            <mat-form-field
+                class="form-field-small no-subscrip-wrapper"
+                appearance="outline"
+                color="accent"
+            >
                 <mat-select
                     [(ngModel)]="node.data.propertyScope"
                     panelClass="small-select"
+                    class="small-select"
                     [attr.data-cy]="'property-scope-' + label"
                 >
                     <mat-option value="MEASUREMENT_PROPERTY"

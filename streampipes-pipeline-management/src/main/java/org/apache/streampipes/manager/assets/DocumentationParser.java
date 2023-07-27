@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.manager.assets;
 
-import com.google.common.base.Charsets;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class DocumentationParser {
 
@@ -38,14 +38,14 @@ public class DocumentationParser {
     try {
       String fileContents = getFileContents();
       String newFileContents = new ImagePathReplacer(fileContents, appId).replaceContent();
-      FileUtils.writeStringToFile(file, newFileContents, Charsets.UTF_8);
+      FileUtils.writeStringToFile(file, newFileContents, StandardCharsets.UTF_8);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   private String getFileContents() throws IOException {
-    return FileUtils.readFileToString(file, Charsets.UTF_8);
+    return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
   }
 
 }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.generic.elements;
 
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.transform.stream.DuplicateFilterPipelineElement;
 
 import org.junit.Test;
 

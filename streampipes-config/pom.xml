@@ -49,12 +49,6 @@
             <artifactId>streampipes-service-discovery</artifactId>
             <version>0.93.0-SNAPSHOT</version>
         </dependency>
-
-        <!-- External dependencies -->
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

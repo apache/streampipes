@@ -16,12 +16,14 @@
  *
  */
 
-.mat-tab-label-content {
+.mdc-tab__text-label {
     text-transform: uppercase;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    letter-spacing: normal;
 }
 
-.small .mat-tab-label {
-    min-width: 100px;
+.small .mdc-tab__text-label {
     height: 32px;
     font-size: 10pt;
 }

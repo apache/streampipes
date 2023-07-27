@@ -20,8 +20,8 @@ package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class PullAdapterScheduler {
       } catch (ExecutionException | InterruptedException e) {
         SpMonitoringManager.INSTANCE.addErrorMessage(
             adapterElementId,
-            SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+            SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e)));
       } catch (TimeoutException e) {
         LOGGER.warn("Timeout occurred", e);
       }

@@ -20,15 +20,18 @@ package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 
 import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeConfigExtractor;
 import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeStreamPipesClient;
 
 public class AdapterContextGenerator {
 
-  public IAdapterRuntimeContext makeRuntimeContext() {
-    return new SpAdapterRuntimeContext(SpMonitoringManager.INSTANCE, makeConfigExtractor(), makeStreamPipesClient());
+  public IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
+    return new SpAdapterRuntimeContext(
+        new ExtensionsLogger(adapterInstanceId),
+        makeConfigExtractor(),
+        makeStreamPipesClient());
   }
 
   public IAdapterGuessSchemaContext makeGuessSchemaContext() {

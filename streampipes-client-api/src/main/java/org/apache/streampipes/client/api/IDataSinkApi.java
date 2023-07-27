@@ -20,10 +20,9 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.api.annotation.NotYetImplemented;
 import org.apache.streampipes.client.api.live.EventProcessor;
-import org.apache.streampipes.client.api.live.IKafkaConfig;
-import org.apache.streampipes.messaging.EventConsumer;
+import org.apache.streampipes.client.api.live.IBrokerConfigOverride;
+import org.apache.streampipes.client.api.live.ISubscription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,12 +45,12 @@ public interface IDataSinkApi extends CRUDApi<String, DataSinkInvocation> {
   @Override
   void update(DataSinkInvocation element);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(DataSinkInvocation sink,
-                                                  EventProcessor callback);
+  ISubscription subscribe(DataSinkInvocation sink,
+                          EventProcessor callback);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(DataSinkInvocation sink,
-                                                  IKafkaConfig kafkaConfig,
-                                                  EventProcessor callback);
+  ISubscription subscribe(DataSinkInvocation sink,
+                          IBrokerConfigOverride brokerConfigOverride,
+                          EventProcessor callback);
 
   DataSinkInvocation getDataSinkForPipelineElement(String templateId, DataSinkInvocation pipelineElement);
 }

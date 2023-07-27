@@ -19,10 +19,10 @@
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.api.live.EventProcessor;
-import org.apache.streampipes.client.api.live.IKafkaConfig;
-import org.apache.streampipes.messaging.EventConsumer;
+import org.apache.streampipes.client.api.live.IBrokerConfigOverride;
+import org.apache.streampipes.client.api.live.IConfiguredEventProducer;
+import org.apache.streampipes.client.api.live.ISubscription;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,10 +43,12 @@ public interface IDataStreamApi extends CRUDApi<String, SpDataStream> {
   @Override
   void update(SpDataStream element);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(SpDataStream stream,
-                            EventProcessor callback);
+  IConfiguredEventProducer getProducer(SpDataStream stream);
 
-  EventConsumer<KafkaTransportProtocol> subscribe(SpDataStream stream,
-                                                  IKafkaConfig kafkaConfig,
-                                                  EventProcessor callback);
+  ISubscription subscribe(SpDataStream stream,
+                          EventProcessor callback);
+
+  ISubscription subscribe(SpDataStream stream,
+                          IBrokerConfigOverride brokerConfigOverride,
+                          EventProcessor callback);
 }

@@ -26,6 +26,7 @@ import {
     PipelineService,
 } from '@streampipes/platform-services';
 import {
+    CurrentUserService,
     DialogRef,
     DialogService,
     PanelType,
@@ -73,6 +74,7 @@ export class PipelinesComponent implements OnInit {
         private dialogService: DialogService,
         private activatedRoute: ActivatedRoute,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private router: Router,
         private functionsService: FunctionsService,
         private breadcrumbService: SpBreadcrumbService,
@@ -86,7 +88,7 @@ export class PipelinesComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpPipelineRoutes.BASE),
         );
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );

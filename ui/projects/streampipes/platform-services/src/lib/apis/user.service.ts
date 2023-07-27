@@ -26,6 +26,7 @@ import {
     UserAccount,
 } from '../model/gen/streampipes-model-client';
 import { ChangePasswordRequest } from '../model/user/user.model';
+import { ShortUserInfo } from '../model/gen/streampipes-model';
 
 @Injectable({
     providedIn: 'root',
@@ -36,18 +37,10 @@ export class UserService {
         private platformServicesCommons: PlatformServicesCommons,
     ) {}
 
-    getAllUserAccounts(): Observable<UserAccount[]> {
-        return this.http.get(`${this.usersPath}?type=USER_ACCOUNT`).pipe(
+    public listUsers(): Observable<ShortUserInfo[]> {
+        return this.http.get(this.usersPath).pipe(
             map(response => {
-                return (response as any[]).map(p => UserAccount.fromData(p));
-            }),
-        );
-    }
-
-    getAllServiceAccounts(): Observable<ServiceAccount[]> {
-        return this.http.get(`${this.usersPath}?type=SERVICE_ACCOUNT`).pipe(
-            map(response => {
-                return (response as any[]).map(p => ServiceAccount.fromData(p));
+                return (response as any[]).map(p => ShortUserInfo.fromData(p));
             }),
         );
     }

@@ -35,6 +35,10 @@ public abstract class AbstractSharedRestInterface {
     return error(entity, 404);
   }
 
+  protected <T> Response notFound() {
+    return Response.status(404).build();
+  }
+
   protected <T> Response serverError(T entity) {
     return error(entity, 500);
   }
