@@ -65,7 +65,7 @@ public class Init extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
-            new SpNatsProtocolFactory()),
+            new SpNatsProtocolFactory(),
             new SpPulsarProtocolFactory())
         .build();
   }
