@@ -36,6 +36,7 @@
                 disableRipple
                 [(ngModel)]="field.aggregations"
                 multiple
+                [panelClass]="'form-field-small-min-width'"
                 (ngModelChange)="triggerConfigurationUpdate()"
             >
                 <mat-option [value]="'MEAN'" *ngIf="field.numeric">
