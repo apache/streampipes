@@ -64,7 +64,7 @@ dev_packages = base_packages + [
 ]
 
 docs_packages = [
-    "mkdocs==1.4.2",
+    "mkdocs==1.5.1",
     "mkdocs-awesome-pages-plugin==2.9.0",
     "mkdocs-material==9.1.3",
     "mkdocstrings[python]==0.22.0",
