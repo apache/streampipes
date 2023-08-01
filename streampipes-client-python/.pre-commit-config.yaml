@@ -29,11 +29,18 @@ repos:
 
   - repo: local
     hooks:
+
+      - id: print_statement
+        name: Check that print is not in the source code
+        types: [ python ]
+        entry: 'print\(.*\)'
+        language: pygrep
+
       - id: interrogate
         name: interrogate
         language: python
         types: [ python ]
-        entry:  interrogate -vv --fail-under 100 --omit-covered-files --ignore-init-method --ignore-module --ignore-magic --ignore-regex test_* --ignore-regex Test*
+        entry:  interrogate -vv --fail-under 100 --omit-covered-files --ignore-init-method --ignore-module --ignore-magic --ignore-regex test_* --ignore-regex Test* --ignore-regex conftest*
 
       - id: pyupgrade
         name: pyupgrade
