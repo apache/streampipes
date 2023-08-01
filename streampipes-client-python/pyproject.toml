@@ -83,6 +83,12 @@ pandas-stubs = "2.0.0.230412"
 types-Jinja2 = "2.11.9"
 types-requests = "2.31.0.0"
 
+[tool.poetry.group.deployment]
+optional = true
+
+[tool.poetry.group.deployment.dependencies]
+twine = "4.0.2"
+
 [[tool.poetry.source]]
 name = "PyPI"
 priority = "primary"
