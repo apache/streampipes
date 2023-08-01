@@ -118,14 +118,17 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
-          cache: 'pip'
+          cache: 'poetry'
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install -e ".[dev]"
+          poetry install --with dev,stubs --all-extras
 
       - name: Run style & code checks
         working-directory: ./streampipes-client-python
@@ -147,14 +150,17 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
-          cache: 'pip'
+          cache: 'poetry'
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install -e ".[dev]"
+          poetry install --with dev,stubs --all-extras
 
       - name: Run unit-tests
         working-directory: ./streampipes-client-python
@@ -170,21 +176,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
-
-      - name: Cache Python doc dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/setup.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-doc-
+          cache: 'poetry'
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install -e ".[docs]"
+          poetry install --with docs
 
       - name: Build MkDocs
         working-directory: ./streampipes-client-python
