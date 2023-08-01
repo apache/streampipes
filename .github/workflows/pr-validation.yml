@@ -131,8 +131,6 @@ jobs:
         working-directory: ./streampipes-client-python
         run: |
           make pre-commit
-          make mypy
-          make lint
 
   python-unit-tests:
     runs-on: ${{ matrix.os }}
