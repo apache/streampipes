@@ -181,7 +181,7 @@ class ResourceContainer(ABC):
 
         # the ResourceContainer expects a list of items
         # raise an exception if the response does not be a list
-        if not type(parsed_json) == list:
+        if not isinstance(parsed_json, list):
             raise StreamPipesResourceContainerJSONError(container_name=str(cls), json_string=json_string)
 
         try:
