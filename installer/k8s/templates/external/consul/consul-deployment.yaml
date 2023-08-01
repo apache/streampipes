@@ -31,6 +31,7 @@ spec:
         - name: {{ .Values.external.consul.persistence.pvName }}
           persistentVolumeClaim:
             claimName: {{ .Values.external.consul.persistence.claimName }}
+      restartPolicy: {{ .Values.restartPolicy }}
       containers:
         - name: {{ .Values.external.consul.appName }}
           image: consul:{{ .Values.external.consul.version }}
@@ -56,8 +57,29 @@ spec:
             - name: CONSUL_LOCAL_CONFIG
               value: "{\"disable_update_check\": true}"
           ports:
-            - containerPort: 8500
-            - containerPort: 8600
+            - containerPort: {{ .Values.external.consul.port1 }}
+            - containerPort: {{ .Values.external.consul.port2 }}
           volumeMounts:
             - mountPath: "/consul/data"
               name: {{ .Values.external.consul.persistence.pvName }}
+          livenessProbe:
+            httpGet:
+              path: /v1/status/leader
+              port: {{ .Values.external.consul.port1 }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /v1/status/leader
+              port: {{ .Values.external.consul.port1 }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /v1/status/leader
+              port: {{ .Values.external.consul.port1 }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

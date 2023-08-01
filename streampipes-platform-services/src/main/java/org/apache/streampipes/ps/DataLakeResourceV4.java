@@ -22,10 +22,10 @@ import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -241,7 +241,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             this.dataLakeManagement.getData(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
         return ok(result);
       } catch (RuntimeException e) {
-        return badRequest(StreamPipesErrorMessage.from(e));
+        return badRequest(SpLogMessage.from(e));
       }
     }
   }

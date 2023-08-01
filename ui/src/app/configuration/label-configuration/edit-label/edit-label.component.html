@@ -36,14 +36,11 @@
             <mat-label>Desription</mat-label>
             <input matInput [(ngModel)]="label.description" />
         </mat-form-field>
-        <mat-form-field color="accent">
-            <input
-                matInput
-                [(colorPicker)]="label.color"
-                [cpPosition]="'bottom'"
-                [style.background]="label.color"
-            />
-        </mat-form-field>
+        <input
+            [(colorPicker)]="label.color"
+            [cpPosition]="'bottom'"
+            [style.background]="label.color"
+        />
         <div fxFlex fxLayoutAlign="end center">
             <button
                 mat-button

@@ -43,23 +43,26 @@
                                         class="list-item"
                                     >
                                         <div
-                                            mat-list-avatar
+                                            matListItemAvatar
                                             class="pipeline-avatar sp-accent-bg"
                                         >
                                             <mat-icon>{{ link.icon }}</mat-icon>
                                         </div>
-                                        <div
-                                            mat-line
+                                        <span
+                                            matListItemTitle
                                             style="
                                                 font-weight: bold;
                                                 font-size: 14pt;
                                             "
                                         >
                                             {{ link.name }}
-                                        </div>
-                                        <p mat-line class="module-description">
+                                        </span>
+                                        <span
+                                            matListItemLine
+                                            class="module-description"
+                                        >
                                             {{ link.description }}
-                                        </p>
+                                        </span>
                                         <mat-divider></mat-divider>
                                     </mat-list-item>
                                 </mat-list>

@@ -35,6 +35,7 @@ import {
     DataLakeMeasure,
     DataViewDataExplorerService,
     DateRange,
+    SpLogMessage,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { DataDownloadDialogComponent } from '../../../core-ui/data-download-dialog/data-download-dialog.component';
@@ -46,8 +47,11 @@ import { BaseWidgetData } from '../widgets/base/data-explorer-widget-data';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import {
+    CurrentUserService,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -107,7 +111,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     widgetTypeChangedSubscription: Subscription;
     intervalSubscription: Subscription;
 
-    errorMessage: StreamPipesErrorMessage;
+    errorMessage: SpLogMessage;
 
     componentRef: ComponentRef<BaseWidgetData<any>>;
 
@@ -119,14 +123,17 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
         private componentFactoryResolver: ComponentFactoryResolver,
         private widgetTypeService: WidgetTypeService,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
     ) {}
 
     ngOnInit(): void {
-        this.authSubscription = this.authService.user$.subscribe(user => {
-            this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
-            );
-        });
+        this.authSubscription = this.currentUserService.user$.subscribe(
+            user => {
+                this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+                    UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
+                );
+            },
+        );
         this.widgetLoaded = true;
         this.title = this.dataLakeMeasure.measureName;
         this.widgetTypeChangedSubscription =

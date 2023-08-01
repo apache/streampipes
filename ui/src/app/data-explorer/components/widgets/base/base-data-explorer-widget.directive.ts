@@ -33,8 +33,8 @@ import {
     DataExplorerWidgetModel,
     DatalakeRestService,
     DataViewQueryGeneratorService,
+    SpLogMessage,
     SpQueryResult,
-    StreamPipesErrorMessage,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../../services/resize.service';
@@ -59,8 +59,8 @@ export abstract class BaseDataExplorerWidgetDirective<
     timerCallback: EventEmitter<boolean> = new EventEmitter();
 
     @Output()
-    errorCallback: EventEmitter<StreamPipesErrorMessage> =
-        new EventEmitter<StreamPipesErrorMessage>();
+    errorCallback: EventEmitter<SpLogMessage> =
+        new EventEmitter<SpLogMessage>();
 
     @Input() gridsterItem: GridsterItem;
     @Input() gridsterItemComponent: GridsterItemComponent;

@@ -48,7 +48,7 @@ base_packages = [
 
 dev_packages = base_packages + [
     "autoflake==2.2.0",
-    "black==23.3.0",
+    "black==23.7.0",
     "blacken-docs==1.15.0",
     "flake8==6.0.0",
     "interrogate[png]==1.5.0",
@@ -58,13 +58,13 @@ dev_packages = base_packages + [
     "pre-commit==3.3.0",
     "pytest==7.4.0",
     "pytest-cov==4.1.0",
-    "pyupgrade==3.8.0",
+    "pyupgrade==3.10.1",
     "types-Jinja2==2.11.9",
     "types-requests==2.31.0.0",
 ]
 
 docs_packages = [
-    "mkdocs==1.4.2",
+    "mkdocs==1.5.1",
     "mkdocs-awesome-pages-plugin==2.9.0",
     "mkdocs-material==9.1.3",
     "mkdocstrings[python]==0.22.0",

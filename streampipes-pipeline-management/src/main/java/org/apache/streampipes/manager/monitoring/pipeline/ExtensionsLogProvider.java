@@ -53,7 +53,11 @@ public enum ExtensionsLogProvider {
       infos.addAll(0, value);
 
       if (infos.size() > MAX_ITEMS) {
-        infos.subList(MAX_ITEMS, infos.size()).clear();
+        int numElementsToRemove = infos.size() - MAX_ITEMS;
+
+        for (int i = 0; i < numElementsToRemove; i++) {
+          infos.remove(infos.size() - 1);
+        }
       }
     });
   }

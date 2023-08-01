@@ -70,13 +70,13 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
-      runtimeContext.getLogger().increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
+      monitoringManager.increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
       var event = this.internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo);
       pipelineElement
           .onEvent(event, outputCollector);
     } catch (RuntimeException e) {
       LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
-      addLogEntry(runtimeContext.getLogger(), instanceId, e);
+      addLogEntry(e);
     }
   }
 

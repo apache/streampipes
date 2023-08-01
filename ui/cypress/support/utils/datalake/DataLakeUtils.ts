@@ -258,16 +258,19 @@ export class DataLakeUtils {
     }
 
     public static selectDataConfig() {
-        cy.get('.mat-tab-label').contains('Data').parent().click();
+        cy.get('.mdc-tab__text-label').contains('Data').parent().click();
     }
 
     public static selectVisualizationConfig() {
         // Click Next button
-        cy.get('.mat-tab-label').contains('Visualization').parent().click();
+        cy.get('.mdc-tab__text-label')
+            .contains('Visualization')
+            .parent()
+            .click();
     }
 
     public static selectAppearanceConfig() {
-        cy.get('.mat-tab-label').contains('Appearance').parent().click();
+        cy.get('.mdc-tab__text-label').contains('Appearance').parent().click();
     }
 
     public static clickCreateButton() {

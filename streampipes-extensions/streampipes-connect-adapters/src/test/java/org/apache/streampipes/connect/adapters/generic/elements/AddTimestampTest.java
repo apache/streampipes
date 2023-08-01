@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.generic.elements;
 
-import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.elements.AddTimestampPipelineElement;
 
 import org.junit.Assert;
 import org.junit.Test;

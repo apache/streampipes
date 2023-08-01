@@ -24,12 +24,11 @@ import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.connect.adapter.util.TransportFormatSelector;
+import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 import org.apache.streampipes.messaging.EventProducer;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.monitoring.SpLogEntry;
 
 import java.util.Map;
 
@@ -78,9 +77,7 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
             System.currentTimeMillis());
       }
     } catch (RuntimeException e) {
-      SpMonitoringManager.INSTANCE.addErrorMessage(
-          adapterDescription.getElementId(),
-          SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+      new ExtensionsLogger(adapterDescription.getElementId()).error(e);
     }
     return null;
   }

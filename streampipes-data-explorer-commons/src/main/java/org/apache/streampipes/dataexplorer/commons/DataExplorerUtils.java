@@ -20,6 +20,7 @@ package org.apache.streampipes.dataexplorer.commons;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxNameSanitizer;
+import org.apache.streampipes.dataexplorer.commons.sanitizer.MeasureNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.schema.EventProperty;
 
@@ -63,6 +64,9 @@ public class DataExplorerUtils {
 
     // Removes selected timestamp from event schema
     removeTimestampsFromEventSchema(measure);
+
+    // Sanitize the data lake measure name
+    measure.setMeasureName(new MeasureNameSanitizer().sanitize(measure.getMeasureName()));
 
     // Removes all spaces with _ and validates that no special terms are used as runtime names
     measure.getEventSchema()

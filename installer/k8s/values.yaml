@@ -17,8 +17,12 @@
 deployment: lite
 preferredBroker: "nats"
 pullPolicy: "Always"
+restartPolicy: Always
 persistentVolumeReclaimPolicy: "Delete"
 persistentVolumeAccessModes: "ReadWriteOnce"
+initialDelaySeconds: 60
+periodSeconds: 30
+failureThreshold: 30
 
 streampipes:
   version: "0.93.0-SNAPSHOT"
@@ -27,7 +31,7 @@ streampipes:
     appName: "backend"
     port: 8030
     persistence:
-      storageClassName: ""
+      storageClassName: "hostpath"
       storageSize: "1Gi"
       claimName: "backend-pvc"
       pvName: "backend-pv"
@@ -36,7 +40,7 @@ streampipes:
       port: 8030
   ui:
     appName: "ui"
-    resolverActive: false
+    resolverActive: true
     # DNS resolver when using the Nginx proxy
     resolver: "kube-dns.kube-system.svc.cluster.local"
     service:
@@ -61,22 +65,33 @@ streampipes:
     certResolverActive: true
     certResolver: ""
 
+extensions:
+  iiot:
+    port: 8090
+
 external:
   consul:
     appName: "consul"
     version: 1.14.3
+    port1: 8500
+    port2: 8600
     persistence:
-      storageClassName: ""
+      storageClassName: "hostpath"
       storageSize: "1Gi"
       claimName: "consul-pvc"
       pvName: "consul-pv"
+    service:
+      name: "consul"
+      port1: 8500
+      port2: 8600
   couchdb:
     appName: "couchdb"
     version: 3.3.1
     user: "admin"
     password: "admin"
+    port: 5984
     persistence:
-      storageClassName: ""
+      storageClassName: "hostpath"
       storageSize: "1Gi"
       claimName: "couchdb-pvc"
       pvName: "couchdb-pv"
@@ -91,21 +106,27 @@ external:
     # For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
     initMode: "setup"
     persistence:
-      storageClassName: ""
+      storageClassName: "hostpath"
       storageSize: "1Gi"
       storageSizeV1: "1Gi"
       claimName: "influxdb2-pvc"
       claimNameV1: "influxdb-pvc"
       pvName: "influxdb2-pv"
       pvNameV1: "influxdb-pv"
+    port1: 8083
+    port2: 8086
+    port3: 8090
   nats:
     appName: "nats"
+    port: 4222
     service:
       type: "NodePort"
       externalTrafficPolicy: "Local"
     version:
   kafkaVersion: 2.2.0
+  kafkaPort: 9092
   zookeeperVersion: 3.4.13
+  zookeeperPort: 2181
 
 
 

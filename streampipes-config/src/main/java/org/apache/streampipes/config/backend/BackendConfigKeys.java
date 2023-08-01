@@ -29,6 +29,7 @@ public class BackendConfigKeys {
   public static final String MQTT_PORT = "SP_MQTT_PORT";
   public static final String KAFKA_HOST = "SP_KAFKA_HOST";
   public static final String KAFKA_PORT = "SP_KAFKA_PORT";
+  public static final String PULSAR_URL = "SP_PULSAR_URL";
   public static final String ZOOKEEPER_HOST = "SP_ZOOKEEPER_HOST";
   public static final String ZOOKEEPER_PORT = "SP_ZOOKEEPER_PORT";
   public static final String IS_CONFIGURED = "SP_IS_CONFIGURED";

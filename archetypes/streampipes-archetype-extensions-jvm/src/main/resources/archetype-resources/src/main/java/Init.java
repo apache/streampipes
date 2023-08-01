@@ -30,6 +30,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
@@ -53,8 +54,8 @@ public class Init extends ExtensionsModelSubmitter {
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerPipelineElement(new ${classNamePrefix}DataProcessor())
         .registerPipelineElement(new ${classNamePrefix}DataSink())
-        .registerAdapter(new ExampleGenericAdapter())
-        .registerAdapter(new ExampleSpecificAdapter())
+        .registerAdapter(new ${classNamePrefix}GenericAdapter())
+        .registerAdapter(new ${classNamePrefix}SpecificAdapter())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
@@ -64,7 +65,8 @@ public class Init extends ExtensionsModelSubmitter {
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
-            new SpNatsProtocolFactory())
+            new SpNatsProtocolFactory(),
+            new SpPulsarProtocolFactory())
         .build();
   }
 }

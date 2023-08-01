@@ -16,12 +16,9 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <mat-form-field fxFlex="100" color="accent">
-        <mat-label>
-            <mat-icon>search</mat-icon>
-            <span>&nbsp;Search</span></mat-label
-        >
+<div fxFlex="100" fxLayout="column" class="form-field-small">
+    <mat-form-field appearance="outline" fxFlex="100" color="accent">
+        <mat-label>Search</mat-label>
         <input
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.searchValue

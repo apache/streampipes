@@ -55,6 +55,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.NATS_PORT, 4222, "Port of Nats");
     config.register(BackendConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(BackendConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
+    config.register(BackendConfigKeys.PULSAR_URL, "pulsar://localhost:6650", "Apache Pulsar URL");
     config.register(BackendConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Hostname for backend service for zookeeper");
     config.register(BackendConfigKeys.ZOOKEEPER_PORT, 2181, "Port for backend service for zookeeper");
     config.register(BackendConfigKeys.IS_CONFIGURED, false,
@@ -130,6 +131,10 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.KAFKA_PORT);
   }
 
+  public String getPulsarUrl() {
+    return config.getString(BackendConfigKeys.PULSAR_URL);
+  }
+
   public String getZookeeperHost() {
     return config.getString(BackendConfigKeys.ZOOKEEPER_HOST);
   }
@@ -140,7 +145,7 @@ public enum BackendConfig {
 
   public MessagingSettings getMessagingSettings() {
     return config.getObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.class,
-        new MessagingSettings());
+        DefaultMessagingSettings.make());
   }
 
   public boolean isConfigured() {

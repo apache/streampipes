@@ -2,13 +2,13 @@
   "name": "@streampipes/platform-services",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^14.2.7",
-    "@angular/core": "^14.2.7",
+    "@angular/common": "^15.1.5",
+    "@angular/core": "^15.1.5",
     "rxjs": "^7.5.7",
-    "angular-gridster2": "^14.1.2"
+    "angular-gridster2": "^15.0.3"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
     "karma": "~6.4.1",

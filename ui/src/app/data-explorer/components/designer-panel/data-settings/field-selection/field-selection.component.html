@@ -26,16 +26,17 @@
     </mat-checkbox>
     <div fxFlex fxLayoutAlign="end center">
         <mat-form-field
+            appearance="outline"
             color="accent"
             class="aggregation-width small-form"
             floatLabel="never"
             *ngIf="!(sourceConfig.queryType === 'raw')"
         >
-            <mat-label>Aggregation</mat-label>
             <mat-select
                 disableRipple
                 [(ngModel)]="field.aggregations"
                 multiple
+                [panelClass]="'form-field-small-min-width'"
                 (ngModelChange)="triggerConfigurationUpdate()"
             >
                 <mat-option [value]="'MEAN'" *ngIf="field.numeric">

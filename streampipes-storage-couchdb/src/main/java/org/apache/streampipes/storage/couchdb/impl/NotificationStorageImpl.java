@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.lightcouch.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,18 +53,33 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
                                                 Integer offset,
                                                 Integer count) {
     List<JsonObject> notifications =
-        couchDbClientSupplier
-            .get()
-            .view("notificationtypes/notificationtypes")
-            .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
-            .endKey(Arrays.asList(notificationTypeId, 0))
-            .descending(true)
+        getQuery(notificationTypeId)
             .includeDocs(true)
             .skip(offset)
             .limit(count)
             .query(JsonObject.class);
 
     return map(notifications);
+  }
+
+  @Override
+  public List<Notification> getAllNotifications(String notificationTypeId) {
+    List<JsonObject> notifications =
+        getQuery(notificationTypeId)
+            .includeDocs(true)
+            .query(JsonObject.class);
+
+    return map(notifications);
+  }
+
+  private View getQuery(String notificationTypeId) {
+    return couchDbClientSupplier
+        .get()
+        .view("notificationtypes/notificationtypes")
+        .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
+        .endKey(Arrays.asList(notificationTypeId, 0))
+        .descending(true)
+        .includeDocs(true);
   }
 
   @Override

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.dataexplorer.commons.sanitizer.MeasureNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -66,11 +67,15 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
 
   @Override
   protected DataLakeMeasure convert(Pipeline pipeline, DataSinkInvocation sink) {
+
+    var measureName = extractFieldValue(sink, MeasureFieldInternalName);
+    var sanitizedMeasureName = new MeasureNameSanitizer().sanitize(measureName);
+
     DataLakeMeasure measure = new DataLakeMeasure();
     measure.setEventSchema(sink.getInputStreams().get(0).getEventSchema());
     measure.setPipelineId(pipeline.getPipelineId());
     measure.setPipelineName(pipeline.getName());
-    measure.setMeasureName(extractFieldValue(sink, MeasureFieldInternalName));
+    measure.setMeasureName(sanitizedMeasureName);
     measure.setPipelineIsRunning(pipeline.isRunning());
 
     return measure;

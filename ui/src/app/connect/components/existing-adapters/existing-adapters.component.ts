@@ -23,12 +23,13 @@ import {
     AdapterMonitoringService,
     PipelineElementService,
     SpMetricsEntry,
-    StreamPipesErrorMessage,
     PipelineService,
+    SpLogMessage,
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
 import {
+    CurrentUserService,
     DialogRef,
     DialogService,
     PanelType,
@@ -84,7 +85,7 @@ export class ExistingAdaptersComponent implements OnInit {
         public connectService: ConnectService,
         private adapterService: AdapterService,
         private dialogService: DialogService,
-        private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private pipelineElementService: PipelineElementService,
         private pipelineService: PipelineService,
         private router: Router,
@@ -97,7 +98,7 @@ export class ExistingAdaptersComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.getAdaptersRunning();
         });
@@ -160,10 +161,7 @@ export class ExistingAdaptersComponent implements OnInit {
         });
     }
 
-    openAdapterStatusErrorDialog(
-        message: StreamPipesErrorMessage,
-        title: string,
-    ) {
+    openAdapterStatusErrorDialog(message: SpLogMessage, title: string) {
         this.dialogService.open(SpExceptionDetailsDialogComponent, {
             panelType: PanelType.STANDARD_PANEL,
             title: 'Adapter Status',

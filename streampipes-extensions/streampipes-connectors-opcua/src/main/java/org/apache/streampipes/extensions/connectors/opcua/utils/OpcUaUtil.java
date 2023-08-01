@@ -31,11 +31,11 @@ import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigEx
 import org.apache.streampipes.extensions.connectors.opcua.model.OpcNode;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
@@ -83,9 +83,9 @@ public class OpcUaUtil {
    */
   public static GuessSchema getSchema(IAdapterParameterExtractor extractor)
       throws AdapterException, ParseException {
-    GuessSchema guessSchema = new GuessSchema();
+    var builder = GuessSchemaBuilder.create();
     EventSchema eventSchema = new EventSchema();
-    List<Map<String, GuessTypeInfo>> eventPreview = new ArrayList<>();
+    Map<String, Object> eventPreview = new HashMap<>();
     Map<String, FieldStatusInfo> fieldStatusInfos = new HashMap<>();
     List<EventProperty> allProperties = new ArrayList<>();
 
@@ -131,33 +131,30 @@ public class OpcUaUtil {
     }
 
     eventSchema.setEventProperties(allProperties);
-    guessSchema.setEventSchema(eventSchema);
-    guessSchema.setEventPreview(eventPreview);
-    guessSchema.setFieldStatusInfo(fieldStatusInfos);
+    builder.properties(allProperties);
+    builder.fieldStatusInfos(fieldStatusInfos);
+    builder.preview(eventPreview);
 
-    return guessSchema;
+    return builder.build();
   }
 
   private static void makeEventPreview(List<OpcNode> selectedNodes,
-                                       List<Map<String, GuessTypeInfo>> eventPreview,
+                                       Map<String, Object> eventPreview,
                                        Map<String, FieldStatusInfo> fieldStatusInfos,
                                        List<DataValue> dataValues) {
-    var singlePreview = new HashMap<String, GuessTypeInfo>();
 
     for (int i = 0; i < dataValues.size(); i++) {
       var dv = dataValues.get(i);
       String label = selectedNodes.get(i).getLabel();
       if (StatusCode.GOOD.equals(dv.getStatusCode())) {
         var value = dv.getValue().getValue();
-        singlePreview.put(label, new GuessTypeInfo(value.getClass().getCanonicalName(), value));
+        eventPreview.put(label, value);
         fieldStatusInfos.put(label, FieldStatusInfo.good());
       } else {
         String additionalInfo = dv.getStatusCode() != null ? dv.getStatusCode().toString() : "Status code is null";
         fieldStatusInfos.put(label, FieldStatusInfo.bad(additionalInfo, false));
       }
     }
-
-    eventPreview.add(singlePreview);
   }
 
 

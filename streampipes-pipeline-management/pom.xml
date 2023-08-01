@@ -32,11 +32,11 @@
             <artifactId>streampipes-commons</artifactId>
             <version>0.93.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-extensions-management</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.streampipes</groupId>-->
+<!--            <artifactId>streampipes-extensions-management</artifactId>-->
+<!--            <version>0.93.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-cbor</artifactId>
@@ -55,26 +55,6 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-smile</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-jms</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-mqtt</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-nats</artifactId>
             <version>0.93.0-SNAPSHOT</version>
         </dependency>
         <dependency>

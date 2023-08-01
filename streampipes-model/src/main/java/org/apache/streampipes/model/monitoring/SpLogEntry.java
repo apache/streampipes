@@ -18,27 +18,31 @@
 
 package org.apache.streampipes.model.monitoring;
 
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public class SpLogEntry {
 
   private long timestamp;
-  private StreamPipesErrorMessage errorMessage;
+  private SpLogMessage errorMessage;
 
   public SpLogEntry() {
 
   }
 
+  public SpLogEntry(SpLogEntry other) {
+    this.timestamp = other.getTimestamp();
+    this.errorMessage = new SpLogMessage(other.getErrorMessage());
+  }
+
   private SpLogEntry(long timestamp,
-                     StreamPipesErrorMessage errorMessage) {
+                     SpLogMessage errorMessage) {
     this.timestamp = timestamp;
     this.errorMessage = errorMessage;
   }
 
   public static SpLogEntry from(long timestamp,
-                                StreamPipesErrorMessage errorMessage) {
+                                SpLogMessage errorMessage) {
     return new SpLogEntry(timestamp, errorMessage);
   }
 
@@ -50,11 +54,11 @@ public class SpLogEntry {
     this.timestamp = timestamp;
   }
 
-  public StreamPipesErrorMessage getErrorMessage() {
+  public SpLogMessage getErrorMessage() {
     return errorMessage;
   }
 
-  public void setErrorMessage(StreamPipesErrorMessage errorMessage) {
+  public void setErrorMessage(SpLogMessage errorMessage) {
     this.errorMessage = errorMessage;
   }
 }
