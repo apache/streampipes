@@ -17,14 +17,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka
+  name: {{ .Values.external.kafka.service.name }}
   labels:
-    name: kafka
+    name: {{ .Values.external.kafka.appName }}
 spec:
   selector:
-    app: kafka
+    app: {{ .Values.external.kafka.appName }}
   ports:
     - name: main
       protocol: TCP
-      port: 9092
+      port: {{ .Values.external.kafka.port }}
+      targetPort: {{ .Values.external.kafka.service.port }}
 {{- end }}

@@ -17,13 +17,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zookeeper
+  name: {{ .Values.external.zookeeper.service.name }}
 spec:
   selector:
-    app: zookeeper
+    app: {{ .Values.external.zookeeper.appName }}
   ports:
     - name: main
       protocol: TCP
-      port: 2181
-      targetPort: 2181
+      port: {{ .Values.external.zookeeper.port }}
+      targetPort: {{ .Values.external.zookeeper.port }}
 {{- end }}
