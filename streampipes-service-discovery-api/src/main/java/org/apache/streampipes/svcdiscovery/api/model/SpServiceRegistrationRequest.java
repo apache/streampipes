@@ -17,16 +17,24 @@
  */
 package org.apache.streampipes.svcdiscovery.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class SpServiceRegistrationRequest {
 
   private String svcGroup;
-  private String svcId;
+
+  protected @SerializedName("_rev") String rev;
+  private @SerializedName("_id") String svcId;
   private String host;
   private int port;
   private List<SpServiceTag> tags;
   private String healthCheckPath;
+  private boolean healthy = true;
+
+  public SpServiceRegistrationRequest() {
+  }
 
   public SpServiceRegistrationRequest(String svcGroup,
                                       String svcId,
@@ -105,5 +113,21 @@ public class SpServiceRegistrationRequest {
 
   public void setHealthCheckPath(String healthCheckPath) {
     this.healthCheckPath = healthCheckPath;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
+
+  public boolean isHealthy() {
+    return healthy;
+  }
+
+  public void setHealthy(boolean healthy) {
+    this.healthy = healthy;
   }
 }

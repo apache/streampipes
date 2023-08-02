@@ -24,15 +24,11 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.networking.Networking;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.UnknownHostException;
-import java.util.Collections;
 import java.util.List;
 
 public class StreamPipesClientRuntimeConnectionResolver implements ClientConnectionUrlResolver {
@@ -76,12 +72,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
   }
 
   private List<String> findClientServices() {
-    return SpServiceDiscovery
-        .getServiceDiscovery()
-        .getServiceEndpoints(
-            DefaultSpServiceGroups.CORE,
-            true,
-            Collections.singletonList(DefaultSpServiceTags.STREAMPIPES_CLIENT.asString())
-        );
+    // TODO check how to identify backend
+    return List.of("backend");
   }
 }

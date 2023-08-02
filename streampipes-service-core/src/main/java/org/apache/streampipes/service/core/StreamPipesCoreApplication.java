@@ -128,7 +128,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     this.logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-    new StreamPipesEnvChecker().updateEnvironmentVariables();
+    // TODO
+    //new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
 
     if (!isConfigured()) {
@@ -204,8 +205,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         LOG.error("Pipeline {} could not be stopped", s.getPipelineName());
       }
     });
-
-    deregisterService(serviceId());
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }

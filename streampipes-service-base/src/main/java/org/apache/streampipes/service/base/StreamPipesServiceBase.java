@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.service.base;
 
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -39,7 +37,6 @@ public abstract class StreamPipesServiceBase {
                                          String serviceGroup,
                                          String serviceId,
                                          BaseNetworkingConfig networkingConfig) throws UnknownHostException {
-    registerService(serviceGroup, serviceId, networkingConfig);
     runApplication(serviceClass, networkingConfig.getPort());
   }
 
@@ -50,28 +47,7 @@ public abstract class StreamPipesServiceBase {
     app.run();
   }
 
-  private void registerService(String serviceGroup,
-                               String serviceId,
-                               BaseNetworkingConfig networkingConfig) {
-    SpServiceRegistrationRequest req = SpServiceRegistrationRequest.from(
-        serviceGroup,
-        serviceId,
-        networkingConfig.getHost(),
-        networkingConfig.getPort(),
-        getServiceTags(),
-        getHealthCheckPath());
-
-    SpServiceDiscovery
-        .getServiceDiscovery()
-        .registerService(req);
-  }
-
   protected abstract List<SpServiceTag> getServiceTags();
-
-  protected void deregisterService(String serviceId) {
-    LOG.info("Deregistering service (id={})...", serviceId);
-    SpServiceDiscovery.getServiceDiscovery().deregisterService(serviceId);
-  }
 
   protected String getHealthCheckPath() {
     return "/svchealth/" + AUTO_GENERATED_SERVICE_ID;

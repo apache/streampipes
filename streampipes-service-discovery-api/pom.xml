@@ -27,6 +27,12 @@
 
     <artifactId>streampipes-service-discovery-api</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

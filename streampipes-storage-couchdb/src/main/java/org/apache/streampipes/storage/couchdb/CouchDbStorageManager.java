@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IAssetDashboardStorage;
 import org.apache.streampipes.storage.api.ICategoryStorage;
@@ -60,7 +61,9 @@ import org.apache.streampipes.storage.couchdb.impl.DataLakeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceConfigStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceEndpointStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ImageStorageImpl;
@@ -78,6 +81,8 @@ import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.impl.VisualizationStorageImpl;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 
@@ -237,6 +242,16 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IUserActivationTokenStorage getUserActivationTokenStorage() {
     return new UserActivationTokenImpl();
+  }
+
+  @Override
+  public CRUDStorage<String, SpServiceRegistrationRequest> getExtensionsServiceStorage() {
+    return new ExtensionsServiceStorageImpl();
+  }
+
+  @Override
+  public CRUDStorage<String, SpServiceConfiguration> getExtensionsServiceConfigurationStorage() {
+    return new ExtensionsServiceConfigStorageImpl();
   }
 
 

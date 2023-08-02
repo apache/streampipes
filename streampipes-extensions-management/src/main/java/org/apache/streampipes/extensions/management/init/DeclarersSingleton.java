@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.management.init;
 
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -27,15 +28,15 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,9 +116,9 @@ public class DeclarersSingleton implements IDeclarersSingleton {
                                String serviceName,
                                Map<String, ConfigItem> configs) {
     LOG.info("Registering {} configs in key/value store", configs.size());
-    SpConfig spConfig = SpServiceDiscovery.getSpConfig(serviceGroup);
-    configs.values().forEach(spConfig::register);
-    spConfig.register(ConfigItem.from("SP_SERVICE_NAME", serviceName, ""));
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    var serviceConfiguration = new SpServiceConfiguration(serviceGroup, serviceName, configs);
+    client.adminApi().registerServiceConfiguration(serviceConfiguration);
   }
 
   public void addDeclarers(List<IStreamPipesPipelineElement<?>> allPipelineElements) {

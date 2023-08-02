@@ -21,10 +21,19 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.model.config.MessagingSettings;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 
 import java.util.List;
 
 public interface IAdminApi {
+
+  void registerService(SpServiceRegistrationRequest serviceRegistration);
+
+  void deregisterService(String serviceId);
+
+  void registerServiceConfiguration(SpServiceConfiguration serviceConfiguration);
+
   void registerAdapters(List<AdapterDescription> adapters);
 
   void registerFunctions(List<FunctionDefinition> functions);

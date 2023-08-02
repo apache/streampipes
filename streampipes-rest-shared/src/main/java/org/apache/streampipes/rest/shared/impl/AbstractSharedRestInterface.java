@@ -58,6 +58,10 @@ public abstract class AbstractSharedRestInterface {
     return Response.ok().build();
   }
 
+  protected Response created() {
+    return Response.status(201).build();
+  }
+
   protected Response fail() {
     return Response.serverError().build();
   }

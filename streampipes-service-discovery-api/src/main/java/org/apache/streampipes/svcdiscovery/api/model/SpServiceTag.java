@@ -20,8 +20,12 @@ package org.apache.streampipes.svcdiscovery.api.model;
 public class SpServiceTag {
 
   private static final String COLON = ":";
-  private final SpServiceTagPrefix prefix;
-  private final String value;
+  private SpServiceTagPrefix prefix;
+  private String value;
+
+  public SpServiceTag() {
+
+  }
 
   private SpServiceTag(SpServiceTagPrefix prefix, String value) {
     this.prefix = prefix;
@@ -35,5 +39,21 @@ public class SpServiceTag {
 
   public String asString() {
     return prefix.asString() + COLON + value;
+  }
+
+  public SpServiceTagPrefix getPrefix() {
+    return prefix;
+  }
+
+  public void setPrefix(SpServiceTagPrefix prefix) {
+    this.prefix = prefix;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
   }
 }

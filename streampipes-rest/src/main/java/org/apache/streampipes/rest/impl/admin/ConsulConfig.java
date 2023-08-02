@@ -21,13 +21,12 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.config.MessagingSettings;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.svcdiscovery.api.model.PeConfig;
-import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -52,7 +51,7 @@ import java.util.Map;
 
 @Path("/v2/consul")
 @Component
-public class ConsulConfig extends AbstractRestResource {
+public class ConsulConfig extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
 
@@ -68,7 +67,7 @@ public class ConsulConfig extends AbstractRestResource {
 
     for (Map.Entry<String, String> entry : peServices.entrySet()) {
       String serviceStatus = entry.getValue();
-      String mainKey = ConsulSpConfig.SERVICE_ROUTE_PREFIX + entry.getKey();
+      String mainKey = entry.getKey();
 
       Map<String, String> meta = new HashMap<>();
       meta.put("status", serviceStatus);
@@ -181,7 +180,7 @@ public class ConsulConfig extends AbstractRestResource {
   }
 
   public List<ConfigItem> getConfigForService(String serviceId) {
-    Map<String, String> keyValues = getKeyValueStore().getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
+    Map<String, String> keyValues = getKeyValueStore().getKeyValue(serviceId);
 
     List<ConfigItem> configItems = new LinkedList<>();
 

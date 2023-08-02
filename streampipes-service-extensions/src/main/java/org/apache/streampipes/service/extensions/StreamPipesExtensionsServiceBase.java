@@ -18,11 +18,14 @@
 
 package org.apache.streampipes.service.extensions;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
@@ -68,13 +71,31 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    this.registerService(DefaultSpServiceGroups.EXT, serviceId(), networkingConfig);
+
     this.startStreamPipesService(
         serviceClass,
         DefaultSpServiceGroups.EXT,
         serviceId(),
         networkingConfig
     );
+
     this.afterServiceRegistered(serviceDef);
+  }
+
+  private void registerService(String serviceGroup,
+                               String serviceId,
+                               BaseNetworkingConfig networkingConfig) {
+    SpServiceRegistrationRequest req = SpServiceRegistrationRequest.from(
+        serviceGroup,
+        serviceId,
+        networkingConfig.getHost(),
+        networkingConfig.getPort(),
+        getServiceTags(),
+        getHealthCheckPath());
+
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    client.adminApi().registerService(req);
   }
 
   @Override
@@ -86,6 +107,12 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     }
     tags.addAll(getExtensionsServiceTags());
     return tags;
+  }
+
+  protected void deregisterService(String serviceId) {
+    LOG.info("Deregistering service (id={})...", serviceId);
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    client.adminApi().deregisterService(serviceId);
   }
 
   protected abstract List<SpServiceTag> getExtensionsServiceTags();

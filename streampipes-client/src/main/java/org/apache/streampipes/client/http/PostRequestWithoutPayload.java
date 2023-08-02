@@ -15,51 +15,24 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.client.http;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
+import org.apache.http.HttpEntity;
 
-public abstract class PostRequest<K, V, T> extends HttpRequest<K, V, T> {
+public class PostRequestWithoutPayload<K, V> extends PostRequest<K, V, Void> {
 
-  private K body;
-  private final boolean withBody;
-
-  public PostRequest(StreamPipesClientConfig clientConfig,
-                     StreamPipesApiPath apiPath,
-                     Serializer<K, V, T> serializer,
-                     K body) {
+  public PostRequestWithoutPayload(StreamPipesClientConfig clientConfig,
+                                   StreamPipesApiPath apiPath, Serializer<K, V, Void> serializer) {
     super(clientConfig, apiPath, serializer);
-    this.body = body;
-    this.withBody = true;
-  }
-
-  public PostRequest(StreamPipesClientConfig clientConfig,
-                     StreamPipesApiPath apiPath,
-                     Serializer<K, V, T> serializer) {
-    super(clientConfig, apiPath, serializer);
-    this.withBody = false;
   }
 
   @Override
-  protected Request makeRequest(Serializer<K, V, T> serializer) {
-    Request request = Request
-        .Post(makeUrl())
-        .setHeaders(standardPostHeaders());
-
-    if (withBody) {
-      addBody(request, serializer);
-    }
-
-    return request;
+  protected Void afterRequest(Serializer<K, V, Void> serializer, HttpEntity entity) {
+    return null;
   }
-
-  protected void addBody(Request request, Serializer<K, V, T> serializer) {
-    request.bodyString(serializer.serialize(body), ContentType.APPLICATION_JSON);
-  }
-
 }

@@ -64,6 +64,14 @@ public class Utils {
     return getCouchDbGsonClient("category");
   }
 
+  public static CouchDbClient getCouchDbServiceConfigStorage() {
+    return getCouchDbGsonClient("extensions-services-configurations");
+  }
+
+  public static CouchDbClient getCouchDbExtensionsStorage() {
+    return getCouchDbGsonClient("extensions-services");
+  }
+
   public static CouchDbClient getCouchDbLabelClient() {
     return getCouchDbGsonClient("label");
   }
