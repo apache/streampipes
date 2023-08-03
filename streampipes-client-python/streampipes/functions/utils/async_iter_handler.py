@@ -56,11 +56,13 @@ class AsyncIterHandler:
         message: Tuple[str, Any]
             Description of the anonymous integer return value.
         """
-        pending = {AsyncIterHandler.anext(stream_id, message) for stream_id, message in messages.items()}
+        pending = {
+            asyncio.create_task(AsyncIterHandler.anext(stream_id, message)) for stream_id, message in messages.items()
+        }
         while pending:
-            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)  # type: ignore
+            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
             for i in done:
                 stream_id, msg = i.result()
                 if stream_id != "stop":
-                    pending.add(AsyncIterHandler.anext(stream_id, messages[stream_id]))
+                    pending.add(asyncio.create_task(AsyncIterHandler.anext(stream_id, messages[stream_id])))
                 yield stream_id, msg
