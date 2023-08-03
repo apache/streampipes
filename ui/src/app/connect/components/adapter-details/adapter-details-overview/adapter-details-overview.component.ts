@@ -18,13 +18,15 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
-import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import {
     AdapterService,
     AdapterMonitoringService,
 } from '@streampipes/platform-services';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.routes';
 
 @Component({
@@ -37,14 +39,14 @@ export class SpAdapterDetailsOverviewComponent
     implements OnInit
 {
     constructor(
-        authService: AuthService,
+        currentUserService: CurrentUserService,
         activatedRoute: ActivatedRoute,
         adapterService: AdapterService,
         adapterMonitoringService: AdapterMonitoringService,
         breadcrumbService: SpBreadcrumbService,
     ) {
         super(
-            authService,
+            currentUserService,
             activatedRoute,
             adapterService,
             adapterMonitoringService,

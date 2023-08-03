@@ -1012,14 +1012,18 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   public K requiredRuntimeResolvableTreeInput(Label label,
-                                              List<String> dependsOn) {
-    return requiredRuntimeResolvableTreeInput(label, dependsOn, false);
+                                              List<String> dependsOn,
+                                              boolean multiSelection) {
+    return requiredRuntimeResolvableTreeInput(label, dependsOn, false, multiSelection);
   }
 
   public K requiredRuntimeResolvableTreeInput(Label label,
                                               List<String> dependsOn,
-                                              boolean resolveDynamically) {
-    this.staticProperties.add(StaticProperties.runtimeResolvableTreeInput(label, dependsOn, resolveDynamically));
+                                              boolean resolveDynamically,
+                                              boolean multiSelection) {
+    this.staticProperties.add(
+        StaticProperties.runtimeResolvableTreeInput(label, dependsOn, resolveDynamically, multiSelection)
+    );
     return me();
   }
 

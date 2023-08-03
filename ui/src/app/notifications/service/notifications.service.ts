@@ -40,6 +40,12 @@ export class NotificationsService {
         return this.http
             .get(
                 this.notificationUrl + '/time' + '?' + 'startTime=' + startTime,
+                {
+                    context: new HttpContext().set(
+                        NGX_LOADING_BAR_IGNORED,
+                        true,
+                    ),
+                },
             )
             .pipe(
                 map(data => {

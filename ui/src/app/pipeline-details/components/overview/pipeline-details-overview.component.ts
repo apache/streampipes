@@ -22,7 +22,10 @@ import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { AuthService } from '../../../services/auth.service';
 import { PipelineService } from '@streampipes/platform-services';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
@@ -41,9 +44,16 @@ export class SpPipelineDetailsOverviewComponent
         activatedRoute: ActivatedRoute,
         pipelineService: PipelineService,
         authService: AuthService,
+        currentUserService: CurrentUserService,
         breadcrumbService: SpBreadcrumbService,
     ) {
-        super(activatedRoute, pipelineService, authService, breadcrumbService);
+        super(
+            activatedRoute,
+            pipelineService,
+            authService,
+            currentUserService,
+            breadcrumbService,
+        );
     }
 
     ngOnInit(): void {

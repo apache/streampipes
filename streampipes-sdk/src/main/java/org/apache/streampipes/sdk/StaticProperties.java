@@ -137,13 +137,16 @@ public class StaticProperties {
 
   public static RuntimeResolvableTreeInputStaticProperty runtimeResolvableTreeInput(Label label,
                                                                                     List<String> dependsOn,
-                                                                                    boolean resolveDynamically) {
+                                                                                    boolean resolveDynamically,
+                                                                                    boolean multiSelection) {
     RuntimeResolvableTreeInputStaticProperty treeInput = new RuntimeResolvableTreeInputStaticProperty(
         label.getInternalId(),
         label.getLabel(),
         label.getDescription());
 
     treeInput.setDependsOn(dependsOn);
+    treeInput.setResolveDynamically(resolveDynamically);
+    treeInput.setMultiSelection(multiSelection);
 
     return treeInput;
   }

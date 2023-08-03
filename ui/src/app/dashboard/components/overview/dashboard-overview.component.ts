@@ -24,6 +24,7 @@ import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-
 import { Router } from '@angular/router';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import {
+    CurrentUserService,
     DialogService,
     PanelType,
     SpBreadcrumbService,
@@ -55,6 +56,7 @@ export class DashboardOverviewComponent implements OnInit {
         private router: Router,
         private dialogService: DialogService,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private breadcrumbService: SpBreadcrumbService,
     ) {}
 
@@ -62,7 +64,7 @@ export class DashboardOverviewComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpDashboardRoutes.BASE),
         );
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,

@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventSchema, GuessTypeInfo } from '@streampipes/platform-services';
+import { EventSchema } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-event-schema-preview',
@@ -28,8 +28,8 @@ export class EventSchemaPreviewComponent implements OnInit {
     @Input() originalEventSchema: EventSchema;
     @Input() desiredEventSchema: EventSchema;
 
-    @Input() originalPreview: Record<string, GuessTypeInfo>;
-    @Input() desiredPreview: Record<string, GuessTypeInfo>;
+    @Input() originalPreview: string;
+    @Input() desiredPreview: Record<string, any>;
 
     @Output() updatePreviewEmitter = new EventEmitter();
 
@@ -37,25 +37,8 @@ export class EventSchemaPreviewComponent implements OnInit {
     desiredField: Record<string, any>;
 
     ngOnInit(): void {
-        this.originalField = this.toSimpleMap(this.originalPreview);
-        this.desiredField = this.toSimpleMap(this.desiredPreview);
-    }
-
-    toSimpleMap(event: Record<string, GuessTypeInfo>): Record<string, any> {
-        let result: Record<string, any> = {};
-
-        for (const key in event) {
-            result[key] = event[key].value;
-        }
-
-        result = Object.keys(result)
-            .sort()
-            .reduce((obj, key) => {
-                obj[key] = result[key];
-                return obj;
-            }, {});
-
-        return result;
+        this.originalField = JSON.parse(this.originalPreview);
+        this.desiredField = this.desiredPreview;
     }
 
     public updateEventPreview() {

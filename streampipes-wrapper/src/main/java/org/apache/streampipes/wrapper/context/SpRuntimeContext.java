@@ -17,36 +17,32 @@
  */
 package org.apache.streampipes.wrapper.context;
 
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.client.api.IStreamPipesClient;
+import org.apache.streampipes.extensions.api.config.IConfigExtractor;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import org.apache.streampipes.extensions.api.pe.context.RuntimeContext;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 
 public class SpRuntimeContext implements RuntimeContext {
 
 
-  private String correspondingUser;
-  private ConfigExtractor configExtractor;
-  private StreamPipesClient streamPipesClient;
-  private SpMonitoringManager spLogManager;
+  private final String correspondingUser;
+  private final IConfigExtractor configExtractor;
+  private final IStreamPipesClient streamPipesClient;
+  private final IExtensionsLogger extensionsLogger;
 
   public SpRuntimeContext(String correspondingUser,
-                          ConfigExtractor configExtractor,
-                          StreamPipesClient streamPipesClient,
-                          SpMonitoringManager spLogManager) {
+                          IConfigExtractor configExtractor,
+                          IStreamPipesClient streamPipesClient,
+                          IExtensionsLogger extensionsLogger) {
     this.correspondingUser = correspondingUser;
     this.configExtractor = configExtractor;
     this.streamPipesClient = streamPipesClient;
-    this.spLogManager = spLogManager;
-  }
-
-  public SpRuntimeContext() {
-
+    this.extensionsLogger = extensionsLogger;
   }
 
   @Override
-  public SpMonitoringManager getLogger() {
-    return spLogManager;
+  public IExtensionsLogger getLogger() {
+    return extensionsLogger;
   }
 
   @Override
@@ -55,12 +51,12 @@ public class SpRuntimeContext implements RuntimeContext {
   }
 
   @Override
-  public ConfigExtractor getConfigStore() {
+  public IConfigExtractor getConfigStore() {
     return this.configExtractor;
   }
 
   @Override
-  public StreamPipesClient getStreamPipesClient() {
+  public IStreamPipesClient getStreamPipesClient() {
     return streamPipesClient;
   }
 }

@@ -30,7 +30,7 @@ export class SecurityUserConfigComponent extends AbstractSecurityPrincipalConfig
     displayedColumns: string[] = ['username', 'fullName', 'edit'];
 
     getObservable(): Observable<UserAccount[]> {
-        return this.userService.getAllUserAccounts();
+        return this.userAdminService.getAllUserAccounts();
     }
 
     editUser(account: UserAccount) {

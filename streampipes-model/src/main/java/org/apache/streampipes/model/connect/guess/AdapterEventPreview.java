@@ -22,14 +22,13 @@ import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.List;
-import java.util.Map;
 
 @TsModel
 public class AdapterEventPreview {
 
   private List<TransformationRuleDescription> rules;
 
-  private Map<String, GuessTypeInfo> inputData;
+  private String inputData;
 
   public List<TransformationRuleDescription> getRules() {
     return rules;
@@ -39,11 +38,11 @@ public class AdapterEventPreview {
     this.rules = rules;
   }
 
-  public Map<String, GuessTypeInfo> getInputData() {
+  public String getInputData() {
     return inputData;
   }
 
-  public void setInputData(Map<String, GuessTypeInfo> inputData) {
+  public void setInputData(String inputData) {
     this.inputData = inputData;
   }
 }

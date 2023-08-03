@@ -21,12 +21,11 @@ package org.apache.streampipes.wrapper.standalone.routing;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
+import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
@@ -42,15 +41,17 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneSpOutputCollector.class);
 
-  private final EventProducer<T> producer;
+  private final EventProducer producer;
   private final String resourceId;
+  private final ExtensionsLogger extensionsLogger;
 
   public StandaloneSpOutputCollector(T protocol,
                                      TransportFormat format,
                                      String resourceId) throws SpRuntimeException {
     super(protocol, format);
-    this.producer = protocolDefinition.getProducer();
+    this.producer = protocolDefinition.getProducer(protocol);
     this.resourceId = resourceId;
+    this.extensionsLogger = new ExtensionsLogger(resourceId);
   }
 
   public void collect(Event event) {
@@ -59,23 +60,22 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
       producer.publish(dataFormatDefinition.fromMap(outEvent));
       SpMonitoringManager.INSTANCE.increaseOutCounter(resourceId, System.currentTimeMillis());
     } catch (SpRuntimeException e) {
-      var logEntry = SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e));
-      SpMonitoringManager.INSTANCE.addErrorMessage(resourceId, logEntry);
+      extensionsLogger.error(e);
       LOG.error("Could not publish event", e);
     }
   }
 
   @Override
   public void connect() throws SpRuntimeException {
-    if (!protocolDefinition.getProducer().isConnected()) {
-      protocolDefinition.getProducer().connect(transportProtocol);
+    if (!producer.isConnected()) {
+      producer.connect();
     }
   }
 
   @Override
   public void disconnect() throws SpRuntimeException {
-    if (protocolDefinition.getProducer().isConnected()) {
-      protocolDefinition.getProducer().disconnect();
+    if (producer.isConnected()) {
+      producer.disconnect();
       ProtocolManager.removeOutputCollector(transportProtocol);
     }
   }

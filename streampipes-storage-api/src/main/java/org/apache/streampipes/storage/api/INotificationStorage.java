@@ -29,6 +29,8 @@ public interface INotificationStorage {
 
   List<Notification> getAllNotifications(String notificationTypeId, Integer offset, Integer count);
 
+  List<Notification> getAllNotifications(String notificationTypeId);
+
   List<Notification> getAllNotificationsFromTimestamp(long startTime);
 
   List<Notification> getUnreadNotifications();

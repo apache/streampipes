@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
+import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -41,14 +42,10 @@ public class AdapterWorkerManagement {
   private final RunningAdapterInstances runningAdapterInstances;
   private final IDeclarersSingleton declarers;
 
-  private final IAdapterRuntimeContext adapterRuntimeContext;
-
   public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances,
-                                 IDeclarersSingleton declarers,
-                                 IAdapterRuntimeContext runtimeContext) {
+                                 IDeclarersSingleton declarers) {
     this.runningAdapterInstances = runningAdapterInstances;
     this.declarers = declarers;
-    this.adapterRuntimeContext = runtimeContext;
   }
 
   public Collection<AdapterDescription> getAllRunningAdapterInstances() {
@@ -69,8 +66,9 @@ public class AdapterWorkerManagement {
       var registeredParsers = newAdapterInstance.declareConfig().getSupportedParsers();
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
       var eventCollector = EventCollector.from(adapterDescription);
+      var runtimeContext = makeRuntimeContext(adapterDescription.getElementId());
 
-      newAdapterInstance.onAdapterStarted(extractor, eventCollector, adapterRuntimeContext);
+      newAdapterInstance.onAdapterStarted(extractor, eventCollector, runtimeContext);
     } else {
       var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
       LOG.error(errorMessage);
@@ -88,10 +86,15 @@ public class AdapterWorkerManagement {
 
       var registeredParsers = adapter.declareConfig().getSupportedParsers();
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
-      adapter.onAdapterStopped(extractor, adapterRuntimeContext);
+      var runtimeContext = makeRuntimeContext(elementId);
+      adapter.onAdapterStopped(extractor, runtimeContext);
     }
 
     resetMonitoring(elementId);
+  }
+
+  private IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
+    return new AdapterContextGenerator().makeRuntimeContext(adapterInstanceId);
   }
 
   private void resetMonitoring(String elementId) {

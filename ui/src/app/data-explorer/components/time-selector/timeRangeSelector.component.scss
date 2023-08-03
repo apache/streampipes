@@ -19,21 +19,22 @@
 @import '../../../../scss/variables';
 
 .start-date {
-    width: 100px;
-    margin-left: 10px;
+    width: 130px;
+    margin-left: 5px;
     margin-right: 5px;
 }
 
 .end-date {
-    width: 100px;
+    width: 130px;
     margin-left: 5px;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .button-margin {
     border-radius: 0 !important;
-    padding-left: 4px !important;
-    padding-right: 4px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0;
     border-right: 1px solid #cccccc !important;
 }
 
@@ -43,7 +44,7 @@
 
 .time-range-wrapper {
     border: 1px solid var(--color-accent);
-    background: var(--color-accent);
+    //background: var(--color-accent);
 }
 
 .time-wrapper {
@@ -53,4 +54,12 @@
 
 .mr--15 {
     margin-right: -15px;
+}
+
+.ml--5 {
+    margin-left: -5px;
+}
+
+.mr--5 {
+    margin-right: -5px;
 }

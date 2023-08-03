@@ -35,6 +35,7 @@ spec:
         - name: {{ .Values.streampipes.core.persistence.pvName }}
           persistentVolumeClaim:
             claimName: {{ .Values.streampipes.core.persistence.claimName }}
+      restartPolicy: {{ .Values.restartPolicy }}
       containers:
         - name: {{ .Values.streampipes.core.appName }}
           image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}
@@ -47,3 +48,24 @@ spec:
           volumeMounts:
             - mountPath: "/root/.streampipes"
               name: {{ .Values.streampipes.core.persistence.pvName }}
+          readinessProbe:
+            httpGet:
+              path: /streampipes-backend/api/v2/setup/configured
+              port: {{ .Values.streampipes.core.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /streampipes-backend/api/v2/setup/configured
+              port: {{ .Values.streampipes.core.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /streampipes-backend/api/v2/setup/configured
+              port: {{ .Values.streampipes.core.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

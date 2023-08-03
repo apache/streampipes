@@ -74,10 +74,12 @@ public class JmsPublisherSink extends StreamPipesDataSink {
     Integer jmsPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
     String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
-    this.publisher = new ActiveMQPublisher();
     JmsTransportProtocol jmsTransportProtocol =
         new JmsTransportProtocol(jmsHost, jmsPort, topic);
-    this.publisher.connect(jmsTransportProtocol);
+
+    this.publisher = new ActiveMQPublisher(jmsTransportProtocol);
+    this.publisher.connect();
+
     if (!this.publisher.isConnected()) {
       throw new SpRuntimeException(
           "Could not connect to JMS server " + jmsHost + " on Port: " + jmsPort

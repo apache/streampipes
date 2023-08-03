@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.wrapper.context.generator;
 
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.context.IContextGenerator;
+import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 import org.apache.streampipes.extensions.management.util.RuntimeContextUtils;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.context.SpEventProcessorRuntimeContext;
@@ -34,6 +34,6 @@ public class DataProcessorContextGenerator
         invocation.getCorrespondingUser(),
         RuntimeContextUtils.makeConfigExtractor(),
         RuntimeContextUtils.makeStreamPipesClient(),
-        SpMonitoringManager.INSTANCE);
+        new ExtensionsLogger(invocation.getElementId()));
   }
 }

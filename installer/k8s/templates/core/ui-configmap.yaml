@@ -21,7 +21,7 @@ data:
   default.conf: |
     server {
       listen {{ .Values.streampipes.ui.port }} default_server;
-      {{- if .Values.streampipes.ui.resolver }}
+      {{- if .Values.streampipes.ui.resolverActive }}
       resolver {{ .Values.streampipes.ui.resolver }};
       {{- end }}
       root /usr/share/nginx/html;

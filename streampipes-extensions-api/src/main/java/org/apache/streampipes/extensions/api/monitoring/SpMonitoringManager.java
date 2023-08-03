@@ -22,7 +22,6 @@ import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public enum SpMonitoringManager {
 
   INSTANCE;
 
-  private final Map<String, List<SpLogEntry>> logInfos;
+  private final Map<String, FixedSizeList<SpLogEntry>> logInfos;
   private final Map<String, SpMetricsEntry> metricsInfos;
 
   SpMonitoringManager() {
@@ -42,9 +41,9 @@ public enum SpMonitoringManager {
   public void addErrorMessage(String resourceId,
                               SpLogEntry errorMessageEntry) {
     if (!logInfos.containsKey(resourceId)) {
-      logInfos.put(resourceId, new ArrayList<>());
+      logInfos.put(resourceId, new FixedSizeList<>(100));
     }
-    this.logInfos.get(resourceId).add(0, errorMessageEntry);
+    this.logInfos.get(resourceId).add(errorMessageEntry);
   }
 
   public void increaseInCounter(String resourceId,
@@ -87,17 +86,27 @@ public enum SpMonitoringManager {
     return currentEntry;
   }
 
-  public Map<String, List<SpLogEntry>> getAllLogs() {
-    return logInfos;
-  }
-
-  public Map<String, SpMetricsEntry> getAllMetrics() {
-    return this.metricsInfos;
-  }
-
   public SpEndpointMonitoringInfo getMonitoringInfo() {
+    var logInfos = makeLogInfos();
     return new SpEndpointMonitoringInfo(logInfos, metricsInfos);
   }
+
+  public void clearAllLogs() {
+    this.logInfos.forEach((key, value) -> value.clear());
+  }
+
+  private Map<String, List<SpLogEntry>> makeLogInfos() {
+    var logEntries = new HashMap<String, List<SpLogEntry>>();
+    this.logInfos.forEach((key, value) ->
+        logEntries.put(key, cloneList(value.getAllItems())));
+
+    return logEntries;
+  }
+
+  private List<SpLogEntry> cloneList(List<SpLogEntry> allItems) {
+    return allItems.stream().map(SpLogEntry::new).toList();
+  }
+
 
   private void checkAndPrepareMetrics(String resourceId) {
     if (!metricsInfos.containsKey(resourceId)) {
@@ -109,8 +118,4 @@ public enum SpMonitoringManager {
     this.metricsInfos.put(resourceId, new SpMetricsEntry());
   }
 
-
-  public void clearAllLogs() {
-    logInfos.forEach((key, value) -> value.clear());
-  }
 }

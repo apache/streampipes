@@ -70,6 +70,14 @@ jobs:
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
 
+      - name: Build and Push Docker Backend Nats Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./streampipes-service-core-nats
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          push: true
+          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend-nats:${{ env.MVN_VERSION }}
+
       - name: Build UI
         working-directory: ./ui
         run: |

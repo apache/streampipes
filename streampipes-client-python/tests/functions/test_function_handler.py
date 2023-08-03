@@ -39,9 +39,6 @@ from streampipes.model.resource.function_definition import FunctionDefinition
 
 
 class TestFunction(StreamPipesFunction):
-    def requiredStreamIds(self) -> List[str]:
-        return ["urn:streampipes.apache.org:eventstream:uPDKLI"]
-
     def onServiceStarted(self, context: FunctionContext):
         self.context = context
         self.data: List[Dict[str, Any]] = []
@@ -54,9 +51,6 @@ class TestFunction(StreamPipesFunction):
 
 
 class TestFunctionTwoStreams(StreamPipesFunction):
-    def requiredStreamIds(self) -> List[str]:
-        return ["urn:streampipes.apache.org:eventstream:uPDKLI", "urn:streampipes.apache.org:eventstream:HHoidJ"]
-
     def onServiceStarted(self, context: FunctionContext):
         self.context = context
         self.data1: List[Dict[str, Any]] = []
@@ -73,9 +67,6 @@ class TestFunctionTwoStreams(StreamPipesFunction):
 
 
 class TestFunctionOutput(StreamPipesFunction):
-    def requiredStreamIds(self) -> List[str]:
-        return ["urn:streampipes.apache.org:eventstream:uPDKLI"]
-
     def onServiceStarted(self, context: FunctionContext):
         self.context = context
         self.i = 0
@@ -192,7 +183,9 @@ class TestFunctionHandler(TestCase):
         )
 
         registration = Registration()
-        test_function = TestFunction()
+        test_function = TestFunction(
+            FunctionDefinition(consumed_streams=["urn:streampipes.apache.org:eventstream:uPDKLI"])
+        )
         registration.register(test_function)
         function_handler = FunctionHandler(registration, client)
         function_handler.initializeFunctions()
@@ -229,7 +222,9 @@ class TestFunctionHandler(TestCase):
         )
 
         registration = Registration()
-        test_function = TestFunction()
+        test_function = TestFunction(
+            FunctionDefinition(consumed_streams=["urn:streampipes.apache.org:eventstream:uPDKLI"])
+        )
         registration.register(test_function)
         function_handler = FunctionHandler(registration, client)
         function_handler.initializeFunctions()
@@ -262,7 +257,9 @@ class TestFunctionHandler(TestCase):
         )
 
         registration = Registration()
-        test_function = TestFunction()
+        test_function = TestFunction(
+            FunctionDefinition(consumed_streams=["urn:streampipes.apache.org:eventstream:uPDKLI"])
+        )
         registration.register(test_function)
         function_handler = FunctionHandler(registration, client)
         with self.assertRaises(UnsupportedBrokerError):
@@ -301,8 +298,17 @@ class TestFunctionHandler(TestCase):
         )
 
         registration = Registration()
-        test_function1 = TestFunction()
-        test_function2 = TestFunctionTwoStreams()
+        test_function1 = TestFunction(
+            FunctionDefinition(consumed_streams=["urn:streampipes.apache.org:eventstream:uPDKLI"])
+        )
+        test_function2 = TestFunctionTwoStreams(
+            FunctionDefinition(
+                consumed_streams=[
+                    "urn:streampipes.apache.org:eventstream:uPDKLI",
+                    "urn:streampipes.apache.org:eventstream:HHoidJ",
+                ]
+            )
+        )
         registration.register(test_function1).register(test_function2)
         function_handler = FunctionHandler(registration, client)
         function_handler.initializeFunctions()
@@ -363,7 +369,9 @@ class TestFunctionHandler(TestCase):
 
         output_stream = create_data_stream("test", attributes={"number": RuntimeType.INTEGER.value})
         test_function = TestFunctionOutput(
-            function_definition=FunctionDefinition().add_output_data_stream(output_stream)
+            function_definition=FunctionDefinition(
+                consumed_streams=["urn:streampipes.apache.org:eventstream:uPDKLI"]
+            ).add_output_data_stream(output_stream)
         )
         registration = Registration()
         registration.register(test_function)
@@ -425,7 +433,7 @@ class TestFunctionHandler(TestCase):
             "test", attributes={"number": RuntimeType.INTEGER.value}, broker=SupportedBroker.KAFKA
         )
         test_function = TestFunctionOutput(
-            function_definition=FunctionDefinition().add_output_data_stream(output_stream)
+            function_definition=FunctionDefinition(consumed_streams=["urn:streampipes.apache.org:eventstream:uPDKLI"]).add_output_data_stream(output_stream)
         )
         registration = Registration()
         registration.register(test_function)

@@ -35,7 +35,9 @@ public class GuessSchema {
 
   public EventSchema eventSchema;
 
-  public List<Map<String, GuessTypeInfo>> eventPreview;
+  //public List<Map<String, GuessTypeInfo>> eventPreview;
+
+  private List<String> eventPreview;
 
   public Map<String, FieldStatusInfo> fieldStatusInfo;
 
@@ -59,11 +61,11 @@ public class GuessSchema {
     this.eventSchema = eventSchema;
   }
 
-  public List<Map<String, GuessTypeInfo>> getEventPreview() {
+  public List<String> getEventPreview() {
     return eventPreview;
   }
 
-  public void setEventPreview(List<Map<String, GuessTypeInfo>> eventPreview) {
+  public void setEventPreview(List<String> eventPreview) {
     this.eventPreview = eventPreview;
   }
 

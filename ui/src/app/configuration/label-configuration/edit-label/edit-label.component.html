@@ -16,7 +16,11 @@
   ~
   -->
 
-<div fxLayout="column" class="mt-10" [ngClass]="editMode ? '' : 'create-label'">
+<div
+    fxLayout="column"
+    class="form-field-small mt-10"
+    [ngClass]="editMode ? '' : 'create-label'"
+>
     <div
         fxLayout="row"
         fxFlex="100"
@@ -28,22 +32,19 @@
             [labelText]="label.label"
             *ngIf="label && showPreview"
         ></sp-label>
-        <mat-form-field color="accent">
+        <mat-form-field color="accent" appearance="outline">
             <mat-label>Label</mat-label>
             <input matInput [(ngModel)]="label.label" />
         </mat-form-field>
-        <mat-form-field color="accent">
+        <mat-form-field color="accent" appearance="outline">
             <mat-label>Desription</mat-label>
             <input matInput [(ngModel)]="label.description" />
         </mat-form-field>
-        <mat-form-field color="accent">
-            <input
-                matInput
-                [(colorPicker)]="label.color"
-                [cpPosition]="'bottom'"
-                [style.background]="label.color"
-            />
-        </mat-form-field>
+        <input
+            [(colorPicker)]="label.color"
+            [cpPosition]="'bottom'"
+            [style.background]="label.color"
+        />
         <div fxFlex fxLayoutAlign="end center">
             <button
                 mat-button

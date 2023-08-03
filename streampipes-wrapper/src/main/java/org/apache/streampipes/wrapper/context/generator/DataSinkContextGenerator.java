@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.wrapper.context.generator;
 
-import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.context.IContextGenerator;
+import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 import org.apache.streampipes.extensions.management.util.RuntimeContextUtils;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.context.SpEventSinkRuntimeContext;
@@ -33,6 +33,6 @@ public class DataSinkContextGenerator implements IContextGenerator<EventSinkRunt
         invocation.getCorrespondingUser(),
         RuntimeContextUtils.makeConfigExtractor(),
         RuntimeContextUtils.makeStreamPipesClient(),
-        SpMonitoringManager.INSTANCE);
+        new ExtensionsLogger(invocation.getElementId()));
   }
 }

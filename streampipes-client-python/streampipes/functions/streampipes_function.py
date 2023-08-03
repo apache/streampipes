@@ -83,7 +83,6 @@ class StreamPipesFunction(ABC):
             collector.disconnect()
         self.onServiceStopped()
 
-    @abstractmethod
     def requiredStreamIds(self) -> List[str]:
         """Get the ids of the streams needed by the function.
 
@@ -92,7 +91,7 @@ class StreamPipesFunction(ABC):
         stream_ids: List[str]
             List of the stream ids
         """
-        raise NotImplementedError  # pragma: no cover
+        return self.function_definition.consumed_streams
 
     @abstractmethod
     def onServiceStarted(self, context: FunctionContext) -> None:

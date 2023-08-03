@@ -20,8 +20,8 @@ import { ProfileService } from '../profile.service';
 import { UserAccount } from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { AppConstants } from '../../services/app.constants';
-import { JwtTokenStorageService } from '../../services/jwt-token-storage.service';
 import { AuthService } from '../../services/auth.service';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Directive()
 export abstract class BasicProfileSettings {
@@ -33,13 +33,13 @@ export abstract class BasicProfileSettings {
     constructor(
         protected profileService: ProfileService,
         public appConstants: AppConstants,
-        private tokenService: JwtTokenStorageService,
+        protected currentUserService: CurrentUserService,
         protected authService: AuthService,
     ) {}
 
     receiveUserData() {
         this.profileService
-            .getUserProfile(this.authService.user$.getValue().username)
+            .getUserProfile(this.currentUserService.user$.getValue().username)
             .subscribe(userData => {
                 this.userData = userData;
                 this.onUserDataReceived();

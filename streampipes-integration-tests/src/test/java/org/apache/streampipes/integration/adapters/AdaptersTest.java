@@ -35,4 +35,12 @@ public class AdaptersTest {
       mqttAdapterTester.run();
     }
   }
+
+
+  @Test
+  public void testKafkaAdapter() throws Exception {
+    try (KafkaAdapterTester kafkaAdapterTester = new KafkaAdapterTester()) {
+      kafkaAdapterTester.run();
+    }
+  }
 }

@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.integration.containers.MosquittoContainer;
 import org.apache.streampipes.integration.containers.MosquittoDevContainer;
+import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -36,7 +37,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,17 +104,7 @@ public class MqttAdapterTester extends AdapterTesterBase {
 
   @Override
   public List<Map<String, Object>> getTestEvents() {
-    List<Map<String, Object>> result = new ArrayList<>();
-
-    for (int i = 0; i < 3; i++) {
-      result.add(
-          Map.of(
-              "timestamp", i,
-              "value", "test-data")
-      );
-    }
-
-    return result;
+    return Utils.getSimpleTestEvents();
   }
 
 
@@ -141,8 +131,8 @@ public class MqttAdapterTester extends AdapterTesterBase {
         mosquittoContainer.getBrokerHost(),
         mosquittoContainer.getBrokerPort(),
         TOPIC);
-    MqttPublisher publisher = new MqttPublisher();
-    publisher.connect(mqttSettings);
+    MqttPublisher publisher = new MqttPublisher(mqttSettings);
+    publisher.connect();
     return publisher;
   }
 

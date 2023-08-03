@@ -42,7 +42,7 @@ public class AdapterWorkerManagementTest {
     when(declarerSingleton.getAdapter(any())).thenReturn(Optional.empty());
 
     var adapterWorkerManagement = new AdapterWorkerManagement(
-        null, declarerSingleton, null);
+        null, declarerSingleton);
 
     adapterWorkerManagement.invokeAdapter(adapterDescription);
   }

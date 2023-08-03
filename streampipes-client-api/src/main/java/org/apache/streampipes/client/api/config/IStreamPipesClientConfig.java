@@ -19,17 +19,16 @@
 package org.apache.streampipes.client.api.config;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
+import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.List;
 
 public interface IStreamPipesClientConfig {
   ObjectMapper getSerializer();
 
   void addDataFormat(SpDataFormatFactory spDataFormatFactory);
 
-  List<SpDataFormatFactory> getRegisteredDataFormats();
+  void addTransportProtocol(SpProtocolDefinitionFactory<?> protocolDefinitionFactory);
 
   ClientConnectionUrlResolver getConnectionConfig();
 }

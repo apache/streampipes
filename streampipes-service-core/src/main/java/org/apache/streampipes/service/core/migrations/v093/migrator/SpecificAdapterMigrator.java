@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.service.core.migrations.v093.migrator;
 
+import org.apache.streampipes.model.connect.adapter.migration.IAdapterConverter;
+import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
+import org.apache.streampipes.model.connect.adapter.migration.SpecificAdapterConverter;
+
 import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
@@ -27,19 +31,20 @@ public class SpecificAdapterMigrator implements AdapterMigrator {
 
   private static final Logger LOG = LoggerFactory.getLogger(SpecificAdapterMigrator.class);
   private final MigrationHelpers helpers;
+  private final IAdapterConverter converter;
 
   public SpecificAdapterMigrator(MigrationHelpers helpers) {
     this.helpers = helpers;
+    this.converter = new SpecificAdapterConverter(false);
   }
 
   @Override
   public void migrate(CouchDbClient couchDbClient,
                       JsonObject adapter) {
     var adapterName = helpers.getAdapterName(adapter);
-    helpers.updateType(adapter);
-    helpers.updateFieldType(adapter);
+    var convertedAdapter = converter.convert(adapter);
 
-    couchDbClient.update(adapter);
+    couchDbClient.update(convertedAdapter);
 
     LOG.info("Successfully migrated adapter {}", adapterName);
   }

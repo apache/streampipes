@@ -16,11 +16,11 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100" fxLayout="column" class="form-field-small">
     <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
-        <span class="data-explorer-header">Widget Title</span>
+        <span class="data-explorer-header mb-10">Widget Title</span>
         <div fxFlex="100" fxLayout="row">
-            <mat-form-field color="accent" fxFlex="100">
+            <mat-form-field appearance="outline" color="accent" fxFlex="100">
                 <mat-label>Widget Title</mat-label>
                 <input
                     matInput
@@ -31,37 +31,33 @@
     </div>
 
     <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
-        <span class="data-explorer-header">Color</span>
-        <div fxFlex="100" fxLayout="row">
-            <mat-form-field color="accent" fxFlex="100">
-                <mat-label>Background Color</mat-label>
-                <input
-                    matInput
-                    [(colorPicker)]="baseAppearanceConfig.backgroundColor"
-                    [cpPosition]="'bottom'"
-                    [style.background]="baseAppearanceConfig.backgroundColor"
-                    required
-                    [cpPresetColors]="presetColors"
-                    (colorPickerSelect)="triggerViewUpdate()"
-                    autocomplete="off"
-                />
-            </mat-form-field>
+        <span class="data-explorer-header mb-10">Color</span>
+        <div fxFlex="100" fxLayout="row" class="mb-10">
+            <span>Background</span>
+            <span fxFlex></span>
+            <input
+                [(colorPicker)]="baseAppearanceConfig.backgroundColor"
+                [cpPosition]="'left'"
+                [style.background]="baseAppearanceConfig.backgroundColor"
+                required
+                [cpPresetColors]="presetColors"
+                (colorPickerSelect)="triggerViewUpdate()"
+                autocomplete="off"
+            />
         </div>
 
-        <div fxFlex="100" fxLayout="row">
-            <mat-form-field color="accent" fxFlex="100">
-                <mat-label>Text Color</mat-label>
-                <input
-                    matInput
-                    [(colorPicker)]="baseAppearanceConfig.textColor"
-                    [cpPosition]="'bottom'"
-                    [style.background]="baseAppearanceConfig.textColor"
-                    required
-                    [cpPresetColors]="presetColors"
-                    (colorPickerSelect)="triggerViewUpdate()"
-                    autocomplete="off"
-                />
-            </mat-form-field>
+        <div fxFlex="100" fxLayout="row" class="mb-10">
+            <span>Text</span>
+            <span fxFlex></span>
+            <input
+                [(colorPicker)]="baseAppearanceConfig.textColor"
+                [cpPosition]="'left'"
+                [style.background]="baseAppearanceConfig.textColor"
+                required
+                [cpPresetColors]="presetColors"
+                (colorPickerSelect)="triggerViewUpdate()"
+                autocomplete="off"
+            />
         </div>
     </div>
 </div>

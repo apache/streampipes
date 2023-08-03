@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.service.core.migrations.v093;
 
-import org.apache.streampipes.service.core.migrations.v093.migrator.MigrationHelpers;
+import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
 
 import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;

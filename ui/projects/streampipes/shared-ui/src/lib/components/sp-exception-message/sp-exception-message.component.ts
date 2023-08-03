@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { StreamPipesErrorMessage } from '@streampipes/platform-services';
+import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogService } from '../../dialog/base-dialog/base-dialog.service';
 import { PanelType } from '../../dialog/base-dialog/base-dialog.model';
 import { SpExceptionDetailsDialogComponent } from './exception-details-dialog/exception-details-dialog.component';
@@ -35,7 +35,7 @@ export class SpExceptionMessageComponent {
     showDetails = true;
 
     @Input()
-    message: StreamPipesErrorMessage;
+    message: SpLogMessage;
 
     @Input()
     messageTimestamp: number;

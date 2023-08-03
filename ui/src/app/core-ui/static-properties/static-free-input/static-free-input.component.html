@@ -41,15 +41,19 @@
     <div *ngIf="staticProperty.valueSpecification">
         <div fxLayout="column" fxFlex="100">
             <mat-slider
-                thumbLabel
-                formControlName="{{ fieldName }}"
                 [max]="staticProperty.valueSpecification.maxValue"
                 [min]="staticProperty.valueSpecification.minValue"
                 [step]="staticProperty.valueSpecification.step"
                 [attr.data-cy]="fieldName"
+                [discrete]="true"
                 [displayWith]="formatLabel"
                 color="accent"
             >
+                <input
+                    matSliderThumb
+                    #slider
+                    formControlName="{{ fieldName }}"
+                />
             </mat-slider>
         </div>
     </div>

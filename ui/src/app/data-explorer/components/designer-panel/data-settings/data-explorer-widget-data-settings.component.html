@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100" fxLayout="column" class="form-field-small">
     <mat-accordion fxFlex="100" class="data-source-selection-panel">
         <mat-expansion-panel
             [expanded]="step === 0"
@@ -35,7 +35,6 @@
                     </div>
                     <div fxFlex fxLayoutAlign="end center">
                         <button
-                            mat-button
                             mat-icon-button
                             color="accent"
                             matTooltip="Clone Data Source"
@@ -47,7 +46,6 @@
                             >
                         </button>
                         <button
-                            mat-button
                             mat-icon-button
                             color="accent"
                             matTooltip="Delete Data Source"
@@ -86,54 +84,58 @@
                             </mat-radio-button>
                         </mat-radio-group>
                     </div>
-                    <mat-form-field
-                        color="accent"
-                        fxFlex="100"
-                        *ngIf="sourceConfig.sourceType === 'pipeline'"
-                    >
-                        <mat-label>Select data explorer sink</mat-label>
-                        <mat-select
-                            [(value)]="sourceConfig.measureName"
-                            (selectionChange)="
-                                updateMeasure(sourceConfig, $event.value)
-                            "
-                            data-cy="data-explorer-select-data-set"
+                    <div class="form-field-small">
+                        <mat-form-field
+                            color="accent"
+                            fxFlex="100"
+                            appearance="outline"
+                            *ngIf="sourceConfig.sourceType === 'pipeline'"
                         >
-                            <mat-option
-                                *ngFor="let pipeline of availablePipelines"
-                                [value]="pipeline.measureName"
+                            <mat-select
+                                [panelClass]="'form-field-small'"
+                                [(value)]="sourceConfig.measureName"
+                                (selectionChange)="
+                                    updateMeasure(sourceConfig, $event.value)
+                                "
+                                data-cy="data-explorer-select-data-set"
                             >
-                                <span class="pipeline-name">{{
-                                    pipeline.pipelineName
-                                }}</span
-                                >&nbsp;&nbsp;{{ pipeline.measureName }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field
-                        color="accent"
-                        fxFlex="100"
-                        *ngIf="sourceConfig.sourceType === 'measurement'"
-                    >
-                        <mat-label>Select measurement</mat-label>
-                        <mat-select
-                            [(value)]="sourceConfig.measureName"
-                            (selectionChange)="
-                                updateMeasure(sourceConfig, $event.value)
-                            "
+                                <mat-option
+                                    *ngFor="let pipeline of availablePipelines"
+                                    [value]="pipeline.measureName"
+                                >
+                                    <span class="pipeline-name">{{
+                                        pipeline.pipelineName
+                                    }}</span
+                                    ><br />{{ pipeline.measureName }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field
+                            color="accent"
+                            fxFlex="100"
+                            appearance="outline"
+                            *ngIf="sourceConfig.sourceType === 'measurement'"
                         >
-                            <mat-option
-                                [value]="measurement.measureName"
-                                *ngFor="
-                                    let measurement of availableMeasurements
+                            <mat-select
+                                [(value)]="sourceConfig.measureName"
+                                (selectionChange)="
+                                    updateMeasure(sourceConfig, $event.value)
                                 "
                             >
-                                <span class="pipeline-name">{{
-                                    measurement.measureName
-                                }}</span>
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                                <mat-option
+                                    [value]="measurement.measureName"
+                                    *ngFor="
+                                        let measurement of availableMeasurements
+                                    "
+                                >
+                                    <span class="pipeline-name">{{
+                                        measurement.measureName
+                                    }}</span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
                 <div
                     fxLayout="column"
@@ -170,27 +172,38 @@
                         fxFlex="100"
                         *ngIf="sourceConfig.queryType === 'raw'"
                     >
-                        <mat-form-field fxFlex="100" color="accent">
-                            <mat-label>
-                                <span>&nbsp;Limit</span>
-                            </mat-label>
-                            <input
-                                [(ngModel)]="sourceConfig.queryConfig.limit"
-                                matInput
-                                (change)="triggerDataRefresh()"
-                            />
-                        </mat-form-field>
-
-                        <mat-form-field fxFlex="100" color="accent">
-                            <mat-label>
-                                <span>&nbsp;Page</span>
-                            </mat-label>
-                            <input
-                                [(ngModel)]="sourceConfig.queryConfig.page"
-                                matInput
-                                (change)="triggerDataRefresh()"
-                            />
-                        </mat-form-field>
+                        <div class="form-field-small mb-10">
+                            <mat-form-field
+                                fxFlex="100"
+                                color="accent"
+                                appearance="outline"
+                            >
+                                <mat-label>
+                                    <span>&nbsp;Limit</span>
+                                </mat-label>
+                                <input
+                                    [(ngModel)]="sourceConfig.queryConfig.limit"
+                                    matInput
+                                    (change)="triggerDataRefresh()"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-small mb-10">
+                            <mat-form-field
+                                fxFlex="100"
+                                color="accent"
+                                appearance="outline"
+                            >
+                                <mat-label>
+                                    <span>&nbsp;Page</span>
+                                </mat-label>
+                                <input
+                                    [(ngModel)]="sourceConfig.queryConfig.page"
+                                    matInput
+                                    (change)="triggerDataRefresh()"
+                                />
+                            </mat-form-field>
+                        </div>
                     </div>
                     <div
                         fxLayout="column"

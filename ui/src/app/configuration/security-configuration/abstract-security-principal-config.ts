@@ -24,6 +24,7 @@ import {
     ServiceAccount,
     UserAccount,
     UserService,
+    UserAdminService,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
@@ -44,6 +45,7 @@ export abstract class AbstractSecurityPrincipalConfig<
 
     constructor(
         protected userService: UserService,
+        protected userAdminService: UserAdminService,
         protected dialogService: DialogService,
     ) {}
 

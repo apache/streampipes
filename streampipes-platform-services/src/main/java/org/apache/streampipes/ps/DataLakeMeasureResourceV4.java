@@ -35,6 +35,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.Objects;
+
 @Path("/v4/datalake/measure")
 public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
 
@@ -58,7 +60,12 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{id}")
   public Response getDataLakeMeasure(@PathParam("id") String elementId) {
-    return ok(this.dataLakeMeasureManagement.getById(elementId));
+    var measure = this.dataLakeMeasureManagement.getById(elementId);
+    if (Objects.nonNull(measure)) {
+      return ok(measure);
+    } else {
+      return notFound();
+    }
   }
 
   @PUT

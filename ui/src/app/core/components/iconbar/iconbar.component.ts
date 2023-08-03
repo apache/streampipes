@@ -23,6 +23,7 @@ import { NotificationCountService } from '../../../services/notification-count-s
 import { AuthService } from '../../../services/auth.service';
 import { RestApi } from '../../../services/rest-api.service';
 import { AppConstants } from '../../../services/app.constants';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-iconbar',
@@ -36,11 +37,12 @@ export class IconbarComponent
     constructor(
         router: Router,
         authService: AuthService,
+        currentUserService: CurrentUserService,
         public notificationCountService: NotificationCountService,
         private restApi: RestApi,
         appConstants: AppConstants,
     ) {
-        super(authService, router, appConstants);
+        super(authService, currentUserService, router, appConstants);
     }
 
     ngOnInit(): void {

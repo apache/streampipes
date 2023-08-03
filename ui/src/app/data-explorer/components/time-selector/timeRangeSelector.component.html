@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxLayout="row" fxLayoutAlign="start center">
+<div fxLayout="row" fxLayoutAlign="start center" class="form-field-small">
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
         <button
             mat-button
@@ -39,11 +39,11 @@
             <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
         </button>
         <mat-form-field
-            appearance="standard"
-            class="start-date form-field-margin form-field-size-smaller"
+            fxLayoutAlign="center center"
+            class="start-date form-field-margin smaller-font-size form-field-smaller"
             color="accent"
+            appearance="outline"
         >
-            <mat-label>From</mat-label>
             <input
                 matInput
                 data-cy="time-range-from"
@@ -55,11 +55,11 @@
             <owl-date-time #dt1></owl-date-time>
         </mat-form-field>
         <mat-form-field
-            appearance="standard"
-            class="end-date form-field-margin form-field-size-smaller"
+            fxLayoutAlign="center center"
+            class="end-date form-field-margin form-field-smaller"
             color="accent"
+            appearance="outline"
         >
-            <mat-label>To</mat-label>
             <input
                 matInput
                 data-cy="time-range-to"
@@ -72,7 +72,7 @@
         </mat-form-field>
         <button
             mat-button
-            class="button-icon icon-button-font-size mr-15"
+            class="button-icon icon-button-font-size ml--5 mr--5"
             color="accent"
         >
             <mat-icon (click)="increaseTime()">navigate_next</mat-icon>
@@ -87,7 +87,7 @@
             matTooltip="Reload"
             matTooltipPosition="above"
         >
-            <mat-icon (click)="refreshData()">autorenew</mat-icon>
+            <i (click)="refreshData()" class="material-icons mr-0">autorenew</i>
         </button>
     </div>
 </div>

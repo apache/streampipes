@@ -31,9 +31,13 @@
                 <span class="color-warn">{{ title }}</span>
             </div>
             <div class="error-details-title">Probable cause</div>
-            <div class="log-message" [innerText]="message.cause"></div>
+            <div
+                class="log-message"
+                [innerText]="message.cause || 'No more information'"
+            ></div>
             <div class="mt-10">
                 <button
+                    [disabled]="message.fullStackTrace === undefined"
                     mat-button
                     color="accent"
                     (click)="showDetails = !showDetails"

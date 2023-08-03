@@ -76,6 +76,11 @@
     color: white;
 }
 
+.mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
+    border-radius: var(--mdc-list-list-item-leading-avatar-shape);
+    background-color: var(--color-accent);
+}
+
 .pt-0 {
     padding-top: 0;
 }

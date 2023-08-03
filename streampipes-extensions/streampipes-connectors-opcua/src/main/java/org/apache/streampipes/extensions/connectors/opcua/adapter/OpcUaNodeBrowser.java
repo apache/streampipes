@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
-import org.apache.streampipes.extensions.connectors.opcua.adapter.configuration.SpOpcUaConfig;
-import org.apache.streampipes.extensions.connectors.opcua.adapter.utils.OpcUaTypes;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.model.OpcNode;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
@@ -28,19 +29,15 @@ import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.UaException;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -48,12 +45,12 @@ import java.util.stream.Collectors;
 public class OpcUaNodeBrowser {
 
   private final OpcUaClient client;
-  private final SpOpcUaConfig spOpcConfig;
+  private final OpcUaConfig spOpcConfig;
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaNodeBrowser.class);
 
   public OpcUaNodeBrowser(OpcUaClient client,
-                          SpOpcUaConfig spOpcUaClientConfig) {
+                          OpcUaConfig spOpcUaClientConfig) {
     this.client = client;
     this.spOpcConfig = spOpcUaClientConfig;
   }
@@ -114,34 +111,13 @@ public class OpcUaNodeBrowser {
           childNode.setNodeName(node.getDisplayName().getText());
           childNode.setInternalNodeName(node.getNodeId().toParseableString());
           childNode.setDataNode(isDataNode(node));
-          childNode.setNodeMetadata(buildMetadata(client, node));
+          childNode.setNodeMetadata(new OpcUaNodeMetadataExtractor(client, node).extract());
           return childNode;
         })
         .collect(Collectors.toList());
   }
 
-  private Map<String, Object> buildMetadata(OpcUaClient client,
-                                            UaNode node) {
-    var metadata = new HashMap<String, Object>();
-    metadata.put("NamespaceIndex", node.getNodeId().getNamespaceIndex().toString());
-    metadata.put("NodeClass", node.getNodeClass().toString());
-    metadata.put("Description", node.getDescription().getText());
-    metadata.put("BrowseName", node.getBrowseName().getName());
-    metadata.put("DisplayName", node.getDisplayName().getText());
 
-    if (node instanceof UaVariableNode) {
-      var dataTypeNodeId = ((UaVariableNode) node).getDataType();
-      metadata.put("Value", String.valueOf(((UaVariableNode) node).getValue().getValue().getValue()));
-      try {
-        var dataTypeNode = client.getAddressSpace().getNode(dataTypeNodeId);
-        metadata.put("DataType", dataTypeNode.getDisplayName().getText());
-      } catch (UaException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    return metadata;
-  }
 
   private AddressSpace getAddressSpace() {
     return client.getAddressSpace();
@@ -151,4 +127,5 @@ public class OpcUaNodeBrowser {
     return (node.getNodeClass().equals(NodeClass.Variable) || (node.getNodeClass().equals(NodeClass.VariableType)))
         && node instanceof UaVariableNode;
   }
+
 }

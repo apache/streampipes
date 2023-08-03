@@ -19,6 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-streampipes',
@@ -37,9 +38,9 @@ import { animate, style, transition, trigger } from '@angular/animations';
 export class StreampipesComponent implements OnInit {
     darkMode: boolean;
 
-    constructor(public authService: AuthService) {}
+    constructor(public currentUserService: CurrentUserService) {}
 
     ngOnInit(): void {
-        this.authService.darkMode$.subscribe(dm => (this.darkMode = dm));
+        this.currentUserService.darkMode$.subscribe(dm => (this.darkMode = dm));
     }
 }

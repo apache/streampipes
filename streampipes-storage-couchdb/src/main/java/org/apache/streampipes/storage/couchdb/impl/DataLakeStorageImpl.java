@@ -38,8 +38,7 @@ public class DataLakeStorageImpl extends AbstractDao<DataLakeMeasure> implements
 
   @Override
   public List<DataLakeMeasure> getAllDataLakeMeasures() {
-    List<DataLakeMeasure> dataLakeMeasures = findAll();
-    return dataLakeMeasures;
+    return findAll();
   }
 
   @Override

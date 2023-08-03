@@ -28,6 +28,8 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.List;
@@ -64,6 +66,10 @@ public class ProtocolSelector extends GroundingSelector {
         } else if (prioritizedProtocol.getProtocolClass().equals(NatsTransportProtocol.class.getCanonicalName())
             && supportsProtocol(NatsTransportProtocol.class)) {
           return natsTopic();
+        } else if (prioritizedProtocol.getProtocolClass().equals(PulsarTransportProtocol.class.getCanonicalName())
+            && supportsProtocol(PulsarTransportProtocol.class)) {
+          return new PulsarTransportProtocol(BackendConfig.INSTANCE.getPulsarUrl(),
+              new SimpleTopicDefinition(outputTopic));
         }
       }
     }

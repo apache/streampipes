@@ -28,6 +28,7 @@ spec:
       labels:
         app: {{ .Values.external.nats.appName }}
     spec:
+      restartPolicy: {{ .Values.restartPolicy }}
       initContainers:
         - name: init-wait-consul
           image: alpine
@@ -37,5 +38,23 @@ spec:
           image: nats
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 4222
+            - containerPort: {{ .Values.external.nats.port}}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.external.nats.port}}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.external.nats.port}}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.external.nats.port}}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
 {{- end }}

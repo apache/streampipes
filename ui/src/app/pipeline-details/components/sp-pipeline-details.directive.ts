@@ -22,7 +22,10 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
 import { SpPipelineDetailsTabs } from '../pipeline-details-tabs';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 
 @Directive()
 export abstract class SpPipelineDetailsDirective {
@@ -38,11 +41,12 @@ export abstract class SpPipelineDetailsDirective {
         protected activatedRoute: ActivatedRoute,
         protected pipelineService: PipelineService,
         protected authService: AuthService,
+        protected currentUserService: CurrentUserService,
         protected breadcrumbService: SpBreadcrumbService,
     ) {}
 
     onInit(): void {
-        this.authService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );

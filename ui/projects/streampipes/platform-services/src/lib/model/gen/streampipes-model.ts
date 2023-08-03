@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-06-12 22:17:35.
+// Generated using typescript-generator version 3.1.1185 on 2023-07-23 10:14:46.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -144,7 +145,7 @@ export class AdapterDescription extends NamedStreamPipesEntity {
 }
 
 export class AdapterEventPreview {
-    inputData: { [index: string]: GuessTypeInfo };
+    inputData: string;
     rules: TransformationRuleDescriptionUnion[];
 
     static fromData(
@@ -155,9 +156,7 @@ export class AdapterEventPreview {
             return data;
         }
         const instance = target || new AdapterEventPreview();
-        instance.inputData = __getCopyObjectFn(GuessTypeInfo.fromData)(
-            data.inputData,
-        );
+        instance.inputData = data.inputData;
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.rules);
@@ -1892,7 +1891,7 @@ export class FunctionId {
 
 export class GuessSchema {
     '@class': 'org.apache.streampipes.model.connect.guess.GuessSchema';
-    'eventPreview': { [index: string]: GuessTypeInfo }[];
+    'eventPreview': string[];
     'eventSchema': EventSchema;
     'fieldStatusInfo': { [index: string]: FieldStatusInfo };
 
@@ -1902,31 +1901,13 @@ export class GuessSchema {
         }
         const instance = target || new GuessSchema();
         instance['@class'] = data['@class'];
-        instance.eventPreview = __getCopyArrayFn(
-            __getCopyObjectFn(GuessTypeInfo.fromData),
-        )(data.eventPreview);
+        instance.eventPreview = __getCopyArrayFn(__identity<string>())(
+            data.eventPreview,
+        );
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.fieldStatusInfo = __getCopyObjectFn(FieldStatusInfo.fromData)(
             data.fieldStatusInfo,
         );
-        return instance;
-    }
-}
-
-export class GuessTypeInfo {
-    type: string;
-    value: any;
-
-    static fromData(
-        data: GuessTypeInfo,
-        target?: GuessTypeInfo,
-    ): GuessTypeInfo {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new GuessTypeInfo();
-        instance.type = data.type;
-        instance.value = data.value;
         return instance;
     }
 }
@@ -1936,7 +1917,8 @@ export class TransportProtocol {
         | 'org.apache.streampipes.model.grounding.JmsTransportProtocol'
         | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
         | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.NatsTransportProtocol';
+        | 'org.apache.streampipes.model.grounding.NatsTransportProtocol'
+        | 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
     'brokerHostname': string;
     'elementId': string;
     'topicDefinition': TopicDefinitionUnion;
@@ -1973,6 +1955,8 @@ export class TransportProtocol {
                 return MqttTransportProtocol.fromData(data);
             case 'org.apache.streampipes.model.grounding.NatsTransportProtocol':
                 return NatsTransportProtocol.fromData(data);
+            case 'org.apache.streampipes.model.grounding.PulsarTransportProtocol':
+                return PulsarTransportProtocol.fromData(data);
         }
     }
 }
@@ -2983,6 +2967,22 @@ export class ProtocolDescription extends NamedStreamPipesEntity {
     }
 }
 
+export class PulsarTransportProtocol extends TransportProtocol {
+    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
+
+    static 'fromData'(
+        data: PulsarTransportProtocol,
+        target?: PulsarTransportProtocol,
+    ): PulsarTransportProtocol {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PulsarTransportProtocol();
+        super.fromData(data, instance);
+        return instance;
+    }
+}
+
 export class QuantitativeValue extends ValueSpecification {
     '@class': 'org.apache.streampipes.model.schema.QuantitativeValue';
     'maxValue': number;
@@ -3140,6 +3140,7 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty';
     'dependsOn': string[];
     'latestFetchedNodes': TreeInputNode[];
+    'multiSelection': boolean;
     'nextBaseNodeToResolve': string;
     'nodes': TreeInputNode[];
     'resolveDynamically': boolean;
@@ -3161,6 +3162,7 @@ export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
         instance.latestFetchedNodes = __getCopyArrayFn(TreeInputNode.fromData)(
             data.latestFetchedNodes,
         );
+        instance.multiSelection = data.multiSelection;
         instance.nextBaseNodeToResolve = data.nextBaseNodeToResolve;
         instance.nodes = __getCopyArrayFn(TreeInputNode.fromData)(data.nodes);
         instance.resolveDynamically = data.resolveDynamically;
@@ -3187,6 +3189,26 @@ export class SecretStaticProperty extends StaticProperty {
         super.fromData(data, instance);
         instance.encrypted = data.encrypted;
         instance.value = data.value;
+        return instance;
+    }
+}
+
+export class ShortUserInfo {
+    displayName: string;
+    email: string;
+    principalId: string;
+
+    static fromData(
+        data: ShortUserInfo,
+        target?: ShortUserInfo,
+    ): ShortUserInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ShortUserInfo();
+        instance.displayName = data.displayName;
+        instance.email = data.email;
+        instance.principalId = data.principalId;
         return instance;
     }
 }
@@ -3303,7 +3325,7 @@ export class SpDataStreamContainer {
 }
 
 export class SpLogEntry {
-    errorMessage: StreamPipesErrorMessage;
+    errorMessage: SpLogMessage;
     timestamp: number;
 
     static fromData(data: SpLogEntry, target?: SpLogEntry): SpLogEntry {
@@ -3311,10 +3333,29 @@ export class SpLogEntry {
             return data;
         }
         const instance = target || new SpLogEntry();
-        instance.errorMessage = StreamPipesErrorMessage.fromData(
-            data.errorMessage,
-        );
+        instance.errorMessage = SpLogMessage.fromData(data.errorMessage);
         instance.timestamp = data.timestamp;
+        return instance;
+    }
+}
+
+export class SpLogMessage {
+    cause: string;
+    detail: string;
+    fullStackTrace: string;
+    level: SpLogLevel;
+    title: string;
+
+    static fromData(data: SpLogMessage, target?: SpLogMessage): SpLogMessage {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpLogMessage();
+        instance.cause = data.cause;
+        instance.detail = data.detail;
+        instance.fullStackTrace = data.fullStackTrace;
+        instance.level = data.level;
+        instance.title = data.title;
         return instance;
     }
 }
@@ -3495,30 +3536,6 @@ export class StreamPipesApplicationPackage {
         instance.requiredProcessorAppIds = __getCopyArrayFn(
             __identity<string>(),
         )(data.requiredProcessorAppIds);
-        return instance;
-    }
-}
-
-export class StreamPipesErrorMessage {
-    cause: string;
-    detail: string;
-    fullStackTrace: string;
-    level: string;
-    title: string;
-
-    static fromData(
-        data: StreamPipesErrorMessage,
-        target?: StreamPipesErrorMessage,
-    ): StreamPipesErrorMessage {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new StreamPipesErrorMessage();
-        instance.cause = data.cause;
-        instance.detail = data.detail;
-        instance.fullStackTrace = data.fullStackTrace;
-        instance.level = data.level;
-        instance.title = data.title;
         return instance;
     }
 }
@@ -3830,6 +3847,8 @@ export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
 
+export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
+
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
 
 export type StaticPropertyType =
@@ -3900,7 +3919,8 @@ export type TransportProtocolUnion =
     | JmsTransportProtocol
     | KafkaTransportProtocol
     | MqttTransportProtocol
-    | NatsTransportProtocol;
+    | NatsTransportProtocol
+    | PulsarTransportProtocol;
 
 export type ValidationInfoLevel = 'INFO' | 'ERROR';
 

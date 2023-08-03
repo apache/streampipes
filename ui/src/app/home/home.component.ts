@@ -21,7 +21,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { AuthService } from '../services/auth.service';
 import { UserRole } from '../_enums/user-role.enum';
 
@@ -36,6 +39,7 @@ export class HomeComponent implements OnInit {
     constructor(
         private homeService: HomeService,
         private authService: AuthService,
+        private currentUserService: CurrentUserService,
         private sanitizer: DomSanitizer,
         private router: Router,
         public appConstants: AppConstants,
@@ -45,7 +49,7 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.authService.user$.subscribe(userInfo => {
+        this.currentUserService.user$.subscribe(userInfo => {
             const isAdmin = userInfo.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.showStatus =
                 isAdmin ||
