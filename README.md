@@ -118,21 +118,20 @@ The quickest way to run StreamPipes including the latest extensions (adapters, p
 
 Please follow the instructions provided in the corresponding `README.md` to get started.
 
-For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/docs/try-installation.html).
+For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/try-installation.html).
 
 > TL;DR: Download the latest release, switch to the ``installer/compose`` directory and run ``docker-compose up -d``.
 
 ## Documentation
 
-The full documentation is available [here](https://streampipes.apache.org/docs/index.html).
+The full documentation is available [here](https://streampipes.apache.org/docs/user-guide-introduction).
 
 Quick Links:
 
-* [Installation](https://streampipes.apache.org/docs/docs/try-installation.html)
-* [Create adapters](https://streampipes.apache.org/docs/docs/use-connect.html)
-* [Create pipelines](https://streampipes.apache.org/docs/docs/use-pipeline-editor.html)
-* [Pipeline elements](https://streampipes.apache.org/pipeline-elements.html)
-* [Write you own pipeline elements](https://streampipes.apache.org/docs/docs/extend-archetypes.html)
+* [Installation](https://streampipes.apache.org/docs/try-installation.html)
+* [Create adapters](https://streampipes.apache.org/docs/use-connect.html)
+* [Create pipelines](https://streampipes.apache.org/docs/use-pipeline-editor.html)
+* [Write you own pipeline elements](https://streampipes.apache.org/docs/extend-archetypes.html)
 
 ## Building StreamPipes
 
@@ -174,10 +173,10 @@ The source code of all included pipeline elements and adapters can be found [her
 
 ## Extending StreamPipes
 
-You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/extend-tutorial-data-processors.html) can be used to integrate your existing processing logic into StreamPipes. 
+You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/extend-tutorial-data-processors.html) can be used to integrate your existing processing logic into StreamPipes. 
 Pipeline elements are packaged as Docker images and can be installed at runtime, whenever your requirements change.
 
-👉 Check our [developer guide](https://streampipes.apache.org/docs/docs/extend-setup.html).
+👉 Check our [developer guide](https://streampipes.apache.org/docs/extend-setup.html).
 
 ## Bugs and Feature Requests
 
