@@ -15,11 +15,9 @@
 # limitations under the License.
 #
 import json
-from collections import namedtuple
 from unittest import TestCase
 from unittest.mock import patch, MagicMock, call
 
-from requests import Response
 
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig

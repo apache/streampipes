@@ -93,6 +93,26 @@ twine = "4.0.2"
 name = "PyPI"
 priority = "primary"
 
+[tool.interrogate]
+ignore-init-method = true
+ignore-magic = true
+ignore-module = true
+fail-under = 100
+ignore-regex = ["test_*", "Test*", ".*BaseClass.*"]
+verbose = 2 # possible values: 0 (minimal output), 1 (-v), 2 (-vv)
+omit-covered-files = true
+generate-badge = "./streampipes-client-python/docs/img"
+badge-style = "flat"
+
+[tool.isort]
+profile = "black"
+src_paths = ["streampipes", "tests"]
+
+[tool.mypy]
+pretty = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -17,7 +17,7 @@
 
 .PHONY: check
 check: mypy lint unit-tests
-	interrogate -vv --fail-under 100 --omit-covered-files --ignore-init-method --ignore-module --ignore-magic --ignore-regex test_* --ignore-regex Test* --generate-badge ./docs/img --badge-format svg --badge-style flat
+	interrogate -c pyproject.toml
 
 .PHONY: doc
 doc:
@@ -33,7 +33,7 @@ livedoc: doc
 
 .PHONY: mypy
 mypy:
-	mypy streampipes --warn-unused-ignores --warn-redundant-casts --pretty
+	mypy streampipes --config-file pyproject.toml
 
 .PHONY: rebase
 rebase:
@@ -43,7 +43,7 @@ rebase:
 reformat-all:
 	pyupgrade --py38 --keep-runtime-typing
 	autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes tests
-	isort --profile black streampipes tests
+	isort --settings-file pyproject.toml
 	black --line-length=120 streampipes tests
 
 .PHONY: pre-commit
