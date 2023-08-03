@@ -16,20 +16,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.external.influxdb.service.name }}
+  name: {{ .Values.external.influxdb.appName }}
 spec:
   selector:
     app: {{ .Values.external.influxdb.appName }}
   ports:
     - name: main
       protocol: TCP
-      port: {{ .Values.external.influxdb.port1 }}
-      targetPort: {{ .Values.external.influxdb.service.port1 }}
+      port: 8083
+      targetPort: 8083
     - name: api
       protocol: TCP
-      port: {{ .Values.external.influxdb.service.port2 }}
-      targetPort: {{ .Values.external.influxdb.service.port2 }}
+      port: 8086
+      targetPort: 8086
     - name: internal
       protocol: TCP
-      port: {{ .Values.external.influxdb.service.port3 }}
-      targetPort: {{ .Values.external.influxdb.service.port3 }}
+      port: 8090
+      targetPort: 8090

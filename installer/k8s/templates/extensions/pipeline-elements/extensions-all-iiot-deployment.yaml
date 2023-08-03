@@ -16,22 +16,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.extensions.iiot.appName }}
+  name: extensions-all-iiot
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.extensions.iiot.appName }}
+      app: extensions-all-iiot
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ .Values.extensions.iiot.appName }}
+        app: extensions-all-iiot
     spec:
       restartPolicy: {{ .Values.restartPolicy }}
-      initContainers:
-        - name: init-wait-{{.Values.streampipes.core.service.name}}
-          image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{.Values.streampipes.core.service.name}} {{ .Values.streampipes.core.service.port }} && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: extensions-all-iiot
           image: {{ .Values.streampipes.registry }}/extensions-all-iiot:{{ .Values.streampipes.version }}

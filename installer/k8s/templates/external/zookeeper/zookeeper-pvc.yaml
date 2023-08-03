@@ -17,11 +17,11 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Values.external.zookeeper.persistence.pvName }}
+  name: zookeeper-pv
 spec:
-  storageClassName: {{ .Values.external.zookeeper.persistence.storageClassName }}
+  storageClassName: local-storage-zookeeper
   capacity:
-    storage: {{ .Values.external.zookeeper.persistence.storageSize }}
+    storage: 20M
   accessModes:
     - {{ .Values.persistentVolumeAccessModes }}
   persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
@@ -32,13 +32,13 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ .Values.external.zookeeper.appName }}
-  name: {{ .Values.external.zookeeper.persistence.claimName }}
+    app: zookeeper
+  name: zookeeper-pvc
 spec:
-  storageClassName: {{ .Values.external.zookeeper.persistence.storageClassName }}
+  storageClassName: local-storage-zookeeper
   accessModes:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: {{ .Values.external.zookeeper.persistence.storageSize }}
+      storage: 20M
 {{- end }}

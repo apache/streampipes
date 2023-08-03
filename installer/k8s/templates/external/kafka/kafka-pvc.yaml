@@ -17,11 +17,11 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Values.external.kafka.persistence.pvName }}
+  name: kafka-pv
 spec:
-  storageClassName: {{ .Values.external.kafka.persistence.storageClassName }}
+  storageClassName: local-storage-kafka
   capacity:
-    storage: {{ .Values.external.kafka.persistence.storageSize}}
+    storage: 50M
   accessModes:
      - {{ .Values.persistentVolumeAccessModes }}
   persistentVolumeReclaimPolicy: {{ .Values.persistentVolumeReclaimPolicy }}
@@ -32,13 +32,13 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ .Values.external.kafka.appName }}
-  name: {{ .Values.external.kafka.persistence.claimName }}
+    app: kafka
+  name: kafka-pvc
 spec:
-  storageClassName: {{ .Values.external.kafka.persistence.storageClassName }}
+  storageClassName: local-storage-kafka
   accessModes:
     - {{ .Values.persistentVolumeAccessModes }}
   resources:
     requests:
-      storage: {{ .Values.external.kafka.persistence.storageSize }}
+      storage: 50M
 {{- end }}
