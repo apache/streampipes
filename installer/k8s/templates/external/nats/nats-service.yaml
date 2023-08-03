@@ -17,16 +17,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nats
+  name: {{ .Values.external.nats.service.name }}
   labels:
-    name: nats
+    name: {{ .Values.external.nats.appName }}
 spec:
   selector:
-    app: nats
+    app: {{ .Values.external.nats.appName }}
   type: {{ .Values.external.nats.service.type }}
   externalTrafficPolicy: {{ .Values.external.nats.service.externalTrafficPolicy }}
   ports:
     - name: main
       protocol: TCP
-      port: 4222
+      port: {{ .Values.external.nats.port }}
 {{- end }}

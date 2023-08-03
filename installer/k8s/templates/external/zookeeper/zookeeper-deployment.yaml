@@ -17,39 +17,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zookeeper
+  name: {{ .Values.external.zookeeper.appName }}
 spec:
   selector:
     matchLabels:
-      app: zookeeper
+      app: {{ .Values.external.zookeeper.appName }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: zookeeper
+        app: {{ .Values.external.zookeeper.appName }}
     spec:
       restartPolicy: {{ .Values.restartPolicy }}
       volumes:
-        - name: zookeeper-pv
+        - name: {{ .Values.external.zookeeper.persistence.pvName }}
           persistentVolumeClaim:
-            claimName: zookeeper-pvc
+            claimName: {{ .Values.external.zookeeper.persistence.claimName }}
       containers:
         #TODO: wurstmeister/zookeeper:latest is running ZK 3.4.13. Once this
         #      changes, the mount path needs to be adapted
-        - name: zookeeper
-          image: fogsyio/zookeeper:{{ .Values.external.zookeeperVersion }}
+        - name: {{ .Values.external.zookeeper.appName }}
+          image: fogsyio/zookeeper:{{ .Values.external.zookeeper.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.external.zookeeperPort }}
+            - containerPort: {{ .Values.external.zookeeper.port }}
           volumeMounts:
-            - mountPath: "/opt/zookeeper-{{ .Values.external.zookeeperVersion }}/data"
-              name: zookeeper-pv
+            - mountPath: "/opt/zookeeper-{{ .Values.external.zookeeper.version }}/data"
+              name: {{ .Values.external.zookeeper.persistence.pvName }}
           livenessProbe:
             exec:
               command:
                 - sh
                 - -c
-                - echo ruok | nc localhost {{ .Values.external.zookeeperPort }}
+                - echo ruok | nc localhost {{ .Values.external.zookeeper.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
@@ -58,7 +58,7 @@ spec:
               command:
                 - sh
                 - -c
-                - echo ruok | nc localhost {{ .Values.external.zookeeperPort }}
+                - echo ruok | nc localhost {{ .Values.external.zookeeper.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
@@ -67,7 +67,7 @@ spec:
               command:
                 - sh
                 - -c
-                - echo ruok | nc localhost {{ .Values.external.zookeeperPort }}
+                - echo ruok | nc localhost {{ .Values.external.zookeeper.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
