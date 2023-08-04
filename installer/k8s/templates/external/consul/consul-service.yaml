@@ -23,9 +23,9 @@ spec:
   ports:
     - name: main
       protocol: TCP
-      port: {{ .Values.external.consul.port1 }}
-      targetPort: {{ .Values.external.consul.service.port1 }}
+      port: {{ .Values.external.consul.webPort }}
+      targetPort: {{ .Values.external.consul.service.webPort }}
     - name: test
       protocol: TCP
-      port: {{ .Values.external.consul.port2 }}
-      targetPort: {{ .Values.external.consul.service.port2 }}
+      port: {{ .Values.external.consul.dnsPort }}
+      targetPort: {{ .Values.external.consul.service.dnsPort }}

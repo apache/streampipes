@@ -32,7 +32,7 @@ spec:
       initContainers:
         - name: init-wait-consul
           image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.consul.appName }} {{ .Values.external.consul.port1 }} && exit 0 || sleep 3; done; exit 1"]
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.consul.appName }} {{ .Values.external.consul.webPort }} && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: {{ .Values.external.nats.appName }}
           image: nats

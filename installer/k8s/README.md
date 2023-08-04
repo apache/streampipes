@@ -98,7 +98,7 @@ rm -rf ${HOME}/streampipes-k8s
 | failureThreshold                                 | Number of consecutive failures for readiness probes     | 30                                      |
 | hostPath                                         | Host path for the application                           | ""                                      |
 
-###Streampipes common parameters
+###StreamPipes common parameters
 | Parameter Name                                  | Description                                             | Value                                    |
 |-------------------------------------------------|---------------------------------------------------------|------------------------------------------|
 | streampipes.version                             | StreamPipes version                                     | "0.93.0-SNAPSHOT"                        |
@@ -110,7 +110,7 @@ rm -rf ${HOME}/streampipes-k8s
 | streampipes.core.persistence.claimName          | Name of the backend PersistentVolumeClaim               | "backend-pvc"                            |
 | streampipes.core.persistence.pvName             | Name of the backend PersistentVolume                    | "backend-pv"                             |
 | streampipes.core.service.name                   | Name of the backend service                             | "backend"                                |
-| streampipes.core.service.port                   | Port for the backend service                            | 8030                                     |
+| streampipes.core.service.port                   | TargetPort of the StreamPipes backend service           | 8030                                     |
 | streampipes.ui.appName                          | StreamPipes UI application name                         | "ui"                                     |
 | streampipes.ui.resolverActive                   | Flag for enabling DNS resolver for Nginx proxy          | true                                     |
 | streampipes.ui.port                             | StreamPipes UI port                                     | 8088                                     |
@@ -118,7 +118,7 @@ rm -rf ${HOME}/streampipes-k8s
 | streampipes.ui.service.name                     | Name of the UI service                                  | "ui"                                     |
 | streampipes.ui.service.type                     | Type of the UI service                                  | "ClusterIP"                              |
 | streampipes.ui.service.nodePort                 | Node port for the UI service                            | 8088                                     |
-| streampipes.ui.service.port                     | Port for the UI service                                 | 8088                                     |
+| streampipes.ui.service.port                     | TargetPort of the StreamPipes UI service                | 8088                                     |
 | streampipes.ingress.active                      | Flag for enabling Ingress for StreamPipes               | false                                    |
 | streampipes.ingress.annotations                 | Annotations for Ingress                                 | {}                                       |
 | streampipes.ingress.host                        | Hostname for Ingress                                    | ""                                       |
@@ -135,37 +135,37 @@ rm -rf ${HOME}/streampipes-k8s
 |-------------------------------------------------|---------------------------------------------------------|------------------------------------------|
 | extensions.iiot.appName                         | IIoT extensions application name                        | extensions-all-iiot                      |
 | extensions.iiot.port                            | Port for the IIoT extensions application                | 8090                                     |
-| extensions.iiot.service.name                    | Name of the IIoT extensions service                     | extensions-all-iiot1                     |
-| extensions.iiot.service.port                    | Port for the IIoT extensions service                    | 8090                                     |
+| extensions.iiot.service.name                    | Name of the IIoT extensions service                     | extensions-all-iiot                      |
+| extensions.iiot.service.port                    | TargetPort of the IIoT extensions service               | 8090                                     |
 
 
 ###External common parameters
 
 ####Consul common parameters
 | Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|-----------------|
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
 | external.consul.appName                         | Consul application name                                  | "consul"                                 |
 | external.consul.version                         | Consul version                                           | 1.14.3                                   |
-| external.consul.port1                           | Port 1 for Consul service                                | 8500                                     |
-| external.consul.port2                           | Port 2 for Consul service                                | 8600                                     |
+| external.consul.webPort                         | Port number for the Consul web interface                 | 8500                                     |
+| external.consul.dnsPort                         | Port number for the Consul DNS interface                 | 8600                                     |
 | external.consul.persistence.storageClassName    | Storage class name for Consul PVs                        | "hostpath"                               |
 | external.consul.persistence.storageSize         | Size of the Consul PV                                    | "1Gi"                                    |
 | external.consul.persistence.claimName           | Name of the Consul PersistentVolumeClaim                 | "consul-pvc"                             |
 | external.consul.persistence.pvName              | Name of the Consul PersistentVolume                      | "consul-pv"                              |
 | external.consul.service.name                    | Name of the Consul service                               | "consul"                                 |
-| external.consul.service.port1                   | Port 1 for the Consul service                            | 8500                                     |
-| external.consul.service.port2                   | Port 2 for the Consul service                            | 8600                                     |
+| external.consul.service.webPort                 | TargetPort of the Consul service for web interface       | 8500                                     |
+| external.consul.service.dnsPort                 | TargetPort of the Consul service for DNS interface       | 8600                                     |
 
 ####Couchdb common parameters
 | Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|-----------------|
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
 | external.couchdb.appName                        | CouchDB application name                                 | "couchdb"                                |
 | external.couchdb.version                        | CouchDB version                                          | 3.3.1                                    |
 | external.couchdb.user                           | CouchDB admin username                                   | "admin"                                  |
 | external.couchdb.password                       | CouchDB admin password                                   | "admin"                                  |
 | external.couchdb.port                           | Port for the CouchDB service                             | 5984                                     |
 | external.couchdb.service.name                   | Name of the CouchDB service                              | "couchdb"                                |
-| external.couchdb.service.port                   | Port for the CouchDB service                             | 5984                                     |
+| external.couchdb.service.port                   | TargetPort of the CouchDB service                        | 5984                                     |
 | external.couchdb.persistence.storageClassName   | Storage class name for CouchDB PVs                       | "hostpath"                               |
 | external.couchdb.persistence.storageSize        | Size of the CouchDB PV                                   | "1Gi"                                    |
 | external.couchdb.persistence.claimName          | Name of the CouchDB PersistentVolumeClaim                | "couchdb-pvc"                            |
@@ -173,7 +173,7 @@ rm -rf ${HOME}/streampipes-k8s
 
 ####Influxdb common parameters
 | Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|-----------------|
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
 | external.influxdb.appName                       | InfluxDB application name                                | "influxdb"                               |
 | external.influxdb.version                       | InfluxDB version                                         | 2.6                                      |
 | external.influxdb.username                      | InfluxDB admin username                                  | "admin"                                  |
@@ -182,13 +182,13 @@ rm -rf ${HOME}/streampipes-k8s
 | external.influxdb.initOrg                       | InfluxDB initial organization                            | "sp"                                     |
 | external.influxdb.initBucket                    | InfluxDB initial bucket                                  | "sp"                                     |
 | external.influxdb.initMode                      | InfluxDB initialization mode                             | "setup"                                  |
-| external.influxdb.port1                         | Port 1 for the InfluxDB service                          | 8083                                     |
-| external.influxdb.port2                         | Port 2 for the InfluxDB service                          | 8086                                     |
-| external.influxdb.port3                         | Port 3 for the InfluxDB service                          | 8090                                     |
+| external.influxdb.apiPort                       | Port number for the InfluxDB service (API)               | 8083                                     |
+| external.influxdb.httpPort                      | Port number for the InfluxDB service (HTTP)              | 8086                                     |
+| external.influxdb.grpcPort                      | Port number for the InfluxDB service (gRPC)              | 8090                                     |
 | external.influxdb.service.name                  | Name of the InfluxDB service                             | "influxdb"                               |
-| external.influxdb.service.port1                 | Port 1 for the InfluxDB service                          | 8083                                     |
-| external.influxdb.service.port2                 | Port 2 for the InfluxDB service                          | 8086                                     |
-| external.influxdb.service.port3                 | Port 3 for the InfluxDB service                          | 8090                                     |
+| external.influxdb.service.apiPort               | TargetPort of the InfluxDB service for API               | 8083                                     |
+| external.influxdb.service.httpPort              | TargetPort of the InfluxDB service for HTTP              | 8086                                     |
+| external.influxdb.service.grpcPort              | TargetPort of the InfluxDB service for gRPC              | 8090                                     |
 | external.influxdb.persistence.storageClassName  | Storage class name for InfluxDB PVs                      | "hostpath"                               |
 | external.influxdb.persistence.storageSize       | Size of the InfluxDB PV                                  | "1Gi"                                    |
 | external.influxdb.persistence.storageSizeV1     | Size of the InfluxDB PV for v1 databases                 | "1Gi"                                    |
@@ -200,24 +200,24 @@ rm -rf ${HOME}/streampipes-k8s
 
 ####Nats common parameters
 | Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|-----------------|
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
 | external.nats.appName                           | NATS application name                                    | "nats"                                   |
 | external.nats.port                              | Port for the NATS service                                | 4222                                     |
 | external.nats.version                           | NATS version                                             |                                          |
 | external.nats.service.type                      | Type of the NATS service                                 | "NodePort"                               |
 | external.nats.service.externalTrafficPolicy     | External traffic policy for the NATS service             | "Local"                                  |
-| external.nats.service.name                      | Name of the NATS service                                 | "nats1"                                  |
-| external.nats.service.port                      | Port for the NATS service                                | 4222                                     |
+| external.nats.service.name                      | Name of the NATS service                                 | "nats"                                   |
+| external.nats.service.port                      | TargetPort of the NATS service                           | 4222                                     |
 
 
 ####Kafka common parameters
 | Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|-----------------|
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
 | external.kafka.appName                          | Kafka application name                                   | "kafka"                                  |
 | external.kafka.version                          | Kafka version                                            | 2.2.0                                    |
 | external.kafka.port                             | Port for the Kafka service                               | 9092                                     |
 | external.kafka.service.name                     | Name of the Kafka service                                | "kafka"                                  |
-| external.kafka.service.port                     | Port for the Kafka service                               | 9092                                     |
+| external.kafka.service.port                     | TargetPort of the Kafka service                          | 9092                                     |
 | external.kafka.persistence.storageClassName     | Storage class name for Kafka PVs                         | "hostpath"                               |
 | external.kafka.persistence.storageSize          | Size of the Kafka PV                                     | "1Gi"                                    |
 | external.kafka.persistence.claimName            | Name of the Kafka PersistentVolumeClaim                  | "kafka-pvc"                              |
@@ -226,12 +226,12 @@ rm -rf ${HOME}/streampipes-k8s
 
 ####Zookeeper common parameters
 | Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|-----------------|
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
 | external.zookeeper.appName                      | ZooKeeper application name                               | "zookeeper"                              |
 | external.zookeeper.version                      | ZooKeeper version                                        | 3.4.13                                   |
 | external.zookeeper.port                         | Port for the ZooKeeper service                           | 2181                                     |
 | external.zookeeper.service.name                 | Name of the ZooKeeper service                            | "zookeeper"                              |
-| external.zookeeper.service.port                 | Port for the ZooKeeper service                           | 2181                                     |
+| external.zookeeper.service.port                 | TargetPort of the ZooKeeper service                      | 2181                                     |
 | external.zookeeper.persistence.storageClassName | Storage class name for ZooKeeper PVs                     | "hostpath"                               |
 | external.zookeeper.persistence.storageSize      | Size of the ZooKeeper PV                                 | "1Gi"                                    |
 | external.zookeeper.persistence.claimName        | Name of the ZooKeeper PersistentVolumeClaim              | "zookeeper-pvc"                          |

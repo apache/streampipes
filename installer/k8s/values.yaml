@@ -71,15 +71,15 @@ extensions:
     appName: extensions-all-iiot
     port: 8090
     service:
-      name: extensions-all-iiot1
+      name: extensions-all-iiot
       port: 8090
 
 external:
   consul:
     appName: "consul"
     version: 1.14.3
-    port1: 8500
-    port2: 8600
+    webPort: 8500
+    dnsPort: 8600
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
@@ -87,8 +87,8 @@ external:
       pvName: "consul-pv"
     service:
       name: "consul"
-      port1: 8500
-      port2: 8600
+      webPort: 8500
+      dnsPort: 8600
   couchdb:
     appName: "couchdb"
     version: 3.3.1
@@ -113,14 +113,14 @@ external:
     initBucket: "sp"
     # For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
     initMode: "setup"
-    port1: 8083
-    port2: 8086
-    port3: 8090
+    apiPort: 8083
+    httpPort: 8086
+    grpcPort: 8090
     service:
       name: "influxdb"
-      port1: 8083
-      port2: 8086
-      port3: 8090
+      apiPort: 8083
+      httpPort: 8086
+      grpcPort: 8090
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
@@ -136,7 +136,7 @@ external:
     service:
       type: "NodePort"
       externalTrafficPolicy: "Local"
-      name: "nats1"
+      name: "nats"
       port: 4222
   kafka:
     appName: "kafka"
