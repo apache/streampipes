@@ -42,25 +42,26 @@ public class ConsulConfigMigration implements Migration {
     var currConf = BackendConfig.INSTANCE;
     var newConf = new SpCoreConfiguration();
 
-    newConf.setMessagingSettings(currConf.getMessagingSettings());
+    var messagingSettings = currConf.getMessagingSettings();
     newConf.setLocalAuthConfig(currConf.getLocalAuthConfig());
     newConf.setEmailConfig(currConf.getEmailConfig());
     newConf.setGeneralConfig(currConf.getGeneralConfig());
 
-    newConf.setJmsHost(currConf.getJmsHost());
-    newConf.setJmsPort(currConf.getJmsPort());
-    newConf.setMqttHost(currConf.getMqttHost());
-    newConf.setMqttPort(currConf.getMqttPort());
-    newConf.setNatsHost(currConf.getNatsHost());
-    newConf.setNatsPort(currConf.getNatsPort());
-    newConf.setKafkaHost(currConf.getKafkaHost());
-    newConf.setKafkaPort(currConf.getKafkaPort());
-    newConf.setPulsarUrl(currConf.getPulsarUrl());
-    newConf.setZookeeperHost(currConf.getZookeeperHost());
-    newConf.setZookeeperPort(currConf.getZookeeperPort());
+    messagingSettings.setJmsHost(currConf.getJmsHost());
+    messagingSettings.setJmsPort(currConf.getJmsPort());
+    messagingSettings.setMqttHost(currConf.getMqttHost());
+    messagingSettings.setMqttPort(currConf.getMqttPort());
+    messagingSettings.setNatsHost(currConf.getNatsHost());
+    messagingSettings.setNatsPort(currConf.getNatsPort());
+    messagingSettings.setKafkaHost(currConf.getKafkaHost());
+    messagingSettings.setKafkaPort(currConf.getKafkaPort());
+    messagingSettings.setPulsarUrl(currConf.getPulsarUrl());
+    messagingSettings.setZookeeperHost(currConf.getZookeeperHost());
+    messagingSettings.setZookeeperPort(currConf.getZookeeperPort());
     newConf.setAssetDir(currConf.getAssetDir());
     newConf.setFilesDir(currConf.getFilesDir());
 
+    newConf.setMessagingSettings(messagingSettings);
     storage.createElement(newConf);
   }
 

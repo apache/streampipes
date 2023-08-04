@@ -150,6 +150,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getPrioritizedProtocol() {
+    return new StringEnvironmentVariable(Envs.SP_PRIORITIZED_PROTOCOL);
+  }
+
+  @Override
   public BooleanEnvironmentVariable getSetupInstallPipelineElements() {
     return new BooleanEnvironmentVariable(Envs.SP_SETUP_INSTALL_PIPELINE_ELEMENTS);
   }

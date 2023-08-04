@@ -38,44 +38,45 @@ public class GroundingUtils {
 
   public static EventGrounding createEventGrounding() {
     EventGrounding eventGrounding = new EventGrounding();
-    var cfg = Utils
+    var messagingSettings = Utils
         .getCoreConfigStorage()
-        .get();
+        .get()
+        .getMessagingSettings();
 
     String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
     TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
     SpProtocol prioritizedProtocol =
-        cfg.getMessagingSettings().getPrioritizedProtocols().get(0);
+        messagingSettings.getPrioritizedProtocols().get(0);
 
     if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeJmsTransportProtocol(
-              cfg.getJmsHost(),
-              cfg.getJmsPort(),
+              messagingSettings.getJmsHost(),
+              messagingSettings.getJmsPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeKafkaTransportProtocol(
-              cfg.getKafkaHost(),
-              cfg.getKafkaPort(),
+              messagingSettings.getKafkaHost(),
+              messagingSettings.getKafkaPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeMqttTransportProtocol(
-              cfg.getMqttHost(),
-              cfg.getMqttPort(),
+              messagingSettings.getMqttHost(),
+              messagingSettings.getMqttPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeNatsTransportProtocol(
-              cfg.getNatsHost(),
-              cfg.getNatsPort(),
+              messagingSettings.getNatsHost(),
+              messagingSettings.getNatsPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, PulsarTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makePulsarTransportProtocol(
-              cfg.getPulsarUrl(),
+              messagingSettings.getPulsarUrl(),
               topicDefinition
           )
       );

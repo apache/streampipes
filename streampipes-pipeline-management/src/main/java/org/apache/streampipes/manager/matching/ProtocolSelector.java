@@ -22,7 +22,7 @@ import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.configuration.SpProtocol;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -41,19 +41,20 @@ public class ProtocolSelector extends GroundingSelector {
   private final String outputTopic;
   private final List<SpProtocol> prioritizedProtocols;
 
-  private final SpCoreConfiguration cfg;
+  private final MessagingSettings messagingSettings;
 
   public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
     super(source, targets);
     this.outputTopic = TopicGenerator.generateRandomTopic();
-    this.cfg = StorageDispatcher
+    this.messagingSettings = StorageDispatcher
         .INSTANCE
         .getNoSqlStore()
         .getSpCoreConfigurationStorage()
-        .get();
+        .get()
+        .getMessagingSettings();
 
     this.prioritizedProtocols =
-        cfg.getMessagingSettings().getPrioritizedProtocols();
+        messagingSettings.getPrioritizedProtocols();
   }
 
   public TransportProtocol getPreferredProtocol() {
@@ -77,7 +78,7 @@ public class ProtocolSelector extends GroundingSelector {
           return natsTopic();
         } else if (prioritizedProtocol.getProtocolClass().equals(PulsarTransportProtocol.class.getCanonicalName())
             && supportsProtocol(PulsarTransportProtocol.class)) {
-          return new PulsarTransportProtocol(cfg.getPulsarUrl(),
+          return new PulsarTransportProtocol(messagingSettings.getPulsarUrl(),
               new SimpleTopicDefinition(outputTopic));
         }
       }
@@ -87,35 +88,35 @@ public class ProtocolSelector extends GroundingSelector {
 
   private TransportProtocol mqttTopic() {
     return new MqttTransportProtocol(
-        cfg.getMqttHost(),
-        cfg.getMqttPort(),
+        messagingSettings.getMqttHost(),
+        messagingSettings.getMqttPort(),
         outputTopic
     );
   }
 
   private TransportProtocol jmsTopic() {
     return new JmsTransportProtocol(
-        cfg.getJmsHost(),
-        cfg.getJmsPort(),
+        messagingSettings.getJmsHost(),
+        messagingSettings.getJmsPort(),
         outputTopic
     );
   }
 
   private TransportProtocol natsTopic() {
     return new NatsTransportProtocol(
-        cfg.getNatsHost(),
-        cfg.getNatsPort(),
+        messagingSettings.getNatsHost(),
+        messagingSettings.getNatsPort(),
         outputTopic
     );
   }
 
   private TransportProtocol kafkaTopic() {
     return new KafkaTransportProtocol(
-        cfg.getKafkaHost(),
-        cfg.getKafkaPort(),
+        messagingSettings.getKafkaHost(),
+        messagingSettings.getKafkaPort(),
         outputTopic,
-        cfg.getZookeeperHost(),
-        cfg.getZookeeperPort()
+        messagingSettings.getZookeeperHost(),
+        messagingSettings.getZookeeperPort()
     );
   }
 

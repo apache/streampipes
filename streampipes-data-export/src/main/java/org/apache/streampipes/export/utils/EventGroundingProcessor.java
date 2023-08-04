@@ -19,7 +19,7 @@
 package org.apache.streampipes.export.utils;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.configuration.SpProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -30,18 +30,18 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class EventGroundingProcessor {
 
-  SpCoreConfiguration cfg;
-  SpProtocol configuredProtocol;
+  private final MessagingSettings messagingSettings;
+  private final SpProtocol configuredProtocol;
 
   public EventGroundingProcessor() {
-    this.cfg = StorageDispatcher
+    this.messagingSettings = StorageDispatcher
         .INSTANCE
         .getNoSqlStore()
         .getSpCoreConfigurationStorage()
-        .get();
+        .get()
+        .getMessagingSettings();
 
-    this.configuredProtocol = cfg
-        .getMessagingSettings()
+    this.configuredProtocol = messagingSettings
         .getPrioritizedProtocols().get(0);
   }
 
@@ -77,28 +77,28 @@ public class EventGroundingProcessor {
 
   private KafkaTransportProtocol makeKafkaProtocol() {
     var protocol = new KafkaTransportProtocol();
-    protocol.setBrokerHostname(cfg.getKafkaHost());
-    protocol.setKafkaPort(cfg.getKafkaPort());
+    protocol.setBrokerHostname(messagingSettings.getKafkaHost());
+    protocol.setKafkaPort(messagingSettings.getKafkaPort());
     return protocol;
   }
 
   private MqttTransportProtocol makeMqttProtocol() {
     var protocol = new MqttTransportProtocol();
-    protocol.setBrokerHostname(cfg.getMqttHost());
-    protocol.setPort(cfg.getMqttPort());
+    protocol.setBrokerHostname(messagingSettings.getMqttHost());
+    protocol.setPort(messagingSettings.getMqttPort());
     return protocol;
   }
 
   private NatsTransportProtocol makeNatsProtocol() {
     var protocol = new NatsTransportProtocol();
-    protocol.setBrokerHostname(cfg.getNatsHost());
-    protocol.setPort(cfg.getNatsPort());
+    protocol.setBrokerHostname(messagingSettings.getNatsHost());
+    protocol.setPort(messagingSettings.getNatsPort());
     return protocol;
   }
 
   private PulsarTransportProtocol makePulsarProtocol() {
     var protocol = new PulsarTransportProtocol();
-    protocol.setBrokerHostname(cfg.getNatsHost());
+    protocol.setBrokerHostname(messagingSettings.getNatsHost());
     return protocol;
   }
 

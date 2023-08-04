@@ -22,6 +22,7 @@ package org.apache.streampipes.config.backend;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.random.TokenGenerator;
+import org.apache.streampipes.model.configuration.DefaultMessagingSettings;
 import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.configuration.LocalAuthConfig;

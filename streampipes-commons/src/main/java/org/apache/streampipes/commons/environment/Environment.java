@@ -89,6 +89,8 @@ public interface Environment {
   // Messaging
   StringEnvironmentVariable getKafkaRetentionTimeMs();
 
+  StringEnvironmentVariable getPrioritizedProtocol();
+
 
   // Setup
   BooleanEnvironmentVariable getSetupInstallPipelineElements();

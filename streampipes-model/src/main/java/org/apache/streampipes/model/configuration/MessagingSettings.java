@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.model.configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessagingSettings {
@@ -29,7 +30,24 @@ public class MessagingSettings {
   private List<SpDataFormat> prioritizedFormats;
   private List<SpProtocol> prioritizedProtocols;
 
+  private String jmsHost;
+  private int jmsPort;
 
+  private String mqttHost;
+  private int mqttPort;
+
+  private String natsHost;
+  private int natsPort;
+
+  private String kafkaHost;
+  private int kafkaPort;
+
+  private String pulsarUrl;
+
+  private String zookeeperHost;
+  private int zookeeperPort;
+
+  private List<String> supportedProtocols;
 
   public MessagingSettings(Integer batchSize,
                            Integer messageMaxBytes,
@@ -43,6 +61,7 @@ public class MessagingSettings {
     this.acks = acks;
     this.prioritizedFormats = prioritizedFormats;
     this.prioritizedProtocols = prioritizedProtocols;
+    this.supportedProtocols = new ArrayList<>();
   }
 
   public MessagingSettings() {
@@ -95,5 +114,101 @@ public class MessagingSettings {
 
   public void setPrioritizedProtocols(List<SpProtocol> prioritizedProtocols) {
     this.prioritizedProtocols = prioritizedProtocols;
+  }
+
+  public String getJmsHost() {
+    return jmsHost;
+  }
+
+  public void setJmsHost(String jmsHost) {
+    this.jmsHost = jmsHost;
+  }
+
+  public int getJmsPort() {
+    return jmsPort;
+  }
+
+  public void setJmsPort(int jmsPort) {
+    this.jmsPort = jmsPort;
+  }
+
+  public String getMqttHost() {
+    return mqttHost;
+  }
+
+  public void setMqttHost(String mqttHost) {
+    this.mqttHost = mqttHost;
+  }
+
+  public int getMqttPort() {
+    return mqttPort;
+  }
+
+  public void setMqttPort(int mqttPort) {
+    this.mqttPort = mqttPort;
+  }
+
+  public String getNatsHost() {
+    return natsHost;
+  }
+
+  public void setNatsHost(String natsHost) {
+    this.natsHost = natsHost;
+  }
+
+  public int getNatsPort() {
+    return natsPort;
+  }
+
+  public void setNatsPort(int natsPort) {
+    this.natsPort = natsPort;
+  }
+
+  public String getKafkaHost() {
+    return kafkaHost;
+  }
+
+  public void setKafkaHost(String kafkaHost) {
+    this.kafkaHost = kafkaHost;
+  }
+
+  public int getKafkaPort() {
+    return kafkaPort;
+  }
+
+  public void setKafkaPort(int kafkaPort) {
+    this.kafkaPort = kafkaPort;
+  }
+
+  public String getPulsarUrl() {
+    return pulsarUrl;
+  }
+
+  public void setPulsarUrl(String pulsarUrl) {
+    this.pulsarUrl = pulsarUrl;
+  }
+
+  public String getZookeeperHost() {
+    return zookeeperHost;
+  }
+
+  public void setZookeeperHost(String zookeeperHost) {
+    this.zookeeperHost = zookeeperHost;
+  }
+
+  public int getZookeeperPort() {
+    return zookeeperPort;
+  }
+
+  public void setZookeeperPort(int zookeeperPort) {
+    this.zookeeperPort = zookeeperPort;
+  }
+
+  public List<String> getSupportedProtocols() {
+    return supportedProtocols;
+  }
+
+  public void setSupportedProtocols(List<String> supportedProtocols) {
+    this.supportedProtocols = supportedProtocols;
   }
 }
