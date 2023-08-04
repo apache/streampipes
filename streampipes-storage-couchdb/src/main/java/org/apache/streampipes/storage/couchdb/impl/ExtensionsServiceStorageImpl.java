@@ -21,41 +21,41 @@ package org.apache.streampipes.storage.couchdb.impl;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import java.util.List;
 
-public class ExtensionsServiceStorageImpl extends AbstractDao<SpServiceRegistrationRequest>
-    implements CRUDStorage<String, SpServiceRegistrationRequest> {
+public class ExtensionsServiceStorageImpl extends AbstractDao<SpServiceRegistration>
+    implements CRUDStorage<String, SpServiceRegistration> {
 
   public ExtensionsServiceStorageImpl() {
-    super(Utils::getCouchDbExtensionsStorage, SpServiceRegistrationRequest.class);
+    super(Utils::getCouchDbExtensionsStorage, SpServiceRegistration.class);
   }
 
 
   @Override
-  public List<SpServiceRegistrationRequest> getAll() {
+  public List<SpServiceRegistration> getAll() {
     return findAll();
   }
 
   @Override
-  public void createElement(SpServiceRegistrationRequest element) {
+  public void createElement(SpServiceRegistration element) {
     persist(element);
   }
 
   @Override
-  public SpServiceRegistrationRequest getElementById(String id) {
+  public SpServiceRegistration getElementById(String id) {
     return find(id).orElseThrow(IllegalArgumentException::new);
   }
 
   @Override
-  public SpServiceRegistrationRequest updateElement(SpServiceRegistrationRequest element) {
+  public SpServiceRegistration updateElement(SpServiceRegistration element) {
     update(element);
     return getElementById(element.getSvcId());
   }
 
   @Override
-  public void deleteElement(SpServiceRegistrationRequest element) {
+  public void deleteElement(SpServiceRegistration element) {
     delete(element.getSvcId());
   }
 }

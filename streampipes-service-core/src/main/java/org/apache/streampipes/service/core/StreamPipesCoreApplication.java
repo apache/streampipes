@@ -19,6 +19,7 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
+import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.setup.AutoInstallation;
@@ -82,8 +83,12 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private static final int HEALTH_CHECK_INTERVAL = 60;
   private static final TimeUnit HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
 
+  private static final int SERVICE_HEALTH_CHECK_INTERVAL = 60;
+  private static final TimeUnit SERVICE_HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
+
   private ScheduledExecutorService executorService;
   private ScheduledExecutorService healthCheckExecutorService;
+  private ScheduledExecutorService serviceHealthCheckExecutorService;
   private ScheduledExecutorService logCheckExecutorService;
 
   private final Map<String, Integer> failedPipelines = new HashMap<>();
@@ -127,6 +132,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     this.logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    this.serviceHealthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
@@ -138,6 +144,13 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new MigrationsHandler().performMigrations();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
+
+    LOG.info("Service health check will run every {} seconds", SERVICE_HEALTH_CHECK_INTERVAL);
+    serviceHealthCheckExecutorService.scheduleAtFixedRate(new ServiceHealthCheck(),
+        SERVICE_HEALTH_CHECK_INTERVAL,
+        SERVICE_HEALTH_CHECK_INTERVAL,
+        SERVICE_HEALTH_CHECK_UNIT);
+
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
     healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
         HEALTH_CHECK_INTERVAL,

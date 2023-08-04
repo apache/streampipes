@@ -22,13 +22,13 @@ import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import java.util.List;
 
 public interface IAdminApi {
 
-  void registerService(SpServiceRegistrationRequest serviceRegistration);
+  void registerService(SpServiceRegistration serviceRegistration);
 
   void deregisterService(String serviceId);
 

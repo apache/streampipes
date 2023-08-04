@@ -18,7 +18,7 @@
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 public interface INoSqlStorage {
 
@@ -84,7 +84,7 @@ public interface INoSqlStorage {
 
   IUserActivationTokenStorage getUserActivationTokenStorage();
 
-  CRUDStorage<String, SpServiceRegistrationRequest> getExtensionsServiceStorage();
+  CRUDStorage<String, SpServiceRegistration> getExtensionsServiceStorage();
 
   CRUDStorage<String, SpServiceConfiguration> getExtensionsServiceConfigurationStorage();
 

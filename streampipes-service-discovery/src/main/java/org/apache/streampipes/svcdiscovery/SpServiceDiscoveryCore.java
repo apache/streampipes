@@ -23,9 +23,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +40,14 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   private static final Logger LOG = LoggerFactory.getLogger(SpServiceDiscoveryCore.class);
   private static final int MAX_RETRIES = 3;
 
-  private final CRUDStorage<String, SpServiceRegistrationRequest> serviceStorage;
+  private final CRUDStorage<String, SpServiceRegistration> serviceStorage;
 
   public SpServiceDiscoveryCore() {
     this.serviceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
   }
 
   @Override
-  public void registerService(SpServiceRegistrationRequest serviceRegistrationRequest) {
+  public void registerService(SpServiceRegistration serviceRegistrationRequest) {
     // not needed
   }
 
@@ -71,7 +69,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   public List<String> getServiceEndpoints(String serviceGroup,
                                           boolean restrictToHealthy,
                                           List<String> filterByTags) {
-    List<SpServiceRegistrationRequest> activeServices = findService(serviceGroup, 0);
+    List<SpServiceRegistration> activeServices = findService(0);
 
     return activeServices
         .stream()
@@ -92,39 +90,25 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
     // not needed
   }
 
-  private List<String> asString(List<SpServiceTag> tags) {
-    return tags.stream().map(SpServiceTag::asString).collect(Collectors.toList());
+  private String makeServiceUrl(SpServiceRegistration service) {
+    return service.getScheme() + "://" + service.getHost() + ":" + service.getPort();
   }
 
-  private boolean hasExtensionsTag(List<String> tags) {
-    return tags.stream().anyMatch(tag -> tag.equals(DefaultSpServiceTags.PE.asString())
-        || tag.equals(DefaultSpServiceTags.CONNECT_WORKER.asString()));
-  }
-
-  private String extractServiceGroup(List<String> tags) {
-    String groupTag = tags.stream().filter(tag -> tag.startsWith(SpServiceTagPrefix.SP_GROUP.asString())).findFirst()
-        .orElse("unknown service group");
-    return groupTag.replaceAll(SpServiceTagPrefix.SP_GROUP.asString() + ":", "");
-  }
-
-  private String makeServiceUrl(SpServiceRegistrationRequest service) {
-    return service.getHost() + ":" + service.getPort();
-  }
-
-  private boolean allFiltersSupported(SpServiceRegistrationRequest service,
+  private boolean allFiltersSupported(SpServiceRegistration service,
                                       List<String> filterByTags) {
-    return new HashSet<>(service.getTags()).containsAll(filterByTags);
+    return new HashSet<>(service.getTags())
+        .stream()
+        .anyMatch(tag -> filterByTags.contains(tag.asString()));
   }
 
-  private List<SpServiceRegistrationRequest> findService(String serviceGroup,
-                                                         int retryCount) {
+  private List<SpServiceRegistration> findService(int retryCount) {
     var services = serviceStorage.getAll();
     if (services.size() == 0) {
       if (retryCount < MAX_RETRIES) {
         try {
           retryCount++;
           TimeUnit.SECONDS.sleep(10);
-          return findService(serviceGroup, retryCount);
+          return findService(retryCount);
         } catch (InterruptedException e) {
           e.printStackTrace();
           return Collections.emptyList();

@@ -21,27 +21,29 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SpServiceRegistrationRequest {
+public class SpServiceRegistration {
 
   private String svcGroup;
 
   protected @SerializedName("_rev") String rev;
   private @SerializedName("_id") String svcId;
+  private String scheme = "http";
   private String host;
   private int port;
   private List<SpServiceTag> tags;
   private String healthCheckPath;
   private boolean healthy = true;
+  private long firstTimeSeenUnhealthy = 0;
 
-  public SpServiceRegistrationRequest() {
+  public SpServiceRegistration() {
   }
 
-  public SpServiceRegistrationRequest(String svcGroup,
-                                      String svcId,
-                                      String host,
-                                      int port,
-                                      List<SpServiceTag> tags,
-                                      String healthCheckPath) {
+  public SpServiceRegistration(String svcGroup,
+                               String svcId,
+                               String host,
+                               int port,
+                               List<SpServiceTag> tags,
+                               String healthCheckPath) {
     this.svcGroup = svcGroup;
     this.svcId = svcId;
     this.host = host;
@@ -50,21 +52,21 @@ public class SpServiceRegistrationRequest {
     this.healthCheckPath = healthCheckPath;
   }
 
-  public static SpServiceRegistrationRequest from(String svcGroup,
-                                                  String svcId,
-                                                  String host,
-                                                  Integer port,
-                                                  List<SpServiceTag> tags) {
-    return new SpServiceRegistrationRequest(svcGroup, svcId, host, port, tags, "");
+  public static SpServiceRegistration from(String svcGroup,
+                                           String svcId,
+                                           String host,
+                                           Integer port,
+                                           List<SpServiceTag> tags) {
+    return new SpServiceRegistration(svcGroup, svcId, host, port, tags, "");
   }
 
-  public static SpServiceRegistrationRequest from(String svcGroup,
-                                                  String svcId,
-                                                  String host,
-                                                  Integer port,
-                                                  List<SpServiceTag> tags,
-                                                  String healthCheckPath) {
-    return new SpServiceRegistrationRequest(svcGroup, svcId, host, port, tags, healthCheckPath);
+  public static SpServiceRegistration from(String svcGroup,
+                                           String svcId,
+                                           String host,
+                                           Integer port,
+                                           List<SpServiceTag> tags,
+                                           String healthCheckPath) {
+    return new SpServiceRegistration(svcGroup, svcId, host, port, tags, healthCheckPath);
   }
 
   public String getSvcGroup() {
@@ -129,5 +131,21 @@ public class SpServiceRegistrationRequest {
 
   public void setHealthy(boolean healthy) {
     this.healthy = healthy;
+  }
+
+  public String getScheme() {
+    return scheme;
+  }
+
+  public void setScheme(String scheme) {
+    this.scheme = scheme;
+  }
+
+  public long getFirstTimeSeenUnhealthy() {
+    return firstTimeSeenUnhealthy;
+  }
+
+  public void setFirstTimeSeenUnhealthy(long firstTimeSeenUnhealthy) {
+    this.firstTimeSeenUnhealthy = firstTimeSeenUnhealthy;
   }
 }

@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.svcdiscovery.api;
 
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ public interface ISpServiceDiscovery {
    *
    * @param serviceRegistrationRequest the service registration request
    */
-  void registerService(SpServiceRegistrationRequest serviceRegistrationRequest);
+  void registerService(SpServiceRegistration serviceRegistrationRequest);
 
   /**
    * Get active pipeline element service endpoints

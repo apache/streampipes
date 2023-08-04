@@ -22,7 +22,7 @@ import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
@@ -81,9 +81,9 @@ public class ConsulSpServiceDiscoveryTest extends AbstractConsulTest {
         List.of(makeServiceTag().get(0).asString()));
   }
 
-  private SpServiceRegistrationRequest makeRequest(List<SpServiceTag> serviceTags,
-                                                   String serviceId) {
-    var req = new SpServiceRegistrationRequest(
+  private SpServiceRegistration makeRequest(List<SpServiceTag> serviceTags,
+                                            String serviceId) {
+    var req = new SpServiceRegistration(
         DefaultSpServiceGroups.EXT,
         serviceId,
         "localhost",

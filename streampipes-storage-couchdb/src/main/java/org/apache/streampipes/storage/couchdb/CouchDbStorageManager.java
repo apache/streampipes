@@ -84,7 +84,7 @@ import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.impl.VisualizationStorageImpl;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 
@@ -247,7 +247,7 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<String, SpServiceRegistrationRequest> getExtensionsServiceStorage() {
+  public CRUDStorage<String, SpServiceRegistration> getExtensionsServiceStorage() {
     return new ExtensionsServiceStorageImpl();
   }
 

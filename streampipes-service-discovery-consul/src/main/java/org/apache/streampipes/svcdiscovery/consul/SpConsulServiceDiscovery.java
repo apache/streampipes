@@ -21,7 +21,7 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
@@ -55,7 +55,7 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   }
 
   @Override
-  public void registerService(SpServiceRegistrationRequest req) {
+  public void registerService(SpServiceRegistration req) {
     consulInstance().agentServiceRegister(createRegistrationBody(req));
     LOG.info("Successfully registered service at Consul: " + req.getSvcId());
   }
@@ -129,7 +129,7 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
     consul.agentServiceDeregister(svcId);
   }
 
-  private NewService createRegistrationBody(SpServiceRegistrationRequest req) {
+  private NewService createRegistrationBody(SpServiceRegistration req) {
     var service = new NewService();
     service.setId(req.getSvcId());
     service.setName(req.getSvcGroup());
@@ -143,7 +143,7 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
     return service;
   }
 
-  private NewService.Check createServiceCheck(SpServiceRegistrationRequest req) {
+  private NewService.Check createServiceCheck(SpServiceRegistration req) {
     var serviceCheck = new NewService.Check();
 
     serviceCheck.setHttp(HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath());

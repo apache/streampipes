@@ -24,7 +24,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   }
 
   @Override
-  public void registerService(SpServiceRegistrationRequest serviceRegistration) {
+  public void registerService(SpServiceRegistration serviceRegistration) {
     post(getExtensionsServiceRegistrationPath(), serviceRegistration);
   }
 

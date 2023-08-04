@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -38,12 +38,12 @@ import jakarta.ws.rs.core.Response;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<String, SpServiceRegistrationRequest> extensionsServiceStorage =
+  private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response registerService(SpServiceRegistrationRequest serviceRegistration) {
+  public Response registerService(SpServiceRegistration serviceRegistration) {
     extensionsServiceStorage.createElement(serviceRegistration);
     return ok();
   }

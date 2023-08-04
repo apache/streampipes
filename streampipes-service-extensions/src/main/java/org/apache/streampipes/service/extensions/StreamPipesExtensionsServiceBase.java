@@ -25,7 +25,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
 
@@ -86,7 +86,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   private void registerService(String serviceGroup,
                                String serviceId,
                                BaseNetworkingConfig networkingConfig) {
-    SpServiceRegistrationRequest req = SpServiceRegistrationRequest.from(
+    SpServiceRegistration req = SpServiceRegistration.from(
         serviceGroup,
         serviceId,
         networkingConfig.getHost(),
