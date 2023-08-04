@@ -87,4 +87,6 @@ public interface INoSqlStorage {
   CRUDStorage<String, SpServiceRegistrationRequest> getExtensionsServiceStorage();
 
   CRUDStorage<String, SpServiceConfiguration> getExtensionsServiceConfigurationStorage();
+
+  ISpCoreConfigurationStorage getSpCoreConfigurationStorage();
 }

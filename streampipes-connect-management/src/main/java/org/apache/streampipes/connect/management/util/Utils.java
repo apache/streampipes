@@ -16,9 +16,17 @@
  *
  */
 
-package org.apache.streampipes.config.backend.model;
+package org.apache.streampipes.connect.management.util;
 
-public enum JwtSigningMode {
-  HMAC,
-  RSA
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+
+public class Utils {
+
+  public static ISpCoreConfigurationStorage getCoreConfigStorage() {
+    return StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getSpCoreConfigurationStorage();
+  }
 }

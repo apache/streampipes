@@ -15,29 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.config;
+package org.apache.streampipes.model.configuration;
 
-public enum SpProtocol {
-
-  KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
-  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
-  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
-  NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol"),
-  PULSAR("PULSAR", "org.apache.streampipes.model.grounding.PulsarTransportProtocol");
-
-  private final String name;
-  private final String protocolClass;
-
-  SpProtocol(String name, String protocolClass) {
-    this.name = name;
-    this.protocolClass = protocolClass;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getProtocolClass() {
-    return protocolClass;
-  }
+public enum TransportStrategy {
+  SMTP,
+  SMTPS,
+  SMTP_TLS;
 }

@@ -15,27 +15,31 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
+package org.apache.streampipes.model.configuration;
 
-import org.apache.streampipes.model.configuration.EmailConfig;
-import org.apache.streampipes.mail.template.TestMailTemplate;
-import org.apache.streampipes.mail.utils.MailUtils;
 
-import org.simplejavamail.api.email.Email;
+import org.apache.streampipes.vocabulary.MessageFormat;
 
-import java.io.IOException;
+public enum SpDataFormat {
 
-public class MailTester extends AbstractMailer {
+  CBOR("Cbor", MessageFormat.CBOR),
+  JSON("JSON", MessageFormat.JSON),
+  FST("Fast-Serializer", MessageFormat.FST),
+  SMILE("Smile", MessageFormat.SMILE);
 
-  public void sendTestMail(EmailConfig emailConfig) throws IOException {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
+  private String name;
+  private String messageFormat;
+
+  SpDataFormat(String name, String messageFormat) {
+    this.name = name;
+    this.messageFormat = messageFormat;
   }
 
-  private Email makeTestMail(EmailConfig emailConfig) throws IOException {
-    return baseEmail(emailConfig)
-        .withSubject("Hello from " + MailUtils.extractAppName())
-        .appendTextHTML(new TestMailTemplate().generateTemplate())
-        .to(emailConfig.getTestRecipientAddress())
-        .buildEmail();
+  public String getName() {
+    return name;
+  }
+
+  public String getMessageFormat() {
+    return messageFormat;
   }
 }

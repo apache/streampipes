@@ -19,8 +19,7 @@
 package org.apache.streampipes.rest.impl.admin;
 
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.model.config.MessagingSettings;
+import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -165,7 +164,7 @@ public class ConsulConfig extends AbstractAuthGuardedRestResource {
   @Path("/messaging")
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response getMessagingSettings() {
-    return ok(BackendConfig.INSTANCE.getMessagingSettings());
+    return ok(getSpCoreConfigurationStorage().get().getMessagingSettings());
   }
 
   @POST
@@ -175,7 +174,9 @@ public class ConsulConfig extends AbstractAuthGuardedRestResource {
   @Path("messaging")
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response updateMessagingSettings(MessagingSettings messagingSettings) {
-    BackendConfig.INSTANCE.setMessagingSettings(messagingSettings);
+    var cfg = getSpCoreConfigurationStorage().get();
+    cfg.setMessagingSettings(messagingSettings);
+    getSpCoreConfigurationStorage().updateElement(cfg);
     return ok();
   }
 

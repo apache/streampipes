@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -35,7 +34,7 @@ public class EmailResource extends AbstractAuthGuardedRestResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendEmail(SpEmail email) {
-    if (BackendConfig.INSTANCE.getEmailConfig().isEmailConfigured()) {
+    if (getSpCoreConfigurationStorage().get().getEmailConfig().isEmailConfigured()) {
       new MailSender().sendEmail(email);
       return ok();
     } else {

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.config.backend.model;
+package org.apache.streampipes.model.configuration;
 
 public class LocalAuthConfig {
 

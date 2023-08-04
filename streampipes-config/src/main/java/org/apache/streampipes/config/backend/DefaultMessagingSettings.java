@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.config.backend;
 
-import org.apache.streampipes.model.config.MessagingSettings;
-import org.apache.streampipes.model.config.SpDataFormat;
-import org.apache.streampipes.model.config.SpProtocol;
+import org.apache.streampipes.model.configuration.MessagingSettings;
+import org.apache.streampipes.model.configuration.SpDataFormat;
+import org.apache.streampipes.model.configuration.SpProtocol;
 
 import java.util.Arrays;
 import java.util.List;

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.config;
+package org.apache.streampipes.model.configuration;
 
 import java.util.List;
 

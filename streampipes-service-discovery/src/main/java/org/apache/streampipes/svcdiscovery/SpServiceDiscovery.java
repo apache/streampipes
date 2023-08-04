@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
+import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 
 public class SpServiceDiscovery {
 
@@ -47,8 +48,7 @@ public class SpServiceDiscovery {
 
   public static SpConfig getSpConfig(String serviceGroup,
                                      Environment environment) {
-    // TODO can probably be removed?
-    return null;
+    return new ConsulSpConfig(serviceGroup, environment);
   }
 
 }

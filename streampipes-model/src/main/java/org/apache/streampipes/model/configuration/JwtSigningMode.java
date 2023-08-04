@@ -15,27 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
 
-import org.apache.streampipes.model.configuration.EmailConfig;
-import org.apache.streampipes.mail.template.TestMailTemplate;
-import org.apache.streampipes.mail.utils.MailUtils;
+package org.apache.streampipes.model.configuration;
 
-import org.simplejavamail.api.email.Email;
-
-import java.io.IOException;
-
-public class MailTester extends AbstractMailer {
-
-  public void sendTestMail(EmailConfig emailConfig) throws IOException {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
-  }
-
-  private Email makeTestMail(EmailConfig emailConfig) throws IOException {
-    return baseEmail(emailConfig)
-        .withSubject("Hello from " + MailUtils.extractAppName())
-        .appendTextHTML(new TestMailTemplate().generateTemplate())
-        .to(emailConfig.getTestRecipientAddress())
-        .buildEmail();
-  }
+public enum JwtSigningMode {
+  HMAC,
+  RSA
 }

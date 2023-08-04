@@ -15,10 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.config.backend.model;
 
-public enum TransportStrategy {
-  SMTP,
-  SMTPS,
-  SMTP_TLS;
+package org.apache.streampipes.storage.api;
+
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+
+import java.util.List;
+
+public interface ISpCoreConfigurationStorage {
+
+  List<SpCoreConfiguration> getAll();
+
+  void createElement(SpCoreConfiguration element);
+
+  SpCoreConfiguration get();
+
+  SpCoreConfiguration updateElement(SpCoreConfiguration element);
+
+  void deleteElement();
 }

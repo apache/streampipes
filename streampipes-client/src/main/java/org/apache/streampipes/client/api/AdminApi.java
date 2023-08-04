@@ -19,7 +19,7 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.config.MessagingSettings;
+import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.message.SuccessMessage;

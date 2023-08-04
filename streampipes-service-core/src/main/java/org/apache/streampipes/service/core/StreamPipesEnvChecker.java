@@ -20,9 +20,11 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.JwtSigningMode;
-import org.apache.streampipes.config.backend.model.LocalAuthConfig;
+import org.apache.streampipes.model.configuration.JwtSigningMode;
+import org.apache.streampipes.model.configuration.LocalAuthConfig;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,8 @@ public class StreamPipesEnvChecker {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesEnvChecker.class);
 
-  BackendConfig coreConfig;
+  private ISpCoreConfigurationStorage configStorage;
+  private SpCoreConfiguration coreConfig;
 
   private Environment env;
 
@@ -44,7 +47,12 @@ public class StreamPipesEnvChecker {
   }
 
   public void updateEnvironmentVariables() {
-    this.coreConfig = BackendConfig.INSTANCE;
+    this.configStorage = StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getSpCoreConfigurationStorage();
+
+    this.coreConfig = configStorage.get();
 
     LOG.info("Checking and updating environment variables...");
     updateJwtSettings();
@@ -92,7 +100,8 @@ public class StreamPipesEnvChecker {
     }
     if (!incompleteConfig) {
       LOG.info("Updating local auth config with signing mode {}", localAuthConfig.getJwtSigningMode().name());
-      coreConfig.updateLocalAuthConfig(localAuthConfig);
+      coreConfig.setLocalAuthConfig(localAuthConfig);
+      configStorage.updateElement(coreConfig);
     }
   }
 

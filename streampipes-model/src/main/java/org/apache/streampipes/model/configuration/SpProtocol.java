@@ -15,31 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.config;
+package org.apache.streampipes.model.configuration;
 
+public enum SpProtocol {
 
-import org.apache.streampipes.vocabulary.MessageFormat;
+  KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
+  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
+  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
+  NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol"),
+  PULSAR("PULSAR", "org.apache.streampipes.model.grounding.PulsarTransportProtocol");
 
-public enum SpDataFormat {
+  private final String name;
+  private final String protocolClass;
 
-  CBOR("Cbor", MessageFormat.CBOR),
-  JSON("JSON", MessageFormat.JSON),
-  FST("Fast-Serializer", MessageFormat.FST),
-  SMILE("Smile", MessageFormat.SMILE);
-
-  private String name;
-  private String messageFormat;
-
-  SpDataFormat(String name, String messageFormat) {
+  SpProtocol(String name, String protocolClass) {
     this.name = name;
-    this.messageFormat = messageFormat;
+    this.protocolClass = protocolClass;
   }
 
   public String getName() {
     return name;
   }
 
-  public String getMessageFormat() {
-    return messageFormat;
+  public String getProtocolClass() {
+    return protocolClass;
   }
 }

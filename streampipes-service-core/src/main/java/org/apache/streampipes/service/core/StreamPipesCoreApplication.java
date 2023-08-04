@@ -128,8 +128,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     this.logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-    // TODO
-    //new StreamPipesEnvChecker().updateEnvironmentVariables();
+    new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
 
     if (!isConfigured()) {
@@ -150,8 +149,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         LOG_FETCH_INTERVAL,
         LOG_FETCH_INTERVAL,
         LOG_FETCH_UNIT);
-
-
   }
 
   private boolean isConfigured() {

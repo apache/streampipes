@@ -44,6 +44,7 @@ import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCach
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineMonitoringDataStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
@@ -53,6 +54,7 @@ import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AssetDashboardStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CategoryStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DashboardStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DashboardWidgetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataExplorerDashboardStorageImpl;
@@ -252,6 +254,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public CRUDStorage<String, SpServiceConfiguration> getExtensionsServiceConfigurationStorage() {
     return new ExtensionsServiceConfigStorageImpl();
+  }
+
+  @Override
+  public ISpCoreConfigurationStorage getSpCoreConfigurationStorage() {
+    return new CoreConfigurationStorageImpl();
   }
 
 

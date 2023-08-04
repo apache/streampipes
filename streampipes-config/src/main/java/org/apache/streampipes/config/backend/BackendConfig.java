@@ -22,10 +22,10 @@ package org.apache.streampipes.config.backend;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.random.TokenGenerator;
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.apache.streampipes.config.backend.model.GeneralConfig;
-import org.apache.streampipes.config.backend.model.LocalAuthConfig;
-import org.apache.streampipes.model.config.MessagingSettings;
+import org.apache.streampipes.model.configuration.EmailConfig;
+import org.apache.streampipes.model.configuration.GeneralConfig;
+import org.apache.streampipes.model.configuration.LocalAuthConfig;
+import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
@@ -34,9 +34,6 @@ import java.io.File;
 public enum BackendConfig {
   INSTANCE;
 
-  private final char[] possibleCharacters =
-      ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?")
-          .toCharArray();
   private SpConfig config;
 
   BackendConfig() {

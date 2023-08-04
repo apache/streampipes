@@ -32,6 +32,7 @@ import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -50,6 +51,10 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
 public abstract class AbstractRestResource extends AbstractSharedRestInterface {
+
+  protected ISpCoreConfigurationStorage getSpCoreConfigurationStorage() {
+    return getNoSqlStorage().getSpCoreConfigurationStorage();
+  }
 
   protected IPipelineElementDescriptionStorageCache getPipelineElementRdfStorage() {
     return StorageManager.INSTANCE.getPipelineElementStorage();

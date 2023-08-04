@@ -60,6 +60,10 @@ public class Utils {
     return getCouchDbGsonClient("pipelinecanvasmetadata");
   }
 
+  public static CouchDbClient getCouchDbGeneralConfigStorage() {
+    return getCouchDbGsonClient("general-configuration");
+  }
+
   public static CouchDbClient getCouchDbCategoryClient() {
     return getCouchDbGsonClient("category");
   }

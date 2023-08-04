@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.manager.matching;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.config.SpProtocol;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+import org.apache.streampipes.model.configuration.SpProtocol;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -31,6 +31,7 @@ import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 import java.util.Set;
@@ -40,11 +41,19 @@ public class ProtocolSelector extends GroundingSelector {
   private final String outputTopic;
   private final List<SpProtocol> prioritizedProtocols;
 
+  private final SpCoreConfiguration cfg;
+
   public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
     super(source, targets);
     this.outputTopic = TopicGenerator.generateRandomTopic();
+    this.cfg = StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getSpCoreConfigurationStorage()
+        .get();
+
     this.prioritizedProtocols =
-        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
+        cfg.getMessagingSettings().getPrioritizedProtocols();
   }
 
   public TransportProtocol getPreferredProtocol() {
@@ -68,7 +77,7 @@ public class ProtocolSelector extends GroundingSelector {
           return natsTopic();
         } else if (prioritizedProtocol.getProtocolClass().equals(PulsarTransportProtocol.class.getCanonicalName())
             && supportsProtocol(PulsarTransportProtocol.class)) {
-          return new PulsarTransportProtocol(BackendConfig.INSTANCE.getPulsarUrl(),
+          return new PulsarTransportProtocol(cfg.getPulsarUrl(),
               new SimpleTopicDefinition(outputTopic));
         }
       }
@@ -77,30 +86,37 @@ public class ProtocolSelector extends GroundingSelector {
   }
 
   private TransportProtocol mqttTopic() {
-    return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
-        BackendConfig.INSTANCE.getMqttPort(),
-        outputTopic);
+    return new MqttTransportProtocol(
+        cfg.getMqttHost(),
+        cfg.getMqttPort(),
+        outputTopic
+    );
   }
 
   private TransportProtocol jmsTopic() {
-    return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
-        BackendConfig.INSTANCE.getJmsPort(),
-        outputTopic);
+    return new JmsTransportProtocol(
+        cfg.getJmsHost(),
+        cfg.getJmsPort(),
+        outputTopic
+    );
   }
 
   private TransportProtocol natsTopic() {
     return new NatsTransportProtocol(
-        BackendConfig.INSTANCE.getNatsHost(),
-        BackendConfig.INSTANCE.getNatsPort(),
-        outputTopic);
+        cfg.getNatsHost(),
+        cfg.getNatsPort(),
+        outputTopic
+    );
   }
 
   private TransportProtocol kafkaTopic() {
-    return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
-        BackendConfig.INSTANCE.getKafkaPort(),
+    return new KafkaTransportProtocol(
+        cfg.getKafkaHost(),
+        cfg.getKafkaPort(),
         outputTopic,
-        BackendConfig.INSTANCE.getZookeeperHost(),
-        BackendConfig.INSTANCE.getZookeeperPort());
+        cfg.getZookeeperHost(),
+        cfg.getZookeeperPort()
+    );
   }
 
 
@@ -114,6 +130,5 @@ public class ProtocolSelector extends GroundingSelector {
             .getTransportProtocols()
             .stream()
             .anyMatch(protocol::isInstance));
-
   }
 }

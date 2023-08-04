@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.mail;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.mail.config.MailConfigurationBuilder;
+import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.simplejavamail.api.email.Email;
@@ -44,7 +44,7 @@ public class AbstractMailer {
   }
 
   protected EmailConfig getEmailConfig() {
-    EmailConfig config = BackendConfig.INSTANCE.getEmailConfig();
+    EmailConfig config = MailUtils.getSpCoreConfiguration().getEmailConfig();
     return getDecryptedEmailConfig(config);
   }
 

@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.mail.config;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
+import org.apache.streampipes.model.configuration.EmailConfig;
 
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
@@ -60,10 +60,10 @@ public class MailConfigurationBuilder {
   }
 
   private TransportStrategy toTransportStrategy(
-      org.apache.streampipes.config.backend.model.TransportStrategy strategy) {
-    if (strategy == org.apache.streampipes.config.backend.model.TransportStrategy.SMTP) {
+      org.apache.streampipes.model.configuration.TransportStrategy strategy) {
+    if (strategy == org.apache.streampipes.model.configuration.TransportStrategy.SMTP) {
       return TransportStrategy.SMTP;
-    } else if (strategy == org.apache.streampipes.config.backend.model.TransportStrategy.SMTPS) {
+    } else if (strategy == org.apache.streampipes.model.configuration.TransportStrategy.SMTPS) {
       return TransportStrategy.SMTPS;
     } else {
       return TransportStrategy.SMTP_TLS;

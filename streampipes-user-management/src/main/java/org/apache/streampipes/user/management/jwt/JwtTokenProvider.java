@@ -20,13 +20,14 @@ package org.apache.streampipes.user.management.jwt;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.JwtSigningMode;
-import org.apache.streampipes.config.backend.model.LocalAuthConfig;
 import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.configuration.JwtSigningMode;
+import org.apache.streampipes.model.configuration.LocalAuthConfig;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.security.jwt.JwtTokenGenerator;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.UserInfoUtil;
@@ -51,11 +52,16 @@ public class JwtTokenProvider {
 
   public static final String CLAIM_USER = "user";
   private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
-  private BackendConfig config;
+  private SpCoreConfiguration config;
   private Environment env;
 
   public JwtTokenProvider() {
-    this.config = BackendConfig.INSTANCE;
+    this.config =  StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getSpCoreConfigurationStorage()
+        .get();
+
     this.env = Environments.getEnvironment();
   }
 

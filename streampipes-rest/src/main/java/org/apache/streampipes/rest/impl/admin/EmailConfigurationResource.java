@@ -17,9 +17,8 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.mail.MailTester;
+import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -49,7 +48,7 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response getMailConfiguration() {
-    return ok(BackendConfig.INSTANCE.getEmailConfig());
+    return ok(getSpCoreConfigurationStorage().get().getEmailConfig());
   }
 
   @PUT
@@ -67,7 +66,10 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
       config.setSmtpPassword(SecretEncryptionManager.encrypt(config.getSmtpPassword()));
       config.setSmtpPassEncrypted(true);
     }
-    BackendConfig.INSTANCE.updateEmailConfig(config);
+    var storage = getSpCoreConfigurationStorage();
+    var cfg = storage.get();
+    cfg.setEmailConfig(config);
+    storage.updateElement(cfg);
 
     return ok();
   }
