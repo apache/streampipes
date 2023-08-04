@@ -69,7 +69,7 @@
     "jquery": "^3.7.0",
     "jquery-ui-dist": "1.13.2",
     "jshint": "^2.13.6",
-    "konva": "8.4.0",
+    "konva": "9.2.0",
     "leaflet": "1.9.3",
     "lodash": "4.17.21",
     "material-icons": "^1.13.1",
