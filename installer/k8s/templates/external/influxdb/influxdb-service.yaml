@@ -23,13 +23,13 @@ spec:
   ports:
     - name: main
       protocol: TCP
-      port: {{ .Values.external.influxdb.port1 }}
-      targetPort: {{ .Values.external.influxdb.service.port1 }}
+      port: {{ .Values.external.influxdb.apiPort }}
+      targetPort: {{ .Values.external.influxdb.service.apiPort }}
     - name: api
       protocol: TCP
-      port: {{ .Values.external.influxdb.service.port2 }}
-      targetPort: {{ .Values.external.influxdb.service.port2 }}
+      port: {{ .Values.external.influxdb.service.httpPort }}
+      targetPort: {{ .Values.external.influxdb.service.httpPort }}
     - name: internal
       protocol: TCP
-      port: {{ .Values.external.influxdb.service.port3 }}
-      targetPort: {{ .Values.external.influxdb.service.port3 }}
+      port: {{ .Values.external.influxdb.service.grpcPort }}
+      targetPort: {{ .Values.external.influxdb.service.grpcPort }}
