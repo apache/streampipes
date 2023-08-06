@@ -24,7 +24,6 @@ import { SpConfigurationRoutes } from '../configuration.routes';
 @Component({
     selector: 'sp-extensions-service-management',
     templateUrl: './extensions-service-management.component.html',
-    styleUrls: ['./extensions-service-management.component.css'],
 })
 export class ExtensionsServiceManagementComponent implements OnInit {
     tabs = SpConfigurationTabs.getTabs();
