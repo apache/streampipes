@@ -32,11 +32,11 @@ import org.apache.streampipes.extensions.management.client.StreamPipesClientReso
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +114,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
   private void registerConfigs(String serviceGroup,
                                String serviceName,
-                               Map<String, ConfigItem> configs) {
+                               List<ConfigItem> configs) {
     LOG.info("Registering {} configs in key/value store", configs.size());
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     var serviceConfiguration = new SpServiceConfiguration(serviceGroup, serviceName, configs);

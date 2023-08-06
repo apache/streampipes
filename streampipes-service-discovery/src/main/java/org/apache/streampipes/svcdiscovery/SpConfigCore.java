@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.svcdiscovery;
 
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.ConfigurationScope;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
 
 public class SpConfigCore implements SpConfig {
 

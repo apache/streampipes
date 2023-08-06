@@ -98,19 +98,17 @@ public abstract class HttpRequest<K, V, T> {
     try {
       HttpResponse response = request.execute().returnResponse();
       StatusLine status = response.getStatusLine();
-      if (status.getStatusCode() == HttpStatus.SC_OK) {
+      if (status.getStatusCode() == HttpStatus.SC_OK || status.getStatusCode() == HttpStatus.SC_CREATED) {
         return afterRequest(serializer, response.getEntity());
       } else {
         switch (status.getStatusCode()) {
-          case HttpStatus.SC_UNAUTHORIZED:
-            throw new SpHttpErrorStatusCode(
-                " 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?",
-                401);
-          case HttpStatus.SC_NOT_FOUND:
-            throw new SpHttpErrorStatusCode(" 404 - The requested resource could not be found.", 404);
-          default:
-            throw new SpHttpErrorStatusCode(status.getStatusCode() + " - " + status.getReasonPhrase(),
-                status.getStatusCode());
+          case HttpStatus.SC_UNAUTHORIZED -> throw new SpHttpErrorStatusCode(
+              " 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?",
+              401);
+          case HttpStatus.SC_NOT_FOUND ->
+              throw new SpHttpErrorStatusCode(" 404 - The requested resource could not be found.", 404);
+          default -> throw new SpHttpErrorStatusCode(status.getStatusCode() + " - " + status.getReasonPhrase(),
+              status.getStatusCode());
         }
       }
     } catch (IOException e) {

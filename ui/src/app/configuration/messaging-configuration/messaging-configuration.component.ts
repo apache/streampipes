@@ -43,7 +43,7 @@ export class MessagingConfigurationComponent implements OnInit {
     ngOnInit() {
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[4].itemTitle },
+            { label: SpConfigurationTabs.getTabs()[6].itemTitle },
         ]);
         this.getMessagingSettings();
     }

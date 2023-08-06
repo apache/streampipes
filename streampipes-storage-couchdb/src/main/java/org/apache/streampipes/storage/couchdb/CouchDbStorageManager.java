@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
+import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IAssetDashboardStorage;
@@ -83,8 +85,6 @@ import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.impl.VisualizationStorageImpl;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 

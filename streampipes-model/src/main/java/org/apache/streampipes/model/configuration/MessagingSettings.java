@@ -17,9 +17,12 @@
  */
 package org.apache.streampipes.model.configuration;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@TsModel
 public class MessagingSettings {
 
   private Integer batchSize;

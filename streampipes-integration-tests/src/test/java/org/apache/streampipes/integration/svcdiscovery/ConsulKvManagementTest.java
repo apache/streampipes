@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.integration.svcdiscovery;
 
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
 import com.google.gson.Gson;
 import org.junit.Before;

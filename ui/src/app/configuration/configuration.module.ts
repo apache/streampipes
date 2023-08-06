@@ -28,13 +28,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfigurationService } from './shared/configuration.service';
 import { ConsulServiceComponent } from './consul-service/consul-service.component';
-import { ConsulConfigsComponent } from './consul-configs/consul-configs.component';
-import { ConsulConfigsTextComponent } from './consul-configs-text/consul-configs-text.component';
-import { ConsulConfigsPasswordComponent } from './consul-configs-password/consul-configs-password.component';
-import { ConsulConfigsBooleanComponent } from './consul-configs-boolean/consul-configs-boolean.component';
-import { ConsulConfigsNumberComponent } from './consul-configs-number/consul-configs-number.component';
+
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { PipelineElementConfigurationComponent } from './pipeline-element-configuration/pipeline-element-configuration.component';
 import { MessagingConfigurationComponent } from './messaging-configuration/messaging-configuration.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
@@ -43,15 +38,23 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MatDividerModule } from '@angular/material/divider';
-import { SecurityUserConfigComponent } from './security-configuration/security-user-configuration/security-user-config.component';
-import { SecurityServiceConfigComponent } from './security-configuration/security-service-configuration/security-service-config.component';
+import {
+    SecurityUserConfigComponent
+} from './security-configuration/security-user-configuration/security-user-config.component';
+import {
+    SecurityServiceConfigComponent
+} from './security-configuration/security-service-configuration/security-service-config.component';
 import { EditUserDialogComponent } from './security-configuration/edit-user-dialog/edit-user-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { SecurityUserGroupConfigComponent } from './security-configuration/user-group-configuration/user-group-configuration.component';
+import {
+    SecurityUserGroupConfigComponent
+} from './security-configuration/user-group-configuration/user-group-configuration.component';
 import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
 import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';
 import { GeneralConfigurationComponent } from './general-configuration/general-configuration.component';
-import { SecurityAuthenticationConfigurationComponent } from './security-configuration/authentication-configuration/authentication-configuration.component';
+import {
+    SecurityAuthenticationConfigurationComponent
+} from './security-configuration/authentication-configuration/authentication-configuration.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpDataExportImportComponent } from './export/data-export-import.component';
@@ -61,6 +64,30 @@ import { SpDataExportItemComponent } from './export/export-dialog/data-export-it
 import { SpEditLabelComponent } from './label-configuration/edit-label/edit-label.component';
 import { SpLabelConfigurationComponent } from './label-configuration/label-configuration.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import {
+    ExtensionsServiceManagementComponent
+} from './extensions-service-management/extensions-service-management.component';
+import {
+    ConsulConfigsComponent
+} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs.component';
+import {
+    ConsulConfigsTextComponent
+} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-text/consul-configs-text.component';
+import {
+    ConsulConfigsPasswordComponent
+} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-password/consul-configs-password.component';
+import {
+    ConsulConfigsBooleanComponent
+} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-boolean/consul-configs-boolean.component';
+import {
+    ConsulConfigsNumberComponent
+} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-number/consul-configs-number.component';
+import {
+    SpRegisteredExtensionsServiceComponent
+} from './extensions-service-management/registrered-extensions-services/registered-extensions-services.component';
+import {
+    SpExtensionsServiceConfigurationComponent
+} from './extensions-service-management/extensions-service-configuration/extensions-service-configuration.component';
 
 @NgModule({
     imports: [
@@ -114,8 +141,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
                         component: MessagingConfigurationComponent,
                     },
                     {
-                        path: 'pipelineelement',
-                        component: PipelineElementConfigurationComponent,
+                        path: 'extensions-services',
+                        component: ExtensionsServiceManagementComponent,
                     },
                     {
                         path: 'security',
@@ -139,7 +166,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
         EditGroupDialogComponent,
         EmailConfigurationComponent,
         GeneralConfigurationComponent,
-        PipelineElementConfigurationComponent,
+        ExtensionsServiceManagementComponent,
         SecurityAuthenticationConfigurationComponent,
         SecurityConfigurationComponent,
         SecurityUserConfigComponent,
@@ -153,6 +180,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
         SpDataImportDialogComponent,
         SpEditLabelComponent,
         SpLabelConfigurationComponent,
+        SpRegisteredExtensionsServiceComponent,
+        SpExtensionsServiceConfigurationComponent
     ],
     providers: [ConfigurationService],
 })

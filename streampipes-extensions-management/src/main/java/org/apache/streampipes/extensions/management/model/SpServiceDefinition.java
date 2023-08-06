@@ -23,12 +23,10 @@ import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclar
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class SpServiceDefinition {
@@ -46,7 +44,7 @@ public class SpServiceDefinition {
 
   private List<StreamPipesAdapter> adapters;
 
-  private Map<String, ConfigItem> kvConfigs;
+  private List<ConfigItem> kvConfigs;
 
   private List<IStreamPipesRuntimeProvider> runtimeProviders;
 
@@ -55,7 +53,7 @@ public class SpServiceDefinition {
     this.pipelineElements = new ArrayList<>();
     this.dataFormatFactories = new ArrayList<>();
     this.protocolDefinitionFactories = new ArrayList<>();
-    this.kvConfigs = new HashMap<>();
+    this.kvConfigs = new ArrayList<>();
     this.functions = new ArrayList<>();
     this.adapters = new ArrayList<>();
     this.runtimeProviders = new ArrayList<>();
@@ -126,7 +124,7 @@ public class SpServiceDefinition {
   }
 
   public void addConfig(ConfigItem configItem) {
-    this.kvConfigs.put(configItem.getKey(), configItem);
+    this.kvConfigs.add(configItem);
   }
 
   public void addAdapter(StreamPipesAdapter adapter) {
@@ -161,7 +159,7 @@ public class SpServiceDefinition {
     this.protocolDefinitionFactories = protocolDefinitionFactories;
   }
 
-  public Map<String, ConfigItem> getKvConfigs() {
+  public List<ConfigItem> getKvConfigs() {
     return kvConfigs;
   }
 

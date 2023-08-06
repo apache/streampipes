@@ -18,17 +18,21 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -40,6 +44,13 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedRestResourc
   private final CRUDStorage<String, SpServiceConfiguration> extensionsServicesConfigStorage =
       getNoSqlStorage().getExtensionsServiceConfigurationStorage();
 
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAllServiceConfigurations() {
+    return ok(extensionsServicesConfigStorage.getAll());
+  }
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public Response registerServiceConfiguration(SpServiceConfiguration serviceConfiguration) {
@@ -48,6 +59,19 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedRestResourc
       return created();
     } else {
       return ok();
+    }
+  }
+
+  @PUT
+  @Path("{serviceGroup}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response registerServiceConfiguration(@PathParam("serviceGroup") String serviceGroup,
+                                               SpServiceConfiguration serviceConfiguration) {
+    if (extensionsServicesConfigStorage.getElementById(serviceGroup) != null) {
+      extensionsServicesConfigStorage.updateElement(serviceConfiguration);
+      return ok();
+    } else {
+      return badRequest();
     }
   }
 }

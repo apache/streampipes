@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.svcdiscovery.api.model;
 
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+
 public enum SpServiceUrlProvider {
 
   DATA_PROCESSOR(SpServicePathPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_PROCESSOR),

@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import java.util.List;
 

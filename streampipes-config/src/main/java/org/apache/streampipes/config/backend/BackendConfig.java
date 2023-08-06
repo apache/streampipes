@@ -19,7 +19,6 @@
 package org.apache.streampipes.config.backend;
 
 
-import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.random.TokenGenerator;
 import org.apache.streampipes.model.configuration.DefaultMessagingSettings;
@@ -30,71 +29,17 @@ import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
-import java.io.File;
-
 public enum BackendConfig {
   INSTANCE;
 
-  private SpConfig config;
+  private final SpConfig config;
 
   BackendConfig() {
     config = SpServiceDiscovery.getSpConfig("backend");
-
-    config.register(BackendConfigKeys.SERVICE_NAME, "Backend", "Backend Configuration");
-
-    config.register(BackendConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
-    config.register(BackendConfigKeys.BACKEND_PORT, 8030, "Port for backend");
-
-    config.register(BackendConfigKeys.JMS_HOST, "activemq", "Hostname for backend service for active mq");
-    config.register(BackendConfigKeys.JMS_PORT, 61616, "Port for backend service for active mq");
-    config.register(BackendConfigKeys.MQTT_HOST, "activemq", "Hostname of mqtt service");
-    config.register(BackendConfigKeys.MQTT_PORT, 1883, "Port of mqtt service");
-    config.register(BackendConfigKeys.NATS_HOST, "nats", "Hostname of Nats");
-    config.register(BackendConfigKeys.NATS_PORT, 4222, "Port of Nats");
-    config.register(BackendConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
-    config.register(BackendConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
-    config.register(BackendConfigKeys.PULSAR_URL, "pulsar://localhost:6650", "Apache Pulsar URL");
-    config.register(BackendConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Hostname for backend service for zookeeper");
-    config.register(BackendConfigKeys.ZOOKEEPER_PORT, 2181, "Port for backend service for zookeeper");
     config.register(BackendConfigKeys.IS_CONFIGURED, false,
         "Boolean that indicates whether streampipes is " + "already configured or not");
     config.register(BackendConfigKeys.IS_SETUP_RUNNING, false,
         "Boolean that indicates whether the initial setup " + "is currently running");
-    config.register(BackendConfigKeys.ASSETS_DIR, makeAssetLocation(),
-        "The directory where " + "pipeline element assets are stored.");
-    config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(),
-        "The directory where " + "pipeline element files are stored.");
-    config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, DefaultMessagingSettings.make(),
-        "Default Messaging Settings");
-
-    config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()),
-        "Local authentication settings");
-    config.registerObject(BackendConfigKeys.EMAIL_CONFIG, EmailConfig.fromDefaults(), "Email settings");
-    config.registerObject(BackendConfigKeys.GENERAL_CONFIG, new GeneralConfig(), "General settings");
-  }
-
-  private String makeAssetLocation() {
-    return makeStreamPipesHomeLocation()
-        + "assets";
-  }
-
-  private String makeFileLocation() {
-    return makeStreamPipesHomeLocation()
-        + "files";
-  }
-
-  private String makeStreamPipesHomeLocation() {
-    var userDefinedAssetDir = getEnvironment().getCoreAssetBaseDir();
-    var assetDirAppendix = getSpAssetDirAppendix();
-    if (userDefinedAssetDir.exists()) {
-      return userDefinedAssetDir.getValue() + assetDirAppendix;
-    } else {
-      return System.getProperty("user.home") + assetDirAppendix;
-    }
-  }
-
-  private String getSpAssetDirAppendix() {
-    return File.separator + ".streampipes" + File.separator;
   }
 
   public String getJmsHost() {
@@ -143,19 +88,11 @@ public enum BackendConfig {
 
   public MessagingSettings getMessagingSettings() {
     return config.getObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.class,
-        DefaultMessagingSettings.make());
+        new DefaultMessagingSettings().make());
   }
 
   public boolean isConfigured() {
     return config.getBoolean(BackendConfigKeys.IS_CONFIGURED);
-  }
-
-  public void setKafkaHost(String s) {
-    config.setString(BackendConfigKeys.KAFKA_HOST, s);
-  }
-
-  public void setMessagingSettings(MessagingSettings settings) {
-    config.setObject(BackendConfigKeys.MESSAGING_SETTINGS, settings);
   }
 
   public void setIsConfigured(boolean b) {
@@ -179,28 +116,12 @@ public enum BackendConfig {
     return config.getObject(BackendConfigKeys.EMAIL_CONFIG, EmailConfig.class, EmailConfig.fromDefaults());
   }
 
-  public void updateEmailConfig(EmailConfig emailConfig) {
-    config.setObject(BackendConfigKeys.EMAIL_CONFIG, emailConfig);
-  }
-
   public GeneralConfig getGeneralConfig() {
     return config.getObject(BackendConfigKeys.GENERAL_CONFIG, GeneralConfig.class, new GeneralConfig());
   }
 
-  public void updateGeneralConfig(GeneralConfig generalConfig) {
-    config.setObject(BackendConfigKeys.GENERAL_CONFIG, generalConfig);
-  }
-
-  public void updateLocalAuthConfig(LocalAuthConfig authConfig) {
-    config.setObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, authConfig);
-  }
-
-  public void updateSetupStatus(boolean status) {
-    config.setBoolean(BackendConfigKeys.IS_SETUP_RUNNING, status);
-  }
-
   private String getJwtSecret() {
-    var env = getEnvironment();
+    var env = Environments.getEnvironment();
     return env.getJwtSecret().getValueOrResolve(this::makeDefaultJwtSecret);
   }
 
@@ -208,8 +129,7 @@ public enum BackendConfig {
     return TokenGenerator.generateNewToken();
   }
 
-  private Environment getEnvironment() {
-    return Environments.getEnvironment();
+  public void updateSetupStatus(boolean status) {
+    config.setBoolean(BackendConfigKeys.IS_SETUP_RUNNING, status);
   }
-
 }

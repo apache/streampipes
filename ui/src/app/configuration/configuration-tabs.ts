@@ -37,6 +37,11 @@ export class SpConfigurationTabs {
                 itemLink: ['configuration', 'export'],
             },
             {
+                itemId: 'extensions-services',
+                itemTitle: 'Extensions Services',
+                itemLink: ['configuration', 'extensions-services'],
+            },
+            {
                 itemId: 'labels',
                 itemTitle: 'Labels',
                 itemLink: ['configuration', 'labels'],
@@ -50,11 +55,6 @@ export class SpConfigurationTabs {
                 itemId: 'messaging',
                 itemTitle: 'Messaging',
                 itemLink: ['configuration', 'messaging'],
-            },
-            {
-                itemId: 'pipelineelement',
-                itemTitle: 'Pipeline Element Configuration',
-                itemLink: ['configuration', 'pipelineelement'],
             },
             {
                 itemId: 'security',

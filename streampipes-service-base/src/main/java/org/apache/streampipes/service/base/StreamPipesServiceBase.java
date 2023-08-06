@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.service.base;
 
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;

@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.svcdiscovery.api.model;
 
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+
 public class DefaultSpServiceTags {
 
   public static final SpServiceTag CORE = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "core");

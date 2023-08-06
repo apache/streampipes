@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.svcdiscovery.api;
 
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 
 import java.util.List;
 import java.util.Map;

@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.manager.health;
 
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
 
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;

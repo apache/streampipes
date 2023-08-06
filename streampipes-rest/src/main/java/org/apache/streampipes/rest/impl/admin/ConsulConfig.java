@@ -20,11 +20,11 @@ package org.apache.streampipes.rest.impl.admin;
 
 
 import org.apache.streampipes.model.configuration.MessagingSettings;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.svcdiscovery.api.model.PeConfig;
 
 import com.google.gson.Gson;

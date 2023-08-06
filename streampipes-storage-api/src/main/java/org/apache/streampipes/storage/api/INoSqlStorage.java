@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceConfiguration;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 
 public interface INoSqlStorage {
 

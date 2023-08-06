@@ -25,7 +25,7 @@ import java.util.List;
 
 public class DefaultMessagingSettings {
 
-  public static MessagingSettings make() {
+  public MessagingSettings make() {
     List<SpProtocol> protocolList;
     var env = Environments.getEnvironment();
     if (env.getPrioritizedProtocol().exists()) {

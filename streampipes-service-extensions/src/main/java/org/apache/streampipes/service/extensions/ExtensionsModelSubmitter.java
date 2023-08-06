@@ -19,10 +19,10 @@ package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.service.extensions.connect.ConnectWorkerRegistrationService;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

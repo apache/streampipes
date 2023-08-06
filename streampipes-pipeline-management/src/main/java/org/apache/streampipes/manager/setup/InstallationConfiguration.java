@@ -38,6 +38,7 @@ public class InstallationConfiguration {
   public static List<InstallationStep> getInstallationSteps(InitialSettings settings) {
     List<InstallationStep> steps = new ArrayList<>();
 
+    steps.add(new SpCoreConfigurationStep());
     steps.add(new CouchDbInstallationStep());
     steps.add(new UserRegistrationInstallationStep(
         settings.getAdminEmail(),
