@@ -40,6 +40,7 @@ public interface Environment {
 
   IntEnvironmentVariable getServicePort();
 
+  StringEnvironmentVariable getSpCoreScheme();
   StringEnvironmentVariable getSpCoreHost();
   IntEnvironmentVariable getSpCorePort();
 

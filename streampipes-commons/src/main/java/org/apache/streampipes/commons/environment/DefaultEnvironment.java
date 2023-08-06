@@ -51,6 +51,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getSpCoreScheme() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_SCHEME);
+  }
+
+  @Override
   public StringEnvironmentVariable getSpCoreHost() {
     return new StringEnvironmentVariable(Envs.SP_CORE_HOST);
   }

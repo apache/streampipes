@@ -51,7 +51,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
     if (baseUrls.size() > 0) {
       if (env.getSpDebug().getValueOrDefault()) {
         try {
-          return "http://" + Networking.getHostname() + ":" + env.getSpCorePort().getValueOrDefault();
+          return buildBaseUrl(Networking.getHostname());
         } catch (UnknownHostException e) {
           LOG.error("Could not auto-resolve host address - using http://localhost:8030");
           return "http://localhost:8030";
@@ -72,6 +72,14 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
   }
 
   private List<String> findClientServices() {
-    return List.of(env.getSpCoreHost().getValueOrDefault());
+    return List.of(buildBaseUrl(env.getSpCoreHost().getValueOrDefault()));
+  }
+
+  private String buildBaseUrl(String host) {
+    return env.getSpCoreScheme().getValueOrDefault()
+        + "://"
+        + host
+        + ":"
+        + env.getSpCorePort().getValueOrDefault();
   }
 }

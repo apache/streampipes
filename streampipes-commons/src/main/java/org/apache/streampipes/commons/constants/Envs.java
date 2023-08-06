@@ -33,6 +33,7 @@ public enum Envs {
       DefaultEnvValues.CONSUL_HOST_DEFAULT,
       DefaultEnvValues.LOCALHOST),
 
+  SP_CORE_SCHEME("SP_CORE_SCHEME", "http", "http"),
   SP_CORE_HOST("SP_CORE_HOST", "backend", "localhost"),
   SP_CORE_PORT("SP_CORE_PORT", "8030", "8030"),
 
