@@ -26,6 +26,7 @@ import java.util.List;
 @TsModel
 public class SpServiceRegistration {
 
+  private String svcType;
   private String svcGroup;
 
   protected @SerializedName("_rev") String rev;
@@ -41,12 +42,14 @@ public class SpServiceRegistration {
   public SpServiceRegistration() {
   }
 
-  public SpServiceRegistration(String svcGroup,
+  public SpServiceRegistration(String svcType,
+                               String svcGroup,
                                String svcId,
                                String host,
                                int port,
                                List<SpServiceTag> tags,
                                String healthCheckPath) {
+    this.svcType = svcType;
     this.svcGroup = svcGroup;
     this.svcId = svcId;
     this.host = host;
@@ -55,21 +58,23 @@ public class SpServiceRegistration {
     this.healthCheckPath = healthCheckPath;
   }
 
-  public static SpServiceRegistration from(String svcGroup,
+  public static SpServiceRegistration from(String svcType,
+                                           String svcGroup,
                                            String svcId,
                                            String host,
                                            Integer port,
                                            List<SpServiceTag> tags) {
-    return new SpServiceRegistration(svcGroup, svcId, host, port, tags, "");
+    return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, "");
   }
 
-  public static SpServiceRegistration from(String svcGroup,
+  public static SpServiceRegistration from(String svcType,
+                                           String svcGroup,
                                            String svcId,
                                            String host,
                                            Integer port,
                                            List<SpServiceTag> tags,
                                            String healthCheckPath) {
-    return new SpServiceRegistration(svcGroup, svcId, host, port, tags, healthCheckPath);
+    return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, healthCheckPath);
   }
 
   public String getSvcGroup() {
@@ -150,5 +155,13 @@ public class SpServiceRegistration {
 
   public void setFirstTimeSeenUnhealthy(long firstTimeSeenUnhealthy) {
     this.firstTimeSeenUnhealthy = firstTimeSeenUnhealthy;
+  }
+
+  public String getSvcType() {
+    return svcType;
+  }
+
+  public void setSvcType(String svcType) {
+    this.svcType = svcType;
   }
 }

@@ -53,16 +53,7 @@ public class ServiceHealthCheck implements Runnable {
     try {
       var response = Request.Get(healthCheckUrl).execute();
       if (response.returnResponse().getStatusLine().getStatusCode() != 200) {
-        if (service.isHealthy()) {
-          service.setHealthy(false);
-          service.setFirstTimeSeenUnhealthy(System.currentTimeMillis());
-          updateService(service);
-        }
-        if (shouldDeleteService(service)) {
-          LOG.info("Removing service {} which has been unhealthy for more than {} seconds.",
-              service.getSvcId(), MAX_UNHEALTHY_DURATION_BEFORE_REMOVAL_MS / 1000);
-          storage.deleteElement(service);
-        }
+        processUnhealthyService(service);
       } else {
         if (!service.isHealthy()) {
           service.setHealthy(true);
@@ -70,9 +61,20 @@ public class ServiceHealthCheck implements Runnable {
         }
       }
     } catch (IOException e) {
+      processUnhealthyService(service);
+    }
+  }
+
+  private void processUnhealthyService(SpServiceRegistration service) {
+    if (service.isHealthy()) {
       service.setHealthy(false);
       service.setFirstTimeSeenUnhealthy(System.currentTimeMillis());
       updateService(service);
+    }
+    if (shouldDeleteService(service)) {
+      LOG.info("Removing service {} which has been unhealthy for more than {} seconds.",
+          service.getSvcId(), MAX_UNHEALTHY_DURATION_BEFORE_REMOVAL_MS / 1000);
+      storage.deleteElement(service);
     }
   }
 

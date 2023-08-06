@@ -101,7 +101,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
   public void populate(String host, Integer port, SpServiceDefinition serviceDef) {
     this.serviceDefinition = serviceDef;
-    this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
     this.setHostName(host);
     this.setPort(port);
     this.addDeclarers(serviceDef.getDeclarers());
@@ -112,15 +111,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.runtimeProviders = serviceDef.getRuntimeProviders();
     serviceDef.getAdapters().forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
     serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
-  }
-
-  private void registerConfigs(String serviceGroup,
-                               String serviceName,
-                               List<ConfigItem> configs) {
-    LOG.info("Registering {} configs in key/value store", configs.size());
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    var serviceConfiguration = new SpServiceConfiguration(serviceGroup, serviceName, configs);
-    client.adminApi().registerServiceConfiguration(serviceConfiguration);
   }
 
   public void addDeclarers(List<IStreamPipesPipelineElement<?>> allPipelineElements) {

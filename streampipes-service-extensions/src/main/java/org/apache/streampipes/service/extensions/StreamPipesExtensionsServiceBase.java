@@ -19,9 +19,12 @@
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -37,10 +40,12 @@ import jakarta.annotation.PreDestroy;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
+  private static final int RETRY_INTERVAL_SECONDS = 5;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -62,17 +67,26 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     }
   }
 
-  public SpServiceDefinition provideServiceDefinition() {
-    return null;
-  }
+  public abstract SpServiceDefinition provideServiceDefinition();
 
   public abstract void afterServiceRegistered(SpServiceDefinition serviceDef);
 
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
-    this.registerService(DefaultSpServiceGroups.EXT, serviceId(), networkingConfig);
+    var req = SpServiceRegistration.from(
+        DefaultSpServiceGroups.EXT,
+        serviceDef.getServiceGroup(),
+        serviceId(),
+        networkingConfig.getHost(),
+        networkingConfig.getPort(),
+        getServiceTags(),
+        getHealthCheckPath());
 
+    LOG.info("Registering service {} with id {} at core", req.getSvcGroup(), req.getSvcId());
+    registerService(req);
+
+    this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
     this.startStreamPipesService(
         serviceClass,
         DefaultSpServiceGroups.EXT,
@@ -83,19 +97,24 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     this.afterServiceRegistered(serviceDef);
   }
 
-  private void registerService(String serviceGroup,
-                               String serviceId,
-                               BaseNetworkingConfig networkingConfig) {
-    SpServiceRegistration req = SpServiceRegistration.from(
-        serviceGroup,
-        serviceId,
-        networkingConfig.getHost(),
-        networkingConfig.getPort(),
-        getServiceTags(),
-        getHealthCheckPath());
-
+  private void registerService(SpServiceRegistration serviceRegistration) {
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    client.adminApi().registerService(req);
+    try {
+      client.adminApi().registerService(serviceRegistration);
+      LOG.info("Successfully registered service at core.");
+    } catch (SpRuntimeException e) {
+      LOG.warn(
+          "Could not register at core at url {}. Trying again in {} seconds",
+          client.getConnectionConfig().getBaseUrl(),
+          10
+      );
+      try {
+        TimeUnit.SECONDS.sleep(RETRY_INTERVAL_SECONDS);
+        registerService(serviceRegistration);
+      } catch (InterruptedException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
   }
 
   @Override
@@ -113,6 +132,15 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     LOG.info("Deregistering service (id={})...", serviceId);
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     client.adminApi().deregisterService(serviceId);
+  }
+
+  private void registerConfigs(String serviceGroup,
+                               String serviceName,
+                               List<ConfigItem> configs) {
+    LOG.info("Registering {} service configs for service {}", configs.size(), serviceGroup);
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    var serviceConfiguration = new SpServiceConfiguration(serviceGroup, serviceName, configs);
+    client.adminApi().registerServiceConfiguration(serviceConfiguration);
   }
 
   protected abstract List<SpServiceTag> getExtensionsServiceTags();

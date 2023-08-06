@@ -24,8 +24,6 @@ import org.apache.streampipes.service.extensions.connect.ConnectWorkerRegistrati
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -38,8 +36,6 @@ import java.util.List;
 @EnableAutoConfiguration
 @Import({ExtensionsResourceConfig.class, WebSecurityConfig.class})
 public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServiceBase {
-  private static final Logger LOG =
-      LoggerFactory.getLogger(ExtensionsModelSubmitter.class.getCanonicalName());
 
   @PreDestroy
   public void onExit() {
