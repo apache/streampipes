@@ -47,7 +47,7 @@ public class VehicleDataSimulator implements Runnable {
   private void initSimulation() {
     try {
       ConfigExtractor configExtractor =
-          ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
+          ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceGroup());
       SimulationConfig config = buildSimulationConfig();
       Map<String, TopicAwareWorkflow> workflows = buildSimWorkflows(config);
       String kafkaHost = getKafkaHost(configExtractor);
@@ -78,12 +78,12 @@ public class VehicleDataSimulator implements Runnable {
 
   private String getKafkaHost(ConfigExtractor configExtractor) {
     return env.getSpDebug().getValueOrDefault()
-        ? "localhost" : configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
+        ? "localhost" : configExtractor.getString(ConfigKeys.KAFKA_HOST);
   }
 
   private Integer getKafkaPort(ConfigExtractor configExtractor) {
     return env.getSpDebug().getValueOrDefault()
-        ? 9094 : configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
+        ? 9094 : configExtractor.getInteger(ConfigKeys.KAFKA_PORT);
   }
 
   @Override

@@ -51,6 +51,14 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedRestResourc
     return ok(extensionsServicesConfigStorage.getAll());
   }
 
+  @GET
+  @Path("{serviceGroup}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getServiceConfiguration(@PathParam("serviceGroup") String serviceGroup) {
+    var config = extensionsServicesConfigStorage.getElementById(serviceGroup);
+    return config != null ? ok(config) : notFound();
+  }
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public Response registerServiceConfiguration(SpServiceConfiguration serviceConfiguration) {

@@ -37,6 +37,4 @@ public class AdapterContextGenerator {
   public IAdapterGuessSchemaContext makeGuessSchemaContext() {
     return new SpAdapterGuessSchemaContext(makeConfigExtractor(), makeStreamPipesClient());
   }
-
-
 }

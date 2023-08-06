@@ -19,14 +19,15 @@
 package org.apache.streampipes.extensions.management.util;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.config.IConfigExtractor;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 
 public class RuntimeContextUtils {
 
-  public static ConfigExtractor makeConfigExtractor() {
-    var serviceId = DeclarersSingleton.getInstance().getServiceId();
+  public static IConfigExtractor makeConfigExtractor() {
+    var serviceId = DeclarersSingleton.getInstance().getServiceGroup();
     return ConfigExtractor.from(serviceId);
   }
 

@@ -34,6 +34,8 @@ public interface IAdminApi {
 
   void registerServiceConfiguration(SpServiceConfiguration serviceConfiguration);
 
+  SpServiceConfiguration getServiceConfiguration(String serviceGroup);
+
   void registerAdapters(List<AdapterDescription> adapters);
 
   void registerFunctions(List<FunctionDefinition> functions);

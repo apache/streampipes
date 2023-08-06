@@ -50,6 +50,14 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   }
 
   @Override
+  public SpServiceConfiguration getServiceConfiguration(String serviceGroup) {
+    var opt = getSingleOpt(
+        getExtensionsServiceConfigurationPath().addToPath(serviceGroup), SpServiceConfiguration.class);
+
+    return opt.orElseGet(SpServiceConfiguration::new);
+  }
+
+  @Override
   public void registerAdapters(List<AdapterDescription> adapters) {
     post(getConnectPath(), adapters);
   }
@@ -84,7 +92,6 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   private StreamPipesApiPath getMessagingSettingsPath() {
     return StreamPipesApiPath
         .fromBaseApiPath()
-        .addToPath("consul")
         .addToPath("messaging");
   }
 

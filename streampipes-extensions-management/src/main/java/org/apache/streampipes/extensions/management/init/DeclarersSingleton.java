@@ -72,6 +72,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   private List<IStreamPipesRuntimeProvider> runtimeProviders;
 
   private String serviceId;
+  private String serviceGroup;
 
   private int port;
   private String route;
@@ -105,6 +106,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.setPort(port);
     this.addDeclarers(serviceDef.getDeclarers());
     this.serviceId = serviceDef.getServiceId();
+    this.serviceGroup = serviceDef.getServiceGroup();
     this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.runtimeProviders = serviceDef.getRuntimeProviders();
@@ -279,6 +281,10 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
     // TODO create complete service definition
     return serviceDef;
+  }
+
+  public String getServiceGroup() {
+    return serviceGroup;
   }
 
   public SpServiceDefinition getServiceDefinition() {

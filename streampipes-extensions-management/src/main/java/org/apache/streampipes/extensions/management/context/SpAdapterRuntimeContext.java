@@ -19,9 +19,9 @@
 package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.config.IConfigExtractor;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 
 import java.io.Serializable;
 
@@ -31,7 +31,7 @@ public class SpAdapterRuntimeContext extends SpAdapterGuessSchemaContext
   private final IExtensionsLogger extensionsLogger;
 
   public SpAdapterRuntimeContext(IExtensionsLogger extensionsLogger,
-                                 ConfigExtractor configExtractor,
+                                 IConfigExtractor configExtractor,
                                  StreamPipesClient streamPipesClient) {
     super(configExtractor, streamPipesClient);
     this.extensionsLogger = extensionsLogger;

@@ -18,10 +18,21 @@
 
 package org.apache.streampipes.extensions.api.config;
 
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 
 import java.io.Serializable;
 
 public interface IConfigExtractor extends Serializable {
-  SpConfig getConfig();
+
+  boolean getBoolean(String key);
+
+  int getInteger(String key);
+
+  double getDouble(String key);
+
+  String getString(String key);
+
+  <T> T getObject(String key, Class<T> clazz, T defaultValue);
+
+  ConfigItem getConfigItem(String key);
 }
