@@ -27,13 +27,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AutoInstallation {
+public class AutoInstallation implements BackgroundTaskNotifier {
 
   private static final Logger LOG = LoggerFactory.getLogger(AutoInstallation.class);
 
-  private Environment env;
+  private final Environment env;
+  private final AtomicInteger errorCount = new AtomicInteger();
+  private int numberOfBackgroundSteps = 0;
+  private int executedBackgroundSteps = 0;
 
   public AutoInstallation() {
     this.env = Environments.getEnvironment();
@@ -43,19 +48,22 @@ public class AutoInstallation {
     InitialSettings settings = collectInitialSettings();
 
     List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(settings);
-    AtomicInteger errorCount = new AtomicInteger();
+    List<Runnable> backgroundSteps = InstallationConfiguration.getBackgroundInstallationSteps(settings, this);
+    numberOfBackgroundSteps = backgroundSteps.size();
 
     steps.forEach(step -> {
       step.install();
       errorCount.addAndGet(step.getErrorCount());
     });
-    if (errorCount.get() > 0) {
-      LOG.error("{} errors occurred during the setup process", errorCount);
-    } else {
-      BackendConfig.INSTANCE.setIsConfigured(true);
-      LOG.info("Initial setup completed successfully - you can now open the login page in the browser.");
-    }
-    LOG.info("\n\n**********\n\nAuto-Setup finished\n\n**********\n\n");
+
+    initBackgroundJobs(backgroundSteps);
+  }
+
+  private void initBackgroundJobs(List<Runnable> backgroundSteps) {
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    backgroundSteps.forEach(executorService::execute);
+    executorService.shutdown();
   }
 
   private InitialSettings collectInitialSettings() {
@@ -101,6 +109,22 @@ public class AutoInstallation {
     } else {
       LOG.info("Environment variable {} not found, using default value {}", name, variable.getDefault());
       return variable.getDefault();
+    }
+  }
+
+  @Override
+  public void notifyFinished(int ec) {
+    errorCount.addAndGet(ec);
+    executedBackgroundSteps++;
+
+    if (executedBackgroundSteps == numberOfBackgroundSteps) {
+      if (errorCount.get() > 0) {
+        LOG.error("{} errors occurred during the setup process", errorCount);
+      } else {
+        BackendConfig.INSTANCE.setIsConfigured(true);
+        LOG.info("Initial setup completed successfully - you can now open the login page in the browser.");
+      }
+      LOG.info("\n\n**********\n\nAuto-Setup finished\n\n**********\n\n");
     }
   }
 }

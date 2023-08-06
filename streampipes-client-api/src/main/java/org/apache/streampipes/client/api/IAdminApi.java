@@ -20,9 +20,9 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.function.FunctionDefinition;
 
 import java.util.List;
 

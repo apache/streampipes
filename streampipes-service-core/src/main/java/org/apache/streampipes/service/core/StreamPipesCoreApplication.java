@@ -130,11 +130,11 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     if (!isConfigured()) {
       doInitialSetup();
+    } else {
+      new MigrationsHandler().performMigrations();
     }
 
-    new MigrationsHandler().performMigrations();
-
-    executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
+    executorService.schedule(this::startAllPreviouslyStoppedPipelines, 10, TimeUnit.SECONDS);
 
     LOG.info("Service health check will run every {} seconds", SERVICE_HEALTH_CHECK_INTERVAL);
     serviceHealthCheckExecutorService.scheduleAtFixedRate(new ServiceHealthCheck(),
@@ -164,9 +164,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
 
     BackendConfig.INSTANCE.updateSetupStatus(true);
-    LOG.info("Auto-setup will start in 10 seconds to make sure extensions services are running...");
+    LOG.info("Auto-setup will start in 5 seconds to make sure all services are running...");
     try {
-      TimeUnit.SECONDS.sleep(10);
+      TimeUnit.SECONDS.sleep(5);
       LOG.info("Starting installation procedure");
       new AutoInstallation().startAutoInstallation();
       BackendConfig.INSTANCE.updateSetupStatus(false);

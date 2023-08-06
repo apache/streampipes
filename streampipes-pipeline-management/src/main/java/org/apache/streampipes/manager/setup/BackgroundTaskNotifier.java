@@ -16,22 +16,10 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.guard';
+package org.apache.streampipes.manager.setup;
 
-@Injectable()
-export class ConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
-    constructor(router: Router, authService: AuthService) {
-        super(router, authService);
-    }
+public interface BackgroundTaskNotifier {
 
-    onIsConfigured(): boolean | UrlTree {
-        return true;
-    }
+  void notifyFinished(int errorCount);
 
-    onIsUnconfigured(): boolean | UrlTree {
-        return this.router.parseUrl('startup');
-    }
 }

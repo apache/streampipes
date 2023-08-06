@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
-  private static final int RETRY_INTERVAL_SECONDS = 5;
+  private static final int RETRY_INTERVAL_SECONDS = 3;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -104,7 +104,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       LOG.warn(
           "Could not register at core at url {}. Trying again in {} seconds",
           client.getConnectionConfig().getBaseUrl(),
-          10
+          RETRY_INTERVAL_SECONDS
       );
       try {
         TimeUnit.SECONDS.sleep(RETRY_INTERVAL_SECONDS);
