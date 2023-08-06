@@ -25,90 +25,98 @@ import { StreampipesPeContainer } from './streampipes-pe-container.model';
 import { MessagingSettings } from './messaging-settings.model';
 import { MultipartUtils } from './multipart-utils';
 import {
-  SpServiceConfiguration, SpServiceRegistration
+    SpServiceConfiguration,
+    SpServiceRegistration,
 } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable()
 export class ConfigurationService {
-  constructor(private http: HttpClient) {
-  }
+    constructor(private http: HttpClient) {}
 
-  getServerUrl() {
-    return '/streampipes-backend';
-  }
-
-  generateKeyPair(): Observable<string[]> {
-    return this.http
-      .get(this.getServerUrl() + '/api/v2/admin/general-config/keys', {
-        responseType: 'text',
-        observe: 'response',
-      })
-      .pipe(
-        map(response => {
-          return new MultipartUtils().extractMultipartPlainTextContent(
-            response,
-          );
-        }),
-      );
-  }
-
-  getMessagingSettings(): Observable<MessagingSettings> {
-    return this.http
-      .get(this.getServerUrl() + '/api/v2/consul/messaging')
-      .pipe(
-        map(response => {
-          return response as MessagingSettings;
-        }),
-      );
-  }
-
-  getRegisteredExtensionsServices(): Observable<SpServiceRegistration[]> {
-    return this.http.get(this.getServerUrl() + '/api/v2/extensions-services').pipe(
-      map(response => {
-        return response as SpServiceRegistration[];
-      }),
-    );
-  }
-
-  getExtensionsServiceConfigs(): Observable<SpServiceConfiguration[]> {
-    return this.http.get(this.getServerUrl() + '/api/v2/extensions-services-configurations').pipe(
-      map(response => {
-        return response as SpServiceConfiguration[];
-      }),
-    );
-  }
-
-  updateExtensionsServiceConfigs(
-    config: SpServiceConfiguration,
-  ): Observable<Object> {
-    return this.http.put(
-      this.getServerUrl() + `/api/v2/extensions-services-configurations/${config.serviceGroup}`,
-      config,
-    );
-  }
-
-  updateMessagingSettings(
-    messagingSettings: MessagingSettings,
-  ): Observable<Object> {
-    return this.http.post(
-      this.getServerUrl() + '/api/v2/consul/messaging',
-      messagingSettings,
-    );
-  }
-
-  adjustConfigurationKey(consulKey) {
-    const removedKey = consulKey.substr(
-      consulKey.lastIndexOf('/') + 1,
-      consulKey.length,
-    );
-
-    // console.log(removedKey);
-
-    let str1 = removedKey.replace(/SP/g, '');
-    str1 = str1.replace(/_/g, ' ');
-    if (str1.startsWith(' ')) {
-      str1 = str1.slice(1, str1.length);
+    getServerUrl() {
+        return '/streampipes-backend';
     }
-    return str1;
-  }
+
+    generateKeyPair(): Observable<string[]> {
+        return this.http
+            .get(this.getServerUrl() + '/api/v2/admin/general-config/keys', {
+                responseType: 'text',
+                observe: 'response',
+            })
+            .pipe(
+                map(response => {
+                    return new MultipartUtils().extractMultipartPlainTextContent(
+                        response,
+                    );
+                }),
+            );
+    }
+
+    getMessagingSettings(): Observable<MessagingSettings> {
+        return this.http
+            .get(this.getServerUrl() + '/api/v2/consul/messaging')
+            .pipe(
+                map(response => {
+                    return response as MessagingSettings;
+                }),
+            );
+    }
+
+    getRegisteredExtensionsServices(): Observable<SpServiceRegistration[]> {
+        return this.http
+            .get(this.getServerUrl() + '/api/v2/extensions-services')
+            .pipe(
+                map(response => {
+                    return response as SpServiceRegistration[];
+                }),
+            );
+    }
+
+    getExtensionsServiceConfigs(): Observable<SpServiceConfiguration[]> {
+        return this.http
+            .get(
+                this.getServerUrl() +
+                    '/api/v2/extensions-services-configurations',
+            )
+            .pipe(
+                map(response => {
+                    return response as SpServiceConfiguration[];
+                }),
+            );
+    }
+
+    updateExtensionsServiceConfigs(
+        config: SpServiceConfiguration,
+    ): Observable<Object> {
+        return this.http.put(
+            this.getServerUrl() +
+                `/api/v2/extensions-services-configurations/${config.serviceGroup}`,
+            config,
+        );
+    }
+
+    updateMessagingSettings(
+        messagingSettings: MessagingSettings,
+    ): Observable<Object> {
+        return this.http.post(
+            this.getServerUrl() + '/api/v2/consul/messaging',
+            messagingSettings,
+        );
+    }
+
+    adjustConfigurationKey(consulKey) {
+        const removedKey = consulKey.substr(
+            consulKey.lastIndexOf('/') + 1,
+            consulKey.length,
+        );
+
+        // console.log(removedKey);
+
+        let str1 = removedKey.replace(/SP/g, '');
+        str1 = str1.replace(/_/g, ' ');
+        if (str1.startsWith(' ')) {
+            str1 = str1.slice(1, str1.length);
+        }
+        return str1;
+    }
 }

@@ -19,32 +19,28 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  SpServiceRegistration
-} from '@streampipes/platform-services';
+import { SpServiceRegistration } from '@streampipes/platform-services';
 import { ConfigurationService } from '../../shared/configuration.service';
 
 @Component({
-  selector: 'sp-registered-extensions-services',
-  templateUrl: './registered-extensions-services.component.html',
-  styleUrls: ['./registered-extensions-services.component.scss']
+    selector: 'sp-registered-extensions-services',
+    templateUrl: './registered-extensions-services.component.html',
+    styleUrls: ['./registered-extensions-services.component.scss'],
 })
 export class SpRegisteredExtensionsServiceComponent {
+    displayedColumns: string[] = ['status', 'name'];
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    dataSource = new MatTableDataSource<SpServiceRegistration>();
 
-  displayedColumns: string[] = ['status', 'name'];
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  dataSource = new MatTableDataSource<SpServiceRegistration>();
+    constructor(private configurationService: ConfigurationService) {
+        this.getRegisteredServices();
+    }
 
-
-  constructor(
-    private configurationService: ConfigurationService
-  ) {
-    this.getRegisteredServices();
-  }
-
-  getRegisteredServices(): void {
-    this.configurationService.getRegisteredExtensionsServices().subscribe(res => {
-      this.dataSource.data = res;
-    })
-  }
+    getRegisteredServices(): void {
+        this.configurationService
+            .getRegisteredExtensionsServices()
+            .subscribe(res => {
+                this.dataSource.data = res;
+            });
+    }
 }

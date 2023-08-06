@@ -36,15 +36,12 @@ import { SpConfigurationRoutes } from '../configuration.routes';
 @Component({
     selector: 'sp-extensions-service-management',
     templateUrl: './extensions-service-management.component.html',
-    styleUrls: ['./extensions-service-management.component.css']
+    styleUrls: ['./extensions-service-management.component.css'],
 })
 export class ExtensionsServiceManagementComponent implements OnInit {
     tabs = SpConfigurationTabs.getTabs();
 
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-    ) {
-    }
+    constructor(private breadcrumbService: SpBreadcrumbService) {}
 
     ngOnInit() {
         this.breadcrumbService.updateBreadcrumb([

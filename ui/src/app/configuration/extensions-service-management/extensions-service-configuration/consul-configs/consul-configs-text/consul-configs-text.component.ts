@@ -18,9 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
-import {
-    ConfigItem
-} from '@streampipes/platform-services';
+import { ConfigItem } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-consul-configs-text',

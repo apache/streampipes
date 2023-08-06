@@ -38,23 +38,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MatDividerModule } from '@angular/material/divider';
-import {
-    SecurityUserConfigComponent
-} from './security-configuration/security-user-configuration/security-user-config.component';
-import {
-    SecurityServiceConfigComponent
-} from './security-configuration/security-service-configuration/security-service-config.component';
+import { SecurityUserConfigComponent } from './security-configuration/security-user-configuration/security-user-config.component';
+import { SecurityServiceConfigComponent } from './security-configuration/security-service-configuration/security-service-config.component';
 import { EditUserDialogComponent } from './security-configuration/edit-user-dialog/edit-user-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import {
-    SecurityUserGroupConfigComponent
-} from './security-configuration/user-group-configuration/user-group-configuration.component';
+import { SecurityUserGroupConfigComponent } from './security-configuration/user-group-configuration/user-group-configuration.component';
 import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
 import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';
 import { GeneralConfigurationComponent } from './general-configuration/general-configuration.component';
-import {
-    SecurityAuthenticationConfigurationComponent
-} from './security-configuration/authentication-configuration/authentication-configuration.component';
+import { SecurityAuthenticationConfigurationComponent } from './security-configuration/authentication-configuration/authentication-configuration.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpDataExportImportComponent } from './export/data-export-import.component';
@@ -64,30 +56,14 @@ import { SpDataExportItemComponent } from './export/export-dialog/data-export-it
 import { SpEditLabelComponent } from './label-configuration/edit-label/edit-label.component';
 import { SpLabelConfigurationComponent } from './label-configuration/label-configuration.component';
 import { ColorPickerModule } from 'ngx-color-picker';
-import {
-    ExtensionsServiceManagementComponent
-} from './extensions-service-management/extensions-service-management.component';
-import {
-    ConsulConfigsComponent
-} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs.component';
-import {
-    ConsulConfigsTextComponent
-} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-text/consul-configs-text.component';
-import {
-    ConsulConfigsPasswordComponent
-} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-password/consul-configs-password.component';
-import {
-    ConsulConfigsBooleanComponent
-} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-boolean/consul-configs-boolean.component';
-import {
-    ConsulConfigsNumberComponent
-} from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-number/consul-configs-number.component';
-import {
-    SpRegisteredExtensionsServiceComponent
-} from './extensions-service-management/registrered-extensions-services/registered-extensions-services.component';
-import {
-    SpExtensionsServiceConfigurationComponent
-} from './extensions-service-management/extensions-service-configuration/extensions-service-configuration.component';
+import { ExtensionsServiceManagementComponent } from './extensions-service-management/extensions-service-management.component';
+import { ConsulConfigsComponent } from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs.component';
+import { ConsulConfigsTextComponent } from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-text/consul-configs-text.component';
+import { ConsulConfigsPasswordComponent } from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-password/consul-configs-password.component';
+import { ConsulConfigsBooleanComponent } from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-boolean/consul-configs-boolean.component';
+import { ConsulConfigsNumberComponent } from './extensions-service-management/extensions-service-configuration/consul-configs/consul-configs-number/consul-configs-number.component';
+import { SpRegisteredExtensionsServiceComponent } from './extensions-service-management/registrered-extensions-services/registered-extensions-services.component';
+import { SpExtensionsServiceConfigurationComponent } from './extensions-service-management/extensions-service-configuration/extensions-service-configuration.component';
 
 @NgModule({
     imports: [
@@ -181,7 +157,7 @@ import {
         SpEditLabelComponent,
         SpLabelConfigurationComponent,
         SpRegisteredExtensionsServiceComponent,
-        SpExtensionsServiceConfigurationComponent
+        SpExtensionsServiceConfigurationComponent,
     ],
     providers: [ConfigurationService],
 })

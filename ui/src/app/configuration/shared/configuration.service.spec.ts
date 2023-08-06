@@ -23,9 +23,7 @@ import {
 } from '@angular/common/http/testing';
 import { ConfigurationService } from './configuration.service';
 import { StreampipesPeContainer } from './streampipes-pe-container.model';
-import {
-    SpServiceConfiguration
-} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { SpServiceConfiguration } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 describe('ConfigurationService', () => {
     let injector: TestBed;
@@ -47,7 +45,9 @@ describe('ConfigurationService', () => {
 
     it('should create Get to /api/v2/extensions-services-configurations', () => {
         service.getExtensionsServiceConfigs().subscribe(res => res);
-        const req = httpMock.expectOne('/streampipes-backend/api/v2/extensions-services-configurations');
+        const req = httpMock.expectOne(
+            '/streampipes-backend/api/v2/extensions-services-configurations',
+        );
         expect(req.request.method).toBe('GET');
     });
 
@@ -55,7 +55,9 @@ describe('ConfigurationService', () => {
         service
             .updateExtensionsServiceConfigs({} as SpServiceConfiguration)
             .subscribe(res => res);
-        const req = httpMock.expectOne('/streampipes-backend/api/v2/extensions-services-configurations/abc');
+        const req = httpMock.expectOne(
+            '/streampipes-backend/api/v2/extensions-services-configurations/abc',
+        );
         expect(req.request.method).toBe('PUT');
     });
 

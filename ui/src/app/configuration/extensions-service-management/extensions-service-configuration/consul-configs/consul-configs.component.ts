@@ -18,9 +18,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { XsService } from '../../../../NS/xs.service';
-import {
-    SpServiceConfiguration
-} from '@streampipes/platform-services';
+import { SpServiceConfiguration } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-consul-configs',

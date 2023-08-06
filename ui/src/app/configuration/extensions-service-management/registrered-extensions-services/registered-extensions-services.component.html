@@ -17,75 +17,68 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-  <table
-      fxFlex="100"
-      mat-table
-      [dataSource]="dataSource"
-      multiTemplateDataRows
-  >
-    <ng-container matColumnDef="status">
-      <th
-          fxFlex="30"
-          fxLayoutAlign="start center"
-          mat-header-cell
-          *matHeaderCellDef
-      >
-        Status
-      </th>
-      <td
-          fxFlex="30"
-          fxLayoutAlign="start center"
-          mat-cell
-          *matCellDef="let element"
-      >
-                            <span
-                                *ngIf="element.healthy"
-                                fxLayoutAlign="center center"
-                            >
-                                <mat-icon class="service-icon-passing"
-                                >lens</mat-icon
-                                >
-                            </span>
-        <span
-            *ngIf="element.healthy === false"
-            fxLayoutAlign="center center"
-        >
-                                <mat-icon class="service-icon-critical"
-                                >lens</mat-icon
-                                >
-                            </span>
-      </td>
-    </ng-container>
+    <table
+        fxFlex="100"
+        mat-table
+        [dataSource]="dataSource"
+        multiTemplateDataRows
+    >
+        <ng-container matColumnDef="status">
+            <th
+                fxFlex="30"
+                fxLayoutAlign="start center"
+                mat-header-cell
+                *matHeaderCellDef
+            >
+                Status
+            </th>
+            <td
+                fxFlex="30"
+                fxLayoutAlign="start center"
+                mat-cell
+                *matCellDef="let element"
+            >
+                <span *ngIf="element.healthy" fxLayoutAlign="center center">
+                    <mat-icon class="service-icon-passing">lens</mat-icon>
+                </span>
+                <span
+                    *ngIf="element.healthy === false"
+                    fxLayoutAlign="center center"
+                >
+                    <mat-icon class="service-icon-critical">lens</mat-icon>
+                </span>
+            </td>
+        </ng-container>
 
-    <ng-container matColumnDef="name">
-      <th
-          fxFlex="40"
-          fxLayoutAlign="start center"
-          mat-header-cell
-          *matHeaderCellDef
-      >
-        Service ID
-      </th>
-      <td
-          fxFlex="40"
-          fxLayoutAlign="start center"
-          mat-cell
-          *matCellDef="let element"
-      >
-        {{ element.svcId }}
-      </td>
-    </ng-container>
+        <ng-container matColumnDef="name">
+            <th
+                fxFlex="40"
+                fxLayoutAlign="start center"
+                mat-header-cell
+                *matHeaderCellDef
+            >
+                Service ID
+            </th>
+            <td
+                fxFlex="40"
+                fxLayoutAlign="start center"
+                mat-cell
+                *matCellDef="let element"
+            >
+                {{ element.svcId }}
+            </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-        mat-row
-        *matRowDef="let element; columns: displayedColumns"
-        class="consul-configuration-row"
-    ></tr>
-    <tr
-        mat-row
-        *matRowDef="let row; columns: ['expandedDetail']"
-        class="consul-configuration-detail-row"
-    ></tr>
-  </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            *matRowDef="let element; columns: displayedColumns"
+            class="consul-configuration-row"
+        ></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: ['expandedDetail']"
+            class="consul-configuration-detail-row"
+        ></tr>
+    </table>
 </div>
