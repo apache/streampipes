@@ -51,6 +51,16 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getSpCoreHost() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getSpCorePort() {
+    return new IntEnvironmentVariable(Envs.SP_CORE_PORT);
+  }
+
+  @Override
   public StringEnvironmentVariable getTsStorageProtocol() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_PROTOCOL);
   }

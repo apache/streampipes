@@ -40,6 +40,8 @@ public interface Environment {
 
   IntEnvironmentVariable getServicePort();
 
+  StringEnvironmentVariable getSpCoreHost();
+  IntEnvironmentVariable getSpCorePort();
 
   // Time series storage env variables
 

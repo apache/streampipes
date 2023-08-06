@@ -30,7 +30,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +75,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
     var req = SpServiceRegistration.from(
-        DefaultSpServiceGroups.EXT,
+        DefaultSpServiceTypes.EXT,
         serviceDef.getServiceGroup(),
         serviceId(),
         networkingConfig.getHost(),
@@ -89,8 +89,6 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
     this.startStreamPipesService(
         serviceClass,
-        DefaultSpServiceGroups.EXT,
-        serviceId(),
         networkingConfig
     );
 
@@ -117,7 +115,6 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     }
   }
 
-  @Override
   protected List<SpServiceTag> getServiceTags() {
     List<SpServiceTag> tags = new ArrayList<>();
     if (DeclarersSingleton.getInstance().getServiceDefinition() != null) {

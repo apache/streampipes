@@ -15,16 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
+package org.apache.streampipes.svcdiscovery.api.model;
 
-import java.util.Map;
+public class DefaultSpServiceTypes {
 
-public interface ISpKvManagement {
-
-  Map<String, String> getKeyValue(String route);
-
-  void updateConfig(String key, String entry, boolean password);
-
-  void deleteConfig(String key);
+  public static final String EXT = "ext";
 
 }

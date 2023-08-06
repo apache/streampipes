@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.execution.endpoint;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public class ExtensionsServiceEndpointGenerator {
     return SpServiceDiscovery
         .getServiceDiscovery()
         .getServiceEndpoints(
-            DefaultSpServiceGroups.EXT,
+            DefaultSpServiceTypes.EXT,
             true,
             Collections
                 .singletonList(

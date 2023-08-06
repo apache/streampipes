@@ -19,7 +19,6 @@ package org.apache.streampipes.svcdiscovery;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
@@ -32,14 +31,6 @@ public class SpServiceDiscovery {
 
   public static ISpServiceDiscovery getServiceDiscovery(Environment environment) {
     return new SpServiceDiscoveryCore();
-  }
-
-  public static ISpKvManagement getKeyValueStore() {
-    return new SpKvManagementCore();
-  }
-
-  public static ISpKvManagement getKeyValueStore(Environment environment) {
-    return new SpKvManagementCore();
   }
 
   public static SpConfig getSpConfig(String serviceGroup) {

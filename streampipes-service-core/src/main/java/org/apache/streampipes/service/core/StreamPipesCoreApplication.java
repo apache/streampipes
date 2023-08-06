@@ -30,7 +30,6 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
@@ -40,8 +39,6 @@ import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +51,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,8 +106,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       registerProtocols(supportedProtocols);
       BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
       startStreamPipesService(StreamPipesCoreApplication.class,
-          DefaultSpServiceGroups.CORE,
-          serviceId(),
           networkingConfig);
     } catch (UnknownHostException e) {
       LOG.error(
@@ -122,10 +116,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   protected void registerProtocols(SupportedProtocols protocols) {
     protocols.getSupportedProtocols().forEach(SpProtocolManager.INSTANCE::register);
-  }
-
-  private String serviceId() {
-    return DefaultSpServiceGroups.CORE + "-" + AUTO_GENERATED_SERVICE_ID;
   }
 
   @PostConstruct
@@ -296,16 +286,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         .INSTANCE
         .getNoSqlStore()
         .getPipelineStorageAPI();
-  }
-
-
-  @Override
-  protected List<SpServiceTag> getServiceTags() {
-    return Arrays.asList(
-        DefaultSpServiceTags.CORE,
-        DefaultSpServiceTags.CONNECT_MASTER,
-        DefaultSpServiceTags.STREAMPIPES_CLIENT
-    );
   }
 
   @Override

@@ -17,25 +17,17 @@
  */
 package org.apache.streampipes.service.base;
 
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
-
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 
 import java.net.UnknownHostException;
 import java.util.Collections;
-import java.util.List;
 
 public abstract class StreamPipesServiceBase {
 
   public static final String AUTO_GENERATED_SERVICE_ID = RandomStringUtils.randomAlphanumeric(6);
-  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesServiceBase.class);
 
   public void startStreamPipesService(Class<?> serviceClass,
-                                         String serviceGroup,
-                                         String serviceId,
                                          BaseNetworkingConfig networkingConfig) throws UnknownHostException {
     runApplication(serviceClass, networkingConfig.getPort());
   }
@@ -46,8 +38,6 @@ public abstract class StreamPipesServiceBase {
     app.setDefaultProperties(Collections.singletonMap("server.port", port));
     app.run();
   }
-
-  protected abstract List<SpServiceTag> getServiceTags();
 
   protected String getHealthCheckPath() {
     return "/svchealth/" + AUTO_GENERATED_SERVICE_ID;

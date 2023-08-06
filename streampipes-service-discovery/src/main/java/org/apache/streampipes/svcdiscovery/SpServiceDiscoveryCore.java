@@ -22,8 +22,8 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -47,22 +46,10 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   @Override
-  public void registerService(SpServiceRegistration serviceRegistrationRequest) {
-    // not needed
-  }
-
-  @Override
   public List<String> getActivePipelineElementEndpoints() {
     LOG.info("Discovering active pipeline element service endpoints");
-    return getServiceEndpoints(DefaultSpServiceGroups.EXT, true,
+    return getServiceEndpoints(DefaultSpServiceTypes.EXT, true,
         Collections.singletonList(DefaultSpServiceTags.PE.asString()));
-  }
-
-  @Override
-  public List<String> getActiveConnectWorkerEndpoints() {
-    LOG.info("Discovering active StreamPipes Connect worker service endpoints");
-    return getServiceEndpoints(DefaultSpServiceGroups.EXT, true,
-        Collections.singletonList(DefaultSpServiceTags.CONNECT_WORKER.asString()));
   }
 
   @Override
@@ -78,16 +65,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
             || service.isHealthy())
         .map(this::makeServiceUrl)
         .collect(Collectors.toList());
-  }
-
-  @Override
-  public Map<String, String> getExtensionsServiceGroups() {
-    return null;
-  }
-
-  @Override
-  public void deregisterService(String svcId) {
-    // not needed
   }
 
   private String makeServiceUrl(SpServiceRegistration service) {
