@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.service.core;
+package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
@@ -40,7 +40,7 @@ public class StreamPipesEnvChecker {
   private ISpCoreConfigurationStorage configStorage;
   private SpCoreConfiguration coreConfig;
 
-  private Environment env;
+  private final Environment env;
 
   public StreamPipesEnvChecker() {
     this.env = Environments.getEnvironment();
@@ -52,10 +52,12 @@ public class StreamPipesEnvChecker {
         .getNoSqlStore()
         .getSpCoreConfigurationStorage();
 
-    this.coreConfig = configStorage.get();
+    if (configStorage.getAll().size() > 0) {
+      this.coreConfig = configStorage.get();
 
-    LOG.info("Checking and updating environment variables...");
-    updateJwtSettings();
+      LOG.info("Checking and updating environment variables...");
+      updateJwtSettings();
+    }
   }
 
   private void updateJwtSettings() {

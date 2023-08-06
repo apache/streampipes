@@ -15,10 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.pe.jvm.config;
 
-public class ConfigKeys {
-  static final String HOST = "SP_HOST";
-  static final String PORT = "SP_PORT";
-  static final String SERVICE_NAME_KEY = "SP_SERVICE_NAME";
+import { Component, Input } from '@angular/core';
+
+@Component({
+    selector: 'sp-messaging-broker-config',
+    templateUrl: './broker-config.component.html',
+})
+export class SpMessagingBrokerConfigComponent {
+    @Input()
+    title: string;
+
+    @Input()
+    host: string;
+
+    @Input()
+    port: number;
 }

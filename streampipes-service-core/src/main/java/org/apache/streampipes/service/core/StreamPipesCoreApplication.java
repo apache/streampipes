@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.setup.AutoInstallation;
+import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;

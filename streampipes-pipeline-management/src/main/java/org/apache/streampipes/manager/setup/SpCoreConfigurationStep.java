@@ -27,6 +27,7 @@ public class SpCoreConfigurationStep extends InstallationStep {
     var coreCfg = new DefaultSpCoreConfiguration().make();
 
     StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage().createElement(coreCfg);
+    new StreamPipesEnvChecker().updateEnvironmentVariables();
   }
 
   @Override

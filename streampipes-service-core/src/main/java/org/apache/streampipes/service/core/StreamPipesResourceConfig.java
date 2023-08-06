@@ -56,12 +56,12 @@ import org.apache.streampipes.rest.impl.RestorePasswordResource;
 import org.apache.streampipes.rest.impl.Setup;
 import org.apache.streampipes.rest.impl.UserResource;
 import org.apache.streampipes.rest.impl.Version;
-import org.apache.streampipes.rest.impl.admin.ConsulConfig;
 import org.apache.streampipes.rest.impl.admin.DataExportResource;
 import org.apache.streampipes.rest.impl.admin.DataImportResource;
 import org.apache.streampipes.rest.impl.admin.EmailConfigurationResource;
 import org.apache.streampipes.rest.impl.admin.ExtensionsServiceEndpointResource;
 import org.apache.streampipes.rest.impl.admin.GeneralConfigurationResource;
+import org.apache.streampipes.rest.impl.admin.MessagingConfigurationResource;
 import org.apache.streampipes.rest.impl.admin.PermissionResource;
 import org.apache.streampipes.rest.impl.admin.PipelineElementImport;
 import org.apache.streampipes.rest.impl.admin.ServiceConfigurationResource;
@@ -111,7 +111,6 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         AssetManagementResource.class,
         AutoComplete.class,
         CategoryResource.class,
-        ConsulConfig.class,
         ContainerProvidedOptions.class,
         DashboardWidget.class,
         Dashboard.class,
@@ -131,6 +130,7 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         GenericStorageResource.class,
         LabelResource.class,
         MeasurementUnitResource.class,
+        MessagingConfigurationResource.class,
         Notification.class,
         OntologyMeasurementUnit.class,
         PermissionResource.class,

@@ -63,6 +63,7 @@ import { ServiceConfigsBooleanComponent } from './extensions-service-management/
 import { ServiceConfigsNumberComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-number/service-configs-number.component';
 import { SpRegisteredExtensionsServiceComponent } from './extensions-service-management/registrered-extensions-services/registered-extensions-services.component';
 import { SpExtensionsServiceConfigurationComponent } from './extensions-service-management/extensions-service-configuration/extensions-service-configuration.component';
+import { SpMessagingBrokerConfigComponent } from './messaging-configuration/broker-config/broker-config.component';
 
 @NgModule({
     imports: [
@@ -154,6 +155,7 @@ import { SpExtensionsServiceConfigurationComponent } from './extensions-service-
         SpDataImportDialogComponent,
         SpEditLabelComponent,
         SpLabelConfigurationComponent,
+        SpMessagingBrokerConfigComponent,
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
     ],
