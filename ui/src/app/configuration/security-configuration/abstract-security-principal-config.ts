@@ -23,8 +23,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import {
     ServiceAccount,
     UserAccount,
-    UserService,
     UserAdminService,
+    UserService,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { DialogService, PanelType } from '@streampipes/shared-ui';

@@ -15,3 +15,17 @@
  * limitations under the License.
  *
  */
+
+import { Component, Input } from '@angular/core';
+import { ConfigurationService } from '../../../../shared/configuration.service';
+import { ConfigItem } from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-consul-configs-text',
+    templateUrl: './service-configs-text.component.html',
+    providers: [ConfigurationService],
+})
+export class ServiceConfigsTextComponent {
+    @Input() configuration: ConfigItem;
+    constructor(public configService: ConfigurationService) {}
+}

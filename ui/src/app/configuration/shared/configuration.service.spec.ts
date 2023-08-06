@@ -22,7 +22,6 @@ import {
     HttpTestingController,
 } from '@angular/common/http/testing';
 import { ConfigurationService } from './configuration.service';
-import { StreampipesPeContainer } from './streampipes-pe-container.model';
 import { SpServiceConfiguration } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 describe('ConfigurationService', () => {

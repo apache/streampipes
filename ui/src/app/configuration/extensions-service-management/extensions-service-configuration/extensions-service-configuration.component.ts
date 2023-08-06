@@ -19,7 +19,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { StreampipesPeContainer } from '../../shared/streampipes-pe-container.model';
 import { ConfigurationService } from '../../shared/configuration.service';
 import {
     animate,
@@ -106,7 +105,7 @@ export class SpExtensionsServiceConfigurationComponent {
             );
     }
 
-    expand(element: StreampipesPeContainer) {
+    expand(element: SpServiceConfiguration) {
         if (this.expandedElement === element) {
             this.expandedElement = undefined;
         } else {

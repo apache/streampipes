@@ -15,3 +15,17 @@
  * limitations under the License.
  *
  */
+
+import { Component, Input } from '@angular/core';
+import { ConfigurationService } from '../../../../shared/configuration.service';
+import { ConfigItem } from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-consul-configs-boolean',
+    templateUrl: './service-configs-boolean.component.html',
+    providers: [ConfigurationService],
+})
+export class ServiceConfigsBooleanComponent {
+    @Input() configuration: ConfigItem;
+    constructor(public configService: ConfigurationService) {}
+}

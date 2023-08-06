@@ -19,7 +19,7 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ConsulConfigsPasswordComponent } from './consul-configs-password.component';
+import { ServiceConfigsPasswordComponent } from './service-configs-password.component';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
@@ -34,11 +34,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ConsulConfigsPasswordComponent', () => {
-    let fixture: ComponentFixture<ConsulConfigsPasswordComponent>;
+    let fixture: ComponentFixture<ServiceConfigsPasswordComponent>;
 
     let configurationServiceStub: Partial<ConfigurationService>;
 
-    let component: ConsulConfigsPasswordComponent;
+    let component: ServiceConfigsPasswordComponent;
 
     let configurationServcie: ConfigurationService;
 
@@ -68,7 +68,7 @@ describe('ConsulConfigsPasswordComponent', () => {
                 FormsModule,
                 HttpClientTestingModule,
             ],
-            declarations: [ConsulConfigsPasswordComponent],
+            declarations: [ServiceConfigsPasswordComponent],
             providers: [
                 {
                     provide: ConfigurationService,
@@ -77,7 +77,7 @@ describe('ConsulConfigsPasswordComponent', () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(ConsulConfigsPasswordComponent);
+        fixture = TestBed.createComponent(ServiceConfigsPasswordComponent);
 
         configurationServcie =
             fixture.debugElement.injector.get(ConfigurationService);

@@ -24,11 +24,11 @@ const hiddenPasswordString = '*****';
 
 @Component({
     selector: 'sp-consul-configs-password',
-    templateUrl: './consul-configs-password.component.html',
-    styleUrls: ['./consul-configs-password.component.css'],
+    templateUrl: './service-configs-password.component.html',
+    styleUrls: ['./service-configs-password.component.css'],
     providers: [ConfigurationService],
 })
-export class ConsulConfigsPasswordComponent {
+export class ServiceConfigsPasswordComponent {
     @Input() configuration: ConfigItem;
 
     password: string;

@@ -15,3 +15,24 @@
  * limitations under the License.
  *
  */
+
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { XsService } from '../../../../NS/xs.service';
+import { SpServiceConfiguration } from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-consul-configs',
+    templateUrl: './service-configs.component.html',
+    providers: [XsService],
+})
+export class ServiceConfigsComponent {
+    @Input() consulService: SpServiceConfiguration;
+    @Output() updateConsulService: EventEmitter<SpServiceConfiguration> =
+        new EventEmitter<SpServiceConfiguration>();
+
+    constructor(private service: XsService) {}
+
+    updateConfiguration(): void {
+        this.updateConsulService.emit(this.consulService);
+    }
+}
