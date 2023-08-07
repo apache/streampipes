@@ -22,6 +22,7 @@ __all__ = [
 from typing import Dict
 
 from pydantic import StrictStr
+
 from streampipes.model.resource.resource import Resource
 
 

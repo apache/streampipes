@@ -19,6 +19,7 @@ import logging
 from typing import Any, Dict
 
 from nats import connect
+
 from streampipes.functions.broker import Publisher
 
 logger = logging.getLogger(__name__)

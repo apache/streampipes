@@ -28,6 +28,7 @@ import sys
 from typing import Dict, Optional
 
 from requests import Session
+
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.endpoint import APIEndpoint
 from streampipes.endpoint.api import (

@@ -19,6 +19,7 @@ import logging
 from typing import AsyncIterator
 
 from confluent_kafka import Consumer as KafkaConnection  # type: ignore
+
 from streampipes.functions.broker import Consumer
 from streampipes.functions.broker.kafka.kafka_message_fetcher import KafkaMessageFetcher
 from streampipes.model.common import random_letters
