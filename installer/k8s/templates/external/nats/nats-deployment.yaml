@@ -32,13 +32,13 @@ spec:
       initContainers:
         - name: init-wait-consul
           image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8500 && exit 0 || sleep 3; done; exit 1"]
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.consul.appName }} {{ .Values.external.consul.webPort }} && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: {{ .Values.external.nats.appName }}
           image: nats
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.external.nats.port}}
+            - containerPort: {{ .Values.external.nats.port }}
           livenessProbe:
             tcpSocket:
               port: {{ .Values.external.nats.port}}

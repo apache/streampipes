@@ -16,16 +16,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.external.consul.appName }}
+  name: {{ .Values.external.consul.service.name }}
 spec:
   selector:
     app: {{ .Values.external.consul.appName }}
   ports:
     - name: main
       protocol: TCP
-      port: 8500
-      targetPort: 8500
+      port: {{ .Values.external.consul.webPort }}
+      targetPort: {{ .Values.external.consul.service.webPort }}
     - name: test
       protocol: TCP
-      port: 8600
-      targetPort: 8600
+      port: {{ .Values.external.consul.dnsPort }}
+      targetPort: {{ .Values.external.consul.service.dnsPort }}

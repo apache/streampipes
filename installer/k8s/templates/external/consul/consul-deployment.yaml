@@ -57,29 +57,29 @@ spec:
             - name: CONSUL_LOCAL_CONFIG
               value: "{\"disable_update_check\": true}"
           ports:
-            - containerPort: {{ .Values.external.consul.port1 }}
-            - containerPort: {{ .Values.external.consul.port2 }}
+            - containerPort: {{ .Values.external.consul.webPort }}
+            - containerPort: {{ .Values.external.consul.dnsPort }}
           volumeMounts:
             - mountPath: "/consul/data"
               name: {{ .Values.external.consul.persistence.pvName }}
           livenessProbe:
             httpGet:
               path: /v1/status/leader
-              port: {{ .Values.external.consul.port1 }}
+              port: {{ .Values.external.consul.webPort }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /v1/status/leader
-              port: {{ .Values.external.consul.port1 }}
+              port: {{ .Values.external.consul.webPort }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           startupProbe:
             httpGet:
               path: /v1/status/leader
-              port: {{ .Values.external.consul.port1 }}
+              port: {{ .Values.external.consul.webPort }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
