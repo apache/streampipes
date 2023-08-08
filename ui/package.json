@@ -48,7 +48,7 @@
     "@circlon/angular-tree-component": "^11.0.4",
     "@ctrl/ngx-codemirror": "5.1.1",
     "@danielmoncada/angular-datetime-picker": "^15.0.2",
-    "@fortawesome/fontawesome-free": "6.3.0",
+    "@fortawesome/fontawesome-free": "6.4.2",
     "@jsplumb/browser-ui": "^6.2.10",
     "@ngx-loading-bar/core": "6.0.2",
     "@ngx-loading-bar/http-client": "6.0.2",
