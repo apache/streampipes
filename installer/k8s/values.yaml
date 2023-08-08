@@ -162,6 +162,18 @@ external:
       storageSize: "1Gi"
       claimName: "zookeeper-pvc"
       pvName: "zookeeper-pv"
+  pulsar:
+    appName: "pulsar"
+    version: 3.0.0
+    port: 6650
+    service:
+      name: "pulsar"
+      port: 6650
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "pulsar-pvc"
+      pvName: "pulsar-pv"
 
 
 
