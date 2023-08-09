@@ -140,7 +140,7 @@
 
 	<amqp-client.version>5.18.0</amqp-client.version>
 	<animal-sniffer-annotations.version>1.23</animal-sniffer-annotations.version>
-	<boofcv.version>0.43.1</boofcv.version>
+	<boofcv.version>0.44</boofcv.version>
 	<bcprov.version>1.70</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
