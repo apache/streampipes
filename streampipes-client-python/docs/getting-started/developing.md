@@ -93,6 +93,14 @@ poetry add <dep-name> --group stubs
 poetry add <dep-name> --group docs
 ```
 
+In case you want to regenerate the poetry lock file, e.g., in case you manually updated the `pyproject.toml`,
+the following command should be used:
+```bash
+poetry lock --no-update
+```
+
+After that, you should install the current version of the poetry lock file to keep your local environment consistent (see command above.)
+
 ### 📚Documentation
 To build our documentation, we use [Materials for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 All files can be found within the `docs` directory.
