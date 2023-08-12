@@ -237,6 +237,20 @@ rm -rf ${HOME}/streampipes-k8s
 | external.zookeeper.persistence.claimName        | Name of the ZooKeeper PersistentVolumeClaim              | "zookeeper-pvc"                          |
 | external.zookeeper.persistence.pvName           | Name of the ZooKeeper PersistentVolume                   | "zookeeper-pv"                           |
 
+
+####Pulsar common parameters
+| Parameter Name                                  | Description                                              | Value                                    |
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
+| external.pulsar.appName                         | pulsar application name                                  | "pulsar"                                 |
+| external.pulsar.version                         | pulsar version                                           | 3.0.0                                    |
+| external.pulsar.port                            | Port for the pulsar service                              | 6650                                     |
+| external.pulsar.service.name                    | Name of the pulsar service                               | "pulsar"                                 |
+| external.pulsar.service.port                    | TargetPort of the pulsar service                         | 6650                                     |
+| external.pulsar.persistence.storageClassName    | Storage class name for pulsar PVs                        | "hostpath"                               |
+| external.pulsar.persistence.storageSize         | Size of the pulsar PV                                    | "1Gi"                                    |
+| external.pulsar.persistence.claimName           | Name of the pulsar PersistentVolumeClaim                 | "pulsar-pvc"                             |
+| external.pulsar.persistence.pvName              | Name of the pulsar PersistentVolume                      | "pulsar-pv"                              |
+
 ## Bugs and Feature Requests
 
 If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue on [GitHub](https://github.com/apache/streampipes/issues).
