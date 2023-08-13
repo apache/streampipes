@@ -33,7 +33,7 @@ livedoc: doc
 
 .PHONY: mypy
 mypy:
-	mypy streampipes --config-file pyproject.toml
+	poetry run mypy streampipes --config-file pyproject.toml
 
 .PHONY: rebase
 rebase:
@@ -41,14 +41,14 @@ rebase:
 
 .PHONY: reformat-all
 reformat-all:
-	pyupgrade --py38 --keep-runtime-typing
-	autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes tests
-	isort --settings-file pyproject.toml
-	black --line-length=120 streampipes tests
+	poetry run pyupgrade --py38 --keep-runtime-typing
+	poetry run autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes tests
+	poetry run isort --settings-file pyproject.toml
+	poetry run black --line-length=120 streampipes tests
 
 .PHONY: pre-commit
 pre-commit:
-	git ls-files -- 'streampipes/**/*' | xargs pre-commit run --verbose --files
+	git ls-files -- 'streampipes/**/*' | xargs poetry run pre-commit run --verbose --files
 
 .PHONY: unit-tests
 unit-tests:
