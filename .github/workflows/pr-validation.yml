@@ -175,6 +175,11 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |

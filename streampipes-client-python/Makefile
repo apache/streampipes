@@ -21,7 +21,7 @@ check: mypy lint unit-tests
 
 .PHONY: doc
 doc:
-	mkdocs build
+	poetry run mkdocs build
 
 .PHONY: lint
 lint:
@@ -29,7 +29,7 @@ lint:
 
 .PHONY: livedoc
 livedoc: doc
-	mkdocs serve --dirtyreload
+	poetry run mkdocs serve --dirtyreload
 
 .PHONY: mypy
 mypy:
@@ -52,4 +52,4 @@ pre-commit:
 
 .PHONY: unit-tests
 unit-tests:
-	pytest --cov=streampipes tests/ --cov-fail-under=90 --cov-report term-missing --no-cov-on-fail
+	poetry run pytest --cov=streampipes tests/ --cov-fail-under=90 --cov-report term-missing --no-cov-on-fail
