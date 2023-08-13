@@ -39,7 +39,7 @@ include = [
 python = "^3.8,<3.11"
 confluent-kafka = "~2.0"
 nats-py = "~2.2"
-pandas = "~1.5"
+pandas = ">=1.5, ~2.0"
 pydantic = "~1.10"
 requests = "~2.28"
 typing-extensions = "~4.5"
