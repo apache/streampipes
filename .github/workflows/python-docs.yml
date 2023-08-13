@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/setup.py') }}
+          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/pyproject.toml', '**/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-pip-doc-
 
