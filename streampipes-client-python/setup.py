@@ -50,7 +50,7 @@ base_packages = [
 dev_packages = base_packages + [
     "autoflake==2.2.0",
     "black==23.7.0",
-    "blacken-docs==1.15.0",
+    "blacken-docs==1.16.0",
     "flake8==6.1.0",
     "interrogate[png]==1.5.0",
     "isort==5.12.0",
