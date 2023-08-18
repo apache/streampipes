@@ -1756,6 +1756,7 @@
                         <exclude>.mypy_cache/**</exclude>
                         <exclude>**/site/**</exclude>
                         <exclude>**/.mypy_cache/**</exclude>
+						<exclude>**/poetry.lock</exclude>
 
                         <!-- Exclude Husky which defines its own gitignore and is not detected by rat -->
                         <exclude>ui/.husky/**</exclude>
