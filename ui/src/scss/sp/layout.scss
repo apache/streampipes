@@ -104,6 +104,10 @@
     width: 60px;
 }
 
+.w-80-px {
+    width: 80px;
+}
+
 .w-100-px {
     width: 100px;
 }
@@ -232,4 +236,12 @@ img {
     .large-menu.mat-mdc-menu-panel {
         max-width: none;
     }
+}
+
+.min-w-100 {
+    min-width: 100px;
+}
+
+.min-w-200 {
+    min-width: 200px;
 }

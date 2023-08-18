@@ -103,6 +103,7 @@ export class DataExplorerDashboardOverviewComponent
         const dataViewDashboard: Dashboard = {};
         dataViewDashboard.dashboardGeneralSettings = {};
         dataViewDashboard.widgets = [];
+        dataViewDashboard.name = '';
 
         this.openDataViewModificationDialog(true, dataViewDashboard);
     }
