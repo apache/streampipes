@@ -143,6 +143,9 @@ jobs:
       matrix:
         python: [3.8, 3.9, "3.10", "3.11"]
         os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/checkout@v3
@@ -167,6 +170,7 @@ jobs:
       - name: Run unit-tests
         working-directory: ./streampipes-client-python
         run: |
+          source $VENV  # see https://github.com/snok/install-poetry#running-on-windows
           make unit-tests
 
   python-doc-checks:
