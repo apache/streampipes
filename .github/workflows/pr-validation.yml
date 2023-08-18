@@ -157,6 +157,7 @@ jobs:
 
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
+        working-directory: ./streampipes-client-python
         with:
           version: 1.5.1
           in-project: true
