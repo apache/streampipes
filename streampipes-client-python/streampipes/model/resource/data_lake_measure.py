@@ -17,6 +17,7 @@
 from typing import Optional
 
 from pydantic import StrictBool, StrictStr
+
 from streampipes.model.common import EventSchema
 from streampipes.model.resource.resource import Resource
 

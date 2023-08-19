@@ -18,6 +18,7 @@ import logging
 from typing import AsyncIterator
 
 from nats import connect
+
 from streampipes.functions.broker import Consumer
 
 logger = logging.getLogger(__name__)
