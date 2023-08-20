@@ -92,7 +92,7 @@
 	<json-smart.version>2.4.9</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
 	<kafka.version>3.4.0</kafka.version>
-	<kotlin-stdlib.version>1.8.0</kotlin-stdlib.version>
+	<kotlin-stdlib.version>1.9.0</kotlin-stdlib.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
 	<log4j.version>2.20.0</log4j.version>
 	<lz4.version>1.8.0</lz4.version>
@@ -1327,7 +1327,7 @@
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-stdlib-jdk8</artifactId>
+                <artifactId>kotlin-stdlib</artifactId>
                 <version>${kotlin-stdlib.version}</version>
             </dependency>
         </dependencies>
