@@ -25,4 +25,5 @@
     <suppress checks="." files="com.github.jqudt"/>
     <suppress checks="." files="com.kohlschutter.boilerpipe"/>
     <suppress checks="." files="/streampipes-maven-plugin/target/*"/>
+    <suppress checks="." files="/streampipes-client-python/target/*/poetry.lock"/>
 </suppressions>

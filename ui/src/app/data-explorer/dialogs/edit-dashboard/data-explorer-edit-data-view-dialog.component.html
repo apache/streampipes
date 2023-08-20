@@ -27,10 +27,14 @@
                 <mat-form-field class="w-100" floatLabel="auto" color="accent">
                     <mat-label>Data View Name</mat-label>
                     <input
+                        id="dvname"
+                        #dvname="ngModel"
+                        required
                         matInput
                         data-cy="data-view-name"
                         [(ngModel)]="dashboard.name"
                     />
+                    <mat-error>Name must not be empty</mat-error>
                 </mat-form-field>
                 <mat-form-field class="w-100" color="accent">
                     <mat-label>Description</mat-label>
@@ -70,6 +74,7 @@
             Close
         </button>
         <button
+            [disabled]="dvname.invalid"
             mat-button
             mat-raised-button
             color="accent"

@@ -23,6 +23,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Literal, Optional, Tuple, Type
 
 from pydantic import BaseModel, Extra, Field, StrictInt, ValidationError, validator
+
 from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.container import DataLakeMeasures
 from streampipes.model.container.resource_container import ResourceContainer

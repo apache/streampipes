@@ -17,6 +17,7 @@
 from typing import List, Optional
 
 from pydantic import Field, StrictBool, StrictInt, StrictStr
+
 from streampipes.model.common import (
     ApplicationLink,
     EventGrounding,
