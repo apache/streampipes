@@ -45,8 +45,8 @@
                     <span class="general-options-header">Users</span>
                     <mat-form-field class="example-chip-list" color="accent">
                         <mat-label>Authorized Users</mat-label>
-                        <mat-chip-list #chipList aria-label="User selection">
-                            <mat-chip
+                        <mat-chip-grid #chipList aria-label="User selection">
+                            <mat-chip-row
                                 *ngFor="let user of grantedUserAuthorities"
                                 selectable="true"
                                 removable="true"
@@ -56,7 +56,7 @@
                                 <button matChipRemove>
                                     <mat-icon>cancel</mat-icon>
                                 </button>
-                            </mat-chip>
+                            </mat-chip-row>
                             <input
                                 placeholder="Add"
                                 #userInput
@@ -68,7 +68,7 @@
                                 "
                                 (matChipInputTokenEnd)="addUser($event)"
                             />
-                        </mat-chip-list>
+                        </mat-chip-grid>
                         <mat-autocomplete
                             #auto="matAutocomplete"
                             (optionSelected)="userSelected($event)"
@@ -90,8 +90,8 @@
                     <span class="general-options-header">Groups</span>
                     <mat-form-field class="example-chip-list" color="accent">
                         <mat-label>Authorized Groups</mat-label>
-                        <mat-chip-list #chipList aria-label="Group selection">
-                            <mat-chip
+                        <mat-chip-grid #chipList aria-label="Group selection">
+                            <mat-chip-row
                                 *ngFor="let group of grantedGroupAuthorities"
                                 selectable="true"
                                 removable="true"
@@ -101,7 +101,7 @@
                                 <button matChipRemove>
                                     <mat-icon>cancel</mat-icon>
                                 </button>
-                            </mat-chip>
+                            </mat-chip-row>
                             <input
                                 placeholder="Add"
                                 #groupInput
@@ -113,7 +113,7 @@
                                 "
                                 (matChipInputTokenEnd)="addGroup($event)"
                             />
-                        </mat-chip-list>
+                        </mat-chip-grid>
                         <mat-autocomplete
                             #auto="matAutocomplete"
                             (optionSelected)="groupSelected($event)"
