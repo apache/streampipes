@@ -28,7 +28,7 @@ import { RestService } from '../../services/rest.service';
     templateUrl: './pipeline-element-runtime-info.component.html',
     styleUrls: ['./pipeline-element-runtime-info.component.scss'],
 })
-export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
+export class PipelineElementRuntimeInfoComponent implements OnDestroy {
     @Input()
     streamDescription: SpDataStream;
 
@@ -39,10 +39,6 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     runtimeDataError = false;
 
     constructor(private restService: RestService) {}
-
-    ngOnInit(): void {
-        this.checkPollingStart();
-    }
 
     checkPollingStart() {
         if (this._pollingActive) {

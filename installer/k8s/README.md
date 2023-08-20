@@ -224,20 +224,6 @@ rm -rf ${HOME}/streampipes-k8s
 | external.kafka.persistence.pvName               | Name of the Kafka PersistentVolume                       | "kafka-pv"                               |
 
 
-####Zookeeper common parameters
-| Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
-| external.zookeeper.appName                      | ZooKeeper application name                               | "zookeeper"                              |
-| external.zookeeper.version                      | ZooKeeper version                                        | 3.4.13                                   |
-| external.zookeeper.port                         | Port for the ZooKeeper service                           | 2181                                     |
-| external.zookeeper.service.name                 | Name of the ZooKeeper service                            | "zookeeper"                              |
-| external.zookeeper.service.port                 | TargetPort of the ZooKeeper service                      | 2181                                     |
-| external.zookeeper.persistence.storageClassName | Storage class name for ZooKeeper PVs                     | "hostpath"                               |
-| external.zookeeper.persistence.storageSize      | Size of the ZooKeeper PV                                 | "1Gi"                                    |
-| external.zookeeper.persistence.claimName        | Name of the ZooKeeper PersistentVolumeClaim              | "zookeeper-pvc"                          |
-| external.zookeeper.persistence.pvName           | Name of the ZooKeeper PersistentVolume                   | "zookeeper-pv"                           |
-
-
 ####Pulsar common parameters
 | Parameter Name                                  | Description                                              | Value                                    |
 |-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
