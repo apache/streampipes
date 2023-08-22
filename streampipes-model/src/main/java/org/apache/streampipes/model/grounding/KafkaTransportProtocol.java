@@ -42,6 +42,8 @@ public class KafkaTransportProtocol extends TransportProtocol {
 
   private String groupId;
 
+  private String groupInstanceId;
+
   public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic) {
     super(kafkaHost, new SimpleTopicDefinition(topic));
     this.zookeeperHost = kafkaHost;
@@ -65,6 +67,7 @@ public class KafkaTransportProtocol extends TransportProtocol {
     this.acks = other.getAcks();
     this.batchSize = other.getBatchSize();
     this.groupId = other.getGroupId();
+    this.groupInstanceId = other.getGroupInstanceId();
     this.lingerMs = other.getLingerMs();
     this.maxRequestSize = other.getMaxRequestSize();
     this.messageMaxBytes = other.getMessageMaxBytes();
@@ -164,5 +167,13 @@ public class KafkaTransportProtocol extends TransportProtocol {
 
   public void setMaxRequestSize(String maxRequestSize) {
     this.maxRequestSize = maxRequestSize;
+  }
+
+  public String getGroupInstanceId() {
+    return groupInstanceId;
+  }
+
+  public void setGroupInstanceId(String groupInstanceId) {
+    this.groupInstanceId = groupInstanceId;
   }
 }

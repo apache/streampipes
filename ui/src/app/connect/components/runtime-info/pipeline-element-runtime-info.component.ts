@@ -19,16 +19,18 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
     EventPropertyUnion,
+    KafkaTransportProtocol,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { RestService } from '../../services/rest.service';
+import { UUID } from 'angular2-uuid';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
     templateUrl: './pipeline-element-runtime-info.component.html',
     styleUrls: ['./pipeline-element-runtime-info.component.scss'],
 })
-export class PipelineElementRuntimeInfoComponent implements OnDestroy {
+export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     @Input()
     streamDescription: SpDataStream;
 
@@ -38,7 +40,28 @@ export class PipelineElementRuntimeInfoComponent implements OnDestroy {
     timer: any;
     runtimeDataError = false;
 
+    groupId: string;
+    groupInstanceId = 'runtime-info';
+
     constructor(private restService: RestService) {}
+
+    ngOnInit(): void {
+        this.checkAndAssignGroupId();
+    }
+
+    checkAndAssignGroupId(): void {
+        if (!this.groupId && this.streamDescription) {
+            if (
+                this.streamDescription.eventGrounding
+                    .transportProtocols[0] instanceof KafkaTransportProtocol
+            ) {
+                this.streamDescription.eventGrounding.transportProtocols[0].groupId =
+                    UUID.UUID();
+                this.streamDescription.eventGrounding.transportProtocols[0].groupInstanceId =
+                    this.groupInstanceId;
+            }
+        }
+    }
 
     checkPollingStart() {
         if (this._pollingActive) {
@@ -99,6 +122,7 @@ export class PipelineElementRuntimeInfoComponent implements OnDestroy {
     @Input()
     set pollingActive(pollingActive: boolean) {
         this._pollingActive = pollingActive;
+        this.checkAndAssignGroupId();
         this.checkPollingStart();
     }
 

@@ -56,13 +56,12 @@ export class PipelineElementPreviewComponent implements OnInit {
                     ) {
                         this.runtimeData = data;
                     }
-
-                    this.timer = setTimeout(() => {
-                        this.getLatestRuntimeInfo();
-                    }, 1000);
                 } else {
                     this.runtimeDataError = true;
                 }
+                this.timer = setTimeout(() => {
+                    this.getLatestRuntimeInfo();
+                }, 1000);
             });
     }
 }

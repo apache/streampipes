@@ -20,8 +20,10 @@ package org.apache.streampipes.messaging.kafka.config;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.CooperativeStickyAssignor;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -54,9 +56,13 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KEY_DESERIALIZER_CLASS_CONFIG_DEFAULT);
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, VALUE_DESERIALIZER_CLASS_CONFIG_DEFAULT);
 
-
     props.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
+    props.put(
+        ConsumerConfig.GROUP_INSTANCE_ID_CONFIG,
+        getConfigOrDefault(protocol::getGroupInstanceId, UUID.randomUUID().toString())
+    );
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, AUTO_OFFSET_RESET_CONFIG_DEFAULT);
+    props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, List.of(CooperativeStickyAssignor.class));
     return props;
   }
 }

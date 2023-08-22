@@ -28,8 +28,11 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
+import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +45,37 @@ public class PipelinePreview {
   public PipelinePreviewModel initiatePreview(Pipeline pipeline) {
     String previewId = generatePreviewId();
     pipeline.setActions(new ArrayList<>());
-    List<NamedStreamPipesEntity> pipelineElements = new PipelineVerificationHandlerV2(pipeline)
-        .verifyAndBuildGraphs(true)
-        .stream()
-        .collect(Collectors.toList());
+    List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
+        new PipelineVerificationHandlerV2(pipeline)
+            .verifyAndBuildGraphs(true));
+
+    pipelineElements.forEach(this::applyGrounding);
 
     invokeGraphs(filter(pipelineElements));
     storeGraphs(previewId, pipelineElements);
 
     return makePreviewModel(previewId, pipelineElements);
+  }
+
+  private void applyGrounding(NamedStreamPipesEntity pe) {
+    if (pe instanceof SpDataStream) {
+      var grounding = ((SpDataStream) pe).getEventGrounding();
+      applyGroupId(grounding);
+    } else if (pe instanceof DataProcessorInvocation) {
+      applyGroupId(((DataProcessorInvocation) pe).getOutputStream().getEventGrounding());
+    }
+  }
+
+  private void applyGroupId(EventGrounding grounding) {
+    var protocol = grounding.getTransportProtocol();
+    if (protocol instanceof KafkaTransportProtocol) {
+      var clonedProtocol = new Cloner().protocol(protocol);
+      String groupId = UUID.randomUUID().toString();
+      String groupInstanceId = UUID.randomUUID().toString();
+      ((KafkaTransportProtocol) clonedProtocol).setGroupId(groupId);
+      ((KafkaTransportProtocol) clonedProtocol).setGroupInstanceId(groupInstanceId);
+      grounding.setTransportProtocol(clonedProtocol);
+    }
   }
 
   public void deletePreview(String previewId) {

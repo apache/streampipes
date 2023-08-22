@@ -1984,6 +1984,7 @@ export class KafkaTransportProtocol extends TransportProtocol {
     'acks': string;
     'batchSize': string;
     'groupId': string;
+    'groupInstanceId': string;
     'kafkaPort': number;
     'lingerMs': number;
     'maxRequestSize': string;
