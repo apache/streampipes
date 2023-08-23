@@ -36,7 +36,7 @@ public class Protocols {
    * containing URL and topic where data arrives.
    */
   public static KafkaTransportProtocol kafka(String kafkaHost, Integer kafkaPort, String topic) {
-    return new KafkaTransportProtocol(kafkaHost, kafkaPort, topic, kafkaHost, kafkaPort);
+    return new KafkaTransportProtocol(kafkaHost, kafkaPort, topic);
   }
 
   /**

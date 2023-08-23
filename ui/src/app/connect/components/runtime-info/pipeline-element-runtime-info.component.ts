@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import {
     EventPropertyUnion,
     KafkaTransportProtocol,
@@ -30,7 +30,7 @@ import { UUID } from 'angular2-uuid';
     templateUrl: './pipeline-element-runtime-info.component.html',
     styleUrls: ['./pipeline-element-runtime-info.component.scss'],
 })
-export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
+export class PipelineElementRuntimeInfoComponent implements OnDestroy {
     @Input()
     streamDescription: SpDataStream;
 
@@ -44,10 +44,6 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     groupInstanceId = 'runtime-info';
 
     constructor(private restService: RestService) {}
-
-    ngOnInit(): void {
-        this.checkAndAssignGroupId();
-    }
 
     checkAndAssignGroupId(): void {
         if (!this.groupId && this.streamDescription) {
@@ -64,7 +60,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     }
 
     checkPollingStart() {
-        if (this._pollingActive) {
+        if (this._pollingActive && this.streamDescription) {
             this.getLatestRuntimeInfo();
         }
     }
