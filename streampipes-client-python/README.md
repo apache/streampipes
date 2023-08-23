@@ -52,6 +52,9 @@ and the amazing universe of data analytics libraries in Python. </p>
 <a href="https://github.com/python/mypy" target="_blank">
     <img src="https://img.shields.io/badge/typed-mypy-blue" alt="Typed: MyPy">
 </a>
+<a href="https://python-poetry.org" target="_blank">
+    <img src="https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json" alt="Dependency & Build Management: Poetry">
+</a>
 <img src="https://raw.githubusercontent.com/apache/streampipes/dev/streampipes-client-python/docs/img/interrogate_badge.svg" alt= “interrogate” height="20">
 <a href="https://pypi.org/project/streampipes/" target="_blank">
     <img src="https://img.shields.io/pypi/dm/streampipes" alt="Downloads: PyPI/Month">
