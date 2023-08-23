@@ -24,17 +24,20 @@ This document describes how to easily set up your local dev environment to work 
 
 1) **Set up your Python environment**
 
-Create a virtual Python environment with a tool of your choice.
-As a next step, install all required dependencies for the development, e.g., with `pip`:
-
+Create a virtual Python environment using a tool of your choice. 
+To manage dependencies, we use [Poetry](https://python-poetry.org/), so please install poetry in your local environment, e.g. via
 ```bash
-pip install .[dev]  # or alternatively: pip install .[all] to include dependencies for building the docs as well
+pip install poetry
 ```
 
-In case you are on macOS and using `zsh` the following should work for you:
+Once poetry is installed you can simply finalize your Python environment by running:
+
 ```bash
-pip install ."[dev]"
+poetry install --with dev,stubs  # install everything that is required for the development
+poetry install --with docs  # install everything to work with the documentation
+poetry install --with dev,stubs,docs  # install all optional dependencies related to development
 ```
+
 <br>
 
 2) **Install pre-commit hook**
@@ -75,6 +78,36 @@ TODO: replace link to java file by link to documentation
 3) **Build a similar API as the Java client provides** 🔄 <br>
 Whenever possible, please try to develop the API of the Python library the same as the [Java client](https://github.com/apache/streampipes/blob/dev/streampipes-client/src/main/java/org/apache/streampipes/client/StreamPipesClient.java) or Java SDK.
 By doing so, we would like to provide a consistent developer experience and the basis for automated testing in the future.
+
+### 📦 Dependency Management
+In case you want to add a new dependency to StreamPipes you can use the following command:
+```bash
+poetry add <dep-name>
+```
+
+If the dependency is only required for development purpose or the documentation,
+please stick to one the following:
+```bash
+poetry add <dep-name> --group dev
+poetry add <dep-name> --group stubs
+poetry add <dep-name> --group docs
+```
+
+In case you want to regenerate the poetry lock file, e.g., in case you manually updated the `pyproject.toml`,
+the following command should be used:
+```bash
+poetry lock --no-update
+```
+
+After that, you should install the current version of the poetry lock file to keep your local environment consistent (see command above.)
+
+### 📚Documentation
+To build our documentation, we use [Materials for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+All files can be found within the `docs` directory.
+To pre-view your local version of the documentation, you can use the following command:
+```bash
+make livedoc
+```
 
 ---
 ## 🚀 Roadmap

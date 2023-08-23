@@ -38,6 +38,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SpBreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { ShortenPipe } from './pipes/shorten.pipe';
 
 @NgModule({
     imports: [
@@ -65,7 +66,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         StreampipesComponent,
         IconbarComponent,
         ToolbarComponent,
+        ShortenPipe,
     ],
-    providers: [],
+    providers: [ShortenPipe],
 })
 export class CoreModule {}
