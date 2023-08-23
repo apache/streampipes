@@ -179,7 +179,9 @@ export class AdapterStartedDialog implements OnInit {
                         .subscribe(pipelineOperationStatus => {
                             this.pipelineOperationStatus =
                                 pipelineOperationStatus;
-                            this.startAdapter(message, adapterElementId);
+                            setTimeout(() => {
+                                this.startAdapter(message, adapterElementId);
+                            }, 4000);
                         });
                 });
         });

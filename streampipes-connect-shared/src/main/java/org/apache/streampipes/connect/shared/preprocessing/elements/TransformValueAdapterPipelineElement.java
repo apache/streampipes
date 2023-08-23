@@ -28,6 +28,7 @@ import org.apache.streampipes.connect.shared.preprocessing.transform.value.Value
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.ValueTransformationRule;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
@@ -75,6 +76,8 @@ public class TransformValueAdapterPipelineElement implements IAdapterPipelineEle
         var tmp = (ChangeDatatypeTransformationRuleDescription) ruleDescription;
         rules.add(new DatatypeTransformationRule(tmp.getRuntimeKey(), tmp.getOriginalDatatypeXsd(),
             tmp.getTargetDatatypeXsd()));
+      } else if (ruleDescription instanceof AddValueTransformationRuleDescription) {
+        // Do nothing since value rules are processed earlier
       } else {
         logger.error(
             "Could not find the class for the rule description. This should never happen. "
