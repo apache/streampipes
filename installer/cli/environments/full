@@ -26,6 +26,5 @@ zookeeper
 kafka
 influxdb
 sources-watertank-simulator
-sources-vehicle-simulator
 pipeline-elements-all-jvm
 pipeline-elements-all-flink
