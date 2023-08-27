@@ -123,8 +123,8 @@ jobs:
         uses: snok/install-poetry@v1
         with:
           version: 1.5.1
-          in-project: true
-          prefer-active-python: true
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
@@ -187,8 +187,8 @@ jobs:
         uses: snok/install-poetry@v1
         with:
           version: 1.5.1
-          in-project: true
-          prefer-active-python: true
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
