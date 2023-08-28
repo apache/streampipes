@@ -22,51 +22,26 @@ import {
     SpQueryResult,
 } from '@streampipes/platform-services';
 
-import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { HeatmapWidgetModel } from './model/heatmap-widget.model';
 
 import { EChartsOption } from 'echarts';
-import { ECharts } from 'echarts/core';
+import { BaseDataExplorerEchartsWidgetDirective } from '../base/base-data-explorer-echarts-widget.directive';
+import { SpEchartsRenderer } from '../../../models/dataview-dashboard.model';
 
 @Component({
     selector: 'sp-data-explorer-heatmap-widget',
-    templateUrl: './heatmap-widget.component.html',
-    styleUrls: ['./heatmap-widget.component.scss'],
+    templateUrl: '../base/echarts-widget.component.html',
+    styleUrls: ['../base/echarts-widget.component.scss'],
 })
 export class HeatmapWidgetComponent
-    extends BaseDataExplorerWidgetDirective<HeatmapWidgetModel>
+    extends BaseDataExplorerEchartsWidgetDirective<HeatmapWidgetModel>
     implements OnInit
 {
-    eChartsInstance: ECharts;
-    currentWidth: number;
-    currentHeight: number;
-
-    option = {};
     dynamic: EChartsOption;
-
-    configReady = false;
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.onSizeChanged(
-            this.gridsterItemComponent.width,
-            this.gridsterItemComponent.height,
-        );
-        this.initOptions();
     }
-
-    public refreshView() {}
-
-    onResize(width: number, height: number) {
-        this.onSizeChanged(width, height);
-    }
-
-    handleUpdatedFields(
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ) {}
-
-    beforeDataFetched() {}
 
     onDataReceived(spQueryResult: SpQueryResult[]) {
         this.setShownComponents(false, true, false, false);
@@ -79,25 +54,6 @@ export class HeatmapWidgetComponent
                 dataBundle[3],
                 dataBundle[4],
             );
-        }
-    }
-
-    onChartInit(ec: ECharts) {
-        this.eChartsInstance = ec;
-        this.applySize(this.currentWidth, this.currentHeight);
-        this.initOptions();
-    }
-
-    protected onSizeChanged(width: number, height: number) {
-        this.currentWidth = width;
-        this.currentHeight = height;
-        this.configReady = true;
-        this.applySize(width, height);
-    }
-
-    applySize(width: number, height: number) {
-        if (this.eChartsInstance) {
-            this.eChartsInstance.resize({ width, height });
         }
     }
 
@@ -325,4 +281,15 @@ export class HeatmapWidgetComponent
         }
         return num;
     }
+
+    getRenderer(): SpEchartsRenderer<HeatmapWidgetModel> {
+        return undefined;
+    }
+
+    protected handleUpdatedFields(
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ) {}
+
+    refreshView() {}
 }

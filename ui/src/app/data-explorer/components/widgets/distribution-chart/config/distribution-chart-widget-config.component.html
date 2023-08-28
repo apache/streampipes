@@ -51,6 +51,75 @@
     >
     </sp-select-property>
 
+    <div
+        fxLayoutGap="10px"
+        fxLayout="column"
+        *ngIf="
+            currentlyConfiguredWidget.visualizationConfig.displayType ===
+            'histogram'
+        "
+    >
+        <mat-checkbox
+            [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.autoBin"
+            (change)="triggerDataRefresh()"
+        >
+            Auto-compute number of bins
+        </mat-checkbox>
+        <mat-form-field
+            fxFlex="100"
+            color="accent"
+            appearance="outline"
+            *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoBin"
+        >
+            <mat-label><span>Number of bins</span></mat-label>
+            <input
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig.numberOfBins
+                "
+                matInput
+                (input)="onNumBinChange($event.target.value)"
+            />
+        </mat-form-field>
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.autoDomain
+            "
+            (change)="triggerViewRefresh()"
+        >
+            All values
+        </mat-checkbox>
+        <mat-form-field
+            fxFlex="100"
+            color="accent"
+            appearance="outline"
+            *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoDomain"
+        >
+            <mat-label><span>Minimum value</span></mat-label>
+            <input
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig.domainMin
+                "
+                matInput
+                (input)="onDomainMinChange($event.target.value)"
+            />
+        </mat-form-field>
+        <mat-form-field
+            fxFlex="100"
+            color="accent"
+            appearance="outline"
+            *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoDomain"
+        >
+            <mat-label><span>Maximum value</span></mat-label>
+            <input
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig.domainMax
+                "
+                matInput
+                (input)="onDomainMaxChange($event.target.value)"
+            />
+        </mat-form-field>
+    </div>
+
     <h5
         *ngIf="
             currentlyConfiguredWidget.visualizationConfig.displayType ===
@@ -62,6 +131,7 @@
         Rounding
     </h5>
     <mat-form-field
+        appearance="outline"
         class="marginColorField"
         color="accent"
         fxFlex="35"
@@ -87,13 +157,14 @@
     </mat-form-field>
 
     <div
+        class="mt-10"
         *ngIf="
             currentlyConfiguredWidget.visualizationConfig.displayType ===
             'heatmap'
         "
     >
-        <mat-form-field fxFlex="100" color="accent">
-            <mat-label> <span>Resolution</span></mat-label>
+        <mat-form-field fxFlex="100" color="accent" appearance="outline">
+            <mat-label><span>Resolution</span></mat-label>
             <input
                 [(ngModel)]="
                     currentlyConfiguredWidget.visualizationConfig.resolution

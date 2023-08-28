@@ -15,3 +15,23 @@
  * limitations under the License.
  *
  */
+
+import { SpBaseEchartsRenderer } from './sp-base-echarts-renderer';
+import { HeatmapWidgetModel } from '../components/widgets/heatmap/model/heatmap-widget.model';
+import { GeneratedDataset, WidgetSize } from '../models/dataset.model';
+import { EChartsOption } from 'echarts';
+
+export class SpHeatmapRenderer extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
+    applyOptions(
+        datasets: GeneratedDataset,
+        options: EChartsOption,
+        widgetConfig: HeatmapWidgetModel,
+        widgetSize: WidgetSize,
+    ): void {
+        // TODO
+    }
+
+    getType(): string {
+        return 'heatmap';
+    }
+}

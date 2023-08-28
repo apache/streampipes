@@ -93,6 +93,9 @@ export abstract class BaseDataExplorerWidgetDirective<
     resizeSub: Subscription;
     timeSelectionSub: Subscription;
 
+    widthOffset: number;
+    heightOffset: number;
+
     requestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
         Observable<SpQueryResult>[]
     >();
@@ -107,8 +110,8 @@ export abstract class BaseDataExplorerWidgetDirective<
     ) {}
 
     ngOnInit(): void {
-        const heightOffset = this.gridMode ? 70 : 65;
-        const widthOffset = this.gridMode ? 10 : 10;
+        this.heightOffset = this.gridMode ? 70 : 65;
+        this.widthOffset = this.gridMode ? 10 : 10;
         this.showData = true;
         const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
         this.fieldProvider =
@@ -181,8 +184,9 @@ export abstract class BaseDataExplorerWidgetDirective<
                 info => {
                     if (info.gridsterItem.id === this.dataExplorerWidget._id) {
                         this.onResize(
-                            this.gridsterItemComponent.width - widthOffset,
-                            this.gridsterItemComponent.height - heightOffset,
+                            this.gridsterItemComponent.width - this.widthOffset,
+                            this.gridsterItemComponent.height -
+                                this.heightOffset,
                         );
                     }
                 },
@@ -197,8 +201,8 @@ export abstract class BaseDataExplorerWidgetDirective<
             );
         this.updateData();
         this.onResize(
-            this.gridsterItemComponent.width - widthOffset,
-            this.gridsterItemComponent.height - heightOffset,
+            this.gridsterItemComponent.width - this.widthOffset,
+            this.gridsterItemComponent.height - this.heightOffset,
         );
     }
 

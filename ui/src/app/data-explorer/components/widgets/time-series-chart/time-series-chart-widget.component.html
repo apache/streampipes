@@ -44,6 +44,8 @@
         [divId]="dataExplorerWidget._id"
         class="plotly-container"
         [data]="data"
+        [updateOnlyWithRevision]="true"
+        [revision]="revision"
         [layout]="graph.layout"
         [config]="graph.config"
     >
