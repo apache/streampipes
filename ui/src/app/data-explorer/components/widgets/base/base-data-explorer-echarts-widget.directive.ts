@@ -18,6 +18,7 @@
 
 import { Directive, OnInit } from '@angular/core';
 import {
+    DataExplorerField,
     DataExplorerWidgetModel,
     SpQueryResult,
 } from '@streampipes/platform-services';
@@ -95,6 +96,20 @@ export abstract class BaseDataExplorerEchartsWidgetDirective<
                 { width: this.currentWidth, height: this.currentHeight },
             ),
         };
+    }
+
+    triggerFieldUpdate(
+        selected: DataExplorerField,
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ): DataExplorerField {
+        return this.updateSingleField(
+            selected,
+            this.fieldProvider.numericFields,
+            addedFields,
+            removedFields,
+            field => field.fieldCharacteristics.numeric,
+        );
     }
 
     refreshView() {

@@ -45,20 +45,6 @@ export class DistributionChartWidgetComponent
             );
     }
 
-    triggerFieldUpdate(
-        selected: DataExplorerField,
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ): DataExplorerField {
-        return this.updateSingleField(
-            selected,
-            this.fieldProvider.numericFields,
-            addedFields,
-            removedFields,
-            field => field.fieldCharacteristics.numeric,
-        );
-    }
-
     getRenderer(): SpEchartsRenderer<DistributionChartWidgetModel> {
         const widgetCategory = DataExplorerWidgetRegistry.getWidgetTemplate(
             WidgetType.DistributionChart,
