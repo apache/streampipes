@@ -30,7 +30,6 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 @Component({
     selector: 'sp-data-explorer-heatmap-widget-config',
     templateUrl: './heatmap-widget-config.component.html',
-    styleUrls: ['./heatmap-widget-config.component.scss'],
 })
 export class HeatmapWidgetConfigComponent
     extends BaseWidgetConfig<HeatmapWidgetModel, HeatmapVisConfig>

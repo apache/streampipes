@@ -28,7 +28,6 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 @Component({
     selector: 'sp-data-explorer-distribution-chart-widget-config',
     templateUrl: './distribution-chart-widget-config.component.html',
-    styleUrls: ['./distribution-chart-widget-config.component.scss'],
 })
 export class DistributionWidgetConfigComponent
     extends BaseWidgetConfig<

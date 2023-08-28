@@ -28,7 +28,6 @@ import { ColorUtils } from '../utils/color-utils';
 @Component({
     selector: 'sp-data-explorer-correlation-chart-widget',
     templateUrl: './correlation-chart-widget.component.html',
-    styleUrls: ['./correlation-chart-widget.component.scss'],
 })
 export class CorrelationChartWidgetComponent
     extends BaseDataExplorerWidgetDirective<CorrelationChartWidgetModel>
