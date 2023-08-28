@@ -139,13 +139,13 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "blacken-docs"
-version = "1.15.0"
+version = "1.16.0"
 description = "Run Black on Python code blocks in documentation files."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "blacken_docs-1.15.0-py3-none-any.whl", hash = "sha256:020657fd480f9f0a4dc82b9278390891ebd5216992b026e652c5b31d0e9c405d"},
-    {file = "blacken_docs-1.15.0.tar.gz", hash = "sha256:2915242add4e584738027b5bebafd4120c174a6c7645e1d8ce1c2f3265edc48a"},
+    {file = "blacken_docs-1.16.0-py3-none-any.whl", hash = "sha256:b0dcb84b28ebfb352a2539202d396f50e15a54211e204a8005798f1d1edb7df8"},
+    {file = "blacken_docs-1.16.0.tar.gz", hash = "sha256:b4bdc3f3d73898dfbf0166f292c6ccfe343e65fc22ddef5319c95d1a8dcc6c1c"},
 ]
 
 [package.dependencies]
@@ -3245,4 +3245,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">3.8.1,<3.12"
-content-hash = "97e9d6655de747dc52a07cd95ec7dc2497f2c7e479875a127b1caf521e10bd97"
+content-hash = "376ccc3fa94bac077bf996255f3765a883f1092ab66df1fd32a4648ad896fc11"
