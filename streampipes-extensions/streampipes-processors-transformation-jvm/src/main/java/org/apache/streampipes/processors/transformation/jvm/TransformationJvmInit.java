@@ -41,6 +41,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadat
 import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.hasher.FieldHasherProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.math.RoundProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
@@ -90,7 +91,8 @@ public class TransformationJvmInit extends ExtensionsModelSubmitter {
             new StringToStateProcessor(),
             new StringCounterProcessor(),
             new BooleanOperatorProcessor(),
-            new FiledRenameProcessor())
+            new FiledRenameProcessor(),
+            new RoundProcessor())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
