@@ -16,11 +16,12 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.jvm.processor.math;
+package org.apache.streampipes.processors.transformation.jvm.processor.round;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -28,7 +29,9 @@ import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
@@ -47,12 +50,15 @@ public class RoundProcessor extends StreamPipesDataProcessor {
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder
-            .create("package.org.apache.streampipes.processors.transformation.jvm.processor.math", "Round", "Round numeric values")
+            .create("org.apache.streampipes.processors.transformation.jvm.round")
+            .category(DataProcessorType.TRANSFORM)
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                 .create()
-                .requiredPropertyWithNaryMapping(EpRequirements.numberReq(), Labels.from(FIELDS, "Fields to Be Rounded", "fields to be rounded"), PropertyScope.NONE)
+                .requiredPropertyWithNaryMapping(EpRequirements.numberReq(), Labels.withId(FIELDS), PropertyScope.NONE)
                 .build())
-            .requiredIntegerParameter(Labels.from(NUM_DIGITS, "Number of Digits", "How many digits after decimal point to round/keep?"))
+            .requiredIntegerParameter(Labels.withId(NUM_DIGITS))
             .outputStrategy(OutputStrategies.keep())
             .build();
     }
@@ -68,9 +74,7 @@ public class RoundProcessor extends StreamPipesDataProcessor {
         for (String fieldToBeRounded : fieldsToBeRounded) {
             double value = event.getFieldBySelector(fieldToBeRounded).getAsPrimitive().getAsDouble();
             double roundedValue = BigDecimal.valueOf(value).setScale(numDigits, RoundingMode.HALF_UP).doubleValue();
-            event.removeFieldBySelector(fieldToBeRounded);
-            // Needs to remove "s0::“ in the beginning since addField uses runtime name
-            event.addField(fieldToBeRounded.substring(4), roundedValue);
+            event.updateFieldBySelector(fieldToBeRounded, roundedValue);
         }
         collector.collect(event);
     }
