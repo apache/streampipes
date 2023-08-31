@@ -40,46 +40,46 @@ import java.math.RoundingMode;
 import java.util.List;
 
 public class RoundProcessor extends StreamPipesDataProcessor {
+  private List<String> fieldsToBeRounded;
+  private int numDigits;
 
-    private List<String> fieldsToBeRounded;
-    private int numDigits;
+  private static final String FIELDS = "fields";
+  private static final String NUM_DIGITS = "num-digits";
 
-    private static final String FIELDS = "fields";
-    private static final String NUM_DIGITS = "num-digits";
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.round")
+        .category(DataProcessorType.TRANSFORM)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithNaryMapping(EpRequirements.numberReq(), Labels.withId(FIELDS), PropertyScope.NONE)
+            .build())
+        .requiredIntegerParameter(Labels.withId(NUM_DIGITS))
+        .outputStrategy(OutputStrategies.keep())
+        .build();
+  }
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder
-            .create("org.apache.streampipes.processors.transformation.jvm.round")
-            .category(DataProcessorType.TRANSFORM)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithNaryMapping(EpRequirements.numberReq(), Labels.withId(FIELDS), PropertyScope.NONE)
-                .build())
-            .requiredIntegerParameter(Labels.withId(NUM_DIGITS))
-            .outputStrategy(OutputStrategies.keep())
-            .build();
+  @Override
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    fieldsToBeRounded = parameters.extractor().mappingPropertyValues(FIELDS);
+    numDigits = parameters.extractor().singleValueParameter(NUM_DIGITS, Integer.class);
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+    for (String fieldToBeRounded : fieldsToBeRounded) {
+      double value = event.getFieldBySelector(fieldToBeRounded).getAsPrimitive().getAsDouble();
+      double roundedValue = BigDecimal.valueOf(value).setScale(numDigits, RoundingMode.HALF_UP).doubleValue();
+      event.updateFieldBySelector(fieldToBeRounded, roundedValue);
     }
+    collector.collect(event);
+  }
 
-    @Override
-    public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-        fieldsToBeRounded = parameters.extractor().mappingPropertyValues(FIELDS);
-        numDigits = parameters.extractor().singleValueParameter(NUM_DIGITS, Integer.class);
-    }
-
-    @Override
-    public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-        for (String fieldToBeRounded : fieldsToBeRounded) {
-            double value = event.getFieldBySelector(fieldToBeRounded).getAsPrimitive().getAsDouble();
-            double roundedValue = BigDecimal.valueOf(value).setScale(numDigits, RoundingMode.HALF_UP).doubleValue();
-            event.updateFieldBySelector(fieldToBeRounded, roundedValue);
-        }
-        collector.collect(event);
-    }
-
-    @Override
-    public void onDetach() {
-    }
+  @Override
+  public void onDetach() {
+  }
 }
