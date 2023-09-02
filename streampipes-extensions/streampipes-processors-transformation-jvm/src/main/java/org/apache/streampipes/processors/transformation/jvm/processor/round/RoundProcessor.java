@@ -30,6 +30,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
@@ -37,14 +38,29 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoundProcessor extends StreamPipesDataProcessor {
   private List<String> fieldsToBeRounded;
   private int numDigits;
+  private String roundingMode;
 
   private static final String FIELDS = "fields";
   private static final String NUM_DIGITS = "num-digits";
+  private static final String ROUNDING_MODE = "rounding-mode";
+  private static final Map<String, RoundingMode> ROUNDING_MODE_MAP = new HashMap<String, RoundingMode>() {
+    {
+      put("UP", RoundingMode.UP);
+      put("DOWN", RoundingMode.DOWN);
+      put("CEILING", RoundingMode.CEILING);
+      put("FLOOR", RoundingMode.FLOOR);
+      put("HALF_UP", RoundingMode.HALF_UP);
+      put("HALF_DOWN", RoundingMode.HALF_DOWN);
+      put("HALF_EVEN", RoundingMode.HALF_EVEN);
+    }
+  };
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -58,6 +74,8 @@ public class RoundProcessor extends StreamPipesDataProcessor {
             .requiredPropertyWithNaryMapping(EpRequirements.numberReq(), Labels.withId(FIELDS), PropertyScope.NONE)
             .build())
         .requiredIntegerParameter(Labels.withId(NUM_DIGITS))
+        .requiredSingleValueSelection(Labels.withId(ROUNDING_MODE),
+            Options.from(ROUNDING_MODE_MAP.keySet().toArray(new String[0])))
         .outputStrategy(OutputStrategies.keep())
         .build();
   }
@@ -67,13 +85,15 @@ public class RoundProcessor extends StreamPipesDataProcessor {
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     fieldsToBeRounded = parameters.extractor().mappingPropertyValues(FIELDS);
     numDigits = parameters.extractor().singleValueParameter(NUM_DIGITS, Integer.class);
+    roundingMode = parameters.extractor().selectedSingleValue(ROUNDING_MODE, String.class);
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
     for (String fieldToBeRounded : fieldsToBeRounded) {
       double value = event.getFieldBySelector(fieldToBeRounded).getAsPrimitive().getAsDouble();
-      double roundedValue = BigDecimal.valueOf(value).setScale(numDigits, RoundingMode.HALF_UP).doubleValue();
+      double roundedValue =
+          BigDecimal.valueOf(value).setScale(numDigits, ROUNDING_MODE_MAP.get(roundingMode)).doubleValue();
       event.updateFieldBySelector(fieldToBeRounded, roundedValue);
     }
     collector.collect(event);

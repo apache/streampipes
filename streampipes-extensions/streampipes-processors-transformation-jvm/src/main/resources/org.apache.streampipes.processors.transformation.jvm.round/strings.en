@@ -23,3 +23,6 @@ fields.description=The fields which should be rounded
 
 num-digits.title=Number of Digits
 num-digits.description=How many digits after decimal point to round/keep?
+
+rounding-mode.title=Mode of Rounding
+rounding-mode.description=See https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html
