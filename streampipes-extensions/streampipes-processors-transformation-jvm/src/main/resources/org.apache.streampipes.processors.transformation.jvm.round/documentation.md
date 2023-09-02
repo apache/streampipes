@@ -47,6 +47,11 @@ Select which fields of the event should be rounded.
 Specify the number of digits after the decimal point to round/keep, e.g., if number is 2.8935 and #digits is 3,
 the result will be 2.894.
 
+### Mode of Rounding
+
+Specify the mode of rounding. All supported modes
+are [here](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html).
+
 ## Output
 
 The output of this processor is the same event with the fields selected by the ``Fiels to Be Rounded`` parameter rounded
