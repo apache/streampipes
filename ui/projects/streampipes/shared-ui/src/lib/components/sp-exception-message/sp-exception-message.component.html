@@ -28,7 +28,7 @@
                 <div fxLayoutAlign="start center">
                     <i class="material-icons color-warn mr-15">warning</i>
                     <h5 *ngIf="messageTimestamp" class="mr-15">
-                        {{ messageTimestamp | date : 'short' }}
+                        {{ messageTimestamp | date: 'short' }}
                     </h5>
                     <h5 fxFlex class="color-warn">
                         {{ message.title || 'Error' }}

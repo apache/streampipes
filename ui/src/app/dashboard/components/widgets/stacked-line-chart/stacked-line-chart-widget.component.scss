@@ -38,10 +38,16 @@
 
 .status-light-red {
     background-color: #c22;
-    box-shadow: #338 0 -1px 7px 1px, inset #600 0 -1px 9px, #f00 0 0px 8px;
+    box-shadow:
+        #338 0 -1px 7px 1px,
+        inset #600 0 -1px 9px,
+        #f00 0 0px 8px;
 }
 
 .status-light-green {
     background-color: #690;
-    box-shadow: #225 0 -1px 7px 1px, inset #460 0 -1px 9px, #7d0 0 0px 8px;
+    box-shadow:
+        #225 0 -1px 7px 1px,
+        inset #460 0 -1px 9px,
+        #7d0 0 0px 8px;
 }

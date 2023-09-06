@@ -27,7 +27,10 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export abstract class BaseConfiguredCanActivateGuard implements CanActivate {
-    constructor(protected router: Router, protected authService: AuthService) {}
+    constructor(
+        protected router: Router,
+        protected authService: AuthService,
+    ) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,

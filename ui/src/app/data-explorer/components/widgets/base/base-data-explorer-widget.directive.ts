@@ -47,8 +47,9 @@ import { catchError, switchMap } from 'rxjs/operators';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<
-    T extends DataExplorerWidgetModel,
-> implements BaseWidgetData<T>, OnInit
+        T extends DataExplorerWidgetModel,
+    >
+    implements BaseWidgetData<T>, OnInit
 {
     private static TOO_MUCH_DATA_PARAMETER = 10000;
 
