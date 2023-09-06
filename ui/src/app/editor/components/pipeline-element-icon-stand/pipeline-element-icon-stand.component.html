@@ -154,9 +154,8 @@
                             fxFlex="100"
                             *ngFor="
                                 let element of allElements
-                                    | pipelineElementType
-                                        : availableType.filters
-                                    | pipelineElementName : elementFilter
+                                    | pipelineElementType: availableType.filters
+                                    | pipelineElementName: elementFilter
                             "
                             class="pe-row"
                         >
@@ -193,8 +192,8 @@
                                     let element of allElements
                                         | pipelineElementType
                                             : availableType.filters
-                                        | pipelineElementName : elementFilter
-                                        | pipelineElementGroup : category
+                                        | pipelineElementName: elementFilter
+                                        | pipelineElementGroup: category
                                 "
                                 class="pe-row"
                             >
