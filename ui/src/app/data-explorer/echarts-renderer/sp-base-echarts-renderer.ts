@@ -16,12 +16,29 @@
  *
  */
 
-import { SpEchartsRenderer, WidgetBaseAppearanceConfig, } from '../models/dataview-dashboard.model';
-import { DataExplorerWidgetModel, SpQueryResult, } from '@streampipes/platform-services';
+import {
+    SpEchartsRenderer,
+    WidgetBaseAppearanceConfig,
+} from '../models/dataview-dashboard.model';
+import {
+    DataExplorerWidgetModel,
+    SpQueryResult,
+} from '@streampipes/platform-services';
 import { EChartsOption } from 'echarts';
 import { BoxLayoutOptionMixin } from 'echarts/types/src/util/types';
-import { DatasetOption, GridOption, XAXisOption, YAXisOption, } from 'echarts/types/dist/shared';
-import { AxisOptions, GeneratedDataset, GridOptions, TagValue, WidgetSize, } from '../models/dataset.model';
+import {
+    DatasetOption,
+    GridOption,
+    XAXisOption,
+    YAXisOption,
+} from 'echarts/types/dist/shared';
+import {
+    AxisOptions,
+    GeneratedDataset,
+    GridOptions,
+    TagValue,
+    WidgetSize,
+} from '../models/dataset.model';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 
 export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>

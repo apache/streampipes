@@ -16,7 +16,10 @@
  *
  */
 
-import { DataExplorerField, DataExplorerWidgetModel, } from '@streampipes/platform-services';
+import {
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
 import { EChartsOption, SeriesOption } from 'echarts';
 import { SpBaseEchartsRenderer } from './sp-base-echarts-renderer';
 import { GeneratedDataset, WidgetSize } from '../models/dataset.model';

@@ -20,7 +20,11 @@ import { SpBaseEchartsRenderer } from './sp-base-echarts-renderer';
 import { HeatmapWidgetModel } from '../components/widgets/heatmap/model/heatmap-widget.model';
 import { GeneratedDataset, TagValue } from '../models/dataset.model';
 import { EChartsOption } from 'echarts';
-import { DimensionDefinitionLoose, OptionDataValue, OptionSourceDataArrayRows, } from 'echarts/types/src/util/types';
+import {
+    DimensionDefinitionLoose,
+    OptionDataValue,
+    OptionSourceDataArrayRows,
+} from 'echarts/types/src/util/types';
 
 export class SpHeatmapRenderer extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
     getType(): string {

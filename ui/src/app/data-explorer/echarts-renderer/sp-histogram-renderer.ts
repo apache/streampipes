@@ -16,9 +16,7 @@
  *
  */
 
-import {
-    DistributionChartWidgetModel
-} from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
+import { DistributionChartWidgetModel } from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
 import { BarSeriesOption, EChartsOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from './sp-base-single-field-echarts-renderer';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
