@@ -15,14 +15,14 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.processors.transformation.jvm.round.title=Number Rounder
+org.apache.streampipes.processors.transformation.jvm.round.title=Numeric Rounding
 org.apache.streampipes.processors.transformation.jvm.round.description=Round numeric values
 
 fields.title=Fields to Be Rounded
-fields.description=The fields which should be rounded
+fields.description=Select the fields which should be rounded
 
-num-digits.title=Number of Digits
-num-digits.description=How many digits after decimal point to round/keep?
+num-digits.title=Number of Decimal Places
+num-digits.description=How many decimal places to keep after rounding
 
 rounding-mode.title=Mode of Rounding
-rounding-mode.description=See https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html
+rounding-mode.description=Which rounding mode should be applied?

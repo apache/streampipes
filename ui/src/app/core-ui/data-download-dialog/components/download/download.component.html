@@ -25,7 +25,7 @@
     >
         <mat-spinner [diameter]="30" color="accent"></mat-spinner>
         <label *ngIf="downloadProgress.downloadedMBs !== undefined"
-            >{{ downloadProgress.downloadedMBs | number : '1.0-2' }} Mb</label
+            >{{ downloadProgress.downloadedMBs | number: '1.0-2' }} Mb</label
         >
         <button mat-button color="warn" (click)="cancelDownload()">
             Cancel

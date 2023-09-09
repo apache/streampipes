@@ -64,7 +64,7 @@
                 <td *ngIf="isTimestamp(property)">
                     {{
                         runtimeData[property.runtimeName]
-                            | date : 'yyyy-MM-dd HH:mm:ss '
+                            | date: 'yyyy-MM-dd HH:mm:ss '
                     }}
                 </td>
                 <td *ngIf="hasNoDomainProperty(property)">

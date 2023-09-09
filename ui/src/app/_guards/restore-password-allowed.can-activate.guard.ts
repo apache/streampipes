@@ -30,7 +30,10 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class RestorePasswordAllowedCanActivateGuard implements CanActivate {
-    constructor(private router: Router, private loginService: LoginService) {}
+    constructor(
+        private router: Router,
+        private loginService: LoginService,
+    ) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,
