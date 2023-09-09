@@ -16,10 +16,7 @@
  *
  */
 
-import {
-    DataExplorerField,
-    DataExplorerWidgetModel,
-} from '@streampipes/platform-services';
+import { DataExplorerField, DataExplorerWidgetModel, } from '@streampipes/platform-services';
 import { EChartsOption, SeriesOption } from 'echarts';
 import { SpBaseEchartsRenderer } from './sp-base-echarts-renderer';
 import { GeneratedDataset, WidgetSize } from '../models/dataset.model';
@@ -50,7 +47,9 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
                 transform: this.addDatasetTransform(widgetConfig),
             });
             const seriesName =
-                tags.length === 0 ? 'Default' : this.makeSeriesName(tags[i]);
+                tags.length === 0
+                    ? this.getDefaultSeriesName(widgetConfig)
+                    : this.makeSeriesName(tags[i]);
             series.push(
                 this.addSeriesItem(
                     seriesName,
@@ -117,5 +116,9 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
 
     getYAxisType(): 'category' | 'value' | 'time' | 'log' {
         return 'category';
+    }
+
+    getDefaultSeriesName(widgetConfig: T): string {
+        return 'Default';
     }
 }

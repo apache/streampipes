@@ -21,7 +21,9 @@ import { WidgetType, WidgetTypeMap } from './data-explorer-widgets';
 
 export class DataExplorerWidgetRegistry {
     static getAvailableWidgetTemplates(): IWidget<any>[] {
-        return Array.from(WidgetTypeMap.values());
+        return Array.from(WidgetTypeMap.values()).sort((a, b) =>
+            a.label.localeCompare(b.label),
+        );
     }
 
     static getWidgetTemplate(type: WidgetType) {

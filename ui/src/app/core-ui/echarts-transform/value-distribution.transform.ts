@@ -61,11 +61,7 @@ export const ValueDistributionTransform: ExternalDataTransform<ValueDistribution
                         (i + 1 < allValues.length
                             ? '<' + allValues[i + 1].toFixed(2)
                             : '');
-                    dataResult.push([
-                        currentRange,
-                        0,
-                        (currentCount + 1) / total,
-                    ]);
+                    dataResult.push([currentRange, 0, currentCount / total]);
                     currentCount = 0;
                     start = allValues[i + 1];
                 }

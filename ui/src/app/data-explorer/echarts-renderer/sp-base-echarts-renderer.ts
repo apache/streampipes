@@ -16,29 +16,12 @@
  *
  */
 
-import {
-    SpEchartsRenderer,
-    WidgetBaseAppearanceConfig,
-} from '../models/dataview-dashboard.model';
-import {
-    DataExplorerWidgetModel,
-    SpQueryResult,
-} from '@streampipes/platform-services';
+import { SpEchartsRenderer, WidgetBaseAppearanceConfig, } from '../models/dataview-dashboard.model';
+import { DataExplorerWidgetModel, SpQueryResult, } from '@streampipes/platform-services';
 import { EChartsOption } from 'echarts';
 import { BoxLayoutOptionMixin } from 'echarts/types/src/util/types';
-import {
-    DatasetOption,
-    GridOption,
-    XAXisOption,
-    YAXisOption,
-} from 'echarts/types/dist/shared';
-import {
-    AxisOptions,
-    GeneratedDataset,
-    GridOptions,
-    TagValue,
-    WidgetSize,
-} from '../models/dataset.model';
+import { DatasetOption, GridOption, XAXisOption, YAXisOption, } from 'echarts/types/dist/shared';
+import { AxisOptions, GeneratedDataset, GridOptions, TagValue, WidgetSize, } from '../models/dataset.model';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 
 export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
@@ -46,7 +29,7 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
 {
     minimumChartWidth = 200;
     minimumChartHeight = 50;
-    gridMargin = 50;
+    gridMargin = 60;
 
     abstract getType(): string;
 
@@ -151,10 +134,10 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
                 text: s.name,
                 textStyle: {
                     fontSize: 12,
-                    fontWeight: 'normal',
+                    fontWeight: 'bold',
                 },
                 left: grid.left,
-                top: grid.top,
+                top: (grid.top as number) - 20,
             };
         });
     }
@@ -302,10 +285,6 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
             preparedDataEndIndices: preparedDataEndIndices,
             initialTransformsCount: initialTransformsCount,
         };
-    }
-
-    makePercent(value: number) {
-        return value + '%';
     }
 
     abstract applyOptions(

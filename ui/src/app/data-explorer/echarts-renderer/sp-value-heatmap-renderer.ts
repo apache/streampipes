@@ -16,7 +16,9 @@
  *
  */
 
-import { DistributionChartWidgetModel } from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
+import {
+    DistributionChartWidgetModel
+} from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
 import { EChartsOption, HeatmapSeriesOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from './sp-base-single-field-echarts-renderer';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
@@ -86,6 +88,15 @@ export class SpValueHeatmapRenderer extends SpBaseSingleFieldEchartsRenderer<
             encode: { itemId: 0, value: 2 },
             xAxisIndex: index,
             yAxisIndex: index,
+            tooltip: {
+                valueFormatter: value => {
+                    if (typeof value === 'number' && isFinite(value)) {
+                        return (value * 100).toFixed(3) + '%';
+                    } else {
+                        return value as string;
+                    }
+                },
+            },
             emphasis: {
                 itemStyle: {
                     borderColor: '#333',

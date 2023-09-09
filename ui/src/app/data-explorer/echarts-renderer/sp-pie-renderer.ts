@@ -16,7 +16,9 @@
  *
  */
 
-import { DistributionChartWidgetModel } from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
+import {
+    DistributionChartWidgetModel
+} from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
 import { EChartsOption, PieSeriesOption } from 'echarts';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { SpBaseSingleFieldEchartsRenderer } from './sp-base-single-field-echarts-renderer';
@@ -60,6 +62,16 @@ export class SpPieRenderer extends SpBaseSingleFieldEchartsRenderer<
             type: 'pie',
             universalTransition: true,
             datasetIndex: datasetIndex,
+            tooltip: {
+                formatter: params => {
+                    return `${params.marker} ${params.value[0]} <b>${params.value[1]}</b> (${params.percent}%)`;
+                },
+            },
+            label: {
+                formatter: params => {
+                    return `${params.value[0]} (${params.percent}%)`;
+                },
+            },
             encode: { itemName: 'name', value: 'value' },
         };
     }
@@ -96,5 +108,9 @@ export class SpPieRenderer extends SpBaseSingleFieldEchartsRenderer<
 
     shouldApplySeriesPosition(): boolean {
         return true;
+    }
+
+    getDefaultSeriesName(widgetConfig: DistributionChartWidgetModel): string {
+        return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
     }
 }
