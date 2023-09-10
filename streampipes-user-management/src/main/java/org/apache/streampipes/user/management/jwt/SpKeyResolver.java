@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.user.management.jwt;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
@@ -70,7 +69,13 @@ public class SpKeyResolver implements SigningKeyResolver {
   }
 
   public String getPublicKeyFromConfig() {
-    return BackendConfig.INSTANCE.getLocalAuthConfig().getPublicKey();
+    return StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getSpCoreConfigurationStorage()
+        .get()
+        .getLocalAuthConfig()
+        .getPublicKey();
   }
 
 

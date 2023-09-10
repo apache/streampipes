@@ -27,7 +27,10 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthCanActivateChildrenGuard implements CanActivateChild {
-    constructor(private authService: AuthService, private router: Router) {}
+    constructor(
+        private authService: AuthService,
+        private router: Router,
+    ) {}
 
     canActivateChild(
         childRoute: ActivatedRouteSnapshot,

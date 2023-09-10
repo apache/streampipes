@@ -23,6 +23,7 @@ github:
     - analytics
     - stream-processing
     - self-service
+    - hacktoberfest
 
   features:
     wiki: false

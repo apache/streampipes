@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-07-23 10:14:46.
+// Generated using typescript-generator version 3.1.1185 on 2023-08-06 11:37:37.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -759,6 +759,29 @@ export class ColorPickerStaticProperty extends StaticProperty {
         const instance = target || new ColorPickerStaticProperty();
         super.fromData(data, instance);
         instance.selectedColor = data.selectedColor;
+        return instance;
+    }
+}
+
+export class ConfigItem {
+    configurationScope: ConfigurationScope;
+    description: string;
+    key: string;
+    password: boolean;
+    value: string;
+    valueType: string;
+
+    static fromData(data: ConfigItem, target?: ConfigItem): ConfigItem {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ConfigItem();
+        instance.configurationScope = data.configurationScope;
+        instance.description = data.description;
+        instance.key = data.key;
+        instance.password = data.password;
+        instance.value = data.value;
+        instance.valueType = data.valueType;
         return instance;
     }
 }
@@ -2192,6 +2215,62 @@ export class MessageCounter {
     }
 }
 
+export class MessagingSettings {
+    acks: number;
+    batchSize: number;
+    jmsHost: string;
+    jmsPort: number;
+    kafkaHost: string;
+    kafkaPort: number;
+    lingerMs: number;
+    messageMaxBytes: number;
+    mqttHost: string;
+    mqttPort: number;
+    natsHost: string;
+    natsPort: number;
+    prioritizedFormats: SpDataFormat[];
+    prioritizedProtocols: SpProtocol[];
+    pulsarUrl: string;
+    supportedProtocols: string[];
+    zookeeperHost: string;
+    zookeeperPort: number;
+
+    static fromData(
+        data: MessagingSettings,
+        target?: MessagingSettings,
+    ): MessagingSettings {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new MessagingSettings();
+        instance.acks = data.acks;
+        instance.batchSize = data.batchSize;
+        instance.jmsHost = data.jmsHost;
+        instance.jmsPort = data.jmsPort;
+        instance.kafkaHost = data.kafkaHost;
+        instance.kafkaPort = data.kafkaPort;
+        instance.lingerMs = data.lingerMs;
+        instance.messageMaxBytes = data.messageMaxBytes;
+        instance.mqttHost = data.mqttHost;
+        instance.mqttPort = data.mqttPort;
+        instance.natsHost = data.natsHost;
+        instance.natsPort = data.natsPort;
+        instance.prioritizedFormats = __getCopyArrayFn(
+            __identity<SpDataFormat>(),
+        )(data.prioritizedFormats);
+        instance.prioritizedProtocols = __getCopyArrayFn(
+            __identity<SpProtocol>(),
+        )(data.prioritizedProtocols);
+        instance.pulsarUrl = data.pulsarUrl;
+        instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
+            data.supportedProtocols,
+        );
+        instance.zookeeperHost = data.zookeeperHost;
+        instance.zookeeperPort = data.zookeeperPort;
+        return instance;
+    }
+}
+
 export class MoveRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
     'newRuntimeKey': string;
@@ -3411,6 +3490,77 @@ export class SpQueryResult {
     }
 }
 
+export class SpServiceConfiguration {
+    configs: ConfigItem[];
+    rev: string;
+    serviceGroup: string;
+    serviceName: string;
+
+    static fromData(
+        data: SpServiceConfiguration,
+        target?: SpServiceConfiguration,
+    ): SpServiceConfiguration {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpServiceConfiguration();
+        instance.configs = __getCopyArrayFn(ConfigItem.fromData)(data.configs);
+        instance.rev = data.rev;
+        instance.serviceGroup = data.serviceGroup;
+        instance.serviceName = data.serviceName;
+        return instance;
+    }
+}
+
+export class SpServiceRegistration {
+    firstTimeSeenUnhealthy: number;
+    healthCheckPath: string;
+    healthy: boolean;
+    host: string;
+    port: number;
+    rev: string;
+    scheme: string;
+    svcGroup: string;
+    svcId: string;
+    tags: SpServiceTag[];
+
+    static fromData(
+        data: SpServiceRegistration,
+        target?: SpServiceRegistration,
+    ): SpServiceRegistration {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpServiceRegistration();
+        instance.firstTimeSeenUnhealthy = data.firstTimeSeenUnhealthy;
+        instance.healthCheckPath = data.healthCheckPath;
+        instance.healthy = data.healthy;
+        instance.host = data.host;
+        instance.port = data.port;
+        instance.rev = data.rev;
+        instance.scheme = data.scheme;
+        instance.svcGroup = data.svcGroup;
+        instance.svcId = data.svcId;
+        instance.tags = __getCopyArrayFn(SpServiceTag.fromData)(data.tags);
+        return instance;
+    }
+}
+
+export class SpServiceTag {
+    prefix: SpServiceTagPrefix;
+    value: string;
+
+    static fromData(data: SpServiceTag, target?: SpServiceTag): SpServiceTag {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpServiceTag();
+        instance.prefix = data.prefix;
+        instance.value = data.value;
+        return instance;
+    }
+}
+
 export class StaticPropertyAlternative extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative';
     'elementId': string;
@@ -3819,6 +3969,11 @@ export class WildcardTopicMapping {
     }
 }
 
+export type ConfigurationScope =
+    | 'CONTAINER_STARTUP_CONFIG'
+    | 'CONTAINER_GLOBAL_CONFIG'
+    | 'PIPELINE_ELEMENT_CONFIG';
+
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';
 
 export type EventPropertyUnion =
@@ -3848,9 +4003,22 @@ export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
 
+export type SpDataFormat = 'CBOR' | 'JSON' | 'FST' | 'SMILE';
+
 export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 
+export type SpProtocol = 'KAFKA' | 'JMS' | 'MQTT' | 'NATS' | 'PULSAR';
+
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
+
+export type SpServiceTagPrefix =
+    | 'SYSTEM'
+    | 'SP_GROUP'
+    | 'ADAPTER'
+    | 'DATA_STREAM'
+    | 'DATA_PROCESSOR'
+    | 'DATA_SINK'
+    | 'DATA_SET';
 
 export type StaticPropertyType =
     | 'AnyStaticProperty'

@@ -32,6 +32,6 @@ export class ConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
     }
 
     onIsUnconfigured(): boolean | UrlTree {
-        return this.router.parseUrl('setup');
+        return this.router.parseUrl('startup');
     }
 }

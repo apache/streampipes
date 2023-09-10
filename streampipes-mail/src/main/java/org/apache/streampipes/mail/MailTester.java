@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.mail;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.mail.template.TestMailTemplate;
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.EmailConfig;
 
 import org.simplejavamail.api.email.Email;
 

@@ -33,7 +33,7 @@ public abstract class AbstractAdapterIncludedStream implements IStreamPipesDataS
   }
 
   public ConfigExtractor configExtractor() {
-    return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
+    return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceGroup());
   }
 
   @Override

@@ -60,8 +60,20 @@ public class Utils {
     return getCouchDbGsonClient("pipelinecanvasmetadata");
   }
 
+  public static CouchDbClient getCouchDbGeneralConfigStorage() {
+    return getCouchDbGsonClient("general-configuration");
+  }
+
   public static CouchDbClient getCouchDbCategoryClient() {
     return getCouchDbGsonClient("category");
+  }
+
+  public static CouchDbClient getCouchDbServiceConfigStorage() {
+    return getCouchDbGsonClient("extensions-services-configurations");
+  }
+
+  public static CouchDbClient getCouchDbExtensionsStorage() {
+    return getCouchDbGsonClient("extensions-services");
   }
 
   public static CouchDbClient getCouchDbLabelClient() {

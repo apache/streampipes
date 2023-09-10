@@ -27,7 +27,7 @@ import org.apache.http.entity.ContentType;
 public abstract class PostRequest<K, V, T> extends HttpRequest<K, V, T> {
 
   private K body;
-  private boolean withBody;
+  private final boolean withBody;
 
   public PostRequest(StreamPipesClientConfig clientConfig,
                      StreamPipesApiPath apiPath,

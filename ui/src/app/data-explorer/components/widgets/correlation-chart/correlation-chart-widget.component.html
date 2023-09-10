@@ -43,6 +43,8 @@
         *ngIf="showData"
         [divId]="dataExplorerWidget._id"
         class="plotly-container"
+        [updateOnlyWithRevision]="true"
+        [revision]="revision"
         [data]="data"
         [layout]="graph.layout"
         [config]="graph.config"

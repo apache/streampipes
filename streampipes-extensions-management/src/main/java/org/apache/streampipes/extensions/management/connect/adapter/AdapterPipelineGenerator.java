@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
 import org.apache.streampipes.connect.shared.preprocessing.elements.TransformStreamAdapterElement;
 import org.apache.streampipes.connect.shared.preprocessing.transform.stream.DuplicateFilterPipelineElement;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToBrokerAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
@@ -29,7 +29,8 @@ import org.apache.streampipes.extensions.management.connect.adapter.preprocessin
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToNatsAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToPulsarAdapterSink;
-import org.apache.streampipes.model.config.SpProtocol;
+import org.apache.streampipes.model.configuration.MessagingSettings;
+import org.apache.streampipes.model.configuration.SpProtocol;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -70,7 +71,7 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {
     var prioritizedProtocol =
-        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+        getMessagingSettings().getPrioritizedProtocols().get(0);
 
     if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
       return new SendToJmsAdapterSink(adapterDescription);
@@ -88,5 +89,10 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
   private boolean isPrioritized(SpProtocol prioritizedProtocol,
                                 Class<?> protocolClass) {
     return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
+  }
+
+  private MessagingSettings getMessagingSettings() {
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    return client.adminApi().getMessagingSettings();
   }
 }

@@ -17,29 +17,18 @@
  */
 package org.apache.streampipes.service.base;
 
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
-
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 
 import java.net.UnknownHostException;
 import java.util.Collections;
-import java.util.List;
 
 public abstract class StreamPipesServiceBase {
 
   public static final String AUTO_GENERATED_SERVICE_ID = RandomStringUtils.randomAlphanumeric(6);
-  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesServiceBase.class);
 
   public void startStreamPipesService(Class<?> serviceClass,
-                                         String serviceGroup,
-                                         String serviceId,
                                          BaseNetworkingConfig networkingConfig) throws UnknownHostException {
-    registerService(serviceGroup, serviceId, networkingConfig);
     runApplication(serviceClass, networkingConfig.getPort());
   }
 
@@ -48,29 +37,6 @@ public abstract class StreamPipesServiceBase {
     SpringApplication app = new SpringApplication(serviceClass);
     app.setDefaultProperties(Collections.singletonMap("server.port", port));
     app.run();
-  }
-
-  private void registerService(String serviceGroup,
-                               String serviceId,
-                               BaseNetworkingConfig networkingConfig) {
-    SpServiceRegistrationRequest req = SpServiceRegistrationRequest.from(
-        serviceGroup,
-        serviceId,
-        networkingConfig.getHost(),
-        networkingConfig.getPort(),
-        getServiceTags(),
-        getHealthCheckPath());
-
-    SpServiceDiscovery
-        .getServiceDiscovery()
-        .registerService(req);
-  }
-
-  protected abstract List<SpServiceTag> getServiceTags();
-
-  protected void deregisterService(String serviceId) {
-    LOG.info("Deregistering service (id={})...", serviceId);
-    SpServiceDiscovery.getServiceDiscovery().deregisterService(serviceId);
   }
 
   protected String getHealthCheckPath() {

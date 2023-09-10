@@ -17,10 +17,15 @@
  */
 package org.apache.streampipes.manager.assets;
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AssetConstants {
 
-  public static final String ASSET_BASE_DIR = BackendConfig.INSTANCE.getAssetDir();
+  public static final String ASSET_BASE_DIR = StorageDispatcher
+      .INSTANCE
+      .getNoSqlStore()
+      .getSpCoreConfigurationStorage()
+      .get()
+      .getAssetDir();
 
 }

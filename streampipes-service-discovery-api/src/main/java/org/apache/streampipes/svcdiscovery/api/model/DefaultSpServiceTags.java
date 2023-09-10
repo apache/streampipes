@@ -17,12 +17,13 @@
  */
 package org.apache.streampipes.svcdiscovery.api.model;
 
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+
 public class DefaultSpServiceTags {
 
   public static final SpServiceTag CORE = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "core");
   public static final SpServiceTag PE = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "pe");
-  public static final SpServiceTag CONNECT_MASTER = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "connect-master");
-  public static final SpServiceTag CONNECT_WORKER = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "connect-worker");
-  public static final SpServiceTag STREAMPIPES_CLIENT =
-      SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "streampipes-client");
+  public static final SpServiceTag CONNECT_WORKER = SpServiceTag
+      .create(SpServiceTagPrefix.SYSTEM, "connect-worker");
 }

@@ -25,6 +25,9 @@ import { ImageWidgetComponent } from '../components/widgets/image/image-widget.c
 import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
 import { CorrelationChartWidgetComponent } from '../components/widgets/correlation-chart/correlation-chart-widget.component';
 import { DistributionChartWidgetComponent } from '../components/widgets/distribution-chart/distribution-chart-widget.component';
+import { SpPieRenderer } from '../echarts-renderer/sp-pie-renderer';
+import { SpValueHeatmapRenderer } from '../echarts-renderer/sp-value-heatmap-renderer';
+import { SpHistogramRenderer } from '../echarts-renderer/sp-histogram-renderer';
 
 export enum WidgetType {
     Table,
@@ -37,7 +40,7 @@ export enum WidgetType {
     DistributionChart,
 }
 
-export const WidgetTypeMap = new Map<number, IWidget>([
+export const WidgetTypeMap = new Map<number, IWidget<any>>([
     [
         WidgetType.Table,
         {
@@ -96,6 +99,11 @@ export const WidgetTypeMap = new Map<number, IWidget>([
             id: 'distribution-chart',
             label: 'Distribution',
             componentClass: DistributionChartWidgetComponent,
+            renderers: [
+                new SpHistogramRenderer(),
+                new SpPieRenderer(),
+                new SpValueHeatmapRenderer(),
+            ],
         },
     ],
 ]);

@@ -40,6 +40,9 @@ public interface Environment {
 
   IntEnvironmentVariable getServicePort();
 
+  StringEnvironmentVariable getSpCoreScheme();
+  StringEnvironmentVariable getSpCoreHost();
+  IntEnvironmentVariable getSpCorePort();
 
   // Time series storage env variables
 
@@ -88,6 +91,8 @@ public interface Environment {
 
   // Messaging
   StringEnvironmentVariable getKafkaRetentionTimeMs();
+
+  StringEnvironmentVariable getPrioritizedProtocol();
 
 
   // Setup

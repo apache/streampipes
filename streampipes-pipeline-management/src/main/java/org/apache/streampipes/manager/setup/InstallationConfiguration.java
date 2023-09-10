@@ -18,26 +18,17 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.manager.endpoint.EndpointFetcher;
-import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.setup.InitialSettings;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class InstallationConfiguration {
-
-  private static final Logger LOG = LoggerFactory.getLogger(InstallationConfiguration.class);
-  private static final int MAX_RETRIES = 3;
-  private static final int SLEEP_TIME_SECONDS = 5;
 
   public static List<InstallationStep> getInstallationSteps(InitialSettings settings) {
     List<InstallationStep> steps = new ArrayList<>();
 
+    steps.add(new SpCoreConfigurationStep());
     steps.add(new CouchDbInstallationStep());
     steps.add(new UserRegistrationInstallationStep(
         settings.getAdminEmail(),
@@ -46,30 +37,11 @@ public class InstallationConfiguration {
         settings.getInitialServiceAccountSecret(),
         settings.getInitialAdminUserSid()));
 
-    if (settings.getInstallPipelineElements()) {
-      List<ExtensionsServiceEndpoint> endpoints;
-      int numberOfAttempts = 0;
-      do {
-        endpoints = new EndpointFetcher().getEndpoints();
-        numberOfAttempts++;
-        if (endpoints.size() == 0) {
-          LOG.info("Found 0 endpoints - waiting {} seconds to make sure all endpoints have properly started",
-              SLEEP_TIME_SECONDS);
-          try {
-            TimeUnit.SECONDS.sleep(SLEEP_TIME_SECONDS);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-      } while (endpoints.size() == 0 && numberOfAttempts < MAX_RETRIES);
-      LOG.info("Found {} endpoints from which we will install extensions.", endpoints.size());
-      LOG.info(
-          "Further available extensions can always be installed by navigating to the 'Install pipeline elements' view");
-      for (ExtensionsServiceEndpoint endpoint : endpoints) {
-        steps.add(new PipelineElementInstallationStep(endpoint, settings.getInitialAdminUserSid()));
-      }
-    }
-
     return steps;
+  }
+
+  public static List<Runnable> getBackgroundInstallationSteps(InitialSettings settings,
+                                                              BackgroundTaskNotifier callback) {
+    return List.of(new ExtensionsInstallationTask(settings, callback));
   }
 }

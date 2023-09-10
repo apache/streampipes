@@ -36,7 +36,10 @@ import { StandardDialogConfig } from '../standard-dialog/standard-dialog.config'
     providedIn: 'root',
 })
 export class DialogService {
-    constructor(private overlay: Overlay, private injector: Injector) {}
+    constructor(
+        private overlay: Overlay,
+        private injector: Injector,
+    ) {}
 
     public open<T>(
         component: ComponentType<T>,

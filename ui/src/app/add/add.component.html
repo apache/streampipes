@@ -160,11 +160,11 @@
                     (triggerInstallation)="triggerInstallation($event)"
                     *ngFor="
                         let endpointItem of endpointItems
-                            | pipelineElementTypeFilter : selectedTab
-                            | pipelineElementNameFilter : filterTerm
+                            | pipelineElementTypeFilter: selectedTab
+                            | pipelineElementNameFilter: filterTerm
                             | pipelineElementInstallationStatusFilter
                                 : selectedInstallationStatus
-                            | orderBy : 'asc' : 'name'
+                            | orderBy: 'asc' : 'name'
                     "
                     class="p-15"
                     (click)="toggleSelected(endpointItem)"

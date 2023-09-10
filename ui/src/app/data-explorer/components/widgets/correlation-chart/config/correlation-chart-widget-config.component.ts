@@ -28,7 +28,6 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 @Component({
     selector: 'sp-data-explorer-correlation-chart-widget-config',
     templateUrl: './correlation-chart-widget-config.component.html',
-    styleUrls: ['./correlation-chart-widget-config.component.scss'],
 })
 export class CorrelationWidgetConfigComponent
     extends BaseWidgetConfig<

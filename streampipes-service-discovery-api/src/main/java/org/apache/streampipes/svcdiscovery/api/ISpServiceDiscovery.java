@@ -17,19 +17,9 @@
  */
 package org.apache.streampipes.svcdiscovery.api;
 
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
-
 import java.util.List;
-import java.util.Map;
 
 public interface ISpServiceDiscovery {
-
-  /**
-   * Register service.
-   *
-   * @param serviceRegistrationRequest the service registration request
-   */
-  void registerService(SpServiceRegistrationRequest serviceRegistrationRequest);
 
   /**
    * Get active pipeline element service endpoints
@@ -37,13 +27,6 @@ public interface ISpServiceDiscovery {
    * @return list of pipeline element endpoints
    */
   List<String> getActivePipelineElementEndpoints();
-
-  /**
-   * Get active StreamPipes Connect worker endpoints
-   *
-   * @return list of StreamPipes Connect worker endpoints
-   */
-  List<String> getActiveConnectWorkerEndpoints();
 
   /**
    * Get service endpoints
@@ -56,19 +39,4 @@ public interface ISpServiceDiscovery {
   List<String> getServiceEndpoints(String svcGroup,
                                    boolean restrictToHealthy,
                                    List<String> filterByTags);
-
-  /**
-   * Get all pipeline element service endpoints
-   *
-   * @return list of pipline element service endpoints
-   */
-  Map<String, String> getExtensionsServiceGroups();
-
-  /**
-   * Deregister registered service endpoint in Consul
-   *
-   * @param svcId service id of endpoint to be deregistered
-   */
-  void deregisterService(String svcId);
-
 }
