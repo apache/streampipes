@@ -48,5 +48,21 @@ jobs:
         with:
           name: streampipes-extensions-docs
           path: |
-            streampipes-extensions/streampipes-extensions-all-jvm/target/docs/
+            streampipes-extensions/streampipes-extensions-all-jvm/target/docs/pe/
+          retention-days: 5
+
+      - name: Publish Extensions image assets as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: streampipes-extensions-docs-image-assets
+          path: |
+            streampipes-extensions/streampipes-extensions-all-jvm/target/docs/img/
+          retention-days: 5
+
+      - name: Publish Extensions sidebar
+        uses: actions/upload-artifact@v3
+        with:
+          name: streampipes-extensions-docs-sidebar
+          path: |
+            streampipes-extensions/streampipes-extensions-all-jvm/target/docs/sidebars.json
           retention-days: 5
