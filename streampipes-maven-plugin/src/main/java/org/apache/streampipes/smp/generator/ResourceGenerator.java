@@ -16,30 +16,31 @@
  *
  */
 
-package org.apache.streampipes.smp.util;
+package org.apache.streampipes.smp.generator;
 
 import org.apache.streampipes.smp.model.AssetModel;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
 
-public class DuplicateRemover {
+public abstract class ResourceGenerator {
 
-  private List<AssetModel> assetModels;
-  private String sourceDir;
+  protected final ClassLoader loader;
+  protected final AssetModel extensionsElement;
+  protected final Path targetPath;
 
-  public DuplicateRemover(String sourceDir, List<AssetModel> assetModels) {
-    this.assetModels = assetModels;
-    this.sourceDir = sourceDir;
+  public ResourceGenerator(ClassLoader loader,
+                           AssetModel extensionsElement,
+                           Path targetPath) {
+    this.loader = loader;
+    this.extensionsElement = extensionsElement;
+    this.targetPath = targetPath;
   }
 
-  public List<AssetModel> removeAlreadyExisting() {
-
-    return assetModels
-        .stream()
-        .filter(am -> !(new File(Utils.makePath(sourceDir, am.getAppId() + File.separator
-            + "documentation.md")).exists()))
-        .collect(Collectors.toList());
+  protected InputStream getResourceInputStream(String resourceName) {
+    return loader.getResourceAsStream(extensionsElement.getAppId() + "/" + resourceName);
   }
+
+  public abstract void generate() throws IOException;
 }
