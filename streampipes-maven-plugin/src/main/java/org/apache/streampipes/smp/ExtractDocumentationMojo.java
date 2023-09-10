@@ -20,6 +20,7 @@ package org.apache.streampipes.smp;
 
 import org.apache.streampipes.smp.extractor.ExtensionsFinder;
 import org.apache.streampipes.smp.extractor.LocalesExtractor;
+import org.apache.streampipes.smp.generator.AdditionalAssetsResourceGenerator;
 import org.apache.streampipes.smp.generator.DocumentationResourceGenerator;
 import org.apache.streampipes.smp.generator.IconResourceGenerator;
 import org.apache.streampipes.smp.generator.SidebarConfigGenerator;
@@ -124,6 +125,7 @@ public class ExtractDocumentationMojo extends AbstractMojo {
                   extensionsElement.getPipelineElementName(),
                   extensionsElement.getPipelineElementDescription()));
 
+          new AdditionalAssetsResourceGenerator(log, loader, extensionsElement, imgPath).generate();
         } catch (IOException e) {
           log.warn(
               String.format(

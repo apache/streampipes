@@ -29,7 +29,7 @@ import java.nio.file.Path;
 
 public class DocumentationResourceGenerator extends ResourceGenerator {
 
-  private static final String DocumentationFileName = "documentation.md";
+  public static final String DOCUMENTATION_FILE_NAME = "documentation.md";
 
   public DocumentationResourceGenerator(ClassLoader loader,
                                         AssetModel extensionsElement,
@@ -40,7 +40,7 @@ public class DocumentationResourceGenerator extends ResourceGenerator {
   @Override
   public void generate() throws IOException {
     DirectoryManager.createIfNotExists(targetPath);
-    try (var inputStream = getResourceInputStream(DocumentationFileName)) {
+    try (var inputStream = getResourceInputStream(DOCUMENTATION_FILE_NAME)) {
       if (inputStream != null) {
         var originalDocumentationFileContents = new String(inputStream.readAllBytes());
         // modify docs for documentation page

@@ -28,6 +28,8 @@ import java.util.Properties;
 
 public class LocalesExtractor {
 
+  public static final String LOCALES_FILE_EN = "strings.en";
+
   private static final String TITLE = ".title";
   private static final String DESCRIPTION = ".description";
 
@@ -41,7 +43,7 @@ public class LocalesExtractor {
   }
 
   public void applyLocales(AssetModel assetModel) {
-    var localeFile = loader.getResourceAsStream(assetModel.getAppId() + "/strings.en");
+    var localeFile = loader.getResourceAsStream(assetModel.getAppId() + "/" + LOCALES_FILE_EN);
     try {
       var props = loadProperties(localeFile);
       assetModel.setPipelineElementName(extractKey(props, assetModel, TITLE));

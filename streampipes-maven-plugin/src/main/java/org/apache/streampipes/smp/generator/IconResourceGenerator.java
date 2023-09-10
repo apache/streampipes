@@ -28,7 +28,7 @@ import java.nio.file.StandardCopyOption;
 
 public class IconResourceGenerator extends ResourceGenerator {
 
-  private static final String IconName = "icon.png";
+  public static final String ICON_NAME = "icon.png";
   private static final String PlaceholderIconName = "placeholder-icon.png";
 
   public IconResourceGenerator(ClassLoader loader,
@@ -40,14 +40,14 @@ public class IconResourceGenerator extends ResourceGenerator {
   @Override
   public void generate() throws IOException {
     DirectoryManager.createIfNotExists(targetPath);
-    try (var inputStream = getResourceInputStream(IconName)) {
+    try (var inputStream = getResourceInputStream(ICON_NAME)) {
       if (inputStream != null) {
-        Files.copy(inputStream, targetPath.resolve(IconName), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(inputStream, targetPath.resolve(ICON_NAME), StandardCopyOption.REPLACE_EXISTING);
       } else {
         ClassLoader classLoader = this.getClass().getClassLoader();
         try (var placeHolderIconStream = classLoader.getResourceAsStream(PlaceholderIconName)) {
           if (placeHolderIconStream != null) {
-            Files.copy(placeHolderIconStream, targetPath.resolve(IconName), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(placeHolderIconStream, targetPath.resolve(ICON_NAME), StandardCopyOption.REPLACE_EXISTING);
           }
         }
       }
