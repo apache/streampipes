@@ -20,10 +20,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { StreampipesPeContainer } from './streampipes-pe-container.model';
-import { MessagingSettings } from './messaging-settings.model';
 import { MultipartUtils } from './multipart-utils';
+import {
+    MessagingSettings,
+    SpServiceConfiguration,
+    SpServiceRegistration,
+} from '@streampipes/platform-services';
 
 @Injectable()
 export class ConfigurationService {
@@ -49,40 +51,43 @@ export class ConfigurationService {
     }
 
     getMessagingSettings(): Observable<MessagingSettings> {
-        return this.http
-            .get(this.getServerUrl() + '/api/v2/consul/messaging')
-            .pipe(
-                map(response => {
-                    return response as MessagingSettings;
-                }),
-            );
-    }
-
-    getConsulServices(): Observable<StreampipesPeContainer[]> {
-        return this.http.get(this.getServerUrl() + '/api/v2/consul').pipe(
+        return this.http.get(this.getServerUrl() + '/api/v2/messaging').pipe(
             map(response => {
-                for (const service of response as any[]) {
-                    for (const config of service['configs']) {
-                        if (config.valueType === 'xs:integer') {
-                            config.value = parseInt(config.value);
-                        } else if (config.valueType === 'xs:double') {
-                            config.value = parseFloat('xs:double');
-                        } else if (config.valueType === 'xs:boolean') {
-                            config.value = config.value === 'true';
-                        }
-                    }
-                }
-                return response as StreampipesPeContainer[];
+                return response as MessagingSettings;
             }),
         );
     }
 
-    updateConsulService(
-        consulService: StreampipesPeContainer,
+    getRegisteredExtensionsServices(): Observable<SpServiceRegistration[]> {
+        return this.http
+            .get(this.getServerUrl() + '/api/v2/extensions-services')
+            .pipe(
+                map(response => {
+                    return response as SpServiceRegistration[];
+                }),
+            );
+    }
+
+    getExtensionsServiceConfigs(): Observable<SpServiceConfiguration[]> {
+        return this.http
+            .get(
+                this.getServerUrl() +
+                    '/api/v2/extensions-services-configurations',
+            )
+            .pipe(
+                map(response => {
+                    return response as SpServiceConfiguration[];
+                }),
+            );
+    }
+
+    updateExtensionsServiceConfigs(
+        config: SpServiceConfiguration,
     ): Observable<Object> {
-        return this.http.post(
-            this.getServerUrl() + '/api/v2/consul',
-            consulService,
+        return this.http.put(
+            this.getServerUrl() +
+                `/api/v2/extensions-services-configurations/${config.serviceGroup}`,
+            config,
         );
     }
 
@@ -90,7 +95,7 @@ export class ConfigurationService {
         messagingSettings: MessagingSettings,
     ): Observable<Object> {
         return this.http.post(
-            this.getServerUrl() + '/api/v2/consul/messaging',
+            this.getServerUrl() + '/api/v2/messaging',
             messagingSettings,
         );
     }

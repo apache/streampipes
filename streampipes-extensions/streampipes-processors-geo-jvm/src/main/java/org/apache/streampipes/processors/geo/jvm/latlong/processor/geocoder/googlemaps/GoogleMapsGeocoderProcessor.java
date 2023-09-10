@@ -79,7 +79,7 @@ public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
 
     this.geocoderRequest = parameters.extractor().mappingPropertyValue(GEOCODER_REQUEST_KEY);
 
-    String googleMapsApiKey = runtimeContext.getConfigStore().getConfig().getString(ConfigKeys.GOOGLE_API_KEY);
+    String googleMapsApiKey = runtimeContext.getConfigStore().getString(ConfigKeys.GOOGLE_API_KEY);
 
     if (googleMapsApiKey == null || googleMapsApiKey.equals("")) {
       throw new SpRuntimeException("Could not start Geocoder. Did you forget to add a Google Maps API key?");

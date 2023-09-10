@@ -19,9 +19,11 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
+import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.setup.AutoInstallation;
+import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
@@ -37,9 +39,6 @@ import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,8 +80,12 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private static final int HEALTH_CHECK_INTERVAL = 60;
   private static final TimeUnit HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
 
+  private static final int SERVICE_HEALTH_CHECK_INTERVAL = 60;
+  private static final TimeUnit SERVICE_HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
+
   private ScheduledExecutorService executorService;
   private ScheduledExecutorService healthCheckExecutorService;
+  private ScheduledExecutorService serviceHealthCheckExecutorService;
   private ScheduledExecutorService logCheckExecutorService;
 
   private final Map<String, Integer> failedPipelines = new HashMap<>();
@@ -104,8 +106,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       registerProtocols(supportedProtocols);
       BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
       startStreamPipesService(StreamPipesCoreApplication.class,
-          DefaultSpServiceGroups.CORE,
-          serviceId(),
           networkingConfig);
     } catch (UnknownHostException e) {
       LOG.error(
@@ -118,26 +118,30 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     protocols.getSupportedProtocols().forEach(SpProtocolManager.INSTANCE::register);
   }
 
-  private String serviceId() {
-    return DefaultSpServiceGroups.CORE + "-" + AUTO_GENERATED_SERVICE_ID;
-  }
-
   @PostConstruct
   public void init() {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     this.logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    this.serviceHealthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
 
     if (!isConfigured()) {
       doInitialSetup();
+    } else {
+      new MigrationsHandler().performMigrations();
     }
 
-    new MigrationsHandler().performMigrations();
+    executorService.schedule(this::startAllPreviouslyStoppedPipelines, 10, TimeUnit.SECONDS);
 
-    executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
+    LOG.info("Service health check will run every {} seconds", SERVICE_HEALTH_CHECK_INTERVAL);
+    serviceHealthCheckExecutorService.scheduleAtFixedRate(new ServiceHealthCheck(),
+        SERVICE_HEALTH_CHECK_INTERVAL,
+        SERVICE_HEALTH_CHECK_INTERVAL,
+        SERVICE_HEALTH_CHECK_UNIT);
+
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
     healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
         HEALTH_CHECK_INTERVAL,
@@ -149,8 +153,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         LOG_FETCH_INTERVAL,
         LOG_FETCH_INTERVAL,
         LOG_FETCH_UNIT);
-
-
   }
 
   private boolean isConfigured() {
@@ -162,9 +164,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
 
     BackendConfig.INSTANCE.updateSetupStatus(true);
-    LOG.info("Auto-setup will start in 10 seconds to make sure extensions services are running...");
+    LOG.info("Auto-setup will start in 5 seconds to make sure all services are running...");
     try {
-      TimeUnit.SECONDS.sleep(10);
+      TimeUnit.SECONDS.sleep(5);
       LOG.info("Starting installation procedure");
       new AutoInstallation().startAutoInstallation();
       BackendConfig.INSTANCE.updateSetupStatus(false);
@@ -204,8 +206,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         LOG.error("Pipeline {} could not be stopped", s.getPipelineName());
       }
     });
-
-    deregisterService(serviceId());
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }
@@ -286,16 +286,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         .INSTANCE
         .getNoSqlStore()
         .getPipelineStorageAPI();
-  }
-
-
-  @Override
-  protected List<SpServiceTag> getServiceTags() {
-    return Arrays.asList(
-        DefaultSpServiceTags.CORE,
-        DefaultSpServiceTags.CONNECT_MASTER,
-        DefaultSpServiceTags.STREAMPIPES_CLIENT
-    );
   }
 
   @Override

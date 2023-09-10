@@ -19,8 +19,8 @@
 import { Injectable } from '@angular/core';
 import {
     AssetExportConfiguration,
-    PlatformServicesCommons,
     ExportConfiguration,
+    PlatformServicesCommons,
 } from '@streampipes/platform-services';
 import {
     HttpClient,

@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 
 import org.mockito.Mockito;
 import org.testcontainers.consul.ConsulContainer;

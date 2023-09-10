@@ -167,5 +167,58 @@
                 </div>
             </div>
         </sp-split-section>
+        <mat-divider></mat-divider>
+        <sp-split-section
+            title="Messaging layers"
+            subtitle="Manage messaging layer connectivity"
+        >
+            <sp-messaging-broker-config
+                title="JMS"
+                [host]="messagingSettings.jmsHost"
+                [port]="messagingSettings.jmsPort"
+            ></sp-messaging-broker-config>
+            <sp-messaging-broker-config
+                title="Kafka"
+                [host]="messagingSettings.kafkaHost"
+                [port]="messagingSettings.kafkaPort"
+            ></sp-messaging-broker-config>
+            <sp-messaging-broker-config
+                title="MQTT"
+                [host]="messagingSettings.mqttHost"
+                [port]="messagingSettings.mqttPort"
+            ></sp-messaging-broker-config>
+            <sp-messaging-broker-config
+                title="Nats"
+                [host]="messagingSettings.natsHost"
+                [port]="messagingSettings.natsPort"
+            ></sp-messaging-broker-config>
+            <div fxLayout="column">
+                <div class="subsection-title">Pulsar</div>
+                <mat-form-field class="form-field" fxFlex="100" color="accent">
+                    <mat-label>URL</mat-label>
+                    <input
+                        matInput
+                        [(ngModel)]="messagingSettings.pulsarUrl"
+                        type="text"
+                    />
+                </mat-form-field>
+            </div>
+            <sp-messaging-broker-config
+                title="Zookeeper"
+                [host]="messagingSettings.zookeeperHost"
+                [port]="messagingSettings.zookeeperPort"
+            ></sp-messaging-broker-config>
+            <div fxLayoutAlign="start center" class="mt-10">
+                <button
+                    mat-raised-button
+                    color="accent"
+                    type="submit"
+                    class="md-raised md-primary submit-button"
+                    (click)="updateMessagingSettings()"
+                >
+                    Update
+                </button>
+            </div>
+        </sp-split-section>
     </div>
 </sp-basic-nav-tabs>

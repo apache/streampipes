@@ -51,6 +51,21 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getSpCoreScheme() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_SCHEME);
+  }
+
+  @Override
+  public StringEnvironmentVariable getSpCoreHost() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getSpCorePort() {
+    return new IntEnvironmentVariable(Envs.SP_CORE_PORT);
+  }
+
+  @Override
   public StringEnvironmentVariable getTsStorageProtocol() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_PROTOCOL);
   }
@@ -147,6 +162,11 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getKafkaRetentionTimeMs() {
     return new StringEnvironmentVariable(Envs.SP_KAFKA_RETENTION_MS);
+  }
+
+  @Override
+  public StringEnvironmentVariable getPrioritizedProtocol() {
+    return new StringEnvironmentVariable(Envs.SP_PRIORITIZED_PROTOCOL);
   }
 
   @Override

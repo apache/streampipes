@@ -20,12 +20,12 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { CurrentUserService, DialogRef } from '@streampipes/shared-ui';
 import {
     Group,
+    MailConfigService,
     Role,
     ServiceAccount,
     UserAccount,
-    MailConfigService,
-    UserService,
     UserGroupService,
+    UserService,
 } from '@streampipes/platform-services';
 import {
     AbstractControl,

@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.manager.matching;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.config.SpProtocol;
+import org.apache.streampipes.model.configuration.MessagingSettings;
+import org.apache.streampipes.model.configuration.SpProtocol;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -31,6 +31,7 @@ import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 import java.util.Set;
@@ -40,11 +41,20 @@ public class ProtocolSelector extends GroundingSelector {
   private final String outputTopic;
   private final List<SpProtocol> prioritizedProtocols;
 
+  private final MessagingSettings messagingSettings;
+
   public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
     super(source, targets);
     this.outputTopic = TopicGenerator.generateRandomTopic();
+    this.messagingSettings = StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getSpCoreConfigurationStorage()
+        .get()
+        .getMessagingSettings();
+
     this.prioritizedProtocols =
-        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
+        messagingSettings.getPrioritizedProtocols();
   }
 
   public TransportProtocol getPreferredProtocol() {
@@ -68,7 +78,7 @@ public class ProtocolSelector extends GroundingSelector {
           return natsTopic();
         } else if (prioritizedProtocol.getProtocolClass().equals(PulsarTransportProtocol.class.getCanonicalName())
             && supportsProtocol(PulsarTransportProtocol.class)) {
-          return new PulsarTransportProtocol(BackendConfig.INSTANCE.getPulsarUrl(),
+          return new PulsarTransportProtocol(messagingSettings.getPulsarUrl(),
               new SimpleTopicDefinition(outputTopic));
         }
       }
@@ -77,30 +87,37 @@ public class ProtocolSelector extends GroundingSelector {
   }
 
   private TransportProtocol mqttTopic() {
-    return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
-        BackendConfig.INSTANCE.getMqttPort(),
-        outputTopic);
+    return new MqttTransportProtocol(
+        messagingSettings.getMqttHost(),
+        messagingSettings.getMqttPort(),
+        outputTopic
+    );
   }
 
   private TransportProtocol jmsTopic() {
-    return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
-        BackendConfig.INSTANCE.getJmsPort(),
-        outputTopic);
+    return new JmsTransportProtocol(
+        messagingSettings.getJmsHost(),
+        messagingSettings.getJmsPort(),
+        outputTopic
+    );
   }
 
   private TransportProtocol natsTopic() {
     return new NatsTransportProtocol(
-        BackendConfig.INSTANCE.getNatsHost(),
-        BackendConfig.INSTANCE.getNatsPort(),
-        outputTopic);
+        messagingSettings.getNatsHost(),
+        messagingSettings.getNatsPort(),
+        outputTopic
+    );
   }
 
   private TransportProtocol kafkaTopic() {
-    return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
-        BackendConfig.INSTANCE.getKafkaPort(),
+    return new KafkaTransportProtocol(
+        messagingSettings.getKafkaHost(),
+        messagingSettings.getKafkaPort(),
         outputTopic,
-        BackendConfig.INSTANCE.getZookeeperHost(),
-        BackendConfig.INSTANCE.getZookeeperPort());
+        messagingSettings.getZookeeperHost(),
+        messagingSettings.getZookeeperPort()
+    );
   }
 
 
@@ -114,6 +131,5 @@ public class ProtocolSelector extends GroundingSelector {
             .getTransportProtocols()
             .stream()
             .anyMatch(protocol::isInstance));
-
   }
 }

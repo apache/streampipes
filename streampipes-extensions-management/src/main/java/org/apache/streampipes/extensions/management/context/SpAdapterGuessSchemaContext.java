@@ -19,22 +19,22 @@
 package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.config.IConfigExtractor;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
-import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 
 public class SpAdapterGuessSchemaContext implements IAdapterGuessSchemaContext {
 
-  protected ConfigExtractor configExtractor;
+  protected IConfigExtractor configExtractor;
   protected StreamPipesClient streamPipesClient;
 
-  public SpAdapterGuessSchemaContext(ConfigExtractor configExtractor,
+  public SpAdapterGuessSchemaContext(IConfigExtractor configExtractor,
                                      StreamPipesClient streamPipesClient) {
     this.configExtractor = configExtractor;
     this.streamPipesClient = streamPipesClient;
   }
 
   @Override
-  public ConfigExtractor getConfigStore() {
+  public IConfigExtractor getConfigStore() {
     return configExtractor;
   }
 

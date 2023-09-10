@@ -19,19 +19,30 @@
 package org.apache.streampipes.export.utils;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.model.config.SpProtocol;
+import org.apache.streampipes.model.configuration.MessagingSettings;
+import org.apache.streampipes.model.configuration.SpProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class EventGroundingProcessor {
 
-  SpProtocol configuredProtocol;
+  private final MessagingSettings messagingSettings;
+  private final SpProtocol configuredProtocol;
+
   public EventGroundingProcessor() {
-    this.configuredProtocol = BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+    this.messagingSettings = StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getSpCoreConfigurationStorage()
+        .get()
+        .getMessagingSettings();
+
+    this.configuredProtocol = messagingSettings
+        .getPrioritizedProtocols().get(0);
   }
 
   public TransportProtocol applyOverride(TransportProtocol protocol) {
@@ -66,28 +77,28 @@ public class EventGroundingProcessor {
 
   private KafkaTransportProtocol makeKafkaProtocol() {
     var protocol = new KafkaTransportProtocol();
-    protocol.setBrokerHostname(BackendConfig.INSTANCE.getKafkaHost());
-    protocol.setKafkaPort(BackendConfig.INSTANCE.getKafkaPort());
+    protocol.setBrokerHostname(messagingSettings.getKafkaHost());
+    protocol.setKafkaPort(messagingSettings.getKafkaPort());
     return protocol;
   }
 
   private MqttTransportProtocol makeMqttProtocol() {
     var protocol = new MqttTransportProtocol();
-    protocol.setBrokerHostname(BackendConfig.INSTANCE.getMqttHost());
-    protocol.setPort(BackendConfig.INSTANCE.getMqttPort());
+    protocol.setBrokerHostname(messagingSettings.getMqttHost());
+    protocol.setPort(messagingSettings.getMqttPort());
     return protocol;
   }
 
   private NatsTransportProtocol makeNatsProtocol() {
     var protocol = new NatsTransportProtocol();
-    protocol.setBrokerHostname(BackendConfig.INSTANCE.getNatsHost());
-    protocol.setPort(BackendConfig.INSTANCE.getNatsPort());
+    protocol.setBrokerHostname(messagingSettings.getNatsHost());
+    protocol.setPort(messagingSettings.getNatsPort());
     return protocol;
   }
 
   private PulsarTransportProtocol makePulsarProtocol() {
     var protocol = new PulsarTransportProtocol();
-    protocol.setBrokerHostname(BackendConfig.INSTANCE.getNatsHost());
+    protocol.setBrokerHostname(messagingSettings.getNatsHost());
     return protocol;
   }
 

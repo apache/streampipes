@@ -22,8 +22,8 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.util.ServiceDefinitionUtil;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 
 import java.util.ArrayList;
 import java.util.Collection;

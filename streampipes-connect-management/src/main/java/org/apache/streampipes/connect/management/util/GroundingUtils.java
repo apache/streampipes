@@ -18,8 +18,7 @@
 
 package org.apache.streampipes.connect.management.util;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.model.config.SpProtocol;
+import org.apache.streampipes.model.configuration.SpProtocol;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -39,41 +38,45 @@ public class GroundingUtils {
 
   public static EventGrounding createEventGrounding() {
     EventGrounding eventGrounding = new EventGrounding();
+    var messagingSettings = Utils
+        .getCoreConfigStorage()
+        .get()
+        .getMessagingSettings();
 
     String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
     TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
     SpProtocol prioritizedProtocol =
-        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+        messagingSettings.getPrioritizedProtocols().get(0);
 
     if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeJmsTransportProtocol(
-              BackendConfig.INSTANCE.getJmsHost(),
-              BackendConfig.INSTANCE.getJmsPort(),
+              messagingSettings.getJmsHost(),
+              messagingSettings.getJmsPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeKafkaTransportProtocol(
-              BackendConfig.INSTANCE.getKafkaHost(),
-              BackendConfig.INSTANCE.getKafkaPort(),
+              messagingSettings.getKafkaHost(),
+              messagingSettings.getKafkaPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeMqttTransportProtocol(
-              BackendConfig.INSTANCE.getMqttHost(),
-              BackendConfig.INSTANCE.getMqttPort(),
+              messagingSettings.getMqttHost(),
+              messagingSettings.getMqttPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makeNatsTransportProtocol(
-              BackendConfig.INSTANCE.getNatsHost(),
-              BackendConfig.INSTANCE.getNatsPort(),
+              messagingSettings.getNatsHost(),
+              messagingSettings.getNatsPort(),
               topicDefinition));
     } else if (isPrioritized(prioritizedProtocol, PulsarTransportProtocol.class)) {
       eventGrounding.setTransportProtocol(
           makePulsarTransportProtocol(
-              BackendConfig.INSTANCE.getPulsarUrl(),
+              messagingSettings.getPulsarUrl(),
               topicDefinition
           )
       );

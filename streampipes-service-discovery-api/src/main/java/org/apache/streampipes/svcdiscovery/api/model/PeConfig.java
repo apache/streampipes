@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.svcdiscovery.api.model;
 
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
+
 import java.util.List;
 import java.util.Map;
 

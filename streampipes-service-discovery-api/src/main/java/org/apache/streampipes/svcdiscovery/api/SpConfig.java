@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.svcdiscovery.api;
 
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.ConfigurationScope;
 
 public interface SpConfig {
 

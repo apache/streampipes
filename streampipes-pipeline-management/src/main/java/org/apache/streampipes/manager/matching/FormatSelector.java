@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.manager.matching;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.config.SpDataFormat;
+import org.apache.streampipes.model.configuration.SpDataFormat;
 import org.apache.streampipes.model.grounding.TransportFormat;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.vocabulary.MessageFormat;
 
 import java.net.URI;
@@ -46,11 +46,17 @@ public class FormatSelector extends GroundingSelector {
           .get(0);
     } else {
       List<SpDataFormat> prioritizedFormats =
-          BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedFormats();
+          StorageDispatcher
+              .INSTANCE
+              .getNoSqlStore()
+              .getSpCoreConfigurationStorage()
+              .get()
+              .getMessagingSettings()
+              .getPrioritizedFormats();
 
       List<SpDataFormat> supportedFormats = prioritizedFormats
           .stream()
-          .filter(pf -> supportsFormat(pf.getMessageFormat())).collect(Collectors.toList());
+          .filter(pf -> supportsFormat(pf.getMessageFormat())).toList();
 
       if (supportedFormats.size() > 0) {
         return new TransportFormat(supportedFormats.get(0).getMessageFormat());
@@ -60,7 +66,7 @@ public class FormatSelector extends GroundingSelector {
     }
   }
 
-  public <T extends TransportFormat> boolean supportsFormat(String format) {
+  public boolean supportsFormat(String format) {
     List<InvocableStreamPipesEntity> elements = buildInvocables();
     return elements
         .stream()

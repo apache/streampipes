@@ -32,13 +32,11 @@ import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
-import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -50,6 +48,10 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
 public abstract class AbstractRestResource extends AbstractSharedRestInterface {
+
+  protected ISpCoreConfigurationStorage getSpCoreConfigurationStorage() {
+    return getNoSqlStorage().getSpCoreConfigurationStorage();
+  }
 
   protected IPipelineElementDescriptionStorageCache getPipelineElementRdfStorage() {
     return StorageManager.INSTANCE.getPipelineElementStorage();
@@ -110,19 +112,6 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     return statusMessage(new ErrorMessage(notifications));
   }
 
-//  protected String getCurrentUsername() throws AuthenticationException {
-//    if (SecurityContext.getSubject().isAuthenticated()) {
-//      return SecurityUtils.getSubject().getPrincipal().toString();
-//    }
-//    throw new AuthenticationException("Not authenticated");
-//  }
-
-  protected boolean authorized(String username) {
-    // TODO SEC
-    //return username.equals(SecurityUtils.getSubject().getPrincipal().toString());
-    return true;
-  }
-
   @SuppressWarnings("deprecation")
   protected String decode(String encodedString) {
     return URLDecoder.decode(encodedString);
@@ -143,14 +132,6 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected Response unauthorized() {
     return Response.status(Response.Status.UNAUTHORIZED).build();
-  }
-
-  protected ISpKvManagement getKeyValueStore() {
-    return SpServiceDiscovery.getKeyValueStore();
-  }
-
-  protected ISpServiceDiscovery getServiceDiscovery() {
-    return SpServiceDiscovery.getServiceDiscovery();
   }
 
   protected SpResourceManager getSpResourceManager() {

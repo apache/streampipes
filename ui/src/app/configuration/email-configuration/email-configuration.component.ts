@@ -56,7 +56,7 @@ export class EmailConfigurationComponent implements OnInit {
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[2].itemTitle },
+            { label: SpConfigurationTabs.getTabs()[5].itemTitle },
         ]);
         this.loadMailConfig(true);
     }

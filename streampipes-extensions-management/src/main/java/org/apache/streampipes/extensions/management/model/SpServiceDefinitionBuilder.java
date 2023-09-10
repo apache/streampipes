@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclar
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,8 +126,8 @@ public class SpServiceDefinitionBuilder {
   public SpServiceDefinitionBuilder merge(SpServiceDefinition other) {
     this.serviceDefinition.addDeclarers(other.getDeclarers());
     this.serviceDefinition.addAdapters(other.getAdapters());
-    other.getKvConfigs().values().forEach(value -> {
-      if (this.serviceDefinition.getKvConfigs().containsKey(value.getKey())) {
+    other.getKvConfigs().forEach(value -> {
+      if (this.serviceDefinition.getKvConfigs().stream().anyMatch(c -> c.getKey().equals(value.getKey()))) {
         LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.",
             value.getKey());
       }
