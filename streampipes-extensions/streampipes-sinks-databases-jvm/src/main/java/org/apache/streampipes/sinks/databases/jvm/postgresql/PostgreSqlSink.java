@@ -87,9 +87,9 @@ public class PostgreSqlSink extends StreamPipesDataSink {
         hostname,
         port,
         dbName,
-        tableName,
         user,
-        password,
+        password,      
+        tableName,
         sslSelection.equals(SSL_ENABLED));
 
     this.postgreSql = new PostgreSql();
