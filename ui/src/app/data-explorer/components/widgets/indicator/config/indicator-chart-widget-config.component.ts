@@ -28,7 +28,6 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
     templateUrl: './indicator-chart-widget-config.component.html',
-    styleUrls: ['./indicator-chart-widget-config.component.scss'],
 })
 export class IndicatorWidgetConfigComponent
     extends BaseWidgetConfig<IndicatorChartWidgetModel, IndicatorChartVisConfig>

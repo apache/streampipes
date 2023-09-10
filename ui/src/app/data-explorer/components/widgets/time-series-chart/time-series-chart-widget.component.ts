@@ -103,6 +103,8 @@ export class TimeSeriesChartWidgetComponent
         },
     };
 
+    revision = 1;
+
     ngOnInit(): void {
         this.updatemenus = [
             {
@@ -505,6 +507,7 @@ export class TimeSeriesChartWidgetComponent
             (this.graph.layout as any).width =
                 width - this.offsetRightLineChart;
             (this.graph.layout as any).height = height;
+            this.revision += 1;
         }, 10);
     }
 
@@ -524,6 +527,7 @@ export class TimeSeriesChartWidgetComponent
         );
 
         this.setShownComponents(false, true, false, false);
+        this.revision += 1;
     }
 
     handleUpdatedFields(

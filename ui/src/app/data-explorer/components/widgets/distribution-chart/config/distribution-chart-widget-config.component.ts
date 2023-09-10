@@ -28,7 +28,6 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 @Component({
     selector: 'sp-data-explorer-distribution-chart-widget-config',
     templateUrl: './distribution-chart-widget-config.component.html',
-    styleUrls: ['./distribution-chart-widget-config.component.scss'],
 })
 export class DistributionWidgetConfigComponent
     extends BaseWidgetConfig<
@@ -44,7 +43,7 @@ export class DistributionWidgetConfigComponent
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     updateDisplayType(selectedType: string) {
@@ -61,19 +60,35 @@ export class DistributionWidgetConfigComponent
             this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
                 this.fieldProvider.numericFields[0];
         }
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     updateRoundingValue(selectedType: number) {
         this.currentlyConfiguredWidget.visualizationConfig.roundingValue =
             selectedType;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     onResolutionChange(resolution: number): void {
         this.currentlyConfiguredWidget.visualizationConfig.resolution =
             resolution;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
+    }
+
+    onNumBinChange(numberOfBins: number): void {
+        this.currentlyConfiguredWidget.visualizationConfig.numberOfBins =
+            numberOfBins;
+        this.triggerViewRefresh();
+    }
+
+    onDomainMinChange(value: number) {
+        this.currentlyConfiguredWidget.visualizationConfig.domainMin = value;
+        this.triggerViewRefresh();
+    }
+
+    onDomainMaxChange(value: number) {
+        this.currentlyConfiguredWidget.visualizationConfig.domainMax = value;
+        this.triggerViewRefresh();
     }
 
     protected getWidgetType(): WidgetType {
@@ -87,6 +102,11 @@ export class DistributionWidgetConfigComponent
             displayType: 'histogram',
             roundingValue: 0.1,
             resolution: 1,
+            autoBin: true,
+            numberOfBins: 10,
+            domainMin: 0,
+            domainMax: 100,
+            autoDomain: true,
         };
     }
 }

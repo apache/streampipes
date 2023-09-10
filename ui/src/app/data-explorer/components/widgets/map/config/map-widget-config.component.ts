@@ -27,7 +27,6 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 @Component({
     selector: 'sp-data-explorer-map-widget-config',
     templateUrl: './map-widget-config.component.html',
-    styleUrls: ['./map-widget-config.component.scss'],
 })
 export class MapWidgetConfigComponent
     extends BaseWidgetConfig<MapWidgetModel, MapVisConfig>

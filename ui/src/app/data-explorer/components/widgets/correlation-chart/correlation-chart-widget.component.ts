@@ -28,7 +28,6 @@ import { ColorUtils } from '../utils/color-utils';
 @Component({
     selector: 'sp-data-explorer-correlation-chart-widget',
     templateUrl: './correlation-chart-widget.component.html',
-    styleUrls: ['./correlation-chart-widget.component.scss'],
 })
 export class CorrelationChartWidgetComponent
     extends BaseDataExplorerWidgetDirective<CorrelationChartWidgetModel>
@@ -37,6 +36,7 @@ export class CorrelationChartWidgetComponent
     colNo = 2;
     fixedColNo = 2;
     rowNo = 2;
+    revision = 1;
 
     data = [];
 
@@ -221,6 +221,7 @@ export class CorrelationChartWidgetComponent
         this.graph.layout.autosize = false;
         (this.graph.layout as any).width = width;
         (this.graph.layout as any).height = height;
+        this.revision += 1;
     }
 
     beforeDataFetched() {}
@@ -229,6 +230,7 @@ export class CorrelationChartWidgetComponent
         this.prepareData(spQueryResult);
         this.updateAppearance();
         this.setShownComponents(false, true, false, false);
+        this.revision += 1;
     }
 
     handleUpdatedFields(
