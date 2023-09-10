@@ -36,13 +36,39 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.streampipes.core.persistence.claimName }}
       restartPolicy: {{ .Values.restartPolicy }}
+      initContainers:
+        - name: init-wait-consul-couchdb
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.consul.service.name }} {{ .Values.external.consul.service.webPort }} && nc -zvw1 {{ .Values.external.couchdb.service.name }} {{ .Values.external.couchdb.service.port }} && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: {{ .Values.streampipes.core.appName }}
           image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: SP_PRIORITIZED_PROTOCOL
-              value: {{ .Values.preferredBroker }}
+            {{- if eq .Values.preferredBroker "pulsar" }}
+              value: "pulsar"
+            - name: SP_PULSAR_URL
+              value: "pulsar://{{ .Values.external.pulsar.service.name }}:{{ .Values.external.pulsar.service.port }}"
+            {{- end }}
+            {{- if eq .Values.preferredBroker "kafka" }}
+              value: "kafka"
+            - name: SP_KAFKA_HOST
+              value: "{{ .Values.external.kafka.service.name }}"
+            - name: SP_KAFKA_PORT
+              value: "{{ .Values.external.kafka.service.port }}"
+            - name: SP_ZOOKEEPER_HOST
+              value: "{{ .Values.external.zookeeper.service.name }}"
+            - name: SP_ZOOKEEPER_PORT
+              value: "{{ .Values.external.zookeeper.service.port }}"
+            {{- end }}
+            {{- if eq .Values.preferredBroker "nats" }}
+              value: "nats"
+            - name: SP_NATS_HOST
+              value: "{{ .Values.external.nats.service.name }}"
+            - name: SP_NATS_PORT
+              value: "{{ .Values.external.nats.service.port }}"
+            {{- end }}
           ports:
             - containerPort: {{ .Values.streampipes.core.port }}
           volumeMounts:

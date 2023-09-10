@@ -25,24 +25,29 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
 
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          in-project: true
+          prefer-active-python: true
+
       - name: Install dependencies
         working-directory: ./streampipes-client-python
         run: |
-          python -m pip install --upgrade pip 
-          pip install build twine
-          pip install -e ".[docs]"
+          poetry install --with deployment,docs --all-extras
 
       - name: Build package
         working-directory: ./streampipes-client-python
         run: |
-          python -m build
+          poetry build
           twine check --strict dist/*
 
       - name: Publish package

@@ -20,6 +20,7 @@ import logging
 from typing import Any, Dict
 
 from confluent_kafka import Producer  # type: ignore
+
 from streampipes.functions.broker import Publisher
 
 logger = logging.getLogger(__name__)

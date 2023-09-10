@@ -33,7 +33,6 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 @Component({
     selector: 'sp-data-explorer-time-series-chart-widget-config',
     templateUrl: './time-series-chart-widget-config.component.html',
-    styleUrls: ['./time-series-chart-widget-config.component.scss'],
 })
 export class TimeSeriesChartWidgetConfigComponent
     extends BaseWidgetConfig<

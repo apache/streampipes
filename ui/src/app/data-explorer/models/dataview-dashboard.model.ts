@@ -18,15 +18,31 @@
 
 import { GridsterConfig } from 'angular-gridster2';
 import { WidgetType } from '../registry/data-explorer-widgets';
-import { DataExplorerField } from '@streampipes/platform-services';
+import {
+    DataExplorerField,
+    DataExplorerWidgetModel,
+    SpQueryResult,
+} from '@streampipes/platform-services';
+import { EChartsOption } from 'echarts';
+import { WidgetSize } from './dataset.model';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDataViewDashboardConfig extends GridsterConfig {}
 
-export interface IWidget {
+export interface SpEchartsRenderer<T extends DataExplorerWidgetModel> {
+    getType(): string;
+    render(
+        queryResult: SpQueryResult[],
+        widgetConfig: T,
+        widgetSize: WidgetSize,
+    ): EChartsOption;
+}
+
+export interface IWidget<T extends DataExplorerWidgetModel> {
     id: string;
     label: string;
     componentClass: any;
+    renderers?: SpEchartsRenderer<T>[];
 }
 
 export interface WidgetBaseAppearanceConfig {

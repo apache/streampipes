@@ -41,7 +41,6 @@
         <module>streampipes-extensions-all-jvm</module>
 
         <module>streampipes-pipeline-elements-all-jvm</module>
-        <module>streampipes-pipeline-elements-experimental-flink</module>
         <module>streampipes-pipeline-elements-data-simulator</module>
         <module>streampipes-pipeline-elements-shared</module>
 

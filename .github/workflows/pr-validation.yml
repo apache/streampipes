@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -64,7 +64,7 @@ jobs:
     needs: [python-quality-checks, python-unit-tests, run-format-and-lint-ui]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -101,7 +101,7 @@ jobs:
         run: sleep 70
 
       - name: 'UI Tests'
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           install: false
           wait-on: 'http://localhost/#/login'
@@ -112,81 +112,88 @@ jobs:
   python-quality-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
-          cache: 'pip'
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install -e ".[dev]"
+          poetry install --with dev,stubs --all-extras
 
       - name: Run style & code checks
         working-directory: ./streampipes-client-python
         run: |
           make pre-commit
-          make mypy
-          make lint
 
   python-unit-tests:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        python: [3.8, 3.9, "3.10"]
+        python: [3.8, 3.9, "3.10", "3.11"]
         os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python v${{ matrix.python }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
-          cache: 'pip'
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install -e ".[dev]"
+          poetry install --with dev,stubs --all-extras
 
       - name: Run unit-tests
         working-directory: ./streampipes-client-python
         run: |
+          source $VENV  # see https://github.com/snok/install-poetry#running-on-windows
           make unit-tests
 
   python-doc-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
 
-      - name: Cache Python doc dependencies
-        uses: actions/cache@v3
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-doc-${{ hashFiles('**/setup.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-doc-
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install Python dependencies
         working-directory: ./streampipes-client-python
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install -e ".[docs]"
+          poetry install --with docs
 
       - name: Build MkDocs
         working-directory: ./streampipes-client-python

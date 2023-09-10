@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -116,13 +116,13 @@ jobs:
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:${{ env.MVN_VERSION }}
 
-      - name: Build and Push Docker Image pipeline-elements-experimental-flink
-        uses: docker/build-push-action@v4
-        with:
-          context: ./streampipes-extensions/streampipes-pipeline-elements-experimental-flink
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
-          push: true
-          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-experimental-flink:${{ env.MVN_VERSION }}
+#      - name: Build and Push Docker Image pipeline-elements-experimental-flink
+#        uses: docker/build-push-action@v4
+#        with:
+#          context: ./streampipes-extensions/streampipes-pipeline-elements-experimental-flink
+#          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+#          push: true
+#          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-experimental-flink:${{ env.MVN_VERSION }}
 
       - name: Build and Push Docker Image extensions-all-iiot
         uses: docker/build-push-action@v4

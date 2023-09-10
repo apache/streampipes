@@ -54,6 +54,19 @@ import { AvailableRolesService } from './services/available-roles.service';
 
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
+import { ValueDistributionTransform } from './core-ui/echarts-transform/value-distribution.transform';
+import { HistogramTransform } from './core-ui/echarts-transform/histogram.transform';
+import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
+
+import * as echarts from 'echarts';
+import * as transform from 'echarts-simple-transform';
+
+echarts.registerTransform(transform.aggregate);
+echarts.registerTransform(ValueDistributionTransform);
+echarts.registerTransform(HistogramTransform);
+echarts.registerTransform(RoundValuesTransform);
+
+
 import * as $ from 'jquery';
 
 @NgModule({

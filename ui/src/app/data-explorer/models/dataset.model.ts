@@ -15,3 +15,41 @@
  * limitations under the License.
  *
  */
+
+import {
+    DatasetOption,
+    GridOption,
+    XAXisOption,
+    YAXisOption,
+} from 'echarts/types/dist/shared';
+
+export interface WidgetSize {
+    width: number;
+    height: number;
+}
+
+export interface TagValue {
+    tagKeys: string[];
+    values: any[];
+}
+
+export interface GeneratedDataset {
+    dataset: DatasetOption[];
+    tagValues: TagValue[][];
+    rawDataStartIndices: number[];
+    rawDataEndIndices: number[];
+    preparedDataStartIndices: number[];
+    preparedDataEndIndices: number[];
+    initialTransformsCount: number;
+}
+
+export interface GridOptions {
+    grid: GridOption[];
+    numberOfRows: number;
+    numberOfColumns: number;
+}
+
+export interface AxisOptions {
+    xAxisOptions: XAXisOption[];
+    yAxisOptions: YAXisOption[];
+}

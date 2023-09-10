@@ -16,14 +16,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: extensions-all-iiot
+  name: {{ .Values.extensions.iiot.service.name }}
   labels:
-    name: extensions-all-iiot
+    name: {{ .Values.extensions.iiot.appName }}
 spec:
   selector:
-    app: extensions-all-iiot
+    app: {{ .Values.extensions.iiot.appName }}
   ports:
     - name: main
       protocol: TCP
-      port: 8090
-      targetPort: 8090
+      port: {{ .Values.extensions.iiot.port }}
+      targetPort: {{ .Values.extensions.iiot.service.port }}

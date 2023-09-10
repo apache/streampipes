@@ -16,14 +16,7 @@
   ~
   -->
 
-<div
-    fxLayout="column"
-    fxFlex="100"
-    [ngStyle]="{
-        background: dataExplorerWidget.baseAppearanceConfig.backgroundColor,
-        color: dataExplorerWidget.baseAppearanceConfig.textColor
-    }"
->
+<div class="main-panel">
     <sp-no-data-in-date-range
         *ngIf="showNoDataInDateRange"
         [viewDateRange]="timeSettings"
@@ -36,30 +29,14 @@
         (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
         *ngIf="showTooMuchData"
         class="h-100"
-    ></sp-too-much-data>
-
-    <plotly-plot
-        *ngIf="
-            showData &&
-            !(dataExplorerWidget.visualizationConfig.displayType === 'heatmap')
-        "
-        [divId]="dataExplorerWidget._id"
-        class="plotly-container"
-        [data]="data"
-        [layout]="graph.layout"
-        [config]="graph.config"
     >
-    </plotly-plot>
+    </sp-too-much-data>
 
-    <sp-data-explorer-value-heatmap-widget
-        *ngIf="
-            showData &&
-            dataExplorerWidget.visualizationConfig.displayType === 'heatmap'
-        "
-        [currentWidth]="currentWidth"
-        [currentHeight]="currentHeight"
-        [widgetConfig]="dataExplorerWidget"
-        [data]="latestData"
-    >
-    </sp-data-explorer-value-heatmap-widget>
+    <div
+        echarts
+        [options]="option"
+        [ngStyle]="{ width: currentWidth, height: '100%' }"
+        (chartInit)="onChartInit($event)"
+        *ngIf="option"
+    ></div>
 </div>

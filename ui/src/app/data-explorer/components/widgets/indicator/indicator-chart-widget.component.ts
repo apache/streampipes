@@ -27,7 +27,6 @@ import {
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget',
     templateUrl: './indicator-chart-widget.component.html',
-    styleUrls: ['./indicator-chart-widget.component.scss'],
 })
 export class IndicatorChartWidgetComponent
     extends BaseDataExplorerWidgetDirective<IndicatorChartWidgetModel>

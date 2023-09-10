@@ -24,7 +24,8 @@
     width: 5ch;
     white-space: nowrap;
     overflow: hidden;
-    -webkit-animation: typing 1s steps(5, end),
+    -webkit-animation:
+        typing 1s steps(5, end),
         blink-caret 0.5s step-end infinite alternate;
 }
 

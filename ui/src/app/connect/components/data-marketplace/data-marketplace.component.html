@@ -98,7 +98,7 @@
                         (click)="selectAdapter(adapterDescription.appId)"
                         *ngFor="
                             let adapterDescription of adapterDescriptions
-                                | adapterFilter : currentFilter
+                                | adapterFilter: currentFilter
                         "
                         [adapter]="adapterDescription"
                     ></sp-adapter-description>
