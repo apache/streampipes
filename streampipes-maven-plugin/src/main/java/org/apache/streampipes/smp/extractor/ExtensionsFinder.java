@@ -52,19 +52,20 @@ public class ExtensionsFinder {
     var serviceDef = ((ExtensionsModelSubmitter) loader.loadClass(initClass).newInstance()).provideServiceDefinition();
 
     extensions.addAll(findAdapters(serviceDef));
-    extensions.addAll(findPipelineElements(serviceDef, IDataProcessorConfiguration.class));
-    extensions.addAll(findPipelineElements(serviceDef, IDataSinkConfiguration.class));
+    extensions.addAll(findPipelineElements(serviceDef, IDataProcessorConfiguration.class, PeType.PROCESSOR));
+    extensions.addAll(findPipelineElements(serviceDef, IDataSinkConfiguration.class, PeType.SINK));
 
     return extensions;
   }
 
   private List<AssetModel> findPipelineElements(SpServiceDefinition serviceDef,
-                                                Class<? extends IPipelineElementConfiguration<?, ?>> configType) {
+                                                Class<? extends IPipelineElementConfiguration<?, ?>> configType,
+                                                PeType peType) {
     return serviceDef.getDeclarers()
         .stream()
         .map(IStreamPipesPipelineElement::declareConfig)
         .filter(configType::isInstance)
-        .map(config -> new AssetModel(config.getDescription().getAppId(), PeType.PROCESSOR)).toList();
+        .map(config -> new AssetModel(config.getDescription().getAppId(), peType)).toList();
   }
 
   private Collection<? extends AssetModel> findAdapters(SpServiceDefinition serviceDef) {
