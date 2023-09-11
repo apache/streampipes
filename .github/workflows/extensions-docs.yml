@@ -21,7 +21,7 @@ on:
     - cron:  "0 3 * * 6"  # runs every saturday at 03:00:00
 
 jobs:
-  python-docs-artifact-building:
+  extensions-docs-artifact-building:
     runs-on: ubuntu-latest
     steps:
       - name: clone
