@@ -76,9 +76,9 @@ public class ExtractDocumentationMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoFailureException {
     var log = getLog();
-    var targetDir = this.session.getExecutionRootDirectory() + File.separator + "target";
+    var targetDir = this.session.getCurrentProject().getBasedir() + File.separator + "target";
     var spIgnoreFile =
-        this.session.getExecutionRootDirectory() + File.separator + SP_IGNORE_FILENAME;
+        this.session.getCurrentProject().getBasedir() + File.separator + SP_IGNORE_FILENAME;
     var docsBasePath = Paths.get(targetDir, DOCS_ROOT_FOLDER);
 
     try {
@@ -137,8 +137,9 @@ public class ExtractDocumentationMojo extends AbstractMojo {
       }
 
       var sidebarConfig = new SidebarConfigGenerator(log, extensionsElements).generate();
-      log.info("Writing sidebar config");
-      FileUtils.writeStringToFile(docsBasePath.resolve("sidebars.json").toFile(),
+      var sidebarPath = docsBasePath.resolve("sidebar.json");
+      log.info(String.format("Writing sidebar config to %s", sidebarPath));
+      FileUtils.writeStringToFile(sidebarPath.toFile(),
           sidebarConfig, Charsets.UTF_8);
 
     } catch (IOException | DependencyResolutionRequiredException | ClassNotFoundException
