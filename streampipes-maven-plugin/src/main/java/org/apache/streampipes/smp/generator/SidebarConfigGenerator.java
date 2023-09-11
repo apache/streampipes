@@ -21,6 +21,8 @@ package org.apache.streampipes.smp.generator;
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -48,6 +50,7 @@ public class SidebarConfigGenerator {
   }
 
   public String generate() throws IOException {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     log.info("Downloading existing sidebar from Git repo");
     var existingSidebar = loadExistingSidebar();
     log.info("Sidebar download successful");
@@ -66,7 +69,7 @@ public class SidebarConfigGenerator {
 
     section.add(PipelineElementSection, pipelineElements);
 
-    return existingSidebarJson.toString();
+    return gson.toJson(existingSidebarJson);
   }
 
   private JsonObject makeItems(PeType type,
