@@ -54,7 +54,6 @@ public class SidebarConfigGenerator {
     var existingSidebarJson = JsonParser.parseString(existingSidebar);
 
     JsonArray pipelineElements = new JsonArray();
-    assetModels.forEach(pe -> pipelineElements.add("pe/" + pe.getAppId()));
 
     pipelineElements.add(makeItems(PeType.ADAPTER, "Adapters"));
     pipelineElements.add(makeItems(PeType.PROCESSOR, "Data Processors"));

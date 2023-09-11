@@ -114,8 +114,7 @@ public class ExtractDocumentationMojo extends AbstractMojo {
           var docsPath = Paths.get(
               targetDir,
               DOCS_ROOT_FOLDER,
-              DOCS_PE_FOLDER,
-              extensionsElement.getAppId());
+              DOCS_PE_FOLDER);
           new DocumentationResourceGenerator(loader, extensionsElement, docsPath).generate();
 
           log.info(
