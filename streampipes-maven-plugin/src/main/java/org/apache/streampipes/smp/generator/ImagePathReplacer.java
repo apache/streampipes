@@ -26,11 +26,10 @@ public class ImagePathReplacer {
   private static final String IMAGE_REGEX = "(<img.*src=\")(.*)(\")";
   private static final Pattern pattern = Pattern.compile(IMAGE_REGEX);
 
-  private static final String DOCS_PREFIX = "/docs/img/pipeline-elements/";
-  private static final String WEBSITE_PREFIX = "/img/pipeline-elements/";
+  private static final String DOCS_PREFIX = "/img/pipeline-elements/";
 
-  private String originalContent;
-  private String appId;
+  private final String originalContent;
+  private final String appId;
 
   public ImagePathReplacer(String originalContent, String appId) {
     this.originalContent = originalContent;
@@ -39,10 +38,6 @@ public class ImagePathReplacer {
 
   public String replaceContentForDocs() {
     return replaceContent(DOCS_PREFIX);
-  }
-
-  public String replaceContentForWebsite() {
-    return replaceContent(WEBSITE_PREFIX);
   }
 
   public String replaceContent(String prefix) {
