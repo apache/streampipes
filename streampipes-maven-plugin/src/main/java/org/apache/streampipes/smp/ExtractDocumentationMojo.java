@@ -137,7 +137,7 @@ public class ExtractDocumentationMojo extends AbstractMojo {
       }
 
       var sidebarConfig = new SidebarConfigGenerator(log, extensionsElements).generate();
-      var sidebarPath = docsBasePath.resolve("sidebar.json");
+      var sidebarPath = docsBasePath.resolve("sidebars.json");
       log.info(String.format("Writing sidebar config to %s", sidebarPath));
       FileUtils.writeStringToFile(sidebarPath.toFile(),
           sidebarConfig, Charsets.UTF_8);
