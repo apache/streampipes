@@ -43,6 +43,10 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
+      - name: Check target folder
+        working-directory: ./streampipes-extensions/streampipes-extensions-all-jvm/target
+        run: ls -la  
+
       - name: Publish Extensions docs as artifact
         uses: actions/upload-artifact@v3
         with:
