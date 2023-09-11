@@ -1396,7 +1396,6 @@
         <module>streampipes-wrapper-distributed</module>
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-kafka-streams</module>
-        <module>streampipes-wrapper-python</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
 	</modules>
