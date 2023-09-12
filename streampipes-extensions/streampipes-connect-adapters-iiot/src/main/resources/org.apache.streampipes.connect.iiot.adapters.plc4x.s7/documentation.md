@@ -73,12 +73,15 @@ There are two options to define the nodes:
   should be added as nodes. Here is an example export enriched with the runtime name:
 
 ```
-Runtime Name,Path,Data Type,Node Name,Comment,Hmi Visible,Hmi Accessible,Hmi Writeable,Typeobject ID,Version ID
-I_High_sensor,Tag table_1,Bool,%I0.0,,True,True,True,,
-I_Low_sensor,Tag table_1,Bool,%I0.1,,True,True,True,,
-I_Pallet_sensor,Tag table_1,Bool,%I0.2,,True,True,True,,
-I_Loaded,Tag table_1,Bool,%I0.3,,True,True,True,,
+Runtime Name,Path,Data Type,Node Name
+I_High_sensor,Tag table_1,Bool,%I0.0,
+I_Low_sensor,Tag table_1,Bool,%I0.1,
+I_Pallet_sensor,Tag table_1,Bool,%I0.2,
+I_Loaded,Tag table_1,Bool,%I0.3,
 ```
+
+Note that the CSV can contain additional columns, but only the columns `Runtime Name`, `Data Type` and `Node Name` are
+used, while all other columns will be ignored.
 
 ## Best Practices
 

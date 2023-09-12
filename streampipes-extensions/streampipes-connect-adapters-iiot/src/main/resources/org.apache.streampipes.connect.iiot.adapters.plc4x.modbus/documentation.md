@@ -57,3 +57,13 @@ The following fields must be provided for each node:
 * Node Address: Refers to the address of the Node in Modbus, e.g., 1
 * Object Type: Can be selected from the available options `DiscreteInput`, `Coil`, `InputRegister`,
   or `HoldingRegister`. 
+
+An example CSV file looks as follows:
+
+```
+Runtime Name,Node Address,Object Type,
+field1,1,Coil
+temperature,2,Coil
+```
+
+Note that the CSV header must exactly match the titles `Runtime Name`, `Node Address` and `Object Type`.
