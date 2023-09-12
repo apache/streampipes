@@ -157,7 +157,7 @@
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
 	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
 	<jsrosbridge.version>0.2.0</jsrosbridge.version>
-	<jedis.version>4.4.3</jedis.version>
+	<jedis.version>5.0.0</jedis.version>
 	<j2objc-annotations.version>1.3</j2objc-annotations.version>
 	<kryo.version>2.24.0</kryo.version>
 	<language-detector.version>0.6</language-detector.version>
