@@ -89,7 +89,7 @@
 	<jjwt.version>0.11.2</jjwt.version>
 	<jna.version>5.13.0</jna.version>
 	<json-path.version>5.3.0</json-path.version>
-	<json-smart.version>2.4.9</json-smart.version>
+	<json-smart.version>2.5.0</json-smart.version>
 	<jsr305.version>3.0.2</jsr305.version>
 	<kafka.version>3.4.0</kafka.version>
 	<kotlin-stdlib.version>1.9.0</kotlin-stdlib.version>
