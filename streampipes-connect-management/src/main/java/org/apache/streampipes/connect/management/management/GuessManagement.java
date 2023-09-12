@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
+import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -31,9 +32,7 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +56,8 @@ public class GuessManagement {
     var objectMapper = JacksonSerializer.getObjectMapper();
     var description = objectMapper.writeValueAsString(adapterDescription);
     logger.info("Guess schema at: " + workerUrl);
-    Response requestResponse = Request.Post(workerUrl)
-        .bodyString(description, ContentType.APPLICATION_JSON)
-        .connectTimeout(1000)
-        .socketTimeout(100000)
+    Response requestResponse = ExtensionServiceExecutions
+        .extServicePostRequest(workerUrl, null, description)
         .execute();
 
     var httpResponse = requestResponse.returnResponse();
