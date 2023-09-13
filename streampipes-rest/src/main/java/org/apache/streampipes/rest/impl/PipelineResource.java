@@ -235,6 +235,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     }
     storedPipeline.setCreatedAt(System.currentTimeMillis());
     storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
+    storedPipeline.setHealthStatus(pipeline.getHealthStatus());
     storedPipeline.setPipelineNotifications(pipeline.getPipelineNotifications());
     Operations.updatePipeline(storedPipeline);
     SuccessMessage message = Notifications.success("Pipeline modified");

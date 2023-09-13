@@ -27,14 +27,8 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfigurationService } from './shared/configuration.service';
-import { ConsulServiceComponent } from './consul-service/consul-service.component';
-import { ConsulConfigsComponent } from './consul-configs/consul-configs.component';
-import { ConsulConfigsTextComponent } from './consul-configs-text/consul-configs-text.component';
-import { ConsulConfigsPasswordComponent } from './consul-configs-password/consul-configs-password.component';
-import { ConsulConfigsBooleanComponent } from './consul-configs-boolean/consul-configs-boolean.component';
-import { ConsulConfigsNumberComponent } from './consul-configs-number/consul-configs-number.component';
+
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { PipelineElementConfigurationComponent } from './pipeline-element-configuration/pipeline-element-configuration.component';
 import { MessagingConfigurationComponent } from './messaging-configuration/messaging-configuration.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
@@ -61,6 +55,15 @@ import { SpDataExportItemComponent } from './export/export-dialog/data-export-it
 import { SpEditLabelComponent } from './label-configuration/edit-label/edit-label.component';
 import { SpLabelConfigurationComponent } from './label-configuration/label-configuration.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ExtensionsServiceManagementComponent } from './extensions-service-management/extensions-service-management.component';
+import { ServiceConfigsComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs.component';
+import { ServiceConfigsTextComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-text/service-configs-text.component';
+import { ServiceConfigsPasswordComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-password/service-configs-password.component';
+import { ServiceConfigsBooleanComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-boolean/service-configs-boolean.component';
+import { ServiceConfigsNumberComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-number/service-configs-number.component';
+import { SpRegisteredExtensionsServiceComponent } from './extensions-service-management/registrered-extensions-services/registered-extensions-services.component';
+import { SpExtensionsServiceConfigurationComponent } from './extensions-service-management/extensions-service-configuration/extensions-service-configuration.component';
+import { SpMessagingBrokerConfigComponent } from './messaging-configuration/broker-config/broker-config.component';
 
 @NgModule({
     imports: [
@@ -114,8 +117,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
                         component: MessagingConfigurationComponent,
                     },
                     {
-                        path: 'pipelineelement',
-                        component: PipelineElementConfigurationComponent,
+                        path: 'extensions-services',
+                        component: ExtensionsServiceManagementComponent,
                     },
                     {
                         path: 'security',
@@ -128,18 +131,17 @@ import { ColorPickerModule } from 'ngx-color-picker';
         ColorPickerModule,
     ],
     declarations: [
-        ConsulServiceComponent,
-        ConsulConfigsComponent,
-        ConsulConfigsTextComponent,
-        ConsulConfigsPasswordComponent,
-        ConsulConfigsBooleanComponent,
-        ConsulConfigsNumberComponent,
+        ServiceConfigsComponent,
+        ServiceConfigsTextComponent,
+        ServiceConfigsPasswordComponent,
+        ServiceConfigsBooleanComponent,
+        ServiceConfigsNumberComponent,
         DeleteDatalakeIndexComponent,
         EditUserDialogComponent,
         EditGroupDialogComponent,
         EmailConfigurationComponent,
         GeneralConfigurationComponent,
-        PipelineElementConfigurationComponent,
+        ExtensionsServiceManagementComponent,
         SecurityAuthenticationConfigurationComponent,
         SecurityConfigurationComponent,
         SecurityUserConfigComponent,
@@ -153,6 +155,9 @@ import { ColorPickerModule } from 'ngx-color-picker';
         SpDataImportDialogComponent,
         SpEditLabelComponent,
         SpLabelConfigurationComponent,
+        SpMessagingBrokerConfigComponent,
+        SpRegisteredExtensionsServiceComponent,
+        SpExtensionsServiceConfigurationComponent,
     ],
     providers: [ConfigurationService],
 })

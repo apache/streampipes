@@ -19,11 +19,11 @@
 package org.apache.streampipes.svcdiscovery.consul;
 
 import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.model.extensions.configuration.ConfigItem;
+import org.apache.streampipes.model.extensions.configuration.ConfigItemUtils;
+import org.apache.streampipes.model.extensions.configuration.ConfigurationScope;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItemUtils;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
 
 import com.ecwid.consul.v1.ConsulClient;
 import com.fasterxml.jackson.core.JsonProcessingException;

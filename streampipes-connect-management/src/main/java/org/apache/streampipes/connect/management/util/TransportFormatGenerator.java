@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.connect.management.util;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.model.config.SpDataFormat;
+import org.apache.streampipes.model.configuration.SpDataFormat;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.sdk.helpers.SupportedFormats;
 import org.apache.streampipes.vocabulary.MessageFormat;
@@ -29,8 +28,9 @@ import java.util.List;
 public class TransportFormatGenerator {
 
   public static TransportFormat getTransportFormat() {
+    var cfg = Utils.getCoreConfigStorage().get();
     List<SpDataFormat> supportedFormats =
-        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedFormats();
+        cfg.getMessagingSettings().getPrioritizedFormats();
 
     if (supportedFormats.size() > 0) {
       return new TransportFormat(supportedFormats.get(0).getMessageFormat());

@@ -24,15 +24,11 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.networking.Networking;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.UnknownHostException;
-import java.util.Collections;
 import java.util.List;
 
 public class StreamPipesClientRuntimeConnectionResolver implements ClientConnectionUrlResolver {
@@ -55,7 +51,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
     if (baseUrls.size() > 0) {
       if (env.getSpDebug().getValueOrDefault()) {
         try {
-          return "http://" + Networking.getHostname() + ":" + 8030;
+          return buildBaseUrl(Networking.getHostname());
         } catch (UnknownHostException e) {
           LOG.error("Could not auto-resolve host address - using http://localhost:8030");
           return "http://localhost:8030";
@@ -76,12 +72,14 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
   }
 
   private List<String> findClientServices() {
-    return SpServiceDiscovery
-        .getServiceDiscovery()
-        .getServiceEndpoints(
-            DefaultSpServiceGroups.CORE,
-            true,
-            Collections.singletonList(DefaultSpServiceTags.STREAMPIPES_CLIENT.asString())
-        );
+    return List.of(buildBaseUrl(env.getSpCoreHost().getValueOrDefault()));
+  }
+
+  private String buildBaseUrl(String host) {
+    return env.getSpCoreScheme().getValueOrDefault()
+        + "://"
+        + host
+        + ":"
+        + env.getSpCorePort().getValueOrDefault();
   }
 }

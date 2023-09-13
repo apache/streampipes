@@ -20,13 +20,12 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.GeneralConfig;
 import org.apache.streampipes.model.client.user.JwtAuthenticationResponse;
 import org.apache.streampipes.model.client.user.LoginRequest;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
@@ -97,7 +96,7 @@ public class Authentication extends AbstractRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response doRegister(RegistrationData data) {
-    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
+    GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     if (!config.isAllowSelfRegistration()) {
       throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
@@ -129,7 +128,7 @@ public class Authentication extends AbstractRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAuthSettings() {
-    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
+    GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     Map<String, Object> response = new HashMap<>();
     response.put("allowSelfRegistration", config.isAllowSelfRegistration());
     response.put("allowPasswordRecovery", config.isAllowPasswordRecovery());

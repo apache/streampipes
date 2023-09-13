@@ -25,8 +25,8 @@ import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.client.fluent.Request;
@@ -71,7 +71,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private List<String> getActiveExtensionsEndpoints() {
     return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(
-        DefaultSpServiceGroups.EXT,
+        DefaultSpServiceTypes.EXT,
         true,
         List.of(DefaultSpServiceTags.PE.asString(), DefaultSpServiceTags.CONNECT_WORKER.asString())
     );

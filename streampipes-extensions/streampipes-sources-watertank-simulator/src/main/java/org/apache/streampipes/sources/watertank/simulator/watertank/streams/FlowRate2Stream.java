@@ -85,8 +85,8 @@ public class FlowRate2Stream extends AbstractAlreadyExistingStream {
             .build())
         .format(Formats.jsonFormat())
         .protocol(Protocols.kafka(
-            configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
-            configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
+            configExtractor().getString(ConfigKeys.KAFKA_HOST),
+            configExtractor().getInteger(ConfigKeys.KAFKA_PORT),
             "org.apache.streampipes.examples.flowrate2"))
         .build();
   }

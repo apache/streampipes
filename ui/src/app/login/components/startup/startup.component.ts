@@ -46,8 +46,13 @@ export class StartupComponent implements OnInit {
         this.authService.checkConfiguration().subscribe(
             configured => {
                 this.progress = 100;
-                const target: string = configured ? 'login' : 'setup';
-                this.router.navigate([target]);
+                if (configured) {
+                    this.router.navigate(['login']);
+                } else {
+                    setTimeout(() => {
+                        this.checkStatus();
+                    }, this.loadingIntervalInSeconds * 1000);
+                }
             },
             () => {
                 this.currentStep += this.loadingIntervalInSeconds;

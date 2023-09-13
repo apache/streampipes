@@ -17,10 +17,16 @@
  */
 
 import { IWidget } from '../models/dataview-dashboard.model';
-import { WidgetTypeMap } from './data-explorer-widgets';
+import { WidgetType, WidgetTypeMap } from './data-explorer-widgets';
 
 export class DataExplorerWidgetRegistry {
-    static getAvailableWidgetTemplates(): IWidget[] {
-        return Array.from(WidgetTypeMap.values());
+    static getAvailableWidgetTemplates(): IWidget<any>[] {
+        return Array.from(WidgetTypeMap.values()).sort((a, b) =>
+            a.label.localeCompare(b.label),
+        );
+    }
+
+    static getWidgetTemplate(type: WidgetType) {
+        return WidgetTypeMap.get(type);
     }
 }

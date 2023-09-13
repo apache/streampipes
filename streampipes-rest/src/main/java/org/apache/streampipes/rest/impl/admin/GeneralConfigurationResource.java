@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.GeneralConfig;
+import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -51,7 +50,7 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public GeneralConfig getGeneralConfiguration() {
-    return BackendConfig.INSTANCE.getGeneralConfig();
+    return getSpCoreConfigurationStorage().get().getGeneralConfig();
   }
 
   @PUT
@@ -60,7 +59,10 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response updateGeneralConfiguration(GeneralConfig config) {
     config.setConfigured(true);
-    BackendConfig.INSTANCE.updateGeneralConfig(config);
+    var storage = getSpCoreConfigurationStorage();
+    var cfg = storage.get();
+    cfg.setGeneralConfig(config);
+    storage.updateElement(cfg);
 
     return ok();
   }

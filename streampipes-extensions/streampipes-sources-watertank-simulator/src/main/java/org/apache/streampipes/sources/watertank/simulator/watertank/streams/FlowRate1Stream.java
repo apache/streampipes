@@ -68,8 +68,8 @@ public class FlowRate1Stream extends AbstractAdapterIncludedStream {
             .build())
         .format(Formats.jsonFormat())
         .protocol(Protocols.kafka(
-            configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
-            configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
+            configExtractor().getString(ConfigKeys.KAFKA_HOST),
+            configExtractor().getInteger(ConfigKeys.KAFKA_PORT),
             "org.apache.streampipes.examples.flowrate-1")
         )
         .build();

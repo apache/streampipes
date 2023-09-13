@@ -28,6 +28,11 @@ export interface DistributionChartVisConfig extends DataExplorerVisConfig {
     displayType: string;
     roundingValue: number;
     resolution: number;
+    autoBin: boolean;
+    numberOfBins: number;
+    autoDomain: boolean;
+    domainMin: number;
+    domainMax: number;
 }
 
 export interface DistributionChartWidgetModel extends DataExplorerWidgetModel {

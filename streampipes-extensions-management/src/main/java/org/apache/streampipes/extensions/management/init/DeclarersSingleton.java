@@ -33,9 +33,6 @@ import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +68,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   private List<IStreamPipesRuntimeProvider> runtimeProviders;
 
   private String serviceId;
+  private String serviceGroup;
 
   private int port;
   private String route;
@@ -99,25 +97,16 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
   public void populate(String host, Integer port, SpServiceDefinition serviceDef) {
     this.serviceDefinition = serviceDef;
-    this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
     this.setHostName(host);
     this.setPort(port);
     this.addDeclarers(serviceDef.getDeclarers());
     this.serviceId = serviceDef.getServiceId();
+    this.serviceGroup = serviceDef.getServiceGroup();
     this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.runtimeProviders = serviceDef.getRuntimeProviders();
     serviceDef.getAdapters().forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
     serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
-  }
-
-  private void registerConfigs(String serviceGroup,
-                               String serviceName,
-                               Map<String, ConfigItem> configs) {
-    LOG.info("Registering {} configs in key/value store", configs.size());
-    SpConfig spConfig = SpServiceDiscovery.getSpConfig(serviceGroup);
-    configs.values().forEach(spConfig::register);
-    spConfig.register(ConfigItem.from("SP_SERVICE_NAME", serviceName, ""));
   }
 
   public void addDeclarers(List<IStreamPipesPipelineElement<?>> allPipelineElements) {
@@ -278,6 +267,10 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
     // TODO create complete service definition
     return serviceDef;
+  }
+
+  public String getServiceGroup() {
+    return serviceGroup;
   }
 
   public SpServiceDefinition getServiceDefinition() {

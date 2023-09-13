@@ -33,7 +33,7 @@ export class DataExplorerVisualisationSettingsComponent implements OnInit {
 
     constructor(private widgetTypeService: WidgetTypeService) {}
 
-    availableWidgets: IWidget[];
+    availableWidgets: IWidget<any>[];
 
     ngOnInit(): void {
         this.availableWidgets =

@@ -19,41 +19,47 @@
 package org.apache.streampipes.smp.extractor;
 
 import org.apache.streampipes.smp.model.AssetModel;
-import org.apache.streampipes.smp.util.Utils;
 
-import java.io.FileReader;
+import org.apache.maven.plugin.logging.Log;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class LocalesExtractor {
 
+  public static final String LOCALES_FILE_EN = "strings.en";
+
   private static final String TITLE = ".title";
   private static final String DESCRIPTION = ".description";
-  private AssetModel assetModel;
-  private String baseDir;
 
-  public LocalesExtractor(String baseDir, AssetModel assetModel) {
-    this.baseDir = baseDir;
-    this.assetModel = assetModel;
+  private final Log log;
+  private final ClassLoader loader;
+
+  public LocalesExtractor(Log log,
+                          ClassLoader loader) {
+    this.log = log;
+    this.loader = loader;
   }
 
-  public AssetModel extract() throws IOException {
-    String localesPath = Utils.makeLocalesPath(baseDir, assetModel.getAppId());
-    Properties props = loadProperties(localesPath);
-
-    assetModel.setPipelineElementName(extractKey(props, assetModel, TITLE));
-    assetModel.setPipelineElementDescription(extractKey(props, assetModel, DESCRIPTION));
-
-    return assetModel;
+  public void applyLocales(AssetModel assetModel) {
+    var localeFile = loader.getResourceAsStream(assetModel.getAppId() + "/" + LOCALES_FILE_EN);
+    try {
+      var props = loadProperties(localeFile);
+      assetModel.setPipelineElementName(extractKey(props, assetModel, TITLE));
+      assetModel.setPipelineElementDescription(extractKey(props, assetModel, DESCRIPTION));
+    } catch (IOException e) {
+      log.warn(String.format("Could not load properties file %s", assetModel.getAppId()), e);
+    }
   }
 
   private String extractKey(Properties props, AssetModel assetModel, String appendix) {
     return props.getProperty(assetModel.getAppId() + appendix);
   }
 
-  private Properties loadProperties(String localesPath) throws IOException {
+  private Properties loadProperties(InputStream stream) throws IOException {
     Properties props = new Properties();
-    props.load(new FileReader(localesPath));
+    props.load(stream);
     return props;
   }
 }

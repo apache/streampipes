@@ -18,49 +18,49 @@
 
 package org.apache.streampipes.smp;
 
-import org.apache.streampipes.smp.extractor.ControllerFileFinder;
-import org.apache.streampipes.smp.extractor.ResourceDirectoryElementFinder;
-import org.apache.streampipes.smp.generator.DataJsonGenerator;
-import org.apache.streampipes.smp.generator.ImagePathReplacer;
-import org.apache.streampipes.smp.generator.MarkdownHeaderGenerator;
-import org.apache.streampipes.smp.generator.MarkdownTitleRemover;
-import org.apache.streampipes.smp.generator.PipelineElementOverviewGenerator;
+import org.apache.streampipes.smp.extractor.ExtensionsFinder;
+import org.apache.streampipes.smp.extractor.LocalesExtractor;
+import org.apache.streampipes.smp.generator.AdditionalAssetsResourceGenerator;
+import org.apache.streampipes.smp.generator.DocumentationResourceGenerator;
+import org.apache.streampipes.smp.generator.IconResourceGenerator;
 import org.apache.streampipes.smp.generator.SidebarConfigGenerator;
 import org.apache.streampipes.smp.model.AssetModel;
-import org.apache.streampipes.smp.util.DirectoryManager;
-import org.apache.streampipes.smp.util.Utils;
 
+import com.google.common.base.Charsets;
 import org.apache.commons.io.FileUtils;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * goal which extracts pipeline element documentations for the StreamPipes website + documentation
  */
 
-@Mojo(name = "extract-docs", defaultPhase = LifecyclePhase.NONE, aggregator = true)
+@Mojo(
+    name = "extract-docs",
+    defaultPhase = LifecyclePhase.PACKAGE,
+    requiresDependencyResolution = ResolutionScope.TEST,
+    requiresDependencyCollection = ResolutionScope.TEST)
 public class ExtractDocumentationMojo extends AbstractMojo {
 
   private static final String DOCS_ROOT_FOLDER = "docs";
-  private static final String DOCS_FOLDER = "docs-documentation";
-  private static final String DOCS_WEBSITE_FOLDER = "docs-website";
+  private static final String DOCS_PE_FOLDER = "pe";
   private static final String IMG_FOLDER = "img";
   private static final String SP_IGNORE_FILENAME = ".spignore";
 
@@ -70,127 +70,97 @@ public class ExtractDocumentationMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project}", readonly = true)
   private MavenProject project;
 
+  @Parameter(name = "initClass", required = true)
+  private String initClass;
+
   @Override
-  public void execute() throws MojoExecutionException, MojoFailureException {
-    String targetDir = this.session.getExecutionRootDirectory() + File.separator + "target";
-    String spIgnoreFile =
-        this.session.getExecutionRootDirectory() + File.separator + SP_IGNORE_FILENAME;
-    Path docsBasePath = Paths.get(targetDir, DOCS_ROOT_FOLDER);
+  public void execute() throws MojoFailureException {
+    var log = getLog();
+    var targetDir = this.session.getCurrentProject().getBasedir() + File.separator + "target";
+    var spIgnoreFile =
+        this.session.getCurrentProject().getBasedir() + File.separator + SP_IGNORE_FILENAME;
+    var docsBasePath = Paths.get(targetDir, DOCS_ROOT_FOLDER);
 
-    List<MavenProject> projects = session.getProjects();
-    List<AssetModel> documentedPipelineElements = new ArrayList<>();
-    List<String> pipelineElementsToExclude = new ArrayList<>();
-
-    if (Files.exists(Paths.get(spIgnoreFile))) {
-      try {
-        pipelineElementsToExclude = Files.readAllLines(Paths.get(spIgnoreFile));
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-
-    for (MavenProject currentModule : projects) {
-      File baseDir = currentModule.getBasedir();
-      List<String> sourceRoots = currentModule.getCompileSourceRoots();
-      List<AssetModel> allAssetModels = new ArrayList<>();
-      //String targetDir = this.project.getModel().getBuild().getDirectory();
-
-      //String dockerImageName =
-      //        new DockerImageExtractor(baseDir.getAbsolutePath()).extractImageName();
-
-      if (currentModule.getName().equals("streampipes-connect-adapters")) {
-        System.out.println("Opening adapters");
-        allAssetModels = new ResourceDirectoryElementFinder(sourceRoots.get(0), getLog(), baseDir.getAbsolutePath())
-            .makeAssetModels();
-        allAssetModels.forEach(am -> System.out.println(am.getAppId()));
-      } else {
-        allAssetModels = new ControllerFileFinder(getLog(),
-            baseDir.getAbsolutePath(), sourceRoots.get(0),
-            "**/*Controller.java").makeAssetModels();
-      }
-
-      allAssetModels.forEach(am -> {
-        am.setBaseDir(baseDir.getAbsolutePath());
-        am.setModuleName(currentModule.getName());
-        //am.setContainerName(dockerImageName);
-      });
-
-      List<String> finalPipelineElementsToExclude = pipelineElementsToExclude;
-      documentedPipelineElements.addAll(
-          allAssetModels
-              .stream()
-              .filter(am -> finalPipelineElementsToExclude.stream().noneMatch(pe -> pe.equals(am.getAppId())))
-              .collect(Collectors.toList()));
-    }
     try {
-      Collections.sort(documentedPipelineElements);
-      documentedPipelineElements.forEach(am -> System.out.println(
-          am.getAppId() + ", " + am.getPipelineElementName() + ", " + am.getPipelineElementDescription()));
+      List<String> pipelineElementsToExclude = new ArrayList<>();
 
-      for (AssetModel assetModel : documentedPipelineElements) {
-        Path docsPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_FOLDER,
-            "pe");
-        Path docsWebsitePath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_WEBSITE_FOLDER,
-            assetModel.getAppId());
-        Path imgPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, IMG_FOLDER,
-            assetModel.getAppId());
-        DirectoryManager.createIfNotExists(docsPath);
-        DirectoryManager.createIfNotExists(imgPath);
-
-        Boolean iconExists = Files.exists(Utils.makeResourcePath(assetModel.getBaseDir(),
-            assetModel.getAppId()).resolve("icon.png"));
-
-        if (iconExists) {
-          Files.copy(Utils.makeResourcePath(assetModel.getBaseDir(),
-                  assetModel.getAppId()).resolve("icon.png")
-              , imgPath.resolve("icon.png"));
-        } else {
-          ClassLoader classLoader = this.getClass().getClassLoader();
-          InputStream inputStream = classLoader.getResourceAsStream("placeholder-icon.png");
-          Files.copy(inputStream, imgPath.resolve("icon.png"));
+      var path = Paths.get(spIgnoreFile);
+      if (Files.exists(path)) {
+        try {
+          pipelineElementsToExclude = Files.readAllLines(path);
+        } catch (IOException e) {
+          log.error(String.format("Could not open .spignore file at path %s", path));
         }
-
-        String originalDocumentationFileContents =
-            FileUtils.readFileToString(Utils.makeResourcePath(assetModel.getBaseDir(),
-                assetModel.getAppId()).resolve("documentation.md").toFile());
-
-        // modify docs for documentation page
-        String documentationFileContents =
-            new MarkdownTitleRemover(originalDocumentationFileContents).removeTitle();
-
-        documentationFileContents =
-            new MarkdownHeaderGenerator(assetModel, documentationFileContents).createHeaders();
-
-        documentationFileContents = new ImagePathReplacer(documentationFileContents,
-            assetModel.getAppId()).replaceContentForDocs();
-
-        FileUtils.writeStringToFile(docsPath.resolve(assetModel.getAppId() + ".md").toFile(),
-            documentationFileContents);
-
       }
 
-      Boolean existsOverviewFile = Files.exists(docsBasePath.resolve("pipeline-elements.md"));
-      if (!existsOverviewFile) {
-        AssetModel assetModel = new AssetModel("pipeline-elements", "Overview", "");
-        String header = new MarkdownHeaderGenerator(assetModel, "").createHeaders();
-        FileUtils.writeStringToFile(docsBasePath.resolve("pipeline-elements.md").toFile(), header);
+      var loader = getClassLoader(project);
+      var finalPipelineElementsToExclude = pipelineElementsToExclude;
+      var localesExtractor = new LocalesExtractor(log, loader);
+      var extensionsElements = new ExtensionsFinder(loader, initClass)
+          .findExtensions()
+          .stream()
+          .filter(am -> !finalPipelineElementsToExclude.contains(am.getAppId()))
+          .peek(localesExtractor::applyLocales)
+          .sorted(AssetModel::compareTo)
+          .toList();
+
+      log.info(String.format("Will generate documentation for %s resources", extensionsElements.size()));
+
+      for (AssetModel extensionsElement : extensionsElements) {
+        try {
+          var imgPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, IMG_FOLDER, extensionsElement.getAppId());
+          new IconResourceGenerator(loader, extensionsElement, imgPath).generate();
+
+          var docsPath = Paths.get(
+              targetDir,
+              DOCS_ROOT_FOLDER,
+              DOCS_PE_FOLDER);
+          new DocumentationResourceGenerator(loader, extensionsElement, docsPath).generate();
+
+          log.info(
+              String.format(
+                  "Generated documentation for %s (%s, %s)",
+                  extensionsElement.getAppId(),
+                  extensionsElement.getPipelineElementName(),
+                  extensionsElement.getPipelineElementDescription()));
+
+          new AdditionalAssetsResourceGenerator(log, loader, extensionsElement, imgPath).generate();
+        } catch (IOException e) {
+          log.warn(
+              String.format(
+                  "Could not generate documentation for %s (%s, %s)",
+                  extensionsElement.getAppId(),
+                  extensionsElement.getPipelineElementName(),
+                  extensionsElement.getPipelineElementDescription()), e);
+        }
       }
 
-      String pipelineElementOverviewContent =
-          new PipelineElementOverviewGenerator(documentedPipelineElements).generate();
-      FileUtils.writeStringToFile(docsBasePath.resolve("pipeline-elements.md").toFile(),
-          pipelineElementOverviewContent, true);
+      var sidebarConfig = new SidebarConfigGenerator(log, extensionsElements).generate();
+      var sidebarPath = docsBasePath.resolve("sidebars.json");
+      log.info(String.format("Writing sidebar config to %s", sidebarPath));
+      FileUtils.writeStringToFile(sidebarPath.toFile(),
+          sidebarConfig, Charsets.UTF_8);
 
-
-      FileUtils.writeStringToFile(docsBasePath.resolve("sidebars.json").toFile(),
-          new SidebarConfigGenerator(documentedPipelineElements).generate());
-
-      FileUtils.writeStringToFile(docsBasePath.resolve("_data.json").toFile(),
-          new DataJsonGenerator(documentedPipelineElements).generate());
-
-
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (IOException | DependencyResolutionRequiredException | ClassNotFoundException
+             | IllegalAccessException | InstantiationException e) {
+      throw new MojoFailureException(
+          "Could not generate documentation - please check the initClass for available extensions", e);
     }
+  }
+
+  private ClassLoader getClassLoader(MavenProject project)
+      throws DependencyResolutionRequiredException, MalformedURLException {
+    List<URL> runtimeUrls = new ArrayList<>();
+    List<String> runtimeClasspathElements = project.getCompileClasspathElements();
+
+    for (String element : runtimeClasspathElements) {
+      runtimeUrls.add(new File(element).toURI().toURL());
+    }
+
+    URL[] array = new URL[runtimeUrls.size()];
+    array = runtimeUrls.toArray(array);
+
+    return new URLClassLoader(array,
+        Thread.currentThread().getContextClassLoader());
   }
 }

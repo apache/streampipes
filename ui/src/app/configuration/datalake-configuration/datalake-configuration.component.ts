@@ -20,12 +20,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
-    DataExplorerDataConfig,
     DatalakeQueryParameterBuilder,
     DatalakeQueryParameters,
     DatalakeRestService,
     DataViewDataExplorerService,
-    DateRange,
     EventSchema,
     FieldConfig,
     SpQueryResult,

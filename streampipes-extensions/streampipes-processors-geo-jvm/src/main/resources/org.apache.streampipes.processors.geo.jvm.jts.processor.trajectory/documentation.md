@@ -68,7 +68,7 @@ Adds a LineString geometry in the Well Known Text to the event, representing a t
 Creating a LineString with a threshold of 2 allowed sub-points:
 
 * First Event:
-  * Point(8.12 41.23) --> LineString <empty>
+  * Point(8.12 41.23) --> LineString(empty)
 * Second Event:
   * Point(8.56 41.25) --> LineString(8.12 41.23, 8.56 41.25)
 * Second Event:

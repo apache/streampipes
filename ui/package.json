@@ -60,11 +60,13 @@
     "angular2-uuid": "1.1.1",
     "codemirror": "^5.65.11",
     "console-browserify": "^1.2.0",
+    "d3-array": "^3.2.4",
     "dagre": "0.8.5",
     "datatables.net": "^1.13.1",
     "datatables.net-dt": "^1.13.1",
     "echarts": "^5.4.1",
     "echarts-wordcloud": "^2.1.0",
+    "echarts-simple-transform": "^1.0.0",
     "file-saver": "2.0.5",
     "jquery": "^3.7.0",
     "jquery-ui-dist": "1.13.2",
@@ -142,7 +144,7 @@
     "to-string-loader": "^1.2.0",
     "typescript": "4.8.2",
     "webpack": "^5.76.0",
-    "webpack-cli": "^5.0.1",
+    "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.8.0"
   },
   "overrides": {
