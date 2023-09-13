@@ -55,7 +55,7 @@ public class ExtensionsInstallationTask implements Runnable {
       do {
         endpoints = new EndpointFetcher().getEndpoints();
         numberOfAttempts++;
-        if (endpoints.size() == 0) {
+        if (endpoints.isEmpty()) {
           LOG.info("Found 0 endpoints - waiting {} seconds to make sure all endpoints have properly started",
               SLEEP_TIME_SECONDS);
           try {
@@ -64,7 +64,7 @@ public class ExtensionsInstallationTask implements Runnable {
             e.printStackTrace();
           }
         }
-      } while (endpoints.size() == 0 && numberOfAttempts < MAX_RETRIES);
+      } while (endpoints.isEmpty() && numberOfAttempts < MAX_RETRIES);
       LOG.info("Found {} endpoints from which we will install extensions.", endpoints.size());
       LOG.info(
           "Further available extensions can always be installed by navigating to the 'Install pipeline elements' view");

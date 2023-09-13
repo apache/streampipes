@@ -23,11 +23,16 @@ import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.model.message.Message;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PipelineElementInstallationStep extends InstallationStep {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementInstallationStep.class);
 
   private final ExtensionsServiceEndpoint endpoint;
   private final String principalSid;
@@ -42,6 +47,7 @@ public class PipelineElementInstallationStep extends InstallationStep {
   public void install() {
     List<Message> statusMessages = new ArrayList<>();
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
+    LOG.info("Found {} endpoint items for endpoint {}", items.size(), endpoint.getEndpointUrl());
     for (ExtensionsServiceEndpointItem item : items) {
       statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
           principalSid, true));
