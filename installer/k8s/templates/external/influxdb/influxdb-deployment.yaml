@@ -53,9 +53,15 @@ spec:
             - name: DOCKER_INFLUXDB_INIT_USERNAME
               value: {{ .Values.external.influxdb.username }}
             - name: DOCKER_INFLUXDB_INIT_PASSWORD
-              value: {{ .Values.external.influxdb.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-ts-storage-password
             - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
-              value: {{ .Values.external.influxdb.adminToken }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-ts-storage-token
             - name: DOCKER_INFLUXDB_INIT_ORG
               value: {{ .Values.external.influxdb.initOrg }}
             - name: DOCKER_INFLUXDB_INIT_BUCKET

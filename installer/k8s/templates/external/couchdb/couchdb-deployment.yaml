@@ -40,7 +40,10 @@ spec:
             - name: COUCHDB_USER
               value: {{ .Values.external.couchdb.user }}
             - name: COUCHDB_PASSWORD
-              value: {{ .Values.external.couchdb.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-couchdb-password
           ports:
             - containerPort: {{ .Values.external.couchdb.port }}
           volumeMounts:
