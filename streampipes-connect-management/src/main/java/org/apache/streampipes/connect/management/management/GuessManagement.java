@@ -57,7 +57,7 @@ public class GuessManagement {
     var description = objectMapper.writeValueAsString(adapterDescription);
     logger.info("Guess schema at: " + workerUrl);
     Response requestResponse = ExtensionServiceExecutions
-        .extServicePostRequest(workerUrl, null, description)
+        .extServicePostRequest(workerUrl, description)
         .execute();
 
     var httpResponse = requestResponse.returnResponse();
