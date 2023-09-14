@@ -54,6 +54,26 @@
                     fxLayout="column"
                     fxLayoutAlign="center center"
                     fxFlex="100"
+                    *ngIf="saveInDataLake && templateErrorMessage"
+                >
+                    <div
+                        class="info-message warning-message"
+                        fxFlex="100"
+                        fxLayoutAlign="center center"
+                        fxLayout="row"
+                    >
+                        <i class="material-icons">warning</i>
+                        <span
+                            >&nbsp;{{
+                                templateErrorMessage.notifications[0].title
+                            }}</span
+                        >
+                    </div>
+                </div>
+                <div
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                    fxFlex="100"
                     *ngIf="pipelineOperationStatus"
                 >
                     <sp-pipeline-started-status
@@ -70,7 +90,7 @@
                 >
                     <div>
                         <div
-                            class="success-message"
+                            class="info-message"
                             fxFlex="100"
                             fxLayoutAlign="center center"
                             fxLayout="row"
@@ -91,7 +111,7 @@
                 </div>
                 <div *ngIf="!adapterStatus.success">
                     <div
-                        class="success-message"
+                        class="info-message warning-message"
                         fxFlex="100"
                         fxLayoutAlign="center center"
                         fxLayout="row"
