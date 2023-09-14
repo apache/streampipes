@@ -63,6 +63,8 @@ public class ExtensionsInstallationTask implements Runnable {
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
+        } else {
+          LOG.info("Found endpoint");
         }
       } while (endpoints.isEmpty() && numberOfAttempts < MAX_RETRIES);
       LOG.info("Found {} endpoints from which we will install extensions.", endpoints.size());

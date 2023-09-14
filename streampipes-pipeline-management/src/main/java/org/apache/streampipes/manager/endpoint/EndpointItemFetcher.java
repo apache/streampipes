@@ -29,12 +29,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EndpointItemFetcher {
   Logger logger = LoggerFactory.getLogger(EndpointItemFetcher.class);
 
-  private List<ExtensionsServiceEndpoint> extensionsServiceEndpoints;
+  private final List<ExtensionsServiceEndpoint> extensionsServiceEndpoints;
 
   public EndpointItemFetcher(List<ExtensionsServiceEndpoint> extensionsServiceEndpoints) {
     this.extensionsServiceEndpoints = extensionsServiceEndpoints;
@@ -58,8 +59,8 @@ public class EndpointItemFetcher {
           .readValue(result, new TypeReference<>() {
           });
     } catch (IOException e1) {
-      logger.warn("Processing Element Descriptions could not be fetched from endpoint: " + e.getEndpointUrl());
-      return new ArrayList<>();
+      logger.warn("Processing Element Descriptions could not be fetched from endpoint: " + e.getEndpointUrl(), e);
+      return Collections.emptyList();
     }
   }
 }

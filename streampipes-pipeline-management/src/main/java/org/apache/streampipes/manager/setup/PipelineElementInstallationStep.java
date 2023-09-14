@@ -29,13 +29,17 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PipelineElementInstallationStep extends InstallationStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementInstallationStep.class);
+  private static final int MAX_RETRIES = 3;
 
   private final ExtensionsServiceEndpoint endpoint;
   private final String principalSid;
+  private int retries = 0;
+
 
   public PipelineElementInstallationStep(ExtensionsServiceEndpoint endpoint,
                                          String principalSid) {
@@ -47,16 +51,31 @@ public class PipelineElementInstallationStep extends InstallationStep {
   public void install() {
     List<Message> statusMessages = new ArrayList<>();
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
-    LOG.info("Found {} endpoint items for endpoint {}", items.size(), endpoint.getEndpointUrl());
-    for (ExtensionsServiceEndpointItem item : items) {
-      statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
-          principalSid, true));
-    }
-
-    if (statusMessages.stream().allMatch(Message::isSuccess)) {
-      logSuccess(getTitle());
+    if (items.isEmpty() && retries <= MAX_RETRIES) {
+      retries++;
+      LOG.info(
+          "Endpoint available but no extensions yet found, so we will retry to fetch pipeline elements ({}/{})",
+          retries,
+          MAX_RETRIES
+      );
+      try {
+        TimeUnit.SECONDS.sleep(1);
+        install();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
     } else {
-      logFailure(getTitle());
+      LOG.info("Found {} endpoint items for endpoint {}", items.size(), endpoint.getEndpointUrl());
+      for (ExtensionsServiceEndpointItem item : items) {
+        statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
+            principalSid, true));
+      }
+
+      if (statusMessages.stream().allMatch(Message::isSuccess)) {
+        logSuccess(getTitle());
+      } else {
+        logFailure(getTitle());
+      }
     }
 
   }

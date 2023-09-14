@@ -31,19 +31,19 @@ public class EndpointFetcher {
 
   public List<ExtensionsServiceEndpoint> getEndpoints() {
     List<String> endpoints = SpServiceDiscovery.getServiceDiscovery().getActivePipelineElementEndpoints();
-    List<ExtensionsServiceEndpoint> servicerdExtensionsServiceEndpoints = new LinkedList<>();
+    List<ExtensionsServiceEndpoint> serviceExtensionsServiceEndpoints = new LinkedList<>();
 
     for (String endpoint : endpoints) {
       ExtensionsServiceEndpoint extensionsServiceEndpoint =
               new ExtensionsServiceEndpoint(endpoint);
-      servicerdExtensionsServiceEndpoints.add(extensionsServiceEndpoint);
+      serviceExtensionsServiceEndpoints.add(extensionsServiceEndpoint);
     }
     List<ExtensionsServiceEndpoint> databasedExtensionsServiceEndpoints = StorageDispatcher.INSTANCE.getNoSqlStore()
             .getRdfEndpointStorage()
             .getExtensionsServiceEndpoints();
 
     List<ExtensionsServiceEndpoint> concatList =
-            Stream.of(databasedExtensionsServiceEndpoints, servicerdExtensionsServiceEndpoints)
+            Stream.of(databasedExtensionsServiceEndpoints, serviceExtensionsServiceEndpoints)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
 
