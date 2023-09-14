@@ -34,7 +34,7 @@ public class ExtensionsInstallationTask implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionsInstallationTask.class);
 
-  private static final int MAX_RETRIES = 4;
+  private static final int MAX_RETRIES = 6;
   private static final int SLEEP_TIME_SECONDS = 3;
 
   private final InitialSettings settings;
@@ -63,8 +63,6 @@ public class ExtensionsInstallationTask implements Runnable {
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
-        } else {
-          LOG.info("Found endpoint");
         }
       } while (endpoints.isEmpty() && numberOfAttempts < MAX_RETRIES);
       LOG.info("Found {} endpoints from which we will install extensions.", endpoints.size());
