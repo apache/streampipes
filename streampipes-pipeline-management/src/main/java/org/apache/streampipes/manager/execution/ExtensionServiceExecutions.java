@@ -30,7 +30,9 @@ public class ExtensionServiceExecutions {
     return Request
         .Get(url)
         .addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()))
-        .connectTimeout(10000);
+        .addHeader("Accept", "application/json")
+        .connectTimeout(10000)
+        .socketTimeout(10000);
   }
 
 
