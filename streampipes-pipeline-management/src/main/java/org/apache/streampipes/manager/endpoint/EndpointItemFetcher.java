@@ -59,7 +59,7 @@ public class EndpointItemFetcher {
           .readValue(result, new TypeReference<>() {
           });
     } catch (IOException e1) {
-      logger.warn("Processing Element Descriptions could not be fetched from endpoint: " + e.getEndpointUrl(), e);
+      logger.warn("Processing Element Descriptions could not be fetched from endpoint: " + e.getEndpointUrl(), e1);
       return Collections.emptyList();
     }
   }
