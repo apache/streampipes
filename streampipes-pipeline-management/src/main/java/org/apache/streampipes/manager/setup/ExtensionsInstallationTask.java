@@ -34,7 +34,7 @@ public class ExtensionsInstallationTask implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionsInstallationTask.class);
 
-  private static final int MAX_RETRIES = 8;
+  private static final int MAX_RETRIES = 10;
   private static final int SLEEP_TIME_SECONDS = 3;
 
   private final InitialSettings settings;

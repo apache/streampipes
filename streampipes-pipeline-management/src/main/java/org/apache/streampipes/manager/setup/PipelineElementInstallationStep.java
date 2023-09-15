@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class PipelineElementInstallationStep extends InstallationStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementInstallationStep.class);
-  private static final int MAX_RETRIES = 8;
+  private static final int MAX_RETRIES = 10;
 
   private final ExtensionsServiceEndpoint endpoint;
   private final String principalSid;
@@ -59,7 +59,7 @@ public class PipelineElementInstallationStep extends InstallationStep {
           MAX_RETRIES
       );
       try {
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(3);
         install();
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
