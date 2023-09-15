@@ -23,7 +23,7 @@ connect:
 
 dependencies:
   - "**/pom.xml"
-  - "**/setup.py"
+  - "streampipes-client-python/poetry.lock"
   - "ui/**/package.json"
   - "ui/**/package-lock.json"
 
