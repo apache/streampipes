@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.user.management.util;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -92,6 +92,11 @@ public class PasswordUtil {
 
 
   public static String generateRandomPassword() {
-    return RandomStringUtils.randomAscii(DEFAULT_PASSWORD_LENGTH);
+
+    // allowing all ASCII-characters from decimal id 33 to 125
+    // see https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html for full list
+    var pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 125)
+            .build();
+    return pwdGenerator.generate(DEFAULT_PASSWORD_LENGTH);
   }
 }
