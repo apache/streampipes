@@ -51,7 +51,7 @@ public class PasswordUtil {
     return iterations + ":" + toHex(salt) + ":" + toHex(hash);
   }
 
-  private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+  private static String toHex(byte[] array) {
     BigInteger bi = new BigInteger(1, array);
     String hex = bi.toString(16);
     int paddingLength = (array.length * 2) - hex.length();
@@ -82,7 +82,7 @@ public class PasswordUtil {
   }
 
 
-  private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {
+  private static byte[] fromHex(String hex) {
     byte[] bytes = new byte[hex.length() / 2];
     for (int i = 0; i < bytes.length; i++) {
       bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
