@@ -100,11 +100,6 @@ jobs:
         working-directory: ./installer/compose
         run: sleep 70
 
-      - name: Print debug output
-        run: |
-          docker-compose logs backend
-          docker-compose logs extensions-all-jvm
-
       - name: 'UI Tests'
         uses: cypress-io/github-action@v6
         with:
