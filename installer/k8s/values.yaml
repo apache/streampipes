@@ -28,6 +28,17 @@ hostPath: ""
 streampipes:
   version: "0.93.0-SNAPSHOT"
   registry: "apachestreampipes"
+  auth:
+    secretName: "sp-secrets"
+    users:
+      admin:
+        user: "admin@streampipes.apache.org"
+        password: "admin"
+      service:
+        user: "sp-service-client"
+        secret:
+    encryption:
+      passcode:
   core:
     appName: "backend"
     port: 8030
@@ -93,7 +104,7 @@ external:
     appName: "couchdb"
     version: 3.3.1
     user: "admin"
-    password: "admin"
+    password:
     port: 5984
     service:
       name: "couchdb"
@@ -108,7 +119,7 @@ external:
     version: 2.6
     username: "admin"
     password: "sp-admin"
-    adminToken: "sp-admin"
+    adminToken:
     initOrg: "sp"
     initBucket: "sp"
     # For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation

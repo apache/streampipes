@@ -103,6 +103,12 @@ rm -rf ${HOME}/streampipes-k8s
 |-------------------------------------------------|---------------------------------------------------------|------------------------------------------|
 | streampipes.version                             | StreamPipes version                                     | "0.93.0-SNAPSHOT"                        |
 | streampipes.registry                            | StreamPipes registry URL                                | "apachestreampipes"                      |
+| streampipes.auth.secretName                     | The secret name for storing secrets                     | "sp-secrets"                             |
+| streampipes.auth.users.admin.user               | The initial admin user                                  | "admin@streampipes.apache.org"           |
+| streampipes.auth.users.admin.password           | The initial admin password (leave empty for autogen)    | "admin"                                  |
+| streampipes.auth.users.service.user             | The initial service account user                        | "sp-service-client"                      |
+| streampipes.auth.users.service.secret           | The initial service account secret                      | empty (auto-generated)                   |
+| streampipes.auth.encryption.passcode            | Passcode for value encryption                           | empty (auto-generated)                   |
 | streampipes.core.appName                        | StreamPipes backend application name                    | "backend"                                |
 | streampipes.core.port                           | StreamPipes backend port                                | 8030                                     |
 | streampipes.core.persistence.storageClassName   | Storage class name for backend PVs                      | "hostpath"                               |
@@ -162,7 +168,7 @@ rm -rf ${HOME}/streampipes-k8s
 | external.couchdb.appName                        | CouchDB application name                                 | "couchdb"                                |
 | external.couchdb.version                        | CouchDB version                                          | 3.3.1                                    |
 | external.couchdb.user                           | CouchDB admin username                                   | "admin"                                  |
-| external.couchdb.password                       | CouchDB admin password                                   | "admin"                                  |
+| external.couchdb.password                       | CouchDB admin password                                   | empty (auto-generated)                   |
 | external.couchdb.port                           | Port for the CouchDB service                             | 5984                                     |
 | external.couchdb.service.name                   | Name of the CouchDB service                              | "couchdb"                                |
 | external.couchdb.service.port                   | TargetPort of the CouchDB service                        | 5984                                     |
@@ -177,8 +183,8 @@ rm -rf ${HOME}/streampipes-k8s
 | external.influxdb.appName                       | InfluxDB application name                                | "influxdb"                               |
 | external.influxdb.version                       | InfluxDB version                                         | 2.6                                      |
 | external.influxdb.username                      | InfluxDB admin username                                  | "admin"                                  |
-| external.influxdb.password                      | InfluxDB admin password                                  | "sp-admin"                               |
-| external.influxdb.adminToken                    | InfluxDB admin token                                     | "sp-admin"                               |
+| external.influxdb.password                      | InfluxDB admin password                                  | empty (auto-generated)                   |
+| external.influxdb.adminToken                    | InfluxDB admin token                                     | empty (auto-generated)                   |
 | external.influxdb.initOrg                       | InfluxDB initial organization                            | "sp"                                     |
 | external.influxdb.initBucket                    | InfluxDB initial bucket                                  | "sp"                                     |
 | external.influxdb.initMode                      | InfluxDB initialization mode                             | "setup"                                  |
