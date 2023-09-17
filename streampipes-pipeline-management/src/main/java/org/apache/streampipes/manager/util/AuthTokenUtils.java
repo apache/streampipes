@@ -28,6 +28,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthTokenUtils {
 
+  public static String getAuthTokenForCurrentUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    return makeBearerToken(new JwtTokenProvider().createToken(auth));
+  }
+
   public static String getAuthToken(String resourceId) {
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -80,17 +80,19 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
 
   private List<SpServiceRegistration> findService(int retryCount) {
     var services = serviceStorage.getAll();
-    if (services.size() == 0) {
+    if (services.isEmpty()) {
       if (retryCount < MAX_RETRIES) {
         try {
           retryCount++;
-          TimeUnit.SECONDS.sleep(10);
+          LOG.info("Could not find any extensions services, retrying ({}/{})", retryCount, MAX_RETRIES);
+          TimeUnit.MILLISECONDS.sleep(1000);
           return findService(retryCount);
         } catch (InterruptedException e) {
           e.printStackTrace();
           return Collections.emptyList();
         }
       } else {
+        LOG.info("No service found");
         return Collections.emptyList();
       }
     } else {

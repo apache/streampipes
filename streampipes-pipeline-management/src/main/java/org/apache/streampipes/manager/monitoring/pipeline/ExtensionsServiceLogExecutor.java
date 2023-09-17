@@ -19,7 +19,7 @@
 package org.apache.streampipes.manager.monitoring.pipeline;
 
 
-import org.apache.streampipes.manager.util.AuthTokenUtils;
+import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -61,8 +61,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   }
 
   private Request makeRequest(String serviceEndpointUrl) {
-    return Request.Get(makeLogUrl(serviceEndpointUrl))
-        .addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdmin()));
+    return ExtensionServiceExecutions.extServiceGetRequest(makeLogUrl(serviceEndpointUrl));
   }
 
   private Principal getServiceAdmin() {
