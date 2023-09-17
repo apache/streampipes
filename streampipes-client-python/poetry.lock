@@ -1514,15 +1514,17 @@ files = [
 
 [[package]]
 name = "nats-py"
-version = "2.2.0"
+version = "2.4.0"
 description = "NATS client for Python"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "nats-py-2.2.0.tar.gz", hash = "sha256:e45a0bafde2d04fb2d2bd6b0527b95bc77f371beaf7b6237354be0234ff9bba9"},
+    {file = "nats-py-2.4.0.tar.gz", hash = "sha256:ae8aa34b2f4006ab7700349d7283323bba7d3e766b71ac2e3cfe5fdc8b888862"},
 ]
 
 [package.extras]
+aiohttp = ["aiohttp"]
+fast-parse = ["fast-mail-parser"]
 nkeys = ["nkeys"]
 
 [[package]]

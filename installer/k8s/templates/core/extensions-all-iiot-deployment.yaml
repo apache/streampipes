@@ -38,6 +38,24 @@ spec:
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: {{ .Values.extensions.iiot.port }}
+          env:
+            - name: SP_CLIENT_USER
+              value: "{{ .Values.streampipes.auth.users.service.user }}"
+            - name: SP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.streampipes.auth.secretName }}"
+                  key: sp-initial-client-secret
+            - name: SP_COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-couchdb-password
+            - name: SP_TS_STORAGE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.streampipes.auth.secretName }}"
+                  key: sp-ts-storage-token
           livenessProbe:
             tcpSocket:
               port: {{ .Values.extensions.iiot.port }}

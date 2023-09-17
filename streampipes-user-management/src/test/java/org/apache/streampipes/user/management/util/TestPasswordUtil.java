@@ -15,19 +15,26 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.user.management.util;
 
-@import 'src/scss/sp/sp-dialog';
+import com.google.common.base.CharMatcher;
+import org.junit.Test;
 
-.info-message {
-    text-align: center;
-    font-size: 14pt;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
+import static org.apache.streampipes.user.management.util.PasswordUtil.generateRandomPassword;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-.warning-message {
-    border: 1px solid var(--color-warn);
-    padding: 10px;
-    font-size: 12pt;
-    background: var(--color-bg-2);
+public class TestPasswordUtil {
+
+  @Test
+  public void testGenerateRandomPassword() {
+
+    String randomPassword = generateRandomPassword();
+
+    assertNotNull(randomPassword);
+    assertEquals(10, randomPassword.length());
+    assertTrue(CharMatcher.ascii().matchesAllOf(randomPassword));
+  }
+
 }

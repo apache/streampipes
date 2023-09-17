@@ -69,6 +69,37 @@ spec:
             - name: SP_NATS_PORT
               value: "{{ .Values.external.nats.service.port }}"
             {{- end }}
+            - name: SP_INITIAL_ADMIN_EMAIL
+              value: {{ .Values.streampipes.auth.users.admin.user}}
+            - name: SP_INITIAL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-initial-admin-password
+            - name: SP_INITIAL_SERVICE_USER
+              value: "{{ .Values.streampipes.auth.users.service.user }}"
+            - name: SP_INITIAL_SERVICE_USER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-initial-client-secret
+            - name: SP_ENCRYPTION_PASSCODE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName}}
+                  key: sp-encryption-passcode
+            - name: SP_COUCHDB_USER
+              value: "{{ .Values.external.couchdb.user }}"
+            - name: SP_COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-couchdb-password
+            - name: SP_TS_STORAGE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-ts-storage-token
           ports:
             - containerPort: {{ .Values.streampipes.core.port }}
           volumeMounts:

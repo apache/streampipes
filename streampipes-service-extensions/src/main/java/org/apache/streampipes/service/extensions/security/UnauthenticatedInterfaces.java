@@ -27,12 +27,10 @@ public class UnauthenticatedInterfaces {
 
   public static Collection<String> get() {
     return Arrays.asList(
-        "/svchealth/*",
-        "/",
-        "/sec/**",
-        "/sepa/**",
-        "/stream/**",
-        "/api/v1/worker/**"
+        "/sec/*/assets/**",
+        "/sepa/*/assets/**",
+        "/stream/*/assets/**",
+        "/api/v1/worker/adapters/*/assets/**"
     );
   }
 }

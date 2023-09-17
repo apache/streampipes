@@ -70,7 +70,12 @@ public class StreamPipesEnvChecker {
 
     if (signingMode.exists()) {
       localAuthConfig.setJwtSigningMode(JwtSigningMode.valueOf(signingMode.getValue()));
+    } else {
+      if (localAuthConfig.getJwtSigningMode() != JwtSigningMode.HMAC) {
+        localAuthConfig.setJwtSigningMode(JwtSigningMode.HMAC);
+      }
     }
+
     if (jwtSecret.exists()) {
       localAuthConfig.setTokenSecret(jwtSecret.getValue());
     }
