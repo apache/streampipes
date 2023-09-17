@@ -21,6 +21,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
     AdapterDescription,
+    AdapterService,
     ErrorMessage,
     Message,
     PipelineOperationStatus,
@@ -29,7 +30,6 @@ import {
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
-import { AdapterService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/adapter.service';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
