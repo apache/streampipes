@@ -18,29 +18,83 @@
 
 package org.apache.streampipes.smp.generator;
 
+import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import org.apache.http.client.fluent.Request;
+import org.apache.maven.plugin.logging.Log;
 
+import java.io.IOException;
 import java.util.List;
 
-public class SidebarConfigGenerator extends OutputGenerator {
+public class SidebarConfigGenerator {
 
+  private static final String ExistingSidebarsUrl =
+      "https://raw.githubusercontent.com/apache/streampipes-website/dev/website-v2/sidebars.json";
+  private static final String DocumentationSection = "documentation";
+  private static final String PipelineElementSection = "\uD83D\uDCDA Pipeline Elements";
 
-  public SidebarConfigGenerator(List<AssetModel> assetModels) {
-    super(assetModels);
+  private final List<AssetModel> assetModels;
+  private final Log log;
+
+  public SidebarConfigGenerator(Log log,
+                                List<AssetModel> assetModels) {
+    this.log = log;
+    this.assetModels = assetModels;
   }
 
-  public String generate() {
+  public String generate() throws IOException {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    log.info("Downloading existing sidebar from Git repo");
+    var existingSidebar = loadExistingSidebar();
+    log.info("Sidebar download successful");
+    var existingSidebarJson = JsonParser.parseString(existingSidebar);
+
     JsonArray pipelineElements = new JsonArray();
-    assetModels.forEach(pe -> pipelineElements.add("pe/" + pe.getAppId()));
 
-    JsonObject pipelineElementObject = new JsonObject();
-    pipelineElementObject.add("Pipeline Elements", pipelineElements);
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.add("pipeline-elements", pipelineElementObject);
+    pipelineElements.add(makeItems(PeType.ADAPTER, "Adapters"));
+    pipelineElements.add(makeItems(PeType.PROCESSOR, "Data Processors"));
+    pipelineElements.add(makeItems(PeType.SINK, "Data Sinks"));
 
-    return jsonObject.toString();
+    var section = existingSidebarJson
+        .getAsJsonObject()
+        .get(DocumentationSection)
+        .getAsJsonObject();
+
+    section.add(PipelineElementSection, pipelineElements);
+
+    return gson.toJson(existingSidebarJson);
+  }
+
+  private JsonObject makeItems(PeType type,
+                               String typeName) {
+    var obj = new JsonObject();
+    var peJsonArray = new JsonArray();
+    obj.add("type", new JsonPrimitive("category"));
+    obj.add("label", new JsonPrimitive(typeName));
+
+    assetModels
+        .stream()
+        .filter(am -> am.getPeType() == type)
+        .forEach(am -> {
+          peJsonArray.add(new JsonPrimitive("pe/" + am.getAppId()));
+        });
+
+    obj.add("items", peJsonArray);
+    return obj;
+  }
+
+  private String loadExistingSidebar() throws IOException {
+    return Request
+        .Get(ExistingSidebarsUrl)
+        .execute()
+        .returnContent()
+        .asString();
   }
 }

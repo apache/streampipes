@@ -21,6 +21,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
     AdapterDescription,
+    ErrorMessage,
     Message,
     PipelineOperationStatus,
     PipelineTemplateService,
@@ -68,6 +69,8 @@ export class AdapterStartedDialog implements OnInit {
      * This option will immediately start the adapter, when false it the adapter is only created and not started
      */
     @Input() startAdapterNow = true;
+
+    templateErrorMessage: ErrorMessage;
 
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
@@ -157,33 +160,46 @@ export class AdapterStartedDialog implements OnInit {
                     adapter.correspondingDataStreamElementId,
                     pipelineId,
                 )
-                .subscribe(res => {
-                    const pipelineName = 'Persist ' + this.adapter.name;
+                .subscribe(
+                    res => {
+                        const pipelineName = 'Persist ' + this.adapter.name;
 
-                    const indexName = this.adapter.name;
+                        const indexName = this.adapter.name;
 
-                    const pipelineInvocation = PipelineInvocationBuilder.create(
-                        res,
-                    )
-                        .setName(pipelineName)
-                        .setTemplateId(pipelineId)
-                        .setFreeTextStaticProperty('db_measurement', indexName)
-                        .setMappingPropertyUnary(
-                            'timestamp_mapping',
-                            's0::' + this.dataLakeTimestampField,
-                        )
-                        .build();
+                        const pipelineInvocation =
+                            PipelineInvocationBuilder.create(res)
+                                .setName(pipelineName)
+                                .setTemplateId(pipelineId)
+                                .setFreeTextStaticProperty(
+                                    'db_measurement',
+                                    indexName,
+                                )
+                                .setMappingPropertyUnary(
+                                    'timestamp_mapping',
+                                    's0::' + this.dataLakeTimestampField,
+                                )
+                                .build();
 
-                    this.pipelineTemplateService
-                        .createPipelineTemplateInvocation(pipelineInvocation)
-                        .subscribe(pipelineOperationStatus => {
-                            this.pipelineOperationStatus =
-                                pipelineOperationStatus;
-                            setTimeout(() => {
-                                this.startAdapter(message, adapterElementId);
-                            }, 4000);
-                        });
-                });
+                        this.pipelineTemplateService
+                            .createPipelineTemplateInvocation(
+                                pipelineInvocation,
+                            )
+                            .subscribe(pipelineOperationStatus => {
+                                this.pipelineOperationStatus =
+                                    pipelineOperationStatus;
+                                setTimeout(() => {
+                                    this.startAdapter(
+                                        message,
+                                        adapterElementId,
+                                    );
+                                }, 3000);
+                            });
+                    },
+                    res => {
+                        this.templateErrorMessage = res.error;
+                        this.startAdapter(message, adapterElementId);
+                    },
+                );
         });
     }
 }

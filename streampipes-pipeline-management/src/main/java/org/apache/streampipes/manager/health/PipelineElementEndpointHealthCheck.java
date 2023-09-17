@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.manager.health;
 
+import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -37,7 +37,8 @@ public class PipelineElementEndpointHealthCheck {
   }
 
   public List<String> checkRunningInstances() throws IOException {
-    return asList(Request.Get(makeRequestUrl()).execute().returnContent().toString());
+    var request = ExtensionServiceExecutions.extServiceGetRequest(makeRequestUrl());
+    return asList(request.execute().returnContent().toString());
   }
 
   private List<String> asList(String json) throws JsonProcessingException {

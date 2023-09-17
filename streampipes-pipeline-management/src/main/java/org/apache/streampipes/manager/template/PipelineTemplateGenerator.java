@@ -122,14 +122,12 @@ public class PipelineTemplateGenerator {
   }
 
   protected DataSinkDescription getSink(String id) throws ElementNotFoundException {
-    DataSinkDescription result = getStorage()
-        .getDataSinkByAppId(id);
-
-    if (result == null) {
+    try {
+      return getStorage()
+          .getDataSinkByAppId(id);
+    } catch (IllegalArgumentException e) {
       throw new ElementNotFoundException("Data stream " + id + " is not installed!");
     }
-
-    return result;
   }
 
   protected IPipelineElementDescriptionStorage getStorage() {

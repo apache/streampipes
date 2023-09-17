@@ -79,6 +79,29 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.streampipes</groupId>
+                <artifactId>streampipes-maven-plugin</artifactId>
+                <version>0.93.0-SNAPSHOT</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.rocketmq</groupId>
+                        <artifactId>rocketmq-client-java</artifactId>
+                        <version>5.0.2</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <initClass>org.apache.streampipes.extensions.all.jvm.AllExtensionsInit</initClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>extract-docs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>

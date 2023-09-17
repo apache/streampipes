@@ -66,7 +66,7 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 autoflake = "2.2.0"
-black = "23.7.0"
+black = "23.9.1"
 blacken-docs = "1.16.0"
 flake8 = "6.1.0"
 interrogate = { version = "1.5.0", extras = ["png"] }
@@ -88,7 +88,7 @@ mkdocs-awesome-pages-plugin = "2.9.0"
 mkdocs-gen-files = "0.5.0"
 mkdocs-jupyter = "0.24.0"
 mkdocs-literate-nav = "0.6.0"
-mkdocs-material = "9.2.5"
+mkdocs-material = "9.3.1"
 mkdocstrings = { version = "0.23.0", extras = ["python"] }
 numpydoc = "1.5.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }

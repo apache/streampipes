@@ -26,12 +26,14 @@ public class AssetModel implements Comparable<AssetModel> {
   private String pipelineElementName;
   private String pipelineElementDescription;
   private PeType peType = PeType.PROCESSOR;
-  private String moduleName = "";
-  private String containerName = "";
-  private String baseDir;
 
   public AssetModel() {
 
+  }
+
+  public AssetModel(String appId, PeType peType) {
+    this.appId = appId;
+    this.peType = peType;
   }
 
   public AssetModel(String appId, String pipelineElementName, String pipelineElementDescription) {
@@ -44,9 +46,6 @@ public class AssetModel implements Comparable<AssetModel> {
     return appId;
   }
 
-  public void setAppId(String appId) {
-    this.appId = appId;
-  }
 
   public String getPipelineElementName() {
     return pipelineElementName;
@@ -66,34 +65,6 @@ public class AssetModel implements Comparable<AssetModel> {
 
   public PeType getPeType() {
     return peType;
-  }
-
-  public void setPeType(PeType peType) {
-    this.peType = peType;
-  }
-
-  public String getModuleName() {
-    return moduleName;
-  }
-
-  public void setModuleName(String moduleName) {
-    this.moduleName = moduleName;
-  }
-
-  public String getContainerName() {
-    return containerName;
-  }
-
-  public void setContainerName(String containerName) {
-    this.containerName = containerName;
-  }
-
-  public String getBaseDir() {
-    return baseDir;
-  }
-
-  public void setBaseDir(String baseDir) {
-    this.baseDir = baseDir;
   }
 
   @Override

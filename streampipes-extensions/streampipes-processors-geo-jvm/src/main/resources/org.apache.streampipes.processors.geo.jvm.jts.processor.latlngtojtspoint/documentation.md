@@ -60,8 +60,8 @@ EPSG code value
 Adds a point geometry in the Well Known Text notation and in Longitude (x)  Latitude (y) axis order to the stream.
 
 ### Example
-* Input stream: <br>
+* Input stream: <br/>
   `{latitude=48.5622, longitude=-76.3501, EPSG=4326}`
 
-* Output Stream <br>
+* Output Stream <br/>
   `{latitude=48.5622, longitude=-76.3501, EPSG=4326, geom_wkt=POINT (-76.3501 48.5622)}`

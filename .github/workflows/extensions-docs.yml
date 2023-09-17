@@ -1,0 +1,65 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: "build-extensions-docs-and-share-as-artifact"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  "0 3 * * 6"  # runs every saturday at 03:00:00
+
+jobs:
+  extensions-docs-artifact-building:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone
+        uses: actions/checkout@v4
+
+      - name: create working branch & set GitHub config
+        run: |
+          git checkout -b build-extensions-docs-${{ github.run_id }}
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Publish Extensions docs as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: streampipes-extensions-docs
+          path: streampipes-extensions/streampipes-extensions-all-jvm/target/docs/pe/
+          retention-days: 5
+
+      - name: Publish Extensions image assets as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: streampipes-extensions-docs-image-assets
+          path: streampipes-extensions/streampipes-extensions-all-jvm/target/docs/img/
+          retention-days: 5
+
+      - name: Publish Extensions sidebar
+        uses: actions/upload-artifact@v3
+        with:
+          name: streampipes-extensions-docs-sidebar
+          path: streampipes-extensions/streampipes-extensions-all-jvm/target/docs/sidebars.json
+          retention-days: 5
