@@ -21,25 +21,8 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SourcesManagement {
-
-  private final Logger logger = LoggerFactory.getLogger(SourcesManagement.class);
-
-  private final AdapterInstanceStorageImpl adapterInstanceStorage;
-
-
-  public SourcesManagement(AdapterInstanceStorageImpl adapterStorage) {
-    this.adapterInstanceStorage = adapterStorage;
-  }
-
-  public SourcesManagement() {
-    this(new AdapterInstanceStorageImpl());
-  }
 
   public static SpDataStream updateDataStream(AdapterDescription adapterDescription,
                                               SpDataStream oldDataStream) {

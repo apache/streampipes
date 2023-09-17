@@ -84,7 +84,7 @@
 	<jboss-logging-processor.version>2.2.1.Final</jboss-logging-processor.version>
 	<jersey.version>3.1.0</jersey.version>
 	<jetbrains-annotations.version>24.0.1</jetbrains-annotations.version>
-	<jetty.version>10.0.14</jetty.version>
+	<jetty.version>10.0.16</jetty.version>
 	<jgrapht.version>1.5.1</jgrapht.version>
 	<jjwt.version>0.11.2</jjwt.version>
 	<jna.version>5.13.0</jna.version>
@@ -1396,7 +1396,6 @@
         <module>streampipes-wrapper-distributed</module>
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-kafka-streams</module>
-        <module>streampipes-wrapper-python</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
 	</modules>

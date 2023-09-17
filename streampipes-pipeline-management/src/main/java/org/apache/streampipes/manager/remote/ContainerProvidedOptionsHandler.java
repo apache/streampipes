@@ -18,6 +18,7 @@
 package org.apache.streampipes.manager.remote;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
@@ -26,9 +27,7 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
-import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 
@@ -38,11 +37,11 @@ public class ContainerProvidedOptionsHandler {
   public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
 
     try {
-      String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(request);
-      Response httpResp =
-          Request.Post(getEndpointUrl(request.getAppId())).bodyString(httpRequestBody, ContentType.APPLICATION_JSON)
-              .execute();
-      return handleResponse(httpResp);
+      var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
+      var url = getEndpointUrl(request.getAppId());
+      var resp = ExtensionServiceExecutions.extServicePostRequest(url, payload).execute();
+
+      return handleResponse(resp);
     } catch (Exception e) {
       e.printStackTrace();
       return new RuntimeOptionsResponse();

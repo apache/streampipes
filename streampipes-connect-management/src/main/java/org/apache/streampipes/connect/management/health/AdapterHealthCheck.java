@@ -26,12 +26,17 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AdapterHealthCheck {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthCheck.class);
 
   private final IAdapterStorage adapterStorage;
   private final AdapterMasterManagement adapterMasterManagement;
@@ -125,7 +130,7 @@ public class AdapterHealthCheck {
           this.adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
         }
       } catch (AdapterException e) {
-        e.printStackTrace();
+        LOG.warn("Could not start adapter {}", adapterDescription.getName(), e);
       }
     }
 
