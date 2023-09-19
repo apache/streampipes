@@ -109,7 +109,7 @@ export const MY_NATIVE_FORMATS = {
         day: 'numeric',
         hour: 'numeric',
         minute: 'numeric',
-        hour12: false,
+        hourCycle: 'h23',
     },
     datePickerInput: {
         year: 'numeric',
