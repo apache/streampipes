@@ -15,17 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.commons.constants;
 
-import org.apache.commons.lang3.StringUtils;
+package org.apache.streampipes.service.core;
 
-public class InstanceIdExtractor {
 
-  public static String extractId(String elementId) {
-    return StringUtils.substringAfterLast(elementId, ":");
+import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
+
+import io.prometheus.client.CollectorRegistry;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class StreamPipesPrometheusConfig {
+
+  @Bean
+  public CollectorRegistry collectorRegistry() {
+    return StreamPipesCollectorRegistry.getCollectorRegistry();
   }
 
-  public static String getSimpleName(String elementId){
-    return StringUtils.substringBetween(elementId, ":", ":");
-  }
 }

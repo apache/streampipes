@@ -15,17 +15,25 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.commons.constants;
+package org.apache.streampipes.service.base;
 
-import org.apache.commons.lang3.StringUtils;
 
-public class InstanceIdExtractor {
+import java.util.Properties;
 
-  public static String extractId(String elementId) {
-    return StringUtils.substringAfterLast(elementId, ":");
+public class ServiceBaseConfig {
+
+  private static final String ENDPOINT_INCLUDE_KEY = "management.endpoints.web.exposure.include";
+
+  private static final String ENDPOINT_INCLUDE_VALUE = "health,prometheus";
+
+  private static final String SERVER_PORT_KEY = "server.port";
+
+  public static void addPrometheusConfig(Properties properties) {
+    properties.setProperty(ENDPOINT_INCLUDE_KEY, ENDPOINT_INCLUDE_VALUE);
   }
 
-  public static String getSimpleName(String elementId){
-    return StringUtils.substringBetween(elementId, ":", ":");
+  public static void addPortConfig(Integer port, Properties properties) {
+    properties.setProperty(SERVER_PORT_KEY, port.toString());
   }
+
 }

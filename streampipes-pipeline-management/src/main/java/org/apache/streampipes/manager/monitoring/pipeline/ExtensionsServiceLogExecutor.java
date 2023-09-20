@@ -19,8 +19,13 @@
 package org.apache.streampipes.manager.monitoring.pipeline;
 
 
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
+import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -42,8 +47,11 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private static final String LOG_PATH = "/monitoring";
 
+  private static final PipelineFlowStats pipelineFlowStats = new PipelineFlowStats();
+
   public void run() {
     triggerUpdate();
+    updatePipelineFlow();
   }
 
   public void triggerUpdate() {
@@ -58,6 +66,32 @@ public class ExtensionsServiceLogExecutor implements Runnable {
         LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint);
       }
     });
+  }
+
+  private void updatePipelineFlow() {
+    pipelineFlowStats.clear();
+    ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach(
+        (k, v) -> {
+        String className = InstanceIdExtractor.getSimpleName(k);
+        if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
+          pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
+        } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+          v.getMessagesIn().forEach(
+              (k1, v1) -> {
+              pipelineFlowStats.increaseElementInputTotalData(v1.getCounter());
+            }
+          );
+          pipelineFlowStats.increaseElementOutputTotalData(v.getMessagesOut().getCounter());
+        } else if (DataSinkInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+          v.getMessagesIn().forEach(
+              (k1, v1) -> {
+              pipelineFlowStats.increasePipelineProcessedData(v1.getCounter());
+            }
+          );
+        }
+      }
+    );
+    pipelineFlowStats.metrics();
   }
 
   private Request makeRequest(String serviceEndpointUrl) {

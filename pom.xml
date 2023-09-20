@@ -208,6 +208,8 @@
 	<mave-release-plugin.version>3.0.0-M5</mave-release-plugin.version>
 	<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 	<maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
+	<micrometer-prometheus.version>1.11.0</micrometer-prometheus.version>
+	<micrometer-observation.version>1.11.0</micrometer-observation.version>
 </properties>
 
     <name>Apache StreamPipes</name>
@@ -861,6 +863,11 @@
 					<version>${spring-boot.version}</version>
 				</dependency>
 				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-actuator</artifactId>
+					<version>${spring-boot.version}</version>
+				</dependency>
+				<dependency>
 					<groupId>org.wildfly.common</groupId>
 					<artifactId>wildfly-common</artifactId>
 					<version>${wildfly-common.version}</version>
@@ -1329,6 +1336,16 @@
                 <artifactId>kotlin-stdlib</artifactId>
                 <version>${kotlin-stdlib.version}</version>
             </dependency>
+			<dependency>
+				<groupId>io.micrometer</groupId>
+				<artifactId>micrometer-registry-prometheus</artifactId>
+				<version>${micrometer-prometheus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.micrometer</groupId>
+				<artifactId>micrometer-observation</artifactId>
+				<version>${micrometer-observation.version}</version>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 
