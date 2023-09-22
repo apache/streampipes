@@ -17,7 +17,7 @@
 
 .PHONY: check
 check: mypy lint unit-tests
-	interrogate -c pyproject.toml
+	poetry run interrogate -c pyproject.toml
 
 .PHONY: doc
 doc:
@@ -25,7 +25,7 @@ doc:
 
 .PHONY: lint
 lint:
-	flake8 streampipes --max-line-length 120
+	poetry run flake8 streampipes --max-line-length 120
 
 .PHONY: livedoc
 livedoc: doc

@@ -48,7 +48,7 @@ jobs:
         working-directory: ./streampipes-client-python
         run: |
           poetry build
-          twine check --strict dist/*
+          poetry run twine check --strict dist/*
 
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -59,7 +59,7 @@ jobs:
       - name: Publish new doc version and update alias
         working-directory: ./streampipes-client-python
         run: |
-          mike deploy ${GITHUB_REF##*/} latest -u --deploy-prefix ./streampipes-client-python/docs-tmp -b ${GITHUB_REF}
+          poetry run mike deploy ${GITHUB_REF##*/} latest -u --deploy-prefix ./streampipes-client-python/docs-tmp -b ${GITHUB_REF}
           git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
