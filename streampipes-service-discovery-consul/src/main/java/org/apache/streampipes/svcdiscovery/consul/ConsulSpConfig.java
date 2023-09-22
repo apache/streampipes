@@ -136,6 +136,12 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
   }
 
   @Override
+  public boolean exists(String key) {
+    var os = kvClient.getKVValue(addSn(key)).getValue();
+    return os != null;
+  }
+
+  @Override
   public <T> T getObject(String key, Class<T> clazz, T defaultValue) {
     var os = kvClient.getKVValue(addSn(key));
     if (os.getValue() != null) {
@@ -153,7 +159,6 @@ public class ConsulSpConfig extends AbstractConsulService implements SpConfig {
   @Override
   public ConfigItem getConfigItem(String key) {
     var os = kvClient.getKVValue(addSn(key)).getValue();
-
     return fromJson(os.getDecodedValue());
   }
 

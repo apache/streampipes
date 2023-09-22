@@ -19,10 +19,13 @@
 package org.apache.streampipes.service.core.migrations.v093;
 
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.BackendConfigKeys;
+import org.apache.streampipes.model.configuration.DefaultMessagingSettings;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
 public class ConsulConfigMigration implements Migration {
 
@@ -34,13 +37,19 @@ public class ConsulConfigMigration implements Migration {
 
   @Override
   public boolean shouldExecute() {
-    return storage.getAll().size() == 0;
+    return storage.getAll().isEmpty();
   }
 
   @Override
   public void executeMigration() {
     var currConf = BackendConfig.INSTANCE;
     var newConf = new SpCoreConfiguration();
+
+    var pulsarUrlExists = SpServiceDiscovery
+        .getSpConfig("backend")
+        .exists(BackendConfigKeys.PULSAR_URL);
+
+    var pulsarUrl = pulsarUrlExists ? currConf.getPulsarUrl() : new DefaultMessagingSettings().make().getPulsarUrl();
 
     var messagingSettings = currConf.getMessagingSettings();
     newConf.setLocalAuthConfig(currConf.getLocalAuthConfig());
@@ -55,7 +64,7 @@ public class ConsulConfigMigration implements Migration {
     messagingSettings.setNatsPort(currConf.getNatsPort());
     messagingSettings.setKafkaHost(currConf.getKafkaHost());
     messagingSettings.setKafkaPort(currConf.getKafkaPort());
-    messagingSettings.setPulsarUrl(currConf.getPulsarUrl());
+    messagingSettings.setPulsarUrl(pulsarUrl);
     messagingSettings.setZookeeperHost(currConf.getZookeeperHost());
     messagingSettings.setZookeeperPort(currConf.getZookeeperPort());
     newConf.setAssetDir(currConf.getAssetDir());
