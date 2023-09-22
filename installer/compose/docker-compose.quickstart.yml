@@ -1,0 +1,262 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+version: "3.4"
+
+# global logging
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
+services:
+
+  # StreamPipes services
+  backend:
+    image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
+    depends_on:
+      - consul
+      - couchdb
+    volumes:
+      - backend:/root/.streampipes
+      - files:/spImages
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  connect-adapters:
+    image: "${SP_DOCKER_REGISTRY}/connect-adapters:${SP_VERSION}"
+    depends_on:
+      - consul
+    environment:
+      - SP_BACKEND_HOST=backend
+      - SP_CONNECT_CONTAINER_WORKER=connect-adapters
+    volumes:
+      - connect:/data/
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  connect-adapters-iiot:
+    image: "${SP_DOCKER_REGISTRY}/connect-adapters-iiot:${SP_VERSION}"
+    depends_on:
+      - consul
+    environment:
+      - SP_BACKEND_HOST=backend
+      - SP_CONNECT_CONTAINER_WORKER=connect-adapters
+    volumes:
+      - connect:/data/
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  ui:
+    image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
+    ports:
+      - "80:8088"
+    depends_on:
+      - couchdb
+      - consul
+      - backend
+    volumes:
+      - nginx:/etc/nginx/
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  consul:
+    image: consul:1.14.3
+    environment:
+      - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
+      - "CONSUL_BIND_INTERFACE=eth0"
+      - "CONSUL_HTTP_ADDR=0.0.0.0"
+    volumes:
+      - consul:/consul/data
+    entrypoint:
+      - consul
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -data-dir=/consul/data
+      - -node=consul-one
+      - -bind={{ GetInterfaceIP "eth0" }}
+      - -client=0.0.0.0
+      - -enable-script-checks=true
+      - -ui
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+        ipv4_address: ${SP_CONSUL_CONTAINER_IP}
+
+  couchdb:
+    image: couchdb:3.3.1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=admin
+    volumes:
+      - couchdb:/opt/couchdb/data
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  kafka:
+    image: fogsyio/kafka:2.2.0
+    hostname: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
+      SP_INITIAL_ADMIN_EMAIL: test@gmail.com
+      SP_INITIAL_ADMIN_PASSWORD: pass
+    volumes:
+      - kafka:/kafka
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  zookeeper:
+    image: fogsyio/zookeeper:3.4.13
+    volumes:
+      - zookeeper:/opt/zookeeper-3.4.13
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  influxdb:
+    image: influxdb:2.6
+    environment:
+      - INFLUXDB_DATA_ENGINE=tsm1
+      - INFLUXDB_REPORTING_DISABLED=false
+      - INFLUXDB_ADMIN_ENABLED=true
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=sp-admin
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=sp-admin
+      - DOCKER_INFLUXDB_INIT_ORG=sp
+      - DOCKER_INFLUXDB_INIT_BUCKET=sp
+      - DOCKER_INFLUXDB_INIT_MODE=${SP_INFLUX_INIT_MODE}
+    volumes:
+      - influxdb:/var/lib/influxdb
+      - influxdb2:/var/lib/influxdb2
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  jobmanager:
+    image: fogsyio/flink:1.13.5-scala_2.11
+    command: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  taskmanager:
+    image: fogsyio/flink:1.13.5-scala_2.11
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    links:
+      - "jobmanager:jobmanager"
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  # Lite version pipeline elements
+  pipeline-elements-all-jvm:
+    image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_VERSION}"
+    depends_on:
+      - consul
+    volumes:
+      - files:/spImages
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  sources-watertank-simulator:
+    image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_VERSION}"
+    depends_on:
+      - consul
+      - kafka
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  # Full version pipeline elements
+  pipeline-elements-all-flink:
+    image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-flink:${SP_VERSION}"
+    depends_on:
+      - consul
+      - jobmanager
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  script-runner:
+    build: .
+    volumes:
+      - ./zip_folder:/zip_folder
+    networks:
+      spnet:
+    depends_on:
+      - backend
+
+volumes:
+  backend:
+  consul:
+  connect:
+  couchdb:
+  kafka:
+  zookeeper:
+  influxdb:
+  influxdb2:
+  files:
+  nginx:
+
+
+
+networks:
+  spnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SP_SUBNET}
+
