@@ -215,6 +215,16 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getPrometheusEndpointInclude() {
+    return new StringEnvironmentVariable(Envs.SP_PROMETHEUS_ENDPOINT_INCLUDE);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getSetupPrometheusEndpoint() {
+    return new BooleanEnvironmentVariable(Envs.SP_SETUP_PROMETHEUS_ENDPOINT);
+  }
+
+  @Override
   public StringEnvironmentVariable getConsulLocation() {
     return new StringEnvironmentVariable(Envs.SP_CONSUL_LOCATION);
   }
