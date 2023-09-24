@@ -61,9 +61,10 @@ import { ServiceConfigsTextComponent } from './extensions-service-management/ext
 import { ServiceConfigsPasswordComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-password/service-configs-password.component';
 import { ServiceConfigsBooleanComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-boolean/service-configs-boolean.component';
 import { ServiceConfigsNumberComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-number/service-configs-number.component';
-import { SpRegisteredExtensionsServiceComponent } from './extensions-service-management/registrered-extensions-services/registered-extensions-services.component';
+import { SpRegisteredExtensionsServiceComponent } from './extensions-service-management/registered-extensions-services/registered-extensions-services.component';
 import { SpExtensionsServiceConfigurationComponent } from './extensions-service-management/extensions-service-configuration/extensions-service-configuration.component';
 import { SpMessagingBrokerConfigComponent } from './messaging-configuration/broker-config/broker-config.component';
+import { SpExtensionsServiceDetailsDialogComponent } from './dialog/extensions-service-details/extensions-service-details-dialog.component';
 
 @NgModule({
     imports: [
@@ -154,6 +155,7 @@ import { SpMessagingBrokerConfigComponent } from './messaging-configuration/brok
         SpDataExportItemComponent,
         SpDataImportDialogComponent,
         SpEditLabelComponent,
+        SpExtensionsServiceDetailsDialogComponent,
         SpLabelConfigurationComponent,
         SpMessagingBrokerConfigComponent,
         SpRegisteredExtensionsServiceComponent,

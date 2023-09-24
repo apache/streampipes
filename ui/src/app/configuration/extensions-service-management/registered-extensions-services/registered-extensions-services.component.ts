@@ -21,6 +21,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpServiceRegistration } from '@streampipes/platform-services';
 import { ConfigurationService } from '../../shared/configuration.service';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { SpExtensionsServiceDetailsDialogComponent } from '../../dialog/extensions-service-details/extensions-service-details-dialog.component';
 
 @Component({
     selector: 'sp-registered-extensions-services',
@@ -28,11 +30,14 @@ import { ConfigurationService } from '../../shared/configuration.service';
     styleUrls: ['./registered-extensions-services.component.scss'],
 })
 export class SpRegisteredExtensionsServiceComponent {
-    displayedColumns: string[] = ['status', 'name'];
+    displayedColumns: string[] = ['status', 'name', 'group', 'action'];
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     dataSource = new MatTableDataSource<SpServiceRegistration>();
 
-    constructor(private configurationService: ConfigurationService) {
+    constructor(
+        private configurationService: ConfigurationService,
+        private dialogService: DialogService,
+    ) {
         this.getRegisteredServices();
     }
 
@@ -42,5 +47,16 @@ export class SpRegisteredExtensionsServiceComponent {
             .subscribe(res => {
                 this.dataSource.data = res;
             });
+    }
+
+    openServiceDetails(serviceReg: SpServiceRegistration) {
+        this.dialogService.open(SpExtensionsServiceDetailsDialogComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title: 'Service details',
+            width: '70vw',
+            data: {
+                serviceReg,
+            },
+        });
     }
 }

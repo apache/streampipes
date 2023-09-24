@@ -25,15 +25,15 @@
     >
         <ng-container matColumnDef="group">
             <th
-                fxFlex="40"
+                fxFlex="45"
                 fxLayoutAlign="start center"
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Service Name
+                Service Group
             </th>
             <td
-                fxFlex="40"
+                fxFlex="45"
                 fxLayoutAlign="start center"
                 mat-cell
                 *matCellDef="let element"
@@ -44,7 +44,7 @@
 
         <ng-container matColumnDef="name">
             <th
-                fxFlex="40"
+                fxFlex="45"
                 fxLayoutAlign="start center"
                 mat-header-cell
                 *matHeaderCellDef
@@ -52,7 +52,7 @@
                 Service Name
             </th>
             <td
-                fxFlex="40"
+                fxFlex="45"
                 fxLayoutAlign="start center"
                 mat-cell
                 *matCellDef="let element"
@@ -63,26 +63,32 @@
 
         <ng-container matColumnDef="action">
             <th
-                fxFlex="30"
+                fxFlex="10"
                 fxLayoutAlign="start center"
                 mat-header-cell
                 *matHeaderCellDef
             >
-                Action
+                <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="getConsulServices()"
+                    matTooltip="Refresh"
+                >
+                    <mat-icon>refresh</mat-icon>
+                </button>
             </th>
             <td
-                fxFlex="30"
+                fxFlex="10"
                 fxLayoutAlign="start center"
                 mat-cell
                 *matCellDef="let element"
             >
                 <button
-                    mat-button
-                    mat-raised-button
+                    mat-icon-button
                     color="accent"
                     (click)="expand(element)"
                 >
-                    Edit
+                    <mat-icon>edit</mat-icon>
                 </button>
             </td>
         </ng-container>
@@ -100,10 +106,10 @@
                     "
                 >
                     <div fxFlex="100">
-                        <sp-consul-configs
+                        <sp-service-configs
                             [consulService]="element"
                             (updateConsulService)="updateConsulService($event)"
-                        ></sp-consul-configs>
+                        ></sp-service-configs>
                     </div>
                 </div>
             </td>

@@ -25,7 +25,7 @@
     >
         <ng-container matColumnDef="status">
             <th
-                fxFlex="30"
+                fxFlex="10"
                 fxLayoutAlign="start center"
                 mat-header-cell
                 *matHeaderCellDef
@@ -33,7 +33,7 @@
                 Status
             </th>
             <td
-                fxFlex="30"
+                fxFlex="10"
                 fxLayoutAlign="start center"
                 mat-cell
                 *matCellDef="let element"
@@ -47,6 +47,25 @@
                 >
                     <mat-icon class="service-icon-critical">lens</mat-icon>
                 </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="group">
+            <th
+                fxFlex="40"
+                fxLayoutAlign="start center"
+                mat-header-cell
+                *matHeaderCellDef
+            >
+                Service Group
+            </th>
+            <td
+                fxFlex="40"
+                fxLayoutAlign="start center"
+                mat-cell
+                *matCellDef="let element"
+            >
+                {{ element.svcGroup }}
             </td>
         </ng-container>
 
@@ -69,16 +88,44 @@
             </td>
         </ng-container>
 
+        <ng-container matColumnDef="action">
+            <th
+                fxFlex="10"
+                fxLayoutAlign="start center"
+                mat-header-cell
+                *matHeaderCellDef
+            >
+                <button
+                    mat-icon-button
+                    color="accent"
+                    matTooltip="Refresh"
+                    (click)="getRegisteredServices()"
+                >
+                    <mat-icon>refresh</mat-icon>
+                </button>
+            </th>
+            <td
+                fxFlex="10"
+                fxLayoutAlign="start center"
+                mat-cell
+                *matCellDef="let element"
+            >
+                <button
+                    mat-icon-button
+                    color="accent"
+                    matTooltip="View service details"
+                    (click)="openServiceDetails(element)"
+                >
+                    <mat-icon>search</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr
             mat-row
             *matRowDef="let element; columns: displayedColumns"
             class="consul-configuration-row"
-        ></tr>
-        <tr
-            mat-row
-            *matRowDef="let row; columns: ['expandedDetail']"
-            class="consul-configuration-detail-row"
         ></tr>
     </table>
 </div>
