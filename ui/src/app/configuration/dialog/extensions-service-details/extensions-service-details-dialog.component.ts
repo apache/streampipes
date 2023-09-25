@@ -16,23 +16,24 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { XsService } from '../../../../NS/xs.service';
-import { SpServiceConfiguration } from '@streampipes/platform-services';
+import { Component, Input } from '@angular/core';
+import { DialogRef } from '@streampipes/shared-ui';
+import { SpServiceRegistration } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-service-configs',
-    templateUrl: './service-configs.component.html',
-    providers: [XsService],
+    selector: 'sp-extensions-service-details-dialog',
+    templateUrl: './extensions-service-details-dialog.component.html',
+    styleUrls: ['./extensions-service-details-dialog.component.scss'],
 })
-export class ServiceConfigsComponent {
-    @Input() consulService: SpServiceConfiguration;
-    @Output() updateConsulService: EventEmitter<SpServiceConfiguration> =
-        new EventEmitter<SpServiceConfiguration>();
+export class SpExtensionsServiceDetailsDialogComponent {
+    @Input()
+    serviceReg: SpServiceRegistration;
 
-    constructor(private service: XsService) {}
+    constructor(
+        private dialogRef: DialogRef<SpExtensionsServiceDetailsDialogComponent>,
+    ) {}
 
-    updateConfiguration(): void {
-        this.updateConsulService.emit(this.consulService);
+    close() {
+        this.dialogRef.close();
     }
 }
