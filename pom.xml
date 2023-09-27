@@ -129,7 +129,7 @@
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
-	<mockito.version>5.4.0</mockito.version>
+	<mockito.version>5.5.0</mockito.version>
 	<powermock.version>2.0.9</powermock.version>
 	<rest-assured.version>2.9.0</rest-assured.version>
 	<wiremock.version>2.27.2</wiremock.version>
