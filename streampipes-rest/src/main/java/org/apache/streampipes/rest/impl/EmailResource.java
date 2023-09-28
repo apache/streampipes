@@ -35,8 +35,12 @@ public class EmailResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendEmail(SpEmail email) {
     if (getSpCoreConfigurationStorage().get().getEmailConfig().isEmailConfigured()) {
-      new MailSender().sendEmail(email);
-      return ok();
+      try {
+        new MailSender().sendEmail(email);
+        return ok();
+      } catch (Exception e) {
+        return badRequest(e);
+      }
     } else {
       return serverError(
           "Could not send email - no valid mail configuration provided in StreamPipes (go to settings -> mail)");
