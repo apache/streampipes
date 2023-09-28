@@ -90,6 +90,18 @@ docker-compose -f docker-compose.full.yml down
 #docker-compose -f docker-compose.full.yml down
 ```
 
+We introduce quickstart deployment that comes with a set of predefined StreamPipes assets, to use the quickstart mode, just build the Docker image and start **quickstart** option:
+```bash
+docker-compose -f docker-compose.quickstart.yml build script-runner
+docker-compose -f docker-compose.quickstart.yml up -d
+# go to after all services are started http://localhost
+```
+Stopping the **quickstart** option:
+```bash
+docker-compose -f docker-compose.quickstart.yml down
+#docker-compose -f docker-compose.quickstart.yml down
+```
+
 ## Update services
 To actively pull the latest available Docker images use:
 ```bash

@@ -17,22 +17,18 @@
 
 # Send a POST request and save the response as JSON
 
-# Check if SP_INITIAL_ADMIN_EMAIL is empty; if so, set USERNAME to a default value
 if [ -z "$SP_INITIAL_ADMIN_EMAIL" ]; then
   USERNAME="admin@streampipes.apache.org"
 else
   USERNAME="$SP_INITIAL_ADMIN_EMAIL"
 fi
 
-# Check if SP_INITIAL_ADMIN_PASSWORD is empty; if so, set PASSWORD to a default value
 if [ -z "$SP_INITIAL_ADMIN_PASSWORD" ]; then
   PASSWORD="admin"
 else
   PASSWORD="$SP_INITIAL_ADMIN_PASSWORD"
 fi
 
-echo $USERNAME
-echo $PASSWORD
 
 # Login and obtain token
 JSON_TOKEN_RESPONSE=$(curl -s -X POST "http://backend:8030/streampipes-backend/api/v2/auth/login" \
@@ -42,7 +38,6 @@ JSON_TOKEN_RESPONSE=$(curl -s -X POST "http://backend:8030/streampipes-backend/a
 TOKEN=$(echo "$JSON_TOKEN_RESPONSE" | jq -r '.accessToken')
 RESPONSE_TOKEN="Bearer $TOKEN"
 
-echo $RESPONSE_TOKEN
 
 
 for ZIP_FILE in /zip_folder/*.zip; do
@@ -52,7 +47,7 @@ for ZIP_FILE in /zip_folder/*.zip; do
       -H "Authorization: $RESPONSE_TOKEN" \
       -F "file_upload=@$ZIP_FILE")
 
-  echo "$JSON_RESPONSE"
+
   JSON_PAYLOAD="$JSON_RESPONSE"
 
   # POST upload request using curl
