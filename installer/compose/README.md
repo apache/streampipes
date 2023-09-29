@@ -48,6 +48,7 @@ We provide three options to get you going:
 - **default**: the standard installation, uses Kafka as internal message broker (recommended)
 - **nats**: the standard installation which uses Nats as message broker (recommended for new installations)
 - **full**:  contains experimental Flink wrappers
+- **quickstart**:  contains predefined assets
 
 The ``nats`` version will become the default version in a later release. You can already try it for new installations, 
 but there's not yet an automatic migration from current Kafka-based installations to Nats.
