@@ -1,26 +1,7 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-08-06 11:37:37.
+// Generated using typescript-generator version 3.2.1263 on 2023-09-28 22:59:29.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -2446,6 +2427,7 @@ export class Pipeline extends ElementComposition {
     restartOnSystemReboot: boolean;
     running: boolean;
     startedAt: number;
+    valid: boolean;
 
     static fromData(data: Pipeline, target?: Pipeline): Pipeline {
         if (!data) {
@@ -2471,6 +2453,7 @@ export class Pipeline extends ElementComposition {
         instance.restartOnSystemReboot = data.restartOnSystemReboot;
         instance.running = data.running;
         instance.startedAt = data.startedAt;
+        instance.valid = data.valid;
         return instance;
     }
 }
@@ -2955,6 +2938,32 @@ export class PipelineTemplateInvocation {
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
+        return instance;
+    }
+}
+
+export class PipelineUpdateInfo {
+    canAutoMigrate: boolean;
+    migrationInfo: string;
+    pipelineId: string;
+    pipelineName: string;
+    validationInfos: { [index: string]: PipelineElementValidationInfo[] };
+
+    static fromData(
+        data: PipelineUpdateInfo,
+        target?: PipelineUpdateInfo,
+    ): PipelineUpdateInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PipelineUpdateInfo();
+        instance.canAutoMigrate = data.canAutoMigrate;
+        instance.migrationInfo = data.migrationInfo;
+        instance.pipelineId = data.pipelineId;
+        instance.pipelineName = data.pipelineName;
+        instance.validationInfos = __getCopyObjectFn(
+            __getCopyArrayFn(PipelineElementValidationInfo.fromData),
+        )(data.validationInfos);
         return instance;
     }
 }
@@ -3521,6 +3530,7 @@ export class SpServiceRegistration {
     scheme: string;
     svcGroup: string;
     svcId: string;
+    svcType: string;
     tags: SpServiceTag[];
 
     static fromData(
@@ -3540,6 +3550,7 @@ export class SpServiceRegistration {
         instance.scheme = data.scheme;
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
+        instance.svcType = data.svcType;
         instance.tags = __getCopyArrayFn(SpServiceTag.fromData)(data.tags);
         return instance;
     }

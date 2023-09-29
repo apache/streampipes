@@ -27,6 +27,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.message.EdgeValidationStatusType;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.PipelineEdgeValidation;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
@@ -34,6 +35,7 @@ import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +72,11 @@ public class PipelineModificationGenerator {
     List<PipelineEdgeValidation> edgesWithoutConnectedStream = collectEdgesWithoutStream(modifications);
     edgeValidations.addAll(edgesWithoutConnectedStream);
     message.setEdgeValidations(edgeValidations);
+    message.setPipelineValid(
+        edgeValidations
+            .stream()
+            .allMatch(e -> e.getStatus().getValidationStatusType() == EdgeValidationStatusType.COMPLETE)
+            && message.getPipelineModifications().stream().allMatch(PipelineModification::isPipelineElementValid));
     return message;
   }
 
@@ -90,13 +97,13 @@ public class PipelineModificationGenerator {
       modification.setElementId(t.getElementId());
       try {
         pipelineValidator.apply(source, t, targets, validationInfos);
-        buildModification(modification, t);
+        buildModification(modification, t, t.getInputStreams(), true);
         edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.complete(source.getDom(), t.getDom()));
       } catch (SpValidationException e) {
-        //e.getErrorLog().forEach(log -> validationInfos.add(PipelineElementValidationInfo.error(log.toString())));
+        e.getErrorLog().forEach(log -> validationInfos.add(PipelineElementValidationInfo.error(log.toString())));
         edgeValidations.put(makeKey(source, t),
             PipelineEdgeValidation.invalid(source.getDom(), t.getDom(), toNotifications(e.getErrorLog())));
-        modification.setPipelineElementValid(false);
+        buildModification(modification, t, Collections.emptyList(), false);
       }
       modification.setValidationInfos(validationInfos);
       this.pipelineModifications.put(t.getDom(), modification);
@@ -115,14 +122,16 @@ public class PipelineModificationGenerator {
   }
 
   private void buildModification(PipelineModification modification,
-                                 InvocableStreamPipesEntity t) {
+                                 InvocableStreamPipesEntity t,
+                                 List<SpDataStream> inputStreams,
+                                 boolean valid) {
     if (t instanceof DataProcessorInvocation) {
       modification.setOutputStrategies(((DataProcessorInvocation) t).getOutputStrategies());
       modification.setOutputStream(((DataProcessorInvocation) t).getOutputStream());
     }
-    modification.setInputStreams(t.getInputStreams());
+    modification.setInputStreams(inputStreams);
     modification.setStaticProperties(t.getStaticProperties());
-    modification.setPipelineElementValid(true);
+    modification.setPipelineElementValid(valid);
   }
 
   private Set<InvocableStreamPipesEntity> getConnections(NamedStreamPipesEntity source) {

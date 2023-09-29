@@ -19,7 +19,7 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div fxLayout="column" *ngIf="!adapterInstalled">
+            <div fxLayout="column" *ngIf="loading">
                 <div fxLayoutAlign="center">
                     <mat-spinner
                         [diameter]="50"
@@ -31,16 +31,72 @@
                 </div>
                 <div fxLayoutAlign="center">
                     <h3>
-                        Please wait while your new adapter is being generated...
+                        Please wait while your new adapter is being
+                        {{ editMode ? 'updated' : 'generated' }}...
                     </h3>
+                </div>
+            </div>
+            <div
+                fxLayout="column"
+                *ngIf="
+                    adapterUpdatePreflight &&
+                    editMode &&
+                    !adapterInstalled &&
+                    !loading
+                "
+                fxLayoutAlign="start center"
+            >
+                <h4>
+                    This adapter is used by
+                    {{ adapterPipelineUpdateInfos.length }} pipelines.
+                </h4>
+                <div class="migration-infos">
+                    <div *ngFor="let updateInfo of adapterPipelineUpdateInfos">
+                        <div
+                            *ngIf="updateInfo.canAutoMigrate"
+                            fxLayoutAlign="start center"
+                        >
+                            <i class="material-icons">check</i
+                            >&nbsp;Pipeline&nbsp;<b>{{
+                                updateInfo.pipelineName
+                            }}</b
+                            >&nbsp;will be automatically migrated.
+                        </div>
+                        <div
+                            *ngIf="!updateInfo.canAutoMigrate"
+                            fxLayoutAlign="start center"
+                        >
+                            <i class="material-icons">warning</i>
+                            &nbsp;Pipeline&nbsp;<b>{{
+                                updateInfo.pipelineName
+                            }}</b
+                            >&nbsp;will be stopped and needs manual review.
+                        </div>
+                    </div>
+                </div>
+                <div class="migration-infos" fxLayoutAlign="start center">
+                    <i class="material-icons">warning</i>
+                    Please check and possibly modify existing dashboards and
+                    data views afterwards.
+                </div>
+                <div>
+                    <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        (click)="updateAdapter()"
+                    >
+                        Update adapter and migrate pipelines
+                    </button>
                 </div>
             </div>
             <div fxLayout="column" *ngIf="adapterInstalled && editMode">
                 <div
                     data-cy="info-adapter-successfully-updated"
-                    fxLayoutAlign="center"
+                    fxLayoutAlign="start center"
                 >
-                    <h3>Adapter successfully updated</h3>
+                    <i class="material-icons">check</i>&nbsp;
+                    <h4>Adapter successfully updated</h4>
                 </div>
             </div>
             <div
@@ -102,7 +158,7 @@
                             >
                         </div>
                     </div>
-                    <div *ngIf="startAdapterNow" fxFlex="100">
+                    <div *ngIf="showPreview" fxFlex="100">
                         <sp-pipeline-element-runtime-info
                             [streamDescription]="streamDescription"
                             [pollingActive]="pollingActive"

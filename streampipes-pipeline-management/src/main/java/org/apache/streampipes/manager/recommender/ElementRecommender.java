@@ -65,11 +65,10 @@ public class ElementRecommender {
       Optional<SpDataStream> outputStream = getOutputStream(elementsProvider);
       outputStream.ifPresent(spDataStream -> validate(spDataStream, getAll()));
     } catch (Exception e) {
-      e.printStackTrace();
       return recommendationMessage;
     }
 
-    if (recommendationMessage.getPossibleElements().size() == 0) {
+    if (recommendationMessage.getPossibleElements().isEmpty()) {
       throw new NoSuitableSepasAvailableException();
     } else {
       recommendationMessage

@@ -65,7 +65,7 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     removeSelection() {
-        this.router.navigate(['connect', 'create']).then();
+        this.router.navigate(['connect']).then();
     }
 
     clickSpecificSettingsNextButton() {

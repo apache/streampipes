@@ -21,15 +21,16 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
     AdapterDescription,
+    AdapterService,
     ErrorMessage,
     Message,
     PipelineOperationStatus,
     PipelineTemplateService,
+    PipelineUpdateInfo,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
-import { AdapterService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/adapter.service';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -71,6 +72,10 @@ export class AdapterStartedDialog implements OnInit {
     @Input() startAdapterNow = true;
 
     templateErrorMessage: ErrorMessage;
+    adapterUpdatePreflight = false;
+    adapterPipelineUpdateInfos: PipelineUpdateInfo[];
+    loading = false;
+    showPreview = false;
 
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
@@ -82,21 +87,43 @@ export class AdapterStartedDialog implements OnInit {
 
     ngOnInit() {
         if (this.editMode) {
-            this.editAdapter();
+            this.initAdapterUpdatePreflight();
         } else {
             this.addAdapter();
         }
     }
 
-    editAdapter() {
-        this.adapterService.updateAdapter(this.adapter).subscribe(status => {
-            this.adapterStatus = status;
+    initAdapterUpdatePreflight(): void {
+        this.loading = true;
+        this.adapterService
+            .performPipelineMigrationPreflight(this.adapter)
+            .subscribe(res => {
+                if (res.length === 0) {
+                    this.updateAdapter();
+                } else {
+                    this.adapterUpdatePreflight = true;
+                    this.adapterPipelineUpdateInfos = res;
+                    this.loading = false;
+                }
+            });
+    }
+
+    updateAdapter(): void {
+        this.loading = true;
+        this.adapterService.updateAdapter(this.adapter).subscribe(res => {
+            this.loading = false;
+            this.adapterStatus = res;
             this.adapterInstalled = true;
+            if (this.adapter.running) {
+                this.showAdapterPreview(res, this.adapter.elementId);
+            }
         });
     }
 
     addAdapter() {
+        this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(status => {
+            this.loading = false;
             this.adapterStatus = status;
 
             if (status.success) {
@@ -124,7 +151,6 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     showAdapterPreview(status: Message, adapterElementId: string) {
-        // Start preview on streams and message for sets
         if (status.success) {
             this.getLiveViewPreview(adapterElementId);
             this.adapterInstalled = true;
@@ -142,6 +168,7 @@ export class AdapterStartedDialog implements OnInit {
             this.restService
                 .getSourceDetails(adapter.correspondingDataStreamElementId)
                 .subscribe(st => {
+                    this.showPreview = true;
                     this.streamDescription = st;
                     this.pollingActive = true;
                 });

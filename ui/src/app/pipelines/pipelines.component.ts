@@ -119,7 +119,6 @@ export class PipelinesComponent implements OnInit {
     getFunctions() {
         this.functionsService.getActiveFunctions().subscribe(functions => {
             this.functions = functions.map(f => f.functionId);
-            console.log(this.functions);
             this.functionsReady = true;
         });
     }

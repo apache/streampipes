@@ -52,6 +52,7 @@
             optionDescription="Start adapter now"
             optionIcon="play_arrow"
             dataCy="start-adapter-now-checkbox"
+            *ngIf="!isEditMode"
             [isChecked]="startAdapterNow"
             (optionSelectedEmitter)="startAdapterNow = $event"
         >
@@ -119,6 +120,7 @@
             optionDescription="Store all events of this source in the internal data store"
             optionIcon="save"
             dataCy="sp-store-in-datalake"
+            *ngIf="!isEditMode"
             (optionSelectedEmitter)="handlePersistOption($event)"
         >
             <mat-form-field *ngIf="saveInDataLake" color="accent">
@@ -178,7 +180,7 @@
             mat-button
             style="margin-left: 10px"
         >
-            Edit Adapter
+            Update Adapter
         </button>
     </div>
 </div>
