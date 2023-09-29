@@ -14,9 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# Send a POST request and save the response as JSON
-
 if [ -z "$SP_INITIAL_ADMIN_EMAIL" ]; then
   USERNAME="admin@streampipes.apache.org"
 else
@@ -29,8 +26,6 @@ else
   PASSWORD="$SP_INITIAL_ADMIN_PASSWORD"
 fi
 
-
-# Login and obtain token
 JSON_TOKEN_RESPONSE=$(curl -s -X POST "http://backend:8030/streampipes-backend/api/v2/auth/login" \
     -H "Content-Type: application/json" \
     -d "{\"username\":\"$USERNAME\",\"password\":\"$PASSWORD\"}")
@@ -38,19 +33,15 @@ JSON_TOKEN_RESPONSE=$(curl -s -X POST "http://backend:8030/streampipes-backend/a
 TOKEN=$(echo "$JSON_TOKEN_RESPONSE" | jq -r '.accessToken')
 RESPONSE_TOKEN="Bearer $TOKEN"
 
-# Initial request
 JSON_RESOURCE_ITEMS=$(curl -s -X GET "http://backend:8030/streampipes-backend/api/v2/rdfendpoints/items" \
     -H "Content-Type: application/json" \
     -H "Authorization: $RESPONSE_TOKEN")
 
-# Get the length of the JSON array
 ARRAY_LENGTH=$(echo $JSON_RESOURCE_ITEMS | jq '. | length')
 
-# Check the length of JSON_RESOURCE_ITEMS
 while [ $ARRAY_LENGTH -le 100 ]; do
     echo "StreamPipes Extensions Service not ready, waiting for 3 seconds..."
     sleep 3
-    # Resend the request
     JSON_RESOURCE_ITEMS=$(curl -s -X GET "http://backend:8030/streampipes-backend/api/v2/rdfendpoints/items" \
         -H "Content-Type: application/json" \
         -H "Authorization: $RESPONSE_TOKEN")
@@ -68,7 +59,6 @@ for ZIP_FILE in /zip_folder/*.zip; do
 
   PIPELINE_IDS=($(echo "$JSON_RESPONSE" | jq -r '.pipelines[].resourceId'))
 
-  # For example, to print all pipeline IDs:
   for id in "${PIPELINE_IDS[@]}"; do
 
     ITEMS_PIPELINES=$(curl -s -X GET "http://backend:8030/streampipes-backend/api/v2/pipelines/$id" \
@@ -93,7 +83,6 @@ for ZIP_FILE in /zip_folder/*.zip; do
 
   JSON_PAYLOAD="$JSON_RESPONSE"
 
-  # POST upload request using curl
   curl -i -X POST "http://backend:8030/streampipes-backend/api/v2/import" \
       -H "Authorization: $RESPONSE_TOKEN" \
       -F "file_upload=@$ZIP_FILE" \
