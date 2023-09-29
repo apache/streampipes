@@ -45,6 +45,8 @@ spec:
           image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
+            - name: SP_SETUP_PROMETHEUS_ENDPOINT
+              value: "{{ .Values.monitoringSystem }}"
             - name: SP_PRIORITIZED_PROTOCOL
             {{- if eq .Values.preferredBroker "pulsar" }}
               value: "pulsar"

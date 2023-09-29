@@ -13,66 +13,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if eq .Values.monitoringSystem true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.extensions.iiot.appName }}
+  name: {{ .Values.monitoring.grafana.appName }}
+  labels:
+    app: {{ .Values.monitoring.grafana.appName }}
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.extensions.iiot.appName }}
-  replicas: 1
+      app: {{ .Values.monitoring.grafana.appName }}
   template:
     metadata:
       labels:
-        app: {{ .Values.extensions.iiot.appName }}
+        app: {{ .Values.monitoring.grafana.appName }}
     spec:
+      volumes:
+        - name: {{ .Values.monitoring.grafana.persistence.pvName }}
+          persistentVolumeClaim:
+            claimName:  {{ .Values.monitoring.grafana.persistence.claimName }}
       restartPolicy: {{ .Values.restartPolicy }}
       initContainers:
-        - name: init-wait-{{.Values.streampipes.core.service.name}}
+        - name: init-wait-consul-couchdb-core
           image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{.Values.streampipes.core.service.name}} {{ .Values.streampipes.core.service.port }} && exit 0 || sleep 3; done; exit 1"]
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.streampipes.core.service.name }} {{ .Values.streampipes.core.service.port }} && nc -zvw1 {{ .Values.extensions.iiot.service.name }} {{ .Values.extensions.iiot.service.port }} && exit 0 || sleep 3; done; exit 1"]
       containers:
-        - name: extensions-all-iiot
-          image: {{ .Values.streampipes.registry }}/extensions-all-iiot:{{ .Values.streampipes.version }}
+        - name: {{ .Values.monitoring.grafana.appName }}
+          image: grafana/grafana:{{ .Values.monitoring.grafana.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.extensions.iiot.port }}
-          env:
-            - name: SP_SETUP_PROMETHEUS_ENDPOINT
-              value: "{{ .Values.monitoringSystem }}"
-            - name: SP_CLIENT_USER
-              value: "{{ .Values.streampipes.auth.users.service.user }}"
-            - name: SP_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.streampipes.auth.secretName }}"
-                  key: sp-initial-client-secret
-            - name: SP_COUCHDB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.streampipes.auth.secretName }}
-                  key: sp-couchdb-password
-            - name: SP_TS_STORAGE_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.streampipes.auth.secretName }}"
-                  key: sp-ts-storage-token
+            - containerPort: {{ .Values.monitoring.grafana.port }}
+          volumeMounts:
+            - name: {{ .Values.monitoring.grafana.persistence.pvName }}
+              mountPath: /var/lib/grafana
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.extensions.iiot.port }}
+              port: {{ .Values.monitoring.grafana.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.extensions.iiot.port }}
+              port: {{ .Values.monitoring.grafana.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
           startupProbe:
             tcpSocket:
-              port: {{ .Values.extensions.iiot.port }}
+              port: {{ .Values.monitoring.grafana.port }}
             initialDelaySeconds: {{ .Values.initialDelaySeconds }}
             periodSeconds: {{ .Values.periodSeconds }}
             failureThreshold: {{ .Values.failureThreshold }}
+{{- end }}

@@ -89,6 +89,7 @@ rm -rf ${HOME}/streampipes-k8s
 |--------------------------------------------------|---------------------------------------------------------|-----------------------------------------|
 | deployment                                       | Deployment type (lite or full)                          | lite                                    |
 | preferredBroker                                  | Preferred broker for deployment                         | "nats"                                  |
+| monitoringSystem                                 | Enable monitoring system (true/false)                   | false                                   |
 | pullPolicy                                       | Image pull policy                                       | "Always"                                |
 | restartPolicy                                    | Restart policy for the container                        | Always                                  |
 | persistentVolumeReclaimPolicy                    | Reclaim policy for persistent volumes                   | "Delete"                                |
@@ -168,7 +169,7 @@ rm -rf ${HOME}/streampipes-k8s
 | external.couchdb.appName                        | CouchDB application name                                 | "couchdb"                                |
 | external.couchdb.version                        | CouchDB version                                          | 3.3.1                                    |
 | external.couchdb.user                           | CouchDB admin username                                   | "admin"                                  |
-| external.couchdb.password                       | CouchDB admin password                                   | empty (auto-generated)                   |
+| external.couchdb.password                       | CouchDB admin password                                   | "admin"                                  |
 | external.couchdb.port                           | Port for the CouchDB service                             | 5984                                     |
 | external.couchdb.service.name                   | Name of the CouchDB service                              | "couchdb"                                |
 | external.couchdb.service.port                   | TargetPort of the CouchDB service                        | 5984                                     |
@@ -256,6 +257,41 @@ rm -rf ${HOME}/streampipes-k8s
 | external.pulsar.persistence.storageSize         | Size of the pulsar PV                                    | "1Gi"                                    |
 | external.pulsar.persistence.claimName           | Name of the pulsar PersistentVolumeClaim                 | "pulsar-pvc"                             |
 | external.pulsar.persistence.pvName              | Name of the pulsar PersistentVolume                      | "pulsar-pv"                              |
+
+###Monitoring common parameters
+
+#### Monitoring - Prometheus
+| Parameter Name                                  | Description                                              | Value                                    |
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
+| prometheus.appName                              | Prometheus application name                              | "prometheus"                             |
+| prometheus.version                              | Prometheus version                                       | 2.45.0                                   |
+| prometheus.port                                 | Prometheus port                                          | 9090                                     |
+| prometheus.service.name                         | Prometheus service name                                  | "prometheus"                             |
+| prometheus.service.port                         | Prometheus service port                                  | 9090                                     |
+| prometheus.persistence.storageClassName         | Prometheus storage class name                            | "hostpath"                               |
+| prometheus.persistence.storageSize              | Prometheus storage size                                  | "2Gi"                                    |
+| prometheus.persistence.claimName                | Prometheus PVC claim name                                | "prometheus-pvc"                         |
+| prometheus.persistence.pvName                   | Prometheus PV name                                       | "prometheus-pv"                          |
+| prometheus.persistence.tokenStorageSize         | Prometheus token storage size                            | "16Ki"                                   |
+| prometheus.config.scrapeInterval                | Prometheus scrape interval                               | 10s                                      |
+| prometheus.config.evaluationInterval            | Prometheus evaluation interval                           | 15s                                      |
+| prometheus.config.backendJobName                | Prometheus backend job name                              | "backend"                                |
+| prometheus.config.extensionsName                | Prometheus extensions job name                           | "extensions-all-iiot"                    |
+| prometheus.config.tokenFileName                 | Prometheus token file name                               | "token"                                  |
+| prometheus.config.tokenFileDir                  | Prometheus token file directory                          | "/opt/data/"
+
+#### Monitoring - Grafana
+| Parameter Name                                  | Description                                              | Value                                    |
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
+| grafana.appName                                 | Grafana application name                                 | "grafana"                                |
+| grafana.version                                 | Grafana version                                          | 10.1.2                                   |
+| grafana.port                                    | Grafana port                                             | 3000                                     |
+| grafana.service.name                            | Grafana service name                                     | "grafana"                                |
+| grafana.service.port                            | Grafana service port                                     | 3000                                     |
+| grafana.persistence.storageClassName            | Grafana storage class name                               | "hostpath"                               |
+| grafana.persistence.storageSize                 | Grafana storage size                                     | "1Gi"                                    |
+| grafana.persistence.claimName                   | Grafana PVC claim name                                   | "grafana-pvc"                            |
+| grafana.persistence.pvName                      | Grafana PV name                                          | "grafana-pv"                             |
 
 ## Bugs and Feature Requests
 
