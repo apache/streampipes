@@ -47,6 +47,8 @@ public interface SpConfig {
 
   String getString(String key);
 
+  boolean exists(String key);
+
   <T> T getObject(String key, Class<T> clazz, T defaultValue);
 
   ConfigItem getConfigItem(String key);

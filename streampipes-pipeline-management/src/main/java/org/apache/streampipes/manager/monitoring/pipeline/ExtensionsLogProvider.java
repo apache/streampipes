@@ -114,6 +114,10 @@ public enum ExtensionsLogProvider {
     this.allLogInfos.remove(resourceId);
   }
 
+  public Map<String, SpMetricsEntry> getAllMetricsInfos(){
+    return this.allMetricsInfos;
+  }
+
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
     return Stream.concat(
         pipeline.getSepas().stream().map(NamedStreamPipesEntity::getElementId),

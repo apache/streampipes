@@ -16,10 +16,24 @@
  *
  */
 
-.error-panel {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid var(--color-warn);
-    background: var(--color-bg-1);
-    border-radius: 5px;
+import { Component, Input } from '@angular/core';
+import { DialogRef } from '@streampipes/shared-ui';
+import { SpServiceRegistration } from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-extensions-service-details-dialog',
+    templateUrl: './extensions-service-details-dialog.component.html',
+    styleUrls: ['./extensions-service-details-dialog.component.scss'],
+})
+export class SpExtensionsServiceDetailsDialogComponent {
+    @Input()
+    serviceReg: SpServiceRegistration;
+
+    constructor(
+        private dialogRef: DialogRef<SpExtensionsServiceDetailsDialogComponent>,
+    ) {}
+
+    close() {
+        this.dialogRef.close();
+    }
 }

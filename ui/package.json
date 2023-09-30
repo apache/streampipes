@@ -87,7 +87,7 @@
     "showdown": "1.9.1",
     "stream-browserify": "3.0.0",
     "swagger-ui": "4.18.0",
-    "tslib": "^2.5.0",
+    "tslib": "^2.6.2",
     "zone.js": "~0.12.0"
   },
   "devDependencies": {
@@ -131,7 +131,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.3",
     "karma-firefox-launcher": "^2.1.2",
     "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "^2.0.0",
+    "karma-jasmine-html-reporter": "^2.1.0",
     "karma-verbose-reporter": "0.0.8",
     "lint-staged": "^14.0.0",
     "mustache": "^4.2.0",

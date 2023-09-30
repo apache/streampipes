@@ -21,7 +21,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.SpringApplication;
 
 import java.net.UnknownHostException;
-import java.util.Collections;
+import java.util.Properties;
 
 public abstract class StreamPipesServiceBase {
 
@@ -35,7 +35,12 @@ public abstract class StreamPipesServiceBase {
   private void runApplication(Class<?> serviceClass,
                               Integer port) {
     SpringApplication app = new SpringApplication(serviceClass);
-    app.setDefaultProperties(Collections.singletonMap("server.port", port));
+
+    Properties config = new Properties();
+    ServiceBaseConfig.addPrometheusConfig(config);
+    ServiceBaseConfig.addPortConfig(port, config);
+
+    app.setDefaultProperties(config);
     app.run();
   }
 

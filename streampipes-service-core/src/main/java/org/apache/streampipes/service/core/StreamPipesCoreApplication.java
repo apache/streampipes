@@ -64,7 +64,8 @@ import java.util.concurrent.TimeUnit;
     WelcomePageController.class,
     StreamPipesPasswordEncoder.class,
     WebSecurityConfig.class,
-    SpPermissionEvaluator.class
+    SpPermissionEvaluator.class,
+    StreamPipesPrometheusConfig.class
 })
 @ComponentScan({"org.apache.streampipes.rest.*"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {

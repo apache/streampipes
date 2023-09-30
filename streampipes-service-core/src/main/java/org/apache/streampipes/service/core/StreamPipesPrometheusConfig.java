@@ -16,10 +16,21 @@
  *
  */
 
-.error-panel {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid var(--color-warn);
-    background: var(--color-bg-1);
-    border-radius: 5px;
+package org.apache.streampipes.service.core;
+
+
+import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
+
+import io.prometheus.client.CollectorRegistry;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class StreamPipesPrometheusConfig {
+
+  @Bean
+  public CollectorRegistry collectorRegistry() {
+    return StreamPipesCollectorRegistry.getCollectorRegistry();
+  }
+
 }
