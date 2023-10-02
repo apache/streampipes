@@ -55,7 +55,7 @@ helm install streampipes ./
 # full template only recommend if you have sufficient resources
 # helm install streampipes ./ --set deployment=full
 ```
-After a while, all containers should successfully started, indicated by the `Running` status. 
+After a while, all containers should successfully started, indicated by the `Running` status.
 ```bash
 kubectl get pods
 NAME                                           READY   STATUS    RESTARTS   AGE
@@ -222,13 +222,15 @@ rm -rf ${HOME}/streampipes-k8s
 | external.kafka.appName                          | Kafka application name                                   | "kafka"                                  |
 | external.kafka.version                          | Kafka version                                            | 2.2.0                                    |
 | external.kafka.port                             | Port for the Kafka service                               | 9092                                     |
+| external.kafka.external.hostname                | Name which will be advertised to external clients. Clients which use (default) port 9094       | "localhost"
 | external.kafka.service.name                     | Name of the Kafka service                                | "kafka"                                  |
 | external.kafka.service.port                     | TargetPort of the Kafka service                          | 9092                                     |
+| external.kafka.service.portOutside              | Port for Kafka client outside of the cluster | 9094                              |
 | external.kafka.persistence.storageClassName     | Storage class name for Kafka PVs                         | "hostpath"                               |
 | external.kafka.persistence.storageSize          | Size of the Kafka PV                                     | "1Gi"                                    |
 | external.kafka.persistence.claimName            | Name of the Kafka PersistentVolumeClaim                  | "kafka-pvc"                              |
 | external.kafka.persistence.pvName               | Name of the Kafka PersistentVolume                       | "kafka-pv"                               |
-
+|
 
 ####Zookeeper common parameters
 | Parameter Name                                  | Description                                              | Value                                    |

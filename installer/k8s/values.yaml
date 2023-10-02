@@ -153,9 +153,12 @@ external:
     appName: "kafka"
     version: 2.2.0
     port: 9092
+    external:
+      hostname: "localhost" #  Replace localhost with your external address if Kafka should be reachable from external systems.
     service:
       name: "kafka"
       port: 9092
+      portOutside: 9094
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
