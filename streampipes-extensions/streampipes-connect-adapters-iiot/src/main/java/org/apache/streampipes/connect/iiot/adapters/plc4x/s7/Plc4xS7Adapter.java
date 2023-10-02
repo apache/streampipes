@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.config.ConfigurationParser;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
@@ -47,7 +48,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
@@ -85,17 +85,28 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
   private static final String PLC_NODE_TYPE = "plc_node_type";
 
-  private static final String NODE_INPUT_CODE_BLOCK_ALTIVE = "node_input_code_block_altive";
-  private static final String CODE_BLOCK = "code_block";
-  private static final String NODE_INPUT_ALTERNATIVES = "node_input_alternatives";
-  private static final String NODE_INPUT_COLLECTION_ALTERNATIVE = "node_input_collection_alternative";
+  private static final String PLC_NODE_INPUT_CODE_BLOCK_ALTIVE = "plc_node_input_code_block_altive";
+  private static final String PLC_CODE_BLOCK = "plc_code_block";
+  private static final String PLC_NODE_INPUT_ALTERNATIVES = "plc_node_input_alternatives";
+  private static final String PLC_NODE_INPUT_COLLECTION_ALTERNATIVE = "plc_node_input_collection_alternative";
+
+  private static final String CODE_TEMPLATE = """
+      // This code block can be used to manually specify the addresses of the PLC registers.
+      // The syntax is based on the PLC4X syntax, see [1].
+      // Address Pattern:
+      // propertyName=%{Memory-Area}{start-address}:{Data-Type}[{array-size}]
+
+      temperature=%I0.0:INT
+
+      // [1] https://plc4x.apache.org/users/protocols/s7.html
+      """;
 
   /**
    * Values of user configuration parameters
    */
   private String ip;
   private int pollingInterval;
-  private List<Map<String, String>> nodes;
+  private Map<String, String> nodes;
 
   private PlcDriverManager driverManager;
 
@@ -108,10 +119,8 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
 
   /**
    * This method is executed when the adapter is started. A connection to the PLC is initialized
-   *
-   * @throws AdapterException
    */
-  private void before(IStaticPropertyExtractor extractor) throws AdapterException {
+  private void before(IStaticPropertyExtractor extractor) {
     // Extract user input
     getConfigurations(extractor);
 
@@ -141,17 +150,18 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
     }
   }
 
-  private PlcReadRequest makeReadRequest(PlcConnection plcConnection) throws PlcConnectionException {
+  private PlcReadRequest makeReadRequest(PlcConnection plcConnection) {
     PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
-    for (Map<String, String> node : this.nodes) {
-      builder.addItem(node.get(PLC_NODE_NAME),
-          node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
+
+    for (Map.Entry<String, String> entry : this.nodes.entrySet()) {
+      builder.addItem(entry.getKey(), entry.getValue());
     }
+
     return builder.build();
   }
 
   private void readPlcData(
-      PlcConnection plcConnection, PlcReadResponseHandler handler) throws PlcConnectionException {
+      PlcConnection plcConnection, PlcReadResponseHandler handler) {
     var readRequest = makeReadRequest(plcConnection);
     // Execute the request
     CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
@@ -182,43 +192,28 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
    *
    * @param extractor StaticPropertyExtractor
    */
-  private void getConfigurations(IStaticPropertyExtractor extractor) throws AdapterException {
+  private void getConfigurations(IStaticPropertyExtractor extractor) {
 
     this.ip = extractor.singleValueParameter(PLC_IP, String.class);
     this.pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
 
-    this.nodes = new ArrayList<>();
-    CollectionStaticProperty sp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
+    this.nodes = new HashMap<>();
 
-    for (StaticProperty member : sp.getMembers()) {
-      StaticPropertyExtractor memberExtractor =
-          StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
-      Map<String, String> map = new HashMap<>();
-      map.put(PLC_NODE_RUNTIME_NAME, memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME));
-      map.put(PLC_NODE_NAME, memberExtractor.textParameter(PLC_NODE_NAME));
-      map.put(PLC_NODE_TYPE, memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class));
-      this.nodes.add(map);
+    var selectedAlternative = extractor.selectedAlternativeInternalId(PLC_NODE_INPUT_ALTERNATIVES);
+
+    if (selectedAlternative.equals(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE)) {
+      // Alternative Simple
+      var csp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
+      this.nodes = getNodeInformationFromCollectionStaticProperty(csp);
+
+    } else {
+      // Alternative Advanced
+      var codePropertyInput = extractor.codeblockValue(PLC_CODE_BLOCK);
+      this.nodes = new ConfigurationParser().getNodeInformationFromCodeProperty(codePropertyInput);
     }
   }
 
-  /**
-   * Transforms PLC4X data types to datatypes supported in StreamPipes
-   *
-   * @param plcType String
-   * @return Datatypes
-   */
-  private Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
 
-    String type = plcType.substring(plcType.lastIndexOf(":") + 1);
-
-    return switch (type) {
-      case "BOOL" -> Datatypes.Boolean;
-      case "BYTE", "REAL" -> Datatypes.Float;
-      case "INT" -> Datatypes.Integer;
-      case "WORD", "TIME_OF_DAY", "DATE", "DATE_AND_TIME", "STRING", "CHAR" -> Datatypes.String;
-      default -> throw new AdapterException("Datatype " + plcType + " is not supported");
-    };
-  }
 
   @Override
   public void onReadResult(PlcReadResponse response, Throwable throwable) {
@@ -233,13 +228,14 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   }
 
   private Map<String, Object> makeEvent(PlcReadResponse response) {
-    Map<String, Object> event = new HashMap<>();
-    for (Map<String, String> node : this.nodes) {
-      if (response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
-        event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
+    var event = new HashMap<String, Object>();
+
+    for (String key : this.nodes.keySet()) {
+      if (response.getResponseCode(key) == PlcResponseCode.OK) {
+        event.put(key, response.getObject(key));
       } else {
-        LOG.error("Error[" + node.get(PLC_NODE_NAME) + "]: "
-                  + response.getResponseCode(node.get(PLC_NODE_NAME)).name());
+        LOG.error("Error[" + key + "]: "
+                  + response.getResponseCode(key).name());
       }
     }
     return event;
@@ -260,8 +256,8 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
         .requiredTextParameter(Labels.withId(PLC_IP))
         .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
         .requiredAlternatives(
-            Labels.withId(NODE_INPUT_ALTERNATIVES),
-            Alternatives.from(Labels.withId(NODE_INPUT_COLLECTION_ALTERNATIVE),
+            Labels.withId(PLC_NODE_INPUT_ALTERNATIVES),
+            Alternatives.from(Labels.withId(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE),
                 StaticProperties.collection(Labels.withId(PLC_NODES),
                     StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
                     StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
@@ -269,8 +265,8 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
                         Options.from("Bool", "Byte", "Int", "Word", "Real", "Char", "String", "Date", "Time of day",
                             "Date and Time"))),
                 true),
-            Alternatives.from(Labels.withId(NODE_INPUT_CODE_BLOCK_ALTIVE),
-                StaticProperties.codeStaticProperty(Labels.withId(CODE_BLOCK), CodeLanguage.None, "")))
+            Alternatives.from(Labels.withId(PLC_NODE_INPUT_CODE_BLOCK_ALTIVE),
+                StaticProperties.codeStaticProperty(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE)))
         .buildConfiguration();
   }
 
@@ -304,15 +300,13 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
       GuessSchemaBuilder builder = GuessSchemaBuilder.create();
       List<EventProperty> allProperties = new ArrayList<>();
 
-      for (Map<String, String> node : this.nodes) {
-        Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE)
-            .toUpperCase()
-            .replaceAll(" ", "_"));
+      for (Map.Entry<String, String> entry : this.nodes.entrySet()) {
+        var datatype = new ConfigurationParser().getStreamPipesDataType(entry.getValue());
 
         allProperties.add(
             PrimitivePropertyBuilder
-                .create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
-                .label(node.get(PLC_NODE_RUNTIME_NAME))
+                .create(datatype, entry.getKey())
+                .label(entry.getKey())
                 .description("")
                 .build());
       }
@@ -328,4 +322,36 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
       throw new AdapterException(e.getMessage(), e);
     }
   }
+
+
+  private Map<String, String> getNodeInformationFromCollectionStaticProperty(CollectionStaticProperty csp) {
+    var result = new HashMap<String, String>();
+
+    for (StaticProperty member : csp.getMembers()) {
+      StaticPropertyExtractor memberExtractor =
+          StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
+
+      result.put(
+          memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME),
+          getNodeAddress(memberExtractor));
+
+    }
+
+    return result;
+  }
+
+  /**
+   * Takes the members of the static property collection from the UI and creates the PLC4X node address
+   *
+   * @param memberExtractor member of the static property node collection
+   * @return string in the format of PLC4X node address
+   */
+  private String getNodeAddress(StaticPropertyExtractor memberExtractor) {
+    return "%s:%s".formatted(
+        memberExtractor.textParameter(PLC_NODE_NAME),
+        memberExtractor.selectedSingleValue(PLC_NODE_TYPE, String.class)
+            .toUpperCase()
+            .replaceAll(" ", "_"));
+  }
+
 }
