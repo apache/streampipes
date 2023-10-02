@@ -13,11 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:17-jre-focal
-
-# needed pkgs processors-image-processing-jvm
-RUN apt-get update && apt-get install ttf-dejavu-core && apt-get install fontconfig
-
-COPY target/streampipes-extensions-all-jvm.jar  /streampipes-extensions-all-jvm.jar
-
-ENTRYPOINT ["java", "-jar", "/streampipes-extensions-all-jvm.jar"]
+{{- if eq .Values.monitoringSystem true }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: token
+spec:
+  storageClassName: {{ .Values.monitoring.prometheus.persistence.storageClassName }}
+  accessModes:
+    - {{ .Values.persistentVolumeAccessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.monitoring.prometheus.persistence.tokenStorageSize }}
+{{- end }}
