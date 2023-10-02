@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk;
 
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
@@ -35,6 +36,7 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.SupportedProperty;
+import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.RequirementsSelector;
@@ -134,7 +136,6 @@ public class StaticProperties {
   }
 
 
-
   public static RuntimeResolvableTreeInputStaticProperty runtimeResolvableTreeInput(Label label,
                                                                                     List<String> dependsOn,
                                                                                     boolean resolveDynamically,
@@ -207,6 +208,16 @@ public class StaticProperties {
       return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
           label.getDescription(), sp[0]);
     }
+  }
+
+  public static CodeInputStaticProperty codeStaticProperty(Label label,
+                                                           CodeLanguage codeLanguage,
+                                                           String defaultSkeleton) {
+    var codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
+        label.getLabel(), label.getDescription());
+    codeInputStaticProperty.setLanguage(codeLanguage.name());
+    codeInputStaticProperty.setCodeTemplate(defaultSkeleton);
+    return codeInputStaticProperty;
   }
 
   private static StaticProperty setHorizontalRendering(StaticProperty sp) {

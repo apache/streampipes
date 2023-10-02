@@ -41,6 +41,8 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -82,6 +84,11 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   private static final String PLC_NODE_NAME = "plc_node_name";
   private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
   private static final String PLC_NODE_TYPE = "plc_node_type";
+
+  private static final String NODE_INPUT_CODE_BLOCK_ALTIVE = "node_input_code_block_altive";
+  private static final String CODE_BLOCK = "code_block";
+  private static final String NODE_INPUT_ALTERNATIVES = "node_input_alternatives";
+  private static final String NODE_INPUT_COLLECTION_ALTERNATIVE = "node_input_collection_alternative";
 
   /**
    * Values of user configuration parameters
@@ -232,7 +239,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
         event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
       } else {
         LOG.error("Error[" + node.get(PLC_NODE_NAME) + "]: "
-            + response.getResponseCode(node.get(PLC_NODE_NAME)).name());
+                  + response.getResponseCode(node.get(PLC_NODE_NAME)).name());
       }
     }
     return event;
@@ -252,12 +259,18 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
         .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(PLC_IP))
         .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
-        .requiredCollection(Labels.withId(PLC_NODES),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
-            StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                Options.from("Bool", "Byte", "Int", "Word", "Real", "Char", "String", "Date", "Time of day",
-                    "Date and Time")))
+        .requiredAlternatives(
+            Labels.withId(NODE_INPUT_ALTERNATIVES),
+            Alternatives.from(Labels.withId(NODE_INPUT_COLLECTION_ALTERNATIVE),
+                StaticProperties.collection(Labels.withId(PLC_NODES),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
+                    StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
+                        Options.from("Bool", "Byte", "Int", "Word", "Real", "Char", "String", "Date", "Time of day",
+                            "Date and Time"))),
+                true),
+            Alternatives.from(Labels.withId(NODE_INPUT_CODE_BLOCK_ALTIVE),
+                StaticProperties.codeStaticProperty(Labels.withId(CODE_BLOCK), CodeLanguage.None, "")))
         .buildConfiguration();
   }
 
