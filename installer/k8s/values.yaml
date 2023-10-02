@@ -105,7 +105,7 @@ external:
     appName: "couchdb"
     version: 3.3.1
     user: "admin"
-    password: "admin"
+    password:
     port: 5984
     service:
       name: "couchdb"

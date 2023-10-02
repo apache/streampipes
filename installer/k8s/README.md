@@ -169,7 +169,7 @@ rm -rf ${HOME}/streampipes-k8s
 | external.couchdb.appName                        | CouchDB application name                                 | "couchdb"                                |
 | external.couchdb.version                        | CouchDB version                                          | 3.3.1                                    |
 | external.couchdb.user                           | CouchDB admin username                                   | "admin"                                  |
-| external.couchdb.password                       | CouchDB admin password                                   | "admin"                                  |
+| external.couchdb.password                       | CouchDB admin password                                   | empty (auto-generated)                   |
 | external.couchdb.port                           | Port for the CouchDB service                             | 5984                                     |
 | external.couchdb.service.name                   | Name of the CouchDB service                              | "couchdb"                                |
 | external.couchdb.service.port                   | TargetPort of the CouchDB service                        | 5984                                     |
