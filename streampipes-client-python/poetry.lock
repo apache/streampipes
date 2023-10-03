@@ -2209,13 +2209,13 @@ files = [
 
 [[package]]
 name = "pyupgrade"
-version = "3.13.0"
+version = "3.14.0"
 description = "A tool to automatically upgrade syntax for newer versions."
 optional = false
 python-versions = ">=3.8.1"
 files = [
-    {file = "pyupgrade-3.13.0-py2.py3-none-any.whl", hash = "sha256:8add43ca1fea6eaeb6815b0b987d1f6ff49ec48085169b2a32e9a797e2d2f8fd"},
-    {file = "pyupgrade-3.13.0.tar.gz", hash = "sha256:92220ef0408ff5898bce8ce7845c33bf7bb79c8ff852c5a1dc4305e6333cd60b"},
+    {file = "pyupgrade-3.14.0-py2.py3-none-any.whl", hash = "sha256:221923c5cd6171e4adb78bfd331ce95500112294c36fb61a0947c55c78cb1924"},
+    {file = "pyupgrade-3.14.0.tar.gz", hash = "sha256:e5caa64798256e341afcee6fe42be8d75e4f88f20809b25dc6174548dbc3bace"},
 ]
 
 [package.dependencies]
@@ -3287,4 +3287,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">3.8.1,<3.12"
-content-hash = "4ca138da812dd5c8d94258a78224aa91007c5fbe18572a4a44b2f230a4f81e27"
+content-hash = "70d0a9462e6afd56d55306a121866ce8dfbd7ee629e71cd9c6ba8f8edc040c7b"
