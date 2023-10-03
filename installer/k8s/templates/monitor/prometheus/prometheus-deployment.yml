@@ -51,7 +51,7 @@ spec:
           imagePullPolicy: "IfNotPresent"
           env:
             - name: SP_HOST
-              value: "backend"
+              value: "{{ .Values.streampipes.core.service.name }}"
             - name: SP_PORT
               value: "{{ .Values.streampipes.core.service.port }}"
             - name: SP_USERNAME
@@ -60,13 +60,13 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.streampipes.auth.secretName}}
-                  key: sp-encryption-passcode
+                  key: sp-initial-admin-password
             - name: PROMETHEUS_HOST
               value: "{{ .Values.monitoring.prometheus.service.name }}"
             - name: PROMETHEUS_PORT
               value: "{{ .Values.monitoring.prometheus.service.port }}"
             - name: TOKEN_FILE
-              value: "{{ .Values.monitoring.prometheus.config.tokenFileDir }}{{ .Values.monitoring.prometheus.config.tokenFileName }}"
+              value: "{{ .Values.monitoring.prometheus.config.tokenFileDir }}/{{ .Values.monitoring.prometheus.config.tokenFileName }}"
           volumeMounts:
             - name: shared-token
               mountPath: {{ .Values.monitoring.prometheus.config.tokenFileDir }}
