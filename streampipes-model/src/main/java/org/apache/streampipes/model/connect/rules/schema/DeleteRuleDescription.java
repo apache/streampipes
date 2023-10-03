@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+
 public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
 
   private String runtimeKey;
@@ -43,5 +45,15 @@ public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
 
   public void setRuntimeKey(String runtimeKey) {
     this.runtimeKey = runtimeKey;
+  }
+
+  @Override
+  public void accept(ITransformationRuleVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  @Override
+  public int getRulePriority() {
+    return 240;
   }
 }

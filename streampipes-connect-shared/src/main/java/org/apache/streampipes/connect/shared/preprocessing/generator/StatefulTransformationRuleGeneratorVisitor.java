@@ -16,8 +16,10 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules;
+package org.apache.streampipes.connect.shared.preprocessing.generator;
 
+import org.apache.streampipes.connect.shared.preprocessing.transform.stream.DuplicateFilterPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.transform.stream.EventRateTransformationRule;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
@@ -30,35 +32,68 @@ import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransforma
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+public class StatefulTransformationRuleGeneratorVisitor extends TransformationRuleGeneratorVisitor {
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
-@TsModel
-@JsonSubTypes({
-    @JsonSubTypes.Type(AddTimestampRuleDescription.class),
-    @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
-    @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
-    @JsonSubTypes.Type(UnitTransformRuleDescription.class),
-    @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
-    @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
-    @JsonSubTypes.Type(CreateNestedRuleDescription.class),
-    @JsonSubTypes.Type(DeleteRuleDescription.class),
-    @JsonSubTypes.Type(RenameRuleDescription.class),
-    @JsonSubTypes.Type(MoveRuleDescription.class),
-    @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
-    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
-})
-public abstract class TransformationRuleDescription {
+  @Override
+  public void visit(CreateNestedRuleDescription rule) {
 
-
-  public TransformationRuleDescription() {
-    super();
   }
 
-  public abstract void accept(ITransformationRuleVisitor visitor);
+  @Override
+  public void visit(DeleteRuleDescription rule) {
 
-  public abstract int getRulePriority();
+  }
+
+  @Override
+  public void visit(MoveRuleDescription rule) {
+
+  }
+
+  @Override
+  public void visit(RenameRuleDescription rule) {
+
+  }
+
+  @Override
+  public void visit(EventRateTransformationRuleDescription ruleDesc) {
+    rules.add(
+        new EventRateTransformationRule(ruleDesc.getAggregationTimeWindow(), ruleDesc.getAggregationType()));
+  }
+
+  @Override
+  public void visit(RemoveDuplicatesTransformationRuleDescription ruleDesc) {
+    this.rules.add(
+        new DuplicateFilterPipelineElement(ruleDesc.getFilterTimeWindow()));
+  }
+
+  @Override
+  public void visit(AddTimestampRuleDescription rule) {
+
+  }
+
+  @Override
+  public void visit(AddValueTransformationRuleDescription rule) {
+
+  }
+
+  @Override
+  public void visit(ChangeDatatypeTransformationRuleDescription rule) {
+
+  }
+
+  @Override
+  public void visit(CorrectionValueTransformationRuleDescription rule) {
+
+  }
+
+  @Override
+  public void visit(TimestampTranfsformationRuleDescription rule) {
+
+  }
+
+  @Override
+  public void visit(UnitTransformRuleDescription rule) {
+
+  }
 }

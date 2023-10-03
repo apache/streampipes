@@ -20,5 +20,19 @@ package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 
-public interface ValueTransformationRule extends TransformationRule {
+import java.util.Map;
+
+public class AddTimestampTransformationRule implements TransformationRule {
+
+  private final String runtimeKey;
+
+  public AddTimestampTransformationRule(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
+
+  @Override
+  public Map<String, Object> apply(Map<String, Object> event) {
+    event.put(runtimeKey, System.currentTimeMillis());
+    return event;
+  }
 }

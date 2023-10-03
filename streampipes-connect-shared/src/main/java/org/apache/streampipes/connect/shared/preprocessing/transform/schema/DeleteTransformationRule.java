@@ -18,37 +18,26 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
+import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
+
 import java.util.List;
 import java.util.Map;
 
-public class DeleteTransformationRule implements SchemaTransformationRule {
+public class DeleteTransformationRule extends SupportsNestedTransformationRule {
 
-  private List<String> key;
+  private final List<String> key;
 
   public DeleteTransformationRule(List<String> key) {
     this.key = key;
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> event) {
-    return transform(event, key);
+  protected List<String> getEventKeys() {
+    return key;
   }
 
-  private Map<String, Object> transform(Map<String, Object> event, List<String> keys) {
-    if (keys.size() == 1) {
-      event.remove(keys.get(0));
-      return event;
-    } else {
-      String key = keys.get(0);
-      List<String> newKeysTmpList = keys.subList(1, keys.size());
-
-      Map<String, Object> newSubEvent =
-          transform((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
-
-      event.remove(key);
-      event.put(key, newSubEvent);
-      return event;
-    }
-
+  @Override
+  protected void applyTransformation(Map<String, Object> event, List<String> eventKeys) {
+    event.remove(eventKeys.get(0));
   }
 }

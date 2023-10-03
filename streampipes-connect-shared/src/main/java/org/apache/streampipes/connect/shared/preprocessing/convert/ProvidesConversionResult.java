@@ -16,24 +16,14 @@
  *
  */
 
-package org.apache.streampipes.connect.shared.preprocessing.elements;
+package org.apache.streampipes.connect.shared.preprocessing.convert;
 
-import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.schema.EventProperty;
 
-import java.util.Map;
+import java.util.List;
 
-public class AddTimestampPipelineElement implements IAdapterPipelineElement {
+public interface ProvidesConversionResult extends ITransformationRuleVisitor {
 
-  private String runtimeKey;
-
-  public AddTimestampPipelineElement(String runtimeKey) {
-    this.runtimeKey = runtimeKey;
-  }
-
-  @Override
-  public Map<String, Object> process(Map<String, Object> event) {
-    event.put(runtimeKey, System.currentTimeMillis());
-    return event;
-  }
-
+  List<EventProperty> getTransformedProperties();
 }

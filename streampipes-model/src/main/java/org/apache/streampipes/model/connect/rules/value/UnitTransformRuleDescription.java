@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+
 public class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;
@@ -66,5 +68,15 @@ public class UnitTransformRuleDescription extends ValueTransformationRuleDescrip
 
   public void setToUnitRessourceURL(String toUnitRessourceURL) {
     this.toUnitRessourceURL = toUnitRessourceURL;
+  }
+
+  @Override
+  public void accept(ITransformationRuleVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  @Override
+  public int getRulePriority() {
+    return 310;
   }
 }

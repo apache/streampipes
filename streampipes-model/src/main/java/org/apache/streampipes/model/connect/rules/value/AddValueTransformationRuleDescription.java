@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+
 public class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;
@@ -48,5 +50,15 @@ public class AddValueTransformationRuleDescription extends ValueTransformationRu
 
   public void setStaticValue(String staticValue) {
     this.staticValue = staticValue;
+  }
+
+  @Override
+  public void accept(ITransformationRuleVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  @Override
+  public int getRulePriority() {
+    return 110;
   }
 }

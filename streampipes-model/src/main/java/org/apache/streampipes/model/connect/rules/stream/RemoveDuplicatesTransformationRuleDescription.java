@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.connect.rules.stream;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+
 public class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
 
   private String filterTimeWindow;
@@ -37,5 +39,15 @@ public class RemoveDuplicatesTransformationRuleDescription extends StreamTransfo
 
   public void setFilterTimeWindow(String filterTimeWindow) {
     this.filterTimeWindow = filterTimeWindow;
+  }
+
+  @Override
+  public void accept(ITransformationRuleVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  @Override
+  public int getRulePriority() {
+    return 410;
   }
 }

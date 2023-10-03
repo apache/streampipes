@@ -35,7 +35,7 @@ public class SchemaEventTransformerTest {
   @Test
   @SuppressWarnings("unchecked")
   public void transform() {
-    Map<String, Object> event = getFirstEvent();
+    Map<String, Object> result = getFirstEvent();
 
     List<TransformationRule> rules = new ArrayList<>();
     rules.add(new RenameTransformationRule(List.of("a"), "a1"));
@@ -46,10 +46,9 @@ public class SchemaEventTransformerTest {
     rules.add(new MoveTransformationRule(List.of("b1"), List.of("c1", "f")));
     rules.add(new DeleteTransformationRule(List.of("e")));
 
-    SchemaEventTransformer eventTransformer = new SchemaEventTransformer(rules);
-
-    Map<String, Object> result = eventTransformer.transform(event);
-
+    for (var rule : rules) {
+      result = rule.apply(result);
+    }
 
     assertEquals(2, result.keySet().size());
     assertTrue(result.containsKey("a1"));

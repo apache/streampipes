@@ -66,7 +66,6 @@
                         [isNestedProperty]="isEventPropertyNested"
                         [isListProperty]="isEventPropertyList"
                         [isPrimitiveProperty]="isEventPropertyPrimitive"
-                        *ngIf="!isEventPropertyNested"
                         (dataTypeChanged)="handleDataTypeChange($event)"
                         (timestampSemanticsChanged)="
                             handleTimestampChange($event)

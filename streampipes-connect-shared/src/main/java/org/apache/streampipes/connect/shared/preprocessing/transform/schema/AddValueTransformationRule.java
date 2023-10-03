@@ -20,5 +20,22 @@ package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
 import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 
-public interface SchemaTransformationRule extends TransformationRule {
+import java.util.Map;
+
+public class AddValueTransformationRule implements TransformationRule {
+
+  private final String runtimeKey;
+  private final String value;
+
+  public AddValueTransformationRule(String runtimeKey, String value) {
+    this.runtimeKey = runtimeKey;
+    this.value = value;
+  }
+
+  @Override
+  public Map<String, Object> apply(Map<String, Object> event) {
+    event.put(runtimeKey, value);
+    return event;
+  }
+
 }

@@ -18,25 +18,32 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.elements;
 
+import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
+import org.apache.streampipes.connect.shared.preprocessing.generator.TransformationRuleGeneratorVisitor;
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
+import java.util.List;
 import java.util.Map;
 
-public class AddValuePipelineElement implements IAdapterPipelineElement {
+public class AdapterTransformationPipelineElement implements IAdapterPipelineElement {
 
-  private String runtimeKey;
-  private String value;
+  private final List<TransformationRule> transformationRules;
 
+  public AdapterTransformationPipelineElement(List<TransformationRuleDescription> transformationRules,
+                                              TransformationRuleGeneratorVisitor visitor) {
+    var descriptions = Utils.sortByPriority(transformationRules);
 
-  public AddValuePipelineElement(String runtimeKey, String value) {
-    this.runtimeKey = runtimeKey;
-    this.value = value;
+    descriptions.forEach(d -> d.accept(visitor));
+    this.transformationRules = visitor.getTransformationRules();
   }
 
   @Override
   public Map<String, Object> process(Map<String, Object> event) {
-    event.put(runtimeKey, value);
+    for (TransformationRule rule : transformationRules) {
+      event = rule.apply(event);
+    }
     return event;
   }
-
 }
