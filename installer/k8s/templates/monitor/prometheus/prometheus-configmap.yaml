@@ -37,7 +37,7 @@ data:
 
       - job_name: "{{ .Values.monitoring.prometheus.config.backendJobName }}"
         metrics_path: "/streampipes-backend/actuator/prometheus"
-        bearer_token_file: "{{ .Values.monitoring.prometheus.config.tokenFileDir }}{{ .Values.monitoring.prometheus.config.tokenFileName }}{{ .Values.monitoring.prometheus.config.tokenFileName }}"
+        bearer_token_file: "{{ .Values.monitoring.prometheus.config.tokenFileDir }}/{{ .Values.monitoring.prometheus.config.tokenFileName }}"
         static_configs:
           - targets: [ "{{ .Values.streampipes.core.service.name }}:{{ .Values.streampipes.core.service.port }}" ]
 

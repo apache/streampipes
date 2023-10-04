@@ -212,7 +212,7 @@ monitoring:
       backendJobName: backend
       extensionsName: extensions-all-iiot
       tokenFileName: token
-      tokenFileDir: /opt/data/
+      tokenFileDir: /opt/data
 
   # monitoring - grafana
   grafana:

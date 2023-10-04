@@ -280,7 +280,7 @@ rm -rf ${HOME}/streampipes-k8s
 | prometheus.config.backendJobName                | Prometheus backend job name                              | "backend"                                |
 | prometheus.config.extensionsName                | Prometheus extensions job name                           | "extensions-all-iiot"                    |
 | prometheus.config.tokenFileName                 | Prometheus token file name                               | "token"                                  |
-| prometheus.config.tokenFileDir                  | Prometheus token file directory                          | "/opt/data/"
+| prometheus.config.tokenFileDir                  | Prometheus token file directory                          | "/opt/data"
 
 #### Monitoring - Grafana
 | Parameter Name                                  | Description                                              | Value                                    |
