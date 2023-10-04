@@ -33,6 +33,7 @@ public class ConfigurationParser {
   /**
    * This method takes a string with the PLC configuration and parses the configuration accorting to this pattern:
    * variableName=value
+   *
    * @param codePropertyValue code block with the PLC configuration
    * @return returns a list of Maps, with the variable name as the Key and value as value
    */
@@ -74,6 +75,9 @@ public class ConfigurationParser {
 
     String type = plcType.substring(plcType.lastIndexOf(":") + 1);
 
+    // replace array information from type
+    type = type.replaceAll("\\[.*?\\]", "");
+
     return switch (type) {
       case "BOOL" -> Datatypes.Boolean;
       case "BYTE", "REAL" -> Datatypes.Float;
@@ -81,6 +85,16 @@ public class ConfigurationParser {
       case "WORD", "TIME_OF_DAY", "DATE", "DATE_AND_TIME", "STRING", "CHAR" -> Datatypes.String;
       default -> throw new AdapterException("Datatype " + plcType + " is not supported");
     };
+  }
+
+  /**
+   * Takes the PLC4X address description and validates if it describes an array
+   *
+   * @param plcType address of the register that should be read
+   * @return whether the address describes an array or not
+   */
+  public boolean isPLCArray(String plcType) {
+    return plcType.matches(".*\\[.*\\].*");
   }
 
 

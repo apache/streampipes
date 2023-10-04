@@ -34,6 +34,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.util.Polling
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
@@ -55,6 +56,7 @@ import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.apache.plc4x.java.api.types.PlcResponseCode;
+import org.apache.plc4x.java.api.value.PlcValue;
 import org.apache.plc4x.java.utils.connectionpool.PooledPlcDriverManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -214,7 +216,6 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   }
 
 
-
   @Override
   public void onReadResult(PlcReadResponse response, Throwable throwable) {
     if (throwable != null) {
@@ -232,7 +233,19 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
 
     for (String key : this.nodes.keySet()) {
       if (response.getResponseCode(key) == PlcResponseCode.OK) {
-        event.put(key, response.getObject(key));
+
+        // if the response is a list, add each element to the result
+        if (response.getObject(key) instanceof List) {
+          event.put(key,
+              response.getAsPlcValue()
+                  .getValue(key)
+                  .getList().stream()
+                  .map(PlcValue::getObject)
+                  .toList()
+                  .toArray());
+        } else {
+          event.put(key, response.getObject(key));
+        }
       } else {
         LOG.error("Error[" + key + "]: "
                   + response.getResponseCode(key).name());
@@ -303,12 +316,24 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
       for (Map.Entry<String, String> entry : this.nodes.entrySet()) {
         var datatype = new ConfigurationParser().getStreamPipesDataType(entry.getValue());
 
-        allProperties.add(
-            PrimitivePropertyBuilder
-                .create(datatype, entry.getKey())
-                .label(entry.getKey())
-                .description("")
-                .build());
+        var primitiveProperty = PrimitivePropertyBuilder
+            .create(datatype, entry.getKey())
+            .label(entry.getKey())
+            .description("")
+            .build();
+
+        // Check if the address configuration is an array
+        var isArray = new ConfigurationParser().isPLCArray(entry.getValue());
+
+        if (isArray) {
+          var propertyList = new EventPropertyList();
+          propertyList.setRuntimeName(entry.getKey());
+          propertyList.setLabel(entry.getKey());
+          propertyList.setEventProperty(primitiveProperty);
+          allProperties.add(propertyList);
+        } else {
+          allProperties.add(primitiveProperty);
+        }
       }
 
       this.before(extractor.getStaticPropertyExtractor());

@@ -18,11 +18,16 @@
 
 package org.apache.streampipes.connect.iiot.adapters.plc4x.s7.config;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.sdk.utils.Datatypes;
+
 import org.junit.Test;
 
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.wildfly.common.Assert.assertFalse;
+import static org.wildfly.common.Assert.assertTrue;
 
 public class ConfigurationParserTest {
 
@@ -46,6 +51,7 @@ public class ConfigurationParserTest {
     assertEquals(Set.of("temperature"), result.keySet());
     assertEquals("%I0.0:INT", result.get("temperature"));
   }
+
   @Test
   public void testGetNodeInformationFromCodePropertyMultipleEntries() {
     var configBlock = """
@@ -61,6 +67,23 @@ public class ConfigurationParserTest {
   }
 
   @Test
+  public void testGetStreamPipesDataTypeArray() throws AdapterException {
+    var plcType = "INT[100]";
+    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
+
+    assertEquals(Datatypes.Integer, result);
+  }
+
+  @Test
+  public void testGetStreamPipesDataTypeBasic() throws AdapterException {
+    var plcType = "INT";
+    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
+
+    assertEquals(Datatypes.Integer, result);
+  }
+
+
+  @Test
   public void testGetNodeInformationFromCodePropertyNoEntries() {
     var configBlock = "";
     var result = new ConfigurationParser().getNodeInformationFromCodeProperty(configBlock);
@@ -68,4 +91,16 @@ public class ConfigurationParserTest {
     assertEquals(0, result.size());
   }
 
+  @Test
+  public void testIsPLCArray() {
+    var result = new ConfigurationParser().isPLCArray("%DB3.DB0:BOOL[100]");
+    assertTrue(result);
+  }
+
+
+  @Test
+  public void testIsNoPLCArray() {
+    var result = new ConfigurationParser().isPLCArray("%DB3.DB0:BOOL");
+    assertFalse(result);
+  }
 }
