@@ -37,22 +37,22 @@ public class StatefulTransformationRuleGeneratorVisitor extends TransformationRu
 
   @Override
   public void visit(CreateNestedRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(DeleteRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(MoveRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(RenameRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
@@ -69,31 +69,31 @@ public class StatefulTransformationRuleGeneratorVisitor extends TransformationRu
 
   @Override
   public void visit(AddTimestampRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(AddValueTransformationRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(ChangeDatatypeTransformationRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(CorrectionValueTransformationRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(TimestampTranfsformationRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 
   @Override
   public void visit(UnitTransformRuleDescription rule) {
-
+    // skip (not a stateful transformation)
   }
 }
