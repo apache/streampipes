@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 public class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
 
@@ -53,6 +54,6 @@ public class CreateNestedRuleDescription extends SchemaTransformationRuleDescrip
 
   @Override
   public int getRulePriority() {
-    return 230;
+    return TransformationRulePriority.CREATE_NESTED.getCode();
   }
 }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 public class MoveRuleDescription extends SchemaTransformationRuleDescription {
 
@@ -65,7 +66,7 @@ public class MoveRuleDescription extends SchemaTransformationRuleDescription {
 
   @Override
   public int getRulePriority() {
-    return 220;
+    return TransformationRulePriority.MOVE.getCode();
   }
 }
 

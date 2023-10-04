@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.connect.rules.value;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 public class TimestampTranfsformationRuleDescription extends ValueTransformationRuleDescription {
 
@@ -89,6 +90,6 @@ public class TimestampTranfsformationRuleDescription extends ValueTransformation
 
   @Override
   public int getRulePriority() {
-    return 320;
+    return TransformationRulePriority.TIMESTAMP_TRANSFORMATION.getCode();
   }
 }

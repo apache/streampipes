@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.connect.rules.stream;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 public class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
 
@@ -48,6 +49,6 @@ public class RemoveDuplicatesTransformationRuleDescription extends StreamTransfo
 
   @Override
   public int getRulePriority() {
-    return 410;
+    return TransformationRulePriority.REMOVE_DUPLICATES.getCode();
   }
 }

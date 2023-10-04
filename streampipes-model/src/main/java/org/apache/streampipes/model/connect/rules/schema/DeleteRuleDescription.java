@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
 
@@ -54,6 +55,6 @@ public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
 
   @Override
   public int getRulePriority() {
-    return 240;
+    return TransformationRulePriority.DELETE.getCode();
   }
 }

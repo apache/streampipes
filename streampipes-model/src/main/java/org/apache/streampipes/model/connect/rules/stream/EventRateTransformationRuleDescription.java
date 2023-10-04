@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.connect.rules.stream;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 public class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
 
@@ -61,6 +62,6 @@ public class EventRateTransformationRuleDescription extends StreamTransformation
 
   @Override
   public int getRulePriority() {
-    return 420;
+    return TransformationRulePriority.EVENT_RATE.getCode();
   }
 }

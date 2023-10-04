@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
 public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
@@ -65,6 +66,6 @@ public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
   @Override
   public int getRulePriority() {
-    return 210;
+    return TransformationRulePriority.RENAME.getCode();
   }
 }
