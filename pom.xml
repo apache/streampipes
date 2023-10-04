@@ -1054,6 +1054,11 @@
 					<version>${bcpkix.version}</version>
 				</dependency>
 				<dependency>
+				    <groupId>org.checkerframework</groupId>
+				    <artifactId>checker-qual</artifactId>
+				    <version>${checker-qual.version}</version>
+                </dependency>
+				<dependency>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>animal-sniffer-annotations</artifactId>
 					<version>${animal-sniffer-annotations.version}</version>
