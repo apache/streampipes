@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.generator;
 
-import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.connect.shared.preprocessing.transform.schema.AddValueTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.schema.CreateNestedTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.schema.DeleteTransformationRule;
@@ -30,6 +29,7 @@ import org.apache.streampipes.connect.shared.preprocessing.transform.value.Datat
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTranformationRuleMode;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.UnitTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
