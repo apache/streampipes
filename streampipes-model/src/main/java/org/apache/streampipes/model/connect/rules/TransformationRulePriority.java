@@ -16,9 +16,33 @@
  *
  */
 
-package org.apache.streampipes.connect.shared.preprocessing.transform.stream;
+package org.apache.streampipes.model.connect.rules;
 
-import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+public enum TransformationRulePriority {
 
-public interface StreamTransformationRule extends TransformationRule {
+  ADD_TIMESTAMP(100),
+  ADD_VALUE(110),
+
+  RENAME(210),
+  MOVE(220),
+  CREATE_NESTED(230),
+  DELETE(240),
+
+  CHANGE_UNIT(310),
+  TIMESTAMP_TRANSFORMATION(320),
+  CORRECTION_VALUE(330),
+  CHANGE_DATATYPE(340),
+
+  REMOVE_DUPLICATES(410),
+  EVENT_RATE(420);
+
+  private final int code;
+
+  TransformationRulePriority(int code) {
+    this.code = code;
+  }
+
+  public int getCode() {
+    return this.code;
+  }
 }

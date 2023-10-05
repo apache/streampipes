@@ -18,28 +18,24 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MoveTransformationRule implements SchemaTransformationRule {
+public class MoveTransformationRule implements TransformationRule {
 
-  private List<String> oldKey;
-  private List<String> newKey;
+  private final List<String> oldKey;
+  private final List<String> newKey;
 
   public MoveTransformationRule(List<String> oldKey, List<String> newKey) {
     this.oldKey = oldKey;
-
-//        List<String> tmp = new ArrayList<>();
-//        for (int i = 0; i < newKey.size() - 1; i++) {
-//            tmp.add(newKey.get(i));
-//        }
-
     this.newKey = newKey;
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> event) {
+  public Map<String, Object> apply(Map<String, Object> event) {
 
     Map<String, Object> objectToMove = (Map<String, Object>) ((HashMap<String, Object>) getItem(event, oldKey)).clone();
 
@@ -51,7 +47,7 @@ public class MoveTransformationRule implements SchemaTransformationRule {
   }
 
   private Map<String, Object> addItem(Map<String, Object> event, List<String> keys, Map<String, Object> movedObject) {
-    if (keys.size() == 0 || (keys.size() == 1 && keys.get(0).equals(""))) {
+    if (keys.isEmpty() || (keys.size() == 1 && keys.get(0).isEmpty())) {
       String key = (String) movedObject.keySet().toArray()[0];
       event.put(key, movedObject.get(key));
       return event;
