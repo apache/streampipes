@@ -157,7 +157,6 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(
       String username,
       List<ExtensionsServiceEndpointItem> existingItems) {
-    
     return getAllDataStreams()
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
