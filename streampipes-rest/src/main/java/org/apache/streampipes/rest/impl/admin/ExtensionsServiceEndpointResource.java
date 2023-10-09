@@ -154,8 +154,10 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
         .collect(Collectors.toList());
   }
 
-  private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(String username,
-                                                                        List<ExtensionsServiceEndpointItem> existingItems) {
+  private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(
+      String username,
+      List<ExtensionsServiceEndpointItem> existingItems) {
+    
     return getAllDataStreams()
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
@@ -165,8 +167,10 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   }
 
 
-  private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(String username,
-                                                                           List<ExtensionsServiceEndpointItem> existingItems) {
+  private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(
+      String username,
+      List<ExtensionsServiceEndpointItem> existingItems) {
+
     return getAllDataProcessors()
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
@@ -174,8 +178,10 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
         .collect(Collectors.toList());
   }
 
-  private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(String username,
-                                                                      List<ExtensionsServiceEndpointItem> existingItems) {
+  private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(
+      String username,
+      List<ExtensionsServiceEndpointItem> existingItems) {
+
     return getAllDataSinks()
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
