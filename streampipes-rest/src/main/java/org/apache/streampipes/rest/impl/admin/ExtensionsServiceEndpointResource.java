@@ -20,9 +20,13 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -92,10 +96,12 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
     String username = getAuthenticatedUsername();
 
+    var installedExtensions = getAllInstalledExtensions();
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(endpoints);
-    items.forEach(item -> item.setInstalled(isInstalled(item.getElementId())));
+    items.forEach(item -> item.setInstalled(isInstalled(installedExtensions, item.getAppId())));
 
     // also add installed elements that are currently not running or available
+    items.addAll(getAllAdapterEndpoints(items));
     items.addAll(getAllDataStreamEndpoints(username, items));
     items.addAll(getAllDataProcessorEndpoints(username, items));
     items.addAll(getAllDataSinkEndpoints(username, items));
@@ -123,46 +129,56 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     return new EndpointFetcher().getEndpoints();
   }
 
-  private boolean isInstalled(String elementId) {
-    return getAllPipelineElements()
+  private boolean isInstalled(List<NamedStreamPipesEntity> installedElements,
+                              String appId) {
+    return installedElements
         .stream()
-        .anyMatch(e -> e.equals(elementId));
+        .anyMatch(e -> e.getAppId().equals(appId));
   }
 
-  private List<String> getAllPipelineElements() {
-    List<String> elementUris = new ArrayList<>();
-    elementUris.addAll(getAllDataStreamUris());
-    elementUris.addAll(getAllDataProcessorUris());
-    elementUris.addAll(getAllDataSinkUris());
-    return elementUris;
+  private List<NamedStreamPipesEntity> getAllInstalledExtensions() {
+    List<NamedStreamPipesEntity> elements = new ArrayList<>();
+    elements.addAll(getAllAdapters());
+    elements.addAll(getAllDataStreams());
+    elements.addAll(getAllDataProcessors());
+    elements.addAll(getAllDataSinks());
+    return elements;
+  }
+
+  private List<ExtensionsServiceEndpointItem> getAllAdapterEndpoints(
+      List<ExtensionsServiceEndpointItem> existingItems) {
+    return getAllAdapters()
+        .stream()
+        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
+        .map(adapter -> makeItem(adapter, "adapter"))
+        .collect(Collectors.toList());
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(String username,
-                                              List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllDataStreamUris()
+                                                                        List<ExtensionsServiceEndpointItem> existingItems) {
+    return getAllDataStreams()
         .stream()
-        .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
-        .map(s -> getPipelineElementStorage().getDataStreamById(s))
+        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
+        .filter(s -> !s.isInternallyManaged())
         .map(stream -> makeItem(stream, "stream"))
         .collect(Collectors.toList());
   }
 
+
   private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(String username,
-                                              List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllDataProcessorUris()
+                                                                           List<ExtensionsServiceEndpointItem> existingItems) {
+    return getAllDataProcessors()
         .stream()
-        .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
-        .map(s -> getPipelineElementStorage().getDataProcessorById(s))
+        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
         .map(source -> makeItem(source, "sepa"))
         .collect(Collectors.toList());
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(String username,
-                                              List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllDataSinkUris()
+                                                                      List<ExtensionsServiceEndpointItem> existingItems) {
+    return getAllDataSinks()
         .stream()
-        .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
-        .map(s -> getPipelineElementStorage().getDataSinkById(s))
+        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
         .map(source -> makeItem(source, "action"))
         .collect(Collectors.toList());
   }
@@ -183,16 +199,23 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     return endpoint;
   }
 
-  private List<String> getAllDataStreamUris() {
-    return getSpResourceManager().manageDataStreams().findAllIdsOnly();
+  private List<AdapterDescription> getAllAdapters() {
+    return getNoSqlStorage().getAdapterDescriptionStorage().getAllAdapters();
   }
 
-  private List<String> getAllDataProcessorUris() {
-    return getSpResourceManager().manageDataProcessors().findAllIdsOnly();
+  private List<SpDataStream> getAllDataStreams() {
+    return getNoSqlStorage().getDataStreamStorage().getAll()
+        .stream()
+        .filter(stream -> !stream.isInternallyManaged())
+        .toList();
   }
 
-  private List<String> getAllDataSinkUris() {
-    return getSpResourceManager().manageDataSinks().findAllIdsOnly();
+  private List<DataProcessorDescription> getAllDataProcessors() {
+    return getNoSqlStorage().getDataProcessorStorage().getAll();
+  }
+
+  private List<DataSinkDescription> getAllDataSinks() {
+    return getNoSqlStorage().getDataSinkStorage().getAll();
   }
 
   private IExtensionsServiceEndpointStorage getRdfEndpointStorage() {

@@ -22,7 +22,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.List;
 
-public interface IAdapterStorage {
+public interface IAdapterStorage extends CRUDStorage<String, AdapterDescription>{
 
   List<AdapterDescription> getAllAdapters();
 

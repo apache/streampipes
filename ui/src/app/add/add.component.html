@@ -77,7 +77,7 @@
                         (selectionChange)="filterByCatergory($event)"
                     >
                         <mat-option [value]="'all'"> All </mat-option>
-                        <mat-option [value]="'set'"> Sets </mat-option>
+                        <mat-option [value]="'adapter'"> Adapters </mat-option>
                         <mat-option [value]="'stream'"> Streams </mat-option>
                         <mat-option [value]="'sepa'"> Processors </mat-option>
                         <mat-option [value]="'action'"> Sinks </mat-option>
@@ -149,7 +149,7 @@
         >
             <div fxLayoutAlign="start start" fxLayout="column">
                 <sp-basic-header-title-component
-                    title="Available Pipeline Elements"
+                    title="Available Extensions"
                 ></sp-basic-header-title-component>
             </div>
             <div fxLayout="row wrap" class="w-100">
@@ -183,8 +183,7 @@
                 color="accent"
             ></mat-spinner>
             <h4>
-                &nbsp;&nbsp;Searching for available pipeline elements, please
-                wait...
+                &nbsp;&nbsp;Searching for available extensions, please wait...
             </h4>
         </div>
     </div>

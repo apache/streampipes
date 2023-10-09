@@ -25,16 +25,10 @@ import org.apache.streampipes.storage.couchdb.dao.DbCommand;
 import org.apache.streampipes.storage.couchdb.dao.FindCommand;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Optional;
 
 public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> implements IAdapterStorage {
-
-  private static final String SYSTEM_USER = "system";
-  Logger logger = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class);
 
   public AdapterInstanceStorageImpl() {
     super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
@@ -68,5 +62,31 @@ public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> 
     AdapterDescription adapterDescription = getAdapter(adapterId);
     couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
 
+  }
+
+  @Override
+  public List<AdapterDescription> getAll() {
+    return findAll();
+  }
+
+  @Override
+  public void createElement(AdapterDescription adapter) {
+    persist(adapter);
+  }
+
+  @Override
+  public AdapterDescription getElementById(String id) {
+    return findWithNullIfEmpty(id);
+  }
+
+  @Override
+  public AdapterDescription updateElement(AdapterDescription element) {
+    update(element);
+    return getElementById(element.getElementId());
+  }
+
+  @Override
+  public void deleteElement(AdapterDescription element) {
+    delete(element.getElementId());
   }
 }

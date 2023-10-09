@@ -18,8 +18,11 @@
 package org.apache.streampipes.manager.execution.endpoint;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -28,7 +31,15 @@ import java.util.NoSuchElementException;
 public class ExtensionsServiceEndpointUtils {
 
   public static SpServiceUrlProvider getPipelineElementType(NamedStreamPipesEntity entity) {
-    return isDataProcessor(entity) ? SpServiceUrlProvider.DATA_PROCESSOR : SpServiceUrlProvider.DATA_SINK;
+    if (isDataProcessor(entity)) {
+      return SpServiceUrlProvider.DATA_PROCESSOR;
+    } else if (isDataSink(entity)) {
+      return SpServiceUrlProvider.DATA_SINK;
+    } else if (isAdapter(entity)) {
+      return SpServiceUrlProvider.ADAPTER;
+    } else {
+      throw new RuntimeException("Could not find service url for entity " + entity.getClass().getCanonicalName());
+    }
   }
 
   public static SpServiceUrlProvider getPipelineElementType(String appId) {
@@ -42,5 +53,13 @@ public class ExtensionsServiceEndpointUtils {
 
   private static boolean isDataProcessor(NamedStreamPipesEntity entity) {
     return entity instanceof DataProcessorInvocation || entity instanceof DataProcessorDescription;
+  }
+
+  private static boolean isDataSink(NamedStreamPipesEntity entity) {
+    return entity instanceof DataSinkInvocation || entity instanceof DataSinkDescription;
+  }
+
+  private static boolean isAdapter(NamedStreamPipesEntity entity) {
+    return entity instanceof AdapterDescription;
   }
 }

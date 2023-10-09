@@ -129,7 +129,7 @@ public abstract class AbstractPipelineElementResource<
       // TODO remove after full internationalization support has been implemented
       if (desc.isIncludesLocales()) {
         try {
-          desc = new LabelGenerator(desc).generateLabels();
+          desc = new LabelGenerator<>(desc).generateLabels();
         } catch (IOException e) {
           e.printStackTrace();
         }

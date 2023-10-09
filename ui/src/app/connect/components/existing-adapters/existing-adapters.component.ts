@@ -42,7 +42,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { AuthService } from '../../../services/auth.service';
 import { HelpComponent } from '../../../editor/dialog/help/help.component';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
@@ -50,6 +49,7 @@ import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
 import { CanNotEditAdapterDialog } from '../../dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
 import { zip } from 'rxjs';
+import { RestApi } from '../../../services/rest-api.service';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -89,6 +89,7 @@ export class ExistingAdaptersComponent implements OnInit {
         private pipelineElementService: PipelineElementService,
         private pipelineService: PipelineService,
         private router: Router,
+        private restApi: RestApi,
         private adapterFilter: AdapterFilterPipe,
         private breadcrumbService: SpBreadcrumbService,
         private adapterMonitoringService: AdapterMonitoringService,
@@ -195,9 +196,7 @@ export class ExistingAdaptersComponent implements OnInit {
 
     getIconUrl(adapter: AdapterDescription) {
         if (adapter.includedAssets.length > 0) {
-            return this.adapterService.getAssetUrl(adapter.appId) + '/icon';
-        } else {
-            return 'assets/img/connect/' + adapter.iconUrl;
+            return this.restApi.getAssetUrl(adapter.appId) + '/icon';
         }
     }
 

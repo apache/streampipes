@@ -20,11 +20,10 @@ package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
 
-import java.net.URI;
 import java.util.List;
 
 public interface IPipelineElementDescriptionStorage {
@@ -33,13 +32,7 @@ public interface IPipelineElementDescriptionStorage {
 
   boolean storeDataStream(SpDataStream stream);
 
-  boolean storeDataStream(String jsonld);
-
   boolean storeDataProcessor(DataProcessorDescription processorDescription);
-
-  boolean storeDataProcessor(String jsonld);
-
-  SpDataStream getDataStreamById(URI rdfId);
 
   SpDataStream getDataStreamByAppId(String appId);
 
@@ -47,19 +40,21 @@ public interface IPipelineElementDescriptionStorage {
 
   DataProcessorDescription getDataProcessorById(String rdfId);
 
-  DataProcessorDescription getDataProcessorById(URI rdfId);
-
   DataProcessorDescription getDataProcessorByAppId(String appId);
 
   DataSinkDescription getDataSinkById(String rdfId);
 
-  DataSinkDescription getDataSinkById(URI rdfId);
-
   DataSinkDescription getDataSinkByAppId(String appId);
+
+  AdapterDescription getAdapterById(String elementId);
+
+  AdapterDescription getAdapterByAppId(String appId);
 
   List<SpDataStream> getAllDataStreams();
 
   List<DataProcessorDescription> getAllDataProcessors();
+
+  List<AdapterDescription> getAllAdapterDescriptions();
 
   boolean deleteDataStream(SpDataStream sep);
 
@@ -69,7 +64,13 @@ public interface IPipelineElementDescriptionStorage {
 
   boolean deleteDataProcessor(String rdfId);
 
+  boolean deleteAdapterDescription(AdapterDescription adapterDescription);
+
+  boolean deleteAdapterDescription(String elementId);
+
   boolean exists(SpDataStream stream);
+
+  boolean exists(AdapterDescription adapterDescription);
 
   boolean exists(DataProcessorDescription processorDescription);
 
@@ -83,6 +84,8 @@ public interface IPipelineElementDescriptionStorage {
 
   boolean existsDataSink(String elementId);
 
+  boolean existsAdapterDescription(String elementId);
+
   boolean update(SpDataStream stream);
 
   boolean update(DataProcessorDescription processorDescription);
@@ -91,15 +94,17 @@ public interface IPipelineElementDescriptionStorage {
 
   boolean update(DataSinkDescription sec);
 
+  boolean update(AdapterDescription adapter);
+
   boolean deleteDataSink(DataSinkDescription sec);
 
   boolean deleteDataSink(String rdfId);
 
   boolean storeDataSink(DataSinkDescription sec);
 
-  List<DataSinkDescription> getAllDataSinks();
+  boolean storeAdapterDescription(AdapterDescription adapterDescription);
 
-  StaticProperty getStaticPropertyById(String rdfId);
+  List<DataSinkDescription> getAllDataSinks();
 
   SpDataStream getEventStreamById(String rdfId);
 

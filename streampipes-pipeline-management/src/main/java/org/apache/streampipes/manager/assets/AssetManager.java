@@ -44,6 +44,11 @@ public class AssetManager {
     return Files.readAllBytes(Paths.get(getAssetPath(appId, assetName)));
   }
 
+  public static boolean existsAssetDir(String appId) {
+    var directory = new File(getAssetDir(appId));
+    return directory.exists() && directory.isDirectory();
+  }
+
   public static void storeAsset(SpServiceUrlProvider spServiceUrlProvider,
                                 String appId) throws IOException, NoServiceEndpointsAvailableException {
     InputStream assetStream = new AssetFetcher(spServiceUrlProvider, appId)

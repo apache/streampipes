@@ -38,6 +38,7 @@ body {
     height: auto !important;
     width: 100%;
 
+    --color-adapter: #{$sp-color-adapter};
     --color-set: #{$sp-color-set};
     --color-stream: #{$sp-color-stream};
     --color-processor: #{$sp-color-processor};
@@ -526,13 +527,13 @@ md-content {
     padding: 2px 5px;
 }
 
-.stream-label {
-    background: $sp-color-stream;
-    color: black;
+.adapter-label {
+    background: $sp-color-adapter;
+    color: white;
 }
 
-.set-label {
-    background: $sp-color-set;
+.stream-label {
+    background: $sp-color-stream;
     color: black;
 }
 
@@ -542,6 +543,11 @@ md-content {
 
 .sink-label {
     background: $sp-color-sink;
+}
+
+.adapter {
+    border-radius: 50%;
+    border: 2px solid $sp-color-adapter;
 }
 
 .stream {

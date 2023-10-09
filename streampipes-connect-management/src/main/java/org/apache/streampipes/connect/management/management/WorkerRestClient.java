@@ -77,9 +77,7 @@ public class WorkerRestClient {
           .extServiceGetRequest(url)
           .execute().returnContent().asString();
 
-      List<AdapterDescription> result = JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
-
-      return result;
+      return JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
     } catch (IOException e) {
       logger.error("List of running adapters could not be fetched", e);
       throw new AdapterException("List of running adapters could not be fetched from: " + url);
@@ -106,7 +104,7 @@ public class WorkerRestClient {
     try {
       String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
-      var response = triggerPost(url, ad.getElementId(), adapterDescription);
+      var response = triggerPost(url, ad.getCorrespondingDataStreamElementId(), adapterDescription);
       var responseString = getResponseBody(response);
 
       if (response.getStatusLine().getStatusCode() != 200) {

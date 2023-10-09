@@ -15,13 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.api;
 
-public interface IPipelineElementDescriptionStorageCache extends IPipelineElementDescriptionStorage {
+package org.apache.streampipes.resource.management;
 
-  void refreshDataProcessorCache();
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
-  void refreshDataSinkCache();
+public class AdapterDescriptionResourceManager
+    extends AbstractPipelineElementResourceManager<IAdapterStorage, AdapterDescription, AdapterDescription> {
 
-  void refreshDataSourceCache();
+  public AdapterDescriptionResourceManager() {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage());
+  }
+
+  @Override
+  protected AdapterDescription toInvocation(AdapterDescription description) {
+    return description;
+  }
 }

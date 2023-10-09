@@ -21,36 +21,27 @@ package org.apache.streampipes.manager.verification;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
-import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
 
-public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
+public class AdapterVerifier extends ElementVerifier<AdapterDescription> {
 
-
-  public DataSinkVerifier(String graphData)
-      throws SepaParseException {
-    super(graphData, DataSinkDescription.class);
+  public AdapterVerifier(String graphData) throws SepaParseException {
+    super(graphData, AdapterDescription.class);
   }
-
 
   @Override
   protected StorageState store() {
-    StorageState storageState = StorageState.STORED;
+    var storageState = StorageState.STORED;
     if (!storageApi.exists(elementDescription)) {
-      storageApi.storeDataSink(elementDescription);
+      storageApi.storeAdapterDescription(elementDescription);
     } else {
       storageState = StorageState.ALREADY_STORED;
     }
     return storageState;
   }
-
-  @Override
-  protected void collectValidators() {
-    super.collectValidators();
-  }
-
 
   @Override
   protected void update() {
@@ -60,7 +51,15 @@ public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
   @Override
   protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
-      AssetManager.storeAsset(SpServiceUrlProvider.DATA_SINK, elementDescription.getAppId());
+      AssetManager.storeAsset(SpServiceUrlProvider.ADAPTER, elementDescription.getAppId());
+    }
+  }
+
+  @Override
+  protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
+    if (elementDescription.isIncludesAssets()) {
+      AssetManager.deleteAsset(elementDescription.getAppId());
+      storeAssets();
     }
   }
 }

@@ -47,7 +47,7 @@ public class DataStreamVerifier extends ElementVerifier<SpDataStream> {
     if (!storageApi.exists(elementDescription)) {
       storageApi.storeDataStream(elementDescription);
     } else {
-      storageState = StorageState.ALREADY_IN_SESAME;
+      storageState = StorageState.ALREADY_STORED;
     }
     return storageState;
   }
@@ -61,14 +61,6 @@ public class DataStreamVerifier extends ElementVerifier<SpDataStream> {
   protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
       AssetManager.storeAsset(SpServiceUrlProvider.DATA_STREAM, elementDescription.getAppId());
-    }
-  }
-
-  @Override
-  protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
-    if (elementDescription.isIncludesAssets()) {
-      AssetManager.deleteAsset(elementDescription.getAppId());
-      storeAssets();
     }
   }
 }
