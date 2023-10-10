@@ -110,7 +110,7 @@
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<roaster.version>2.29.0.Final</roaster.version>
 	<siddhi.version>5.1.27</siddhi.version>
-	<simple-java-mail.version>8.2.0</simple-java-mail.version>
+	<simple-java-mail.version>8.3.1</simple-java-mail.version>
 	<slf4j.version>2.0.6</slf4j.version>
 	<snakeyaml.version>2.2</snakeyaml.version>
 	<snappy-java.version>1.1.10.4</snappy-java.version>
@@ -128,7 +128,7 @@
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
-	<mockito.version>5.5.0</mockito.version>
+	<mockito.version>5.6.0</mockito.version>
 	<powermock.version>2.0.9</powermock.version>
 	<rest-assured.version>2.9.0</rest-assured.version>
 	<wiremock.version>2.27.2</wiremock.version>
@@ -186,7 +186,7 @@
 	<commons-collections4.version>4.4</commons-collections4.version>
 	<eclipse.milo.version>0.6.9</eclipse.milo.version>
 	<netty.version>4.1.72.Final</netty.version>
-	<nimbus-jose-jwt.version>9.35</nimbus-jose-jwt.version>
+	<nimbus-jose-jwt.version>9.36</nimbus-jose-jwt.version>
 	<opencsv.version>5.8</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
 	<protobuf.version>3.24.0</protobuf.version>

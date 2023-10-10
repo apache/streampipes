@@ -78,17 +78,20 @@ export class EventPropertyRowComponent implements OnInit {
             const originalProperty = this.findOriginalProperty(
                 this.originalEventSchema.eventProperties,
             );
-            this.originalRuntimeName = originalProperty.runtimeName;
-            this.showFieldStatus =
-                this.fieldStatusInfo &&
-                this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
-            if (this.isPrimitive) {
-                this.originalRuntimeType = this.parseType(
-                    originalProperty.runtimeType,
-                );
-                this.runtimeType = this.parseType(
-                    (this.node.data as EventPropertyPrimitive).runtimeType,
-                );
+            if (originalProperty) {
+                this.originalRuntimeName = originalProperty.runtimeName;
+                this.showFieldStatus =
+                    this.fieldStatusInfo &&
+                    this.fieldStatusInfo[this.originalRuntimeName] !==
+                        undefined;
+                if (this.isPrimitive) {
+                    this.originalRuntimeType = this.parseType(
+                        originalProperty.runtimeType,
+                    );
+                    this.runtimeType = this.parseType(
+                        (this.node.data as EventPropertyPrimitive).runtimeType,
+                    );
+                }
             }
         }
 

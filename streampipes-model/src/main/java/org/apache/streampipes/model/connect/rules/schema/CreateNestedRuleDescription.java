@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.connect.rules.schema;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
+
 public class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
 
   private String runtimeKey;
@@ -42,5 +45,15 @@ public class CreateNestedRuleDescription extends SchemaTransformationRuleDescrip
 
   public void setRuntimeKey(String runtimeKey) {
     this.runtimeKey = runtimeKey;
+  }
+
+  @Override
+  public void accept(ITransformationRuleVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  @Override
+  public int getRulePriority() {
+    return TransformationRulePriority.CREATE_NESTED.getCode();
   }
 }
