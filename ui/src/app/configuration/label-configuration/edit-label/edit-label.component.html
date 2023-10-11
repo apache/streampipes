@@ -34,11 +34,15 @@
         ></sp-label>
         <mat-form-field color="accent" appearance="outline">
             <mat-label>Label</mat-label>
-            <input matInput [(ngModel)]="label.label" />
+            <input matInput [(ngModel)]="label.label" data-cy="label-name" />
         </mat-form-field>
         <mat-form-field color="accent" appearance="outline">
             <mat-label>Desription</mat-label>
-            <input matInput [(ngModel)]="label.description" />
+            <input
+                matInput
+                [(ngModel)]="label.description"
+                data-cy="label-description"
+            />
         </mat-form-field>
         <input
             [(colorPicker)]="label.color"
@@ -58,6 +62,7 @@
                 mat-button
                 mat-raised-button
                 color="accent"
+                data-cy="save-label-button"
                 (click)="saveEmitter.emit(label)"
             >
                 Save
