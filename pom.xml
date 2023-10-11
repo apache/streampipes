@@ -59,7 +59,7 @@
 	<httpclient.version>4.5.13</httpclient.version>
 	<httpcore.version>4.4.9</httpcore.version>
 	<httpcore-osgi.version>4.4.9</httpcore-osgi.version>
-	<immutable-value.version>2.9.3</immutable-value.version>
+	<immutable-value.version>2.10.0</immutable-value.version>
 	<influxdb.version>2.23</influxdb.version>
 	<j2html.version>1.6.0</j2html.version>
 	<jackson.version>2.15.0</jackson.version>
