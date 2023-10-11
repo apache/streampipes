@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
+import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,22 +28,22 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-public class TimestampTranformationRule implements ValueTransformationRule {
+public class TimestampTransformationRule extends SupportsNestedTransformationRule {
 
-  private List<String> eventKey;
-  private TimestampTranformationRuleMode mode;
-  private String formatString;
-  private long multiplier;
+  private final List<String> eventKey;
+  private final TimestampTranformationRuleMode mode;
+  private final long multiplier;
 
   private SimpleDateFormat dateFormatter;
 
-  private static Logger logger = LoggerFactory.getLogger(TimestampTranformationRule.class);
+  private static final Logger logger = LoggerFactory.getLogger(TimestampTransformationRule.class);
 
-  public TimestampTranformationRule(List<String> eventKey, TimestampTranformationRuleMode mode, String formatString,
-                                    long multiplier) {
+  public TimestampTransformationRule(List<String> eventKey,
+                                     TimestampTranformationRuleMode mode,
+                                     String formatString,
+                                     long multiplier) {
     this.eventKey = eventKey;
     this.mode = mode;
-    this.formatString = formatString;
     this.multiplier = multiplier;
 
     if (mode == TimestampTranformationRuleMode.FORMAT_STRING) {
@@ -50,37 +52,21 @@ public class TimestampTranformationRule implements ValueTransformationRule {
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> event) {
-    return transform(event, eventKey);
+  protected List<String> getEventKeys() {
+    return eventKey;
   }
 
-  private Map<String, Object> transform(Map<String, Object> event, List<String> eventKey) {
-
-    if (eventKey.size() == 1) {
-
-      switch (mode) {
-        case TIME_UNIT:
-          long timeLong = Long.valueOf(String.valueOf(event.get(eventKey.get(0))));
-          event.put(eventKey.get(0), this.performTimeUnitTransformation(timeLong));
-          break;
-        case FORMAT_STRING:
-          String dateString = String.valueOf(event.get(eventKey.get(0)));
-          event.put(eventKey.get(0), performFormatStringTransformation(dateString));
+  @Override
+  protected void applyTransformation(Map<String, Object> event, List<String> eventKey) {
+    switch (mode) {
+      case TIME_UNIT -> {
+        long timeLong = Long.parseLong(String.valueOf(event.get(eventKey.get(0))));
+        event.put(eventKey.get(0), this.performTimeUnitTransformation(timeLong));
       }
-
-      return event;
-
-    } else {
-      String key = eventKey.get(0);
-      List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
-
-      Map<String, Object> newSubEvent =
-          transform((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
-
-      event.remove(key);
-      event.put(key, newSubEvent);
-
-      return event;
+      case FORMAT_STRING -> {
+        String dateString = String.valueOf(event.get(eventKey.get(0)));
+        event.put(eventKey.get(0), performFormatStringTransformation(dateString));
+      }
     }
 
   }

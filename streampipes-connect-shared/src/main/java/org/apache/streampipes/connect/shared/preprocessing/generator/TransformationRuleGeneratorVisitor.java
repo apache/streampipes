@@ -16,29 +16,23 @@
  *
  */
 
-package org.apache.streampipes.connect.shared.preprocessing;
+package org.apache.streampipes.connect.shared.preprocessing.generator;
 
-import java.util.Arrays;
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class Util {
+public abstract class TransformationRuleGeneratorVisitor implements ITransformationRuleVisitor {
 
-  public static String getLastKey(String s) {
-    String[] list = s.split("\\.");
-    if (list.length == 0) {
-      return s;
-    } else {
-      return list[list.length - 1];
-    }
+  protected final List<TransformationRule> rules;
+
+  public TransformationRuleGeneratorVisitor() {
+    this.rules = new ArrayList<>();
   }
 
-  public static List<String> toKeyArray(String s) {
-    String[] split = s.split("\\.");
-    if (split.length == 0) {
-      return Arrays.asList(s);
-    } else {
-      return Arrays.asList(split);
-    }
+  public List<TransformationRule> getTransformationRules() {
+    return rules;
   }
-
 }

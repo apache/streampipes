@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.generic.elements;
 
-import org.apache.streampipes.connect.shared.preprocessing.elements.AddTimestampPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.transform.value.AddTimestampTransformationRule;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,9 +31,9 @@ public class AddTimestampTest {
   @Test
   public void addTimestamp() {
 
-    AddTimestampPipelineElement addTimestamp = new AddTimestampPipelineElement("timestamp");
+    var addTimestamp = new AddTimestampTransformationRule("timestamp");
     Map event = new HashMap<>();
-    event = addTimestamp.process(event);
+    event = addTimestamp.apply(event);
 
     Assert.assertNotNull(event.get("timestamp"));
   }

@@ -68,7 +68,7 @@ public class CorrectionValueTest {
          "ADD"
      );
 
-    var resultEvent = correctionRule.transform(event);
+    var resultEvent = correctionRule.apply(event);
     assertNotNull(resultEvent);
     assertEquals(110.0, resultEvent.get(propertyNameBasicValue));
   }
@@ -81,7 +81,7 @@ public class CorrectionValueTest {
         10.0,
         "SUBTRACT"
     );
-    var resultEvent = correctionRule.transform(event);
+    var resultEvent = correctionRule.apply(event);
     assertNotNull(resultEvent);
     assertEquals(90.0, resultEvent.get(propertyNameBasicValue));
   }
@@ -94,7 +94,7 @@ public class CorrectionValueTest {
         1.5,
         "MULTIPLY"
     );
-    var resultEvent = correctionRule.transform(event);
+    var resultEvent = correctionRule.apply(event);
     assertNotNull(resultEvent);
     assertEquals(150.0, resultEvent.get(propertyNameBasicValue));
   }
@@ -107,7 +107,7 @@ public class CorrectionValueTest {
         5,
         "DIVIDE"
     );
-    var resultEvent = correctionRule.transform(event);
+    var resultEvent = correctionRule.apply(event);
     assertNotNull(resultEvent);
     assertEquals(20.0, resultEvent.get(propertyNameBasicValue));
   }
@@ -120,7 +120,7 @@ public class CorrectionValueTest {
         0.0,
         "DIVIDE"
     );
-    var resultEvent = correctionRule.transform(event);
+    var resultEvent = correctionRule.apply(event);
     assertNotNull(resultEvent);
     assertEquals(Double.POSITIVE_INFINITY, resultEvent.get(propertyNameBasicValue));
   }
@@ -136,7 +136,7 @@ public class CorrectionValueTest {
     assertThrows (
         String.format("Selected property `%s` does not contain a numeric value: `%s", propertyNameOtherValue, "Hello"),
         RuntimeException.class,
-        () -> correctionRule.transform(event).get(propertyNameOtherValue)
+        () -> correctionRule.apply(event).get(propertyNameOtherValue)
     );
 
 
@@ -150,7 +150,7 @@ public class CorrectionValueTest {
         10.0,
         "TEST"
     );
-    var resultEvent = correctionRule.transform(event);
+    var resultEvent = correctionRule.apply(event);
     assertNotNull(resultEvent);
     assertEquals(100.0, resultEvent.get(propertyNameBasicValue));
   }

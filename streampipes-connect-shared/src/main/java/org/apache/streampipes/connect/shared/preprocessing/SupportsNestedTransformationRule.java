@@ -16,42 +16,41 @@
  *
  */
 
-package org.apache.streampipes.connect.shared.preprocessing.transform.stream;
+package org.apache.streampipes.connect.shared.preprocessing;
 
 import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 
+import java.util.List;
 import java.util.Map;
 
-public class EventRateTransformationRule implements TransformationRule {
-
-  private final long aggregationTimeWindow;
-
-  //none (Values from last event), max, min, mean, sum (of the values in the time window)
-  private final String aggregationType;
-
-  private long lastSentToPipelineTimestamp = System.currentTimeMillis();
-
-  public EventRateTransformationRule(long aggregationTimeWindow, String aggregationType) {
-    this.aggregationTimeWindow = aggregationTimeWindow;
-    this.aggregationType = aggregationType;
-  }
+public abstract class SupportsNestedTransformationRule implements TransformationRule {
 
   @Override
   public Map<String, Object> apply(Map<String, Object> event) {
-    if (System.currentTimeMillis() > lastSentToPipelineTimestamp + aggregationTimeWindow) {
-      switch (aggregationType) {
-        case "none":
-          lastSentToPipelineTimestamp = System.currentTimeMillis();
-          return event;
-//                case "max":
-//                case "min":
-//                case "mean":
-//                case "sum":
-
-      }
-    }
-    return null;
+    return applyNested(event, getEventKeys());
   }
+
+  protected Map<String, Object> applyNested(Map<String, Object> event,
+                                          List<String> eventKey) {
+    if (eventKey.size() == 1) {
+      applyTransformation(event, eventKey);
+    } else {
+      String key = eventKey.get(0);
+      List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
+
+      Map<String, Object> newSubEvent =
+          applyNested((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
+
+      event.remove(key);
+      event.put(key, newSubEvent);
+    }
+    return event;
+  }
+
+  protected abstract List<String> getEventKeys();
+
+  protected abstract void applyTransformation(Map<String, Object> event,
+                                              List<String> eventKey);
 
 
 }

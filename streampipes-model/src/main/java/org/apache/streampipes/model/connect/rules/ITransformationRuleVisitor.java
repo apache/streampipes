@@ -30,35 +30,30 @@ import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransforma
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+public interface ITransformationRuleVisitor {
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
-@TsModel
-@JsonSubTypes({
-    @JsonSubTypes.Type(AddTimestampRuleDescription.class),
-    @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
-    @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
-    @JsonSubTypes.Type(UnitTransformRuleDescription.class),
-    @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
-    @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
-    @JsonSubTypes.Type(CreateNestedRuleDescription.class),
-    @JsonSubTypes.Type(DeleteRuleDescription.class),
-    @JsonSubTypes.Type(RenameRuleDescription.class),
-    @JsonSubTypes.Type(MoveRuleDescription.class),
-    @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
-    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
-})
-public abstract class TransformationRuleDescription {
+  void visit(CreateNestedRuleDescription rule);
 
+  void visit(DeleteRuleDescription rule);
 
-  public TransformationRuleDescription() {
-    super();
-  }
+  void visit(MoveRuleDescription rule);
 
-  public abstract void accept(ITransformationRuleVisitor visitor);
+  void visit(RenameRuleDescription rule);
 
-  public abstract int getRulePriority();
+  void visit(EventRateTransformationRuleDescription rule);
+
+  void visit(RemoveDuplicatesTransformationRuleDescription rule);
+
+  void visit(AddTimestampRuleDescription rule);
+
+  void visit(AddValueTransformationRuleDescription rule);
+
+  void visit(ChangeDatatypeTransformationRuleDescription rule);
+
+  void visit(CorrectionValueTransformationRuleDescription rule);
+
+  void visit(TimestampTranfsformationRuleDescription rule);
+
+  void visit(UnitTransformRuleDescription rule);
 }

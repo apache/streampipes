@@ -16,27 +16,23 @@
  *
  */
 
-package org.apache.streampipes.connect.shared.preprocessing.elements;
+package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
-import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 
 import java.util.Map;
 
-public class AddValuePipelineElement implements IAdapterPipelineElement {
+public class AddTimestampTransformationRule implements TransformationRule {
 
-  private String runtimeKey;
-  private String value;
+  private final String runtimeKey;
 
-
-  public AddValuePipelineElement(String runtimeKey, String value) {
+  public AddTimestampTransformationRule(String runtimeKey) {
     this.runtimeKey = runtimeKey;
-    this.value = value;
   }
 
   @Override
-  public Map<String, Object> process(Map<String, Object> event) {
-    event.put(runtimeKey, value);
+  public Map<String, Object> apply(Map<String, Object> event) {
+    event.put(runtimeKey, System.currentTimeMillis());
     return event;
   }
-
 }

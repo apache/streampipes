@@ -16,9 +16,14 @@
  *
  */
 
-package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
+package org.apache.streampipes.connect.shared.preprocessing.convert;
 
-import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.schema.EventProperty;
 
-public interface SchemaTransformationRule extends TransformationRule {
+import java.util.List;
+
+public interface ProvidesConversionResult extends ITransformationRuleVisitor {
+
+  List<EventProperty> getTransformedProperties();
 }
