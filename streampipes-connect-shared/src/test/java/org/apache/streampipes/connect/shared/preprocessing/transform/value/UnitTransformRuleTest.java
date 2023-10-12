@@ -60,7 +60,7 @@ public class UnitTransformRuleTest {
     UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
         "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
-    var result = unitTransformationRule.transform(event);
+    var result = unitTransformationRule.apply(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals(273.15,
@@ -93,7 +93,7 @@ public class UnitTransformRuleTest {
     UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
         "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
-    var result = unitTransformationRule.transform(event);
+    var result = unitTransformationRule.apply(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals(283.15,
@@ -123,7 +123,7 @@ public class UnitTransformRuleTest {
     event.put("value1", 0.0);
     event.put("value2", 10.0);
 
-    var result = unitTransformationRule.transform(event);
+    var result = unitTransformationRule.apply(event);
     assertEquals(2, result.keySet().size());
     assertEquals(283.15, result.get(eventPropertyValue2.getLabel()));
 
@@ -132,7 +132,7 @@ public class UnitTransformRuleTest {
     event.put("value1", 20.0);
     event.put("value2", 20.0);
 
-    result = unitTransformationRule.transform(event);
+    result = unitTransformationRule.apply(event);
     assertEquals(2, result.keySet().size());
     assertEquals(293.15, result.get(eventPropertyValue2.getRuntimeName()));
 
@@ -141,7 +141,7 @@ public class UnitTransformRuleTest {
     event.put("value1", 0.0);
     event.put("value2", 0.0);
 
-    result = unitTransformationRule.transform(event);
+    result = unitTransformationRule.apply(event);
     assertEquals(2, result.keySet().size());
     assertEquals(273.15, result.get(eventPropertyValue2.getRuntimeName()));
   }

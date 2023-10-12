@@ -38,7 +38,7 @@ public class RenameTransformationRuleTest {
     oldKey.add("old_key");
     RenameTransformationRule renameRule = new RenameTransformationRule(oldKey, "new_key");
 
-    Map<String, Object> result = renameRule.transform(event);
+    Map<String, Object> result = renameRule.apply(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals("test", result.get("new_key"));
@@ -58,7 +58,7 @@ public class RenameTransformationRuleTest {
     oldKey.add("old_key");
     RenameTransformationRule renameRule = new RenameTransformationRule(oldKey, "new_key");
 
-    Map<String, Object> result = renameRule.transform(event);
+    Map<String, Object> result = renameRule.apply(event);
 
     assertEquals(1, result.keySet().size());
     Map<String, Object> resultNested = (Map<String, Object>) result.get("key");

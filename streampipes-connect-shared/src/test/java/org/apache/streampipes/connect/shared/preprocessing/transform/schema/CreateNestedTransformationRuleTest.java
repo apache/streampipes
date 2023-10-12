@@ -39,7 +39,7 @@ public class CreateNestedTransformationRuleTest {
     key.add("key");
     CreateNestedTransformationRule createNested = new CreateNestedTransformationRule(key);
 
-    Map<String, Object> result = createNested.transform(event);
+    Map<String, Object> result = createNested.apply(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals(0, ((Map<String, Object>) result.get("key")).keySet().size());
@@ -58,7 +58,7 @@ public class CreateNestedTransformationRuleTest {
 
     CreateNestedTransformationRule createNested = new CreateNestedTransformationRule(key);
 
-    Map<String, Object> result = createNested.transform(event);
+    Map<String, Object> result = createNested.apply(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals(1, ((Map<String, Object>) result.get("parent")).keySet().size());

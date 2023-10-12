@@ -57,4 +57,8 @@ public abstract class TransformationRuleDescription {
   public TransformationRuleDescription() {
     super();
   }
+
+  public abstract void accept(ITransformationRuleVisitor visitor);
+
+  public abstract int getRulePriority();
 }

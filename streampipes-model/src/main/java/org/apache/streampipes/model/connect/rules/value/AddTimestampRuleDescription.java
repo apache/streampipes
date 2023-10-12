@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
+
 public class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;
@@ -41,5 +44,15 @@ public class AddTimestampRuleDescription extends ValueTransformationRuleDescript
 
   public void setRuntimeKey(String runtimeKey) {
     this.runtimeKey = runtimeKey;
+  }
+
+  @Override
+  public void accept(ITransformationRuleVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  @Override
+  public int getRulePriority() {
+    return TransformationRulePriority.ADD_TIMESTAMP.getCode();
   }
 }

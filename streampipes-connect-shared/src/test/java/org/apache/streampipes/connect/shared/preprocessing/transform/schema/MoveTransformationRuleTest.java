@@ -51,7 +51,7 @@ public class MoveTransformationRuleTest {
 
     MoveTransformationRule moveRule = new MoveTransformationRule(oldKey, newKey);
 
-    Map<String, Object> result = moveRule.transform(event);
+    Map<String, Object> result = moveRule.apply(event);
 
     assertEquals(2, result.keySet().size());
     assertEquals(0, ((Map<String, Object>) result.get("old_parent")).keySet().size());
@@ -66,7 +66,7 @@ public class MoveTransformationRuleTest {
 
     MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("toMove"), Arrays.asList("new_parent"));
 
-    Map<String, Object> result = moveRule.transform(event);
+    Map<String, Object> result = moveRule.apply(event);
 
     assertEquals(1, result.keySet().size());
     assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
@@ -82,7 +82,7 @@ public class MoveTransformationRuleTest {
 
     MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("parent", "child"), Arrays.asList(""));
 
-    Map<String, Object> result = moveRule.transform(parent);
+    Map<String, Object> result = moveRule.apply(parent);
 
     assertEquals(2, result.keySet().size());
     assertEquals(0, ((Map<String, Object>) result.get("parent")).keySet().size());
