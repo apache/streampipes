@@ -18,14 +18,16 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.stream;
 
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+
 import java.util.Map;
 
-public class EventRateTransformationRule implements StreamTransformationRule {
+public class EventRateTransformationRule implements TransformationRule {
 
-  private long aggregationTimeWindow;
+  private final long aggregationTimeWindow;
 
   //none (Values from last event), max, min, mean, sum (of the values in the time window)
-  private String aggregationType;
+  private final String aggregationType;
 
   private long lastSentToPipelineTimestamp = System.currentTimeMillis();
 
@@ -35,7 +37,7 @@ public class EventRateTransformationRule implements StreamTransformationRule {
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> event) {
+  public Map<String, Object> apply(Map<String, Object> event) {
     if (System.currentTimeMillis() > lastSentToPipelineTimestamp + aggregationTimeWindow) {
       switch (aggregationType) {
         case "none":

@@ -201,6 +201,7 @@ export class EventSchemaComponent implements OnChanges {
         nested.elementId = uuid;
         nested.eventProperties = [];
         nested.domainProperties = [];
+        nested.runtimeName = 'nested';
         if (!eventProperty) {
             this.eventSchema.eventProperties.push(nested);
         } else {

@@ -18,93 +18,30 @@
 
 package org.apache.streampipes.connect.shared;
 
-import org.apache.streampipes.connect.shared.preprocessing.elements.AddTimestampPipelineElement;
-import org.apache.streampipes.connect.shared.preprocessing.elements.AddValuePipelineElement;
-import org.apache.streampipes.connect.shared.preprocessing.elements.TransformSchemaAdapterPipelineElement;
-import org.apache.streampipes.connect.shared.preprocessing.elements.TransformValueAdapterPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.elements.AdapterTransformationPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.generator.StatefulTransformationRuleGeneratorVisitor;
+import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTransformationRuleGeneratorVisitor;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AdapterPipelineGeneratorBase {
 
-  public List<IAdapterPipelineElement> makeAdapterPipelineElements(List<TransformationRuleDescription> rules) {
-    List<IAdapterPipelineElement> pipelineElements = new ArrayList<>();
-
-    // Must be before the schema transformations to ensure that user can move this event property
-    var timestampTransformationRuleDescription = getTimestampRule(rules);
-    if (timestampTransformationRuleDescription != null) {
-      pipelineElements.add(new AddTimestampPipelineElement(
-          timestampTransformationRuleDescription.getRuntimeKey()));
+  public List<IAdapterPipelineElement> makeAdapterPipelineElements(List<TransformationRuleDescription> rules,
+                                                                   boolean includeStateful) {
+    var elements = new ArrayList<IAdapterPipelineElement>();
+    elements.add(new AdapterTransformationPipelineElement(
+        rules,
+        new StatelessTransformationRuleGeneratorVisitor())
+    );
+    if (includeStateful) {
+      elements.add(new AdapterTransformationPipelineElement(
+          rules,
+          new StatefulTransformationRuleGeneratorVisitor())
+      );
     }
-
-    var valueTransformationRuleDescription = getAddValueRule(rules);
-    if (valueTransformationRuleDescription != null) {
-      pipelineElements.add(new AddValuePipelineElement(
-          valueTransformationRuleDescription.getRuntimeKey(),
-          valueTransformationRuleDescription.getStaticValue()));
-    }
-
-    // first transform schema before transforming vales
-    // value rules should use unique keys for of new schema
-    pipelineElements.add(new TransformSchemaAdapterPipelineElement(getSchemaRules(rules)));
-    pipelineElements.add(new TransformValueAdapterPipelineElement(getValueRules(rules)));
-
-    return pipelineElements;
-  }
-
-  protected RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(
-      List<TransformationRuleDescription> rules) {
-    return getRule(rules, RemoveDuplicatesTransformationRuleDescription.class);
-  }
-
-  protected EventRateTransformationRuleDescription getEventRateTransformationRule(
-      List<TransformationRuleDescription> rules) {
-    return getRule(rules, EventRateTransformationRuleDescription.class);
-  }
-
-  protected AddTimestampRuleDescription getTimestampRule(List<TransformationRuleDescription> rules) {
-    return getRule(rules, AddTimestampRuleDescription.class);
-  }
-
-  protected AddValueTransformationRuleDescription getAddValueRule(List<TransformationRuleDescription> rules) {
-    return getRule(rules, AddValueTransformationRuleDescription.class);
-  }
-
-  private <T extends TransformationRuleDescription> T getRule(List<TransformationRuleDescription> rules,
-                                                              Class<T> type) {
-
-    if (rules != null) {
-      for (TransformationRuleDescription tr : rules) {
-        if (type.isInstance(tr)) {
-          return type.cast(tr);
-        }
-      }
-    }
-
-    return null;
-  }
-
-  private List<TransformationRuleDescription> getValueRules(List<TransformationRuleDescription> rules) {
-    return rules
-        .stream()
-        .filter(r -> r instanceof ValueTransformationRuleDescription && !(r instanceof AddTimestampRuleDescription))
-        .collect(Collectors.toList());
-  }
-
-  private List<TransformationRuleDescription> getSchemaRules(List<TransformationRuleDescription> rules) {
-    return rules
-        .stream()
-        .filter(r -> r instanceof SchemaTransformationRuleDescription)
-        .collect(Collectors.toList());
+    return elements;
   }
 }

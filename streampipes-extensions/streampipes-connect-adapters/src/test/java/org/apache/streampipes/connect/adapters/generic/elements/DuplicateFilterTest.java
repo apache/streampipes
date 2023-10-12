@@ -35,27 +35,27 @@ public class DuplicateFilterTest {
   @Test
   public void duplicateSimple() {
     DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
-    List<Map> events = generateEvents();
+    List<Map<String, Object>> events = generateEvents();
 
-    assertNotNull(duplicateFilter.process(events.get(0)));
-    assertNull(duplicateFilter.process(events.get(0)));
+    assertNotNull(duplicateFilter.apply(events.get(0)));
+    assertNull(duplicateFilter.apply(events.get(0)));
 
   }
 
   @Test
   public void duplicateComplex() {
     DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
-    List<Map> events = generateEvents();
+    List<Map<String, Object>> events = generateEvents();
 
-    assertNotNull(duplicateFilter.process(events.get(0)));
-    assertNotNull(duplicateFilter.process(events.get(1)));
-    assertNotNull(duplicateFilter.process(events.get(2)));
-    assertNotNull(duplicateFilter.process(events.get(3)));
-    assertNotNull(duplicateFilter.process(events.get(4)));
-    assertNotNull(duplicateFilter.process(events.get(5)));
-    assertNotNull(duplicateFilter.process(events.get(6)));
-    assertNotNull(duplicateFilter.process(events.get(7)));
-    assertNull(duplicateFilter.process(events.get(0)));
+    assertNotNull(duplicateFilter.apply(events.get(0)));
+    assertNotNull(duplicateFilter.apply(events.get(1)));
+    assertNotNull(duplicateFilter.apply(events.get(2)));
+    assertNotNull(duplicateFilter.apply(events.get(3)));
+    assertNotNull(duplicateFilter.apply(events.get(4)));
+    assertNotNull(duplicateFilter.apply(events.get(5)));
+    assertNotNull(duplicateFilter.apply(events.get(6)));
+    assertNotNull(duplicateFilter.apply(events.get(7)));
+    assertNull(duplicateFilter.apply(events.get(0)));
 
   }
 
@@ -106,8 +106,8 @@ public class DuplicateFilterTest {
 */
 
 
-  private List<Map> generateEvents() {
-    List<Map> list = new LinkedList();
+  private List<Map<String, Object>> generateEvents() {
+    List<Map<String, Object>> list = new LinkedList<>();
 
     list.add(makeMap("Test", 123));
     list.add(makeMap("Test", 1234));
@@ -123,7 +123,7 @@ public class DuplicateFilterTest {
   }
 
   private Map<String, Object> makeMap(String key, Object value) {
-    Map map = new LinkedHashMap();
+    Map<String, Object> map = new LinkedHashMap<>();
     map.put(key, value);
     return map;
   }

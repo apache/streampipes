@@ -65,7 +65,6 @@ export class SpExtensionsServiceConfigurationComponent {
                 const sortedServices = this.sort(response);
                 this.consulServices = sortedServices;
                 this.dataSource.data = sortedServices;
-                console.log(this.consulServices);
             },
             error => {
                 console.error(error);

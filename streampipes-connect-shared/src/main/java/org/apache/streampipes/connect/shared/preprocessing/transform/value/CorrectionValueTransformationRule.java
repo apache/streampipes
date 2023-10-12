@@ -18,13 +18,15 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
+import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
-public class CorrectionValueTransformationRule implements ValueTransformationRule {
+public class CorrectionValueTransformationRule extends SupportsNestedTransformationRule {
 
   private static Logger logger = LoggerFactory.getLogger(CorrectionValueTransformationRule.class);
 
@@ -40,50 +42,34 @@ public class CorrectionValueTransformationRule implements ValueTransformationRul
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> event) {
-    return transform(event, eventKey);
+  protected List<String> getEventKeys() {
+    return eventKey;
   }
 
-  private Map<String, Object> transform(Map<String, Object> event, List<String> eventKey) {
-
-    if (eventKey.size() == 1) {
-      try {
-        Object obj = event.get(eventKey.get(0));
-        double old;
-        if (obj instanceof Number) {
-          old = ((Number) obj).doubleValue();
-        } else {
-          throw new RuntimeException(
-              String.format("Selected property `%s` does not contain a numeric value: `%s", eventKey.get(0), obj)
-          );
-        }
-
-        double corrected = switch (operator) {
-          case "MULTIPLY" -> old * correctionValue;
-          case "ADD" -> old + correctionValue;
-          case "SUBTRACT" -> old - correctionValue;
-          case "DIVIDE" -> old / correctionValue;
-          default -> old;
-        };
-
-        event.put(eventKey.get(0), corrected);
-      } catch (ClassCastException e) {
-        logger.error(e.toString());
+  @Override
+  protected void applyTransformation(Map<String, Object> event, List<String> eventKey) {
+    try {
+      Object obj = event.get(eventKey.get(0));
+      double old;
+      if (obj instanceof Number) {
+        old = ((Number) obj).doubleValue();
+      } else {
+        throw new RuntimeException(
+            String.format("Selected property `%s` does not contain a numeric value: `%s", eventKey.get(0), obj)
+        );
       }
-      return event;
 
-    } else {
-      String key = eventKey.get(0);
-      List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
+      double corrected = switch (operator) {
+        case "MULTIPLY" -> old * correctionValue;
+        case "ADD" -> old + correctionValue;
+        case "SUBTRACT" -> old - correctionValue;
+        case "DIVIDE" -> old / correctionValue;
+        default -> old;
+      };
 
-      Map<String, Object> newSubEvent =
-          transform((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
-
-      event.remove(key);
-      event.put(key, newSubEvent);
-
-      return event;
+      event.put(eventKey.get(0), corrected);
+    } catch (ClassCastException e) {
+      logger.error(e.toString());
     }
-
   }
 }

@@ -20,28 +20,24 @@ package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 
 import org.apache.streampipes.connect.shared.DatatypeUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 
 import java.util.Map;
 
-public class DatatypeTransformationRule implements ValueTransformationRule {
+public class DatatypeTransformationRule implements TransformationRule {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DatatypeTransformationRule.class);
-
-  private String eventKey;
-  private String originalDatatypeXsd;
+  private final String eventKey;
   private String targetDatatypeXsd;
 
-  public DatatypeTransformationRule(String eventKey, String originalDatatypeXsd, String targetDatatypeXsd) {
+  public DatatypeTransformationRule(String eventKey,
+                                    String originalDatatypeXsd,
+                                    String targetDatatypeXsd) {
     this.eventKey = eventKey;
-    this.originalDatatypeXsd = originalDatatypeXsd;
     this.targetDatatypeXsd = targetDatatypeXsd;
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> event) {
+  public Map<String, Object> apply(Map<String, Object> event) {
     Object value = event.get(eventKey);
     Object transformedValue = transformDatatype(value);
     event.put(eventKey, transformedValue);

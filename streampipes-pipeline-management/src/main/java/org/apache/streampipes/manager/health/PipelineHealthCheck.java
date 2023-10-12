@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.health;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
@@ -51,12 +52,21 @@ public class PipelineHealthCheck implements Runnable {
 
   private static final Map<String, Integer> failedRestartAttempts = new HashMap<>();
 
+  private static final PipelinesStats pipelinesStats = new PipelinesStats();
+
   public PipelineHealthCheck() {
 
   }
 
   public void checkAndRestorePipelineElements() {
-    List<Pipeline> runningPipelines = getRunningPipelines();
+
+    List<Pipeline> allPipelines = getAllPipelines();
+    List<Pipeline> runningPipelines = getRunningPipelines(allPipelines);
+
+    pipelinesStats.clear();
+    pipelinesStats.setAllPipelines(allPipelines.size());
+    pipelinesStats.setRunningPipelines(runningPipelines.size());
+    pipelinesStats.setStoppedPipelines(pipelinesStats.getAllPipelines() - pipelinesStats.getRunningPipelines());
 
     if (runningPipelines.size() > 0) {
       Map<String, List<InvocableStreamPipesEntity>> endpointMap = generateEndpointMap();
@@ -107,13 +117,20 @@ public class PipelineHealthCheck implements Runnable {
         if (shouldUpdatePipeline.get()) {
           if (failedInstances.size() > 0) {
             pipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
+            pipelinesStats.failedIncrease();
           } else if (recoveredInstances.size() > 0) {
             pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+            pipelinesStats.attentionRequiredIncrease();
           }
           pipeline.setPipelineNotifications(pipelineNotifications);
           StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
         }
       });
+      int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
+          - pipelinesStats.getAttentionRequiredPipelines();
+      pipelinesStats.setHealthyPipelines(healthNum);
+      pipelinesStats.setElementCount(getElementsCount(allPipelines));
+      pipelinesStats.metrics();
     }
   }
 
@@ -207,14 +224,29 @@ public class PipelineHealthCheck implements Runnable {
     this.checkAndRestorePipelineElements();
   }
 
-  private List<Pipeline> getRunningPipelines() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getPipelineStorageAPI()
-        .getAllPipelines()
+  private List<Pipeline> getRunningPipelines(List<Pipeline> allPipelines) {
+    return allPipelines
         .stream()
         .filter(Pipeline::isRunning)
         .collect(Collectors.toList());
+
+  }
+
+  private List<Pipeline> getAllPipelines() {
+    List<Pipeline> allPipelines = StorageDispatcher
+            .INSTANCE
+            .getNoSqlStore()
+            .getPipelineStorageAPI()
+            .getAllPipelines();
+
+    return allPipelines;
+  }
+
+  private int getElementsCount(List<Pipeline> allPipelines){
+    return allPipelines
+        .stream()
+        .mapToInt(pipeline -> pipeline.getActions().size())
+        .sum();
+
   }
 }

@@ -89,7 +89,7 @@
     <sp-ep-settings-section
         sectionTitle="Field data type"
         sectionDescription="The data type of the field values"
-        *ngIf="!isTimestampProperty"
+        *ngIf="!isTimestampProperty && !isNestedProperty"
     >
         <sp-edit-data-type
             [cachedProperty]="cachedProperty"

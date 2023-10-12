@@ -116,12 +116,6 @@
             <artifactId>influxdb-java</artifactId>
         </dependency>
 
-        <!-- dependency convergence -->
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>jakarta.mail</artifactId>
-        </dependency>
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>

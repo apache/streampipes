@@ -26,6 +26,7 @@
             fxLayout="column"
             *ngFor="let configuration of consulService.configs"
         >
+            <h5>{{ configuration.key }}</h5>
             <sp-consul-configs-password
                 fxFlex="100"
                 *ngIf="configuration.isPassword"

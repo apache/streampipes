@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
+import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
+import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.units.UnitProvider;
 
 import com.github.jqudt.Quantity;
@@ -28,13 +31,19 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class UnitTransformationRule implements ValueTransformationRule {
+public class UnitTransformationRule extends SupportsNestedTransformationRule {
 
-  private static Logger logger = LoggerFactory.getLogger(UnitTransformationRule.class);
+  private static final Logger logger = LoggerFactory.getLogger(UnitTransformationRule.class);
 
-  private List<String> eventKey;
-  private Unit unitTypeFrom;
-  private Unit unitTypeTo;
+  private final List<String> eventKey;
+  private final Unit unitTypeFrom;
+  private final Unit unitTypeTo;
+
+  public UnitTransformationRule(UnitTransformRuleDescription description) {
+    this.unitTypeFrom = UnitProvider.INSTANCE.getUnit(description.getFromUnitRessourceURL());
+    this.unitTypeTo = UnitProvider.INSTANCE.getUnit(description.getToUnitRessourceURL());
+    this.eventKey = Utils.toKeyArray(description.getRuntimeKey());
+  }
 
   public UnitTransformationRule(List<String> keys,
                                 String fromUnitRessourceURL, String toUnitRessourceURL) {
@@ -44,39 +53,21 @@ public class UnitTransformationRule implements ValueTransformationRule {
   }
 
   @Override
-  public Map<String, Object> transform(Map<String, Object> event) {
-    return transform(event, eventKey);
+  protected List<String> getEventKeys() {
+    return eventKey;
   }
 
-  private Map<String, Object> transform(Map<String, Object> event, List<String> eventKey) {
+  @Override
+  protected void applyTransformation(Map<String, Object> event, List<String> eventKey) {
+    try {
+      double value = Double.parseDouble(String.valueOf(event.get(eventKey.get(0))));
 
-    if (eventKey.size() == 1) {
-      try {
-        double value = Double.valueOf(String.valueOf(event.get(eventKey.get(0))));
+      Quantity obs = new Quantity(value, unitTypeFrom);
+      double newValue = obs.convertTo(unitTypeTo).getValue();
 
-        Quantity obs = new Quantity(value, unitTypeFrom);
-        double newValue = obs.convertTo(unitTypeTo).getValue();
-
-        event.put(eventKey.get(0), newValue);
-      } catch (ClassCastException e) {
-        logger.error(e.toString());
-      } catch (IllegalAccessException e) {
-        logger.error(e.toString());
-      }
-      return event;
-
-    } else {
-      String key = eventKey.get(0);
-      List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
-
-      Map<String, Object> newSubEvent =
-          transform((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
-
-      event.remove(key);
-      event.put(key, newSubEvent);
-
-      return event;
+      event.put(eventKey.get(0), newValue);
+    } catch (ClassCastException | IllegalAccessException e) {
+      logger.error(e.toString());
     }
-
   }
 }
