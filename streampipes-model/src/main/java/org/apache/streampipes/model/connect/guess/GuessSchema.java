@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.connect.guess;
 
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
@@ -34,23 +36,19 @@ import java.util.Objects;
 public class GuessSchema {
 
   public EventSchema eventSchema;
-
-  //public List<Map<String, GuessTypeInfo>> eventPreview;
-
   private List<String> eventPreview;
-
   public Map<String, FieldStatusInfo> fieldStatusInfo;
+
+  // for adapter updates
+  private List<EventProperty> removedProperties;
+  private List<Notification> updateNotifications;
 
   public GuessSchema() {
     super();
     this.eventPreview = new ArrayList<>();
     this.fieldStatusInfo = new HashMap<>();
-  }
-
-  public GuessSchema(GuessSchema other) {
-    this.eventSchema = other.getEventSchema() != null ? new EventSchema(other.getEventSchema()) : null;
-    this.eventPreview = other.getEventPreview();
-    this.fieldStatusInfo = other.getFieldStatusInfo();
+    this.removedProperties = new ArrayList<>();
+    this.updateNotifications = new ArrayList<>();
   }
 
   public EventSchema getEventSchema() {
@@ -75,6 +73,22 @@ public class GuessSchema {
 
   public void setFieldStatusInfo(Map<String, FieldStatusInfo> fieldStatusInfo) {
     this.fieldStatusInfo = fieldStatusInfo;
+  }
+
+  public List<EventProperty> getRemovedProperties() {
+    return removedProperties;
+  }
+
+  public void setRemovedProperties(List<EventProperty> removedProperties) {
+    this.removedProperties = removedProperties;
+  }
+
+  public List<Notification> getUpdateNotifications() {
+    return updateNotifications;
+  }
+
+  public void setUpdateNotifications(List<Notification> updateNotifications) {
+    this.updateNotifications = updateNotifications;
   }
 
   @Override

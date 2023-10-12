@@ -24,7 +24,6 @@ import {
     EventSchema,
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { ConnectService } from '../../services/connect.service';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
@@ -53,7 +52,6 @@ export class AdapterConfigurationComponent implements OnInit {
     constructor(
         private transformationRuleService: TransformationRuleService,
         private shepherdService: ShepherdService,
-        private connectService: ConnectService,
         private _formBuilder: UntypedFormBuilder,
         private router: Router,
     ) {}
@@ -84,11 +82,10 @@ export class AdapterConfigurationComponent implements OnInit {
     guessEventSchema() {
         const eventSchema: EventSchema = this.adapter.dataStream.eventSchema;
 
-        if (eventSchema.eventProperties.length === 0) {
-            this.eventSchemaComponent.guessSchema();
-        } else {
+        if (eventSchema.eventProperties.length > 0) {
             this.oldEventSchema = eventSchema;
         }
+        this.eventSchemaComponent.guessSchema();
     }
 
     public setSchema() {
