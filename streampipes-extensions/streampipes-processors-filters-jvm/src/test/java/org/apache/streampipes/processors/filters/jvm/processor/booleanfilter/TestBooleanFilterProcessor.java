@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.booleanfilter;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
@@ -29,6 +26,7 @@ import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.test.extensions.api.StoreEventCollector;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
@@ -151,35 +149,5 @@ public class TestBooleanFilterProcessor {
     map.put(fieldName, value);
     return EventFactory.fromMap(map, new SourceInfo("test" + "-topic", "s0"),
         new SchemaInfo(null, new ArrayList<>()));
-  }
-
-  class StoreEventCollector implements SpOutputCollector {
-    private ArrayList<Event> events = new ArrayList<Event>();
-
-    @Override
-    public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
-    }
-
-    @Override
-    public void unregisterConsumer(String routeId) {
-    }
-
-    @Override
-    public void connect() throws SpRuntimeException {
-    }
-
-    @Override
-    public void disconnect() throws SpRuntimeException {
-    }
-
-    @Override
-    public void collect(Event event) {
-      events.add(event);
-    }
-
-    public List<Event> getEvents() {
-      return this.events;
-    }
-
   }
 }

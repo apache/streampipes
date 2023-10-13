@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.value.change;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
@@ -31,6 +28,7 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.test.extensions.api.StoreEventCollector;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
@@ -38,7 +36,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -60,8 +57,8 @@ public class TestChangedValueDetectionProcessor {
 
     // Create event with no DIMENSION_PROPERTY
     event.getSchemaInfo()
-      .getEventSchema()
-      .getEventProperties().get(0)
+        .getEventSchema()
+        .getEventProperties().get(0)
         .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
 
     assertEquals("l1", processor.getDimensionKey(event));
@@ -87,9 +84,9 @@ public class TestChangedValueDetectionProcessor {
     DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(processor.declareModel());
 
     graph.getStaticProperties().stream()
-    .filter(p -> p instanceof MappingPropertyUnary)
-    .map((p -> (MappingPropertyUnary) p))
-    .findFirst().get().setSelectedProperty("s0::value");
+        .filter(p -> p instanceof MappingPropertyUnary)
+        .map((p -> (MappingPropertyUnary) p))
+        .findFirst().get().setSelectedProperty("s0::value");
 
     ProcessorParams params = new ProcessorParams(graph);
     processor.onInvocation(params, null, null);
@@ -117,9 +114,9 @@ public class TestChangedValueDetectionProcessor {
     DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(processor.declareModel());
 
     graph.getStaticProperties().stream()
-    .filter(p -> p instanceof MappingPropertyUnary)
-    .map((p -> (MappingPropertyUnary) p))
-    .findFirst().get().setSelectedProperty("s0::value");
+        .filter(p -> p instanceof MappingPropertyUnary)
+        .map((p -> (MappingPropertyUnary) p))
+        .findFirst().get().setSelectedProperty("s0::value");
 
     ProcessorParams params = new ProcessorParams(graph);
     processor.onInvocation(params, null, null);
@@ -169,32 +166,5 @@ public class TestChangedValueDetectionProcessor {
     map.put("value", value);
 
     return EventFactory.fromMap(map, new SourceInfo("", "s0"), new SchemaInfo(eventSchema, new ArrayList<>()));
-  }
-
-  class StoreEventCollector implements SpOutputCollector {
-
-    ArrayList<Event> events = new ArrayList<Event>();
-
-    @Override
-    public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {}
-
-    @Override
-    public void unregisterConsumer(String routeId) {}
-
-    @Override
-    public void connect() throws SpRuntimeException {}
-
-    @Override
-    public void disconnect() throws SpRuntimeException {}
-
-    @Override
-    public void collect(Event event) {
-      events.add(event);
-    }
-
-    public List<Event> getEvents() {
-      return this.events;
-    }
-
   }
 }
