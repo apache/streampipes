@@ -42,7 +42,7 @@ public class MergeByTimeProcessor extends StreamPipesDataProcessor {
 
   protected static final String TIMESTAMP_MAPPING_STREAM_1_KEY = "timestamp_mapping_stream_1";
   protected static final String TIMESTAMP_MAPPING_STREAM_2_KEY = "timestamp_mapping_stream_2";
-  private static final String NUMBER_MAPPING = "number_mapping";
+  protected static final String NUMBER_MAPPING = "number_mapping";
   protected static final String TIME_INTERVAL = "time-interval";
 
   private List<String> outputKeySelectors;

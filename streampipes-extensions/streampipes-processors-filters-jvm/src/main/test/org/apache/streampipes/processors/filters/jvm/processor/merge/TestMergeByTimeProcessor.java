@@ -27,9 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
@@ -39,6 +36,7 @@ import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.apache.streampipes.test.extensions.api.StoreEventCollector;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
@@ -189,36 +187,6 @@ public class TestMergeByTimeProcessor {
         return EventFactory.fromMap(map,
             new SourceInfo("test", streamId),
             new SchemaInfo(null, Lists.newArrayList()));
-    }
-
-    class StoreEventCollector implements SpOutputCollector {
-
-        ArrayList<Event> events = new ArrayList<Event>();
-
-        @Override
-        public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {}
-
-        @Override
-        public void unregisterConsumer(String routeId) {}
-
-        @Override
-        public void connect() throws SpRuntimeException {}
-
-        @Override
-        public void disconnect() throws SpRuntimeException {}
-
-        @Override
-        public void collect(Event event) {
-            events.add(event);
-        }
-
-        public List<Event> getEvents() {
-            return this.events;
-        }
-        public void clearEvent() {
-            this.events.clear();
-        }
-
     }
 }
 

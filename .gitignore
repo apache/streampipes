@@ -31,6 +31,7 @@
 .idea/dynamic.xml
 .idea/uiDesigner.xml
 .idea/*
+my-remarks.txt
 
 # Gradle:
 .idea/gradle.xml
