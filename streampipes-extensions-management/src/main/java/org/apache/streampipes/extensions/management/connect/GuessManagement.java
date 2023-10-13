@@ -63,14 +63,16 @@ public class GuessManagement {
       LOG.info("Requesting the event schema for: " + adapterDescription.getAppId());
 
       try {
-        var schema = adapterInstance
+        var guessedSchemaObj = adapterInstance
             .onSchemaRequested(extractor, guessSchemaContext);
 
         if (!adapterDescription.getEventSchema().getEventProperties().isEmpty()) {
-          new SchemaUpdateManagement().computeSchemaChanges(adapterDescription, schema);
+          new SchemaUpdateManagement().computeSchemaChanges(adapterDescription, guessedSchemaObj);
+        } else {
+          guessedSchemaObj.setTargetSchema(guessedSchemaObj.getEventSchema());
         }
 
-        return schema;
+        return guessedSchemaObj;
       } catch (ParseException e) {
         LOG.error(e.toString());
 

@@ -34,13 +34,14 @@ import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformation
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.sdk.helpers.EpProperties;
-import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findPrimitiveProperty;
 import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findProperty;
@@ -106,7 +107,21 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
 
   @Override
   public void visit(AddValueTransformationRuleDescription rule) {
-    this.properties.add(EpProperties.stringEp(Labels.empty(), rule.getRuntimeKey(), ""));
+    var property = new EventPropertyPrimitive();
+    property.setElementId("http://eventProperty.de/staticValue/" + rule.getStaticValue());
+    property.setRuntimeName(rule.getRuntimeKey());
+    property.setRuntimeType(rule.getDatatype());
+    property.setLabel(rule.getLabel());
+    property.setDescription(rule.getDescription());
+    property.setPropertyScope(rule.getPropertyScope().name());
+
+    if (Objects.nonNull(rule.getSemanticType())) {
+      property.setDomainProperties(List.of(URI.create(rule.getSemanticType())));
+    }
+    if (Objects.nonNull(rule.getMeasurementUnit())) {
+      property.setMeasurementUnit(URI.create(rule.getMeasurementUnit()));
+    }
+    this.properties.add(property);
   }
 
   @Override

@@ -56,7 +56,9 @@ export class EditUnitTransformationComponent implements OnInit {
         private restService: RestService,
         private unitProviderService: UnitProviderService,
     ) {
-        this.allUnits = this.unitProviderService.getUnits();
+        this.allUnits = this.unitProviderService
+            .getUnits()
+            .sort((a, b) => a.label.localeCompare(b.label));
         this.filteredUnits = this.stateCtrl.valueChanges.pipe(
             startWith(''),
             map(unit =>

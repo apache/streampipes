@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.connect.guess;
 
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -36,7 +37,9 @@ import java.util.Objects;
 public class GuessSchema {
 
   public EventSchema eventSchema;
+  public EventSchema targetSchema;
   private List<String> eventPreview;
+  private List<TransformationRuleDescription> modifiedRules;
   public Map<String, FieldStatusInfo> fieldStatusInfo;
 
   // for adapter updates
@@ -45,6 +48,7 @@ public class GuessSchema {
 
   public GuessSchema() {
     super();
+    this.modifiedRules = new ArrayList<>();
     this.eventPreview = new ArrayList<>();
     this.fieldStatusInfo = new HashMap<>();
     this.removedProperties = new ArrayList<>();
@@ -57,6 +61,14 @@ public class GuessSchema {
 
   public void setEventSchema(EventSchema eventSchema) {
     this.eventSchema = eventSchema;
+  }
+
+  public EventSchema getTargetSchema() {
+    return targetSchema;
+  }
+
+  public void setTargetSchema(EventSchema targetSchema) {
+    this.targetSchema = targetSchema;
   }
 
   public List<String> getEventPreview() {
@@ -89,6 +101,14 @@ public class GuessSchema {
 
   public void setUpdateNotifications(List<Notification> updateNotifications) {
     this.updateNotifications = updateNotifications;
+  }
+
+  public List<TransformationRuleDescription> getModifiedRules() {
+    return modifiedRules;
+  }
+
+  public void setModifiedRules(List<TransformationRuleDescription> modifiedRules) {
+    this.modifiedRules = modifiedRules;
   }
 
   @Override

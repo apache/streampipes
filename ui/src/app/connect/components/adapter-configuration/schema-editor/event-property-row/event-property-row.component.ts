@@ -31,6 +31,7 @@ import {
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -52,9 +53,12 @@ export class EventPropertyRowComponent implements OnInit {
     @Output() countSelectedChange = new EventEmitter<number>();
 
     label: string;
+
     isPrimitive = false;
     isNested = false;
     isList = false;
+    isStaticValue = false;
+
     timestampProperty = false;
     showFieldStatus = false;
 
@@ -63,7 +67,7 @@ export class EventPropertyRowComponent implements OnInit {
     originalRuntimeName: string;
 
     constructor(
-        private dialog: MatDialog,
+        private staticValueService: StaticValueTransformService,
         private dialogService: DialogService,
     ) {}
 
@@ -72,6 +76,9 @@ export class EventPropertyRowComponent implements OnInit {
         this.isPrimitive = this.isEventPropertyPrimitive(this.node.data);
         this.isList = this.isEventPropertyList(this.node.data);
         this.isNested = this.isEventPropertyNested(this.node.data);
+        this.isStaticValue = this.staticValueService.isStaticValueProperty(
+            this.node.data.elementId,
+        );
         this.timestampProperty = this.isTimestampProperty(this.node.data);
 
         if (this.node.data instanceof EventProperty) {
@@ -79,24 +86,29 @@ export class EventPropertyRowComponent implements OnInit {
                 this.originalEventSchema.eventProperties,
             );
             if (originalProperty) {
-                this.originalRuntimeName = originalProperty.runtimeName;
-                this.showFieldStatus =
-                    this.fieldStatusInfo &&
-                    this.fieldStatusInfo[this.originalRuntimeName] !==
-                        undefined;
-                if (this.isPrimitive) {
-                    this.originalRuntimeType = this.parseType(
-                        originalProperty.runtimeType,
-                    );
-                    this.runtimeType = this.parseType(
-                        (this.node.data as EventPropertyPrimitive).runtimeType,
-                    );
-                }
+                this.applyDisplayedProperties(originalProperty);
+            } else {
+                this.applyDisplayedProperties(this.node.data);
             }
         }
 
         if (!this.node.data.propertyScope) {
             this.node.data.propertyScope = 'MEASUREMENT_PROPERTY';
+        }
+    }
+
+    private applyDisplayedProperties(ep: EventProperty) {
+        this.originalRuntimeName = ep.runtimeName;
+        this.showFieldStatus =
+            this.fieldStatusInfo &&
+            this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
+        if (this.isPrimitive) {
+            this.originalRuntimeType = this.parseType(
+                (ep as EventPropertyPrimitive).runtimeType,
+            );
+            this.runtimeType = this.parseType(
+                (this.node.data as EventPropertyPrimitive).runtimeType,
+            );
         }
     }
 

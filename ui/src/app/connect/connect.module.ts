@@ -35,7 +35,6 @@ import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
 import { DataTypesService } from './services/data-type.service';
 import { StaticPropertyUtilService } from '../core-ui/static-properties/static-property-util.service';
-import { TransformationRuleService } from './services/transformation-rule.service';
 import { ConnectService } from './services/connect.service';
 import { AdapterDescriptionComponent } from './components/data-marketplace/adapter-description/adapter-description.component';
 import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
@@ -190,7 +189,6 @@ import { AdapterSettingsComponent } from './components/adapter-configuration/ada
         RestService,
         ConnectService,
         DataTypesService,
-        TransformationRuleService,
         StaticPropertyUtilService,
         UnitProviderService,
         TimestampPipe,

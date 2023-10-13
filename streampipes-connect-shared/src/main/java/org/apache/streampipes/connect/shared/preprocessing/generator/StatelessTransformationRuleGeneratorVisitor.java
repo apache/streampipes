@@ -91,7 +91,8 @@ public class StatelessTransformationRuleGeneratorVisitor extends TransformationR
   public void visit(AddValueTransformationRuleDescription ruleDesc) {
     rules.add(new AddValueTransformationRule(
         ruleDesc.getRuntimeKey(),
-        ruleDesc.getStaticValue()));
+        ruleDesc.getStaticValue(),
+        ruleDesc.getDatatype()));
   }
 
   @Override

@@ -33,8 +33,11 @@
                 <sp-schema-editor-header
                     fxFlex="100"
                     [countSelected]="countSelected"
+                    [timestampPresent]="timestampPresent"
                     (addNestedPropertyEmitter)="addNestedProperty()"
-                    (addStaticValuePropertyEmitter)="addStaticValueProperty()"
+                    (addStaticValuePropertyEmitter)="
+                        addStaticValueProperty($event)
+                    "
                     (addTimestampPropertyEmitter)="addTimestampProperty()"
                     (guessSchemaEmitter)="guessSchema()"
                     (updatePreviewEmitter)="updatePreview()"
@@ -70,8 +73,8 @@
                     *ngIf="
                         !isError &&
                         !isLoading &&
-                        eventSchema &&
-                        oldEventSchema &&
+                        targetSchema &&
+                        originalSchema &&
                         nodes
                     "
                     fxLayout="column"
@@ -93,9 +96,8 @@
                             <sp-event-property-row
                                 [node]="node"
                                 [(isEditable)]="isEditable"
-                                [(eventSchema)]="eventSchema"
-                                [(originalEventSchema)]="oldEventSchema"
-                                [eventPreview]="eventPreview"
+                                [(eventSchema)]="targetSchema"
+                                [(originalEventSchema)]="originalSchema"
                                 [fieldStatusInfo]="fieldStatusInfo"
                                 (refreshTreeEmitter)="refreshTree($event)"
                                 [(countSelected)]="countSelected"
@@ -111,8 +113,8 @@
         *ngIf="desiredPreview && isPreviewEnabled && !isLoading && !isError"
     >
         <sp-event-schema-preview
-            [originalEventSchema]="oldEventSchema"
-            [desiredEventSchema]="eventSchema"
+            [originalEventSchema]="originalSchema"
+            [desiredEventSchema]="targetSchema"
             [originalPreview]="eventPreview[0]"
             [desiredPreview]="desiredPreview"
             (updatePreviewEmitter)="updatePreview()"

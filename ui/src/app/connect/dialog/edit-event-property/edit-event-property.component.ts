@@ -81,7 +81,6 @@ export class EditEventPropertyComponent implements OnInit {
 
     ngOnInit(): void {
         this.cachedProperty = this.copyEp(this.property);
-        this.runtimeDataTypes = this.dataTypeService.getDataTypes();
         this.isTimestampProperty = this.semanticTypeUtilsService.isTimestamp(
             this.cachedProperty,
         );
@@ -149,15 +148,10 @@ export class EditEventPropertyComponent implements OnInit {
         });
     }
 
-    staticValueAddedByUser() {
-        return this.property.elementId.startsWith(
-            'http://eventProperty.de/staticValue/',
-        );
-    }
-
     save(): void {
         this.property.label = this.cachedProperty.label;
         this.property.description = this.cachedProperty.description;
+        this.property.elementId = this.cachedProperty.elementId;
 
         // remove undefined from domain properties array
         this.property.domainProperties =
@@ -194,10 +188,6 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty as any
             ).timestampTransformationMultiplier;
 
-            (this.property as any).staticValue = (
-                this.cachedProperty as any
-            ).staticValue;
-
             (this.property as any).correctionValue = (
                 this.cachedProperty as any
             ).correctionValue;
@@ -206,19 +196,6 @@ export class EditEventPropertyComponent implements OnInit {
             ).operator;
         }
         this.dialogRef.close({ data: this.property });
-    }
-
-    enableSaveBtn($event: boolean) {
-        this.isSaveBtnEnabled = $event;
-    }
-
-    isNumericDataType($event: boolean) {
-        if (!$event) {
-            // clear cache when changing to non-numeric data type
-            this.cachedProperty.operator = undefined;
-            this.cachedProperty.correctionValue = undefined;
-        }
-        this.isNumericProperty = $event;
     }
 
     handleDataTypeChange(changed: boolean) {

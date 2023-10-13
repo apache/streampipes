@@ -42,6 +42,7 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 import { TransformationRuleService } from '../../../../services/transformation-rule.service';
+import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 
 @Component({
     selector: 'sp-event-schema',
@@ -53,6 +54,7 @@ export class EventSchemaComponent implements OnChanges {
         private restService: RestService,
         private dataTypesService: DataTypesService,
         private transformationRuleService: TransformationRuleService,
+        private staticValueTransformService: StaticValueTransformService,
     ) {}
 
     @Input()
@@ -60,11 +62,9 @@ export class EventSchemaComponent implements OnChanges {
 
     isEditable = true;
 
-    @Input()
-    oldEventSchema: EventSchema;
-
-    @Input()
-    eventSchema: EventSchema = new EventSchema();
+    originalSchema: EventSchema;
+    targetSchema: EventSchema = new EventSchema();
+    timestampPresent = false;
 
     @Input()
     isEditMode;
@@ -72,12 +72,6 @@ export class EventSchemaComponent implements OnChanges {
 
     @Output()
     isEditableChange = new EventEmitter<boolean>();
-    @Output()
-    adapterChange = new EventEmitter<AdapterDescription>();
-    @Output()
-    eventSchemaChange = new EventEmitter<EventSchema>();
-    @Output()
-    oldEventSchemaChange = new EventEmitter<EventSchema>();
 
     @Output()
     goBackEmitter: EventEmitter<MatStepper> = new EventEmitter();
@@ -146,20 +140,14 @@ export class EventSchemaComponent implements OnChanges {
             guessSchema => {
                 this.eventPreview = guessSchema.eventPreview;
                 this.fieldStatusInfo = guessSchema.fieldStatusInfo;
-                this.eventSchema = guessSchema.eventSchema;
-                this.eventSchema.eventProperties.sort((a, b) => {
+                this.targetSchema = guessSchema.targetSchema;
+                this.targetSchema.eventProperties.sort((a, b) => {
                     return a.runtimeName < b.runtimeName ? -1 : 1;
                 });
-                this.eventSchemaChange.emit(this.eventSchema);
                 this.schemaGuess = guessSchema;
 
-                this.validEventSchema = this.checkIfValid(this.eventSchema);
-
-                this.oldEventSchema = EventSchema.fromData(
-                    this.eventSchema,
-                    new EventSchema(),
-                );
-                this.oldEventSchemaChange.emit(this.oldEventSchema);
+                this.originalSchema = guessSchema.eventSchema;
+                this.validEventSchema = this.checkIfValid(this.targetSchema);
 
                 this.refreshTree();
 
@@ -179,17 +167,19 @@ export class EventSchemaComponent implements OnChanges {
                 this.errorMessage = errorMessage.error;
                 this.isError = true;
                 this.isLoading = false;
-                this.eventSchema = new EventSchema();
+                this.targetSchema = new EventSchema();
             },
         );
     }
 
     public refreshTree(refreshPreview = true): void {
-        this.nodes = new Array<EventProperty>();
-        this.nodes.push(this.eventSchema as unknown as EventProperty);
-        this.validEventSchema = this.checkIfValid(this.eventSchema);
-        if (refreshPreview) {
-            this.updatePreview();
+        if (this.targetSchema && this.targetSchema.eventProperties) {
+            this.nodes = new Array<EventProperty>();
+            this.nodes.push(...this.targetSchema.eventProperties);
+            this.validEventSchema = this.checkIfValid(this.targetSchema);
+            if (refreshPreview) {
+                this.updatePreview();
+            }
         }
     }
 
@@ -203,7 +193,7 @@ export class EventSchemaComponent implements OnChanges {
         nested.domainProperties = [];
         nested.runtimeName = 'nested';
         if (!eventProperty) {
-            this.eventSchema.eventProperties.push(nested);
+            this.targetSchema.eventProperties.push(nested);
         } else {
             eventProperty.eventProperties.push(nested);
         }
@@ -211,7 +201,7 @@ export class EventSchemaComponent implements OnChanges {
     }
 
     public removeSelectedProperties(eventProperties?: any): void {
-        eventProperties = eventProperties || this.eventSchema.eventProperties;
+        eventProperties = eventProperties || this.targetSchema.eventProperties;
         for (let i = eventProperties.length - 1; i >= 0; --i) {
             if (eventProperties[i].eventProperties) {
                 this.removeSelectedProperties(
@@ -226,19 +216,19 @@ export class EventSchemaComponent implements OnChanges {
         this.refreshTree();
     }
 
-    public addStaticValueProperty(): void {
+    public addStaticValueProperty(runtimeName: string): void {
         const eventProperty = new EventPropertyPrimitive();
         eventProperty['@class'] =
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
         eventProperty.elementId =
-            'http://eventProperty.de/staticValue/' + UUID.UUID();
+            this.staticValueTransformService.makeDefaultElementId();
 
-        eventProperty.runtimeName = 'key_0';
-        (eventProperty as any).staticValue = '';
+        eventProperty.runtimeName = runtimeName;
         eventProperty.runtimeType = this.dataTypesService.getStringTypeUrl();
         eventProperty.domainProperties = [];
+        eventProperty.propertyScope = 'DIMENSION_PROPERTY';
 
-        this.eventSchema.eventProperties.push(eventProperty);
+        this.targetSchema.eventProperties.push(eventProperty);
         this.refreshTree();
     }
 
@@ -256,16 +246,17 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.propertyScope = 'HEADER_PROPERTY';
         eventProperty.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
 
-        this.eventSchema.eventProperties.push(eventProperty);
+        this.targetSchema.eventProperties.push(eventProperty);
         this.refreshTree();
     }
 
     public updatePreview(): void {
         this.isPreviewEnabled = false;
-        this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
-        this.transformationRuleService.setNewEventSchema(this.eventSchema);
         const ruleDescriptions =
-            this.transformationRuleService.getTransformationRuleDescriptions();
+            this.transformationRuleService.getTransformationRuleDescriptions(
+                this.originalSchema,
+                this.targetSchema,
+            );
         if (this.eventPreview && this.eventPreview.length > 0) {
             this.restService
                 .getAdapterEventPreview({
@@ -298,10 +289,10 @@ export class EventSchemaComponent implements OnChanges {
     }
 
     private checkIfValid(eventSchema: EventSchema): boolean {
-        let hasTimestamp = false;
+        this.timestampPresent = false;
         eventSchema.eventProperties.forEach(p => {
             if (p.domainProperties.indexOf('http://schema.org/DateTime') > -1) {
-                hasTimestamp = true;
+                this.timestampPresent = true;
             }
         });
 
@@ -311,7 +302,7 @@ export class EventSchemaComponent implements OnChanges {
             this.setEventSchemaEditWarning();
         }
 
-        if (!hasTimestamp) {
+        if (!this.timestampPresent) {
             this.schemaErrorHints.push(
                 new UserErrorMessage(
                     'Missing Timestamp',
@@ -338,6 +329,14 @@ export class EventSchemaComponent implements OnChanges {
             }
         }
 
-        return hasTimestamp;
+        return this.timestampPresent;
+    }
+
+    getOriginalSchema(): EventSchema {
+        return this.originalSchema;
+    }
+
+    getTargetSchema(): EventSchema {
+        return this.targetSchema;
     }
 }
