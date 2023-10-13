@@ -110,18 +110,26 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
 
               for (int i = 0; i < ports.size(); i++) {
 
-                var portResult = getMap(payload,
-                    "/iolinkmaster/port[%s]/iolinkdevice/pdin".formatted(ports.get(i)));
-                var eventData = (String) portResult.get("data");
+                try {
+                  var portResult = getMap(payload,
+                          "/iolinkmaster/port[%s]/iolinkdevice/pdin".formatted(ports.get(i)));
+                  var eventData = (String) portResult.get("data");
 
-                var parsedEvent = sensor.parseEvent(eventData);
-                parsedEvent.put("timestamp", System.currentTimeMillis() + i);
-                parsedEvent.put("port", "port" + ports.get(i));
-                parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
+                  var parsedEvent = sensor.parseEvent(eventData);
+                  parsedEvent.put("timestamp", System.currentTimeMillis() + i);
+                  parsedEvent.put("port", "port" + ports.get(i));
+                  parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
 
-                collector.collect(parsedEvent);
+                  collector.collect(parsedEvent);
+                } catch (Exception e) {
+                  adapterRuntimeContext
+                          .getLogger()
+                          .error(e);
+                  LOG.error("Data from IOLink sensor could not be extracted for port {}: {}", i, e);
+                }
               }
-            });
+            }
+            );
           } catch (Exception e) {
             adapterRuntimeContext
                 .getLogger()
