@@ -17,16 +17,6 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
-import static org.junit.Assert.assertTrue;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
@@ -41,11 +31,23 @@ import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class TestMergeByTimeProcessor {
@@ -53,30 +55,26 @@ public class TestMergeByTimeProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(TestMergeByTimeProcessor.class);
 
   private static final Integer timeInterval = 100;
+  @org.junit.runners.Parameterized.Parameter
+  public String testName;
+  @org.junit.runners.Parameterized.Parameter(1)
+  public List<String> eventStrings;
+  @org.junit.runners.Parameterized.Parameter(2)
+  public List<String> expectedValue;
 
   @org.junit.runners.Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-      {"testWithInInterval", Arrays.asList("s0:0", "s1:90"), Arrays.asList("(90,0)")},
-      {"testNotWithInInterval", Arrays.asList("s0:0", "s1:110"), Arrays.asList()},
-      {"testWithInAndNotWithInInterval", Arrays.asList("s0:0", "s1:80", "s0:110", "s1:500"),
-        Arrays.asList("(80,0)")},
-      {"testFigGvnInDocs",
-        Arrays.asList("s1:0", "s0:10", "s0:110", "s1:115", "s0:120", "s1:230", "s0:340", "s0:500",
-          "s1:510"),
-        Arrays.asList("(0,10)", "(115,110)", "(510,500)")}
+        {"testWithInInterval", Arrays.asList("s0:0", "s1:90"), List.of("(90,0)")},
+        {"testNotWithInInterval", Arrays.asList("s0:0", "s1:110"), List.of()},
+        {"testWithInAndNotWithInInterval", Arrays.asList("s0:0", "s1:80", "s0:110", "s1:500"),
+            List.of("(80,0)")},
+        {"testFigGvnInDocs",
+            Arrays.asList("s1:0", "s0:10", "s0:110", "s1:115", "s0:120", "s1:230", "s0:340", "s0:500",
+                "s1:510"),
+            Arrays.asList("(0,10)", "(115,110)", "(510,500)")}
     });
   }
-
-  @org.junit.runners.Parameterized.Parameter
-  public String testName;
-
-  @org.junit.runners.Parameterized.Parameter(1)
-  public List<String> eventStrings;
-
-  @org.junit.runners.Parameterized.Parameter(2)
-  public List<String> expectedValue;
-
 
   @Test
   public void testMergeByTimeProcessor() {
@@ -86,47 +84,47 @@ public class TestMergeByTimeProcessor {
 
     DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
     graph.setInputStreams(Arrays.asList(
-      EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("in-stram0")),
-      EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("in-stream1"))
+        EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("in-stram0")),
+        EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("in-stream1"))
     ));
 
     graph.setOutputStream(
-      EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("out-stream"))
+        EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("out-stream"))
     );
     graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
-      .setActualTopicName("output-topic");
+        .setActualTopicName("output-topic");
 
     List<String> outputKeySelectors = graph.getOutputStrategies()
-      .stream()
-      .filter(CustomOutputStrategy.class::isInstance)
-      .map(o -> (CustomOutputStrategy) o)
-      .findFirst()
-      .map(CustomOutputStrategy::getSelectedPropertyKeys)
-      .orElse(new ArrayList<>());
+        .stream()
+        .filter(CustomOutputStrategy.class::isInstance)
+        .map(o -> (CustomOutputStrategy) o)
+        .findFirst()
+        .map(CustomOutputStrategy::getSelectedPropertyKeys)
+        .orElse(new ArrayList<>());
     outputKeySelectors.add("s0::timestamp_mapping_stream_1");
     outputKeySelectors.add("s1::timestamp_mapping_stream_2");
 
     List<MappingPropertyUnary> mappingPropertyUnaries = graph.getStaticProperties()
-      .stream()
-      .filter(p -> p instanceof MappingPropertyUnary)
-      .map((p -> (MappingPropertyUnary) p))
-      .filter(p -> Arrays.asList(
-          MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY,
-          MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY)
-        .contains(p.getInternalName()))
-      .collect(Collectors.toList());
+        .stream()
+        .filter(p -> p instanceof MappingPropertyUnary)
+        .map((p -> (MappingPropertyUnary) p))
+        .filter(p -> Arrays.asList(
+                MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY,
+                MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY)
+            .contains(p.getInternalName()))
+        .collect(Collectors.toList());
 
     assert mappingPropertyUnaries.size() == 2;
     mappingPropertyUnaries.get(0)
-      .setSelectedProperty("s0::" + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY);
+        .setSelectedProperty("s0::" + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY);
     mappingPropertyUnaries.get(1)
-      .setSelectedProperty("s1::" + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY);
+        .setSelectedProperty("s1::" + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY);
 
     FreeTextStaticProperty fsp = graph.getStaticProperties().stream()
-      .filter(p -> p instanceof FreeTextStaticProperty)
-      .map((p -> (FreeTextStaticProperty) p))
-      .filter(p -> p.getInternalName().equals(MergeByTimeProcessor.TIME_INTERVAL))
-      .findFirst().orElse(null);
+        .filter(p -> p instanceof FreeTextStaticProperty)
+        .map((p -> (FreeTextStaticProperty) p))
+        .filter(p -> p.getInternalName().equals(MergeByTimeProcessor.TIME_INTERVAL))
+        .findFirst().orElse(null);
     assert fsp != null;
     fsp.setValue(String.valueOf(timeInterval));
 
@@ -138,8 +136,8 @@ public class TestMergeByTimeProcessor {
     sendEvents(mergeByTimeProcessor, collector);
 
     List<String> actualCollectedEvents = collector.getEvents().stream()
-      .map(e -> formatMergedEvent(e))
-      .collect(Collectors.toList());
+        .map(e -> formatMergedEvent(e))
+        .collect(Collectors.toList());
 
     LOG.info("Expected merged event is {}", expectedValue);
     LOG.info("Actual merged event is {}", actualCollectedEvents);
@@ -159,8 +157,8 @@ public class TestMergeByTimeProcessor {
   }
 
   private String formatMergedEvent(Event mergedEvent) {
-    return String.format("(%s)", mergedEvent.getFields().values().stream().
-      map(m -> m.getAsPrimitive().getAsString()).collect(Collectors.joining(",")));
+    return String.format("(%s)", mergedEvent.getFields().values().stream()
+        .map(m -> m.getAsPrimitive().getAsString()).collect(Collectors.joining(",")));
   }
 
   private void sendEvents(MergeByTimeProcessor mergeByTimeProcessor, StoreEventCollector spOut) {
@@ -189,7 +187,7 @@ public class TestMergeByTimeProcessor {
       map.put(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, timestamp);
     }
     return EventFactory.fromMap(map,
-      new SourceInfo("test", streamId),
-      new SchemaInfo(null, Lists.newArrayList()));
+        new SourceInfo("test", streamId),
+        new SchemaInfo(null, Lists.newArrayList()));
   }
 }
