@@ -161,62 +161,61 @@ export class TransformationRuleService {
         oldEventSchema: EventSchema,
         newEventSchema: EventSchema,
     ): MoveRuleDescription[] {
-        let result: MoveRuleDescription[] = [];
+        const result: MoveRuleDescription[] = [];
 
-        for (const eventProperty of newEventProperties) {
-            if (eventProperty instanceof EventPropertyNested) {
-                const tmpResults: MoveRuleDescription[] = this.getMoveRules(
-                    (eventProperty as EventPropertyNested).eventProperties,
-                    oldEventSchema,
-                    newEventSchema,
+        const extractMoveRules = (
+            eventProps: EventProperty[],
+            keyPrefix: string,
+        ) => {
+            for (const eventProperty of eventProps) {
+                if (eventProperty instanceof EventPropertyNested) {
+                    extractMoveRules(
+                        (eventProperty as EventPropertyNested).eventProperties,
+                        keyPrefix,
+                    );
+                }
+                const keyOld = this.getCompleteRuntimeNameKey(
+                    oldEventSchema.eventProperties,
+                    eventProperty.elementId,
                 );
-                result = result.concat(tmpResults);
-            }
-            const keyOld: string = this.getCompleteRuntimeNameKey(
-                oldEventSchema.eventProperties,
-                eventProperty.elementId,
-            );
-            const keyNew: string = this.getCompleteRuntimeNameKey(
-                newEventSchema.eventProperties,
-                eventProperty.elementId,
-            );
+                const keyNew = this.getCompleteRuntimeNameKey(
+                    newEventSchema.eventProperties,
+                    eventProperty.elementId,
+                );
+                if (keyOld && keyNew) {
+                    const keyOldPrefix = keyOld.substr(
+                        0,
+                        keyOld.lastIndexOf('.'),
+                    );
+                    const keyNewPrefix = keyNew.substr(
+                        0,
+                        keyNew.lastIndexOf('.'),
+                    );
 
-            // get prefix
-            if (keyOld && keyNew) {
-                const keyOldPrefix: string = keyOld.substr(
-                    0,
-                    keyOld.lastIndexOf('.'),
-                );
-                const keyNewPrefix: string = keyNew.substr(
-                    0,
-                    keyNew.lastIndexOf('.'),
-                );
+                    if (keyOldPrefix !== keyNewPrefix) {
+                        let keyOfOldValue = '';
+                        if (keyOldPrefix === '') {
+                            keyOfOldValue = keyNew.substr(
+                                keyNew.lastIndexOf('.') + 1,
+                            );
+                        } else {
+                            keyOfOldValue = `${keyOldPrefix}.${keyNew.substr(
+                                keyNew.lastIndexOf('.') + 1,
+                            )}`;
+                        }
 
-                if (keyOldPrefix !== keyNewPrefix) {
-                    // old key is equals old route and new name
-                    let keyOfOldValue = '';
-                    keyOfOldValue =
-                        keyOldPrefix === ''
-                            ? keyNew.substr(
-                                  keyNew.lastIndexOf('.') + 1,
-                                  keyNew.length,
-                              )
-                            : keyOldPrefix +
-                              '.' +
-                              keyNew.substr(
-                                  keyNew.lastIndexOf('.') + 1,
-                                  keyNew.length,
-                              );
-                    const rule: MoveRuleDescription = new MoveRuleDescription();
-                    rule['@class'] =
-                        'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
-                    rule.oldRuntimeKey = keyOfOldValue;
-                    rule.newRuntimeKey = keyNewPrefix;
-                    result.push(rule);
+                        const rule = new MoveRuleDescription();
+                        rule['@class'] =
+                            'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
+                        rule.oldRuntimeKey = keyOfOldValue;
+                        rule.newRuntimeKey = keyNewPrefix;
+                        result.push(rule);
+                    }
                 }
             }
-        }
+        };
 
+        extractMoveRules(newEventProperties, '');
         return result;
     }
 
@@ -247,7 +246,6 @@ export class TransformationRuleService {
                 result.push(rule);
             }
         }
-
         return result;
     }
 

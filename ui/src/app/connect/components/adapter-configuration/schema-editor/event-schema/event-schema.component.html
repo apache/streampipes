@@ -86,6 +86,7 @@
                         #tree
                         [nodes]="nodes"
                         [options]="options"
+                        (moveNode)="onNodeMove($event)"
                         (updateData)="onUpdateData(tree)"
                     >
                         <ng-template

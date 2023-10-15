@@ -34,6 +34,7 @@ import {
     EventProperty,
     EventPropertyNested,
     EventPropertyPrimitive,
+    EventPropertyUnion,
     EventSchema,
     FieldStatusInfo,
     GuessSchema,
@@ -97,7 +98,7 @@ export class EventSchemaComponent implements OnChanges {
     isError = false;
     isPreviewEnabled = false;
     errorMessage: SpLogMessage;
-    nodes: EventProperty[] = new Array<EventProperty>();
+    nodes: EventPropertyUnion[] = new Array<EventPropertyUnion>();
     validEventSchema = false;
     schemaErrorHints: UserErrorMessage[] = [];
 
@@ -112,8 +113,8 @@ export class EventSchemaComponent implements OnChanges {
         },
         allowDrop: (node, { parent }) => {
             return (
-                parent.data.eventProperties !== undefined &&
-                parent.parent !== null
+                parent.data instanceof EventPropertyNested ||
+                parent.data.virtual
             );
         },
         displayField: 'runTimeName',
@@ -174,7 +175,7 @@ export class EventSchemaComponent implements OnChanges {
 
     public refreshTree(refreshPreview = true): void {
         if (this.targetSchema && this.targetSchema.eventProperties) {
-            this.nodes = new Array<EventProperty>();
+            this.nodes = new Array<EventPropertyUnion>();
             this.nodes.push(...this.targetSchema.eventProperties);
             this.validEventSchema = this.checkIfValid(this.targetSchema);
             if (refreshPreview) {
@@ -337,6 +338,12 @@ export class EventSchemaComponent implements OnChanges {
     }
 
     getTargetSchema(): EventSchema {
+        this.targetSchema.eventProperties = this.nodes;
         return this.targetSchema;
+    }
+
+    onNodeMove(event: any) {
+        this.targetSchema.eventProperties = this.nodes;
+        this.updatePreview();
     }
 }

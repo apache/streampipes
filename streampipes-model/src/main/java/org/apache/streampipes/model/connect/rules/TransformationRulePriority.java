@@ -24,8 +24,8 @@ public enum TransformationRulePriority {
   ADD_VALUE(110),
 
   RENAME(210),
-  MOVE(220),
   CREATE_NESTED(230),
+  MOVE(235),
   DELETE(240),
 
   CHANGE_UNIT(310),
