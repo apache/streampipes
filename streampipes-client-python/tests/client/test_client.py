@@ -79,6 +79,18 @@ class TestStreamPipesClient(TestCase):
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
 
+    def test_client_create_invalid_config(self):
+
+        with self.assertRaises(AttributeError):
+            StreamPipesClient.create(
+                client_config=StreamPipesClientConfig(
+                    credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                    host_address="localhost",
+                    https_disabled=True,
+                    port=443,
+                )
+            )
+
     @patch("streampipes.client.client.logger", autospec=True)
     @patch("streampipes.endpoint.endpoint.APIEndpoint._make_request", autospec=True)
     def test_client_describe(self, make_request: MagicMock, mocked_logger: MagicMock):
