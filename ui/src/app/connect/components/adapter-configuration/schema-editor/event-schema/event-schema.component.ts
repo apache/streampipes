@@ -31,7 +31,6 @@ import { UUID } from 'angular2-uuid';
 import { DataTypesService } from '../../../../services/data-type.service';
 import {
     AdapterDescription,
-    EventProperty,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
@@ -89,8 +88,7 @@ export class EventSchemaComponent implements OnChanges {
     @Output()
     clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
-    @ViewChild(TreeComponent, { static: true })
-    tree: TreeComponent;
+    _tree: TreeComponent;
 
     schemaGuess: GuessSchema = new GuessSchema();
     countSelected = 0;
@@ -150,13 +148,11 @@ export class EventSchemaComponent implements OnChanges {
                 this.originalSchema = guessSchema.eventSchema;
                 this.validEventSchema = this.checkIfValid(this.targetSchema);
 
-                this.refreshTree();
-
                 this.isEditable = true;
                 this.isEditableChange.emit(true);
                 this.isLoading = false;
                 this.refreshedEventSchema = true;
-
+                this.refreshTree();
                 if (
                     guessSchema.eventPreview &&
                     guessSchema.eventPreview.length > 0
@@ -181,6 +177,11 @@ export class EventSchemaComponent implements OnChanges {
             if (refreshPreview) {
                 this.updatePreview();
             }
+            setTimeout(() => {
+                if (this._tree) {
+                    this._tree.treeModel.expandAll();
+                }
+            });
         }
     }
 
@@ -345,5 +346,14 @@ export class EventSchemaComponent implements OnChanges {
     onNodeMove(event: any) {
         this.targetSchema.eventProperties = this.nodes;
         this.updatePreview();
+    }
+
+    @ViewChild('tree')
+    set tree(treeComponent: TreeComponent) {
+        this._tree = treeComponent;
+    }
+
+    get tree(): TreeComponent {
+        return this._tree;
     }
 }
