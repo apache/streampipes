@@ -120,54 +120,55 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
                 if (payload.containsKey(keyPortInformation)) {
 
                   portResult = getMap(payload, keyPortInformation);
-                } else if (!missingPortInformationDetected){
-                  adapterRuntimeContext
-                          .getLogger()
-                          .warn("Event does not contain information about port " + i, "");
-                  LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
-                  missingPortInformationDetected = true;
-                  break;
-                } else {
-                  break;
-                }
 
-                try {
-                  String eventData;
-                  if (portResult.containsKey("data")) {
-                    eventData = (String) portResult.get("data");
-                  } else if (!missingEventDataDetected){
+                  try {
+                    String eventData;
+                    if (portResult.containsKey("data")) {
+                      eventData = (String) portResult.get("data");
+
+                      var parsedEvent = sensor.parseEvent(eventData);
+                      parsedEvent.put("timestamp", System.currentTimeMillis() + i);
+                      parsedEvent.put("port", "port" + ports.get(i));
+                      parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
+
+                      collector.collect(parsedEvent);
+                    } else {
+                      if (!missingEventDataDetected) {
+                        adapterRuntimeContext
+                                .getLogger()
+                                .warn("Payload for port %s does not contain event data".formatted(i), "");
+                        LOG.error(
+                                "IoLink event does not look like expected. "
+                                + "No port information found for port {}.", i);
+                        missingEventDataDetected = true;
+                      }
+                    }
+                  } catch (Exception e) {
                     adapterRuntimeContext
                             .getLogger()
-                            .warn("Payload for port %s does not contain event data".formatted(i), "");
-                    LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
-                    missingEventDataDetected = true;
-                    break;
-                  } else {
-                    break;
+                            .error(e);
+                    LOG.error("Data from IOLink sensor could not be extracted for port {}: {}", i, e);
                   }
 
-                  var parsedEvent = sensor.parseEvent(eventData);
-                  parsedEvent.put("timestamp", System.currentTimeMillis() + i);
-                  parsedEvent.put("port", "port" + ports.get(i));
-                  parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
-
-                  collector.collect(parsedEvent);
-                } catch (Exception e) {
-                  adapterRuntimeContext
-                          .getLogger()
-                          .error(e);
-                  LOG.error("Data from IOLink sensor could not be extracted for port {}: {}", i, e);
+                } else {
+                  if (!missingPortInformationDetected) {
+                    adapterRuntimeContext
+                            .getLogger()
+                            .warn("Event does not contain information about port " + i, "");
+                    LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
+                    missingPortInformationDetected = true;
+                  }
                 }
               }
-            }
-            );
-          } catch (Exception e) {
+            });
+          } catch (ParseException e) {
             adapterRuntimeContext
-                .getLogger()
-                .error(e);
-            LOG.error("Could not parse event", e);
+                    .getLogger()
+                    .error(e);
+            LOG.error("IOLink master event could not be parsed.", e);
           }
-        });
+        }
+        );
 
     Thread thread = new Thread(this.mqttConsumer);
     thread.start();
