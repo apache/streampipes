@@ -16,4 +16,14 @@
  *
  */
 
-@import 'src/scss/sp/sp-dialog';
+import { Component, Input } from '@angular/core';
+
+@Component({
+    selector: 'sp-adapter-started-loading',
+    templateUrl: './adapter-started-loading.component.html',
+    styleUrls: ['./adapter-started-loading.component.scss'],
+})
+export class SpAdapterStartedLoadingComponent {
+    @Input()
+    textMessage = '';
+}

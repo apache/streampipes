@@ -63,7 +63,7 @@
                 <ng-template matStepLabel>Start Adapter</ng-template>
                 <sp-start-adapter-configuration
                     [adapterDescription]="adapter"
-                    [eventSchema]="eventSchema"
+                    [eventSchema]="adapter.dataStream.eventSchema"
                     [isEditMode]="isEditMode"
                     (removeSelectionEmitter)="removeSelection()"
                     (goBackEmitter)="goBack()"

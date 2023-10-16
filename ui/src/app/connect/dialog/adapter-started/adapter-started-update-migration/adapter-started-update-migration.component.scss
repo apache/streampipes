@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,4 +16,8 @@
  *
  */
 
-@import 'src/scss/sp/sp-dialog';
+.migration-infos {
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

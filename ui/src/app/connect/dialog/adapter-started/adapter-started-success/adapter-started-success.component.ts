@@ -16,4 +16,31 @@
  *
  */
 
-@import 'src/scss/sp/sp-dialog';
+import { Component, Input } from '@angular/core';
+import {
+    ErrorMessage,
+    Message,
+    PipelineOperationStatus,
+} from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-adapter-started-success',
+    templateUrl: './adapter-started-success.component.html',
+    styleUrls: ['./adapter-started-success.component.scss'],
+})
+export class SpAdapterStartedSuccessComponent {
+    @Input()
+    templateErrorMessage: ErrorMessage;
+
+    @Input()
+    adapterInstallationSuccessMessage = '';
+
+    @Input()
+    pipelineOperationStatus: PipelineOperationStatus;
+
+    @Input()
+    saveInDataLake: boolean;
+
+    @Input()
+    adapterStatus: Message;
+}

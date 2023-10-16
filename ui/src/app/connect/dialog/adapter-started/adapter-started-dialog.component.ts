@@ -18,7 +18,6 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { RestService } from '../../services/rest.service';
 import {
     AdapterDescription,
     AdapterService,
@@ -27,7 +26,6 @@ import {
     PipelineOperationStatus,
     PipelineTemplateService,
     PipelineUpdateInfo,
-    SpDataStream,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
@@ -40,7 +38,6 @@ import { PipelineInvocationBuilder } from '../../../core-services/template/Pipel
 export class AdapterStartedDialog implements OnInit {
     adapterInstalled = false;
     public adapterStatus: Message;
-    public streamDescription: SpDataStream;
     pollingActive = false;
     public pipelineOperationStatus: PipelineOperationStatus;
 
@@ -75,12 +72,14 @@ export class AdapterStartedDialog implements OnInit {
     adapterUpdatePreflight = false;
     adapterPipelineUpdateInfos: PipelineUpdateInfo[];
     loading = false;
+    loadingText = '';
     showPreview = false;
+    adapterInstallationSuccessMessage = '';
+    adapterElementId = '';
 
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
         private adapterService: AdapterService,
-        private restService: RestService,
         private shepherdService: ShepherdService,
         private pipelineTemplateService: PipelineTemplateService,
     ) {}
@@ -94,6 +93,7 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     initAdapterUpdatePreflight(): void {
+        this.loadingText = `Checking migrations for adapter ${this.adapter.name}`;
         this.loading = true;
         this.adapterService
             .performPipelineMigrationPreflight(this.adapter)
@@ -109,51 +109,91 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     updateAdapter(): void {
+        this.loadingText = `Updating adapter ${this.adapter.name}`;
         this.loading = true;
-        this.adapterService.updateAdapter(this.adapter).subscribe(res => {
-            this.loading = false;
-            this.adapterStatus = res;
-            this.adapterInstalled = true;
-            if (this.adapter.running) {
-                this.showAdapterPreview(res, this.adapter.elementId);
-            }
-        });
+        this.adapterService.updateAdapter(this.adapter).subscribe(
+            res => {
+                this.adapterStatus = res;
+                this.onAdapterReady(
+                    `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
+                );
+            },
+            error => {
+                this.onAdapterFailure(error.error.title);
+            },
+        );
     }
 
     addAdapter() {
+        this.loadingText = `Creating adapter ${this.adapter.name}`;
         this.loading = true;
-        this.adapterService.addAdapter(this.adapter).subscribe(status => {
-            this.loading = false;
-            this.adapterStatus = status;
-
-            if (status.success) {
-                const adapterElementId = status.notifications[0].title;
-
-                if (this.saveInDataLake) {
-                    this.startSaveInDataLakePipeline(adapterElementId, status);
+        this.adapterService.addAdapter(this.adapter).subscribe(
+            status => {
+                this.adapterStatus = status;
+                if (status.success) {
+                    const adapterElementId = status.notifications[0].title;
+                    if (this.saveInDataLake) {
+                        this.startSaveInDataLakePipeline(adapterElementId);
+                    } else {
+                        this.startAdapter(adapterElementId);
+                    }
                 } else {
-                    this.startAdapter(status, adapterElementId);
+                    const errorMsg =
+                        status.notifications.length > 0
+                            ? status.notifications[0].title
+                            : 'Unknown Error';
+                    this.onAdapterFailure(errorMsg);
                 }
-            }
-        });
+            },
+            error => {
+                this.onAdapterFailure(error.error.title);
+            },
+        );
     }
 
-    startAdapter(status: Message, adapterElementId: string) {
+    startAdapter(adapterElementId: string, showPreview = false) {
+        const successMessage =
+            'Your new data stream is now available in the pipeline editor.';
         if (this.startAdapterNow) {
+            this.adapterElementId = adapterElementId;
+            this.loadingText = `Starting adapter ${this.adapter.name}`;
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
-                .subscribe(startStatus => {
-                    this.showAdapterPreview(startStatus, adapterElementId);
-                });
+                .subscribe(
+                    startStatus => {
+                        this.onAdapterReady(successMessage, showPreview);
+                    },
+                    error => {
+                        this.onAdapterFailure(error.error.title);
+                    },
+                );
         } else {
-            this.showAdapterPreview(status, adapterElementId);
+            this.onAdapterReady(successMessage, false);
         }
     }
 
-    showAdapterPreview(status: Message, adapterElementId: string) {
-        if (status.success) {
-            this.getLiveViewPreview(adapterElementId);
-            this.adapterInstalled = true;
+    onAdapterFailure(errorMessageText: string) {
+        this.adapterInstalled = true;
+        this.adapterStatus = {
+            success: false,
+            elementName: this.adapter.name,
+            notifications: [
+                {
+                    title: errorMessageText,
+                    description: '',
+                    additionalInformation: '',
+                },
+            ],
+        };
+        this.loading = false;
+    }
+
+    onAdapterReady(successMessage: string, showPreview = false): void {
+        this.adapterInstallationSuccessMessage = successMessage;
+        this.adapterInstalled = true;
+        this.loading = false;
+        if (showPreview) {
+            this.showPreview = true;
         }
     }
 
@@ -163,22 +203,8 @@ export class AdapterStartedDialog implements OnInit {
         this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
-    private getLiveViewPreview(adapterElementId: string) {
-        this.adapterService.getAdapter(adapterElementId).subscribe(adapter => {
-            this.restService
-                .getSourceDetails(adapter.correspondingDataStreamElementId)
-                .subscribe(st => {
-                    this.showPreview = true;
-                    this.streamDescription = st;
-                    this.pollingActive = true;
-                });
-        });
-    }
-
-    private startSaveInDataLakePipeline(
-        adapterElementId: string,
-        message: Message,
-    ) {
+    private startSaveInDataLakePipeline(adapterElementId: string) {
+        this.loadingText = 'Creating pipeline to persist data stream';
         this.adapterService.getAdapter(adapterElementId).subscribe(adapter => {
             const pipelineId =
                 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
@@ -211,15 +237,20 @@ export class AdapterStartedDialog implements OnInit {
                             .createPipelineTemplateInvocation(
                                 pipelineInvocation,
                             )
-                            .subscribe(pipelineOperationStatus => {
-                                this.pipelineOperationStatus =
-                                    pipelineOperationStatus;
-                                this.startAdapter(message, adapterElementId);
-                            });
+                            .subscribe(
+                                pipelineOperationStatus => {
+                                    this.pipelineOperationStatus =
+                                        pipelineOperationStatus;
+                                    this.startAdapter(adapterElementId, true);
+                                },
+                                error => {
+                                    this.onAdapterFailure(error.error.title);
+                                },
+                            );
                     },
                     res => {
                         this.templateErrorMessage = res.error;
-                        this.startAdapter(message, adapterElementId);
+                        this.startAdapter(adapterElementId);
                     },
                 );
         });

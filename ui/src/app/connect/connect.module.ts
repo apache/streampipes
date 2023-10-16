@@ -84,6 +84,10 @@ import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/a
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
 import { AllAdapterActionsComponent } from './dialog/start-all-adapters/all-adapter-actions-dialog.component';
 import { AdapterSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-settings.component';
+import { SpAdapterStartedLoadingComponent } from './dialog/adapter-started/adapter-started-loading/adapter-started-loading.component';
+import { SpAdapterStartedSuccessComponent } from './dialog/adapter-started/adapter-started-success/adapter-started-success.component';
+import { SpAdapterStartedUpdateMigrationComponent } from './dialog/adapter-started/adapter-started-update-migration/adapter-started-update-migration.component';
+import { SpAdapterStartedPreviewComponent } from './dialog/adapter-started/adapter-started-preview/adapter-started-preview.component';
 
 @NgModule({
     imports: [
@@ -177,6 +181,10 @@ import { AdapterSettingsComponent } from './components/adapter-configuration/ada
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,
         SpAdapterOptionsPanelComponent,
+        SpAdapterStartedPreviewComponent,
+        SpAdapterStartedLoadingComponent,
+        SpAdapterStartedSuccessComponent,
+        SpAdapterStartedUpdateMigrationComponent,
         SpAdapterTemplateDialogComponent,
         SpConnectFilterToolbarComponent,
         NewAdapterComponent,

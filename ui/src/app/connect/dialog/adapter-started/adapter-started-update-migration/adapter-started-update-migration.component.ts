@@ -16,4 +16,18 @@
  *
  */
 
-@import 'src/scss/sp/sp-dialog';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PipelineUpdateInfo } from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-adapter-started-update-migration',
+    templateUrl: './adapter-started-update-migration.component.html',
+    styleUrls: ['./adapter-started-update-migration.component.scss'],
+})
+export class SpAdapterStartedUpdateMigrationComponent {
+    @Input()
+    adapterPipelineUpdateInfos: PipelineUpdateInfo[] = [];
+
+    @Output()
+    startUpdateEmitter: EventEmitter<void> = new EventEmitter<void>();
+}

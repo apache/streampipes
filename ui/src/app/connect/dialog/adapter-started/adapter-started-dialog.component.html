@@ -19,166 +19,35 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div fxLayout="column" *ngIf="loading">
-                <div fxLayoutAlign="center">
-                    <mat-spinner
-                        [diameter]="50"
-                        fxLayoutAlign="center"
-                        style="margin: 10px 0 5px 0"
-                        color="accent"
-                        >Loading
-                    </mat-spinner>
-                </div>
-                <div fxLayoutAlign="center">
-                    <h3>
-                        Please wait while your new adapter is being
-                        {{ editMode ? 'updated' : 'generated' }}...
-                    </h3>
-                </div>
-            </div>
-            <div
-                fxLayout="column"
-                *ngIf="
-                    adapterUpdatePreflight &&
-                    editMode &&
-                    !adapterInstalled &&
-                    !loading
-                "
-                fxLayoutAlign="start center"
-            >
-                <h4>
-                    This adapter is used by
-                    {{ adapterPipelineUpdateInfos.length }} pipelines.
-                </h4>
-                <div class="migration-infos">
-                    <div *ngFor="let updateInfo of adapterPipelineUpdateInfos">
-                        <div
-                            *ngIf="updateInfo.canAutoMigrate"
-                            fxLayoutAlign="start center"
-                        >
-                            <i class="material-icons">check</i
-                            >&nbsp;Pipeline&nbsp;<b>{{
-                                updateInfo.pipelineName
-                            }}</b
-                            >&nbsp;will be automatically migrated.
-                        </div>
-                        <div
-                            *ngIf="!updateInfo.canAutoMigrate"
-                            fxLayoutAlign="start center"
-                        >
-                            <i class="material-icons">warning</i>
-                            &nbsp;Pipeline&nbsp;<b>{{
-                                updateInfo.pipelineName
-                            }}</b
-                            >&nbsp;will be stopped and needs manual review.
-                        </div>
-                    </div>
-                </div>
-                <div class="migration-infos" fxLayoutAlign="start center">
-                    <i class="material-icons">warning</i>
-                    Please check and possibly modify existing dashboards and
-                    data views afterwards.
-                </div>
-                <div>
-                    <button
-                        mat-button
-                        mat-raised-button
-                        color="accent"
-                        (click)="updateAdapter()"
-                    >
-                        Update adapter and migrate pipelines
-                    </button>
-                </div>
-            </div>
-            <div fxLayout="column" *ngIf="adapterInstalled && editMode">
-                <div
-                    data-cy="info-adapter-successfully-updated"
-                    fxLayoutAlign="start center"
-                >
-                    <i class="material-icons">check</i>&nbsp;
-                    <h4>Adapter successfully updated</h4>
-                </div>
-            </div>
-            <div
-                fxLayout="column"
-                fxLayoutAlign="center center"
-                fxFlex="100"
-                *ngIf="adapterInstalled && !editMode"
-                class="w-100"
-            >
-                <div
-                    fxLayout="column"
-                    fxLayoutAlign="center center"
-                    fxFlex="100"
-                    *ngIf="saveInDataLake && templateErrorMessage"
-                >
-                    <div
-                        class="info-message warning-message"
-                        fxFlex="100"
-                        fxLayoutAlign="center center"
-                        fxLayout="row"
-                    >
-                        <i class="material-icons">warning</i>
-                        <span
-                            >&nbsp;{{
-                                templateErrorMessage.notifications[0].title
-                            }}</span
-                        >
-                    </div>
-                </div>
-                <div
-                    fxLayout="column"
-                    fxLayoutAlign="center center"
-                    fxFlex="100"
-                    *ngIf="pipelineOperationStatus"
-                >
-                    <sp-pipeline-started-status
-                        [pipelineOperationStatus]="pipelineOperationStatus"
-                    >
-                    </sp-pipeline-started-status>
-                    <mat-divider fxFlex="100"></mat-divider>
-                </div>
-                <div
-                    *ngIf="adapterStatus.success"
-                    fxFlex="100"
-                    fxLayout="column"
-                    class="w-100"
-                >
-                    <div>
-                        <div
-                            class="info-message"
-                            fxFlex="100"
-                            fxLayoutAlign="center center"
-                            fxLayout="row"
-                        >
-                            <i class="material-icons">done</i>
-                            <span data-cy="sp-connect-adapter-success-added"
-                                >&nbsp;Your new data stream is now available in
-                                the pipeline editor.</span
-                            >
-                        </div>
-                    </div>
-                    <div *ngIf="showPreview" fxFlex="100">
-                        <sp-pipeline-element-runtime-info
-                            [streamDescription]="streamDescription"
-                            [pollingActive]="pollingActive"
-                        ></sp-pipeline-element-runtime-info>
-                    </div>
-                </div>
-                <div *ngIf="!adapterStatus.success">
-                    <div
-                        class="info-message warning-message"
-                        fxFlex="100"
-                        fxLayoutAlign="center center"
-                        fxLayout="row"
-                    >
-                        <i class="material-icons">error</i>
-                        <span
-                            >Something went wrong during the adapter
-                            installation.</span
-                        >
-                    </div>
-                </div>
+            <sp-adapter-started-loading
+                [textMessage]="loadingText"
+                *ngIf="loading"
+            ></sp-adapter-started-loading>
+            <div fxLayout="column" *ngIf="!loading">
+                <sp-adapter-started-update-migration
+                    *ngIf="
+                        adapterUpdatePreflight &&
+                        editMode &&
+                        !adapterInstalled &&
+                        !loading
+                    "
+                    [adapterPipelineUpdateInfos]="adapterPipelineUpdateInfos"
+                    (startUpdateEmitter)="updateAdapter()"
+                ></sp-adapter-started-update-migration>
+                <sp-adapter-started-success
+                    *ngIf="adapterInstalled"
+                    [adapterInstallationSuccessMessage]="
+                        adapterInstallationSuccessMessage
+                    "
+                    [adapterStatus]="adapterStatus"
+                    [pipelineOperationStatus]="pipelineOperationStatus"
+                    [saveInDataLake]="saveInDataLake"
+                    [templateErrorMessage]="templateErrorMessage"
+                ></sp-adapter-started-success>
+                <sp-adapter-started-preview
+                    *ngIf="showPreview"
+                    [adapterElementId]="adapterElementId"
+                ></sp-adapter-started-preview>
             </div>
         </div>
     </div>
