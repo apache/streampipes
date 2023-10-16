@@ -123,7 +123,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
                 } else if (!missingPortInformationDetected){
                   adapterRuntimeContext
                           .getLogger()
-                          .error("Event does not contain information about port " + i , new Exception());
+                          .warn("Event does not contain information about port " + i, "");
                   LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
                   missingPortInformationDetected = true;
                   break;
@@ -138,7 +138,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
                   } else if (!missingEventDataDetected){
                     adapterRuntimeContext
                             .getLogger()
-                            .error("Payload for port %s does not contain event data".formatted(i), new Exception());
+                            .warn("Payload for port %s does not contain event data".formatted(i), "");
                     LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
                     missingEventDataDetected = true;
                     break;
