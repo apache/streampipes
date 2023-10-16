@@ -188,12 +188,15 @@
                                     #Messages
                                 </th>
                                 <td mat-cell *matCellDef="let adapter">
-                                    <span class="monitoring-info">{{
-                                        adapterMetrics[adapter.elementId]
-                                            ? adapterMetrics[adapter.elementId]
-                                                  .messagesOut.counter
-                                            : 0
-                                    }}</span>
+                                    <h5 class="monitoring-info">
+                                        {{
+                                            adapterMetrics[adapter.elementId]
+                                                ? adapterMetrics[
+                                                      adapter.elementId
+                                                  ].messagesOut.counter
+                                                : 0
+                                        }}
+                                    </h5>
                                 </td>
                             </ng-container>
 
@@ -202,13 +205,18 @@
                                     Last message
                                 </th>
                                 <td mat-cell *matCellDef="let adapter">
-                                    <span class="monitoring-info">{{
-                                        adapterMetrics[adapter.elementId]
-                                            ? (adapterMetrics[adapter.elementId]
-                                                  .lastTimestamp
-                                              | date: 'medium')
-                                            : 'n/a'
-                                    }}</span>
+                                    <h5>
+                                        {{
+                                            adapterMetrics[adapter.elementId] &&
+                                            adapterMetrics[adapter.elementId]
+                                                .lastTimestamp > 0
+                                                ? (adapterMetrics[
+                                                      adapter.elementId
+                                                  ].lastTimestamp
+                                                  | date: 'dd.MM.yyyy HH:mm')
+                                                : 'n/a'
+                                        }}
+                                    </h5>
                                 </td>
                             </ng-container>
 
