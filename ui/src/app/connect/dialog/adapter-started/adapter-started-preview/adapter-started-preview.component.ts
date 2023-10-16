@@ -23,7 +23,6 @@ import { RestService } from '../../../services/rest.service';
 @Component({
     selector: 'sp-adapter-started-preview',
     templateUrl: './adapter-started-preview.component.html',
-    styleUrls: ['./adapter-started-preview.component.scss'],
 })
 export class SpAdapterStartedPreviewComponent implements OnInit, OnDestroy {
     @Input()
