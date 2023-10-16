@@ -54,15 +54,19 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.iolink";
 
+  public static final String KEY_PORT_INFORMATION = "/iolinkmaster/port[%s]/iolinkdevice/pdin";
+
   private static final Logger LOG = LoggerFactory.getLogger(IfmAlMqttAdapter.class);
 
   private static final String PORTS = "ports";
   private static final String SENSOR_TYPE = "sensor_type";
 
+  private final IParser parser;
+  private boolean missingEventDataDetected = false;
+  private boolean missingPortInformationDetected = false;
+
   private MqttConsumer mqttConsumer;
   private MqttConfig mqttConfig;
-
-  private final IParser parser;
 
   private List<String> ports;
 
@@ -110,10 +114,37 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
 
               for (int i = 0; i < ports.size(); i++) {
 
+                String keyPortInformation = KEY_PORT_INFORMATION.formatted(ports.get(i));
+
+                Map<String, Object> portResult;
+                if (payload.containsKey(keyPortInformation)) {
+
+                  portResult = getMap(payload, keyPortInformation);
+                } else if (!missingPortInformationDetected){
+                  adapterRuntimeContext
+                          .getLogger()
+                          .error("Event does not contain information about port " + i , new Exception());
+                  LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
+                  missingPortInformationDetected = true;
+                  break;
+                } else {
+                  break;
+                }
+
                 try {
-                  var portResult = getMap(payload,
-                          "/iolinkmaster/port[%s]/iolinkdevice/pdin".formatted(ports.get(i)));
-                  var eventData = (String) portResult.get("data");
+                  String eventData;
+                  if (portResult.containsKey("data")) {
+                    eventData = (String) portResult.get("data");
+                  } else if (!missingEventDataDetected){
+                    adapterRuntimeContext
+                            .getLogger()
+                            .error("Payload for port %s does not contain event data".formatted(i), new Exception());
+                    LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
+                    missingEventDataDetected = true;
+                    break;
+                  } else {
+                    break;
+                  }
 
                   var parsedEvent = sensor.parseEvent(eventData);
                   parsedEvent.put("timestamp", System.currentTimeMillis() + i);
