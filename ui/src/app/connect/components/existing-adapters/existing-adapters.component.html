@@ -95,7 +95,11 @@
                         >
                             <ng-container matColumnDef="start">
                                 <th mat-header-cell *matHeaderCellDef>Start</th>
-                                <td mat-cell *matCellDef="let adapter">
+                                <td
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                    data-cy="adapters-table"
+                                >
                                     <button
                                         color="accent"
                                         mat-icon-button

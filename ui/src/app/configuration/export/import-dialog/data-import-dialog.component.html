@@ -57,6 +57,7 @@
                     matSuffix
                     mat-button
                     style="min-width: 0px"
+                    data-cy="select-upload-file-button"
                 >
                     <mat-icon *ngIf="uploadStatus < 99"
                         >insert_drive_file</mat-icon
@@ -148,6 +149,7 @@
                     (click)="performPreview()"
                     *ngIf="currentImportStep === 0"
                     [disabled]="!hasInput"
+                    data-cy="next-import-button"
                 >
                     <span>&nbsp;Next</span>
                 </button>
@@ -158,6 +160,7 @@
                     style="margin-right: 10px"
                     *ngIf="currentImportStep === 1"
                     (click)="performImport()"
+                    data-cy="import-button"
                 >
                     <i class="material-icons">file_download</i
                     ><span>&nbsp;Import data</span>
