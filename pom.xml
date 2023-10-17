@@ -59,7 +59,6 @@
 	<httpclient.version>4.5.13</httpclient.version>
 	<httpcore.version>4.4.9</httpcore.version>
 	<httpcore-osgi.version>4.4.9</httpcore-osgi.version>
-	<immutable-value.version>2.9.3</immutable-value.version>
 	<influxdb.version>2.23</influxdb.version>
 	<j2html.version>1.6.0</j2html.version>
 	<jackson.version>2.15.0</jackson.version>
@@ -175,7 +174,7 @@
 	<scala-parser-combinators.version>2.2.0</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<xerces.version>2.12.2</xerces.version>
-	<inlong.version>1.7.0</inlong.version>
+	<inlong.version>1.9.0</inlong.version>
 
 	<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 	<maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -1313,11 +1312,6 @@
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>
                 <version>${jna.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.immutables</groupId>
-                <artifactId>value</artifactId>
-                <version>${immutable-value.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
