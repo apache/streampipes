@@ -38,9 +38,9 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class TextFilterProcessor extends StreamPipesDataProcessor {
 
-  private static final String KEYWORD_ID = "keyword";
-  private static final String OPERATION_ID = "operation";
-  private static final String MAPPING_PROPERTY_ID = "text";
+  protected static final String KEYWORD_ID = "keyword";
+  protected static final String OPERATION_ID = "operation";
+  protected static final String MAPPING_PROPERTY_ID = "text";
 
   private String keyword;
   private StringOperator stringOperator;
