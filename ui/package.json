@@ -79,7 +79,7 @@
     "ngx-echarts": "^15.0.3",
     "ngx-quill": "^21.0.0",
     "ngx-showdown": "6.0.0",
-    "plotly.js": "^2.20.0",
+    "plotly.js": "^2.26.2",
     "quill": "1.3.7",
     "roboto-fontface": "0.10.0",
     "rxjs": "^7.8.0",
