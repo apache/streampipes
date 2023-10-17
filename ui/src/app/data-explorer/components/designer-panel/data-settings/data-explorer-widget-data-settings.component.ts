@@ -96,7 +96,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
             if (!this.dataConfig.sourceConfigs) {
                 const defaultConfigs = this.findDefaultConfig();
-                this.addDataSource(
+                this.addDataStream(
                     defaultConfigs.measureName,
                     defaultConfigs.sourceType,
                 );
@@ -181,7 +181,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
         this.triggerDataRefresh();
     }
 
-    addDataSource(
+    addDataStream(
         measureName = '',
         sourceType: 'pipeline' | 'measurement' = 'pipeline',
     ) {

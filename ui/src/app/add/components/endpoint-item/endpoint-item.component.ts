@@ -112,8 +112,6 @@ export class EndpointItemComponent implements OnInit {
         const baseType = 'pe-label ';
         if (this.item.type === 'stream') {
             this.itemTypeStyle = baseType + 'stream-label';
-        } else if (this.item.type === 'set') {
-            this.itemTypeStyle = baseType + 'set-label';
         } else if (this.item.type === 'sepa') {
             this.itemTypeStyle = baseType + 'processor-label';
         } else {
