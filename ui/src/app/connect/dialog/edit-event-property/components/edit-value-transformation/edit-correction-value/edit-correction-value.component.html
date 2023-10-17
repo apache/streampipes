@@ -16,33 +16,51 @@
   ~
   -->
 
-<div fxLayout="row" fxLayoutAlign="start">
-    <div fxFlex="70" fxLayoutAlign="start center">
-        <mat-form-field class="w-100" style="margin-right: 10px" color="accent">
-            <input
-                matInput
-                name="correction"
-                placeholder="Correction Value"
-                [(ngModel)]="cachedProperty.additionalMetadata.correctionValue"
-                (change)="valueChanged()"
-                data-cy="connect-schema-correction-value"
-            />
-        </mat-form-field>
+<div fxLayout="column">
+    <div class="warning-message">
+        <p class="text-center">
+            Adding a correction value might have implications on the data type.
+            <br />
+            Make sure to modify the data type above if needed.
+        </p>
     </div>
-    <div fxFlex="30" fxLayoutAlign="start center">
-        <mat-form-field class="w-100" color="accent">
-            <mat-select
-                required
-                placeholder="Math Operator"
-                [(ngModel)]="cachedProperty.additionalMetadata.operator"
-                (selectionChange)="valueChanged()"
-                [disabled]="!cachedProperty.additionalMetadata.correctionValue"
-                data-cy="connect-schema-correction-operator"
+    <div fxLayout="row" fxLayoutAlign="start">
+        <div fxFlex="50" fxLayoutAlign="start center">
+            <mat-form-field
+                class="w-100"
+                style="margin-right: 10px"
+                color="accent"
             >
-                <mat-option [value]="op.value" *ngFor="let op of operators">
-                    {{ op.viewValue }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+                <input
+                    matInput
+                    type="number"
+                    name="correction"
+                    placeholder="Correction Value"
+                    [(ngModel)]="
+                        cachedProperty.additionalMetadata.correctionValue
+                    "
+                    (change)="valueChanged()"
+                    data-cy="connect-schema-correction-value"
+                />
+            </mat-form-field>
+        </div>
+        <div fxFlex="50" fxLayoutAlign="start center">
+            <mat-form-field class="w-100" color="accent">
+                <mat-select
+                    required
+                    placeholder="Math Operator"
+                    [(ngModel)]="cachedProperty.additionalMetadata.operator"
+                    (selectionChange)="valueChanged()"
+                    [disabled]="
+                        !cachedProperty.additionalMetadata.correctionValue
+                    "
+                    data-cy="connect-schema-correction-operator"
+                >
+                    <mat-option [value]="op.value" *ngFor="let op of operators">
+                        {{ op.viewValue }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
 </div>
