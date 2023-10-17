@@ -65,6 +65,11 @@ class StreamPipesClient:
     dataStreamApi: DataStreamEndpoint
         Instance of the data stream endpoint
 
+    Raises
+    ------
+    AttributeError:
+        In case an invalid configuration of the `StreamPipesClientConfig` is passed
+
     Examples
     --------
 
@@ -117,6 +122,15 @@ class StreamPipesClient:
         client_config: StreamPipesClientConfig,
         logging_level: Optional[int] = logging.INFO,
     ):
+        # validate client config
+        # `https_disabled` and `port` 443 is an invalid configuration
+        if client_config.https_disabled and client_config.port == 443:
+            raise AttributeError(
+                "Invalid configuration passed! The given client configuration has "
+                "`https_disabled` set to `True` and `port` set to `443`.\n "
+                "If you want to connect to port 443, use `https_disabled=False` or "
+                "alternatively connect to port `80`."
+            )
         self.client_config = client_config
 
         # set up a requests session

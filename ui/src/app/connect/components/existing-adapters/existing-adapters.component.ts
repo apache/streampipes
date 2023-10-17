@@ -71,6 +71,8 @@ export class ExistingAdaptersComponent implements OnInit {
         'name',
         'adapterBase',
         'lastModified',
+        'messagesSent',
+        'lastMessage',
         'action',
     ];
 

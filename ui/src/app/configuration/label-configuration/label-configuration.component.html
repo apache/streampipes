@@ -26,6 +26,7 @@
                 mat-button
                 mat-raised-button
                 color="accent"
+                data-cy="new-label-button"
                 (click)="createLabelMode = true"
             >
                 <i class="material-icons">add</i><span>&nbsp;New label</span>
@@ -43,6 +44,7 @@
                 fxLayout="column"
                 *ngFor="let label of allLabels"
                 class="label-item"
+                data-cy="available-labels-list"
             >
                 <div
                     fxLayout="row"
@@ -53,6 +55,7 @@
                         fxFlex="20"
                         [labelText]="label.label"
                         [labelBackground]="label.color"
+                        data-cy="label-text"
                     >
                     </sp-label>
                     <span fxFlex="50" *ngIf="!isEditMode(label._id)">{{
@@ -71,6 +74,7 @@
                             mat-icon-button
                             color="warn"
                             (click)="deleteLabel(label)"
+                            data-cy="delete-label-button"
                         >
                             <i class="material-icons">delete</i>
                         </button>
