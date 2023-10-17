@@ -85,15 +85,19 @@ export class EventPropertyRowComponent implements OnInit {
             this.originalProperty = this.findOriginalProperty(
                 this.originalEventSchema.eventProperties,
             );
-            if (this.originalProperty) {
-                this.applyDisplayedProperties(this.originalProperty);
-            } else {
-                this.applyDisplayedProperties(this.node.data);
-            }
+            this.checkAndDisplayProperties();
         }
 
         if (!this.node.data.propertyScope) {
             this.node.data.propertyScope = 'MEASUREMENT_PROPERTY';
+        }
+    }
+
+    private checkAndDisplayProperties() {
+        if (this.originalProperty) {
+            this.applyDisplayedProperties(this.originalProperty);
+        } else {
+            this.applyDisplayedProperties(this.node.data);
         }
     }
 
@@ -191,6 +195,8 @@ export class EventPropertyRowComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(refresh => {
             this.timestampProperty = this.isTimestampProperty(this.node.data);
+            this.label = this.getLabel(this.node.data);
+            this.checkAndDisplayProperties();
             this.refreshTreeEmitter.emit(true);
         });
     }
