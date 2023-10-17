@@ -132,7 +132,10 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
 
   @Override
   public void visit(CorrectionValueTransformationRuleDescription rule) {
-    // does not affect schema
+    var property = findPrimitiveProperty(properties, rule.getRuntimeKey());
+    var metadata = property.getAdditionalMetadata();
+    metadata.put("operator", rule.getOperator());
+    metadata.put("correctionValue", rule.getCorrectionValue());
   }
 
   @Override

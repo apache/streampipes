@@ -104,6 +104,10 @@ export class EditEventPropertyComponent implements OnInit {
             );
 
             result.measurementUnit = ep.measurementUnit;
+            result.additionalMetadata.correctionValue =
+                ep.additionalMetadata.correctionValue || undefined;
+            result.additionalMetadata.operator =
+                ep.additionalMetadata.operator || undefined;
 
             (result as any).timestampTransformationMode = (
                 ep as any
@@ -116,9 +120,6 @@ export class EditEventPropertyComponent implements OnInit {
             ).timestampTransformationMultiplier;
 
             (result as any).staticValue = (ep as any).staticValue;
-
-            (result as any).correctionValue = (ep as any).correctionValue;
-            (result as any).operator = (ep as any).operator;
 
             return result;
         } else if (ep instanceof EventPropertyNested) {
@@ -173,12 +174,10 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty as any
             ).timestampTransformationMultiplier;
 
-            (this.property as any).correctionValue = (
-                this.cachedProperty as any
-            ).correctionValue;
-            (this.property as any).operator = (
-                this.cachedProperty as any
-            ).operator;
+            this.property.additionalMetadata.correctionValue =
+                this.cachedProperty.additionalMetadata.correctionValue;
+            this.property.additionalMetadata.operator =
+                this.cachedProperty.additionalMetadata.operator;
         }
         this.dialogRef.close({ data: this.property });
     }

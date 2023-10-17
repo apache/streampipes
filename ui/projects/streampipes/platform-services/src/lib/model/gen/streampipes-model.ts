@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-13 19:50:03.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-17 19:58:29.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -1547,6 +1547,7 @@ export class EventProperty {
         | 'org.apache.streampipes.model.schema.EventPropertyList'
         | 'org.apache.streampipes.model.schema.EventPropertyNested'
         | 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
+    'additionalMetadata': { [index: string]: any };
     'description': string;
     'domainProperties': string[];
     'elementId': string;
@@ -1566,6 +1567,9 @@ export class EventProperty {
         }
         const instance = target || new EventProperty();
         instance['@class'] = data['@class'];
+        instance.additionalMetadata = __getCopyObjectFn(__identity<any>())(
+            data.additionalMetadata,
+        );
         instance.description = data.description;
         instance.domainProperties = __getCopyArrayFn(__identity<string>())(
             data.domainProperties,

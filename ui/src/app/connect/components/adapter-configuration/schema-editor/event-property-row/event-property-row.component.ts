@@ -27,10 +27,12 @@ import {
     EventPropertyUnion,
     EventSchema,
     FieldStatusInfo,
+    TransformationRuleDescription,
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
+import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -69,6 +71,7 @@ export class EventPropertyRowComponent implements OnInit {
     constructor(
         private staticValueService: StaticValueTransformService,
         private dialogService: DialogService,
+        private epUtils: EventPropertyUtilsService,
     ) {}
 
     ngOnInit() {
@@ -82,8 +85,9 @@ export class EventPropertyRowComponent implements OnInit {
         this.timestampProperty = this.isTimestampProperty(this.node.data);
 
         if (this.node.data instanceof EventProperty) {
-            this.originalProperty = this.findOriginalProperty(
+            this.originalProperty = this.epUtils.findPropertyByElementId(
                 this.originalEventSchema.eventProperties,
+                this.node.data.elementId,
             );
             this.checkAndDisplayProperties();
         }
@@ -114,23 +118,6 @@ export class EventPropertyRowComponent implements OnInit {
                 (this.node.data as EventPropertyPrimitive).runtimeType,
             );
         }
-    }
-
-    private findOriginalProperty(properties: EventPropertyUnion[]): any {
-        let result: EventPropertyUnion | undefined;
-
-        for (const property of properties) {
-            if (property.elementId === this.node.data.elementId) {
-                result = property;
-                break;
-            } else if (property instanceof EventPropertyNested) {
-                result = this.findOriginalProperty(property.eventProperties);
-                if (result) {
-                    break;
-                }
-            }
-        }
-        return result;
     }
 
     private parseType(runtimeType: string) {

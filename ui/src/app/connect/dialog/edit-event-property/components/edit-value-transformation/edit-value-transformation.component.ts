@@ -19,8 +19,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import {
-    EventPropertyPrimitive,
     EventPropertyUnion,
+    TransformationRuleDescription,
 } from '@streampipes/platform-services';
 
 @Component({
@@ -31,6 +31,9 @@ import {
 export class EditValueTransformationComponent implements OnInit {
     @Input()
     cachedProperty: EventPropertyUnion;
+
+    @Input() originalProperty: EventPropertyUnion;
+    @Input() transformationRules: TransformationRuleDescription[] = [];
 
     @Input() isTimestampProperty: boolean;
     @Input() isNestedProperty: boolean;

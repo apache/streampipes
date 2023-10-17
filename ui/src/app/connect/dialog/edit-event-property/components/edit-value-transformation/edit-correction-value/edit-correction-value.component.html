@@ -23,7 +23,7 @@
                 matInput
                 name="correction"
                 placeholder="Correction Value"
-                [(ngModel)]="cachedProperty.correctionValue"
+                [(ngModel)]="cachedProperty.additionalMetadata.correctionValue"
                 (change)="valueChanged()"
                 data-cy="connect-schema-correction-value"
             />
@@ -34,9 +34,9 @@
             <mat-select
                 required
                 placeholder="Math Operator"
-                [(ngModel)]="cachedProperty.operator"
+                [(ngModel)]="cachedProperty.additionalMetadata.operator"
                 (selectionChange)="valueChanged()"
-                [disabled]="!cachedProperty.correctionValue"
+                [disabled]="!cachedProperty.additionalMetadata.correctionValue"
                 data-cy="connect-schema-correction-operator"
             >
                 <mat-option [value]="op.value" *ngFor="let op of operators">

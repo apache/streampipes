@@ -20,6 +20,7 @@ import { Injectable } from '@angular/core';
 import {
     AddTimestampRuleDescription,
     AddValueTransformationRuleDescription,
+    ChangeDatatypeTransformationRuleDescription,
     CorrectionValueTransformationRuleDescription,
     CreateNestedRuleDescription,
     DeleteRuleDescription,
@@ -30,7 +31,6 @@ import {
     EventSchema,
     MoveRuleDescription,
     RenameRuleDescription,
-    ChangeDatatypeTransformationRuleDescription,
     TimestampTranfsformationRuleDescription,
     TransformationRuleDescriptionUnion,
     UnitTransformRuleDescription,
@@ -666,10 +666,8 @@ export class TransformationRuleService {
                 rule['@class'] =
                     'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
                 rule.runtimeKey = keyNew;
-                rule.correctionValue = (
-                    eventPropertyPrimitive as any
-                ).correctionValue;
-                rule.operator = (eventPropertyPrimitive as any).operator;
+                rule.correctionValue = eventPropertyPrimitive.additionalMetadata.correctionValue;
+                rule.operator = eventPropertyPrimitive.additionalMetadata.operator;
 
                 result.push(rule);
             } else if (eventProperty instanceof EventPropertyNested) {

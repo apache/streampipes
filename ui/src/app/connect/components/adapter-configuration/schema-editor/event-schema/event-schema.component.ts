@@ -31,6 +31,7 @@ import { UUID } from 'angular2-uuid';
 import { DataTypesService } from '../../../../services/data-type.service';
 import {
     AdapterDescription,
+    CorrectionValueTransformationRuleDescription,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
@@ -43,6 +44,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 import { TransformationRuleService } from '../../../../services/transformation-rule.service';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
+import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 
 @Component({
     selector: 'sp-event-schema',
@@ -55,6 +57,7 @@ export class EventSchemaComponent implements OnChanges {
         private dataTypesService: DataTypesService,
         private transformationRuleService: TransformationRuleService,
         private staticValueTransformService: StaticValueTransformService,
+        private epUtilsService: EventPropertyUtilsService,
     ) {}
 
     @Input()
