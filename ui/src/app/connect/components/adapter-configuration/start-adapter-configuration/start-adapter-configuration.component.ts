@@ -141,7 +141,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(() => {
-            //this.adapterStartedEmitter.emit();
+            this.adapterStartedEmitter.emit();
         });
     }
 

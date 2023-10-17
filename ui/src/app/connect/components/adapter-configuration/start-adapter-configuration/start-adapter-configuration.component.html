@@ -123,7 +123,7 @@
             *ngIf="!isEditMode"
             (optionSelectedEmitter)="handlePersistOption($event)"
         >
-            <mat-form-field *ngIf="saveInDataLake" color="accent">
+            <mat-form-field *ngIf="saveInDataLake" color="accent" class="mt-10">
                 <mat-label>Select Time Field</mat-label>
                 <mat-select
                     [(ngModel)]="dataLakeTimestampField"

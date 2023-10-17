@@ -95,7 +95,7 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     public adapterWasStarted() {
-        this.router.navigate(['connect']).then();
+        this.router.navigate(['connect']);
     }
 
     @ViewChild(EventSchemaComponent) set schemaComponent(

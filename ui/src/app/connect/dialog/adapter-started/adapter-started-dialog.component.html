@@ -20,11 +20,13 @@
     <div class="sp-dialog-content p-15">
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
             <sp-adapter-started-loading
+                fxFlex="100"
                 [textMessage]="loadingText"
                 *ngIf="loading"
             ></sp-adapter-started-loading>
-            <div fxLayout="column" *ngIf="!loading">
+            <div fxFlex="100" fxLayout="column" *ngIf="!loading" class="w-100">
                 <sp-adapter-started-update-migration
+                    fxFlex="100"
                     *ngIf="
                         adapterUpdatePreflight &&
                         editMode &&
@@ -35,6 +37,7 @@
                     (startUpdateEmitter)="updateAdapter()"
                 ></sp-adapter-started-update-migration>
                 <sp-adapter-started-success
+                    fxFlex="100"
                     *ngIf="adapterInstalled"
                     [adapterInstallationSuccessMessage]="
                         adapterInstallationSuccessMessage
