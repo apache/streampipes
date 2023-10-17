@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.model;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.migration.ModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -120,6 +121,11 @@ public class SpServiceDefinitionBuilder {
 
   public SpServiceDefinitionBuilder registerMessagingProtocols(SpProtocolDefinitionFactory<?>... protocols) {
     this.serviceDefinition.addProtocolDefinitionFactories(Arrays.asList(protocols));
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerMigrators(ModelMigrator<?, ?>... migrations) {
+    this.serviceDefinition.addMigrators(List.of(migrations));
     return this;
   }
 
