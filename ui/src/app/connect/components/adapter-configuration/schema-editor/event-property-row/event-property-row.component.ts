@@ -19,7 +19,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { TreeNode } from '@circlon/angular-tree-component';
-import { MatDialog } from '@angular/material/dialog';
 import {
     EventProperty,
     EventPropertyList,
@@ -65,6 +64,7 @@ export class EventPropertyRowComponent implements OnInit {
     runtimeType: string;
     originalRuntimeType: string;
     originalRuntimeName: string;
+    originalProperty: EventPropertyUnion;
 
     constructor(
         private staticValueService: StaticValueTransformService,
@@ -82,11 +82,11 @@ export class EventPropertyRowComponent implements OnInit {
         this.timestampProperty = this.isTimestampProperty(this.node.data);
 
         if (this.node.data instanceof EventProperty) {
-            const originalProperty = this.findOriginalProperty(
+            this.originalProperty = this.findOriginalProperty(
                 this.originalEventSchema.eventProperties,
             );
-            if (originalProperty) {
-                this.applyDisplayedProperties(originalProperty);
+            if (this.originalProperty) {
+                this.applyDisplayedProperties(this.originalProperty);
             } else {
                 this.applyDisplayedProperties(this.node.data);
             }
@@ -184,6 +184,7 @@ export class EventPropertyRowComponent implements OnInit {
             width: '50vw',
             data: {
                 property: data,
+                originalProperty: this.originalProperty,
                 isEditable: this.isEditable,
             },
         });

@@ -43,7 +43,6 @@
                     />
                     <mat-autocomplete
                         #auto="matAutocomplete"
-                        [displayWith]="displayFn"
                         [panelWidth]="'300px'"
                     >
                         <mat-option
@@ -65,7 +64,7 @@
                         matInput
                         placeholder="Unit"
                         disabled
-                        [(ngModel)]="oldMeasurementUnitDipsplay"
+                        [(ngModel)]="originalMeasurementUnitDisplay"
                         data-cy="connect-schema-unit-from-input"
                     />
                 </mat-form-field>

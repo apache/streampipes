@@ -34,7 +34,6 @@ import {
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
-    SemanticTypesService,
 } from '@streampipes/platform-services';
 import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
 import { DataTypesService } from '../../services/data-type.service';
@@ -50,6 +49,7 @@ import { EditUnitTransformationComponent } from './components/edit-unit-transfor
 })
 export class EditEventPropertyComponent implements OnInit {
     @Input() property: EventPropertyUnion;
+    @Input() originalProperty: EventPropertyUnion;
     @Input() isEditable: boolean;
 
     @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
@@ -58,7 +58,7 @@ export class EditEventPropertyComponent implements OnInit {
     valueTransformationComponent: EditValueTransformationComponent;
     unitTransformationComponent: EditUnitTransformationComponent;
 
-    cachedProperty: any;
+    cachedProperty: EventPropertyUnion;
 
     isTimestampProperty = false;
     isEventPropertyPrimitive: boolean;
@@ -76,7 +76,6 @@ export class EditEventPropertyComponent implements OnInit {
         private formBuilder: UntypedFormBuilder,
         private dataTypeService: DataTypesService,
         private semanticTypeUtilsService: SemanticTypeUtilsService,
-        private semanticTypesService: SemanticTypesService,
     ) {}
 
     ngOnInit(): void {
@@ -91,7 +90,9 @@ export class EditEventPropertyComponent implements OnInit {
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
             this.semanticTypeUtilsService.isNumeric(this.cachedProperty) ||
-            this.dataTypeService.isNumeric(this.cachedProperty.runtimeType);
+            this.dataTypeService.isNumeric(
+                (this.cachedProperty as any).runtimeType,
+            );
         this.createForm();
     }
 
@@ -102,12 +103,7 @@ export class EditEventPropertyComponent implements OnInit {
                 new EventPropertyPrimitive(),
             );
 
-            result.measurementUnit = (
-                ep as EventPropertyPrimitive
-            ).measurementUnit;
-            (result as any).measurementUnitTmp = (ep as any).measurementUnitTmp;
-            (result as any).oldMeasurementUnit = (ep as any).oldMeasurementUnit;
-            (result as any).hadMeasarumentUnit = (ep as any).hadMeasarumentUnit;
+            result.measurementUnit = ep.measurementUnit;
 
             (result as any).timestampTransformationMode = (
                 ep as any
@@ -163,20 +159,9 @@ export class EditEventPropertyComponent implements OnInit {
             this.property.runtimeType = (
                 this.cachedProperty as EventPropertyPrimitive
             ).runtimeType;
-
             this.property.measurementUnit = (
-                this.cachedProperty as any
-            ).oldMeasurementUnit;
-
-            (this.property as any).measurementUnitTmp = (
-                this.cachedProperty as any
-            ).measurementUnitTmp;
-            (this.property as any).oldMeasurementUnit = (
-                this.cachedProperty as any
-            ).oldMeasurementUnit;
-            (this.property as any).hadMeasarumentUnit = (
-                this.cachedProperty as any
-            ).hadMeasarumentUnit;
+                this.cachedProperty as EventPropertyPrimitive
+            ).measurementUnit;
 
             (this.property as any).timestampTransformationMode = (
                 this.cachedProperty as any
@@ -200,7 +185,7 @@ export class EditEventPropertyComponent implements OnInit {
 
     handleDataTypeChange(changed: boolean) {
         this.isNumericProperty = this.dataTypeService.isNumeric(
-            this.cachedProperty.runtimeType,
+            (this.cachedProperty as any).runtimeType,
         );
     }
 

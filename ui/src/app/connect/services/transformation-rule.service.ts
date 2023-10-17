@@ -364,20 +364,20 @@ export class TransformationRuleService {
                     newEventSchema.eventProperties,
                     eventPropertyPrimitive.elementId,
                 );
+                const originalProperty: EventPropertyPrimitive =
+                    this.getEventProperty(
+                        oldEventSchema.eventProperties,
+                        eventPropertyPrimitive.elementId,
+                    ) as EventPropertyPrimitive;
 
-                // let unitTransformation: UnitTransformRuleDescription = new UnitTransformRuleDescription();
-                // unitTransformation.fromUnitRessourceURL = eventPropertyPrimitive.
                 const rule: UnitTransformRuleDescription =
                     new UnitTransformRuleDescription();
                 rule['@class'] =
                     'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription';
                 rule.runtimeKey = keyNew;
-                rule.fromUnitRessourceURL = (
-                    eventPropertyPrimitive as any
-                ).oldMeasurementUnit;
-                rule.toUnitRessourceURL = (
-                    eventPropertyPrimitive as any
-                ).measurementUnitTmp;
+                rule.fromUnitRessourceURL = originalProperty.measurementUnit;
+                rule.toUnitRessourceURL =
+                    eventPropertyPrimitive.measurementUnit;
 
                 result.push(rule);
             } else if (eventProperty instanceof EventPropertyNested) {
