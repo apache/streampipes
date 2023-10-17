@@ -109,15 +109,11 @@ export class EditEventPropertyComponent implements OnInit {
             result.additionalMetadata.operator =
                 ep.additionalMetadata.operator || undefined;
 
-            (result as any).timestampTransformationMode = (
-                ep as any
-            ).timestampTransformationMode;
-            (result as any).timestampTransformationFormatString = (
-                ep as any
-            ).timestampTransformationFormatString;
-            (result as any).timestampTransformationMultiplier = (
-                ep as any
-            ).timestampTransformationMultiplier;
+            result.additionalMetadata.mode = ep.additionalMetadata.mode;
+            result.additionalMetadata.formatString =
+                ep.additionalMetadata.formatString;
+            result.additionalMetadata.multiplier =
+                ep.additionalMetadata.multiplier;
 
             (result as any).staticValue = (ep as any).staticValue;
 
@@ -164,15 +160,12 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty as EventPropertyPrimitive
             ).measurementUnit;
 
-            (this.property as any).timestampTransformationMode = (
-                this.cachedProperty as any
-            ).timestampTransformationMode;
-            (this.property as any).timestampTransformationFormatString = (
-                this.cachedProperty as any
-            ).timestampTransformationFormatString;
-            (this.property as any).timestampTransformationMultiplier = (
-                this.cachedProperty as any
-            ).timestampTransformationMultiplier;
+            this.property.additionalMetadata.mode =
+                this.cachedProperty.additionalMetadata.mode;
+            this.property.additionalMetadata.formatString =
+                this.cachedProperty.additionalMetadata.formatString;
+            this.property.additionalMetadata.multiplier =
+                this.cachedProperty.additionalMetadata.multiplier;
 
             this.property.additionalMetadata.correctionValue =
                 this.cachedProperty.additionalMetadata.correctionValue;

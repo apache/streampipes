@@ -17,39 +17,48 @@
  */
 
 import { Injectable } from '@angular/core';
-import { EventPropertyNested, EventPropertyUnion } from '@streampipes/platform-services';
+import {
+    EventPropertyNested,
+    EventPropertyUnion,
+} from '@streampipes/platform-services';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class EventPropertyUtilsService {
-
-  findPropertyByElementId(properties: EventPropertyUnion[],
-                                  elementId: string): any {
-    return this
-      .findProperty(properties, elementId, (ep => ep.elementId));
-  }
-
-  findPropertyByRuntimeName(properties: EventPropertyUnion[],
-                            runtimeName: string) {
-    return this
-      .findProperty(properties, runtimeName, (ep => ep.runtimeName));
-  }
-
-  private findProperty(properties: EventPropertyUnion[],
-                       searchValue: string,
-                       propertyFn: (val1: EventPropertyUnion) => string) {
-    let result: EventPropertyUnion | undefined;
-
-    for (const property of properties) {
-      if (propertyFn(property) === searchValue) {
-        result = property;
-        break;
-      } else if (property instanceof EventPropertyNested) {
-        result = this.findPropertyByElementId(property.eventProperties, searchValue);
-        if (result) {
-          break;
-        }
-      }
+    findPropertyByElementId(
+        properties: EventPropertyUnion[],
+        elementId: string,
+    ): any {
+        return this.findProperty(properties, elementId, ep => ep.elementId);
     }
-    return result;
-  }
+
+    findPropertyByRuntimeName(
+        properties: EventPropertyUnion[],
+        runtimeName: string,
+    ) {
+        return this.findProperty(properties, runtimeName, ep => ep.runtimeName);
+    }
+
+    private findProperty(
+        properties: EventPropertyUnion[],
+        searchValue: string,
+        propertyFn: (val1: EventPropertyUnion) => string,
+    ) {
+        let result: EventPropertyUnion | undefined;
+
+        for (const property of properties) {
+            if (propertyFn(property) === searchValue) {
+                result = property;
+                break;
+            } else if (property instanceof EventPropertyNested) {
+                result = this.findPropertyByElementId(
+                    property.eventProperties,
+                    searchValue,
+                );
+                if (result) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 }

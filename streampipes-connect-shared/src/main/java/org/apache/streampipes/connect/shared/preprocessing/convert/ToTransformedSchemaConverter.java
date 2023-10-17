@@ -143,6 +143,10 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
     var property = findPrimitiveProperty(properties, rule.getRuntimeKey());
     property.setDomainProperties(List.of(URI.create("http://schema.org/DateTime")));
     property.setRuntimeType(Datatypes.Long.toString());
+    var metadata = property.getAdditionalMetadata();
+    metadata.put("mode", rule.getMode());
+    metadata.put("formatString", rule.getFormatString());
+    metadata.put("multiplier", rule.getMultiplier());
   }
 
   @Override

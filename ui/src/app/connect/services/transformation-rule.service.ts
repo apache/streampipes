@@ -554,15 +554,11 @@ export class TransformationRuleService {
                     rule['@class'] =
                         'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription';
                     rule.runtimeKey = keyNew;
-                    rule.mode = (
-                        eventProperty as any
-                    ).timestampTransformationMode;
-                    rule.formatString = (
-                        eventProperty as any
-                    ).timestampTransformationFormatString;
-                    rule.multiplier = (
-                        eventProperty as any
-                    ).timestampTransformationMultiplier;
+                    rule.mode = eventProperty.additionalMetadata.mode;
+                    rule.formatString =
+                        eventProperty.additionalMetadata.formatString;
+                    rule.multiplier =
+                        eventProperty.additionalMetadata.multiplier;
                     result.push(rule);
                 }
             } else if (eventProperty instanceof EventPropertyNested) {
@@ -666,8 +662,10 @@ export class TransformationRuleService {
                 rule['@class'] =
                     'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
                 rule.runtimeKey = keyNew;
-                rule.correctionValue = eventPropertyPrimitive.additionalMetadata.correctionValue;
-                rule.operator = eventPropertyPrimitive.additionalMetadata.operator;
+                rule.correctionValue =
+                    eventPropertyPrimitive.additionalMetadata.correctionValue;
+                rule.operator =
+                    eventPropertyPrimitive.additionalMetadata.operator;
 
                 result.push(rule);
             } else if (eventProperty instanceof EventPropertyNested) {
