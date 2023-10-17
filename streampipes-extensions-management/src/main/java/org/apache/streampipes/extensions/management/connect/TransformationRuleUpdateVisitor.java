@@ -42,12 +42,15 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
 
   private final List<String> existingPropertyRuntimeNames;
   private final List<TransformationRuleDescription> validRules;
+  private final List<TransformationRuleDescription> allRules;
 
 
-  public TransformationRuleUpdateVisitor(List<EventProperty> existingProperties) {
+  public TransformationRuleUpdateVisitor(List<EventProperty> existingProperties,
+                                         List<TransformationRuleDescription> allRules) {
     this.existingPropertyRuntimeNames = existingProperties
         .stream()
         .map(EventProperty::getRuntimeName).toList();
+    this.allRules = allRules;
     this.validRules = new ArrayList<>();
   }
 
@@ -128,10 +131,17 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
   private boolean containsKey(String fullRuntimeKey) {
     var runtimeKeys = Utils.toKeyArray(fullRuntimeKey);
     if (!runtimeKeys.isEmpty()) {
-      return this.existingPropertyRuntimeNames.contains(runtimeKeys.get(0));
+      return this.existingPropertyRuntimeNames.contains(runtimeKeys.get(0)) || inRenameRule(runtimeKeys.get(0));
     } else {
       return false;
     }
+  }
+
+  private boolean inRenameRule(String runtimeKey) {
+    return this.allRules
+        .stream()
+        .filter(rule -> rule instanceof RenameRuleDescription)
+        .anyMatch(rule -> ((RenameRuleDescription) rule).getNewRuntimeKey().equals(runtimeKey));
   }
 
   public List<TransformationRuleDescription> getValidRules() {

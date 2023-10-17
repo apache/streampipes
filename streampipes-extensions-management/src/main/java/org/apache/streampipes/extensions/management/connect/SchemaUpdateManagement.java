@@ -55,7 +55,7 @@ public class SchemaUpdateManagement {
   private List<TransformationRuleDescription> modifyTransformationRules(List<TransformationRuleDescription> rules,
                                                                         EventSchema modifiedSchema) {
     var properties = modifiedSchema.getEventProperties();
-    var visitor = new TransformationRuleUpdateVisitor(properties);
+    var visitor = new TransformationRuleUpdateVisitor(properties, rules);
     rules.forEach(rule -> rule.accept(visitor));
     return visitor.getValidRules();
   }
