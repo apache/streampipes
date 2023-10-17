@@ -20,6 +20,7 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.dataexplorer.param.model.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.PropertyScope;
 
@@ -34,6 +35,8 @@ public class DataLakeMeasurementCount {
 
   private final List<DataLakeMeasure> allMeasurements;
   private final List<String> measurementNames;
+
+  private static final String COUNT_FIELD = "count";
 
   public DataLakeMeasurementCount(List<DataLakeMeasure> allMeasurements,
                                   List<String> measurementNames) {
@@ -50,30 +53,32 @@ public class DataLakeMeasurementCount {
           var builder = DataLakeInfluxQueryBuilder
               .create(m.getMeasureName()).withEndTime(System.currentTimeMillis())
               .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
-          var start = System.currentTimeMillis();
           var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), true);
-          var end = System.currentTimeMillis();
-          System.out.println(m.getMeasureName() + " took " + (end - start));
-          if (queryResult.getTotal() == 0) {
-            return 0;
-          } else {
+          if (queryResult.getTotal() > 0) {
             var headers = queryResult.getHeaders();
-            return ((Double) (
-                queryResult.getAllDataSeries().get(0).getRows().get(0).get(headers.indexOf("count")))
-            ).intValue();
+            return extractResult(queryResult, headers);
+          } else {
+            return 0;
           }
         })));
 
     Map<String, Integer> result = new HashMap<>();
-    for (Map.Entry<String, CompletableFuture<Integer>> entry : futures.entrySet()) {
+    futures.entrySet().forEach((entry -> {
       try {
         result.put(entry.getKey(), entry.getValue().get());
       } catch (InterruptedException | ExecutionException e) {
         result.put(entry.getKey(), 0);
       }
-    }
+    }));
 
     return result;
+  }
+
+  private Integer extractResult(SpQueryResult queryResult,
+                                List<String> headers) {
+    return ((Double) (
+        queryResult.getAllDataSeries().get(0).getRows().get(0).get(headers.indexOf(COUNT_FIELD)))
+    ).intValue();
   }
 
   private DataLakeMeasure getMeasure(String measureName) {
