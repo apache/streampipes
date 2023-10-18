@@ -16,40 +16,26 @@
  *
  */
 
-.mat-mdc-paginator {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
+describe('Add and Delete Label', () => {
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+    });
 
-.mat-mdc-row:nth-child(even) {
-    background-color: var(--color-bg-1);
-}
-.mat-mdc-row:nth-child(odd) {
-    background-color: var(--color-bg-2);
-}
+    it('Perform Test', () => {
+        cy.visit('#/configuration/labels');
 
-.adapter-icon {
-    max-height: 50px;
-}
+        // Add new label
+        cy.dataCy('new-label-button').click();
+        cy.dataCy('label-name').type('test');
+        cy.dataCy('label-description').type('test test');
+        cy.dataCy('save-label-button').click();
 
-.historic {
-    cursor: pointer;
-    color: #ffa23b;
-}
-.real-time {
-    cursor: pointer;
-    color: #ffeb3b;
-}
+        // Check label
+        cy.dataCy('available-labels-list').should('have.length', 1);
+        cy.dataCy('label-text').should('have.text', ' test\n');
 
-.filter-bar-margin {
-    margin-left: 10px;
-    padding-left: 10px;
-}
-
-.monitoring-info {
-    color: var(--color-default-text);
-    border: 1px solid var(--color-default-text);
-    background: var(--color-bg-0);
-    border-radius: 5px;
-    padding: 5px;
-    text-align: center;
-}
+        // Delete label
+        cy.dataCy('delete-label-button').click();
+        cy.dataCy('available-labels-list').should('have.length', 0);
+    });
+});
