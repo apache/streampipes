@@ -57,9 +57,6 @@
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
         <module>streampipes-sinks-notifications-jvm</module>
-
-        <module>streampipes-sources-watertank-simulator</module>
-        <module>streampipes-sources-vehicle-simulator</module>
     </modules>
 
     <properties>

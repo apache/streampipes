@@ -207,16 +207,6 @@ services:
     networks:
       spnet:
 
-  sources-watertank-simulator:
-    image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_VERSION}"
-    depends_on:
-      - consul
-      - kafka
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
   # Full version pipeline elements
   pipeline-elements-all-flink:
     image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-flink:${SP_VERSION}"
