@@ -53,6 +53,7 @@ public class ${classNamePrefix}GenericAdapter implements StreamPipesAdapter {
           ${classNamePrefix}GenericAdapter::new
         )
         .withCategory(AdapterType.Manufacturing)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withSupportedParsers(Parsers.defaultParsers())
         .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
