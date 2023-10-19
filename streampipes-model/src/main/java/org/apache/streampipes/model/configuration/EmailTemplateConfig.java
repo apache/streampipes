@@ -15,29 +15,27 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail.template.generation;
 
-public enum DefaultPlaceholders {
+package org.apache.streampipes.model.configuration;
 
-  TITLE("TITLE"),
-  PREHEADER("PREHEADER"),
-  INNER("INNER"),
+public class EmailTemplateConfig {
 
-  BUTTON_TEXT("BUTTON_TEXT"),
-  MANUAL("MANUAL"),
-  LINK("LINK"),
-  LINK_DESCRIPTION("LINK_DESCRIPTION"),
-  TEXT("TEXT"),
-  LOGO("LOGO"),
-  BASE_URL("BASE_URL");
+  private String template;
 
-  private String placeholderKey;
-
-  DefaultPlaceholders(String placeholderKey) {
-    this.placeholderKey = placeholderKey;
+  public EmailTemplateConfig() {
   }
 
-  public String key() {
-    return placeholderKey;
+  public EmailTemplateConfig(String template) {
+    this.template = template;
+  }
+
+  public String getTemplate() {
+    return template;
+  }
+
+  public void setTemplate(String template) {
+    this.template = template;
   }
 }
+
+
