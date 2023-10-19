@@ -64,7 +64,7 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @PUT
   @Path("templates")
   @JacksonSerialized
-  @Produces
+  @Consumes(MediaType.APPLICATION_JSON)
   @PreAuthorize((AuthConstants.IS_ADMIN_ROLE))
   public Response updateMailTemplate(EmailTemplateConfig templateConfig) {
     var config = getSpCoreConfigurationStorage().get();
