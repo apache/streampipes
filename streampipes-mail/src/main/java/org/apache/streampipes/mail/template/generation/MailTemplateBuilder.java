@@ -68,7 +68,7 @@ public class MailTemplateBuilder {
     return withPlaceholder(placeholder.key(), content);
   }
 
-  public String generateHtmlTemplate() throws IOException {
+  public String generateHtmlTemplate() {
     String fullTemplate = getAndApplyPlaceholders(outerTemplate);
 
     for (String key : placeholders.keySet()) {
@@ -79,25 +79,12 @@ public class MailTemplateBuilder {
     return fullTemplate;
   }
 
-  private String getAndApplyPlaceholders(String outerTemplate) throws IOException {
+  private String getAndApplyPlaceholders(String outerTemplate) {
     return applyInnerTemplate(outerTemplate);
-//    //String partContentAsString = partContent.getContent();
-//    for (String innerPartKey : innerParts.keySet()) {
-//      String templateKey = makeKey(innerPartKey);
-//      if (hasPlaceholder(partContentAsString, templateKey)) {
-//        partContentAsString =
-//            partContentAsString.replaceAll(templateKey, getAndApplyPlaceholders(innerParts.get(innerPartKey)));
-//
-
-    //return outerTemplate;
   }
 
   private String applyInnerTemplate(String content) {
     return content.replaceAll(makeKey(DefaultPlaceholders.INNER.key()), innerPart);
-  }
-
-  private boolean hasPlaceholder(String content, String placeholder) {
-    return content.contains(placeholder);
   }
 
   private String makeKey(String key) {
