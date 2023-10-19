@@ -87,5 +87,8 @@ public class AdapterConfigurationBuilder extends
     return me();
   }
 
-
+  public AdapterConfigurationBuilder withVersion(int version) {
+    this.elementDescription.setVersion(version);
+    return this;
+  }
 }

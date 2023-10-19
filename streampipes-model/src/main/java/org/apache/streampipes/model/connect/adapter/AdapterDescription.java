@@ -20,6 +20,7 @@ package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.base.VersionedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
@@ -35,11 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TsModel
-public class AdapterDescription extends NamedStreamPipesEntity {
+public class AdapterDescription extends NamedStreamPipesEntity implements VersionedStreamPipesEntity {
 
   protected SpDataStream dataStream;
 
   protected boolean running;
+  private int version;
   private EventGrounding eventGrounding;
 
   private String icon;
@@ -74,11 +76,12 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     this.dataStream = new SpDataStream();
   }
 
-  public AdapterDescription(String elementId, String name, String description) {
+  public AdapterDescription(String elementId, String name, String description, int version) {
     super(elementId, name, description);
     this.rules = new ArrayList<>();
     this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
+    this.version = version;
   }
 
 
@@ -87,6 +90,7 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     this.config = new Cloner().staticProperties(other.getConfig());
     this.rules = other.getRules();
     this.icon = other.getIcon();
+    this.version = other.getVersion();
     this.category = new Cloner().epaTypes(other.getCategory());
     this.createdAt = other.getCreatedAt();
     this.selectedEndpointUrl = other.getSelectedEndpointUrl();
@@ -250,4 +254,13 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     this.running = running;
   }
 
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int newVersion) {
+    this.version = newVersion;
+  }
 }

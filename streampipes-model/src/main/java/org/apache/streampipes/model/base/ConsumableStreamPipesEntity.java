@@ -26,9 +26,11 @@ import org.apache.streampipes.model.util.Cloner;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity {
+public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity implements VersionedStreamPipesEntity{
 
   private static final long serialVersionUID = -6617391345752016449L;
+
+  private int version;
 
   protected List<SpDataStream> spDataStreams;
 
@@ -57,6 +59,7 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     if (other.getSupportedGrounding() != null) {
       this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
     }
+    this.version = other.version;
   }
 
   public List<SpDataStream> getSpDataStreams() {
@@ -85,6 +88,16 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
 
   public void setSupportedGrounding(EventGrounding supportedGrounding) {
     this.supportedGrounding = supportedGrounding;
+  }
+
+  @Override
+  public int getVersion(){
+    return this.version;
+  }
+
+  @Override
+  public void setVersion(int version){
+    this.version = version;
   }
 
 }
