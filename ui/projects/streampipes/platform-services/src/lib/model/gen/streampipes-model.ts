@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-08-06 11:37:37.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-19 10:40:49.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -102,6 +101,7 @@ export class AdapterDescription extends NamedStreamPipesEntity {
     'selectedEndpointUrl': string;
     'streamRules': TransformationRuleDescriptionUnion[];
     'valueRules': TransformationRuleDescriptionUnion[];
+    'version': number;
 
     static 'fromData'(
         data: AdapterDescription,
@@ -140,6 +140,7 @@ export class AdapterDescription extends NamedStreamPipesEntity {
         instance.valueRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.valueRules);
+        instance.version = data.version;
         return instance;
     }
 }
@@ -198,6 +199,7 @@ export class TransformationRuleDescription {
         | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
+    'rulePriority': number;
 
     static 'fromData'(
         data: TransformationRuleDescription,
@@ -208,6 +210,7 @@ export class TransformationRuleDescription {
         }
         const instance = target || new TransformationRuleDescription();
         instance['@class'] = data['@class'];
+        instance.rulePriority = data.rulePriority;
         return instance;
     }
 
@@ -3521,6 +3524,7 @@ export class SpServiceRegistration {
     scheme: string;
     svcGroup: string;
     svcId: string;
+    svcType: string;
     tags: SpServiceTag[];
 
     static fromData(
@@ -3540,6 +3544,7 @@ export class SpServiceRegistration {
         instance.scheme = data.scheme;
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
+        instance.svcType = data.svcType;
         instance.tags = __getCopyArrayFn(SpServiceTag.fromData)(data.tags);
         return instance;
     }
