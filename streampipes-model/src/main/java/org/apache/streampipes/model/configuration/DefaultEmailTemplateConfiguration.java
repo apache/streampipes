@@ -24,6 +24,7 @@ public class DefaultEmailTemplateConfiguration {
     return new EmailTemplateConfig(getTemplate());
   }
 
+  @SuppressWarnings("all")
   private String getTemplate() {
     return "<!DOCTYPE html>\n"
         + "<html>\n"
