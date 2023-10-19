@@ -23,8 +23,7 @@ public enum SpServiceTagPrefix {
   ADAPTER("adapter"),
   DATA_STREAM("dstream"),
   DATA_PROCESSOR("dprocessor"),
-  DATA_SINK("dsink"),
-  DATA_SET("dset");
+  DATA_SINK("dsink");
 
   private String prefix;
 
