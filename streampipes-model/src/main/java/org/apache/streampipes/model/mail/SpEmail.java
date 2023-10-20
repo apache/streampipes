@@ -22,6 +22,7 @@ import java.util.List;
 public class SpEmail {
 
   private List<String> recipients;
+  private String preheader;
   private String subject;
   private String message;
 
@@ -30,16 +31,25 @@ public class SpEmail {
 
   public SpEmail(List<String> recipients,
                  String subject,
+                 String preheader,
                  String message) {
     this.recipients = recipients;
     this.subject = subject;
+    this.preheader = preheader;
     this.message = message;
   }
 
   public static SpEmail from(List<String> recipients,
                              String subject,
                              String message) {
-    return new SpEmail(recipients, subject, message);
+    return new SpEmail(recipients, subject, "", message);
+  }
+
+  public static SpEmail from(List<String> recipients,
+                             String subject,
+                             String preheader,
+                             String message) {
+    return new SpEmail(recipients, subject, preheader, message);
   }
 
   public List<String> getRecipients() {
@@ -56,6 +66,14 @@ public class SpEmail {
 
   public void setSubject(String subject) {
     this.subject = subject;
+  }
+
+  public String getPreheader() {
+    return preheader;
+  }
+
+  public void setPreheader(String preheader) {
+    this.preheader = preheader;
   }
 
   public String getMessage() {

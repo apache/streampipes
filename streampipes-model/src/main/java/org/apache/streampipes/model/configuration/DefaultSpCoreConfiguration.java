@@ -32,6 +32,7 @@ public class DefaultSpCoreConfiguration {
     coreCfg.setGeneralConfig(new GeneralConfig());
     coreCfg.setMessagingSettings(new DefaultMessagingSettings().make());
     coreCfg.setEmailConfig(EmailConfig.fromDefaults());
+    coreCfg.setEmailTemplateConfig(new DefaultEmailTemplateConfiguration().getDefaultTemplates());
     coreCfg.setFilesDir(makeFileLocation());
     coreCfg.setAssetDir(makeAssetLocation());
     coreCfg.setLocalAuthConfig(LocalAuthConfig.fromDefaults(getJwtSecret()));

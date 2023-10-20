@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.mail.MailTester;
 import org.apache.streampipes.model.configuration.EmailConfig;
+import org.apache.streampipes.model.configuration.EmailTemplateConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -49,6 +50,27 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response getMailConfiguration() {
     return ok(getSpCoreConfigurationStorage().get().getEmailConfig());
+  }
+
+  @GET
+  @Path("templates")
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public Response getMailTemplates() {
+    return ok(getSpCoreConfigurationStorage().get().getEmailTemplateConfig());
+  }
+
+  @PUT
+  @Path("templates")
+  @JacksonSerialized
+  @Consumes(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public Response updateMailTemplate(EmailTemplateConfig templateConfig) {
+    var config = getSpCoreConfigurationStorage().get();
+    config.setEmailTemplateConfig(templateConfig);
+    getSpCoreConfigurationStorage().updateElement(config);
+    return ok();
   }
 
   @PUT

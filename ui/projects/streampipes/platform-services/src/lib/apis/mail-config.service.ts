@@ -21,7 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { EmailConfig } from '../model/email-config.model';
+import { EmailConfig, EmailTemplate } from '../model/email-config.model';
 
 @Injectable({
     providedIn: 'root',
@@ -38,8 +38,18 @@ export class MailConfigService {
             .pipe(map(response => response as EmailConfig));
     }
 
+    getMailTemplate(): Observable<EmailTemplate> {
+        return this.http
+            .get(`${this.mailConfigPath}/templates`)
+            .pipe(map(response => response as EmailTemplate));
+    }
+
     updateMailConfig(config: EmailConfig): Observable<any> {
         return this.http.put(this.mailConfigPath, config);
+    }
+
+    updateMailTemplate(template: EmailTemplate): Observable<any> {
+        return this.http.put(`${this.mailConfigPath}/templates`, template);
     }
 
     sendTestMail(config: EmailConfig) {
