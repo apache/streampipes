@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.service.extensions;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.migration.ModelMigrator;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
@@ -45,6 +48,14 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
 
   @Override
   public void afterServiceRegistered(SpServiceDefinition serviceDef) {
+    // register all migrations at the StreamPipes Core
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    client.adminApi().registerMigrations(
+          serviceDef.getMigrators().stream().map(ModelMigrator::config).toList(),
+          serviceId()
+    );
+
+    // initialize all function instances
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
   }
 

@@ -24,6 +24,7 @@ import org.apache.streampipes.model.extensions.configuration.SpServiceConfigurat
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import java.util.List;
 
@@ -66,6 +67,15 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     delete(getDeleteFunctionPath(functionId), SuccessMessage.class);
   }
 
+  /**
+   * Register migration configs {@link ModelMigratorConfig} at the StreamPipes Core service.
+   * @param migrationConfigs list of migration configs to be registered
+   */
+  @Override
+  public void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId) {
+    post(getMigrationsPath().addToPath(serviceId), migrationConfigs);
+  }
+
   @Override
   public MessagingSettings getMessagingSettings() {
     return getSingle(getMessagingSettingsPath(), MessagingSettings.class);
@@ -97,5 +107,11 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
 
   private StreamPipesApiPath getDeleteFunctionPath(String functionId) {
     return getFunctionsPath().addToPath(functionId);
+  }
+
+  private StreamPipesApiPath getMigrationsPath() {
+    return StreamPipesApiPath
+            .fromBaseApiPath()
+            .addToPath("migrations");
   }
 }

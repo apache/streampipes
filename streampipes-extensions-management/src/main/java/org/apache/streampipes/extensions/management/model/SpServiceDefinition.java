@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.model;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.migration.ModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -47,6 +48,7 @@ public class SpServiceDefinition {
   private List<ConfigItem> kvConfigs;
 
   private List<IStreamPipesRuntimeProvider> runtimeProviders;
+  private List<ModelMigrator<?, ?>> migrators;
 
   public SpServiceDefinition() {
     this.serviceId = UUID.randomUUID().toString();
@@ -57,6 +59,7 @@ public class SpServiceDefinition {
     this.functions = new ArrayList<>();
     this.adapters = new ArrayList<>();
     this.runtimeProviders = new ArrayList<>();
+    this.migrators = new ArrayList<>();
   }
 
   public String getServiceGroup() {
@@ -181,5 +184,13 @@ public class SpServiceDefinition {
 
   public void addRuntimeProvider(IStreamPipesRuntimeProvider runtimeProvider) {
     this.runtimeProviders.add(runtimeProvider);
+  }
+
+  public List<ModelMigrator<?, ?>> getMigrators() {
+    return this.migrators;
+  }
+
+  public void addMigrators(List<ModelMigrator<?, ?>> migrators) {
+    this.migrators.addAll(migrators);
   }
 }
