@@ -53,6 +53,9 @@ public class SinksInternalJvmInit extends ExtensionsModelSubmitter {
             new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
             new SpNatsProtocolFactory())
+        .registerMigrators(
+            new DataLakeMigrationv1()
+        )
         .build();
 
 
