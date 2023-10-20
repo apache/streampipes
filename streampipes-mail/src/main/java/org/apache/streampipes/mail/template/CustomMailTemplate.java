@@ -15,39 +15,43 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.mail.template;
 
-import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
 import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
-import org.apache.streampipes.mail.template.part.MailTemplatePart;
-import org.apache.streampipes.mail.utils.MailUtils;
 
 import java.util.Map;
 
-public class TestMailTemplate extends AbstractMailTemplate {
+public class CustomMailTemplate extends AbstractMailTemplate {
+
+  private final String title;
+  private final String preheader;
+  private final String content;
+
+  public CustomMailTemplate(String title,
+                            String preheader,
+                            String content) {
+    this.title = title;
+    this.preheader = preheader;
+    this.content = content;
+  }
 
   @Override
   protected String getTitle() {
-    return "Mail settings verification";
+    return title;
   }
 
   @Override
   protected String getPreHeader() {
-    return "Your " + MailUtils.extractAppName() + " mail configuration is working!";
+    return preheader;
   }
 
   @Override
   protected void addPlaceholders(Map<String, String> placeholders) {
-    placeholders.put(DefaultPlaceholders.TEXT.key(), makeText());
   }
 
   @Override
   protected void configureTemplate(MailTemplateBuilder builder) {
-    builder.withInnerPart(MailTemplatePart.MAIL_TEMPLATE_INNER_PLAIN);
+    builder.withInnerPart(content);
   }
-
-  private String makeText() {
-    return "This is a test mail - if you receive this mail, your mail configuration is working.";
-  }
-
 }

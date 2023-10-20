@@ -22,7 +22,6 @@ public class SpServicePathPrefix {
   public static final String DATA_PROCESSOR = "sepa";
   public static final String DATA_SINK = "sec";
   public static final String DATA_STREAM = "stream";
-  public static final String DATA_SET = "set";
   public static final String ADAPTER = "api/v1/worker/adapters";
   public static final String PROTOCOL = "api/v1/worker/protocols";
 

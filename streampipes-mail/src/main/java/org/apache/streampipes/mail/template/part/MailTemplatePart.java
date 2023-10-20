@@ -17,20 +17,22 @@
  */
 package org.apache.streampipes.mail.template.part;
 
+import org.apache.streampipes.mail.utils.MailUtils;
+
+import java.io.IOException;
+
 public enum MailTemplatePart {
 
-  MAIL_TEMPLATE_OUTER("mail-template-outer.html"),
   MAIL_TEMPLATE_INNER_BUTTON("mail-template-inner-button.html"),
-  MAIL_TEMPLATE_INNER_PLAIN("mail-template-inner-plain.html"),
-  MAIL_TEMPLATE_FOOTER("mail-template-footer.html");
+  MAIL_TEMPLATE_INNER_PLAIN("mail-template-inner-plain.html");
 
-  private String templateFilename;
+  private final String templateFilename;
 
   MailTemplatePart(String templateFilename) {
     this.templateFilename = templateFilename;
   }
 
-  public String getTemplateFilename() {
-    return this.templateFilename;
+  public String getContent() throws IOException {
+    return MailUtils.readResourceFileToString(templateFilename);
   }
 }
