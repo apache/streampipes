@@ -30,14 +30,14 @@
                         {{
                             sourceConfig.measureName
                                 ? sourceConfig.measureName
-                                : 'New Data Stream'
+                                : 'New Data Source'
                         }}
                     </div>
                     <div fxFlex fxLayoutAlign="end center">
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Clone Data Stream"
+                            matTooltip="Clone Data Source"
                         >
                             <i
                                 class="material-icons plus-icon align-btn"
@@ -48,7 +48,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Delete Data Stream"
+                            matTooltip="Delete Data Source"
                         >
                             <i
                                 class="material-icons align-btn"
@@ -274,10 +274,10 @@
             mat-raised-button
             color="accent"
             class="small-button"
-            (click)="addDataStream()"
+            (click)="addDataSource()"
             style="margin-right: 10px; margin-bottom: 15px"
         >
-            Add Data Stream
+            Add Data Source
         </button>
     </div>
     <div class="p-10">
