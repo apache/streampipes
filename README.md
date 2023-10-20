@@ -114,12 +114,14 @@ The quickest way to run StreamPipes including the latest extensions (adapters, p
 * **[StreamPipes CLI](installer/cli)** - The Developer's Favorite
 * **[StreamPipes k8s](installer/k8s)** - The Operator's Dream
 
-> **NOTE**: StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
+> [!IMPORTANT] 
+> StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
 
 Please follow the instructions provided in the corresponding `README.md` to get started.
 
 For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/try-installation.html).
 
+> [!NOTE]
 > TL;DR: Download the latest release, switch to the ``installer/compose`` directory and run ``docker-compose up -d``.
 
 ## Documentation

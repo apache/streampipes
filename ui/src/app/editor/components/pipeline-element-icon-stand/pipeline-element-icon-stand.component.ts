@@ -44,11 +44,8 @@ export class PipelineElementIconStandComponent
 {
     availableTypes = [
         {
-            title: 'Data Sources',
-            filters: [
-                PipelineElementType.DataStream,
-                PipelineElementType.DataSet,
-            ],
+            title: 'Data Streams',
+            filters: [PipelineElementType.DataStream],
             open: true,
             color: 'var(--color-stream)',
             sort: 'name',

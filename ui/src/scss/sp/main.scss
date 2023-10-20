@@ -39,7 +39,6 @@ body {
     width: 100%;
 
     --color-adapter: #{$sp-color-adapter};
-    --color-set: #{$sp-color-set};
     --color-stream: #{$sp-color-stream};
     --color-processor: #{$sp-color-processor};
     --color-sink: #{$sp-color-sink};
@@ -553,11 +552,6 @@ md-content {
 .stream {
     border-radius: 50%;
     border: 2px solid $sp-color-stream;
-}
-
-.set {
-    border-radius: 50%;
-    border: 2px solid $sp-color-set;
 }
 
 .action {

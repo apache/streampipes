@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-19 10:40:49.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-19 12:31:37.
 
 export class NamedStreamPipesEntity {
     '@class':
