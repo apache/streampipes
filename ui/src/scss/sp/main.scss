@@ -38,7 +38,6 @@ body {
     height: auto !important;
     width: 100%;
 
-    --color-set: #{$sp-color-set};
     --color-stream: #{$sp-color-stream};
     --color-processor: #{$sp-color-processor};
     --color-sink: #{$sp-color-sink};
@@ -531,11 +530,6 @@ md-content {
     color: black;
 }
 
-.set-label {
-    background: $sp-color-set;
-    color: black;
-}
-
 .processor-label {
     background: $sp-color-processor;
 }
@@ -547,11 +541,6 @@ md-content {
 .stream {
     border-radius: 50%;
     border: 2px solid $sp-color-stream;
-}
-
-.set {
-    border-radius: 50%;
-    border: 2px solid $sp-color-set;
 }
 
 .action {
