@@ -23,6 +23,8 @@ import {
     MailConfigService,
 } from '@streampipes/platform-services';
 
+import 'codemirror/mode/htmlembedded/htmlembedded';
+
 @Component({
     selector: 'sp-email-template-configuration',
     templateUrl: './email-template-configuration.component.html',
@@ -35,7 +37,7 @@ export class SpEmailTemplateConfigurationComponent implements OnInit {
     templateStored = false;
 
     editorOptions = {
-        mode: 'html',
+        mode: 'htmlembedded',
         autoRefresh: true,
         theme: 'dracula',
         autoCloseBrackets: true,
