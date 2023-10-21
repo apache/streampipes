@@ -17,16 +17,28 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
 import {
     CurrentUserService,
+    DialogService,
+    PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { AuthService } from '../services/auth.service';
 import { UserRole } from '../_enums/user-role.enum';
+import { MissingElementsForTutorialComponent } from '../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
+import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
+import { ShepherdService } from '../services/tour/shepherd.service';
+import {
+    AdapterDescription,
+    AdapterService,
+    NamedStreamPipesEntity,
+    Pipeline,
+    PipelineElementService,
+    PipelineService,
+} from '@streampipes/platform-services';
+import { zip } from 'rxjs';
 
 @Component({
     templateUrl: './home.component.html',
@@ -36,14 +48,32 @@ export class HomeComponent implements OnInit {
     serviceLinks = [];
     showStatus = false;
 
+    availablePipelineElements: NamedStreamPipesEntity[] = [];
+    availableAdapters: AdapterDescription[] = [];
+    availablePipelines: Pipeline[] = [];
+    runningPipelines: Pipeline[] = [];
+
+    requiredAdapterForTutorialAppId: any =
+        'org.apache.streampipes.connect.iiot.adapters.simulator.machine';
+    requiredProcessorForTutorialAppId: any =
+        'org.apache.streampipes.processors.filters.jvm.numericalfilter';
+    requiredSinkForTutorialAppId: any =
+        'org.apache.streampipes.sinks.internal.jvm.datalake';
+    missingElementsForTutorial: any = [];
+
+    isTutorialOpen = false;
+
     constructor(
         private homeService: HomeService,
-        private authService: AuthService,
         private currentUserService: CurrentUserService,
-        private sanitizer: DomSanitizer,
         private router: Router,
         public appConstants: AppConstants,
         private breadcrumbService: SpBreadcrumbService,
+        private dialogService: DialogService,
+        private shepherdService: ShepherdService,
+        private pipelineService: PipelineService,
+        private pipelineElementService: PipelineElementService,
+        private adapterService: AdapterService,
     ) {
         this.serviceLinks = this.homeService.getFilteredServiceLinks();
     }
@@ -54,12 +84,11 @@ export class HomeComponent implements OnInit {
             this.showStatus =
                 isAdmin ||
                 userInfo.roles.indexOf(UserRole.ROLE_PIPELINE_ADMIN) > -1;
+            if (isAdmin) {
+                this.loadResources();
+            }
         });
         this.breadcrumbService.updateBreadcrumb([]);
-    }
-
-    getBackground(url) {
-        return this.sanitizer.bypassSecurityTrustStyle(`url(${url})`);
     }
 
     openLink(link) {
@@ -68,5 +97,123 @@ export class HomeComponent implements OnInit {
         } else {
             this.router.navigate([link.link.value]);
         }
+    }
+
+    checkForTutorial() {
+        const currentUser = this.currentUserService.getCurrentUser();
+        if (currentUser.showTutorial) {
+            if (this.requiredPipelineElementsForTourPresent()) {
+                this.isTutorialOpen = true;
+                const dialogRef = this.dialogService.open(
+                    WelcomeTourComponent,
+                    {
+                        panelType: PanelType.STANDARD_PANEL,
+                        title: 'Welcome to ' + this.appConstants.APP_NAME,
+                        data: {
+                            userInfo: currentUser,
+                        },
+                    },
+                );
+                dialogRef.afterClosed().subscribe(startTutorial => {
+                    if (startTutorial) {
+                        this.startTutorial();
+                    }
+                });
+            }
+        }
+    }
+
+    startTutorial() {
+        if (this.requiredPipelineElementsForTourPresent()) {
+            this.router.navigate(['connect']).then(next => {
+                this.shepherdService.startAdapterTour();
+            });
+        } else {
+            this.missingElementsForTutorial = [];
+            if (!this.requiredAdapterForTutorialAppId()) {
+                this.missingElementsForTutorial.push({
+                    name: 'Machine Data Simulator',
+                    appId: this.requiredAdapterForTutorialAppId,
+                });
+            }
+            if (!this.requiredProcessorForTourPresent()) {
+                this.missingElementsForTutorial.push({
+                    name: 'Numerical Filter',
+                    appId: this.requiredProcessorForTutorialAppId,
+                });
+            }
+            if (!this.requiredSinkForTourPresent()) {
+                this.missingElementsForTutorial.push({
+                    name: 'Dashboard Sink',
+                    appId: this.requiredSinkForTutorialAppId,
+                });
+            }
+
+            this.dialogService.open(MissingElementsForTutorialComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Tutorial requires pipeline elements',
+                data: {
+                    missingElementsForTutorial: this.missingElementsForTutorial,
+                },
+            });
+        }
+    }
+
+    requiredPipelineElementsForTourPresent() {
+        return (
+            this.requiredAdapterForTourPresent() &&
+            this.requiredProcessorForTourPresent() &&
+            this.requiredSinkForTourPresent()
+        );
+    }
+
+    requiredAdapterForTourPresent() {
+        return this.requiredPeForTourPresent(
+            this.availableAdapters,
+            this.requiredAdapterForTutorialAppId,
+        );
+    }
+
+    requiredProcessorForTourPresent() {
+        return this.requiredPeForTourPresent(
+            this.availablePipelineElements,
+            this.requiredProcessorForTutorialAppId,
+        );
+    }
+
+    requiredSinkForTourPresent() {
+        return this.requiredPeForTourPresent(
+            this.availablePipelineElements,
+            this.requiredSinkForTutorialAppId,
+        );
+    }
+
+    requiredPeForTourPresent(list: NamedStreamPipesEntity[], appId: string) {
+        return (
+            list &&
+            list.some(el => {
+                return el.appId === appId;
+            })
+        );
+    }
+
+    loadResources(): void {
+        zip(
+            this.pipelineService.getPipelines(),
+            this.adapterService.getAdapterDescriptions(),
+            this.pipelineElementService.getDataStreams(),
+            this.pipelineElementService.getDataProcessors(),
+            this.pipelineElementService.getDataSinks(),
+        ).subscribe(res => {
+            this.availablePipelines = res[0];
+            this.runningPipelines = res[0].filter(p => p.running);
+            this.availableAdapters = res[1];
+            this.availablePipelineElements = this.availablePipelineElements
+                .concat(...res[2])
+                .concat(...res[3])
+                .concat(...res[4]);
+
+            this.checkForTutorial();
+        });
     }
 }

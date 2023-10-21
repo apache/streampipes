@@ -19,8 +19,6 @@
 import createPipelineTourConstants from './create-pipeline-tour.constants';
 import dashboardTourConstants from './dashboard-tour.constants';
 import adapterTourConstants from './adapter-tour.constants';
-import adapterTour2Constants from './adapter-tour-2.constants';
-import adapterTour3Constants from './adapter-tour-3.constants';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -35,8 +33,6 @@ export class TourProviderService {
         this.guidedTours.push(createPipelineTourConstants.createPipelineTour);
         this.guidedTours.push(dashboardTourConstants.dashboardTour);
         this.guidedTours.push(adapterTourConstants.adapterTour);
-        this.guidedTours.push(adapterTour2Constants.adapterTour);
-        this.guidedTours.push(adapterTour3Constants.adapterTour);
         this.time = 500;
     }
 

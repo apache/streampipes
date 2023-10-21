@@ -31,6 +31,7 @@
                         placeholder="Adapter Name"
                         data-cy="sp-adapter-name"
                         required
+                        (blur)="triggerTutorialAdapterNameAssigned()"
                     />
                 </mat-form-field>
                 <mat-form-field color="accent">

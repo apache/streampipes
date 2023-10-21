@@ -143,6 +143,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
         );
         this.pipelineElement.payload.configured = true;
         if (this.shepherdService.isTourActive()) {
+            console.log(this.pipelineElement.type);
             this.shepherdService.trigger('save-' + this.pipelineElement.type);
         }
         this.dialogRef.close(this.pipelineElement);

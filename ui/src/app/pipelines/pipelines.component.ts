@@ -40,6 +40,7 @@ import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { SpPipelineRoutes } from './pipelines.routes';
 import { UserRole } from '../_enums/user-role.enum';
+import { ShepherdService } from '../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-pipelines',
@@ -58,11 +59,8 @@ export class PipelinesComponent implements OnInit {
     pipelineIdToStart: string;
 
     pipelineToStart: Pipeline;
-    systemPipelineToStart: Pipeline;
 
     pipelinesReady = false;
-
-    selectedCategoryIndex = 0;
     hasPipelineWritePrivileges = false;
 
     functions: FunctionId[] = [];
@@ -78,6 +76,7 @@ export class PipelinesComponent implements OnInit {
         private router: Router,
         private functionsService: FunctionsService,
         private breadcrumbService: SpBreadcrumbService,
+        private shepherdService: ShepherdService,
     ) {
         this.pipelineCategories = [];
         this.starting = false;
@@ -119,7 +118,6 @@ export class PipelinesComponent implements OnInit {
     getFunctions() {
         this.functionsService.getActiveFunctions().subscribe(functions => {
             this.functions = functions.map(f => f.functionId);
-            console.log(this.functions);
             this.functionsReady = true;
         });
     }
@@ -231,11 +229,15 @@ export class PipelinesComponent implements OnInit {
         this.getPipelines();
     }
 
-    showPipeline(pipeline) {
-        pipeline.display = !pipeline.display;
+    startPipelineTour(): void {
+        this.shepherdService.startPipelineTour();
     }
 
     navigateToPipelineEditor() {
-        this.router.navigate(['pipelines', 'create']);
+        this.router
+            .navigate(['pipelines', 'create'])
+            .then(() =>
+                this.shepherdService.trigger('pipeline-new-button-clicked'),
+            );
     }
 }

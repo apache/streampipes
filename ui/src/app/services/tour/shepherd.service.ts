@@ -165,7 +165,7 @@ export class ShepherdService {
         this.router.navigateByUrl('dashboard');
     }
 
-    startCreatePipelineTour() {
+    startPipelineTour() {
         this.startTour(this.tourProviderService.getTourById('create-pipeline'));
     }
 
@@ -177,19 +177,11 @@ export class ShepherdService {
         this.startTour(this.tourProviderService.getTourById('adapter'));
     }
 
-    startAdapterTour2() {
-        this.startTour(this.tourProviderService.getTourById('adapter2'));
-    }
-
-    startAdapterTour3() {
-        this.startTour(this.tourProviderService.getTourById('adapter3'));
-    }
-
-    setTimeWaitMillies(value) {
+    setTimeWaitMillis(value) {
         this.tourProviderService.setTime(value);
     }
 
-    getTimeWaitMillies() {
+    getTimeWaitMillis() {
         return this.tourProviderService.getTime();
     }
 }

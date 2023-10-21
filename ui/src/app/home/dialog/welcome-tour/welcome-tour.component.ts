@@ -17,7 +17,6 @@
  */
 
 import { DialogRef } from '@streampipes/shared-ui';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
@@ -39,7 +38,6 @@ export class WelcomeTourComponent implements OnInit {
         private authService: AuthService,
         private dialogRef: DialogRef<WelcomeTourComponent>,
         private profileService: ProfileService,
-        private shepherdService: ShepherdService,
         public appConstants: AppConstants,
     ) {}
 
@@ -49,11 +47,6 @@ export class WelcomeTourComponent implements OnInit {
             .subscribe(data => {
                 this.currentUser = data;
             });
-    }
-
-    startCreatePipelineTour() {
-        this.shepherdService.startCreatePipelineTour();
-        this.close();
     }
 
     hideTourForever() {
@@ -66,7 +59,7 @@ export class WelcomeTourComponent implements OnInit {
             });
     }
 
-    close() {
-        this.dialogRef.close();
+    close(startTutorial = false) {
+        this.dialogRef.close(startTutorial);
     }
 }
