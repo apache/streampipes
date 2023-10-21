@@ -76,7 +76,7 @@ export default {
             {
                 stepId: 'step-8',
                 title: 'Change runtime name',
-                text: 'The runtime name represents the field name of the message. Change the value of the runtime name to <b>temp</b>. This will also change all the keys later in the data stream. ',
+                text: 'The runtime name represents the field name of the message. Change the value of the runtime name to <b>temp</b>. This will also change all the keys later in the data stream. Click outside the input field to continue.',
                 attachToElement: '[data-cy="connect-edit-field-runtime-name"]',
                 attachPosition: 'top',
                 buttons: ['cancel'],
@@ -108,7 +108,7 @@ export default {
             {
                 stepId: 'step-12',
                 title: 'Adapter name',
-                text: 'Change the name of the adapter to <b>Tutorial</b>',
+                text: 'Change the name of the adapter to <b>Tutorial</b> and click outside the input field to continue.',
                 attachToElement: '[data-cy="sp-adapter-name"]',
                 attachPosition: 'top',
                 buttons: ['cancel'],
@@ -135,7 +135,7 @@ export default {
                 title: 'Congratulations',
                 text: '<b></b>Congratulations!</b> You have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data stream',
                 classes: 'shepherd shepherd-welcome',
-                buttons: ['cancel'],
+                buttons: ['cancel', 'pipeline-tutorial'],
             },
         ],
         matchingSteps: [

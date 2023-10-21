@@ -97,6 +97,9 @@ export class PipelinesComponent implements OnInit {
             if (params['pipeline']) {
                 this.pipelineIdToStart = params['pipeline'];
             }
+            if (params.startTutorial) {
+                this.startPipelineTour();
+            }
             this.getPipelineCategories();
             this.getPipelines();
             this.getFunctions();

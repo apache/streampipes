@@ -21,7 +21,7 @@ import dashboardTourConstants from './dashboard-tour.constants';
 import adapterTourConstants from './adapter-tour.constants';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TourProviderService {
     guidedTours: any;
 
