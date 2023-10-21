@@ -53,9 +53,12 @@ describe('Test User Management', () => {
         cy.switchUser(user);
 
         UserUtils.goToUserConfiguration();
+        cy.dataCy('close-tutorial-button').click();
 
         cy.switchUser(UserUtils.adminUser);
         UserUtils.goToUserConfiguration();
+        cy.dataCy('close-tutorial-button').click();
+
         UserUtils.deleteUser(user);
         // Validate that user is removed
         cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
