@@ -108,7 +108,7 @@ public class DataExplorerQueryManagement implements IDataExplorerQueryManagement
     InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient();
     String databaseName = getEnvironment().getTsStorageBucket().getValueOrDefault();
     Map<String, Object> tags = new HashMap<>();
-    if (fields != null && !("".equals(fields))) {
+    if (fields != null && !(fields.isEmpty())) {
       List<String> fieldList = Arrays.asList(fields.split(","));
       fieldList.forEach(f -> {
         String q =
@@ -118,7 +118,7 @@ public class DataExplorerQueryManagement implements IDataExplorerQueryManagement
         QueryResult queryResult = influxDB.query(query);
         queryResult.getResults().forEach(res -> {
           res.getSeries().forEach(series -> {
-            if (series.getValues().size() > 0) {
+            if (!series.getValues().isEmpty()) {
               String field = series.getValues().get(0).get(0).toString();
               List<String> values =
                   series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());

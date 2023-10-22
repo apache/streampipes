@@ -21,8 +21,6 @@ public enum DefaultPlaceholders {
 
   TITLE("TITLE"),
   PREHEADER("PREHEADER"),
-  FOOTER("FOOTER"),
-  FOOTER_TEXT("FOOTER_TEXT"),
   INNER("INNER"),
 
   BUTTON_TEXT("BUTTON_TEXT"),
