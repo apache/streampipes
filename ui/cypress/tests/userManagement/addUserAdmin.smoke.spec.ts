@@ -57,7 +57,6 @@ describe('Test User Management', () => {
 
         cy.switchUser(UserUtils.adminUser);
         UserUtils.goToUserConfiguration();
-        cy.dataCy('close-tutorial-button').click();
 
         UserUtils.deleteUser(user);
         // Validate that user is removed
