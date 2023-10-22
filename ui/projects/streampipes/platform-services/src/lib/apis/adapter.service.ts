@@ -99,16 +99,32 @@ export class AdapterService {
         return `${this.connectPath}/master/adapters/`;
     }
 
-    deleteAdapter(adapter: AdapterDescription): Observable<any> {
-        return this.deleteRequest(adapter, '/master/adapters/');
+    deleteAdapter(
+        adapter: AdapterDescription,
+        deleteAssociatedPipelines: boolean,
+    ): Observable<any> {
+        return this.deleteRequest(
+            adapter,
+            deleteAssociatedPipelines,
+            '/master/adapters/',
+        );
     }
 
     getAdapterCategories(): Observable<any> {
         return this.http.get(`${this.baseUrl}/api/v2/categories/adapter`);
     }
 
-    private deleteRequest(adapter: AdapterDescription, url: string) {
-        return this.http.delete(this.connectPath + url + adapter.elementId);
+    private deleteRequest(
+        adapter: AdapterDescription,
+        deleteAssociatedPipelines: boolean,
+        url: string,
+    ) {
+        const queryString = deleteAssociatedPipelines
+            ? '?deleteAssociatedPipelines=true'
+            : '';
+        return this.http.delete(
+            `${this.connectPath}/${url}/${adapter.elementId}${queryString}`,
+        );
     }
 
     getAssetUrl(appId) {

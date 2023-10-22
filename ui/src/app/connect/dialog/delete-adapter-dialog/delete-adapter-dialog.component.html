@@ -22,15 +22,33 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b
                     ><h4>
-                        This adapter is currently used by
-                        {{ numberOfPipelinesWithAdapter }} pipeline{{
-                            numberOfPipelinesWithAdapter === 1 ? '' : 's'
-                        }}.
-                    </h4></b
+                        The adapter is currently used by these pipelines:
+                        {{ namesOfPipelinesUsingAdapter }}
+                    </h4>
+                    <h4>
+                        You need to delete these pipelines first before deleting
+                        the adapter.
+                    </h4>
+                    <h4>
+                        Do you want to delete all associated pipelines and this
+                        adapter?
+                    </h4>
+                </b>
+                <div
+                    fxFlex="100"
+                    fxLayoutAlign="center center"
+                    fxLayout="column"
                 >
-                <h5>
-                    Delete these pipelines first before deleting the adapter.
-                </h5>
+                    <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        (click)="deleteAdapter(true)"
+                        data-cy="delete-adapter-confirmation"
+                    >
+                        DELETE ALL
+                    </button>
+                </div>
             </div>
         </div>
         <div *ngIf="!isInProgress && !adapterUsedByPipeline" fxLayout="column">
@@ -48,7 +66,7 @@
                     mat-button
                     mat-raised-button
                     color="accent"
-                    (click)="deleteAdapter()"
+                    (click)="deleteAdapter(false)"
                     data-cy="delete-adapter-confirmation"
                 >
                     Delete adapter
