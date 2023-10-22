@@ -42,6 +42,8 @@ import org.apache.streampipes.processors.siddhi.FiltersSiddhiInit;
 import org.apache.streampipes.processors.transformation.jvm.TransformationJvmInit;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.brokers.jvm.BrokersJvmInit;
+import org.apache.streampipes.extensions.connectors.nats.sink.NatsSink;
+import org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink;
 import org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit;
 import org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit;
 import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
@@ -71,6 +73,8 @@ public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
         .merge(new InfluxConnectorsInit().provideServiceDefinition())
         .registerPipelineElements(
             new KafkaPublishSink(),
+            new MqttPublisherSink(),
+            new NatsSink(),
             new PulsarPublisherSink(),
             new RocketMQPublisherSink(),
             new TubeMQPublisherSink())

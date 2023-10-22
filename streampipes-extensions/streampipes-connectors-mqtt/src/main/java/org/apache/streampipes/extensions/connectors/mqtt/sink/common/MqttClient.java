@@ -15,14 +15,12 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.sinks.brokers.jvm.mqtt;
+package org.apache.streampipes.extensions.connectors.mqtt.sink.common;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sinks.brokers.jvm.mqtt.common.MqttOptions;
-import org.apache.streampipes.sinks.brokers.jvm.mqtt.common.MqttUtils;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
@@ -36,7 +34,7 @@ public class MqttClient {
   private MQTT mqtt;
   private BlockingConnection conn;
 
-  public MqttClient(SinkParams params) {
+  public MqttClient(IDataSinkParameters params) {
     this.options = new MqttOptions(params);
     this.createMqttClient();
   }

@@ -35,6 +35,8 @@ import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.extensions.connectors.nats.sink.NatsSink;
+import org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 
@@ -53,6 +55,8 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
         .merge(new AllPipelineElementsInit().provideServiceDefinition())
         .registerPipelineElements(
             new KafkaPublishSink(),
+            new MqttPublisherSink(),
+            new NatsSink(),
             new PulsarPublisherSink(),
             new RocketMQPublisherSink(),
             new TubeMQPublisherSink())

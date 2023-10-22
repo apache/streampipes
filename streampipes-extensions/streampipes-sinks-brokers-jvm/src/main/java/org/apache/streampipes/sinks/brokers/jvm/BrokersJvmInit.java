@@ -31,8 +31,6 @@ import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsPublisherSink;
-import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink;
-import org.apache.streampipes.sinks.brokers.jvm.nats.NatsController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
@@ -54,9 +52,7 @@ public class BrokersJvmInit extends ExtensionsModelSubmitter {
             new RestSink(),
             new BufferRestPublisherSink(),
             new RabbitMqPublisherSink(),
-            new MqttPublisherSink(),
-            new WebsocketServerSink(),
-            new NatsController())
+            new WebsocketServerSink())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

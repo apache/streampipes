@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.pe.shared.config.mqtt;
+package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;

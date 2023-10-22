@@ -16,29 +16,30 @@
  *
  */
 
-package org.apache.streampipes.sinks.brokers.jvm.nats;
+package org.apache.streampipes.extensions.connectors.nats.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.messaging.nats.NatsUtils;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
+import org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import io.nats.client.Connection;
 import io.nats.client.Nats;
@@ -50,9 +51,9 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-public class NatsController extends StreamPipesDataSink {
+public class NatsSink implements IStreamPipesDataSink {
 
-  private static final Logger LOG = LoggerFactory.getLogger(NatsController.class);
+  private static final Logger LOG = LoggerFactory.getLogger(NatsSink.class);
 
   private static final String SUBJECT_KEY = "subject";
   private static final String URLS_KEY = "natsUrls";
@@ -75,22 +76,25 @@ public class NatsController extends StreamPipesDataSink {
   private JsonDataFormatDefinition dataFormatDefinition;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.nats")
-        .category(DataSinkType.MESSAGING)
-        .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
-        .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
-        .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
-            getAccessModeAlternativesTwo())
-        .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
-            getConnectionPropertiesAlternativesTwo())
-        .build();
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        NatsSink::new,
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.nats")
+            .category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build())
+            .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
+            .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
+            .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
+                getAccessModeAlternativesTwo())
+            .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
+                getConnectionPropertiesAlternativesTwo())
+            .build()
+    );
   }
 
   public static StaticPropertyAlternative getAccessModeAlternativesOne() {
@@ -103,7 +107,6 @@ public class NatsController extends StreamPipesDataSink {
         StaticProperties.group(Labels.withId(USERNAME_GROUP),
             StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
             StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
-
   }
 
   public static StaticPropertyAlternative getConnectionPropertiesAlternativesOne() {
@@ -119,11 +122,10 @@ public class NatsController extends StreamPipesDataSink {
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
     this.dataFormatDefinition = new JsonDataFormatDefinition();
     NatsConfig natsConfig = NatsConfigUtils.from(
-        StaticPropertyExtractor.from(parameters.getModel().getStaticProperties()));
+        StaticPropertyExtractor.from(params.getModel().getStaticProperties()));
     this.subject = natsConfig.getSubject();
     Options options = NatsUtils.makeNatsOptions(natsConfig);
 
@@ -145,7 +147,7 @@ public class NatsController extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     try {
       natsConnection.flush(Duration.ofMillis(50));
       natsConnection.close();

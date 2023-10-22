@@ -64,6 +64,8 @@
         <module>streampipes-sources-watertank-simulator</module>
         <module>streampipes-sources-vehicle-simulator</module>
         <module>streampipes-connectors-tubemq</module>
+        <module>streampipes-connectors-nats</module>
+        <module>streampipes-connectors-mqtt</module>
     </modules>
 
     <properties>

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.protocol.stream;
+package org.apache.streampipes.extensions.connectors.nats.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -28,6 +28,7 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchema
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -36,7 +37,6 @@ import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -49,19 +49,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.ACCESS_MODE;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.ANONYMOUS_ACCESS;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.CONNECTION_PROPERTIES;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.CONNECTION_PROPERTIES_GROUP;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.CUSTOM_PROPERTIES;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.NONE_PROPERTIES;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.PASSWORD_KEY;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.PROPERTIES_KEY;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.SUBJECT_KEY;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.URLS_KEY;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_ACCESS;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_GROUP;
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.ACCESS_MODE;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.ANONYMOUS_ACCESS;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CONNECTION_PROPERTIES;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CONNECTION_PROPERTIES_GROUP;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CUSTOM_PROPERTIES;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.NONE_PROPERTIES;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.PASSWORD_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.PROPERTIES_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.SUBJECT_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.URLS_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_ACCESS;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_GROUP;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_KEY;
 
 public class NatsProtocol implements StreamPipesAdapter {
 

@@ -15,32 +15,32 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.sinks.brokers.jvm.mqtt.common;
+package org.apache.streampipes.extensions.connectors.mqtt.sink.common;
 
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 
 import org.fusesource.mqtt.client.QoS;
 
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.AUTH_ALTERNATIVE;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.AUTH_MODE;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.CLEAN_SESSION_KEY;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.ENCRYPTION_MODE;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.HOST;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.KEEP_ALIVE_IN_SEC;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.MQTT_COMPLIANT;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.PASSWORD;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.PORT;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.QOS_LEVEL_KEY;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.RECONNECT_PERIOD_IN_SEC;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.RETAIN;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.TOPIC;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.USERNAME;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.WILL_ALTERNATIVE;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.WILL_MESSAGE;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.WILL_MODE;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.WILL_QOS;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.WILL_RETAIN;
-import static org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink.WILL_TOPIC;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_MODE;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLEAN_SESSION_KEY;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.ENCRYPTION_MODE;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.HOST;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.KEEP_ALIVE_IN_SEC;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.MQTT_COMPLIANT;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.PASSWORD;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.PORT;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.QOS_LEVEL_KEY;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RECONNECT_PERIOD_IN_SEC;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.RETAIN;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.TOPIC;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.USERNAME;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_ALTERNATIVE;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_MESSAGE;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_MODE;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_QOS;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_RETAIN;
+import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_TOPIC;
 
 public class MqttOptions {
 
@@ -65,7 +65,7 @@ public class MqttOptions {
   private String willMessage = "";
   private String mqttProtocolVersion = "3.1";
 
-  public MqttOptions(SinkParams params) {
+  public MqttOptions(IDataSinkParameters params) {
     var extract = params.extractor();
 
     this.clientId = MqttUtils.runningInstanceId(params.getModel().getElementId());

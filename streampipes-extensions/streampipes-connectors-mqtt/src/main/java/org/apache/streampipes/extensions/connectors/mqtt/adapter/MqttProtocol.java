@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.iiot.protocol.stream;
+package org.apache.streampipes.extensions.connectors.mqtt.adapter;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -25,14 +25,14 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchema
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConfig;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConsumer;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
-import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
-import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;

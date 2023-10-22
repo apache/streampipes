@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.pe.shared.config.nats;
+package org.apache.streampipes.extensions.connectors.nats.shared;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.nats.NatsConfig;

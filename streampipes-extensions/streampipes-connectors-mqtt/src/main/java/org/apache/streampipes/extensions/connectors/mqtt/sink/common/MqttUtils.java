@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.sinks.brokers.jvm.mqtt.common;
+package org.apache.streampipes.extensions.connectors.mqtt.sink.common;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 

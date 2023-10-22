@@ -71,11 +71,6 @@
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.nats</groupId>
-            <artifactId>jnats</artifactId>
-            <version>${nats.version}</version>
-        </dependency>
 
         <!-- dependency convergence -->
         <dependency>
