@@ -22,6 +22,10 @@ import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.extensions.connectors.kafka.sink.KafkaPublishSink;
+import org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink;
+import org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink;
+import org.apache.streampipes.extensions.connectors.tubemq.sink.TubeMQPublisherSink;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
@@ -47,6 +51,11 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
             "", 8090)
         .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
         .merge(new AllPipelineElementsInit().provideServiceDefinition())
+        .registerPipelineElements(
+            new KafkaPublishSink(),
+            new PulsarPublisherSink(),
+            new RocketMQPublisherSink(),
+            new TubeMQPublisherSink())
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),
