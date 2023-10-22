@@ -15,20 +15,10 @@
 # Use an official base image
 FROM ubuntu:latest
 
-# Install curl and jq
 RUN apt-get update \
     && apt-get install -y curl jq
-
-
-RUN curl -L -o /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/81b1373f17855a4dc21156cfe1694c31d7d1792e/wait-for-it.sh \
-    && chmod +x /usr/local/bin/wait-for-it.sh
-
 
 COPY upload.sh /usr/local/bin/upload.sh
 RUN chmod +x /usr/local/bin/upload.sh
 
-
-ENV WAITFORIT_TIMEOUT 60
-
-# Run the script
-CMD ["/usr/local/bin/wait-for-it.sh", "backend:8030", "--", "/usr/local/bin/upload.sh"]
+CMD ["/usr/local/bin/upload.sh"]

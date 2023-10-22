@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#!/bin/bash
 if [ -z "$SP_INITIAL_ADMIN_EMAIL" ]; then
   USERNAME="admin@streampipes.apache.org"
 else
@@ -25,6 +26,15 @@ if [ -z "$SP_INITIAL_ADMIN_PASSWORD" ]; then
 else
   PASSWORD="$SP_INITIAL_ADMIN_PASSWORD"
 fi
+
+while true; do
+  if curl -s "http://backend:8030/streampipes-backend/api/v2/auth/login" --max-time 3 &> /dev/null; then
+    break
+  else
+    echo "Streampipes backend not ready, waiting for 3 seconds..."
+    sleep 3
+  fi
+done
 
 JSON_TOKEN_RESPONSE=$(curl -s -X POST "http://backend:8030/streampipes-backend/api/v2/auth/login" \
     -H "Content-Type: application/json" \
@@ -88,4 +98,3 @@ for ZIP_FILE in /zip_folder/*.zip; do
       -F "file_upload=@$ZIP_FILE" \
       -F "configuration=@-;type=application/json" <<< "$JSON_PAYLOAD"
 done
-
