@@ -18,10 +18,14 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div *ngIf="!isInProgress && adapterUsedByPipeline" fxLayout="column">
+        <div
+            *ngIf="!isInProgress && adapterUsedByPipeline"
+            fxLayout="column"
+            style="width: 100%"
+        >
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b
-                    ><h4>
+                <b>
+                    <h4>
                         The adapter is currently used by these pipelines:
                         {{ namesOfPipelinesUsingAdapter }}
                     </h4>
@@ -30,25 +34,21 @@
                         the adapter.
                     </h4>
                     <h4>
-                        Do you want to delete all associated pipelines and this
+                        Do you want to delete all associated pipelines and the
                         adapter?
                     </h4>
                 </b>
-                <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
+            </div>
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    (click)="deleteAdapter(true)"
+                    data-cy="delete-adapter-confirmation"
                 >
-                    <button
-                        mat-button
-                        mat-raised-button
-                        color="accent"
-                        (click)="deleteAdapter(true)"
-                        data-cy="delete-adapter-confirmation"
-                    >
-                        DELETE ALL
-                    </button>
-                </div>
+                    DELETE ALL
+                </button>
             </div>
         </div>
         <div *ngIf="!isInProgress && !adapterUsedByPipeline" fxLayout="column">
