@@ -86,7 +86,11 @@
                                 >
                                     Name
                                 </th>
-                                <td mat-cell *matCellDef="let asset">
+                                <td
+                                    mat-cell
+                                    *matCellDef="let asset"
+                                    data-cy="assets-table"
+                                >
                                     <div
                                         fxLayout="row"
                                         fxLayoutAlign="start center"
@@ -155,6 +159,7 @@
                                                 mat-icon-button
                                                 matTooltip="Edit asset"
                                                 matTooltipPosition="above"
+                                                data-cy="edit-asset-button"
                                                 (click)="
                                                     goToDetailsView(asset, true)
                                                 "

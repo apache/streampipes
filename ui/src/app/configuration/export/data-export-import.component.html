@@ -36,6 +36,7 @@
                         color="accent"
                         [disabled]="selectedAssets.length === 0"
                         (click)="openExportDialog()"
+                        data-cy="export-asset-button"
                     >
                         <i class="material-icons">cloud_download</i
                         ><span>&nbsp;Start export process</span>
@@ -56,6 +57,7 @@
                         mat-raised-button
                         color="accent"
                         (click)="openImportDialog()"
+                        data-cy="import-application-data-button"
                     >
                         <i class="material-icons">cloud_upload</i
                         ><span>&nbsp;Start import process</span>

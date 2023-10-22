@@ -89,7 +89,7 @@ public class ServiceHealthCheck implements Runnable {
   }
 
   private String makeHealthCheckUrl(SpServiceRegistration service) {
-    return service.getScheme() + "://" + service.getHost() + ":" + service.getPort() + service.getHealthCheckPath();
+    return service.getServiceUrl() + service.getHealthCheckPath();
   }
 
   private List<SpServiceRegistration> getRegisteredServices() {

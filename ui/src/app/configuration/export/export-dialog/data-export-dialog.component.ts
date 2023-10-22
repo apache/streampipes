@@ -60,7 +60,16 @@ export class SpDataExportDialogComponent implements OnInit {
     downloadFile(data: any) {
         const blob = new Blob([data], { type: 'application/zip' });
         const url = window.URL.createObjectURL(blob);
-        window.open(url);
+        const anchor = document.createElement('a');
+
+        anchor.href = url;
+        anchor.download = 'data_export';
+        anchor.style.display = 'none';
+        document.body.appendChild(anchor);
+
+        anchor.click();
+
+        window.URL.revokeObjectURL(url);
         this.dialogRef.close();
     }
 }
