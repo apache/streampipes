@@ -23,6 +23,8 @@ import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.extensions.connectors.kafka.sink.KafkaPublishSink;
+import org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink;
+import org.apache.streampipes.extensions.connectors.nats.sink.NatsSink;
 import org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink;
 import org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink;
 import org.apache.streampipes.extensions.connectors.tubemq.sink.TubeMQPublisherSink;
@@ -35,8 +37,6 @@ import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.extensions.connectors.nats.sink.NatsSink;
-import org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 
