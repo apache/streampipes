@@ -15,23 +15,27 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.extensions.svcdiscovery;
 
-public enum SpServiceTagPrefix {
-  SYSTEM("sys"),
-  SP_GROUP("spgroup"),
-  ADAPTER("adapter"),
-  DATA_STREAM("dstream"),
-  DATA_PROCESSOR("dprocessor"),
-  DATA_SINK("dsink");
+package org.apache.streampipes.model.configuration;
 
-  private String prefix;
+public class EmailTemplateConfig {
 
-  SpServiceTagPrefix(String prefix) {
-    this.prefix = prefix;
+  private String template;
+
+  public EmailTemplateConfig() {
   }
 
-  public String asString() {
-    return this.prefix;
+  public EmailTemplateConfig(String template) {
+    this.template = template;
+  }
+
+  public String getTemplate() {
+    return template;
+  }
+
+  public void setTemplate(String template) {
+    this.template = template;
   }
 }
+
+

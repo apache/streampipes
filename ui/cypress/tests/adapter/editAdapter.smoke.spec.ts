@@ -73,7 +73,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.startAndValidateAdapter(3);
 
-        // Validate that name of adapter and data source
+        // Validate that name of adapter and data stream
         cy.dataCy('adapter-name').contains(newAdapterName);
         cy.get('.sp-dialog-content').contains(newAdapterName);
     });

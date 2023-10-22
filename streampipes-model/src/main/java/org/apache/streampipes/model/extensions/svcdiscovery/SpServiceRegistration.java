@@ -145,6 +145,10 @@ public class SpServiceRegistration {
     return scheme;
   }
 
+  public String getServiceUrl() {
+    return getScheme() + "://" + getHost() + ":" + getPort();
+  }
+
   public void setScheme(String scheme) {
     this.scheme = scheme;
   }
