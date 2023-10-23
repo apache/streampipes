@@ -661,13 +661,18 @@ export class TransformationRuleService {
                     new CorrectionValueTransformationRuleDescription();
                 rule['@class'] =
                     'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
-                rule.runtimeKey = keyNew;
-                rule.correctionValue =
-                    eventPropertyPrimitive.additionalMetadata.correctionValue;
-                rule.operator =
-                    eventPropertyPrimitive.additionalMetadata.operator;
+                if (
+                    eventPropertyPrimitive.additionalMetadata &&
+                    eventPropertyPrimitive.additionalMetadata.correctionValue
+                ) {
+                    rule.runtimeKey = keyNew;
+                    rule.correctionValue =
+                        eventPropertyPrimitive.additionalMetadata.correctionValue;
+                    rule.operator =
+                        eventPropertyPrimitive.additionalMetadata.operator;
 
-                result.push(rule);
+                    result.push(rule);
+                }
             } else if (eventProperty instanceof EventPropertyNested) {
                 const tmpResults: CorrectionValueTransformationRuleDescription[] =
                     this.getCorrectionValueRules(

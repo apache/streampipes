@@ -232,6 +232,7 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.runtimeType = this.dataTypesService.getStringTypeUrl();
         eventProperty.domainProperties = [];
         eventProperty.propertyScope = 'DIMENSION_PROPERTY';
+        eventProperty.additionalMetadata = {};
 
         this.targetSchema.eventProperties.push(eventProperty);
         this.refreshTree();

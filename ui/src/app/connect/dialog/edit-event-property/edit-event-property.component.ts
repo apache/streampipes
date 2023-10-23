@@ -104,16 +104,18 @@ export class EditEventPropertyComponent implements OnInit {
             );
 
             result.measurementUnit = ep.measurementUnit;
-            result.additionalMetadata.correctionValue =
-                ep.additionalMetadata.correctionValue || undefined;
-            result.additionalMetadata.operator =
-                ep.additionalMetadata.operator || undefined;
+            if (ep.additionalMetadata) {
+                result.additionalMetadata.correctionValue =
+                    ep.additionalMetadata.correctionValue || undefined;
+                result.additionalMetadata.operator =
+                    ep.additionalMetadata.operator || undefined;
 
-            result.additionalMetadata.mode = ep.additionalMetadata.mode;
-            result.additionalMetadata.formatString =
-                ep.additionalMetadata.formatString;
-            result.additionalMetadata.multiplier =
-                ep.additionalMetadata.multiplier;
+                result.additionalMetadata.mode = ep.additionalMetadata.mode;
+                result.additionalMetadata.formatString =
+                    ep.additionalMetadata.formatString;
+                result.additionalMetadata.multiplier =
+                    ep.additionalMetadata.multiplier;
+            }
 
             (result as any).staticValue = (ep as any).staticValue;
 
