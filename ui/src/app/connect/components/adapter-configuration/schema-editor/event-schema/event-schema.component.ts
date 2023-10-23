@@ -197,6 +197,7 @@ export class EventSchemaComponent implements OnChanges {
         nested.eventProperties = [];
         nested.domainProperties = [];
         nested.runtimeName = 'nested';
+        nested.additionalMetadata = {};
         if (!eventProperty) {
             this.targetSchema.eventProperties.push(nested);
         } else {
@@ -251,6 +252,7 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.domainProperties = ['http://schema.org/DateTime'];
         eventProperty.propertyScope = 'HEADER_PROPERTY';
         eventProperty.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
+        eventProperty.additionalMetadata = {};
 
         this.targetSchema.eventProperties.push(eventProperty);
         this.refreshTree();
