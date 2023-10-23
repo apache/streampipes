@@ -26,10 +26,8 @@ import java.util.Date;
 
 public class Notification {
 
-  private @JsonProperty("_id")
-  @SerializedName("_id") String id;
-  private @JsonProperty("_rev")
-  @SerializedName("_rev") String rev;
+  private @JsonProperty("_id") @SerializedName("_id") String id;
+  private @JsonProperty("_rev") @SerializedName("_rev") String rev;
 
   private String title;
   private Date createdAt;
@@ -121,14 +119,5 @@ public class Notification {
 
   public void setCreatedAtTimestamp(long createdAtTimestamp) {
     this.createdAtTimestamp = createdAtTimestamp;
-  }
-
-  public String toString() {
-    return String.format("Notification '%s' with target '%s' created at %s: '%s'",
-            title,
-            targetedAt,
-            createdAt,
-            message
-    );
   }
 }
