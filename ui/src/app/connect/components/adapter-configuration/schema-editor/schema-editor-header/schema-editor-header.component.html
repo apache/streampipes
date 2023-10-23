@@ -51,7 +51,11 @@
                             class="form-field-small"
                             appearance="outline"
                         >
-                            <input matInput [(ngModel)]="staticValueKey" />
+                            <input
+                                matInput
+                                [(ngModel)]="staticValueKey"
+                                data-cy="connect-add-field-name"
+                            />
                         </mat-form-field>
                     </div>
                     <div fxLayoutAlign="end center">
@@ -60,6 +64,7 @@
                             mat-raised-button
                             color="accent"
                             (click)="addStaticValueProperty()"
+                            data-cy="connect-add-field-name-button"
                         >
                             Add
                         </button>
