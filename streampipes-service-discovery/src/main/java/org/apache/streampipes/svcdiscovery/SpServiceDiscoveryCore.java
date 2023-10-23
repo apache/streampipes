@@ -68,7 +68,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   private String makeServiceUrl(SpServiceRegistration service) {
-    return service.getScheme() + "://" + service.getHost() + ":" + service.getPort();
+    return service.getServiceUrl();
   }
 
   private boolean allFiltersSupported(SpServiceRegistration service,
