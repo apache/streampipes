@@ -153,6 +153,9 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
   public void visit(UnitTransformRuleDescription rule) {
     var property = findPrimitiveProperty(properties, rule.getRuntimeKey());
     property.setMeasurementUnit(URI.create(rule.getToUnitRessourceURL()));
+    var metadata = property.getAdditionalMetadata();
+    metadata.put("fromMeasurementUnit", rule.getFromUnitRessourceURL());
+    metadata.put("toMeasurementUnit", rule.getToUnitRessourceURL());
   }
 
   @Override

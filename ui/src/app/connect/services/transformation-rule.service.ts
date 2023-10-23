@@ -364,22 +364,23 @@ export class TransformationRuleService {
                     newEventSchema.eventProperties,
                     eventPropertyPrimitive.elementId,
                 );
-                const originalProperty: EventPropertyPrimitive =
-                    this.getEventProperty(
-                        oldEventSchema.eventProperties,
-                        eventPropertyPrimitive.elementId,
-                    ) as EventPropertyPrimitive;
 
                 const rule: UnitTransformRuleDescription =
                     new UnitTransformRuleDescription();
                 rule['@class'] =
                     'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription';
                 rule.runtimeKey = keyNew;
-                rule.fromUnitRessourceURL = originalProperty.measurementUnit;
-                rule.toUnitRessourceURL =
-                    eventPropertyPrimitive.measurementUnit;
+                if (
+                    eventProperty.additionalMetadata &&
+                    eventProperty.additionalMetadata.toMeasurementUnit
+                ) {
+                    rule.fromUnitRessourceURL =
+                        eventProperty.additionalMetadata.fromMeasurementUnit;
+                    rule.toUnitRessourceURL =
+                        eventPropertyPrimitive.additionalMetadata.toMeasurementUnit;
 
-                result.push(rule);
+                    result.push(rule);
+                }
             } else if (eventProperty instanceof EventPropertyNested) {
                 const tmpResults: UnitTransformRuleDescription[] =
                     this.getUnitTransformRules(
@@ -391,14 +392,7 @@ export class TransformationRuleService {
             }
         }
 
-        const filteredResult: UnitTransformRuleDescription[] = [];
-        for (const res of result) {
-            if (res.fromUnitRessourceURL !== res.toUnitRessourceURL) {
-                filteredResult.push(res);
-            }
-        }
-
-        return filteredResult;
+        return result;
     }
 
     public getCompleteRuntimeNameKey(

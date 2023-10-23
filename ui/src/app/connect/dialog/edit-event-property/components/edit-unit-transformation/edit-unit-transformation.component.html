@@ -27,17 +27,13 @@
     >
         <div fxLayout="row">
             <div class="w-100" fxLayoutAlign="start center" fxFlex="45">
-                <mat-form-field
-                    *ngIf="!hadMeasurementUnit"
-                    class="w-100"
-                    color="accent"
-                    fxFlex="100"
-                >
+                <mat-form-field class="w-100" color="accent" fxFlex="100">
                     <input
                         matInput
                         placeholder="Unit"
                         [matAutocomplete]="auto"
-                        [formControl]="stateCtrl"
+                        [formControl]="currentUnitStateCtrl"
+                        [compareWith]="compareFn"
                         [attr.disabled]="transformUnitEnable ? '' : null"
                         data-cy="connect-schema-unit-from-dropdown"
                     />
@@ -49,29 +45,31 @@
                             *ngFor="let unit of filteredUnits | async"
                             [value]="unit.label"
                             [attr.data-cy]="unit.resource"
+                            (click)="changeSourceUnit(unit)"
                         >
                             {{ unit.label }}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
-                <mat-form-field
-                    *ngIf="hadMeasurementUnit"
-                    class="example-full-width"
-                    style="width: 155px"
-                    color="accent"
-                >
-                    <input
-                        matInput
-                        placeholder="Unit"
-                        disabled
-                        [(ngModel)]="originalMeasurementUnitDisplay"
-                        data-cy="connect-schema-unit-from-input"
-                    />
-                </mat-form-field>
+                <!--                <mat-form-field-->
+                <!--                    *ngIf="hadMeasurementUnit"-->
+                <!--                    class="example-full-width"-->
+                <!--                    style="width: 155px"-->
+                <!--                    color="accent"-->
+                <!--                >-->
+                <!--                    <input-->
+                <!--                        matInput-->
+                <!--                        placeholder="Unit"-->
+                <!--                        disabled-->
+                <!--                        [(ngModel)]="originalMeasurementUnitDisplay"-->
+                <!--                        data-cy="connect-schema-unit-from-input"-->
+                <!--                    />-->
+                <!--                </mat-form-field>-->
             </div>
             <div fxFlex="10" fxLayoutAlign="center center">
                 <button
                     mat-button
+                    [disabled]="!this.cachedProperty.measurementUnit"
                     (click)="transformUnit()"
                     color="accent"
                     class="form-group"

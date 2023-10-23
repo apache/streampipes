@@ -105,6 +105,11 @@ export class EditEventPropertyComponent implements OnInit {
 
             result.measurementUnit = ep.measurementUnit;
             if (ep.additionalMetadata) {
+                result.additionalMetadata.fromMeasurementUnit =
+                    ep.additionalMetadata.fromMeasurementUnit || undefined;
+                result.additionalMetadata.toMeasurementUnit =
+                    ep.additionalMetadata.toMeasurementUnit || undefined;
+
                 result.additionalMetadata.correctionValue =
                     ep.additionalMetadata.correctionValue || undefined;
                 result.additionalMetadata.operator =
@@ -161,6 +166,11 @@ export class EditEventPropertyComponent implements OnInit {
             this.property.measurementUnit = (
                 this.cachedProperty as EventPropertyPrimitive
             ).measurementUnit;
+
+            this.property.additionalMetadata.fromMeasurementUnit =
+                this.cachedProperty.additionalMetadata.fromMeasurementUnit;
+            this.property.additionalMetadata.toMeasurementUnit =
+                this.cachedProperty.additionalMetadata.toMeasurementUnit;
 
             this.property.additionalMetadata.mode =
                 this.cachedProperty.additionalMetadata.mode;

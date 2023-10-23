@@ -135,7 +135,7 @@ export class AdapterStartedDialog implements OnInit {
                     if (this.saveInDataLake) {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
-                        this.startAdapter(adapterElementId);
+                        this.startAdapter(adapterElementId, true);
                     }
                 } else {
                     const errorMsg =
