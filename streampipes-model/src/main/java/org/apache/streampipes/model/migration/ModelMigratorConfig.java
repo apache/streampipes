@@ -45,10 +45,6 @@ public record ModelMigratorConfig(String targetAppId, SpServiceTagPrefix modelTy
     }
 
     if (targetAppId.equals(((ModelMigratorConfig) o).targetAppId())) {
-
-      if (fromVersion != ((ModelMigratorConfig) o).fromVersion()) {
-        return this.toVersion() - ((ModelMigratorConfig) o).toVersion();
-      }
       return this.fromVersion() - ((ModelMigratorConfig) o).fromVersion();
     }
 
