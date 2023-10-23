@@ -21,7 +21,15 @@ package org.apache.streampipes.extensions.api.migration;
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
-public interface DataProcessorMigrator
-    extends ModelMigrator<DataProcessorInvocation, IDataProcessorParameterExtractor> {
+public abstract class DataProcessorMigrator
+    implements ModelMigrator<DataProcessorInvocation, IDataProcessorParameterExtractor> {
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof ModelMigrator<?, ?>) {
+      return this.config().equals(((ModelMigrator<?, ?>) obj).config());
+    }
+    return false;
+  }
 
 }
