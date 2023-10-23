@@ -62,6 +62,7 @@ import org.apache.streampipes.rest.impl.admin.EmailConfigurationResource;
 import org.apache.streampipes.rest.impl.admin.ExtensionsServiceEndpointResource;
 import org.apache.streampipes.rest.impl.admin.GeneralConfigurationResource;
 import org.apache.streampipes.rest.impl.admin.MessagingConfigurationResource;
+import org.apache.streampipes.rest.impl.admin.MigrationResource;
 import org.apache.streampipes.rest.impl.admin.PermissionResource;
 import org.apache.streampipes.rest.impl.admin.PipelineElementImport;
 import org.apache.streampipes.rest.impl.admin.ServiceConfigurationResource;
@@ -130,6 +131,7 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         LabelResource.class,
         MeasurementUnitResource.class,
         MessagingConfigurationResource.class,
+        MigrationResource.class,
         Notification.class,
         OntologyMeasurementUnit.class,
         PermissionResource.class,

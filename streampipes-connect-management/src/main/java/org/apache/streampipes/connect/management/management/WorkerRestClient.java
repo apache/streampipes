@@ -21,8 +21,11 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
+import org.apache.streampipes.extensions.api.migration.MigrationResult;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.migration.AdapterMigrationRequest;
+import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
@@ -32,8 +35,11 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
@@ -49,6 +55,7 @@ import java.util.List;
 public class WorkerRestClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkerRestClient.class);
+  private static final String ADAPTER_MIGRATION_ENDPOINT = "api/v1/migrations/adapter";
 
   public static void invokeStreamAdapter(String endpointUrl,
                                          String elementId) throws AdapterException {
@@ -84,18 +91,66 @@ public class WorkerRestClient {
     }
   }
 
-  public static void startAdapter(String url,
+  private static void startAdapter(String url,
                                   AdapterDescription ad) throws AdapterException {
     LOG.info("Trying to start adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "started");
   }
 
 
-  public static void stopAdapter(AdapterDescription ad,
+  private static void stopAdapter(AdapterDescription ad,
                                  String url) throws AdapterException {
 
     LOG.info("Trying to stop adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "stopped");
+  }
+
+  /**
+   * Sends a migration request for an adapter to the extensions service.
+   * Encapsulates the communication with the service fully so that only a migration result is returned
+   * which reports about the outcome of the migration.
+   * @param adapterMigrationRequest request that describes the adapter migration
+   * @param serviceUrl URL of the extensions service where the migration should be requested
+   * @return The outcome of the migration in form of a {@link MigrationResult}
+   */
+  public static MigrationResult<AdapterDescription> migrateAdapter(AdapterMigrationRequest adapterMigrationRequest,
+                                               String serviceUrl
+  ) {
+    try {
+      String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(adapterMigrationRequest);
+      var migrationResponse = ExtensionServiceExecutions.extServicePostRequest(
+              "%s/%s".formatted(serviceUrl, ADAPTER_MIGRATION_ENDPOINT),
+              serializedRequest
+      ).execute();
+
+      TypeReference<MigrationResult<AdapterDescription>> typeReference = new TypeReference<>() {
+      };
+
+      return JacksonSerializer.getObjectMapper().readValue(
+              migrationResponse.returnContent().asString(),
+              typeReference
+      );
+
+    } catch (JsonProcessingException e) {
+      return MigrationResult.failure(adapterMigrationRequest.adapterDescription(),
+              List.of(new Notification(
+                      "MigrationNotSend",
+                      String.format(
+                              "Serialization of AdapterMigrationRequest failed, "
+                                      + "could not sent request to extensions service: %s.",
+                              StringUtils.join(e.getStackTrace(), "\n")
+                      )
+              )));
+    } catch (IOException e) {
+      LOG.error("Migration of adapter failed at the extensions service, adapter is not migrated.");
+      return MigrationResult.failure(adapterMigrationRequest.adapterDescription(),
+              new Notification(
+                      "MigrationCommunicationError",
+                      String.format("An error occurred in the communication between StreamPipes core and "
+                              + "the extensions service: %s",
+                              StringUtils.join(e.getStackTrace(), "\n"))
+              ));
+    }
   }
 
   private static void triggerAdapterStateChange(AdapterDescription ad,
@@ -134,14 +189,14 @@ public class WorkerRestClient {
   public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
                                                         String appId,
                                                         RuntimeOptionsRequest runtimeOptionsRequest)
-      throws AdapterException, SpConfigurationException {
+          throws AdapterException, SpConfigurationException {
     String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
       var response = ExtensionServiceExecutions.extServicePostRequest(url, payload)
-          .execute()
-          .returnResponse();
+              .execute()
+              .returnResponse();
 
       String responseString = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
@@ -178,9 +233,9 @@ public class WorkerRestClient {
 
     try {
       byte[] responseString = Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asBytes();
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asBytes();
       return responseString;
     } catch (IOException e) {
       LOG.error(e.getMessage());
@@ -193,9 +248,9 @@ public class WorkerRestClient {
 
     try {
       return Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asString();
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asString();
     } catch (IOException e) {
       LOG.error(e.getMessage());
       throw new AdapterException("Could not get documentation endpoint: " + url);
