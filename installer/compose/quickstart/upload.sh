@@ -28,10 +28,11 @@ else
 fi
 
 while true; do
-  if curl -s "http://backend:8030/streampipes-backend/api/v2/auth/login" --max-time 3 &> /dev/null; then
+  if curl -s "http://backend:8030/streampipes-backend/api/v2/auth/login" --max-time 10 &> /dev/null; then
+    echo "StreamPipes backend is now ready!"
     break
   else
-    echo "Streampipes backend not ready, waiting for 3 seconds..."
+    echo "StreamPipes backend not ready, waiting for 3 seconds..."
     sleep 3
   fi
 done
