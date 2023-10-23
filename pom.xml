@@ -152,7 +152,7 @@
 	<graalvm.js.version>23.0.0</graalvm.js.version>
 	<java-websocket.version>1.5.0</java-websocket.version>
 	<jakarta-websocket-client-api.version>2.1.0</jakarta-websocket-client-api.version>
-	<jaxb-runtime.version>2.3.2</jaxb-runtime.version>
+	<jaxb-runtime.version>4.0.4</jaxb-runtime.version>
 	<jsrosbridge.version>0.2.0</jsrosbridge.version>
 	<jedis.version>4.4.3</jedis.version>
 	<kryo.version>2.24.0</kryo.version>
