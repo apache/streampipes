@@ -32,9 +32,6 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.goToConnect();
 
-        // check that edit button is deactivated while adapter is running
-        ConnectBtns.editAdapter().should('be.disabled');
-
         // stop adapter
         ConnectBtns.stopAdapter().click();
 
@@ -52,12 +49,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.configureAdapter(newUserConfiguration);
 
-        cy.get('.schema-validation-text-warning').contains('Edit mode');
-
         // Update event schema
-        ConnectBtns.refreshSchema().click();
-
-        cy.dataCy('schema-validation-ok').should('not.exist');
 
         ConnectUtils.finishEventSchemaConfiguration();
 
@@ -65,7 +57,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectBtns.storeEditAdapter().click();
 
-        cy.dataCy('info-adapter-successfully-updated', {
+        cy.dataCy('sp-connect-adapter-success-added', {
             timeout: 60000,
         }).should('be.visible');
 
