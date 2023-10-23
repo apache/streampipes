@@ -22,17 +22,30 @@ import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-public interface ModelMigrator<T extends NamedStreamPipesEntity, ExT extends IParameterExtractor<?>> {
+public interface ModelMigrator<
+        T extends NamedStreamPipesEntity,
+        ExT extends IParameterExtractor<?>
+        > extends Comparable<Object> {
 
   ModelMigratorConfig config();
 
   /**
    * Defines the migration to be performed.
-   * @param element Entity to be transformed.
+   *
+   * @param element   Entity to be transformed.
    * @param extractor Extractor that allows to handle static properties.
    * @return Result of the migration that describes both outcomes: successful and failed migrations
    * @throws RuntimeException in case any unexpected error occurs
    */
   MigrationResult<T> migrate(T element, ExT extractor) throws RuntimeException;
 
+  @Override
+  default int compareTo(Object o) {
+    if (!(o instanceof ModelMigrator<?, ?>)) {
+      throw new ClassCastException("Given object is not an instance of `ModelMigrator` - "
+              + "only instances of `ModelMigrator` can be compared.");
+    } else {
+      return config().compareTo(((ModelMigrator<?, ?>) o).config());
+    }
+  }
 }

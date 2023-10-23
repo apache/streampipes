@@ -29,5 +29,29 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
  * @param toVersion   Target version that the migration aims to achieve
  */
 public record ModelMigratorConfig(String targetAppId, SpServiceTagPrefix modelType,
-                                  Integer fromVersion, Integer toVersion) {
+                                  int fromVersion, int toVersion) implements Comparable<Object>{
+
+
+  @Override
+  public int compareTo(Object o) {
+
+    if (o == null) {
+      throw new NullPointerException();
+    }
+
+    if (!(o instanceof ModelMigratorConfig)){
+      throw new ClassCastException("Given object is not an instance of `ModelMigratorConfig` - "
+              + "only instances of `ModelMigratorConfig` can be compared.");
+    }
+
+    if (targetAppId.equals(((ModelMigratorConfig) o).targetAppId())) {
+
+      if (fromVersion != ((ModelMigratorConfig) o).fromVersion()) {
+        return this.toVersion() - ((ModelMigratorConfig) o).toVersion();
+      }
+      return this.fromVersion() - ((ModelMigratorConfig) o).fromVersion();
+    }
+
+    return 0;
+  }
 }

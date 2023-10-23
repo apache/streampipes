@@ -27,6 +27,7 @@ import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -190,7 +191,19 @@ public class SpServiceDefinition {
     return this.migrators;
   }
 
+  /**
+   * Add a list of migrations to the service definition.
+   * This inherently checks for duplicates and sorts the migrations as such that
+   * migrations affecting lower versions always come first.
+   *
+   * @param migrators migrators to add
+   */
   public void addMigrators(List<ModelMigrator<?, ?>> migrators) {
-    this.migrators.addAll(migrators);
+    for (var migratorToAdd : migrators) {
+      if (!this.migrators.contains(migratorToAdd)) {
+        this.migrators.add(migratorToAdd);
+      }
+    }
+    Collections.sort(this.migrators);
   }
 }

@@ -21,5 +21,13 @@ package org.apache.streampipes.extensions.api.migration;
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 
-public interface DataSinkMigrator extends ModelMigrator<DataSinkInvocation, IDataSinkParameterExtractor> {
+public abstract class DataSinkMigrator implements ModelMigrator<DataSinkInvocation, IDataSinkParameterExtractor> {
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof ModelMigrator<?, ?>) {
+      return this.config().equals(((ModelMigrator<?, ?>) obj).config());
+    }
+    return false;
+  }
 }
