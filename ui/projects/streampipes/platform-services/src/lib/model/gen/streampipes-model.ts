@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-17 19:58:29.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-24 20:02:02.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3579,6 +3579,7 @@ export class SpServiceRegistration {
     port: number;
     rev: string;
     scheme: string;
+    serviceUrl: string;
     svcGroup: string;
     svcId: string;
     svcType: string;
@@ -3599,6 +3600,7 @@ export class SpServiceRegistration {
         instance.port = data.port;
         instance.rev = data.rev;
         instance.scheme = data.scheme;
+        instance.serviceUrl = data.serviceUrl;
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
         instance.svcType = data.svcType;
@@ -4084,8 +4086,7 @@ export type SpServiceTagPrefix =
     | 'ADAPTER'
     | 'DATA_STREAM'
     | 'DATA_PROCESSOR'
-    | 'DATA_SINK'
-    | 'DATA_SET';
+    | 'DATA_SINK';
 
 export type StaticPropertyType =
     | 'AnyStaticProperty'
