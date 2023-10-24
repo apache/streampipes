@@ -88,7 +88,7 @@
     "stream-browserify": "3.0.0",
     "swagger-ui": "4.18.0",
     "tslib": "^2.6.2",
-    "zone.js": "~0.12.0"
+    "zone.js": "~0.14.0"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^15.0.0",
