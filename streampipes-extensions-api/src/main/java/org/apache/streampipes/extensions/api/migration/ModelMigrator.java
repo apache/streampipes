@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.api.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 public interface ModelMigrator<

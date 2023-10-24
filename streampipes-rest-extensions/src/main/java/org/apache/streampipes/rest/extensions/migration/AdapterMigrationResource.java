@@ -19,10 +19,10 @@
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.migration.AdapterMigrator;
-import org.apache.streampipes.extensions.api.migration.MigrationResult;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.migration.AdapterMigrationRequest;
 import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;

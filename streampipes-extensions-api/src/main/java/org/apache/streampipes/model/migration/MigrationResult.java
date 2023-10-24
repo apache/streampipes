@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.migration;
+package org.apache.streampipes.model.migration;
 
 import org.apache.streampipes.model.message.Notification;
 
