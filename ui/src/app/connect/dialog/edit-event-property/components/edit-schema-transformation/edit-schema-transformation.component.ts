@@ -29,6 +29,7 @@ import {
 } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-edit-schema-transformation',
@@ -52,7 +53,10 @@ export class EditSchemaTransformationComponent implements OnInit {
     domainPropertyControl = new UntypedFormControl();
     semanticTypes: Observable<string[]>;
 
-    constructor(private semanticTypesService: SemanticTypesService) {}
+    constructor(
+        private semanticTypesService: SemanticTypesService,
+        private shepherdService: ShepherdService,
+    ) {}
 
     ngOnInit(): void {
         this.semanticTypes = this.domainPropertyControl.valueChanges.pipe(
@@ -80,5 +84,12 @@ export class EditSchemaTransformationComponent implements OnInit {
             this.isTimestampProperty = false;
         }
         this.timestampSemanticsChanged.emit(this.isTimestampProperty);
+    }
+
+    triggerTutorialStep(): void {
+        console.log('lu');
+        if (this.cachedProperty.runtimeName === 'temp') {
+            this.shepherdService.trigger('adapter-runtime-name-changed');
+        }
     }
 }

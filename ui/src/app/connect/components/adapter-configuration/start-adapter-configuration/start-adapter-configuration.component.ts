@@ -177,8 +177,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 startAdapterNow: this.startAdapterNow,
             },
         });
-
-        this.shepherdService.trigger('button-startAdapter');
+        this.shepherdService.trigger('adapter-settings-adapter-started');
 
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
@@ -196,5 +195,16 @@ export class StartAdapterConfigurationComponent implements OnInit {
     handlePersistOption(selected: boolean) {
         this.saveInDataLake = selected;
         this.findDefaultTimestamp(selected);
+        this.checkAndTriggerTutorial('adapter-persist-selected');
+    }
+
+    triggerTutorialAdapterNameAssigned() {
+        this.checkAndTriggerTutorial('adapter-name-assigned');
+    }
+
+    checkAndTriggerTutorial(actionId: string) {
+        if (this.adapterDescription.name === 'Tutorial') {
+            this.shepherdService.trigger(actionId);
+        }
     }
 }

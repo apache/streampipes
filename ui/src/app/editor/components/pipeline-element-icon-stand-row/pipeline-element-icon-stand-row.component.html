@@ -19,7 +19,7 @@
     fxLayout="row"
     class="draggable-pipeline-element"
     fxFlex="100"
-    id="{{ element.appId }}"
+    id="{{ element.appId || element.name.toLowerCase().replaceAll(' ', '_') }}"
     [attr.data-pe]="element.elementId"
     (mouseenter)="updateMouseOver(element.name)"
     (mouseleave)="updateMouseOver('')"

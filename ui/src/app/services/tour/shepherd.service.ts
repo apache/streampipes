@@ -23,9 +23,9 @@ import { TourProviderService } from './tour-provider.service';
 import Step from 'shepherd.js/src/types/step';
 import StepOptions = Step.StepOptions;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ShepherdService {
-    currentTour: any;
+    currentTour: Shepherd.Tour;
     currentTourSettings: any;
     timeWaitMillis: number;
 
@@ -92,6 +92,8 @@ export class ShepherdService {
             return this.makeCancelButton(tour);
         } else if (button === 'dashboard') {
             return this.makeStartDashboardTutorialButton();
+        } else if (button === 'pipeline-tutorial') {
+            return this.makeStartPipelineTutorialButton();
         }
     }
 
@@ -131,6 +133,18 @@ export class ShepherdService {
         };
     }
 
+    makeStartPipelineTutorialButton() {
+        return {
+            action: () => {
+                this.currentTour.complete();
+                this.router.navigate(['pipelines'], {
+                    queryParams: { startTutorial: true },
+                });
+            },
+            text: 'Start pipeline tutorial',
+        };
+    }
+
     trigger(actionId) {
         if (Shepherd.activeTour) {
             if (
@@ -165,7 +179,7 @@ export class ShepherdService {
         this.router.navigateByUrl('dashboard');
     }
 
-    startCreatePipelineTour() {
+    startPipelineTour() {
         this.startTour(this.tourProviderService.getTourById('create-pipeline'));
     }
 
@@ -177,19 +191,11 @@ export class ShepherdService {
         this.startTour(this.tourProviderService.getTourById('adapter'));
     }
 
-    startAdapterTour2() {
-        this.startTour(this.tourProviderService.getTourById('adapter2'));
-    }
-
-    startAdapterTour3() {
-        this.startTour(this.tourProviderService.getTourById('adapter3'));
-    }
-
-    setTimeWaitMillies(value) {
+    setTimeWaitMillis(value) {
         this.tourProviderService.setTime(value);
     }
 
-    getTimeWaitMillies() {
+    getTimeWaitMillis() {
         return this.tourProviderService.getTime();
     }
 }
