@@ -18,21 +18,20 @@
 
 package org.apache.streampipes.model.migration;
 
-import org.apache.streampipes.model.message.Notification;
+/**
+ * Models the outcome of a migration.
+ * @param success whether the migration was successfully or not.
+ * @param element the migrated pipeline element or in case of a failure the original one
+ * @param message message that describes the outcome of the migration
+ * @param <T> type of the migration element
+ */
+public record MigrationResult<T> (boolean success, T element, String message){
 
-import java.util.List;
-
-public record MigrationResult<T> (boolean success, T element, List<Notification> messages){
-
-  public static <T> MigrationResult<T> failure(T element, List<Notification> messages) {
-    return new MigrationResult<>(false, element, messages);
-  }
-
-  public static <T> MigrationResult<T> failure(T element, Notification message) {
-    return failure(element, List.of(message));
+  public static <T> MigrationResult<T> failure(T element, String message) {
+    return new MigrationResult<>(false, element, message);
   }
 
   public static <T> MigrationResult<T> success(T element) {
-    return new MigrationResult<>(true, element, List.of());
+    return new MigrationResult<>(true, element, "SUCCESS");
   }
 }
