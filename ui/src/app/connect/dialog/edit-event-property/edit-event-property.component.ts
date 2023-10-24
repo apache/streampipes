@@ -77,7 +77,6 @@ export class EditEventPropertyComponent implements OnInit {
         private formBuilder: UntypedFormBuilder,
         private dataTypeService: DataTypesService,
         private semanticTypeUtilsService: SemanticTypeUtilsService,
-        private semanticTypesService: SemanticTypesService,
         private shepherdService: ShepherdService,
     ) {}
 
