@@ -19,8 +19,6 @@
 package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
-import org.apache.streampipes.connect.shared.preprocessing.elements.TransformStreamAdapterElement;
-import org.apache.streampipes.connect.shared.preprocessing.transform.stream.DuplicateFilterPipelineElement;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToBrokerAdapterSink;
@@ -41,32 +39,16 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   public AdapterPipeline generatePipeline(AdapterDescription adapterDescription) {
 
-    var pipelineElements = makeAdapterPipelineElements(adapterDescription.getRules());
+    var pipelineElements = makeAdapterPipelineElements(adapterDescription.getRules(), true);
 
-    var duplicatesTransformationRuleDescription =
-        getRemoveDuplicateRule(adapterDescription.getRules());
-    if (duplicatesTransformationRuleDescription != null) {
-      pipelineElements.add(
-          new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
-    }
-
-    var transformStreamAdapterElement = new TransformStreamAdapterElement();
-    var eventRateTransformationRuleDescription = getEventRateTransformationRule(adapterDescription.getRules());
-    if (eventRateTransformationRuleDescription != null) {
-      transformStreamAdapterElement.addStreamTransformationRuleDescription(eventRateTransformationRuleDescription);
-    }
-    pipelineElements.add(transformStreamAdapterElement);
-
-    if (adapterDescription.getEventGrounding() != null
-        && adapterDescription.getEventGrounding().getTransportProtocol() != null
-        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
+    if (hasValidGrounding(adapterDescription)) {
       return new AdapterPipeline(
           pipelineElements,
           getAdapterSink(adapterDescription),
           adapterDescription.getEventSchema());
+    } else {
+      return new AdapterPipeline(pipelineElements, adapterDescription.getEventSchema());
     }
-
-    return new AdapterPipeline(pipelineElements, adapterDescription.getEventSchema());
   }
 
   private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {
@@ -94,5 +76,11 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
   private MessagingSettings getMessagingSettings() {
     var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     return client.adminApi().getMessagingSettings();
+  }
+
+  private boolean hasValidGrounding(AdapterDescription adapterDescription) {
+    return adapterDescription.getEventGrounding() != null
+        && adapterDescription.getEventGrounding().getTransportProtocol() != null
+        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null;
   }
 }

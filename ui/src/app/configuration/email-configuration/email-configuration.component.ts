@@ -199,7 +199,7 @@ export class EmailConfigurationComponent implements OnInit {
             error => {
                 this.sendingTestMailInProgress = false;
                 this.sendingTestMailSuccess = false;
-                this.sendingEmailErrorMessage = error.error.localizedMessage;
+                this.sendingEmailErrorMessage = `Error: ${error.error.localizedMessage} with cause ${error.error.cause.localizedMessage}`;
             },
         );
     }

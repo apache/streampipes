@@ -114,4 +114,9 @@ public interface Environment {
   StringEnvironmentVariable getFlinkJobmanagerHost();
 
   IntEnvironmentVariable getFlinkJobmanagerPort();
+
+  //prometheus
+  StringEnvironmentVariable getPrometheusEndpointInclude();
+
+  BooleanEnvironmentVariable getSetupPrometheusEndpoint();
 }

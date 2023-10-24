@@ -18,6 +18,7 @@
 package org.apache.streampipes.mail;
 
 import org.apache.streampipes.mail.template.AccountActiviationMailTemplate;
+import org.apache.streampipes.mail.template.CustomMailTemplate;
 import org.apache.streampipes.mail.template.InitialPasswordMailTemplate;
 import org.apache.streampipes.mail.template.PasswordRecoveryMailTemplate;
 import org.apache.streampipes.mail.utils.MailUtils;
@@ -29,11 +30,14 @@ import java.io.IOException;
 
 public class MailSender extends AbstractMailer {
 
-  public void sendEmail(SpEmail mail) {
+  public void sendEmail(SpEmail mail) throws IOException {
     Email email = baseEmail()
         .withRecipients(toSimpleRecipientList(mail.getRecipients()))
         .withSubject(mail.getSubject())
-        .appendText(mail.getMessage())
+        .appendTextHTML(new CustomMailTemplate(
+            mail.getSubject(),
+            mail.getPreheader(),
+            mail.getMessage()).generateTemplate())
         .buildEmail();
 
     deliverMail(email);

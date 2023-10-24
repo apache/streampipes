@@ -21,7 +21,7 @@ import { XsService } from '../../../../NS/xs.service';
 import { SpServiceConfiguration } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-consul-configs',
+    selector: 'sp-service-configs',
     templateUrl: './service-configs.component.html',
     providers: [XsService],
 })

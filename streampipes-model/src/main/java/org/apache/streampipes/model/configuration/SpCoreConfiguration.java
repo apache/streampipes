@@ -30,6 +30,7 @@ public class SpCoreConfiguration {
   private MessagingSettings messagingSettings;
   private LocalAuthConfig localAuthConfig;
   private EmailConfig emailConfig;
+  private EmailTemplateConfig emailTemplateConfig;
   private GeneralConfig generalConfig;
 
   private boolean isConfigured;
@@ -110,5 +111,13 @@ public class SpCoreConfiguration {
 
   public void setFilesDir(String filesDir) {
     this.filesDir = filesDir;
+  }
+
+  public EmailTemplateConfig getEmailTemplateConfig() {
+    return this.emailTemplateConfig;
+  }
+
+  public void setEmailTemplateConfig(EmailTemplateConfig emailTemplateConfig) {
+    this.emailTemplateConfig = emailTemplateConfig;
   }
 }

@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.connect.rules.stream;
 
+import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
+import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
+
 public class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
 
   private long aggregationTimeWindow;
@@ -50,5 +53,15 @@ public class EventRateTransformationRuleDescription extends StreamTransformation
 
   public void setAggregationType(String aggregationTypes) {
     this.aggregationType = aggregationTypes;
+  }
+
+  @Override
+  public void accept(ITransformationRuleVisitor visitor) {
+    visitor.visit(this);
+  }
+
+  @Override
+  public int getRulePriority() {
+    return TransformationRulePriority.EVENT_RATE.getCode();
   }
 }

@@ -206,13 +206,21 @@
                                     !sendingTestMailSuccess
                                 "
                             >
-                                Failure
-                                <h5>{{ sendingEmailErrorMessage }}</h5>
+                                <div class="error-panel">
+                                    <h4>Could not send email</h4>
+                                    <h5>{{ sendingEmailErrorMessage }}</h5>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </form>
             </sp-split-section>
+        </div>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+            <sp-email-template-configuration
+                fxFlex="100"
+                class="w-100"
+            ></sp-email-template-configuration>
         </div>
         <mat-divider></mat-divider>
     </div>

@@ -90,7 +90,7 @@ export default {
                 title: 'Adapter was started successfully',
                 text:
                     '<p>The adpater is now deployed in the background and the data is fetched and processed from the OpenSenseMap endpoint. Here you will see some example data, which is coming directly ' +
-                    'the data source. This might take a minute. On the left you can see the runtime names of the properties you defined before. On the right side the values are shown. After having a look at ' +
+                    'displayed from the data stream. This might take a minute. On the left you can see the runtime names of the properties you defined before. On the right side the values are shown. After having a look at ' +
                     'the data <b>click on Close</b> to continue.</p>',
                 attachToElement: '#confirm_adapter_started_button',
                 attachPosition: 'bottom',
@@ -99,7 +99,7 @@ export default {
             {
                 stepId: 'step-9',
                 title: 'Congratulation',
-                text: '<b></b>Congratulation!</b> You have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data source',
+                text: '<b></b>Congratulation!</b> You have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data stream',
                 classes: 'shepherd shepherd-welcome',
                 buttons: ['cancel'],
             },

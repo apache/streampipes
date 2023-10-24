@@ -71,5 +71,10 @@ public class Notification {
     this.additionalInformation = additionalInformation;
   }
 
-
+  public String toString() {
+    return String.format("Notification '%s' - '%s'",
+            title,
+            description
+    );
+  }
 }

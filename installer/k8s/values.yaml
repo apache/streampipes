@@ -16,6 +16,7 @@
 # lite or full (default: lite)
 deployment: lite
 preferredBroker: "nats"
+monitoringSystem: false
 pullPolicy: "Always"
 restartPolicy: Always
 persistentVolumeReclaimPolicy: "Delete"
@@ -153,9 +154,12 @@ external:
     appName: "kafka"
     version: 2.2.0
     port: 9092
+    external:
+      hostname: "localhost" #  Replace localhost with your external address if Kafka should be reachable from external systems.
     service:
       name: "kafka"
       port: 9092
+      portOutside: 9094
     persistence:
       storageClassName: "hostpath"
       storageSize: "1Gi"
@@ -187,4 +191,39 @@ external:
       pvName: "pulsar-pv"
 
 
+monitoring:
+  # monitoring - prometheus
+  prometheus:
+    appName: "prometheus"
+    version: 2.45.0
+    port: 9090
+    service:
+      name: "prometheus"
+      port: 9090
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "2Gi"
+      claimName: "prometheus-pvc"
+      pvName: "prometheus-pv"
+      tokenStorageSize: "16Ki"
+    config:
+      scrapeInterval: 10s
+      evaluationInterval: 15s
+      backendJobName: backend
+      extensionsName: extensions-all-iiot
+      tokenFileName: token
+      tokenFileDir: /opt/data
 
+  # monitoring - grafana
+  grafana:
+    appName: "grafana"
+    version: 10.1.2
+    port: 3000
+    service:
+      name: "grafana"
+      port: 3000
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "grafana-pvc"
+      pvName: "grafana-pv"

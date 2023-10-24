@@ -115,7 +115,7 @@ export default {
             {
                 stepId: 'step-9',
                 title: 'Congratulation',
-                text: 'Congratulation you have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data source',
+                text: 'Congratulation you have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data stream',
                 classes: 'shepherd shepherd-welcome',
                 buttons: ['cancel'],
             },

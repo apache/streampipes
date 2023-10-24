@@ -54,13 +54,13 @@ spec:
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: "zookeeper:{{ .Values.external.zookeeper.port }}"
             - name: KAFKA_LISTENERS
-              value: "PLAINTEXT://:{{ .Values.external.kafka.port }}"
+              value: "PLAINTEXT://:{{ .Values.external.kafka.port }},OUTSIDE://:9094"
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://kafka:{{ .Values.external.kafka.port }}"
+              value: "PLAINTEXT://kafka:{{ .Values.external.kafka.port }},OUTSIDE://{{ .Values.external.kafka.external.hostname }}:9094"
             - name: KAFKA_INTER_BROKER_LISTENER_NAME
               value: "PLAINTEXT"
             - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "PLAINTEXT:PLAINTEXT"
+              value: "PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT"
             - name: KAFKA_MESSAGE_MAX_BYTES
               value: "5000012"
             - name: KAFKA_FETCH_MESSAGE_MAX_BYTES

@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 public class WorkerAdministrationManagement {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WorkerAdministrationManagement.class);
   private static final int MAX_RETRIES = 7;
 
   private final IAdapterStorage adapterDescriptionStorage;

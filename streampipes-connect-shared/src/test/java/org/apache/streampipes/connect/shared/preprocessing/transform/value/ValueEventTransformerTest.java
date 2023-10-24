@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -48,14 +49,15 @@ public class ValueEventTransformerTest {
     List<String> keys = new ArrayList<>();
     keys.add("a");
 
-    List<ValueTransformationRule> rules = new ArrayList<>();
+    List<TransformationRule> rules = new ArrayList<>();
     rules.add(new UnitTransformationRule(keys,
         "http://qudt.org/vocab/unit#Kelvin", "http://qudt.org/vocab/unit#DegreeCelsius"));
 
-    ValueEventTransformer eventTransformer = new ValueEventTransformer(rules);
-    Map<String, Object> result = eventTransformer.transform(event);
+    for (var rule: rules) {
+      event = rule.apply(event);
+    }
 
-    assertEquals(0.0, result.get(eventPropertyf.getRuntimeName()));
+    assertEquals(0.0, event.get(eventPropertyf.getRuntimeName()));
 
   }
 
