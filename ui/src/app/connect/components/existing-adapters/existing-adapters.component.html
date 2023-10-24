@@ -57,6 +57,22 @@
                 (filterChangedEmitter)="applyFilter($event)"
             >
             </sp-connect-filter-toolbar>
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="end center"
+                style="padding-left: 10px; padding-right: 10px; font-size: 14px"
+                class="page-container-nav"
+            >
+                <button
+                    mat-icon-button
+                    id="startAdapterTutorial3"
+                    (click)="startAdapterTutorial()"
+                    matTooltip="Tutorial: Generic Adapter"
+                >
+                    <mat-icon color="accent">school</mat-icon>
+                </button>
+            </div>
             <button
                 mat-icon-button
                 matTooltip="Refresh adapters"
@@ -95,7 +111,11 @@
                         >
                             <ng-container matColumnDef="start">
                                 <th mat-header-cell *matHeaderCellDef>Start</th>
-                                <td mat-cell *matCellDef="let adapter">
+                                <td
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                    data-cy="adapters-table"
+                                >
                                     <button
                                         color="accent"
                                         mat-icon-button

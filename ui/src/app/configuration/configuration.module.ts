@@ -65,6 +65,8 @@ import { SpRegisteredExtensionsServiceComponent } from './extensions-service-man
 import { SpExtensionsServiceConfigurationComponent } from './extensions-service-management/extensions-service-configuration/extensions-service-configuration.component';
 import { SpMessagingBrokerConfigComponent } from './messaging-configuration/broker-config/broker-config.component';
 import { SpExtensionsServiceDetailsDialogComponent } from './dialog/extensions-service-details/extensions-service-details-dialog.component';
+import { SpEmailTemplateConfigurationComponent } from './email-configuration/email-template-configuration/email-template-configuration.component';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 @NgModule({
     imports: [
@@ -130,6 +132,7 @@ import { SpExtensionsServiceDetailsDialogComponent } from './dialog/extensions-s
         ]),
         SharedUiModule,
         ColorPickerModule,
+        CodemirrorModule,
     ],
     declarations: [
         ServiceConfigsComponent,
@@ -155,6 +158,7 @@ import { SpExtensionsServiceDetailsDialogComponent } from './dialog/extensions-s
         SpDataExportItemComponent,
         SpDataImportDialogComponent,
         SpEditLabelComponent,
+        SpEmailTemplateConfigurationComponent,
         SpExtensionsServiceDetailsDialogComponent,
         SpLabelConfigurationComponent,
         SpMessagingBrokerConfigComponent,

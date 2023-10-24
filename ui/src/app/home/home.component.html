@@ -25,7 +25,15 @@
                 </div>
                 <div fxLayout="column" fxFlex="100" class="home-margin">
                     <div fxFlex="100" fxLayoutAlign="start center">
-                        <sp-status fxFlex="100" *ngIf="showStatus"></sp-status>
+                        <sp-status
+                            fxFlex="100"
+                            [availablePipelineElements]="
+                                availablePipelineElements.length
+                            "
+                            [availablePipelines]="availablePipelines.length"
+                            [runningPipelines]="runningPipelines.length"
+                            *ngIf="showStatus"
+                        ></sp-status>
                     </div>
                     <div fxFlex="100">
                         <div

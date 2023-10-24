@@ -41,6 +41,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
 import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
+import { ShepherdService } from '../../../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-edit-event-property',
@@ -76,6 +77,8 @@ export class EditEventPropertyComponent implements OnInit {
         private formBuilder: UntypedFormBuilder,
         private dataTypeService: DataTypesService,
         private semanticTypeUtilsService: SemanticTypeUtilsService,
+        private semanticTypesService: SemanticTypesService,
+        private shepherdService: ShepherdService,
     ) {}
 
     ngOnInit(): void {
@@ -185,6 +188,7 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty.additionalMetadata.operator;
         }
         this.dialogRef.close({ data: this.property });
+        this.shepherdService.trigger('adapter-field-changed');
     }
 
     handleDataTypeChange(changed: boolean) {

@@ -33,6 +33,7 @@ import { EditEventPropertyComponent } from '../../../../dialog/edit-event-proper
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
+import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -72,6 +73,7 @@ export class EventPropertyRowComponent implements OnInit {
         private staticValueService: StaticValueTransformService,
         private dialogService: DialogService,
         private epUtils: EventPropertyUtilsService,
+        private shepherdService: ShepherdService,
     ) {}
 
     ngOnInit() {
@@ -179,6 +181,7 @@ export class EventPropertyRowComponent implements OnInit {
                 isEditable: this.isEditable,
             },
         });
+        this.shepherdService.trigger('adapter-edit-field-clicked');
 
         dialogRef.afterClosed().subscribe(refresh => {
             this.timestampProperty = this.isTimestampProperty(this.node.data);
