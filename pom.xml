@@ -1550,6 +1550,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
 					<execution>
+						<inherited>false</inherited>
 						<id>installer-files</id>
 						<phase>package</phase>
 						<goals>
@@ -1559,7 +1560,7 @@
 							<runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
 							<finalName>apache-streampipes-${project.version}-installer</finalName>
 							<descriptors>
-								<descriptor>tools/maven/installer.xml</descriptor>
+								<descriptor>${project.basedir}/tools/maven/installer.xml</descriptor>
 							</descriptors>
 						</configuration>
 					</execution>
