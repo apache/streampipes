@@ -40,7 +40,7 @@ public interface IAdminApi {
 
   void deregisterFunction(String functionId);
 
-  void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
+  void registerAdapterMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
 
   MessagingSettings getMessagingSettings();
 }

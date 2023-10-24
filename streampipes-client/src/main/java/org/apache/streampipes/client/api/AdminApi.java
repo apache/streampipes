@@ -72,8 +72,8 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
    * @param migrationConfigs list of migration configs to be registered
    */
   @Override
-  public void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId) {
-    post(getMigrationsPath().addToPath(serviceId), migrationConfigs);
+  public void registerAdapterMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId) {
+    post(getAdapterMigrationPath().addToPath(serviceId), migrationConfigs);
   }
 
   @Override
@@ -109,9 +109,9 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     return getFunctionsPath().addToPath(functionId);
   }
 
-  private StreamPipesApiPath getMigrationsPath() {
+  private StreamPipesApiPath getAdapterMigrationPath() {
     return StreamPipesApiPath
             .fromBaseApiPath()
-            .addToPath("migrations");
+            .addToPath("migrations/adapter");
   }
 }

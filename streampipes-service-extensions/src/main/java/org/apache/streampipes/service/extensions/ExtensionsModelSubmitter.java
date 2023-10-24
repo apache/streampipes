@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.management.client.StreamPipesClientReso
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
 
@@ -48,10 +49,13 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
 
   @Override
   public void afterServiceRegistered(SpServiceDefinition serviceDef) {
-    // register all migrations at the StreamPipes Core
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    client.adminApi().registerMigrations(
-          serviceDef.getMigrators().stream().map(ModelMigrator::config).toList(),
+
+    // register all adapter migrations at StreamPipes Core
+    var adapterMigrations = serviceDef.getMigrators().stream()
+            .filter(modelMigrator -> modelMigrator.config().modelType() == SpServiceTagPrefix.ADAPTER).toList();
+    client.adminApi().registerAdapterMigrations(
+          adapterMigrations.stream().map(ModelMigrator::config).toList(),
           serviceId()
     );
 

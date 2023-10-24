@@ -27,8 +27,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
+import org.apache.streampipes.storage.api.IPipelineStorage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,89 +53,148 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
 
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
-  private final IDataProcessorStorage dataProcessorStorage = getNoSqlStorage().getDataProcessorStorage();
-  private final IDataSinkStorage dataSinkStorage = getNoSqlStorage().getDataSinkStorage();
+  private final IPipelineStorage pipelineStorage = getNoSqlStorage().getPipelineStorageAPI();
 
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
           getNoSqlStorage().getExtensionsServiceStorage();
 
   @POST
-  @Path("{serviceId}")
+  @Path("adapter/{serviceId}")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response registerMigrations(
+  public Response registerAdapterMigrations(
           @PathParam("serviceId") String serviceId,
           List<ModelMigratorConfig> migrationConfigs) {
 
-    LOG.info("Received {} migrations from extension service.", migrationConfigs.size());
+    var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
+
+    LOG.info("Received {} migrations from extension service {}.",
+            migrationConfigs.size(),
+            extensionsServiceConfig.getServiceUrl());
     LOG.info("Checking migrations for existing assets in StreamPipes Core ...");
     for (var migrationConfig: migrationConfigs) {
       LOG.info("Searching for assets of '{}'", migrationConfig.targetAppId());
       LOG.debug("Searching for assets of '{}' with config {}", migrationConfig.targetAppId(), migrationConfig);
-      switch (migrationConfig.modelType()) {
-        case ADAPTER -> {
-          var adapterDescriptions = adapterStorage.getAdaptersByAppId(migrationConfig.targetAppId());
-          LOG.info("Found {} instances for appId '{}'", adapterDescriptions.size(), migrationConfig.targetAppId());
-          for (var adapterDescription: adapterDescriptions) {
+      var adapterDescriptions = adapterStorage.getAdaptersByAppId(migrationConfig.targetAppId());
+      LOG.info("Found {} instances for appId '{}'", adapterDescriptions.size(), migrationConfig.targetAppId());
+      for (var adapterDescription: adapterDescriptions) {
 
-            var adapterVersion = adapterDescription.getVersion();
+        var adapterVersion = adapterDescription.getVersion();
 
-            if (adapterVersion == migrationConfig.fromVersion()) {
-              LOG.info("Migration is required for adapter '{}'. Migrating from version '{}' to '{}' ...",
-                      adapterDescription.getElementId(),
-                      adapterVersion, migrationConfig.toVersion()
-              );
+        if (adapterVersion == migrationConfig.fromVersion()) {
+          LOG.info("Migration is required for adapter '{}'. Migrating from version '{}' to '{}' ...",
+                  adapterDescription.getElementId(),
+                  adapterVersion, migrationConfig.toVersion()
+          );
 
-              var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
+          var adapterMigrationRequest = new AdapterMigrationRequest(adapterDescription, migrationConfig);
 
-              var adapterMigrationRequest = new AdapterMigrationRequest(adapterDescription, migrationConfig);
+          var migrationResult = WorkerRestClient.migrateAdapter(
+                  adapterMigrationRequest,
+                  extensionsServiceConfig.getServiceUrl()
+          );
 
-              var migrationResult = WorkerRestClient.migrateAdapter(
-                      adapterMigrationRequest,
-                      extensionsServiceConfig.getServiceUrl()
-              );
+          if (migrationResult.success()) {
+            LOG.info("Migration successfully performed by extensions service. Updating adapter description ...");
+            LOG.debug(
+                    "Migration was performed by extensions service '{}'",
+                    extensionsServiceConfig.getServiceUrl());
 
-              if (migrationResult.success()) {
-                LOG.info("Migration successfully performed by extensions service. Updating adapter description ...");
-                LOG.debug(
-                        "Migration was performed by extensions service '{}'",
-                        extensionsServiceConfig.getServiceUrl());
-
-                adapterStorage.updateAdapter(migrationResult.element());
-                LOG.info("Adapter description is updated - Migration successfully completed at core.");
-              } else {
-                LOG.error(
-                        "Migration failed - Failure report: {}",
-                        StringUtils.join(migrationResult.messages(), ",")
-                );
-                LOG.error(
-                        "Migration for adapter '{}' failed - Stopping adapter ...",
-                        migrationResult.element().getElementId()
-                );
-                try {
-                  WorkerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
-                } catch (AdapterException e) {
-                  LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
-                }
-                LOG.info("Adapter successfully stopped.");
-              }
-            } else {
-              LOG.info("Migration is not applicable for adapter '{}' because of a version mismatch - "
-                      + "adapter version: '{}',  migration starts at: '{}'",
-                      adapterDescription.getElementId(),
-                      adapterVersion,
-                      migrationConfig.fromVersion()
-              );
-
+            adapterStorage.updateAdapter(migrationResult.element());
+            LOG.info("Adapter description is updated - Migration successfully completed at Core.");
+          } else {
+            LOG.error(
+                    "Migration failed - Failure report: {}",
+                    StringUtils.join(migrationResult.messages(), ",")
+            );
+            LOG.error(
+                    "Migration for adapter '{}' failed - Stopping adapter ...",
+                    migrationResult.element().getElementId()
+            );
+            try {
+              WorkerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
+            } catch (AdapterException e) {
+              LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
             }
+            LOG.info("Adapter successfully stopped.");
           }
-        }
-        case DATA_PROCESSOR ->  {}
-        case DATA_SINK -> {}
-        default -> LOG.error("Can't handle migration for model type {}", migrationConfig.modelType()
-        );
-      }
+        } else {
+          LOG.info("Migration is not applicable for adapter '{}' because of a version mismatch - "
+                  + "adapter version: '{}',  migration starts at: '{}'",
+                  adapterDescription.getElementId(),
+                  adapterVersion,
+                  migrationConfig.fromVersion()
+          );
 
+        }
+      }
     }
     return ok();
   }
+
+  //          //TODO: abstract method: data processor description & data sink description are both consumableStreamPipesEntiteis
+//          var dataProcessorDescriptions = dataProcessorStorage.getDataProcessorsByAppId(migrationConfig.targetAppId());
+//          LOG.info("Found {} instances for appId '{}'",
+//                  dataProcessorDescriptions.size(),
+//                  migrationConfig.targetAppId()
+//          );
+//          for (var dataProcessorDescription : dataProcessorDescriptions) {
+//            var processorVersion = dataProcessorDescription.getVersion();
+//
+//            if (processorVersion == migrationConfig.fromVersion()) {
+//              LOG.info("Migration is required for {} '{}'. Migrating from version '{}' to '{}' ...",
+//                      migrationConfig.modelType(),
+//                      dataProcessorDescription.getElementId(),
+//                      processorVersion, migrationConfig.toVersion()
+//              );
+//
+//              pipelineStorage.getPipeline(dataProcessorDescription.getConnectedTo())
+//
+//              var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
+//
+//              var migrationRequest = new PipelineElementMigrationRequest(
+//                      dataProcessorDescription,
+//                      migrationConfig
+//              );
+//              var migrationResult = WorkerRestClient.migrateAdapter(
+//                      migrationRequest,
+//                      extensionsServiceConfig.getServiceUrl()
+//              );
+//
+//              if (migrationResult.success()) {
+//                LOG.info("Migration successfully performed by extensions service. Updating {}} description ...",
+//                        migrationConfig.modelType());
+//                LOG.debug(
+//                        "Migration was performed by extensions service '{}'",
+//                        extensionsServiceConfig.getServiceUrl());
+//
+//                adapterStorage.updateAdapter(migrationResult.element());
+//                LOG.info("{}} description is updated - Migration successfully completed at core.", migrationConfig.modelType());
+//              } else {
+//                LOG.error(
+//                        "Migration failed - Failure report: {}",
+//                        StringUtils.join(migrationResult.messages(), ",")
+//                );
+//                LOG.error(
+//                        "Migration for {}} '{}' failed - Stopping adapter ...",
+//                        migrationConfig.modelType(),
+//                        migrationResult.element().getElementId()
+//                );
+//                try {
+//                  WorkerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
+//                } catch (AdapterException e) {
+//                  LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
+//                }
+//                LOG.info("Adapter successfully stopped.");
+//              }
+//            } else {
+//              LOG.info("Migration is not applicable for {} '{}' because of a version mismatch - "
+//                              + "adapter version: '{}',  migration starts at: '{}'",
+//                      migrationConfig.modelType(),
+//                      dataProcessorDescription.getElementId(),
+//                      processorVersion,
+//                      migrationConfig.fromVersion()
+//              );
+//
+//            }
+//          }
 }
