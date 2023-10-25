@@ -20,8 +20,7 @@ package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.migration.AdapterMigrator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.extensions.migration.AdapterMigrationRequest;
-import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -39,13 +38,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 
-@Path("/api/v1/migrations")
-public class MigrationResource extends MigrateExtensionsResource<AdapterMigrator> {
+@Path("/api/v1/migrations/adapter")
+public class AdapterMigrationResource extends MigrateExtensionsResource<AdapterMigrator> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterMigrationResource.class);
 
   /**
-   * Migrates an adapter instance based on the provided {@link AdapterMigrationRequest}.
+   * Migrates an adapter instance based on the provided {@link MigrationRequest}.
    * The outcome of the migration is described in {@link MigrationResult}.
    * The result is always part of the response.
    * Independent, of the migration outcome, the returned response always has OK as status code.
@@ -54,13 +53,12 @@ public class MigrationResource extends MigrateExtensionsResource<AdapterMigrator
    * @return A response with status code ok, that contains a migration result reflecting the outcome of the operation.
    */
   @POST
-  @Path("adapter")
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response migrateAdapter(AdapterMigrationRequest adapterMigrateRequest) {
+  public Response migrateAdapter(MigrationRequest<AdapterDescription> adapterMigrateRequest) {
 
-    var adapterDescription = adapterMigrateRequest.adapterDescription();
+    var adapterDescription = adapterMigrateRequest.migrationElement();
     var migrationConfig = adapterMigrateRequest.modelMigratorConfig();
 
     LOG.info("Received migration request for adapter '{}' to migrate from version {} to {}",
@@ -91,7 +89,7 @@ public class MigrationResource extends MigrateExtensionsResource<AdapterMigrator
           return ok(MigrationResult.success(migratedAdapterDescription));
 
         } else {
-          LOG.error("Migration failed with the following reasons: {}", StringUtils.join(result.messages(), ", "));
+          LOG.error("Migration failed with the following reason: {}", result.message());
           // The failed migration is documented in the MigrationResult
           // The core is expected to handle the response accordingly, so we can safely return a positive status code
           return ok(result);
@@ -102,26 +100,22 @@ public class MigrationResource extends MigrateExtensionsResource<AdapterMigrator
                 + "sending exception report in migration result");
         return ok(MigrationResult.failure(
                         adapterDescription,
-                        new Notification(
-                              "MigrationFailure",
                               String.format(
                                       "Adapter Migration failed due to an unexpected exception: %s",
                                       StringUtils.join(e.getStackTrace(), "\n")
                                       )
                               )
-                        ));
+                        );
       }
     }
     LOG.error("Migrator for migration config {} could not be found. Migration is cancelled.", migrationConfig);
     return ok(MigrationResult.failure(
             adapterDescription,
-            new Notification(
-                "MigrationNotFound",
                 String.format(
                         "The given migration config '%s' could not be mapped to a registered migrator.",
                         migrationConfig
                 )
             )
-    ));
+    );
   }
 }

@@ -18,13 +18,11 @@
 
 package org.apache.streampipes.model.extensions.migration;
 
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 /**
- * Models a request that is sent from the core to an extensions service to mandate an adapter migration.
- * @param adapterDescription adapter to be migrated
- * @param modelMigratorConfig migration config that describes the migration to be applied to the adapter.
+ * Models a request that is sent from the core to an extensions service to mandate a migration.
+ * @param migrationElement element that needs to be migrated
+ * @param modelMigratorConfig migration config that describes the migration to be applied.
  */
-public record AdapterMigrationRequest(AdapterDescription adapterDescription, ModelMigratorConfig modelMigratorConfig) {
-}
+public record MigrationRequest<T>(T migrationElement, ModelMigratorConfig modelMigratorConfig) {}
