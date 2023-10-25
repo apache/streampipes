@@ -22,7 +22,7 @@ import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterEx
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
 public abstract class DataProcessorMigrator
-    implements ModelMigrator<DataProcessorInvocation, IDataProcessorParameterExtractor> {
+        implements ModelMigrator<DataProcessorInvocation, IDataProcessorParameterExtractor> {
 
   @Override
   public boolean equals(Object obj) {
@@ -31,5 +31,4 @@ public abstract class DataProcessorMigrator
     }
     return false;
   }
-
 }

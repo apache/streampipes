@@ -26,6 +26,8 @@ import org.apache.streampipes.rest.extensions.connect.GuessResource;
 import org.apache.streampipes.rest.extensions.connect.HttpServerAdapterResource;
 import org.apache.streampipes.rest.extensions.connect.RuntimeResolvableResource;
 import org.apache.streampipes.rest.extensions.migration.AdapterMigrationResource;
+import org.apache.streampipes.rest.extensions.migration.DataProcessorMigrationResource;
+import org.apache.streampipes.rest.extensions.migration.DataSinkMigrationResource;
 import org.apache.streampipes.rest.extensions.monitoring.MonitoringResource;
 import org.apache.streampipes.rest.extensions.pe.DataProcessorPipelineElementResource;
 import org.apache.streampipes.rest.extensions.pe.DataSinkPipelineElementResource;
@@ -51,7 +53,9 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
         AdapterDescriptionResource.class,
         AdapterMigrationResource.class,
         AdapterWorkerResource.class,
+        DataProcessorMigrationResource.class,
         DataProcessorPipelineElementResource.class,
+        DataSinkMigrationResource.class,
         DataSinkPipelineElementResource.class,
         DataStreamPipelineElementResource.class,
         GuessResource.class,

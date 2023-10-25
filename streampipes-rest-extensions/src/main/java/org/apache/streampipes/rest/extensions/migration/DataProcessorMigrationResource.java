@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.rest.extensions.migration;
 
-import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
-import org.apache.streampipes.extensions.api.migration.AdapterMigrator;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
+import org.apache.streampipes.extensions.api.migration.DataProcessorMigrator;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -34,23 +34,23 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-
-@Path("/api/v1/migrations/adapter")
-public class AdapterMigrationResource extends MigrateExtensionsResource<
-        AdapterDescription,
-        IStaticPropertyExtractor,
-        AdapterMigrator
+@Path("api/v1/migrations/processor")
+public class DataProcessorMigrationResource extends MigrateExtensionsResource<
+        DataProcessorInvocation,
+        IDataProcessorParameterExtractor,
+        DataProcessorMigrator
         > {
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response migrateAdapter(MigrationRequest<AdapterDescription> adapterMigrationRequest) {
-    return ok(handleMigration(adapterMigrationRequest));
+  public Response migrateDataProcessor(MigrationRequest<DataProcessorInvocation> processorMigrationRequest) {
+    return ok(handleMigration(processorMigrationRequest));
   }
 
   @Override
-  protected IStaticPropertyExtractor getPropertyExtractor(AdapterDescription pipelineElementDescription) {
-    return StaticPropertyExtractor.from(pipelineElementDescription.getConfig());
+  protected IDataProcessorParameterExtractor getPropertyExtractor(DataProcessorInvocation pipelineElementDescription) {
+    return ProcessingElementParameterExtractor.from(pipelineElementDescription);
   }
 }

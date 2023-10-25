@@ -23,7 +23,7 @@ import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.base.VersionedStreamPipesEntity;
+import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -69,9 +69,7 @@ import java.util.Optional;
 public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
-
-  private static final String ADAPTER_MIGRATION_ENDPOINT = "api/v1/migrations/adapter";
-  private static final String PIPELINE_ELEMENT_MIGRATION_ENDPOINT = "api/v1/migrations/pipeline-elements";
+  private static final String MIGRATION_ENDPOINT = "api/v1/migrations";
 
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
           getNoSqlStorage().getExtensionsServiceStorage();
@@ -118,8 +116,11 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
           var migrationResult = performMigration(
                   adapterDescription,
                   migrationConfig,
-                  extensionsServiceConfig.getServiceUrl(),
-                  ADAPTER_MIGRATION_ENDPOINT);
+                  String.format("%s/%s/adapter",
+                          extensionsServiceConfig.getServiceUrl(),
+                          MIGRATION_ENDPOINT
+                  )
+          );
 
           if (migrationResult.success()) {
             LOG.info("Migration successfully performed by extensions service. Updating adapter description ...");
@@ -145,7 +146,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
         } else {
           LOG.info(
                   "Migration is not applicable for adapter '{}' because of a version mismatch - "
-                  + "adapter version: '{}',  migration starts at: '{}'",
+                          + "adapter version: '{}',  migration starts at: '{}'",
                   adapterDescription.getElementId(),
                   adapterVersion,
                   migrationConfig.fromVersion()
@@ -184,7 +185,10 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                           return migratePipelineElement(
                                   processor,
                                   migrationConfigs,
-                                  extensionsServiceConfig.getServiceUrl(),
+                                  String.format("%s/%s/processor",
+                                          extensionsServiceConfig.getServiceUrl(),
+                                          MIGRATION_ENDPOINT
+                                  ),
                                   failedMigrations
                           );
                         } else {
@@ -202,7 +206,10 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                           return migratePipelineElement(
                                   sink,
                                   migrationConfigs,
-                                  extensionsServiceConfig.getServiceUrl(),
+                                  String.format("%s/%s/sink",
+                                          extensionsServiceConfig.getServiceUrl(),
+                                          MIGRATION_ENDPOINT
+                                  ),
                                   failedMigrations
                           );
                         } else {
@@ -213,13 +220,15 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
               ).toList();
       pipeline.setActions(migratedDataSinks);
 
+      pipelineStorage.updatePipeline(pipeline);
+
       if (failedMigrations.isEmpty()) {
         LOG.info("Migration for pipeline successfully completed.");
       } else {
-        handleFailedMigrations(pipeline, failedMigrations);
+        // pass most recent version of pipeline
+        handleFailedMigrations(pipelineStorage.getPipeline(pipeline.getPipelineId()), failedMigrations);
       }
     }
-
     return ok();
   }
 
@@ -236,13 +245,25 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
    * @param pipeline         the pipeline affected by failed migrations
    * @param failedMigrations the list of failed migrations
    */
-  protected static void handleFailedMigrations(Pipeline pipeline, List<MigrationResult<?>> failedMigrations) {
+  protected void handleFailedMigrations(Pipeline pipeline, List<MigrationResult<?>> failedMigrations) {
     LOG.error("Failures in migration detected - The following pipeline elements could to be migrated:\n"
-            + StringUtils.join(failedMigrations.stream().map(Record::toString)), "\n");
+            + StringUtils.join(failedMigrations.stream().map(Record::toString).toList()), "\n");
 
-    pipeline.setPipelineNotifications(failedMigrations.stream().map(MigrationResult::message).toList());
+    pipeline.setPipelineNotifications(failedMigrations.stream().map(
+            failedMigration -> "Failed migration of pipeline element: %s".formatted(failedMigration.message())
+    ).toList());
     pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
 
+    pipelineStorage.updatePipeline(pipeline);
+
+    // get updated version of pipeline after modification
+    pipeline = pipelineStorage.getPipeline(pipeline.getPipelineId());
+
+    stopPipeline(pipeline);
+  }
+
+
+  public void stopPipeline(Pipeline pipeline) {
     var pipelineExecutor = new PipelineExecutor(pipeline, true);
     var pipelineStopResult = pipelineExecutor.stopPipeline();
 
@@ -281,24 +302,25 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
    * All applicable migrations found in the provided configs are executed for the given pipeline element.
    * In case a migration fails, the related pipeline element receives the latest definition of its static properties,
    * so that the pipeline element can be adapted by the user to resolve the failed migration.
-   * @param pipelineElement pipeline element to be migrated
-   * @param modelMigrations list of model migrations that might be applicable for this pipeline element
-   * @param serviceUrl url of the extensions service that handles the migration
+   *
+   * @param pipelineElement  pipeline element to be migrated
+   * @param modelMigrations  list of model migrations that might be applicable for this pipeline element
+   * @param url              url of the extensions service endpoint that handles the migration
    * @param failedMigrations collection of failed migrations which is extended by occurring migration failures
-   * @param <T> type of the pipeline element (e.g., DataProcessorInvocation)
+   * @param <T>              type of the pipeline element (e.g., DataProcessorInvocation)
    * @return the migrated (or - in case of a failure - updated) pipeline element
    */
   protected <T extends InvocableStreamPipesEntity> T migratePipelineElement(
           T pipelineElement,
           List<ModelMigratorConfig> modelMigrations,
-          String serviceUrl,
+          String url,
           List<MigrationResult<?>> failedMigrations
   ) {
 
     // loop until no migrations are available anymore
     // this allows to apply multiple migrations for a pipeline element sequentially
     // For example, first migration from 0 to 1 and the second migration from 1 to 2
-    while (getApplicableMigration(pipelineElement, modelMigrations).isPresent()) {
+    while (getApplicableMigration(pipelineElement, modelMigrations).isPresent() && failedMigrations.isEmpty()) {
 
       var migrationConfig = getApplicableMigration(pipelineElement, modelMigrations).get();
       LOG.info(
@@ -310,38 +332,40 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       var migrationResult = performMigration(
               pipelineElement,
               migrationConfig,
-              serviceUrl,
-              PIPELINE_ELEMENT_MIGRATION_ENDPOINT
+              url
       );
 
       if (migrationResult.success()) {
         LOG.info("Migration successfully performed by extensions service. Updating pipeline element invocation ...");
-        LOG.debug("Migration was performed by extensions service '{}'", serviceUrl);
-        return migrationResult.element();
+        LOG.debug("Migration was performed at extensions service endpoint '{}'", url);
+        pipelineElement = migrationResult.element();
       } else {
         LOG.error("Migration failed with the following reason: {}", migrationResult.message());
         failedMigrations.add(migrationResult);
       }
     }
-    updateFailedPipelineElement(pipelineElement);
+    if (!failedMigrations.isEmpty()) {
+      updateFailedPipelineElement(pipelineElement);
+      LOG.info("Updated pipeline elements with new description where automatic migration failed.");
+    }
     return pipelineElement;
   }
 
   /**
    * Performs the actual migration of a pipeline element.
    * This includes the communication with the extensions service which runs the migration.
+   *
    * @param pipelineElement pipeline element to be migrated
    * @param migrationConfig config of the migration to be performed
-   * @param serviceUrl url of the extensions service where the migration should be performed
-   * @param migrationEndpoint endpoint at which the migration should be performed
-   * @param <T> type of the processing element
+   * @param url             url of the migration endpoint at the extensions service
+   *                        where the migration should be performed
+   * @param <T>             type of the processing element
    * @return result of the migration
    */
-  protected <T extends VersionedStreamPipesEntity> MigrationResult<T> performMigration(
+  protected <T extends VersionedNamedStreamPipesEntity> MigrationResult<T> performMigration(
           T pipelineElement,
           ModelMigratorConfig migrationConfig,
-          String serviceUrl,
-          String migrationEndpoint
+          String url
   ) {
 
     try {
@@ -351,7 +375,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
       var migrationResponse = ExtensionServiceExecutions.extServicePostRequest(
-              "%s/%s".formatted(serviceUrl, migrationEndpoint),
+              url,
               serializedRequest
       ).execute();
 
