@@ -76,6 +76,10 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     post(getAdapterMigrationPath().addToPath(serviceId), migrationConfigs);
   }
 
+  public void registerPipelineElementMigrations(List<ModelMigratorConfig> migratorConfigs, String serviceId) {
+    post(getPipelineElementMigrationPath().addToPath(serviceId), migratorConfigs);
+  }
+
   @Override
   public MessagingSettings getMessagingSettings() {
     return getSingle(getMessagingSettingsPath(), MessagingSettings.class);
@@ -113,5 +117,11 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     return StreamPipesApiPath
             .fromBaseApiPath()
             .addToPath("migrations/adapter");
+  }
+
+  private StreamPipesApiPath getPipelineElementMigrationPath() {
+    return StreamPipesApiPath
+            .fromBaseApiPath()
+            .addToPath("migrations/pipeline-element");
   }
 }

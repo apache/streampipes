@@ -23,6 +23,7 @@ import org.apache.streampipes.logging.LoggerFactory;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.api.EndpointSelectable;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -32,7 +33,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
-public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity implements EndpointSelectable {
+public abstract class InvocableStreamPipesEntity
+        extends NamedStreamPipesEntity
+        implements EndpointSelectable, VersionedStreamPipesEntity {
 
   protected List<SpDataStream> inputStreams;
 
@@ -56,6 +59,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   private String selectedEndpointUrl;
 
+  private int version;
+  protected SpServiceTagPrefix serviceTagPrefix;
+
   public InvocableStreamPipesEntity() {
     super();
   }
@@ -69,6 +75,8 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.uncompleted = other.isUncompleted();
     this.correspondingUser = other.getCorrespondingUser();
     this.selectedEndpointUrl = other.getSelectedEndpointUrl();
+    this.serviceTagPrefix = other.serviceTagPrefix;
+    this.version = other.getVersion();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -81,8 +89,15 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     }
   }
 
-  public InvocableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
+  public InvocableStreamPipesEntity(
+          String uri,
+          String name,
+          String description,
+          String iconUrl,
+          SpServiceTagPrefix serviceTagPrefix
+  ) {
     super(uri, name, description, iconUrl);
+    this.serviceTagPrefix = serviceTagPrefix;
     this.configured = false;
   }
 
@@ -172,6 +187,10 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     this.uncompleted = uncompleted;
   }
 
+  public SpServiceTagPrefix getServiceTagPrefix() {
+    return serviceTagPrefix;
+  }
+
   @Override
   public String getSelectedEndpointUrl() {
     return selectedEndpointUrl;
@@ -188,9 +207,17 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     return "/" + InstanceIdExtractor.extractId(getElementId());
   }
 
-  //public Logger getLogger(Class clazz, PeConfig peConfig) {
   public Logger getLogger(Class clazz) {
-    //return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
     return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
+  }
+
+  @Override
+  public int getVersion(){
+    return this.version;
+  }
+
+  @Override
+  public void setVersion(int version){
+    this.version = version;
   }
 }

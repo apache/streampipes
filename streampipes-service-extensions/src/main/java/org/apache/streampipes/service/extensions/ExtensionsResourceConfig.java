@@ -25,7 +25,7 @@ import org.apache.streampipes.rest.extensions.connect.AdapterWorkerResource;
 import org.apache.streampipes.rest.extensions.connect.GuessResource;
 import org.apache.streampipes.rest.extensions.connect.HttpServerAdapterResource;
 import org.apache.streampipes.rest.extensions.connect.RuntimeResolvableResource;
-import org.apache.streampipes.rest.extensions.migration.MigrationResource;
+import org.apache.streampipes.rest.extensions.migration.AdapterMigrationResource;
 import org.apache.streampipes.rest.extensions.monitoring.MonitoringResource;
 import org.apache.streampipes.rest.extensions.pe.DataProcessorPipelineElementResource;
 import org.apache.streampipes.rest.extensions.pe.DataSinkPipelineElementResource;
@@ -49,6 +49,7 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
     return Set.of(
         AdapterAssetResource.class,
         AdapterDescriptionResource.class,
+        AdapterMigrationResource.class,
         AdapterWorkerResource.class,
         DataProcessorPipelineElementResource.class,
         DataSinkPipelineElementResource.class,
@@ -56,7 +57,6 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
         GuessResource.class,
         HttpServerAdapterResource.class,
         JacksonSerializationProvider.class,
-        MigrationResource.class,
         MonitoringResource.class,
         MultiPartFeature.class,
         RuntimeResolvableResource.class,

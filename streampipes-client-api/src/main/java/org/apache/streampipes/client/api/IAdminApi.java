@@ -42,5 +42,7 @@ public interface IAdminApi {
 
   void registerAdapterMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
 
+  void registerPipelineElementMigrations(List<ModelMigratorConfig> migratorConfigs, String serviceId);
+
   MessagingSettings getMessagingSettings();
 }

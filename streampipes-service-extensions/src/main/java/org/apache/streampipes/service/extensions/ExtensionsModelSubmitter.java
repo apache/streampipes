@@ -52,11 +52,26 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
 
     // register all adapter migrations at StreamPipes Core
-    var adapterMigrations = serviceDef.getMigrators().stream()
-            .filter(modelMigrator -> modelMigrator.config().modelType() == SpServiceTagPrefix.ADAPTER).toList();
+    var adapterMigrations = serviceDef.getMigrators()
+            .stream()
+            .filter(modelMigrator -> modelMigrator.config().modelType() == SpServiceTagPrefix.ADAPTER)
+            .toList();
     client.adminApi().registerAdapterMigrations(
-          adapterMigrations.stream().map(ModelMigrator::config).toList(),
-          serviceId()
+            adapterMigrations.stream().map(ModelMigrator::config).toList(),
+            serviceId()
+    );
+
+    // register all pipeline element migrations at StreamPipes Core
+    var pipelineElementMigrations = serviceDef.getMigrators()
+            .stream()
+            .filter(modelMigrator ->
+                    modelMigrator.config().modelType() == SpServiceTagPrefix.DATA_PROCESSOR
+                            || modelMigrator.config().modelType() == SpServiceTagPrefix.DATA_SINK
+            )
+            .toList();
+    client.adminApi().registerPipelineElementMigrations(
+            pipelineElementMigrations.stream().map(ModelMigrator::config).toList(),
+            serviceId()
     );
 
     // initialize all function instances
