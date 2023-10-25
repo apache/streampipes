@@ -28,6 +28,7 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -168,7 +169,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         namesOfPipelinesUsingAdapter.add(
             StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipelineId).getName());
       }
-      return Response.status(409).entity(String.join(", ", namesOfPipelinesUsingAdapter)).build();
+      return Response.status(HttpStatus.SC_CONFLICT).entity(String.join(", ", namesOfPipelinesUsingAdapter)).build();
     } else {
       try {
         // first stop and delete all associated pipelines
