@@ -16,12 +16,12 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationCountService } from '../../services/notification-count-service';
 import {
-    PipelineService,
     PipelineElementService,
+    PipelineService,
 } from '@streampipes/platform-services';
 
 @Component({
@@ -30,10 +30,16 @@ import {
     styleUrls: ['./status.component.css'],
 })
 export class StatusComponent implements OnInit {
-    pipelines = 0;
-    runningPipelines = 0;
-    installedPipelineElements = 0;
     unreadNotificationCount = 0;
+
+    @Input()
+    availablePipelines = 0;
+
+    @Input()
+    availablePipelineElements = 0;
+
+    @Input()
+    runningPipelines = 0;
 
     constructor(
         private pipelineElementService: PipelineElementService,
@@ -43,42 +49,9 @@ export class StatusComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getPipelines();
-        this.getStreams();
-        this.getProcessors();
-        this.getSinks();
         this.notificationCountService.unreadNotificationCount$.subscribe(
             count => (this.unreadNotificationCount = count),
         );
-    }
-
-    getPipelines() {
-        this.pipelineService.getPipelines().subscribe(pipelines => {
-            this.pipelines = pipelines.length;
-            this.runningPipelines = pipelines.filter(p => p.running).length;
-        });
-    }
-
-    getStreams() {
-        this.pipelineElementService.getDataStreams().subscribe(streams => {
-            this.addPipelineElementList(streams);
-        });
-    }
-
-    getProcessors() {
-        this.pipelineElementService.getDataProcessors().subscribe(msg => {
-            this.addPipelineElementList(msg);
-        });
-    }
-
-    getSinks() {
-        this.pipelineElementService.getDataSinks().subscribe(msg => {
-            this.addPipelineElementList(msg);
-        });
-    }
-
-    addPipelineElementList(msg) {
-        this.installedPipelineElements += msg.length;
     }
 
     navigate(url: string) {

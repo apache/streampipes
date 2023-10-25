@@ -33,8 +33,8 @@
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b
-                    >{{ appConstants.APP_NAME }} is your self-service toolbox
-                    for real-time analytics.</b
+                    >{{ appConstants.APP_NAME }} is your toolbox for IIoT data
+                    management and analytics.</b
                 >
                 <p>
                     If you are using {{ appConstants.APP_NAME }} for the first
@@ -45,7 +45,7 @@
                 mat-button
                 mat-raised-button
                 color="accent"
-                (click)="startCreatePipelineTour()"
+                (click)="close(true)"
             >
                 Start Tour
             </button>
@@ -67,6 +67,7 @@
             mat-raised-button
             class="mat-basic"
             (click)="close()"
+            data-cy="close-tutorial-button"
         >
             Close
         </button>
