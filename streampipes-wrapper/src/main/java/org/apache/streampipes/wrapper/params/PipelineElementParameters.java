@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PipelineElementParameters<T extends InvocableStreamPipesEntity, V extends IParameterExtractor<T>>
+public class PipelineElementParameters<T extends InvocableStreamPipesEntity, V extends IParameterExtractor>
     implements IPipelineElementParameters<T, V> {
 
   private final List<InputStreamParams> inputStreamParams;

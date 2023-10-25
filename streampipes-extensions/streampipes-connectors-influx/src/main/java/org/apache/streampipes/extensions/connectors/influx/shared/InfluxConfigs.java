@@ -64,7 +64,7 @@ public class InfluxConfigs {
         );
   }
 
-  public static InfluxConnectionSettings fromExtractor(IParameterExtractor<?> extractor) {
+  public static InfluxConnectionSettings fromExtractor(IParameterExtractor extractor) {
     String protocol = extractor.selectedSingleValueInternalName(DATABASE_PROTOCOL, String.class);
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
