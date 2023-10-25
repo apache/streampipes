@@ -34,8 +34,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 public abstract class InvocableStreamPipesEntity
-        extends NamedStreamPipesEntity
-        implements EndpointSelectable, VersionedStreamPipesEntity {
+        extends VersionedNamedStreamPipesEntity
+        implements EndpointSelectable {
 
   protected List<SpDataStream> inputStreams;
 
@@ -58,8 +58,6 @@ public abstract class InvocableStreamPipesEntity
   private boolean uncompleted;
 
   private String selectedEndpointUrl;
-
-  private int version;
   protected SpServiceTagPrefix serviceTagPrefix;
 
   public InvocableStreamPipesEntity() {
@@ -76,7 +74,6 @@ public abstract class InvocableStreamPipesEntity
     this.correspondingUser = other.getCorrespondingUser();
     this.selectedEndpointUrl = other.getSelectedEndpointUrl();
     this.serviceTagPrefix = other.serviceTagPrefix;
-    this.version = other.getVersion();
     if (other.getStreamRequirements() != null) {
       this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
     }
@@ -209,15 +206,5 @@ public abstract class InvocableStreamPipesEntity
 
   public Logger getLogger(Class clazz) {
     return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
-  }
-
-  @Override
-  public int getVersion(){
-    return this.version;
-  }
-
-  @Override
-  public void setVersion(int version){
-    this.version = version;
   }
 }

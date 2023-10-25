@@ -15,11 +15,35 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.base;
 
-public interface VersionedStreamPipesEntity {
-  int getVersion();
+public abstract class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
 
-  void setVersion(int version);
+  private int version;
+
+  public VersionedNamedStreamPipesEntity() {
+    super();
+    this.version = 0;
+  }
+
+  public VersionedNamedStreamPipesEntity(VersionedNamedStreamPipesEntity other) {
+    super(other);
+    this.version = other.version;
+  }
+
+  public VersionedNamedStreamPipesEntity(String elementId, String name, String description){
+    super(elementId, name, description);
+  }
+
+  public VersionedNamedStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
+    super(elementId, name, description, iconUrl);
+  }
+
+  public int getVersion(){
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
 }
