@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.extensions.api.extractor;
 
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-
 import java.util.List;
 
-public interface IDataProcessorParameterExtractor extends IParameterExtractor<DataProcessorInvocation> {
+public interface IDataProcessorParameterExtractor extends IParameterExtractor {
   String outputTopic();
 
   List<String> outputKeySelectors();

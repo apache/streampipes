@@ -19,7 +19,6 @@
 package org.apache.streampipes.extensions.api.extractor;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -30,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public interface IParameterExtractor<T extends InvocableStreamPipesEntity> {
+public interface IParameterExtractor {
   String measurementUnit(String runtimeName, Integer streamIndex);
 
   String inputTopic(Integer streamIndex);
