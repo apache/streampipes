@@ -31,6 +31,7 @@ import {
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -65,6 +66,7 @@ export class EventPropertyRowComponent implements OnInit {
     constructor(
         private dialog: MatDialog,
         private dialogService: DialogService,
+        private shepherdService: ShepherdService,
     ) {}
 
     ngOnInit() {
@@ -175,6 +177,7 @@ export class EventPropertyRowComponent implements OnInit {
                 isEditable: this.isEditable,
             },
         });
+        this.shepherdService.trigger('adapter-edit-field-clicked');
 
         dialogRef.afterClosed().subscribe(refresh => {
             this.timestampProperty = this.isTimestampProperty(this.node.data);

@@ -35,7 +35,13 @@
         <module>streampipes-connect-adapters-iiot</module>
 
         <module>streampipes-connectors-influx</module>
+        <module>streampipes-connectors-kafka</module>
+        <module>streampipes-connectors-mqtt</module>
+        <module>streampipes-connectors-nats</module>
         <module>streampipes-connectors-opcua</module>
+        <module>streampipes-connectors-pulsar</module>
+        <module>streampipes-connectors-rocketmq</module>
+        <module>streampipes-connectors-tubemq</module>
 
         <module>streampipes-extensions-all-iiot</module>
         <module>streampipes-extensions-all-jvm</module>
