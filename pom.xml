@@ -1339,7 +1339,6 @@
         <module>streampipes-dataformat-smile</module>
         <module>streampipes-extensions</module>
 		<module>streampipes-integration-tests</module>
-        <module>streampipes-logging</module>
 		<module>streampipes-mail</module>
         <module>streampipes-maven-plugin</module>
         <module>streampipes-measurement-units</module>
