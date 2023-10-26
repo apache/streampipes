@@ -44,7 +44,12 @@ import org.apache.streampipes.storage.api.IPipelineStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -88,8 +93,26 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   @POST
   @Path("adapter/{serviceId}")
   @Consumes(MediaType.APPLICATION_JSON)
+  @Operation(
+          summary = "Migrate adapters based on migration configs", tags = {"Core", "Migration"},
+          responses = {
+              @ApiResponse(
+                      responseCode = "" + HttpStatus.SC_OK,
+                      description = "All provided migrations are handled. If an error appeared, "
+                              + "the corresponding actions are taken.")
+          }
+  )
   public Response registerAdapterMigrations(
+          @Parameter(
+                  in = ParameterIn.PATH,
+                  description = "the id of the extensions service that requests migrations",
+                  required = true
+          )
           @PathParam("serviceId") String serviceId,
+          @Parameter(
+                  description = "list of configs (ModelMigratorConfig) that describe the requested migrations",
+                  required = true
+          )
           List<ModelMigratorConfig> migrationConfigs) {
 
     var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
@@ -160,8 +183,26 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   @POST
   @Path("pipeline-element/{serviceId}")
   @Consumes(MediaType.APPLICATION_JSON)
+  @Operation(
+          summary = "Migrate pipeline elements based on migration configs", tags = {"Core", "Migration"},
+          responses = {
+              @ApiResponse(
+                      responseCode = "200" + HttpStatus.SC_OK,
+                      description = "All provided migrations are handled. "
+                              + "If an error appeared, the corresponding actions are taken."
+              )
+          }
+  )
   public Response registerPipelineElementMigrations(
+          @Parameter(
+                  in = ParameterIn.PATH,
+                  description = "the id of the extensions service that requests migrations",
+                  required = true
+          )
           @PathParam("serviceId") String serviceId,
+          @Parameter(
+                  description = "list of config that describe the requested migrations"
+          )
           List<ModelMigratorConfig> migrationConfigs) {
 
     var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);

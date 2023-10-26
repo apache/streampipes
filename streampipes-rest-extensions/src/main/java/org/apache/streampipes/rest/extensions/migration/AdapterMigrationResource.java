@@ -26,6 +26,12 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import jakarta.ws.rs.Consumes;
@@ -45,7 +51,32 @@ public class AdapterMigrationResource extends MigrateExtensionsResource<
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response migrateAdapter(MigrationRequest<AdapterDescription> adapterMigrationRequest) {
+  @Operation(
+          summary = "Execute the migration for a specific adapter instance", tags = {"Extensions", "Migration"},
+          responses = {
+              @ApiResponse(
+                      responseCode = "" + HttpStatus.SC_OK,
+                      description = "The migration was executed. It's result is described in the response. "
+                              + "The Response needs to be handled accordingly.",
+                      content = @Content(
+                              examples = @ExampleObject(
+                                      name = "Successful migration",
+                                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
+                              ),
+                              mediaType = MediaType.APPLICATION_JSON
+                      )
+              )
+          }
+  )
+  public Response migrateAdapter(
+          @Parameter(
+                  description = "request that encompasses the adapter description(AdapterDescription) and "
+                          + "the configuration of the migration",
+                  example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\","
+                          + "\"modelType\": \"adapter\", \"fromVersion\": 0, \"toVersion\": 1}}",
+                  required = true
+          )
+          MigrationRequest<AdapterDescription> adapterMigrationRequest) {
     return ok(handleMigration(adapterMigrationRequest));
   }
 
