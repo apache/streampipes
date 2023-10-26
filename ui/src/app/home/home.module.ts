@@ -28,6 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 
 @NgModule({
     imports: [
@@ -40,7 +41,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         MatListModule,
         PlatformServicesModule,
     ],
-    declarations: [HomeComponent, StatusComponent],
+    declarations: [HomeComponent, StatusComponent, WelcomeTourComponent],
     providers: [HomeService],
 })
 export class HomeModule {}
