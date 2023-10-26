@@ -18,16 +18,20 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
+import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -41,6 +45,7 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -63,10 +68,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Path("v2/migrations")
 @Component
@@ -86,10 +93,6 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final IDataSinkStorage dataSinkStorage = getNoSqlStorage().getDataSinkStorage();
   private final IPipelineStorage pipelineStorage = getNoSqlStorage().getPipelineStorageAPI();
 
-
-  // TODO: override all existing descriptions(adapter, pipeline elements)
-  // Use functionality of update button in UI
-  // increase version as well
   @POST
   @Path("adapter/{serviceId}")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -120,6 +123,10 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
     LOG.info("Received {} migrations from extension service {}.",
             migrationConfigs.size(),
             extensionsServiceConfig.getServiceUrl());
+    LOG.info("Updating adapter descriptions by replacement...");
+    updateDescriptions(migrationConfigs, extensionsServiceConfig.getServiceUrl());
+    LOG.info("Adapter descriptions are up to date.");
+
     LOG.info("Checking migrations for existing adapters in StreamPipes Core ...");
     for (var migrationConfig : migrationConfigs) {
       LOG.info("Searching for assets of '{}'", migrationConfig.targetAppId());
@@ -206,6 +213,10 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
           List<ModelMigratorConfig> migrationConfigs) {
 
     var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
+    LOG.info("Updating pipeline element descriptions by replacement...");
+    updateDescriptions(migrationConfigs, extensionsServiceConfig.getServiceUrl());
+    LOG.info("Pipeline element descriptions are up to date.");
+
     LOG.info("Received {} pipeline element migrations from extension service {}.",
             migrationConfigs.size(),
             extensionsServiceConfig.getServiceUrl());
@@ -438,6 +449,82 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       );
     }
     return MigrationResult.failure(pipelineElement, "Internal error during migration at StreamPipes Core");
+  }
+
+  /**
+   * Update all descriptions of entities in the Core that are affected by migrations.
+   *
+   * @param migrationConfigs List of migrations to take in account
+   * @param serviceUrl       Url of the extension service that provides the migrations.
+   */
+  protected void updateDescriptions(List<ModelMigratorConfig> migrationConfigs, String serviceUrl) {
+    migrationConfigs
+        .stream()
+        .collect(
+                // We only need to update the description once per appId,
+                // because this is directly done with the newest version of the description and
+                // there is iterative migration required.
+                // To avoid unnecessary, multiple updates,
+                // we filter the migration configs such that every appId is unique.
+                // This ensures that every description is only updated once.
+                Collectors.toMap(
+                        ModelMigratorConfig::targetAppId,
+                        Function.identity(),
+                        (existing, replacement) -> existing
+                )
+        )
+        .values()
+        .stream()
+        .peek(config -> {
+                  var requestUrl = getRequestUrl(config.modelType(), config.targetAppId(), serviceUrl);
+                  performUpdate(requestUrl);
+                }
+        );
+  }
+
+  /**
+   * Get the URL that provides the description for an entity.
+   *
+   * @param entityType Type of the entity to be updated.
+   * @param appId      AppId of the entity to be updated
+   * @param serviceUrl URL of the extensions service to which the entity belongs
+   * @return
+   */
+  protected String getRequestUrl(SpServiceTagPrefix entityType, String appId, String serviceUrl) {
+
+    SpServiceUrlProvider urlProvider;
+    switch (entityType) {
+      case ADAPTER -> urlProvider = SpServiceUrlProvider.ADAPTER;
+      case DATA_PROCESSOR -> urlProvider = SpServiceUrlProvider.DATA_PROCESSOR;
+      case DATA_SINK -> urlProvider = SpServiceUrlProvider.DATA_SINK;
+      default -> throw new RuntimeException("Unexpected instance type.");
+    }
+    return urlProvider.getInvocationUrl(serviceUrl, appId);
+  }
+
+  /**
+   * Perform the update of the description based on the given requestUrl
+   *
+   * @param requestUrl URl that references the description to be updated at the extensions service.
+   */
+  protected void performUpdate(String requestUrl) {
+
+    try {
+      var entityPayload = parseURIContent(requestUrl);
+      var updateResult = Operations.verifyAndUpdateElement(entityPayload);
+      if (!updateResult.isSuccess()) {
+        LOG.error(
+                "Updating the pipeline element description failed: {}",
+                StringUtils.join(
+                        updateResult.getNotifications().stream().map(Notification::toString).toList(),
+                        "\n")
+        );
+      }
+    } catch (IOException | URISyntaxException | SepaParseException e) {
+      LOG.error("Updating the pipeline element description failed due to the following exception:\n{}",
+              StringUtils.join(e.getStackTrace(), "\n")
+      );
+    }
   }
 
   /**
