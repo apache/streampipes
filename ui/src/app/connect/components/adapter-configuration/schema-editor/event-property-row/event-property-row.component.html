@@ -66,6 +66,15 @@
             </mat-icon>
             <span style="margin-left: -5px">marked as timestamp</span>
         </div>
+        <div fxLayoutAlign="end center" class="static-value-info-outer">
+            <span
+                *ngIf="isStaticValue"
+                class="static-value-info"
+                matTooltip="Static Value"
+            >
+                S
+            </span>
+        </div>
         <div fxLayoutAlign="end center" class="runtime-type-info-outer">
             <div
                 fxLayout="row"
@@ -116,11 +125,11 @@
                     [attr.data-cy]="'property-scope-' + label"
                 >
                     <mat-option value="MEASUREMENT_PROPERTY"
-                        >Measurement</mat-option
-                    >
+                        >Measurement
+                    </mat-option>
                     <mat-option value="DIMENSION_PROPERTY"
-                        >Dimension</mat-option
-                    >
+                        >Dimension
+                    </mat-option>
                     <mat-option value="HEADER_PROPERTY">Header</mat-option>
                 </mat-select>
             </mat-form-field>

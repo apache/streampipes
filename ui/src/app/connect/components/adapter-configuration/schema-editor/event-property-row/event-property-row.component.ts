@@ -19,7 +19,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { TreeNode } from '@circlon/angular-tree-component';
-import { MatDialog } from '@angular/material/dialog';
 import {
     EventProperty,
     EventPropertyList,
@@ -28,9 +27,13 @@ import {
     EventPropertyUnion,
     EventSchema,
     FieldStatusInfo,
+    TransformationRuleDescription,
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
+import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
+import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -52,19 +55,25 @@ export class EventPropertyRowComponent implements OnInit {
     @Output() countSelectedChange = new EventEmitter<number>();
 
     label: string;
+
     isPrimitive = false;
     isNested = false;
     isList = false;
+    isStaticValue = false;
+
     timestampProperty = false;
     showFieldStatus = false;
 
     runtimeType: string;
     originalRuntimeType: string;
     originalRuntimeName: string;
+    originalProperty: EventPropertyUnion;
 
     constructor(
-        private dialog: MatDialog,
+        private staticValueService: StaticValueTransformService,
         private dialogService: DialogService,
+        private epUtils: EventPropertyUtilsService,
+        private shepherdService: ShepherdService,
     ) {}
 
     ngOnInit() {
@@ -72,27 +81,17 @@ export class EventPropertyRowComponent implements OnInit {
         this.isPrimitive = this.isEventPropertyPrimitive(this.node.data);
         this.isList = this.isEventPropertyList(this.node.data);
         this.isNested = this.isEventPropertyNested(this.node.data);
+        this.isStaticValue = this.staticValueService.isStaticValueProperty(
+            this.node.data.elementId,
+        );
         this.timestampProperty = this.isTimestampProperty(this.node.data);
 
         if (this.node.data instanceof EventProperty) {
-            const originalProperty = this.findOriginalProperty(
+            this.originalProperty = this.epUtils.findPropertyByElementId(
                 this.originalEventSchema.eventProperties,
+                this.node.data.elementId,
             );
-            if (originalProperty) {
-                this.originalRuntimeName = originalProperty.runtimeName;
-                this.showFieldStatus =
-                    this.fieldStatusInfo &&
-                    this.fieldStatusInfo[this.originalRuntimeName] !==
-                        undefined;
-                if (this.isPrimitive) {
-                    this.originalRuntimeType = this.parseType(
-                        originalProperty.runtimeType,
-                    );
-                    this.runtimeType = this.parseType(
-                        (this.node.data as EventPropertyPrimitive).runtimeType,
-                    );
-                }
-            }
+            this.checkAndDisplayProperties();
         }
 
         if (!this.node.data.propertyScope) {
@@ -100,21 +99,27 @@ export class EventPropertyRowComponent implements OnInit {
         }
     }
 
-    private findOriginalProperty(properties: EventPropertyUnion[]): any {
-        let result: EventPropertyUnion | undefined;
-
-        for (const property of properties) {
-            if (property.elementId === this.node.data.elementId) {
-                result = property;
-                break;
-            } else if (property instanceof EventPropertyNested) {
-                result = this.findOriginalProperty(property.eventProperties);
-                if (result) {
-                    break;
-                }
-            }
+    private checkAndDisplayProperties() {
+        if (this.originalProperty) {
+            this.applyDisplayedProperties(this.originalProperty);
+        } else {
+            this.applyDisplayedProperties(this.node.data);
         }
-        return result;
+    }
+
+    private applyDisplayedProperties(ep: EventProperty) {
+        this.originalRuntimeName = ep.runtimeName;
+        this.showFieldStatus =
+            this.fieldStatusInfo &&
+            this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
+        if (this.isPrimitive) {
+            this.originalRuntimeType = this.parseType(
+                (ep as EventPropertyPrimitive).runtimeType,
+            );
+            this.runtimeType = this.parseType(
+                (this.node.data as EventPropertyPrimitive).runtimeType,
+            );
+        }
     }
 
     private parseType(runtimeType: string) {
@@ -172,12 +177,16 @@ export class EventPropertyRowComponent implements OnInit {
             width: '50vw',
             data: {
                 property: data,
+                originalProperty: this.originalProperty,
                 isEditable: this.isEditable,
             },
         });
+        this.shepherdService.trigger('adapter-edit-field-clicked');
 
         dialogRef.afterClosed().subscribe(refresh => {
             this.timestampProperty = this.isTimestampProperty(this.node.data);
+            this.label = this.getLabel(this.node.data);
+            this.checkAndDisplayProperties();
             this.refreshTreeEmitter.emit(true);
         });
     }

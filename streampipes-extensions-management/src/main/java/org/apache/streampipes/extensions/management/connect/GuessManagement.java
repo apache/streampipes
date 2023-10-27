@@ -60,12 +60,19 @@ public class GuessManagement {
 
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
 
-      try {
-        var schema = adapterInstance
-            .onSchemaRequested(extractor, guessSchemaContext);
-        LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
+      LOG.info("Requesting the event schema for: " + adapterDescription.getAppId());
 
-        return schema;
+      try {
+        var guessedSchemaObj = adapterInstance
+            .onSchemaRequested(extractor, guessSchemaContext);
+
+        if (!adapterDescription.getEventSchema().getEventProperties().isEmpty()) {
+          new SchemaUpdateManagement().computeSchemaChanges(adapterDescription, guessedSchemaObj);
+        } else {
+          guessedSchemaObj.setTargetSchema(guessedSchemaObj.getEventSchema());
+        }
+
+        return guessedSchemaObj;
       } catch (ParseException e) {
         LOG.error(e.toString());
 

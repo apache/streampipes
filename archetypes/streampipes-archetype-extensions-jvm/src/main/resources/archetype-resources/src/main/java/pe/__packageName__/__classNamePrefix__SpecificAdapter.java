@@ -53,6 +53,7 @@ public class ${classNamePrefix}SpecificAdapter implements StreamPipesAdapter {
         ${classNamePrefix}SpecificAdapter::new
       )
       .withCategory(AdapterType.Manufacturing)
+      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
       .withLocales(Locales.EN)
       .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
       .buildConfiguration();

@@ -22,7 +22,11 @@ import { map } from 'rxjs/operators';
 
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { AdapterDescription, Message } from '../model/gen/streampipes-model';
+import {
+    AdapterDescription,
+    Message,
+    PipelineUpdateInfo,
+} from '../model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class AdapterService {
@@ -93,6 +97,23 @@ export class AdapterService {
         return this.http
             .put(`${this.connectPath}/master/adapters`, adapter)
             .pipe(map(response => Message.fromData(response as any)));
+    }
+
+    performPipelineMigrationPreflight(
+        adapter: AdapterDescription,
+    ): Observable<PipelineUpdateInfo[]> {
+        return this.http
+            .put(
+                `${this.connectPath}/master/adapters/pipeline-migration-preflight`,
+                adapter,
+            )
+            .pipe(
+                map(response => {
+                    return (response as any[]).map(p =>
+                        PipelineUpdateInfo.fromData(p),
+                    );
+                }),
+            );
     }
 
     get adapterMasterUrl() {

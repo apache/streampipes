@@ -33,16 +33,51 @@
             mat-button
             data-cy="connect-add-static-property"
             matTooltip="Add a static value to event"
-            (click)="addStaticValueProperty()"
+            [matMenuTriggerFor]="staticValueMenu"
         >
             <mat-icon>add</mat-icon>
             <span>&nbsp;Add static value</span>
         </button>
+        <mat-menu #staticValueMenu="matMenu">
+            <div
+                (click)="$event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+            >
+                <div fxLayout="column" class="m-5">
+                    <div fxLayout="column">
+                        <h5>Field name</h5>
+                        <mat-form-field
+                            color="accent"
+                            class="form-field-small"
+                            appearance="outline"
+                        >
+                            <input
+                                matInput
+                                [(ngModel)]="staticValueKey"
+                                data-cy="connect-add-field-name"
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="end center">
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            (click)="addStaticValueProperty()"
+                            data-cy="connect-add-field-name-button"
+                        >
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </mat-menu>
         <button
             color="accent"
             mat-button
             data-cy="connect-schema-add-timestamp-btn"
             matTooltip="Add timestamp to event schema"
+            [disabled]="timestampPresent"
             (click)="addTimestampProperty()"
         >
             <mat-icon>access_time</mat-icon>

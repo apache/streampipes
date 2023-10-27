@@ -29,13 +29,13 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchema
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConfig;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConsumer;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.json.JsonObjectParser;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
-import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
-import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
