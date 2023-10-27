@@ -19,7 +19,6 @@
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.model.configuration.MessagingSettings;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
@@ -35,8 +34,6 @@ public interface IAdminApi {
   void registerServiceConfiguration(SpServiceConfiguration serviceConfiguration);
 
   SpServiceConfiguration getServiceConfiguration(String serviceGroup);
-
-  void registerAdapters(List<AdapterDescription> adapters);
 
   void registerFunctions(List<FunctionDefinition> functions);
 

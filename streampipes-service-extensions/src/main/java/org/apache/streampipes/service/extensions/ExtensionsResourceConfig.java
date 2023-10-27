@@ -20,6 +20,7 @@ package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.rest.extensions.WelcomePage;
 import org.apache.streampipes.rest.extensions.connect.AdapterAssetResource;
+import org.apache.streampipes.rest.extensions.connect.AdapterDescriptionResource;
 import org.apache.streampipes.rest.extensions.connect.AdapterWorkerResource;
 import org.apache.streampipes.rest.extensions.connect.GuessResource;
 import org.apache.streampipes.rest.extensions.connect.HttpServerAdapterResource;
@@ -50,6 +51,7 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
         AdapterWorkerResource.class,
         MultiPartFeature.class,
         AdapterAssetResource.class,
+        AdapterDescriptionResource.class,
         HttpServerAdapterResource.class,
 
         DataSinkPipelineElementResource.class,

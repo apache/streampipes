@@ -23,6 +23,10 @@ public class SpResourceManager {
     return new AdapterResourceManager();
   }
 
+  public AdapterDescriptionResourceManager manageAdapterDescriptions() {
+    return new AdapterDescriptionResourceManager();
+  }
+
   public DashboardResourceManager manageDashboards() {
     return new DashboardResourceManager();
   }

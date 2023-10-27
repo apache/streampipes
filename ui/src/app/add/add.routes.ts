@@ -21,7 +21,7 @@ import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 export class SpAddRoutes {
     static ADD_BASE_LINK = 'add';
     static BASE: SpBreadcrumbItem = {
-        label: 'Install Pipeline Elements',
+        label: 'Install Extensions',
         link: [SpAddRoutes.ADD_BASE_LINK],
     };
 }

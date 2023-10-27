@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.storage.management;
 
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 public enum StorageManager {
 
   INSTANCE;
 
-  public IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
+  public IPipelineElementDescriptionStorage getPipelineElementStorage() {
     return CouchDbStorageManager.INSTANCE.getPipelineElementDescriptionStorage();
   }
 

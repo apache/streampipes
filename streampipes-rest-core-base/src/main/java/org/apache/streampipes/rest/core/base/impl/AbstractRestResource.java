@@ -29,14 +29,13 @@ import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.INotificationStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.storage.management.StorageManager;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -53,11 +52,11 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     return getNoSqlStorage().getSpCoreConfigurationStorage();
   }
 
-  protected IPipelineElementDescriptionStorageCache getPipelineElementRdfStorage() {
-    return StorageManager.INSTANCE.getPipelineElementStorage();
+  protected IPipelineElementDescriptionStorage getPipelineElementRdfStorage() {
+    return getPipelineElementStorage();
   }
 
-  protected IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
+  protected IPipelineElementDescriptionStorage getPipelineElementStorage() {
     return getNoSqlStorage().getPipelineElementDescriptionStorage();
   }
 

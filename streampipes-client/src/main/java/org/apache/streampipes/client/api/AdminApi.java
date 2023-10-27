@@ -20,7 +20,6 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.configuration.MessagingSettings;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
@@ -58,11 +57,6 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   }
 
   @Override
-  public void registerAdapters(List<AdapterDescription> adapters) {
-    post(getConnectPath(), adapters);
-  }
-
-  @Override
   public void registerFunctions(List<FunctionDefinition> functions) {
     post(getFunctionsPath(), functions);
   }
@@ -93,14 +87,6 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     return StreamPipesApiPath
         .fromBaseApiPath()
         .addToPath("messaging");
-  }
-
-  private StreamPipesApiPath getConnectPath() {
-    return StreamPipesApiPath
-        .fromBaseApiPath()
-        .addToPath("connect")
-        .addToPath("master")
-        .addToPath("administration");
   }
 
   private StreamPipesApiPath getFunctionsPath() {

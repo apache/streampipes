@@ -99,7 +99,9 @@ export class EndpointItemComponent implements OnInit {
     }
 
     findItemTypeTitle() {
-        if (this.item.type === 'stream') {
+        if (this.item.type === 'adapter') {
+            this.itemTypeTitle = 'Adapter';
+        } else if (this.item.type === 'stream') {
             this.itemTypeTitle = 'Data Stream';
         } else if (this.item.type === 'sepa') {
             this.itemTypeTitle = 'Data Processor';
@@ -112,6 +114,8 @@ export class EndpointItemComponent implements OnInit {
         const baseType = 'pe-label ';
         if (this.item.type === 'stream') {
             this.itemTypeStyle = baseType + 'stream-label';
+        } else if (this.item.type === 'adapter') {
+            this.itemTypeStyle = baseType + 'adapter-label';
         } else if (this.item.type === 'sepa') {
             this.itemTypeStyle = baseType + 'processor-label';
         } else {

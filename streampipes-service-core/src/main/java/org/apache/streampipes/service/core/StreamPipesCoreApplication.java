@@ -51,11 +51,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -72,9 +69,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
 
-  private static final int MAX_PIPELINE_START_RETRIES = 3;
-  private static final int WAIT_TIME_AFTER_FAILURE_IN_SECONDS = 10;
-
   private static final int LOG_FETCH_INTERVAL = 60;
   private static final TimeUnit LOG_FETCH_UNIT = TimeUnit.SECONDS;
 
@@ -83,13 +77,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final int SERVICE_HEALTH_CHECK_INTERVAL = 60;
   private static final TimeUnit SERVICE_HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
-
-  private ScheduledExecutorService executorService;
-  private ScheduledExecutorService healthCheckExecutorService;
-  private ScheduledExecutorService serviceHealthCheckExecutorService;
-  private ScheduledExecutorService logCheckExecutorService;
-
-  private final Map<String, Integer> failedPipelines = new HashMap<>();
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -121,10 +108,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @PostConstruct
   public void init() {
-    this.executorService = Executors.newSingleThreadScheduledExecutor();
-    this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
-    this.logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
-    this.serviceHealthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    var executorService = Executors.newSingleThreadScheduledExecutor();
+    var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    var logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    var serviceHealthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
@@ -135,7 +122,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       new MigrationsHandler().performMigrations();
     }
 
-    executorService.schedule(this::startAllPreviouslyStoppedPipelines, 10, TimeUnit.SECONDS);
+    executorService.schedule(new PostStartupTask(getAllPipelines()), 10, TimeUnit.SECONDS);
 
     LOG.info("Service health check will run every {} seconds", SERVICE_HEALTH_CHECK_INTERVAL);
     serviceHealthCheckExecutorService.scheduleAtFixedRate(new ServiceHealthCheck(),
@@ -176,11 +163,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     }
   }
 
-  private void schedulePipelineStart(Pipeline pipeline, boolean restartOnReboot) {
-    executorService.schedule(() -> {
-      startPipeline(pipeline, restartOnReboot);
-    }, WAIT_TIME_AFTER_FAILURE_IN_SECONDS, TimeUnit.SECONDS);
-  }
+
 
   @PreDestroy
   public void onExit() {
@@ -209,72 +192,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     });
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
-  }
-
-  private void startAllPreviouslyStoppedPipelines() {
-    LOG.info("Checking for orphaned pipelines...");
-    List<Pipeline> orphanedPipelines = getAllPipelines()
-        .stream()
-        .filter(Pipeline::isRunning)
-        .toList();
-
-    LOG.info("Found {} orphaned pipelines", orphanedPipelines.size());
-
-    orphanedPipelines.forEach(pipeline -> {
-      LOG.info("Restoring orphaned pipeline {}", pipeline.getName());
-      startPipeline(pipeline, false);
-    });
-
-    LOG.info("Checking for gracefully shut down pipelines to be restarted...");
-
-    List<Pipeline> pipelinesToRestart = getAllPipelines()
-        .stream()
-        .filter(p -> !(p.isRunning()))
-        .filter(Pipeline::isRestartOnSystemReboot)
-        .toList();
-
-    LOG.info("Found {} pipelines that we are attempting to restart...", pipelinesToRestart.size());
-
-    pipelinesToRestart.forEach(pipeline -> {
-      startPipeline(pipeline, false);
-    });
-
-    LOG.info("No more pipelines to restore...");
-  }
-
-  private void startPipeline(Pipeline pipeline, boolean restartOnReboot) {
-    PipelineOperationStatus status = Operations.startPipeline(pipeline);
-    if (status.isSuccess()) {
-      LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
-      Pipeline storedPipeline = getPipelineStorage().getPipeline(pipeline.getPipelineId());
-      storedPipeline.setRestartOnSystemReboot(restartOnReboot);
-      getPipelineStorage().updatePipeline(storedPipeline);
-    } else {
-      storeFailedRestartAttempt(pipeline);
-      int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
-      if (failedAttemptCount <= MAX_PIPELINE_START_RETRIES) {
-        LOG.error("Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
-            pipeline.getName(),
-            WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
-            failedAttemptCount,
-            MAX_PIPELINE_START_RETRIES);
-
-        schedulePipelineStart(pipeline, restartOnReboot);
-      } else {
-        LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?",
-            status.getPipelineName());
-      }
-    }
-  }
-
-  private void storeFailedRestartAttempt(Pipeline pipeline) {
-    String pipelineId = pipeline.getPipelineId();
-    if (!failedPipelines.containsKey(pipelineId)) {
-      failedPipelines.put(pipelineId, 1);
-    } else {
-      int failedAttempts = failedPipelines.get(pipelineId) + 1;
-      failedPipelines.put(pipelineId, failedAttempts);
-    }
   }
 
   private List<Pipeline> getAllPipelines() {

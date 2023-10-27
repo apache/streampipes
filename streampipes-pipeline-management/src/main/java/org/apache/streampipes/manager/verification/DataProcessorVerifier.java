@@ -46,7 +46,7 @@ public class DataProcessorVerifier extends ElementVerifier<DataProcessorDescript
     if (!storageApi.exists(elementDescription)) {
       storageApi.storeDataProcessor(elementDescription);
     } else {
-      storageState = StorageState.ALREADY_IN_SESAME;
+      storageState = StorageState.ALREADY_STORED;
     }
     return storageState;
   }
@@ -60,14 +60,6 @@ public class DataProcessorVerifier extends ElementVerifier<DataProcessorDescript
   protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
       AssetManager.storeAsset(SpServiceUrlProvider.DATA_PROCESSOR, elementDescription.getAppId());
-    }
-  }
-
-  @Override
-  protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
-    if (elementDescription.isIncludesAssets()) {
-      AssetManager.deleteAsset(elementDescription.getAppId());
-      storeAssets();
     }
   }
 
