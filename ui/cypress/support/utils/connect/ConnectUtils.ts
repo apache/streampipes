@@ -194,6 +194,7 @@ export class ConnectUtils {
     public static deleteAdapter() {
         // Delete adapter
         cy.visit('#/connect');
+
         cy.dataCy('delete-adapter').should('have.length', 1);
         cy.dataCy('delete-adapter').click();
         cy.dataCy('delete-adapter-confirmation').click();
