@@ -92,7 +92,17 @@
                                 data-cy="datalake-number-of-events"
                                 *matCellDef="let configurationEntry"
                             >
-                                {{ configurationEntry.events | number }}
+                                <mat-spinner
+                                    [diameter]="20"
+                                    fxLayoutAlign="center"
+                                    style="margin: 10px 0 5px 0"
+                                    color="accent"
+                                    *ngIf="configurationEntry.events < 0"
+                                    >Loading
+                                </mat-spinner>
+                                <span *ngIf="configurationEntry.events >= 0">
+                                    {{ configurationEntry.events | number }}
+                                </span>
                             </td>
                         </ng-container>
 
@@ -202,8 +212,9 @@
                 </div>
                 <div fxFlex="100" fxLayoutAlign="end end">
                     <mat-paginator
-                        [pageSizeOptions]="[5, 10, 25, 100]"
-                        [pageSize]="20"
+                        [pageSizeOptions]="[pageSize]"
+                        [pageSize]="pageSize"
+                        (page)="onPageChange($event)"
                     ></mat-paginator>
                 </div>
                 <div

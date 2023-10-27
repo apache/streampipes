@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.1.1185 on 2023-08-06 11:37:37.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-24 20:02:02.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -198,6 +198,7 @@ export class TransformationRuleDescription {
         | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
+    'rulePriority': number;
 
     static 'fromData'(
         data: TransformationRuleDescription,
@@ -208,6 +209,7 @@ export class TransformationRuleDescription {
         }
         const instance = target || new TransformationRuleDescription();
         instance['@class'] = data['@class'];
+        instance.rulePriority = data.rulePriority;
         return instance;
     }
 
@@ -317,7 +319,13 @@ export class AddTimestampRuleDescription extends ValueTransformationRuleDescript
 
 export class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
+    'datatype': string;
+    'description': string;
+    'label': string;
+    'measurementUnit': string;
+    'propertyScope': PropertyScope;
     'runtimeKey': string;
+    'semanticType': string;
     'staticValue': string;
 
     static 'fromData'(
@@ -329,7 +337,13 @@ export class AddValueTransformationRuleDescription extends ValueTransformationRu
         }
         const instance = target || new AddValueTransformationRuleDescription();
         super.fromData(data, instance);
+        instance.datatype = data.datatype;
+        instance.description = data.description;
+        instance.label = data.label;
+        instance.measurementUnit = data.measurementUnit;
+        instance.propertyScope = data.propertyScope;
         instance.runtimeKey = data.runtimeKey;
+        instance.semanticType = data.semanticType;
         instance.staticValue = data.staticValue;
         return instance;
     }
@@ -1533,6 +1547,7 @@ export class EventProperty {
         | 'org.apache.streampipes.model.schema.EventPropertyList'
         | 'org.apache.streampipes.model.schema.EventPropertyNested'
         | 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
+    'additionalMetadata': { [index: string]: any };
     'description': string;
     'domainProperties': string[];
     'elementId': string;
@@ -1552,6 +1567,9 @@ export class EventProperty {
         }
         const instance = target || new EventProperty();
         instance['@class'] = data['@class'];
+        instance.additionalMetadata = __getCopyObjectFn(__identity<any>())(
+            data.additionalMetadata,
+        );
         instance.description = data.description;
         instance.domainProperties = __getCopyArrayFn(__identity<string>())(
             data.domainProperties,
@@ -1917,6 +1935,10 @@ export class GuessSchema {
     'eventPreview': string[];
     'eventSchema': EventSchema;
     'fieldStatusInfo': { [index: string]: FieldStatusInfo };
+    'modifiedRules': TransformationRuleDescriptionUnion[];
+    'removedProperties': EventPropertyUnion[];
+    'targetSchema': EventSchema;
+    'updateNotifications': Notification[];
 
     static 'fromData'(data: GuessSchema, target?: GuessSchema): GuessSchema {
         if (!data) {
@@ -1930,6 +1952,16 @@ export class GuessSchema {
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.fieldStatusInfo = __getCopyObjectFn(FieldStatusInfo.fromData)(
             data.fieldStatusInfo,
+        );
+        instance.modifiedRules = __getCopyArrayFn(
+            TransformationRuleDescription.fromDataUnion,
+        )(data.modifiedRules);
+        instance.removedProperties = __getCopyArrayFn(
+            EventProperty.fromDataUnion,
+        )(data.removedProperties);
+        instance.targetSchema = EventSchema.fromData(data.targetSchema);
+        instance.updateNotifications = __getCopyArrayFn(Notification.fromData)(
+            data.updateNotifications,
         );
         return instance;
     }
@@ -2446,6 +2478,7 @@ export class Pipeline extends ElementComposition {
     restartOnSystemReboot: boolean;
     running: boolean;
     startedAt: number;
+    valid: boolean;
 
     static fromData(data: Pipeline, target?: Pipeline): Pipeline {
         if (!data) {
@@ -2471,6 +2504,7 @@ export class Pipeline extends ElementComposition {
         instance.restartOnSystemReboot = data.restartOnSystemReboot;
         instance.running = data.running;
         instance.startedAt = data.startedAt;
+        instance.valid = data.valid;
         return instance;
     }
 }
@@ -2955,6 +2989,32 @@ export class PipelineTemplateInvocation {
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
+        return instance;
+    }
+}
+
+export class PipelineUpdateInfo {
+    canAutoMigrate: boolean;
+    migrationInfo: string;
+    pipelineId: string;
+    pipelineName: string;
+    validationInfos: { [index: string]: PipelineElementValidationInfo[] };
+
+    static fromData(
+        data: PipelineUpdateInfo,
+        target?: PipelineUpdateInfo,
+    ): PipelineUpdateInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PipelineUpdateInfo();
+        instance.canAutoMigrate = data.canAutoMigrate;
+        instance.migrationInfo = data.migrationInfo;
+        instance.pipelineId = data.pipelineId;
+        instance.pipelineName = data.pipelineName;
+        instance.validationInfos = __getCopyObjectFn(
+            __getCopyArrayFn(PipelineElementValidationInfo.fromData),
+        )(data.validationInfos);
         return instance;
     }
 }
@@ -3519,8 +3579,10 @@ export class SpServiceRegistration {
     port: number;
     rev: string;
     scheme: string;
+    serviceUrl: string;
     svcGroup: string;
     svcId: string;
+    svcType: string;
     tags: SpServiceTag[];
 
     static fromData(
@@ -3538,8 +3600,10 @@ export class SpServiceRegistration {
         instance.port = data.port;
         instance.rev = data.rev;
         instance.scheme = data.scheme;
+        instance.serviceUrl = data.serviceUrl;
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
+        instance.svcType = data.svcType;
         instance.tags = __getCopyArrayFn(SpServiceTag.fromData)(data.tags);
         return instance;
     }
@@ -3998,6 +4062,12 @@ export type OutputStrategyUnion =
 
 export type PipelineHealthStatus = 'OK' | 'REQUIRES_ATTENTION' | 'FAILURE';
 
+export type PropertyScope =
+    | 'HEADER_PROPERTY'
+    | 'DIMENSION_PROPERTY'
+    | 'MEASUREMENT_PROPERTY'
+    | 'NONE';
+
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
@@ -4016,8 +4086,7 @@ export type SpServiceTagPrefix =
     | 'ADAPTER'
     | 'DATA_STREAM'
     | 'DATA_PROCESSOR'
-    | 'DATA_SINK'
-    | 'DATA_SET';
+    | 'DATA_SINK';
 
 export type StaticPropertyType =
     | 'AnyStaticProperty'

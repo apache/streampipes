@@ -45,6 +45,16 @@ export class DatalakeRestService {
         return this.baseUrl + '/api/v4/datalake/measure';
     }
 
+    getMeasurementEntryCounts(
+        measurementNameFilter: string[],
+    ): Observable<Record<string, number>> {
+        return this.http
+            .get(`${this.dataLakeMeasureUrl}`, {
+                params: { filter: measurementNameFilter },
+            })
+            .pipe(map(r => r as Record<string, number>));
+    }
+
     getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
         const url = this.dataLakeUrl + '/measurements/';
         return this.http.get(url).pipe(

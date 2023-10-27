@@ -20,6 +20,7 @@ package org.apache.streampipes.ps;
 
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.influx.DataLakeMeasurementCount;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -32,9 +33,11 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
 import java.util.Objects;
 
 @Path("/v4/datalake/measure")
@@ -53,6 +56,15 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   public Response addDataLake(DataLakeMeasure dataLakeMeasure) {
     DataLakeMeasure result = this.dataLakeMeasureManagement.createMeasurement(dataLakeMeasure);
     return ok(result);
+  }
+
+  @GET
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response getDataLakeInfos(@QueryParam("filter") List<String> measurementNames) {
+    var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
+    return ok(new DataLakeMeasurementCount(allMeasurements, measurementNames).countMeasurementSizes());
   }
 
   @GET

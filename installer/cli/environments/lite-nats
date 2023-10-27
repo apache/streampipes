@@ -19,6 +19,5 @@ backend
 consul
 couchdb
 influxdb
-sources-watertank-simulator
 extensions-all-jvm
 nats

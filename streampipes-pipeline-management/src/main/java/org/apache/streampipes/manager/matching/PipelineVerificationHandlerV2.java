@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.recommender.AllElementsProvider;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -46,27 +47,34 @@ public class PipelineVerificationHandlerV2 {
     return new PipelineModificationGenerator(graph).buildPipelineModificationMessage();
   }
 
+  public Pipeline makeModifiedPipeline() {
+    var allElements = verifyAndBuildGraphs(false);
+    pipeline.setSepas(filterAndConvert(allElements, DataProcessorInvocation.class));
+    pipeline.setActions(filterAndConvert(allElements, DataSinkInvocation.class));
+    return pipeline;
+  }
+
+  private <T extends InvocableStreamPipesEntity> List<T> filterAndConvert(List<NamedStreamPipesEntity> elements,
+                                                                          Class<T> clazz) {
+    return elements
+        .stream()
+        .filter(clazz::isInstance)
+        .map(clazz::cast)
+        .toList();
+  }
+
   public List<NamedStreamPipesEntity> verifyAndBuildGraphs(boolean ignoreUnconfigured) {
-    List<PipelineModification> pipelineModifications = verifyPipeline().getPipelineModifications();
-    List<NamedStreamPipesEntity> allElements = new AllElementsProvider(pipeline).getAllElements();
-    List<NamedStreamPipesEntity> result = new ArrayList<>();
+    var pipelineModifications = verifyPipeline().getPipelineModifications();
+    var allElements = new AllElementsProvider(pipeline).getAllElements();
+    var result = new ArrayList<NamedStreamPipesEntity>();
     allElements.forEach(pipelineElement -> {
-      Optional<PipelineModification> modificationOpt = getModification(pipelineElement.getDom(), pipelineModifications);
+      var modificationOpt = getModification(pipelineElement.getDom(), pipelineModifications);
       if (modificationOpt.isPresent()) {
         PipelineModification modification = modificationOpt.get();
         if (pipelineElement instanceof InvocableStreamPipesEntity) {
-          ((InvocableStreamPipesEntity) pipelineElement).setInputStreams(modification.getInputStreams());
-          ((InvocableStreamPipesEntity) pipelineElement).setStaticProperties(modification.getStaticProperties());
+          applyModificationsForInvocable((InvocableStreamPipesEntity) pipelineElement, modification);
           if (pipelineElement instanceof DataProcessorInvocation) {
-            ((DataProcessorInvocation) pipelineElement).setOutputStream(modification.getOutputStream());
-            if (((DataProcessorInvocation) pipelineElement).getOutputStream().getEventGrounding() == null) {
-              EventGrounding grounding =
-                  new GroundingBuilder(pipelineElement, Collections.emptySet()).getEventGrounding();
-              ((DataProcessorInvocation) pipelineElement).getOutputStream().setEventGrounding(grounding);
-            }
-            if (modification.getOutputStrategies() != null) {
-              ((DataProcessorInvocation) pipelineElement).setOutputStrategies(modification.getOutputStrategies());
-            }
+            applyModificationsForDataProcessor((DataProcessorInvocation) pipelineElement, modification);
           }
         }
         if (!ignoreUnconfigured || modification.isPipelineElementValid()) {
@@ -78,6 +86,27 @@ public class PipelineVerificationHandlerV2 {
     });
 
     return result;
+  }
+
+  private void applyModificationsForDataProcessor(DataProcessorInvocation pipelineElement,
+                                                  PipelineModification modification) {
+    if (modification.getOutputStream() != null) {
+      pipelineElement.setOutputStream(modification.getOutputStream());
+      if (pipelineElement.getOutputStream().getEventGrounding() == null) {
+        EventGrounding grounding =
+            new GroundingBuilder(pipelineElement, Collections.emptySet()).getEventGrounding();
+        pipelineElement.getOutputStream().setEventGrounding(grounding);
+      }
+    }
+    if (modification.getOutputStrategies() != null) {
+      pipelineElement.setOutputStrategies(modification.getOutputStrategies());
+    }
+  }
+
+  private void applyModificationsForInvocable(InvocableStreamPipesEntity pipelineElement,
+                                              PipelineModification modification) {
+    pipelineElement.setInputStreams(modification.getInputStreams());
+    pipelineElement.setStaticProperties(modification.getStaticProperties());
   }
 
   private Optional<PipelineModification> getModification(String id,

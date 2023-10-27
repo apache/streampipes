@@ -60,6 +60,10 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
       DataLakeMeasure oldEntry = optional.get();
       if (!compareEventProperties(oldEntry.getEventSchema().getEventProperties(),
           measure.getEventSchema().getEventProperties())) {
+        oldEntry.setEventSchema(measure.getEventSchema());
+        oldEntry.setTimestampField(measure.getTimestampField());
+        oldEntry.setPipelineName(measure.getPipelineName());
+        getDataLakeStorage().updateDataLakeMeasure(oldEntry);
         return oldEntry;
       }
     } else {

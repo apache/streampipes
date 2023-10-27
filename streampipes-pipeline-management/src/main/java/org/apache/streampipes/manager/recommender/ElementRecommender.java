@@ -38,12 +38,17 @@ import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ElementRecommender {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ElementRecommender.class);
 
   private final Pipeline pipeline;
   private final String baseRecDomId;
@@ -65,11 +70,11 @@ public class ElementRecommender {
       Optional<SpDataStream> outputStream = getOutputStream(elementsProvider);
       outputStream.ifPresent(spDataStream -> validate(spDataStream, getAll()));
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.warn("Could not find root node or output stream of provided pipeline");
       return recommendationMessage;
     }
 
-    if (recommendationMessage.getPossibleElements().size() == 0) {
+    if (recommendationMessage.getPossibleElements().isEmpty()) {
       throw new NoSuitableSepasAvailableException();
     } else {
       recommendationMessage

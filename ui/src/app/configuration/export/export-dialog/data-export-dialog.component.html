@@ -40,7 +40,7 @@
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.dataSources"
-                    sectionTitle="Data Sources"
+                    sectionTitle="Data Streams"
                 ></sp-data-export-item>
                 <sp-data-export-item
                     [exportItems]="config.dataLakeMeasures"
@@ -81,6 +81,7 @@
                     color="accent"
                     style="margin-right: 10px"
                     (click)="generateDownloadPackage()"
+                    data-cy="download-export-button"
                 >
                     <i class="material-icons">file_download</i
                     ><span>&nbsp;Download export</span>

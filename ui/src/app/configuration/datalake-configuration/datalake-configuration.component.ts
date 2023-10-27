@@ -20,13 +20,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
-    DatalakeQueryParameterBuilder,
-    DatalakeQueryParameters,
     DatalakeRestService,
     DataViewDataExplorerService,
-    EventSchema,
-    FieldConfig,
-    SpQueryResult,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -40,6 +35,7 @@ import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/de
 import { SpConfigurationTabs } from '../configuration-tabs';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -50,7 +46,6 @@ export class DatalakeConfigurationComponent implements OnInit {
     tabs = SpConfigurationTabs.getTabs();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    pageSize = 1;
     @ViewChild(MatSort) sort: MatSort;
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry>;
@@ -65,8 +60,10 @@ export class DatalakeConfigurationComponent implements OnInit {
         'remove',
     ];
 
+    pageSize = 15;
+
     constructor(
-        // protected dataLakeRestService: DatalakeRestService,
+        private http: HttpClient,
         private datalakeRestService: DatalakeRestService,
         private dataViewDataExplorerService: DataViewDataExplorerService,
         private dialogService: DialogService,
@@ -94,7 +91,7 @@ export class DatalakeConfigurationComponent implements OnInit {
                         allMeasurements.forEach(measurement => {
                             const entry = new DataLakeConfigurationEntry();
                             entry.name = measurement.measureName;
-
+                            entry.events = -1;
                             inUseMeasurements.forEach(inUseMeasurement => {
                                 if (
                                     inUseMeasurement.measureName ===
@@ -108,32 +105,13 @@ export class DatalakeConfigurationComponent implements OnInit {
                                     }
                                 }
                             });
-
-                            // get the amount of events from the database
-                            const propertyName =
-                                this.getFirstNoneDimensionProperty(
-                                    measurement.eventSchema,
-                                );
-                            const field: FieldConfig = {
-                                runtimeName: propertyName,
-                                aggregations: ['COUNT'],
-                                selected: true,
-                                numeric: false,
-                            };
-                            this.datalakeRestService
-                                .getData(
-                                    measurement.measureName,
-                                    this.buildQ(field),
-                                )
-                                .subscribe((res: SpQueryResult) => {
-                                    // read the count value from the result
-                                    entry.events =
-                                        res.allDataSeries[0].rows[0][1];
-                                });
-
                             this.availableMeasurements.push(entry);
                         });
 
+                        this.availableMeasurements.sort((a, b) =>
+                            a.name.localeCompare(b.name),
+                        );
+                        this.receiveMeasurementSizes(0);
                         this.dataSource = new MatTableDataSource(
                             this.availableMeasurements,
                         );
@@ -142,19 +120,7 @@ export class DatalakeConfigurationComponent implements OnInit {
                             this.dataSource.sort = this.sort;
                         });
                     });
-                // this.availableMeasurements = response;
             });
-    }
-
-    private getFirstNoneDimensionProperty(eventSchema: EventSchema): string {
-        const propertyName = eventSchema.eventProperties.find(
-            ep => ep.propertyScope !== 'DIMENSION_PROPERTY',
-        );
-        if (!propertyName) {
-            return '*';
-        } else {
-            return propertyName.runtimeName;
-        }
     }
 
     cleanDatalakeIndex(measurementIndex: string) {
@@ -208,9 +174,25 @@ export class DatalakeConfigurationComponent implements OnInit {
         });
     }
 
-    private buildQ(column: FieldConfig): DatalakeQueryParameters {
-        return DatalakeQueryParameterBuilder.create(0, new Date().getTime())
-            .withColumnFilter([column], true)
-            .build();
+    onPageChange(event: any) {
+        this.receiveMeasurementSizes(event.pageIndex);
+    }
+
+    receiveMeasurementSizes(pageIndex: number) {
+        const start = pageIndex * this.pageSize;
+        const end = start + this.pageSize;
+        const measurements = this.availableMeasurements
+            .slice(start, end)
+            .filter(m => m.events === -1)
+            .map(m => m.name);
+        this.datalakeRestService
+            .getMeasurementEntryCounts(measurements)
+            .subscribe(res => {
+                this.availableMeasurements.forEach(m => {
+                    if (res[m.name] !== undefined) {
+                        m.events = res[m.name];
+                    }
+                });
+            });
     }
 }

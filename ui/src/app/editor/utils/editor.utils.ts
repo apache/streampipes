@@ -51,8 +51,6 @@ export class PipelineElementTypeUtils {
     static toCssShortHand(elementType: PipelineElementType) {
         if (PipelineElementType.DataStream === elementType) {
             return 'stream';
-        } else if (PipelineElementType.DataSet === elementType) {
-            return 'set';
         } else if (PipelineElementType.DataProcessor === elementType) {
             return 'sepa';
         } else {

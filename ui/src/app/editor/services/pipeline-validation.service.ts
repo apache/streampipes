@@ -30,6 +30,7 @@ import {
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 import { Connection } from '@jsplumb/browser-ui';
+import { PipelineModificationMessage } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineValidationService {
@@ -57,11 +58,19 @@ export class PipelineValidationService {
             'Did you configure all elements?',
             "There's a pipeline element which is missing some configuration.",
         ),
+        new UserErrorMessage(
+            'Invalid pipeline configuration',
+            'Check the current pipeline structure for invalid connections and configurations',
+        ),
     ];
 
     constructor(private jsplumbFactoryService: JsplumbFactoryService) {}
 
-    isValidPipeline(rawPipelineModel, previewConfig: boolean) {
+    isValidPipeline(
+        rawPipelineModel: PipelineElementConfig[],
+        previewConfig: boolean,
+        pm?: PipelineModificationMessage,
+    ) {
         const jsplumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
         const streamInAssembly = this.isStreamInAssembly(rawPipelineModel);
@@ -99,12 +108,18 @@ export class PipelineValidationService {
             this.errorMessages = [];
         }
 
+        if (pm && !pm.pipelineValid) {
+            this.errorMessages.push(this.availableErrorMessages[5]);
+        }
+
         this.pipelineValid =
             streamInAssembly &&
             actionInAssembly &&
             allElementsConnected &&
             onlyOnePipelineCreated &&
-            allElementsConfigured;
+            allElementsConfigured &&
+            (pm ? pm.pipelineValid : true);
+
         return this.pipelineValid;
     }
 
@@ -117,11 +132,11 @@ export class PipelineValidationService {
     }
 
     buildErrorMessages(
-        streamInAssembly,
-        actionInAssembly,
-        allElementsConnected,
-        onlyOnePipelineCreated,
-        allElementsConfigured,
+        streamInAssembly: boolean,
+        actionInAssembly: boolean,
+        allElementsConnected: boolean,
+        onlyOnePipelineCreated: boolean,
+        allElementsConfigured: boolean,
     ) {
         this.errorMessages = [];
         if (!streamInAssembly) {
