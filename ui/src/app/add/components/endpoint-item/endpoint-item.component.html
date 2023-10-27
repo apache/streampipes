@@ -90,34 +90,18 @@
                 </button>
                 <div *ngIf="item.installed" style="margin-left: 5px">
                     <button
-                        class="small-button-add mat-basic no-min-width"
-                        [disabled]="!item.editable"
-                        mat-raised-button
+                        class="small-button-add-inverted"
                         mat-button
-                        [matMenuTriggerFor]="menu"
+                        mat-raised-button
+                        [disabled]="!item.editable"
+                        (click)="
+                            showPermissionsDialog(item.elementId, item.name)
+                        "
+                        *ngIf="item.available"
                     >
-                        <span style="font-size: 12px">...</span>
+                        <mat-icon>share</mat-icon>
+                        <span>&nbsp;Manage permissions</span>
                     </button>
-                    <mat-menu #menu="matMenu">
-                        <button
-                            mat-menu-item
-                            (click)="refresh(item.elementId)"
-                            [disabled]="!item.available"
-                        >
-                            <mat-icon>refresh</mat-icon>
-                            <span>&nbsp;Update</span>
-                        </button>
-                        <button
-                            mat-menu-item
-                            (click)="
-                                showPermissionsDialog(item.elementId, item.name)
-                            "
-                            [disabled]="!item.available"
-                        >
-                            <mat-icon>share</mat-icon>
-                            <span>&nbsp;Manage permissions</span>
-                        </button>
-                    </mat-menu>
                 </div>
             </div>
         </div>
