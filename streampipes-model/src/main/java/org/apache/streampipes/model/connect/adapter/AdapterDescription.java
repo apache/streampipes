@@ -74,6 +74,16 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.dataStream = new SpDataStream();
   }
 
+  public AdapterDescription(int version) {
+    super();
+    this.rules = new ArrayList<>();
+    this.eventGrounding = new EventGrounding();
+    this.config = new ArrayList<>();
+    this.category = new ArrayList<>();
+    this.dataStream = new SpDataStream();
+    this.setVersion(version);
+  }
+
   public AdapterDescription(String elementId, String name, String description) {
     super(elementId, name, description);
     this.rules = new ArrayList<>();

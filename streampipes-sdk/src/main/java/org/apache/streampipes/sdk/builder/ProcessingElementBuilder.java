@@ -35,30 +35,75 @@ public class ProcessingElementBuilder
 
   private List<OutputStrategy> outputStrategies;
 
-  private ProcessingElementBuilder(String id, String name, String description) {
+  private ProcessingElementBuilder(String id, String name, String description, int version) {
     super(id, name, description, new DataProcessorDescription());
     this.outputStrategies = new ArrayList<>();
+    this.elementDescription.setVersion(version);
   }
 
-  private ProcessingElementBuilder(String id) {
+  private ProcessingElementBuilder(String id, int version) {
     super(id, new DataProcessorDescription());
     this.outputStrategies = new ArrayList<>();
+    this.elementDescription.setVersion(version);
   }
 
   /**
    * Creates a new processing element using the builder pattern.
-   *
+   * @deprecated
+   * This method is no longer recommend since we rely on a version for migration purposes.
+   * <p> Please adopt {@link #create(String, String, String, int)} instead.
    * @param id          A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
    * @param label       A human-readable name of the element.
    *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    */
+  @Deprecated(since = "0.93.0", forRemoval = true)
   public static ProcessingElementBuilder create(String id, String label, String description) {
-    return new ProcessingElementBuilder(id, label, description);
+    return new ProcessingElementBuilder(id, label, description, 0);
   }
 
+  /**
+   * Creates a new processing element based on a label using the builder pattern.
+   * @param id          A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
+   * @param label       A human-readable name of the element.
+   *                    Will later be shown as the element name in the StreamPipes UI.
+   * @param description A human-readable description of the element.
+   * @param version     version of the processing element for migration purposes. Should be 0 in standard cases.
+   *                    Only in case there exist migrations for the specific element the version needs to be aligned.
+   * @return Builder for the pre-defined processing element.
+   */
+  public static ProcessingElementBuilder create(String id, String label, String description, int version) {
+    return new ProcessingElementBuilder(id, label, description, version);
+  }
+
+  /**
+   * Creates a new processing element based on a label using the builder pattern.
+   * @deprecated
+   * This method is no longer recommend since we rely on a version for migration purposes.
+   * <p> Please adopt {@link #create(String, String, String, int)} instead.
+   */
+  @Deprecated(since = "0.93.0", forRemoval = true)
   public static ProcessingElementBuilder create(Label label) {
-    return new ProcessingElementBuilder(label.getInternalId(), label.getLabel(), label.getDescription());
+    return new ProcessingElementBuilder(label.getInternalId(), label.getLabel(), label.getDescription(), 0);
+  }
+
+  /**
+   * Creates a new processing element using the builder pattern.
+   * @deprecated
+   * This method is no longer recommend since we rely on a version for migration purposes.
+   * <p> Please adopt {@link #create(String, int)} instead.
+   * If no label and description is
+   * given
+   * for an element,
+   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
+   * must be called.
+   *
+   * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+   *
+   */
+  @Deprecated(since = "0.93.0", forRemoval = true)
+  public static ProcessingElementBuilder create(String id) {
+    return new ProcessingElementBuilder(id, 0);
   }
 
   /**
@@ -70,8 +115,8 @@ public class ProcessingElementBuilder
    *
    * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
    */
-  public static ProcessingElementBuilder create(String id) {
-    return new ProcessingElementBuilder(id);
+  public static ProcessingElementBuilder create(String id, int version) {
+    return new ProcessingElementBuilder(id, version);
   }
 
   /**
