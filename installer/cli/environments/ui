@@ -19,6 +19,5 @@ consul
 extensions-all-jvm
 couchdb
 kafka
-sources-watertank-simulator
 zookeeper
 influxdb

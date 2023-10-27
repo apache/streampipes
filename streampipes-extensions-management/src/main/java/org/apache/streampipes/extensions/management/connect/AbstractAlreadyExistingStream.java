@@ -16,7 +16,8 @@
  *
  */
 
-package org.apache.streampipes.sources;
+package org.apache.streampipes.extensions.management.connect;
+
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.api.pe.config.IDataStreamConfiguration;
@@ -25,11 +26,16 @@ import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.sdk.builder.stream.DataStreamConfiguration;
 
-public abstract class AbstractAdapterIncludedStream implements IStreamPipesDataStream {
+public abstract class AbstractAlreadyExistingStream implements IStreamPipesDataStream {
 
   @Override
   public boolean isExecutable() {
-    return true;
+    return false;
+  }
+
+  @Override
+  public void executeStream() {
+
   }
 
   public ConfigExtractor configExtractor() {
@@ -39,8 +45,8 @@ public abstract class AbstractAdapterIncludedStream implements IStreamPipesDataS
   @Override
   public IDataStreamConfiguration declareConfig() {
     return DataStreamConfiguration.create(
-        () -> this,
-        declareModel()
+            () -> this,
+            declareModel()
     );
   }
 

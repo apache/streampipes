@@ -45,7 +45,6 @@ extensions-all-jvm
 couchdb
 kafka
 ui
-sources-watertank-simulator
 zookeeper
 influxdb
 epsg

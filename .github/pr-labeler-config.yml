@@ -50,7 +50,6 @@ javascript:
   - "streampipes-extensions/streampipes-pipeline-*/**/*"
   - "streampipes-extensions/streampipes-processors-*/**/*"
   - "streampipes-extensions/streampipes-sinks-*/**/*"
-  - "streampipes-extensions/streampipes-sources-*/**/*"
 
 python:
   - "**/*.py"
