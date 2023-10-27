@@ -43,40 +43,41 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/api/v1/migrations/adapter")
 public class AdapterMigrationResource extends MigrateExtensionsResource<
-        AdapterDescription,
-        IStaticPropertyExtractor,
-        AdapterMigrator
-        > {
+    AdapterDescription,
+    IStaticPropertyExtractor,
+    AdapterMigrator
+    > {
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   @Operation(
-          summary = "Execute the migration for a specific adapter instance", tags = {"Extensions", "Migration"},
-          responses = {
-              @ApiResponse(
-                      responseCode = "" + HttpStatus.SC_OK,
-                      description = "The migration was executed. It's result is described in the response. "
-                              + "The Response needs to be handled accordingly.",
-                      content = @Content(
-                              examples = @ExampleObject(
-                                      name = "Successful migration",
-                                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
-                              ),
-                              mediaType = MediaType.APPLICATION_JSON
-                      )
+      summary = "Execute the migration for a specific adapter instance", tags = {"Extensions", "Migration"},
+      responses = {
+          @ApiResponse(
+              responseCode = "" + HttpStatus.SC_OK,
+              description = "The migration was executed. Its result is described in the response. "
+                  + "The Response needs to be handled accordingly.",
+              content = @Content(
+                  examples = @ExampleObject(
+                      name = "Successful migration",
+                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
+                  ),
+                  mediaType = MediaType.APPLICATION_JSON
               )
-          }
+          )
+      }
   )
   public Response migrateAdapter(
-          @Parameter(
-                  description = "request that encompasses the adapter description(AdapterDescription) and "
-                          + "the configuration of the migration",
-                  example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\","
-                          + "\"modelType\": \"adapter\", \"fromVersion\": 0, \"toVersion\": 1}}",
-                  required = true
-          )
-          MigrationRequest<AdapterDescription> adapterMigrationRequest) {
+      @Parameter(
+          description = "request that encompasses the adapter description(AdapterDescription) and "
+              + "the configuration of the migration",
+          example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\","
+              + "\"modelType\": \"adapter\", \"fromVersion\": 0, \"toVersion\": 1}}",
+          required = true
+      )
+      MigrationRequest<AdapterDescription> adapterMigrationRequest) {
     return ok(handleMigration(adapterMigrationRequest));
   }
 
