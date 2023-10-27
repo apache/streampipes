@@ -17,6 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-edit-correction-value',
@@ -24,7 +25,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     styleUrls: ['./edit-correction-value.component.scss'],
 })
 export class EditCorrectionValueComponent {
-    @Input() cachedProperty: any;
+    @Input() cachedProperty: EventPropertyUnion;
+
     @Output() correctionValueChanged = new EventEmitter<boolean>();
 
     operators = [
@@ -37,15 +39,15 @@ export class EditCorrectionValueComponent {
     constructor() {}
 
     valueChanged() {
-        if (this.cachedProperty.correctionValue) {
-            if (!this.cachedProperty.operator) {
+        if (this.cachedProperty.additionalMetadata.correctionValue) {
+            if (!this.cachedProperty.additionalMetadata.operator) {
                 this.correctionValueChanged.emit(true);
             } else {
                 this.correctionValueChanged.emit(false);
             }
         } else {
             this.correctionValueChanged.emit(false);
-            this.cachedProperty.operator = undefined;
+            this.cachedProperty.additionalMetadata.operator = undefined;
         }
     }
 }

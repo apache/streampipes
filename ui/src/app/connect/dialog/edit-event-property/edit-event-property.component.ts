@@ -34,7 +34,6 @@ import {
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
-    SemanticTypesService,
 } from '@streampipes/platform-services';
 import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
 import { DataTypesService } from '../../services/data-type.service';
@@ -51,6 +50,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 })
 export class EditEventPropertyComponent implements OnInit {
     @Input() property: EventPropertyUnion;
+    @Input() originalProperty: EventPropertyUnion;
     @Input() isEditable: boolean;
 
     @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
@@ -59,7 +59,7 @@ export class EditEventPropertyComponent implements OnInit {
     valueTransformationComponent: EditValueTransformationComponent;
     unitTransformationComponent: EditUnitTransformationComponent;
 
-    cachedProperty: any;
+    cachedProperty: EventPropertyUnion;
 
     isTimestampProperty = false;
     isEventPropertyPrimitive: boolean;
@@ -77,13 +77,11 @@ export class EditEventPropertyComponent implements OnInit {
         private formBuilder: UntypedFormBuilder,
         private dataTypeService: DataTypesService,
         private semanticTypeUtilsService: SemanticTypeUtilsService,
-        private semanticTypesService: SemanticTypesService,
         private shepherdService: ShepherdService,
     ) {}
 
     ngOnInit(): void {
         this.cachedProperty = this.copyEp(this.property);
-        this.runtimeDataTypes = this.dataTypeService.getDataTypes();
         this.isTimestampProperty = this.semanticTypeUtilsService.isTimestamp(
             this.cachedProperty,
         );
@@ -94,7 +92,9 @@ export class EditEventPropertyComponent implements OnInit {
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
             this.semanticTypeUtilsService.isNumeric(this.cachedProperty) ||
-            this.dataTypeService.isNumeric(this.cachedProperty.runtimeType);
+            this.dataTypeService.isNumeric(
+                (this.cachedProperty as any).runtimeType,
+            );
         this.createForm();
     }
 
@@ -105,27 +105,26 @@ export class EditEventPropertyComponent implements OnInit {
                 new EventPropertyPrimitive(),
             );
 
-            result.measurementUnit = (
-                ep as EventPropertyPrimitive
-            ).measurementUnit;
-            (result as any).measurementUnitTmp = (ep as any).measurementUnitTmp;
-            (result as any).oldMeasurementUnit = (ep as any).oldMeasurementUnit;
-            (result as any).hadMeasarumentUnit = (ep as any).hadMeasarumentUnit;
+            result.measurementUnit = ep.measurementUnit;
+            if (ep.additionalMetadata) {
+                result.additionalMetadata.fromMeasurementUnit =
+                    ep.additionalMetadata.fromMeasurementUnit || undefined;
+                result.additionalMetadata.toMeasurementUnit =
+                    ep.additionalMetadata.toMeasurementUnit || undefined;
 
-            (result as any).timestampTransformationMode = (
-                ep as any
-            ).timestampTransformationMode;
-            (result as any).timestampTransformationFormatString = (
-                ep as any
-            ).timestampTransformationFormatString;
-            (result as any).timestampTransformationMultiplier = (
-                ep as any
-            ).timestampTransformationMultiplier;
+                result.additionalMetadata.correctionValue =
+                    ep.additionalMetadata.correctionValue || undefined;
+                result.additionalMetadata.operator =
+                    ep.additionalMetadata.operator || undefined;
+
+                result.additionalMetadata.mode = ep.additionalMetadata.mode;
+                result.additionalMetadata.formatString =
+                    ep.additionalMetadata.formatString;
+                result.additionalMetadata.multiplier =
+                    ep.additionalMetadata.multiplier;
+            }
 
             (result as any).staticValue = (ep as any).staticValue;
-
-            (result as any).correctionValue = (ep as any).correctionValue;
-            (result as any).operator = (ep as any).operator;
 
             return result;
         } else if (ep instanceof EventPropertyNested) {
@@ -151,15 +150,10 @@ export class EditEventPropertyComponent implements OnInit {
         });
     }
 
-    staticValueAddedByUser() {
-        return this.property.elementId.startsWith(
-            'http://eventProperty.de/staticValue/',
-        );
-    }
-
     save(): void {
         this.property.label = this.cachedProperty.label;
         this.property.description = this.cachedProperty.description;
+        this.property.elementId = this.cachedProperty.elementId;
 
         // remove undefined from domain properties array
         this.property.domainProperties =
@@ -171,62 +165,34 @@ export class EditEventPropertyComponent implements OnInit {
             this.property.runtimeType = (
                 this.cachedProperty as EventPropertyPrimitive
             ).runtimeType;
-
             this.property.measurementUnit = (
-                this.cachedProperty as any
-            ).oldMeasurementUnit;
+                this.cachedProperty as EventPropertyPrimitive
+            ).measurementUnit;
 
-            (this.property as any).measurementUnitTmp = (
-                this.cachedProperty as any
-            ).measurementUnitTmp;
-            (this.property as any).oldMeasurementUnit = (
-                this.cachedProperty as any
-            ).oldMeasurementUnit;
-            (this.property as any).hadMeasarumentUnit = (
-                this.cachedProperty as any
-            ).hadMeasarumentUnit;
+            this.property.additionalMetadata.fromMeasurementUnit =
+                this.cachedProperty.additionalMetadata.fromMeasurementUnit;
+            this.property.additionalMetadata.toMeasurementUnit =
+                this.cachedProperty.additionalMetadata.toMeasurementUnit;
 
-            (this.property as any).timestampTransformationMode = (
-                this.cachedProperty as any
-            ).timestampTransformationMode;
-            (this.property as any).timestampTransformationFormatString = (
-                this.cachedProperty as any
-            ).timestampTransformationFormatString;
-            (this.property as any).timestampTransformationMultiplier = (
-                this.cachedProperty as any
-            ).timestampTransformationMultiplier;
+            this.property.additionalMetadata.mode =
+                this.cachedProperty.additionalMetadata.mode;
+            this.property.additionalMetadata.formatString =
+                this.cachedProperty.additionalMetadata.formatString;
+            this.property.additionalMetadata.multiplier =
+                this.cachedProperty.additionalMetadata.multiplier;
 
-            (this.property as any).staticValue = (
-                this.cachedProperty as any
-            ).staticValue;
-
-            (this.property as any).correctionValue = (
-                this.cachedProperty as any
-            ).correctionValue;
-            (this.property as any).operator = (
-                this.cachedProperty as any
-            ).operator;
+            this.property.additionalMetadata.correctionValue =
+                this.cachedProperty.additionalMetadata.correctionValue;
+            this.property.additionalMetadata.operator =
+                this.cachedProperty.additionalMetadata.operator;
         }
         this.dialogRef.close({ data: this.property });
         this.shepherdService.trigger('adapter-field-changed');
     }
 
-    enableSaveBtn($event: boolean) {
-        this.isSaveBtnEnabled = $event;
-    }
-
-    isNumericDataType($event: boolean) {
-        if (!$event) {
-            // clear cache when changing to non-numeric data type
-            this.cachedProperty.operator = undefined;
-            this.cachedProperty.correctionValue = undefined;
-        }
-        this.isNumericProperty = $event;
-    }
-
     handleDataTypeChange(changed: boolean) {
         this.isNumericProperty = this.dataTypeService.isNumeric(
-            this.cachedProperty.runtimeType,
+            (this.cachedProperty as any).runtimeType,
         );
     }
 

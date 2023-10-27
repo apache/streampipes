@@ -53,7 +53,6 @@ export class StaticMappingUnaryComponent
     onStatusChange(status: any) {}
 
     onValueChange(value: any) {
-        console.log(value);
         this.staticProperty.selectedProperty = value;
         this.emitUpdate(true);
     }

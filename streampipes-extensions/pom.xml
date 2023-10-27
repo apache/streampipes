@@ -36,9 +36,12 @@
 
         <module>streampipes-connectors-influx</module>
         <module>streampipes-connectors-kafka</module>
+        <module>streampipes-connectors-mqtt</module>
+        <module>streampipes-connectors-nats</module>
         <module>streampipes-connectors-opcua</module>
         <module>streampipes-connectors-pulsar</module>
         <module>streampipes-connectors-rocketmq</module>
+        <module>streampipes-connectors-tubemq</module>
 
         <module>streampipes-extensions-all-iiot</module>
         <module>streampipes-extensions-all-jvm</module>
@@ -60,12 +63,6 @@
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
         <module>streampipes-sinks-notifications-jvm</module>
-
-        <module>streampipes-sources-watertank-simulator</module>
-        <module>streampipes-sources-vehicle-simulator</module>
-        <module>streampipes-connectors-tubemq</module>
-        <module>streampipes-connectors-nats</module>
-        <module>streampipes-connectors-mqtt</module>
     </modules>
 
     <properties>

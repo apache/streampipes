@@ -17,13 +17,18 @@
   -->
 
 <div fxFlex="100" fxLayout="column" class="options-panel">
-    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start start">
-        <div class="mr-15" fxLayoutAlign="start start">
+    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+        <div class="mr-15" fxLayoutAlign="start center">
             <mat-icon class="icon">{{ optionIcon }}</mat-icon>
         </div>
-        <div fxFlex fxLayout="column">
-            <div fxFlex="100" class="title" fxLayout="row">
-                <div fxLayoutAlign="start start" class="mr-15">
+        <div fxFlex fxLayout="column" fxLayoutAlign="center start">
+            <div
+                fxFlex="100"
+                class="title"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+            >
+                <div fxLayoutAlign="start center" class="mr-15">
                     <mat-checkbox
                         (change)="optionSelectedEmitter.emit($event.checked)"
                         [checked]="isChecked"
