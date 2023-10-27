@@ -26,8 +26,6 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public interface IParameterExtractor<T extends InvocableStreamPipesEntity> {
@@ -49,22 +47,7 @@ public interface IParameterExtractor<T extends InvocableStreamPipesEntity> {
 
   String selectedColor(String internalName);
 
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  String fileContentsAsString(String internalName) throws IOException;
-
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  byte[] fileContentsAsByteArray(String internalName) throws IOException;
-
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  InputStream fileContentsAsStream(String internalName) throws IOException;
-
   String selectedFilename(String internalName);
-
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  String selectedFileFetchUrl(String internalName);
-
-  @Deprecated
-  <V> V selectedSingleValueFromRemote(String internalName, Class<V> targetClass);
 
   <V> V selectedSingleValue(String internalName, Class<V> targetClass);
 
