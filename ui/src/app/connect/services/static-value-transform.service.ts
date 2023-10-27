@@ -16,23 +16,26 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { Injectable } from '@angular/core';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
-    beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-    });
+@Injectable({ providedIn: 'root' })
+export class StaticValueTransformService {
+    prefix = 'http://eventProperty.de/staticValue/';
+    placeholderValue = 'placeholder';
 
-    it('Perform Test', () => {
-        const adapterInput = AdapterBuilder.create(
-            'Random_Data_Simulator_\\(Stream\\)',
-        )
-            .setName('Random Data Simulator Adapter Test')
-            .addInput('input', 'wait-time-ms', '1000')
-            .build();
+    makeDefaultElementId(): string {
+        return this.prefix + this.placeholderValue;
+    }
 
-        ConnectUtils.testAdapter(adapterInput);
-        ConnectUtils.deleteAdapter();
-    });
-});
+    makeElementId(value: string) {
+        return this.prefix + value;
+    }
+
+    isStaticValueProperty(elementId: string) {
+        return elementId.startsWith(this.prefix);
+    }
+
+    getStaticValue(elementId: string) {
+        return elementId.replaceAll(this.prefix, '');
+    }
+}

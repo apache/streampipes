@@ -149,7 +149,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.initPlumb();
     }
 
-    validatePipeline() {
+    validatePipeline(pm?: PipelineModificationMessage) {
         setTimeout(() => {
             this.ngZone.run(() => {
                 this.pipelineValid =
@@ -158,6 +158,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                             pe => !pe.settings.disabled,
                         ),
                         this.preview,
+                        pm,
                     );
             });
         });
@@ -301,7 +302,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
-        console.log(pipelineElementConfig);
         setTimeout(() => {
             this.jsplumbService.dataStreamDropped(
                 pipelineElementConfig.payload.dom,
@@ -405,7 +405,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
                                     edgeValidations,
                                 );
                             if (currentConnectionValid) {
-                                this.validatePipeline();
+                                this.validatePipeline(
+                                    pipelineModificationMessage,
+                                );
                                 this.modifyPipeline(
                                     pipelineModificationMessage,
                                 );
@@ -620,15 +622,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
                     .updatePipeline(this.currentPipelineModel)
                     .subscribe(pm => {
                         this.modifyPipeline(pm);
-                        // if (!(pipelineElementConfig.payload instanceof DataSinkInvocation)) {
-                        //   this.JsplumbBridge.activateEndpoint('out-' + pipelineElementConfig.payload.dom, pipelineElementConfig.settings.completed);
-                        // }
                         this.triggerPipelineCacheUpdate();
                         this.announceConfiguredElement(pipelineElementConfig);
                         if (this.previewModeActive) {
                             this.deletePipelineElementPreview(true);
                         }
-                        this.validatePipeline();
+                        this.validatePipeline(pm);
                     });
             } else {
                 this.validatePipeline();
@@ -675,6 +674,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
         );
         this.objectProvider
             .updatePipeline(this.currentPipelineModel)
-            .subscribe(pm => this.modifyPipeline(pm));
+            .subscribe(pm => {
+                this.modifyPipeline(pm);
+                this.pipelineValid =
+                    this.pipelineValidationService.isValidPipeline(
+                        this.rawPipelineModel,
+                        this.preview,
+                        pm,
+                    );
+            });
     }
 }

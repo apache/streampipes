@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+} from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-schema-editor-header',
@@ -25,13 +32,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class SchemaEditorHeaderComponent {
     @Input() countSelected: number;
+    @Input() timestampPresent = false;
 
     @Output() addNestedPropertyEmitter = new EventEmitter();
-    @Output() addStaticValuePropertyEmitter = new EventEmitter();
+    @Output() addStaticValuePropertyEmitter = new EventEmitter<string>();
     @Output() addTimestampPropertyEmitter = new EventEmitter();
     @Output() guessSchemaEmitter = new EventEmitter();
     @Output() updatePreviewEmitter = new EventEmitter();
     @Output() removeSelectedPropertiesEmitter = new EventEmitter();
+
+    @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+    staticValueKey = '';
 
     constructor() {}
 
@@ -40,7 +51,8 @@ export class SchemaEditorHeaderComponent {
     }
 
     public addStaticValueProperty() {
-        this.addStaticValuePropertyEmitter.emit();
+        this.addStaticValuePropertyEmitter.emit(this.staticValueKey);
+        this.trigger.closeMenu();
     }
 
     public addTimestampProperty() {

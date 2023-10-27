@@ -90,3 +90,14 @@
     width: 170px;
     text-align: center;
 }
+
+.static-value-info-outer {
+    width: 20px;
+}
+
+.static-value-info {
+    background: var(--color-default-text);
+    color: var(--color-bg-0);
+    padding: 3px;
+    border-radius: 5px;
+}

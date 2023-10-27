@@ -87,7 +87,13 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
           .stream()
           .filter(p -> mappingPropertyNary.getMapsFromOptions().contains(p))
           .collect(Collectors.toList()));
-      validationInfos.add(PipelineElementValidationInfo.info("Auto-updated invalid field selection"));
+      var info = PipelineElementValidationInfo.info(
+          String.format(
+              "Auto-updated invalid field selection: Fields updated to %s",
+              mappingPropertyNary.getSelectedProperties().toString()
+          )
+      );
+      validationInfos.add(info);
     }
   }
 
@@ -95,10 +101,18 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
   public void visit(MappingPropertyUnary mappingPropertyUnary) {
     if (existsSelection(mappingPropertyUnary)) {
       if (!(mappingPropertyUnary.getMapsFromOptions().contains(mappingPropertyUnary.getSelectedProperty()))) {
-        if (mappingPropertyUnary.getMapsFromOptions().size() > 0) {
+        if (!mappingPropertyUnary.getMapsFromOptions().isEmpty()) {
+          String existingSelector = mappingPropertyUnary.getSelectedProperty();
           String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
           mappingPropertyUnary.setSelectedProperty(firstSelector);
-          validationInfos.add(PipelineElementValidationInfo.info("Auto-updated invalid field selection"));
+          var info = PipelineElementValidationInfo.info(
+              String.format(
+                  "Auto-updated invalid field selection: Selected field %s was changed to %s",
+                  existingSelector,
+                  firstSelector
+              )
+          );
+          validationInfos.add(info);
         }
       }
     } else {
@@ -142,10 +156,10 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
   }
 
   private boolean existsSelection(MappingPropertyUnary mappingProperty) {
-    return !(mappingProperty.getSelectedProperty() == null || mappingProperty.getSelectedProperty().equals(""));
+    return !(mappingProperty.getSelectedProperty() == null || mappingProperty.getSelectedProperty().isEmpty());
   }
 
   private boolean existsSelection(MappingPropertyNary mappingProperty) {
-    return !(mappingProperty.getSelectedProperties() == null || mappingProperty.getSelectedProperties().size() == 0);
+    return !(mappingProperty.getSelectedProperties() == null || mappingProperty.getSelectedProperties().isEmpty());
   }
 }
