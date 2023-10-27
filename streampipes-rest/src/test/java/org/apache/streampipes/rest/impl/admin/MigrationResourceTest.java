@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
+
 import org.junit.Test;
 
 import java.util.List;
