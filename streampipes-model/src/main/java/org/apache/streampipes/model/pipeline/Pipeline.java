@@ -34,6 +34,7 @@ public class Pipeline extends ElementComposition {
 
   private boolean running;
   private boolean restartOnSystemReboot;
+  private boolean valid = true;
 
   private long startedAt;
   private long createdAt;
@@ -159,6 +160,14 @@ public class Pipeline extends ElementComposition {
     this.healthStatus = healthStatus;
   }
 
+  public boolean isValid() {
+    return valid;
+  }
+
+  public void setValid(boolean valid) {
+    this.valid = valid;
+  }
+
   public Pipeline clone() {
     Pipeline pipeline = new Pipeline();
     pipeline.setName(name);
@@ -173,6 +182,8 @@ public class Pipeline extends ElementComposition {
     pipeline.setHealthStatus(healthStatus);
     pipeline.setPipelineNotifications(pipelineNotifications);
     pipeline.setRev(rev);
+    pipeline.setValid(valid);
+
     return pipeline;
   }
 

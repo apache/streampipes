@@ -36,7 +36,7 @@
                     <div
                         fxLayout="row"
                         fxLayoutAlign="start center"
-                        fxFlex="100px"
+                        fxFlex="150px"
                     >
                         <div
                             *ngIf="
@@ -64,22 +64,38 @@
                             class="light light-neutral"
                             [matTooltip]="'Stopped'"
                         ></div>
-                        <button
-                            class="ml-10"
-                            mat-icon-button
-                            [disabled]="!hasPipelineWritePrivileges"
-                            (click)="openPipelineNotificationsDialog(pipeline)"
-                            *ngIf="pipeline.pipelineNotifications.length > 0"
-                            matTooltip="{{
-                                pipeline.pipelineNotifications.length
-                            }} notification{{
-                                pipeline.pipelineNotifications.length > 1
-                                    ? 's'
-                                    : ''
-                            }}"
-                        >
-                            <mat-icon color="warn">warning</mat-icon>
-                        </button>
+                        <div class="notification-icon">
+                            <button
+                                class="ml-10"
+                                mat-icon-button
+                                [disabled]="!hasPipelineWritePrivileges"
+                                (click)="
+                                    openPipelineNotificationsDialog(pipeline)
+                                "
+                                *ngIf="
+                                    pipeline.pipelineNotifications.length > 0
+                                "
+                                matTooltip="{{
+                                    pipeline.pipelineNotifications.length
+                                }} notification{{
+                                    pipeline.pipelineNotifications.length > 1
+                                        ? 's'
+                                        : ''
+                                }}"
+                            >
+                                <i class="material-icons pipeline-notification"
+                                    >warning</i
+                                >
+                            </button>
+                        </div>
+                        <div class="ml-10 notification-icon">
+                            <mat-icon
+                                color="warn"
+                                matTooltip="Invalid pipeline: Modify to fix problems"
+                                *ngIf="!pipeline.valid"
+                                >sync_problem</mat-icon
+                            >
+                        </div>
                     </div>
                 </div>
             </td>
@@ -99,7 +115,11 @@
                             toggleRunningOperation
                         )
                     "
-                    [disabled]="!hasPipelineWritePrivileges || starting"
+                    [disabled]="
+                        !hasPipelineWritePrivileges ||
+                        starting ||
+                        !pipeline.valid
+                    "
                     *ngIf="!pipeline.running"
                 >
                     <i class="material-icons">play_arrow</i>
@@ -127,7 +147,7 @@
         <ng-container matColumnDef="name">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let pipeline">
-                <h4 style="margin-bottom: 0px">{{ pipeline.name }}</h4>
+                <h4 style="margin-bottom: 0">{{ pipeline.name }}</h4>
                 <h5>
                     {{
                         pipeline.description !== '' ? pipeline.description : '-'

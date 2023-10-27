@@ -97,10 +97,6 @@ ul {
     overflow: hidden;
 }
 
-:host ::ng-deep .tree-node-level-1 {
-    border: none;
-}
-
 :host ::ng-deep .node-content-wrapper-focused,
 .node-content-wrapper:hover,
 .node-content-wrapper-active,

@@ -17,6 +17,11 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
+import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
+import {
+    EventPropertyUnion,
+    TransformationRuleDescription,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-edit-value-transformation',
@@ -25,7 +30,10 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class EditValueTransformationComponent implements OnInit {
     @Input()
-    cachedProperty: any;
+    cachedProperty: EventPropertyUnion;
+
+    @Input() originalProperty: EventPropertyUnion;
+    @Input() transformationRules: TransformationRuleDescription[] = [];
 
     @Input() isTimestampProperty: boolean;
     @Input() isNestedProperty: boolean;
@@ -34,17 +42,24 @@ export class EditValueTransformationComponent implements OnInit {
     @Input() isNumericProperty: boolean;
 
     addedByUser: boolean;
+    staticValue: string;
+
+    constructor(
+        private staticValueTransformService: StaticValueTransformService,
+    ) {}
 
     ngOnInit(): void {
-        this.addedByUser = this.staticValueAddedByUser();
-        if (!this.cachedProperty.staticValue) {
-            this.cachedProperty.staticValue = '';
-        }
+        this.addedByUser =
+            this.staticValueTransformService.isStaticValueProperty(
+                this.cachedProperty.elementId,
+            );
+        this.staticValue = this.staticValueTransformService.getStaticValue(
+            this.cachedProperty.elementId,
+        );
     }
 
-    staticValueAddedByUser() {
-        return this.cachedProperty.elementId.startsWith(
-            'http://eventProperty.de/staticValue/',
-        );
+    applyStaticValue(value: any) {
+        this.cachedProperty.elementId =
+            this.staticValueTransformService.makeElementId(value);
     }
 }

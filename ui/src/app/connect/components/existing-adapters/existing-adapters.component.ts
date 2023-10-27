@@ -18,13 +18,13 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-    AdapterService,
     AdapterDescription,
     AdapterMonitoringService,
+    AdapterService,
     PipelineElementService,
-    SpMetricsEntry,
     PipelineService,
     SpLogMessage,
+    SpMetricsEntry,
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
@@ -42,13 +42,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { AuthService } from '../../../services/auth.service';
 import { HelpComponent } from '../../../editor/dialog/help/help.component';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
-import { CanNotEditAdapterDialog } from '../../dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
 import { zip } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 
@@ -236,22 +234,18 @@ export class ExistingAdaptersComponent implements OnInit {
                 adapter.correspondingDataStreamElementId,
             )
             .subscribe(effectedPipelines => {
-                if (effectedPipelines.length > 0) {
-                    this.dialogService.open(CanNotEditAdapterDialog, {
-                        panelType: PanelType.STANDARD_PANEL,
-                        title: 'No edit possible',
-                        width: '50vw',
-                        data: {
-                            pipelines: effectedPipelines,
-                        },
-                    });
-                } else {
-                    this.router.navigate([
-                        'connect',
-                        'edit',
-                        adapter.elementId,
-                    ]);
-                }
+                // if (effectedPipelines.length > 0) {
+                //     this.dialogService.open(CanNotEditAdapterDialog, {
+                //         panelType: PanelType.STANDARD_PANEL,
+                //         title: 'No edit possible',
+                //         width: '50vw',
+                //         data: {
+                //             pipelines: effectedPipelines,
+                //         },
+                //     });
+                // } else {
+                this.router.navigate(['connect', 'edit', adapter.elementId]);
+                //}
             });
     }
 

@@ -26,7 +26,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @JsonSubTypes({
@@ -57,10 +59,13 @@ public abstract class EventProperty {
 
   private String runtimeId;
 
+  private Map<String, Object> additionalMetadata;
+
 
   public EventProperty() {
     this.elementId = ElementIdGenerator.makeElementId(EventProperty.class);
     this.domainProperties = new ArrayList<>();
+    this.additionalMetadata = new HashMap<>();
   }
 
   public EventProperty(EventProperty other) {
@@ -73,6 +78,7 @@ public abstract class EventProperty {
     this.propertyScope = other.getPropertyScope();
     this.runtimeId = other.getRuntimeId();
     this.index = other.getIndex();
+    this.additionalMetadata = other.getAdditionalMetadata();
   }
 
   public EventProperty(List<URI> subClassOf) {
@@ -166,6 +172,14 @@ public abstract class EventProperty {
 
   public void setElementId(String elementId) {
     this.elementId = elementId;
+  }
+
+  public Map<String, Object> getAdditionalMetadata() {
+    return additionalMetadata;
+  }
+
+  public void setAdditionalMetadata(Map<String, Object> additionalMetadata) {
+    this.additionalMetadata = additionalMetadata;
   }
 
   @Override
