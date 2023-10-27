@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.client.api;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.client.http.GetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.ListSerializer;
@@ -26,6 +25,7 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
+import org.apache.http.HttpStatus;
 import java.util.List;
 import java.util.Optional;
 

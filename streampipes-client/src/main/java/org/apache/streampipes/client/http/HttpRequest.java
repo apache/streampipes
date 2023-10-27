@@ -106,7 +106,8 @@ public abstract class HttpRequest<K, V, T> {
               " 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?",
               HttpStatus.SC_UNAUTHORIZED);
           case HttpStatus.SC_NOT_FOUND ->
-              throw new SpHttpErrorStatusCode(" 404 - The requested resource could not be found.", HttpStatus.SC_NOT_FOUND);
+              throw new SpHttpErrorStatusCode(" 404 - The requested resource could not be found.",
+                      HttpStatus.SC_NOT_FOUND);
           default -> throw new SpHttpErrorStatusCode(status.getStatusCode() + " - " + status.getReasonPhrase(),
               status.getStatusCode());
         }
