@@ -260,7 +260,7 @@ export class ConnectUtils {
         adapterConfiguration: AdapterInput,
         expectedFile: string,
         ignoreTime: boolean,
-        waitTime = 0,
+        waitTime = 1000,
     ) {
         ConnectUtils.startAdapter(adapterConfiguration, true);
 

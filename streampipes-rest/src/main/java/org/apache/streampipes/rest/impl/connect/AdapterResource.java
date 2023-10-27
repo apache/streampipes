@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
@@ -84,18 +85,27 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public Response updateAdapter(AdapterDescription adapterDescription) {
-    var principalSid = getAuthenticatedUserSid();
-    var username = getAuthenticatedUsername();
-    LOG.info("User: " + username + " updates adapter " + adapterDescription.getElementId());
-
+    var updateManager = new AdapterUpdateManagement(managementService);
     try {
-      managementService.updateAdapter(adapterDescription, principalSid);
+      updateManager.updateAdapter(adapterDescription);
     } catch (AdapterException e) {
       LOG.error("Error while updating adapter with id " + adapterDescription.getElementId(), e);
       return ok(Notifications.error(e.getMessage()));
     }
 
     return ok(Notifications.success(adapterDescription.getElementId()));
+  }
+
+  @PUT
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
+  @Path("pipeline-migration-preflight")
+  public Response performPipelineMigrationPreflight(AdapterDescription adapterDescription) {
+    var updateManager = new AdapterUpdateManagement(managementService);
+    var migrations = updateManager.checkPipelineMigrations(adapterDescription);
+
+    return ok(migrations);
   }
 
   @GET
@@ -155,7 +165,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                                 boolean deleteAssociatedPipelines) {
     List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
 
-    if (pipelinesUsingAdapter.size() == 0) {
+    if (pipelinesUsingAdapter.isEmpty()) {
       try {
         managementService.deleteAdapter(elementId);
         return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));

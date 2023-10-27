@@ -39,7 +39,6 @@
         *ngIf="isNumericProperty && !isTimestampProperty"
     >
         <sp-edit-correction-value [cachedProperty]="cachedProperty">
-            <!--(correctionValueChanged)="enableSaveBtn($event)"-->
         </sp-edit-correction-value>
     </sp-ep-settings-section>
     <sp-ep-settings-section
@@ -56,7 +55,8 @@
                 name="static_value"
                 id="static_value"
                 data-cy="connect-edit-field-static-value"
-                [(ngModel)]="cachedProperty.staticValue"
+                [ngModel]="staticValue"
+                (ngModelChange)="applyStaticValue($event)"
             />
         </mat-form-field>
     </sp-ep-settings-section>

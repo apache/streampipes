@@ -17,17 +17,3 @@
  */
 
 @import 'src/scss/sp/sp-dialog';
-
-.info-message {
-    text-align: center;
-    font-size: 14pt;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.warning-message {
-    border: 1px solid var(--color-warn);
-    padding: 10px;
-    font-size: 12pt;
-    background: var(--color-bg-2);
-}

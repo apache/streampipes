@@ -28,8 +28,8 @@
 }
 
 .mat-column-status {
-    width: 100px;
-    max-width: 100px;
+    width: 120px;
+    max-width: 120px;
 }
 
 .light {
@@ -61,4 +61,12 @@
 
 .ml-10 {
     margin-left: 10px;
+}
+
+.pipeline-notification {
+    color: #dede00;
+}
+
+.notification-icon {
+    width: 50px;
 }

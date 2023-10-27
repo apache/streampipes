@@ -91,15 +91,7 @@ public class AdapterMasterManagement {
     return ad.getElementId();
   }
 
-  public void updateAdapter(AdapterDescription ad,
-                            String principalSid)
-      throws AdapterException {
-    // update adapter in database
-    this.adapterResourceManager.encryptAndUpdate(ad);
 
-    // update data source in database
-    this.updateDataSource(ad);
-  }
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
     List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
@@ -180,16 +172,6 @@ public class AdapterMasterManagement {
     }
   }
 
-  private void updateDataSource(AdapterDescription ad) {
-    // get data source
-    SpDataStream dataStream = this.dataStreamResourceManager.find(ad.getCorrespondingDataStreamElementId());
-
-    SourcesManagement.updateDataStream(ad, dataStream);
-
-    // Update data source in database
-    this.dataStreamResourceManager.update(dataStream);
-  }
-
   private void installDataSource(SpDataStream stream,
                                  String principalSid,
                                  boolean publicElement) throws AdapterException {
@@ -204,5 +186,4 @@ public class AdapterMasterManagement {
   private IAdapterStorage getAdapterInstanceStorage() {
     return new AdapterInstanceStorageImpl();
   }
-
 }

@@ -30,7 +30,7 @@ public class AdapterPipeline implements IAdapterPipeline {
   private List<IAdapterPipelineElement> pipelineElements;
   private IAdapterPipelineElement pipelineSink;
 
-  private EventSchema resultingEventSchema;
+  private final EventSchema resultingEventSchema;
 
   public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
                          EventSchema resultingEventSchema) {

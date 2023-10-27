@@ -25,14 +25,11 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { EditorComponent } from './editor.component';
-import { EditorService } from './services/editor.service';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
 import { PipelineElementComponent } from './components/pipeline-element/pipeline-element.component';
-import { PipelineEditorService } from './services/pipeline-editor.service';
 import { PipelineComponent } from './components/pipeline/pipeline.component';
 import { PipelineElementOptionsComponent } from './components/pipeline-element-options/pipeline-element-options.component';
-import { PipelineElementRecommendationService } from './services/pipeline-element-recommendation.service';
 import { CustomizeComponent } from './dialog/customize/customize.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -45,7 +42,6 @@ import { PipelineElementDocumentationComponent } from './components/pipeline-ele
 import { ShowdownModule } from 'ngx-showdown';
 import { SafeCss } from './utils/style-sanitizer';
 import { MatchingErrorComponent } from './dialog/matching-error/matching-error.component';
-import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { OutputStrategyComponent } from './components/output-strategy/output-strategy.component';
 import { CustomOutputStrategyComponent } from './components/output-strategy/custom-output/custom-output-strategy.component';
@@ -53,8 +49,6 @@ import { PropertySelectionComponent } from './components/output-strategy/propert
 import { UserDefinedOutputStrategyComponent } from './components/output-strategy/user-defined-output/user-defined-output.component';
 import { ConnectModule } from '../connect/connect.module';
 import { EnabledPipelineElementFilter } from './filter/enabled-pipeline-element.filter';
-import { PipelineElementDraggedService } from './services/pipeline-element-dragged.service';
-import { PipelineCanvasScrollingService } from './services/pipeline-canvas-scrolling.service';
 import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
@@ -108,7 +102,6 @@ import { PipelineElementGroupFilterPipe } from './services/pipeline-element-grou
         PropertySelectionComponent,
         SavePipelineComponent,
         SafeCss,
-        WelcomeTourComponent,
     ],
     providers: [SemanticTypeUtilsService, SafeCss],
     exports: [EditorComponent, PipelineComponent, PipelineElementComponent],

@@ -74,12 +74,10 @@ export class DataMarketplaceComponent implements OnInit {
         });
     }
 
-    startAdapterTutorial3() {
-        this.shepherdService.startAdapterTour3();
-    }
-
     selectAdapter(appId: string) {
-        this.router.navigate(['connect', 'create', appId]);
+        this.router.navigate(['connect', 'create', appId]).then(() => {
+            this.shepherdService.trigger('new-adapter-selected');
+        });
     }
 
     applyFilter(filter: AdapterFilterSettingsModel) {

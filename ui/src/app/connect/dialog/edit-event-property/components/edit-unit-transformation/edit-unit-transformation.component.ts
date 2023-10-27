@@ -17,12 +17,13 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { UnitDescription } from '../../../../model/UnitDescription';
 import { RestService } from '../../../../services/rest.service';
 import { UnitProviderService } from '../../../../services/unit-provider.service';
+import { EventPropertyPrimitive } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-edit-unit-transformation',
@@ -30,7 +31,8 @@ import { UnitProviderService } from '../../../../services/unit-provider.service'
     styleUrls: ['./edit-unit-transformation.component.scss'],
 })
 export class EditUnitTransformationComponent implements OnInit {
-    @Input() cachedProperty: any;
+    @Input() cachedProperty: EventPropertyPrimitive;
+    @Input() originalProperty: EventPropertyPrimitive;
 
     @Input() isTimestampProperty: boolean;
     @Input() isNestedProperty: boolean;
@@ -40,89 +42,88 @@ export class EditUnitTransformationComponent implements OnInit {
 
     @Input() showUnitTransformation: boolean;
 
-    private transformUnitEnable = false;
-    private possibleUnitTransformations: UnitDescription[] = [];
-    private selectUnit: UnitDescription;
-    private allUnits: UnitDescription[];
-    private stateCtrl = new UntypedFormControl();
-
-    private newUnitStateCtrl = new UntypedFormControl();
-    private filteredUnits: Observable<UnitDescription[]>;
-    public hadMeasurementUnit = false;
-    private oldMeasurementUnitDipsplay;
+    transformUnitEnable = false;
+    possibleUnitTransformations: UnitDescription[] = [];
+    selectUnit: UnitDescription;
+    allUnits: UnitDescription[];
+    currentUnitStateCtrl = new UntypedFormControl();
+    newUnitStateCtrl = new UntypedFormControl();
+    filteredUnits: Observable<UnitDescription[]>;
 
     constructor(
-        private formBuilder: UntypedFormBuilder,
         private restService: RestService,
         private unitProviderService: UnitProviderService,
     ) {
-        this.allUnits = this.unitProviderService.getUnits();
-        this.filteredUnits = this.stateCtrl.valueChanges.pipe(
+        this.allUnits = this.unitProviderService
+            .getUnits()
+            .sort((a, b) => a.label.localeCompare(b.label));
+        this.filteredUnits = this.currentUnitStateCtrl.valueChanges.pipe(
             startWith(''),
             map(unit =>
                 unit ? this._filteredUnits(unit) : this.allUnits.slice(),
             ),
         );
+        this.currentUnitStateCtrl.valueChanges.subscribe(val => {
+            const unitResource =
+                val === '' ? undefined : this.findUnitByLabel(val).resource;
+            if (!this.cachedProperty.additionalMetadata.toMeasurementUnit) {
+                this.cachedProperty.measurementUnit = unitResource;
+            }
+            this.cachedProperty.additionalMetadata.fromMeasurementUnit =
+                unitResource;
+        });
     }
 
     protected open = false;
 
     ngOnInit() {
-        //   this.cachedProperty.propertyNumber = this.index;
-        if ((this.cachedProperty as any).measurementUnitTmp !== undefined) {
-            (this.cachedProperty as any).oldMeasurementUnit = (
-                this.cachedProperty as any
-            ).oldMeasurementUnit;
-            // TODO: use if backend deserialize URI correct
-            (this.cachedProperty as any).measurementUnitTmp = (
-                this.cachedProperty as any
-            ).measurementUnitTmp;
-            this.hadMeasurementUnit = (
-                this.cachedProperty as any
-            ).hadMeasarumentUnit;
-            this.transformUnitEnable = (
-                this.cachedProperty as any
-            ).hadMeasarumentUnit;
+        if (this.cachedProperty.measurementUnit) {
+            const sourceUnit = this.cachedProperty.additionalMetadata
+                .toMeasurementUnit
+                ? this.cachedProperty.additionalMetadata.fromMeasurementUnit
+                : this.cachedProperty.measurementUnit;
             const unit = this.allUnits.find(
-                unitTmp =>
-                    unitTmp.resource ===
-                    (this.cachedProperty as any).oldMeasurementUnit,
+                unitTmp => unitTmp.resource === sourceUnit,
             );
-            this.oldMeasurementUnitDipsplay = unit.label;
-            this.stateCtrl.setValue(unit.label);
+            this.transformUnitEnable = true;
+            this.currentUnitStateCtrl.setValue(unit.label);
 
             this.restService.getFittingUnits(unit).subscribe(result => {
                 this.possibleUnitTransformations = result;
-                // this.selectUnit = this.possibleUnitTransformations[0];
-                this.selectUnit = this.allUnits.find(
-                    unitTmp =>
-                        unitTmp.resource ===
-                        (this.cachedProperty as any).measurementUnitTmp,
-                );
-                // this.transformUnitEnable = true;
-                this.changeTargetUnit(this.selectUnit);
+                if (
+                    this.cachedProperty.additionalMetadata &&
+                    this.cachedProperty.additionalMetadata.toMeasurementUnit
+                ) {
+                    this.selectUnit = this.allUnits.find(
+                        u =>
+                            u.resource ===
+                            this.cachedProperty.additionalMetadata
+                                .toMeasurementUnit,
+                    );
+                    this.changeTargetUnit(this.selectUnit);
+                    this.transformUnitEnable = true;
+                }
             });
         }
+    }
+
+    findUnitByLabel(label: string): UnitDescription {
+        return this.allUnits.find(unitTmp => unitTmp.label === label);
     }
 
     compareFn(c1: any, c2: any): boolean {
         return c1 && c2 ? c1.resource === c2.resource : c1 === c2;
     }
 
-    private transformUnit() {
+    transformUnit() {
         if (this.transformUnitEnable) {
             this.transformUnitEnable = false;
-            // TODO: use if backend deserialize URI correct
-            // this.cachedProperty.measurementUnit = this.cachedProperty.oldMeasurementUnit;
-            (this.cachedProperty as any).measurementUnitTmp = (
-                this.cachedProperty as any
-            ).oldMeasurementUnit;
-            (this.cachedProperty as any).hadMeasarumentUnit = false;
+            this.cachedProperty.additionalMetadata.toMeasurementUnit =
+                undefined;
         } else {
             const unit = this.allUnits.find(
-                unitTmp => unitTmp.label === this.stateCtrl.value,
+                unitTmp => unitTmp.label === this.currentUnitStateCtrl.value,
             );
-            (this.cachedProperty as any).hadMeasarumentUnit = true;
             if (!unit) {
                 return;
             }
@@ -136,7 +137,7 @@ export class EditUnitTransformationComponent implements OnInit {
         }
     }
 
-    private _filteredUnits(value: string): UnitDescription[] {
+    _filteredUnits(value: string): UnitDescription[] {
         const filterValue = value.toLowerCase();
         const units: UnitDescription[] = this.allUnits.filter(
             unit => unit.label.toLowerCase().indexOf(filterValue) === 0,
@@ -145,34 +146,24 @@ export class EditUnitTransformationComponent implements OnInit {
             unit => unit.label.toLocaleLowerCase() === filterValue,
         )[0];
         if (unit !== undefined) {
-            (this.cachedProperty as any).oldMeasurementUnit = unit.resource;
-            (this.cachedProperty as any).measurementUnitTmp = unit.resource;
-            // TODO: use if backend deserialize URI correct
-            //   this.cachedProperty.measurementUnit = units.resource;
+            this.cachedProperty.measurementUnit = unit.resource;
         } else {
-            (this.cachedProperty as any).oldMeasurementUnit = undefined;
-            (this.cachedProperty as any).measurementUnitTmp = undefined;
-            // TODO: use if backend deserialize URI correct
-            //   this.cachedProperty.measurementUnit = undefined;
+            this.cachedProperty.measurementUnit = undefined;
         }
         return units;
     }
 
-    changeTargetUnit(unit: UnitDescription) {
-        // TODO: use if backend deserialize URI correct
-        // this.cachedProperty.measurementUnit = unit.resource;
-        (this.cachedProperty as any).measurementUnitTmp = unit.resource;
-        this.newUnitStateCtrl.setValue(unit);
+    changeSourceUnit(unit: UnitDescription) {
+        this.cachedProperty.measurementUnit = unit.resource;
+        this.cachedProperty.additionalMetadata.fromMeasurementUnit =
+            unit.resource;
+        this.currentUnitStateCtrl.setValue(unit.label);
     }
 
-    // setShowUnitTransformation() {
-    //   this.hideUnitTransformation = this.isTimestampProperty ||
-    //     !this.dataTypesService.isNumeric(this.cachedProperty.runtimeType);
-    //
-    //   if (this.dataTypesService.isNumeric(this.cachedProperty.runtimeType)) {
-    //     this.isNumericDataType.emit(true);
-    //   } else {
-    //     this.isNumericDataType.emit(false);
-    //   }
-    // }
+    changeTargetUnit(unit: UnitDescription) {
+        this.cachedProperty.measurementUnit = unit.resource;
+        this.cachedProperty.additionalMetadata.toMeasurementUnit =
+            unit.resource;
+        this.newUnitStateCtrl.setValue(unit);
+    }
 }

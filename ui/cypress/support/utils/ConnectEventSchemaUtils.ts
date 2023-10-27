@@ -121,10 +121,16 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('edit-' + propertyName.toLowerCase(), {
             timeout: 10000,
         }).click({ force: true });
-        cy.dataCy('connect-schema-unit-from-input', { timeout: 10000 }).should(
-            'have.value',
-            fromUnit,
-        );
+
+        cy.dataCy('connect-schema-unit-from-dropdown').eq(0).clear();
+        cy.dataCy('connect-schema-unit-from-dropdown').eq(0).type(fromUnit);
+        cy.dataCy('connect-schema-unit-from-dropdown', {
+            timeout: 10000,
+        }).should('have.value', fromUnit);
+        //cy.dataCy("connect-schema-unit-transform-btn").click();
+        cy.dataCy('connect-schema-unit-to-dropdown')
+            .contains(toUnit)
+            .click({ force: true });
         cy.dataCy('connect-schema-unit-to-dropdown', {
             timeout: 10000,
         }).contains(toUnit);
@@ -133,7 +139,7 @@ export class ConnectEventSchemaUtils {
             'have.length',
             1,
         );
-        cy.dataCy('sp-save-edit-property').click();
+        cy.dataCy('sp-save-edit-property').click({ force: true });
     }
 
     public static addStaticProperty(
@@ -146,12 +152,15 @@ export class ConnectEventSchemaUtils {
         cy.wait(100);
 
         // Edit new property
-        cy.dataCy('edit-key_0', { timeout: 10000 }).click();
-
-        cy.dataCy('connect-edit-field-runtime-name', { timeout: 10000 }).type(
+        cy.dataCy('connect-add-field-name', { timeout: 10000 }).type(
             '{backspace}{backspace}{backspace}{backspace}{backspace}' +
                 propertyName,
         );
+        cy.dataCy('connect-add-field-name-button').click();
+
+        cy.dataCy('edit-' + propertyName.toLowerCase()).click();
+
+        cy.dataCy('connect-edit-field-static-value').clear();
         cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).type(
             propertyValue,
         );
@@ -212,7 +221,7 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should(
             'be.visible',
         );
-        cy.get('#event-schema-next-button').click();
+        cy.dataCy('sp-event-schema-next-button').click();
     }
 
     public static clickEditProperty(propertyName: string) {

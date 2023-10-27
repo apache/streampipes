@@ -72,28 +72,6 @@ services:
     networks:
       spnet:
 
-  sources-watertank-simulator:
-    build:
-      context: ./streampipes-sources-watertank-simulator
-      dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_sources-watertank-simulator:release-validation
-    logging: *default-logging
-    networks:
-      spnet:
-
-  sources-vehicle-simulator:
-    build:
-      context: ./streampipes-sources-vehicle-simulator
-      dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_sources-vehicle-simulator:release-validation
-    logging: *default-logging
-    networks:
-      spnet:
-
 volumes:
   files:
 

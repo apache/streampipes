@@ -36,7 +36,7 @@ public class PrepareStep extends AbstractPipelineValidationStep {
                     Set<InvocableStreamPipesEntity> allTargets,
                     List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
     if (target instanceof DataProcessorInvocation) {
-      if (target.getInputStreams() == null) {
+      if (target.getInputStreams() == null || target.getInputStreams().isEmpty()) {
         target.setInputStreams(new ArrayList<>());
         for (int i = 0; i < target.getStreamRequirements().size(); i++) {
           target.getInputStreams().add(new SpDataStream());
