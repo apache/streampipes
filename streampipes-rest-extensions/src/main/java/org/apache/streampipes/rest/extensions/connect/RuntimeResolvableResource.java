@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
@@ -65,7 +66,7 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
       }
     } catch (SpConfigurationException e) {
       return jakarta.ws.rs.core.Response
-          .status(400)
+          .status(HttpStatus.SC_BAD_REQUEST)
           .entity(e)
           .build();
     }

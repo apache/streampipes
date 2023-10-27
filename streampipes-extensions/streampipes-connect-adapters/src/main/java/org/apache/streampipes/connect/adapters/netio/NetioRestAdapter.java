@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.netio;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;
 import org.apache.streampipes.connect.adapters.netio.model.NetioPowerOutput;
@@ -159,7 +160,7 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
       requestData();
       return NetioUtils.getNetioSchema();
     } catch (IOException e) {
-      if (e instanceof HttpResponseException && ((HttpResponseException) e).getStatusCode() == 401) {
+      if (e instanceof HttpResponseException && ((HttpResponseException) e).getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
         throw new AdapterException(
             "Unauthorized! Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
       } else {

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.ShortUserInfo;
 import org.apache.streampipes.model.client.user.ChangePasswordRequest;
@@ -241,7 +242,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       }
     }
 
-    return Response.status(401).build();
+    return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
   }
 
   @PUT

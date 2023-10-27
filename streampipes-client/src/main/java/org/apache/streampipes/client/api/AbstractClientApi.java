@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.client.api;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.client.http.DeleteRequest;
 import org.apache.streampipes.client.http.GetRequest;
 import org.apache.streampipes.client.http.PostRequestWithPayloadResponse;
@@ -89,7 +90,7 @@ public class AbstractClientApi {
       ObjectSerializer<Void, T> serializer = new ObjectSerializer<>();
       return Optional.of(new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest());
     } catch (SpHttpErrorStatusCode e) {
-      if (e.getHttpStatusCode() == 404) {
+      if (e.getHttpStatusCode() == HttpStatus.SC_NOT_FOUND) {
         return Optional.empty();
       } else {
         throw e;

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.client.api;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.client.http.GetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.ListSerializer;
@@ -47,7 +48,7 @@ public abstract class AbstractTypedClientApi<T> extends AbstractClientApi {
     try {
       return Optional.of(new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest());
     } catch (SpHttpErrorStatusCode e) {
-      if (e.getHttpStatusCode() == 404) {
+      if (e.getHttpStatusCode() == HttpStatus.SC_NOT_FOUND) {
         return Optional.empty();
       } else {
         throw e;

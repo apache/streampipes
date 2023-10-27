@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -130,11 +131,11 @@ public abstract class InvocablePipelineElementResource<
             new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
         return ok(responseOptions);
       } else {
-        return jakarta.ws.rs.core.Response.status(500).build();
+        return jakarta.ws.rs.core.Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
       }
     } catch (SpConfigurationException e) {
       return jakarta.ws.rs.core.Response
-          .status(400)
+          .status(HttpStatus.SC_BAD_REQUEST)
           .entity(e)
           .build();
     }

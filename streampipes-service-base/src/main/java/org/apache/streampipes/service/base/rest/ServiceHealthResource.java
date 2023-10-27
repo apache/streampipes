@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.service.base.rest;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 
 import jakarta.ws.rs.GET;
@@ -34,7 +35,7 @@ public class ServiceHealthResource {
     if (serviceId.equals(StreamPipesServiceBase.AUTO_GENERATED_SERVICE_ID)) {
       return Response.ok().build();
     } else {
-      return Response.status(404).build();
+      return Response.status(HttpStatus.SC_NOT_FOUND).build();
     }
   }
 }

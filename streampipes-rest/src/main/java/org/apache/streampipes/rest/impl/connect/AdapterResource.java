@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
@@ -167,7 +168,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         return ok(Notifications.error(e.getMessage()));
       }
     } else {
-      return Response.status(409).entity(pipelinesUsingAdapter).build();
+      return Response.status(HttpStatus.SC_CONFLICT).entity(pipelinesUsingAdapter).build();
     }
   }
 

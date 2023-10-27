@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.extensions;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
@@ -88,7 +89,7 @@ public abstract class AbstractPipelineElementResource<
       return ok(Resources.toByteArray(iconUrl));
     } catch (IllegalArgumentException e) {
       LOG.warn("No icon resource found for pipeline element {}", appId);
-      return Response.status(400).build();
+      return Response.status(HttpStatus.SC_BAD_REQUEST).build();
     }
   }
 
@@ -101,7 +102,7 @@ public abstract class AbstractPipelineElementResource<
       return ok(Resources.toString(documentationUrl, Charsets.UTF_8));
     } catch (IllegalArgumentException e) {
       LOG.warn("No documentation resource found for pipeline element {}", elementId);
-      return Response.status(400).build();
+      return Response.status(HttpStatus.SC_BAD_REQUEST).build();
     }
   }
 

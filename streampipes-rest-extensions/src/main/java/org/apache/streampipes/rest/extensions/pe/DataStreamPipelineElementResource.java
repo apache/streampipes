@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
+import org.apache.http.HttpStatus;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
@@ -50,7 +51,7 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
               .getIncludedAssets()).makeZip());
     } catch (IOException e) {
       e.printStackTrace();
-      return jakarta.ws.rs.core.Response.status(500).build();
+      return jakarta.ws.rs.core.Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
     }
   }
 
