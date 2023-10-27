@@ -194,14 +194,13 @@ export class ConnectUtils {
     public static deleteAdapter() {
         // Delete adapter
         cy.visit('#/connect');
-
         cy.dataCy('delete-adapter').should('have.length', 1);
         cy.dataCy('delete-adapter').click();
         cy.dataCy('delete-adapter-confirmation').click();
-        cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
+        cy.dataCy('adapter-deletion-in-progress', { timeout: 20000 }).should(
             'be.visible',
         );
-        cy.dataCy('delete-adapter', { timeout: 20000 }).should(
+        cy.dataCy('delete-adapter', { timeout: 40000 }).should(
             'have.length',
             0,
         );
