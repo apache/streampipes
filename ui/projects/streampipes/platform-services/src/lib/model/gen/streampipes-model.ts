@@ -1,32 +1,15 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-24 20:02:02.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-27 10:43:45.
 
 export class NamedStreamPipesEntity {
     '@class':
-        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
+        | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
+        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
         | 'org.apache.streampipes.model.graph.DataSinkInvocation';
@@ -81,7 +64,30 @@ export class NamedStreamPipesEntity {
     }
 }
 
-export class AdapterDescription extends NamedStreamPipesEntity {
+export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
+    '@class':
+        | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
+        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
+        | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
+        | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
+        | 'org.apache.streampipes.model.graph.DataSinkInvocation';
+    'version': number;
+
+    static 'fromData'(
+        data: VersionedNamedStreamPipesEntity,
+        target?: VersionedNamedStreamPipesEntity,
+    ): VersionedNamedStreamPipesEntity {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new VersionedNamedStreamPipesEntity();
+        super.fromData(data, instance);
+        instance.version = data.version;
+        return instance;
+    }
+}
+
+export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
     'category': string[];
     'config': StaticPropertyUnion[];
@@ -101,7 +107,6 @@ export class AdapterDescription extends NamedStreamPipesEntity {
     'selectedEndpointUrl': string;
     'streamRules': TransformationRuleDescriptionUnion[];
     'valueRules': TransformationRuleDescriptionUnion[];
-    'version': number;
 
     static 'fromData'(
         data: AdapterDescription,
@@ -140,7 +145,6 @@ export class AdapterDescription extends NamedStreamPipesEntity {
         instance.valueRules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
         )(data.valueRules);
-        instance.version = data.version;
         return instance;
     }
 }
@@ -1160,7 +1164,7 @@ export class DataLakeMeasure {
 }
 
 export class InvocableStreamPipesEntity
-    extends NamedStreamPipesEntity
+    extends VersionedNamedStreamPipesEntity
     implements EndpointSelectable
 {
     '@class':
@@ -1174,6 +1178,7 @@ export class InvocableStreamPipesEntity
     'detachPath': string;
     'inputStreams': SpDataStream[];
     'selectedEndpointUrl': string;
+    'serviceTagPrefix': SpServiceTagPrefix;
     'staticProperties': StaticPropertyUnion[];
     'statusInfoSettings': ElementStatusInfoSettings;
     'streamRequirements': SpDataStream[];
@@ -1198,6 +1203,7 @@ export class InvocableStreamPipesEntity
             data.inputStreams,
         );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        instance.serviceTagPrefix = data.serviceTagPrefix;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
