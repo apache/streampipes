@@ -479,7 +479,8 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                   var requestUrl = getRequestUrl(config.modelType(), config.targetAppId(), serviceUrl);
                   performUpdate(requestUrl);
                 }
-        );
+        )
+        .toList();
   }
 
   /**
@@ -488,7 +489,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
    * @param entityType Type of the entity to be updated.
    * @param appId      AppId of the entity to be updated
    * @param serviceUrl URL of the extensions service to which the entity belongs
-   * @return
+   * @return URL of the endpoint that provides the description for the given entity
    */
   protected String getRequestUrl(SpServiceTagPrefix entityType, String appId, String serviceUrl) {
 
