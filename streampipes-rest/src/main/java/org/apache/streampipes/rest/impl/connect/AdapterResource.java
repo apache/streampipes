@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -28,21 +29,25 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/v2/connect/master/adapters")
@@ -155,7 +160,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_DELETE_ADAPTER_PRIVILEGE)
-  public Response deleteAdapter(@PathParam("id") String elementId) {
+  public Response deleteAdapter(@PathParam("id") String elementId,
+                                @QueryParam("deleteAssociatedPipelines") @DefaultValue("false")
+                                boolean deleteAssociatedPipelines) {
     List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
 
     if (pipelinesUsingAdapter.isEmpty()) {
@@ -166,8 +173,27 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         LOG.error("Error while deleting adapter with id " + elementId, e);
         return ok(Notifications.error(e.getMessage()));
       }
+    } else if (!deleteAssociatedPipelines) {
+      List<String> namesOfPipelinesUsingAdapter = new ArrayList<String>();
+      for (String pipelineId : pipelinesUsingAdapter) {
+        namesOfPipelinesUsingAdapter.add(
+            StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipelineId).getName());
+      }
+      return Response.status(HttpStatus.SC_CONFLICT).entity(String.join(", ", namesOfPipelinesUsingAdapter)).build();
     } else {
-      return Response.status(409).entity(pipelinesUsingAdapter).build();
+      try {
+        // first stop and delete all associated pipelines
+        for (String pipelineId : pipelinesUsingAdapter) {
+          PipelineManager.stopPipeline(pipelineId, false);
+          PipelineManager.deletePipeline(pipelineId);
+        }
+        managementService.deleteAdapter(elementId);
+        return ok(Notifications.success(
+            "Adapter with id: " + elementId + " and all pipelines using the adapter are deleted."));
+      } catch (Exception e) {
+        LOG.error("Error while deleting adapter with id " + elementId + " and all pipelines using the adapter", e);
+        return ok(Notifications.error(e.getMessage()));
+      }
     }
   }
 
