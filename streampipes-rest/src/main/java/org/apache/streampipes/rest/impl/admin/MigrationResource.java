@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -67,10 +68,10 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final IPipelineStorage pipelineStorage = getNoSqlStorage().getPipelineStorageAPI();
 
   @POST
-  @Path("adapter/{serviceId}")
+  @Path("{serviceId}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Operation(
-      summary = "Migrate adapters based on migration configs", tags = {"Core", "Migration"},
+      summary = "Migrate adapters and pipeline elements based on migration configs", tags = {"Core", "Migration"},
       responses = {
           @ApiResponse(
               responseCode = "" + HttpStatus.SC_OK,
@@ -78,7 +79,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                   + "the corresponding actions are taken.")
       }
   )
-  public Response registerAdapterMigrations(
+  public Response performMigrations(
       @Parameter(
           in = ParameterIn.PATH,
           description = "the id of the extensions service that requests migrations",
@@ -92,41 +93,26 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       List<ModelMigratorConfig> migrationConfigs) {
 
     var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
-    new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, migrationConfigs);
-    return ok();
-  }
+    var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
+    var pipelineElementMigrations = filterConfigs(
+        migrationConfigs,
+        List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
+    );
 
-  @POST
-  @Path("pipeline-element/{serviceId}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Operation(
-      summary = "Migrate pipeline elements based on migration configs", tags = {"Core", "Migration"},
-      responses = {
-          @ApiResponse(
-              responseCode = "200" + HttpStatus.SC_OK,
-              description = "All provided migrations are handled. "
-                  + "If an error appeared, the corresponding actions are taken."
-          )
-      }
-  )
-  public Response registerPipelineElementMigrations(
-      @Parameter(
-          in = ParameterIn.PATH,
-          description = "the id of the extensions service that requests migrations",
-          required = true
-      )
-      @PathParam("serviceId") String serviceId,
-      @Parameter(
-          description = "list of config that describe the requested migrations"
-      )
-      List<ModelMigratorConfig> migrationConfigs) {
-
-    var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
+    new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
     new PipelineElementMigrationManager(
         pipelineStorage,
         dataProcessorStorage,
         dataSinkStorage)
-        .handleMigrations(extensionsServiceConfig, migrationConfigs);
+        .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
     return ok();
+  }
+
+  private List<ModelMigratorConfig> filterConfigs(List<ModelMigratorConfig> migrationConfigs,
+                                                       List<SpServiceTagPrefix> modelTypes) {
+    return migrationConfigs
+        .stream()
+        .filter(config -> modelTypes.stream().anyMatch(modelType -> modelType == config.modelType()))
+        .toList();
   }
 }
