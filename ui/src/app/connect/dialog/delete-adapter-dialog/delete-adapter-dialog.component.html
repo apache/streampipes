@@ -18,19 +18,37 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div *ngIf="!isInProgress && adapterUsedByPipeline" fxLayout="column">
+        <div
+            *ngIf="!isInProgress && adapterUsedByPipeline"
+            fxLayout="column"
+            style="width: 100%"
+        >
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b
-                    ><h4>
-                        This adapter is currently used by
-                        {{ numberOfPipelinesWithAdapter }} pipeline{{
-                            numberOfPipelinesWithAdapter === 1 ? '' : 's'
-                        }}.
-                    </h4></b
+                <b>
+                    <h4>
+                        The adapter is currently used by these pipelines:
+                        {{ namesOfPipelinesUsingAdapter }}
+                    </h4>
+                    <h4>
+                        You need to delete these pipelines first before deleting
+                        the adapter.
+                    </h4>
+                    <h4>
+                        Do you want to delete all associated pipelines and the
+                        adapter?
+                    </h4>
+                </b>
+            </div>
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    (click)="deleteAdapter(true)"
+                    data-cy="delete-adapter-and-associated-pipelines-confirmation"
                 >
-                <h5>
-                    Delete these pipelines first before deleting the adapter.
-                </h5>
+                    DELETE ALL
+                </button>
             </div>
         </div>
         <div *ngIf="!isInProgress && !adapterUsedByPipeline" fxLayout="column">
@@ -48,7 +66,7 @@
                     mat-button
                     mat-raised-button
                     color="accent"
-                    (click)="deleteAdapter()"
+                    (click)="deleteAdapter(false)"
                     data-cy="delete-adapter-confirmation"
                 >
                     Delete adapter

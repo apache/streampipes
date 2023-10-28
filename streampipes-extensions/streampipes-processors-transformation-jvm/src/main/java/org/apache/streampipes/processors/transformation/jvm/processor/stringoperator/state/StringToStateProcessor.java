@@ -21,7 +21,6 @@ package org.apache.streampipes.processors.transformation.jvm.processor.stringope
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -44,8 +43,6 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public class StringToStateProcessor extends StreamPipesDataProcessor {
-
-  private static Logger log;
 
   public static final String STRING_STATE_FIELD = "string_state_field";
 
@@ -74,7 +71,6 @@ public class StringToStateProcessor extends StreamPipesDataProcessor {
   public void onInvocation(ProcessorParams parameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    log = parameters.getGraph().getLogger(StringToStateProcessor.class);
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.stateFields = extractor.mappingPropertyValues(STRING_STATE_FIELD);
   }
