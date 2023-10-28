@@ -21,7 +21,6 @@ package org.apache.streampipes.extensions.connectors.influx.sink;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -35,6 +34,9 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.BATCH_INTERVAL_ACTIONS_KEY;
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.DATABASE_MEASUREMENT_KEY;
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.MAX_FLUSH_DURATION_KEY;
@@ -42,17 +44,16 @@ import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxK
 
 public class InfluxDbSink extends StreamPipesDataSink {
 
+  private static final Logger LOG = LoggerFactory.getLogger(InfluxDbSink.class);
 
   private InfluxDbClient influxDbClient;
 
-  private static Logger log;
 
   @Override
   public void onInvocation(SinkParams parameters,
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
     var extractor = parameters.extractor();
-    log = parameters.getModel().getLogger(InfluxDbSink.class);
 
     var connectionSettings = InfluxConfigs.fromExtractor(extractor);
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
@@ -76,7 +77,7 @@ public class InfluxDbSink extends StreamPipesDataSink {
     try {
       influxDbClient.save(event);
     } catch (SpRuntimeException e) {
-      log.error(e.getMessage());
+      LOG.error(e.getMessage());
     }
   }
 
