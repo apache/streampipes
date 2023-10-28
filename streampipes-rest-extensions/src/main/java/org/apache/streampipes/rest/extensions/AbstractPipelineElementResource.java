@@ -31,9 +31,9 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 
-import org.apache.http.HttpStatus;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

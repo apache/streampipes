@@ -161,7 +161,8 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
       requestData();
       return NetioUtils.getNetioSchema();
     } catch (IOException e) {
-      if (e instanceof HttpResponseException && ((HttpResponseException) e).getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+      if (e instanceof HttpResponseException && ((HttpResponseException) e).getStatusCode()
+              == HttpStatus.SC_UNAUTHORIZED) {
         throw new AdapterException(
             "Unauthorized! Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
       } else {
