@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.extensions;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
@@ -32,6 +31,7 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 
+import org.apache.http.HttpStatus;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.slf4j.Logger;

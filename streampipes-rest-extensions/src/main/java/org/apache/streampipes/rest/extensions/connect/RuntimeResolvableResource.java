@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
@@ -29,6 +28,8 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
+
+import org.apache.http.HttpStatus;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;

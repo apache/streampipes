@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.ShortUserInfo;
 import org.apache.streampipes.model.client.user.ChangePasswordRequest;
@@ -35,6 +34,7 @@ import org.apache.streampipes.user.management.encryption.SecretEncryptionManager
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
+import org.apache.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

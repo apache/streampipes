@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.rest.extensions;
 
-import jakarta.ws.rs.core.Response;
 import org.apache.http.HttpStatus;
+
+import jakarta.ws.rs.core.Response;
 
 public class AbstractExtensionsResource {
 

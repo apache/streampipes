@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.management.management;
 
-import org.apache.http.HttpStatus;
+
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
@@ -35,6 +35,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
@@ -32,6 +31,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.apache.http.HttpStatus;
 
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;

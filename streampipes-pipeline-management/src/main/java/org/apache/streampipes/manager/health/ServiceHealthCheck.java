@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.manager.health;
 
-import org.apache.http.HttpStatus;
+
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

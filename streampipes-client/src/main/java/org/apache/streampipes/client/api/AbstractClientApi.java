@@ -32,6 +32,7 @@ import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 import org.apache.http.HttpStatus;
+
 import java.util.Optional;
 
 public class AbstractClientApi {

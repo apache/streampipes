@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
+
+import org.apache.http.HttpStatus;
 
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;

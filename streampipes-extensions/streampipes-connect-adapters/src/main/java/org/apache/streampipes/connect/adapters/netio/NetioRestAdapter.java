@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.netio;
 
-import org.apache.http.HttpStatus;
+
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;
 import org.apache.streampipes.connect.adapters.netio.model.NetioPowerOutput;
@@ -42,6 +42,7 @@ import org.apache.streampipes.sdk.utils.Assets;
 
 import com.google.gson.Gson;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;

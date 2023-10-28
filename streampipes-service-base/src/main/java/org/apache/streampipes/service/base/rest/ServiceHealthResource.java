@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.service.base.rest;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+import org.apache.http.HttpStatus;
 
 @Path("")
 public class ServiceHealthResource {

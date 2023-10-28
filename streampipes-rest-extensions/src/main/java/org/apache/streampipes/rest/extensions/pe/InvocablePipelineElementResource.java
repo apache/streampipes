@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -39,6 +38,7 @@ import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

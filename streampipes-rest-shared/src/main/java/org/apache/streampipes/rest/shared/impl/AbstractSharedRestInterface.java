@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.rest.shared.impl;
 
-import jakarta.ws.rs.core.Response;
 import org.apache.http.HttpStatus;
+
+import jakarta.ws.rs.core.Response;
 
 public abstract class AbstractSharedRestInterface {
 

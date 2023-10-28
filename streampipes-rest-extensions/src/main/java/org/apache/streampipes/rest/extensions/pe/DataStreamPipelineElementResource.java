@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
+
+import org.apache.http.HttpStatus;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
