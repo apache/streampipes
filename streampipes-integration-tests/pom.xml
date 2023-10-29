@@ -113,7 +113,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>fluent-hc</artifactId>
+      <artifactId>httpcore</artifactId>
     </dependency>
   </dependencies>
 
