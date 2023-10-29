@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
+            <artifactId>httpcore</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -99,6 +99,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <propertyExpansion>
+                        checkstyle.config.base.path=${project.parent.basedir}/tools/maven
+                    </propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>
