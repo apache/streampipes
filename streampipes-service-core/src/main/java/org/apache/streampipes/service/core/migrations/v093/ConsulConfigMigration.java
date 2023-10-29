@@ -22,6 +22,7 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.BackendConfigKeys;
 import org.apache.streampipes.model.configuration.DefaultMessagingSettings;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -71,6 +72,7 @@ public class ConsulConfigMigration implements Migration {
     newConf.setFilesDir(currConf.getFilesDir());
 
     newConf.setMessagingSettings(messagingSettings);
+    newConf.setServiceStatus(SpCoreConfigurationStatus.MIGRATING);
     storage.createElement(newConf);
   }
 

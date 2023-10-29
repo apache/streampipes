@@ -34,6 +34,11 @@ public class CoreConfigurationStorageImpl extends AbstractDao<SpCoreConfiguratio
   }
 
   @Override
+  public boolean exists() {
+    return !findAll().isEmpty();
+  }
+
+  @Override
   public List<SpCoreConfiguration> getAll() {
     return findAll();
   }

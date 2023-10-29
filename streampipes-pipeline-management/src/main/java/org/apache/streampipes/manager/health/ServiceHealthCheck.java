@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.health;
 
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -56,8 +57,8 @@ public class ServiceHealthCheck implements Runnable {
       if (response.returnResponse().getStatusLine().getStatusCode() != 200) {
         processUnhealthyService(service);
       } else {
-        if (!service.isHealthy()) {
-          service.setHealthy(true);
+        if (service.getStatus() == SpServiceStatus.UNHEALTHY) {
+          service.setStatus(SpServiceStatus.HEALTHY);
           updateService(service);
         }
       }
@@ -67,8 +68,8 @@ public class ServiceHealthCheck implements Runnable {
   }
 
   private void processUnhealthyService(SpServiceRegistration service) {
-    if (service.isHealthy()) {
-      service.setHealthy(false);
+    if (service.getStatus() == SpServiceStatus.HEALTHY) {
+      service.setStatus(SpServiceStatus.UNHEALTHY);
       service.setFirstTimeSeenUnhealthy(System.currentTimeMillis());
       updateService(service);
     }

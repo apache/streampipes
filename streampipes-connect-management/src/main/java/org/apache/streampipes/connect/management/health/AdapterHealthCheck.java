@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AdapterHealthCheck {
+public class AdapterHealthCheck implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthCheck.class);
 
@@ -50,6 +50,11 @@ public class AdapterHealthCheck {
                             AdapterMasterManagement adapterMasterManagement) {
     this.adapterStorage = adapterStorage;
     this.adapterMasterManagement = adapterMasterManagement;
+  }
+
+  @Override
+  public void run() {
+    this.checkAndRestoreAdapters();
   }
 
   /**
@@ -135,5 +140,4 @@ public class AdapterHealthCheck {
     }
 
   }
-
 }

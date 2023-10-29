@@ -16,23 +16,11 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.model.extensions.svcdiscovery;
 
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-
-import java.util.List;
-
-public interface ISpCoreConfigurationStorage {
-
-  boolean exists();
-
-  List<SpCoreConfiguration> getAll();
-
-  void createElement(SpCoreConfiguration element);
-
-  SpCoreConfiguration get();
-
-  SpCoreConfiguration updateElement(SpCoreConfiguration element);
-
-  void deleteElement();
+public enum SpServiceStatus {
+  REGISTERED,
+  MIGRATING,
+  HEALTHY,
+  UNHEALTHY
 }

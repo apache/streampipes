@@ -18,9 +18,13 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
+import org.apache.streampipes.manager.health.CoreServiceStatusManager;
+import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -67,6 +71,10 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final IDataSinkStorage dataSinkStorage = getNoSqlStorage().getDataSinkStorage();
   private final IPipelineStorage pipelineStorage = getNoSqlStorage().getPipelineStorageAPI();
 
+  private final CoreServiceStatusManager coreServiceStatusManager = new CoreServiceStatusManager(
+      getNoSqlStorage().getSpCoreConfigurationStorage()
+  );
+
   @POST
   @Path("{serviceId}")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -92,24 +100,39 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       )
       List<ModelMigratorConfig> migrationConfigs) {
 
-    var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
-    var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
-    var pipelineElementMigrations = filterConfigs(
-        migrationConfigs,
-        List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
-    );
+    var serviceManager = new ServiceRegistrationManager(extensionsServiceStorage);
+    var extensionsServiceConfig = serviceManager.getService(serviceId);
+    if (!migrationConfigs.isEmpty() && BackendConfig.INSTANCE.isConfigured()) {
+      if (serviceManager.isAnyServiceMigrating() || !isCoreReady()) {
+        LOG.info("Refusing migration request since precondition is not met.");
+        return Response.status(HttpStatus.SC_CONFLICT).build();
+      } else {
+        serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
+        var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
+        var pipelineElementMigrations = filterConfigs(
+            migrationConfigs,
+            List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
+        );
 
-    new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
-    new PipelineElementMigrationManager(
-        pipelineStorage,
-        dataProcessorStorage,
-        dataSinkStorage)
-        .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
+        new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
+        new PipelineElementMigrationManager(
+            pipelineStorage,
+            dataProcessorStorage,
+            dataSinkStorage)
+            .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
+      }
+    }
+    new ServiceRegistrationManager(extensionsServiceStorage)
+        .applyServiceStatus(extensionsServiceConfig.getSvcId(), SpServiceStatus.HEALTHY);
     return ok();
   }
 
+  private boolean isCoreReady() {
+    return coreServiceStatusManager.isCoreReady();
+  }
+
   private List<ModelMigratorConfig> filterConfigs(List<ModelMigratorConfig> migrationConfigs,
-                                                       List<SpServiceTagPrefix> modelTypes) {
+                                                  List<SpServiceTagPrefix> modelTypes) {
     return migrationConfigs
         .stream()
         .filter(config -> modelTypes.stream().anyMatch(modelType -> modelType == config.modelType()))

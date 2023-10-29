@@ -34,6 +34,7 @@ public class SpCoreConfiguration {
   private GeneralConfig generalConfig;
 
   private boolean isConfigured;
+  private SpCoreConfigurationStatus serviceStatus;
 
   private String assetDir;
   private String filesDir;
@@ -119,5 +120,13 @@ public class SpCoreConfiguration {
 
   public void setEmailTemplateConfig(EmailTemplateConfig emailTemplateConfig) {
     this.emailTemplateConfig = emailTemplateConfig;
+  }
+
+  public SpCoreConfigurationStatus getServiceStatus() {
+    return this.serviceStatus;
+  }
+
+  public void setServiceStatus(SpCoreConfigurationStatus serviceStatus) {
+    this.serviceStatus = serviceStatus;
   }
 }
