@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.extensions.api.migration;
 
-import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+public class MigrationComparison {
 
-public interface DataSinkMigrator extends IModelMigrator<DataSinkInvocation, IDataSinkParameterExtractor> {
+  public static boolean isEqual(IModelMigrator<?, ?> first, IModelMigrator<?, ?> second) {
+    return first.config().equals(second.config());
+  }
 }
+

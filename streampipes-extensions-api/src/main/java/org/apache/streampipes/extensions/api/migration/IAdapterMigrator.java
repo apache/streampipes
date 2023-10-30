@@ -21,13 +21,5 @@ package org.apache.streampipes.extensions.api.migration;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-public abstract class AdapterMigrator implements ModelMigrator<AdapterDescription, IStaticPropertyExtractor> {
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof ModelMigrator<?, ?>) {
-      return this.config().equals(((ModelMigrator<?, ?>) obj).config());
-    }
-    return false;
-  }
+public  interface IAdapterMigrator extends IModelMigrator<AdapterDescription, IStaticPropertyExtractor> {
 }
