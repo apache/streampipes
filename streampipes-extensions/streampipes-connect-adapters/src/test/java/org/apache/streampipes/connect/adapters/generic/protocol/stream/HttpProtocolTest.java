@@ -30,7 +30,7 @@ package org.apache.streampipes.connect.adapters.generic.protocol.stream;
 //
 //        stubFor(get(urlEqualTo("/"))
 //                .willReturn(aResponse()
-//                        .withStatus(200)
+//                        .withStatus(HttpStatus.SC_OK)
 //                        .withBody(expected)));
 //
 //
@@ -77,7 +77,7 @@ package org.apache.streampipes.connect.adapters.generic.protocol.stream;
 //
 //        stubFor(get(urlEqualTo("/"))
 //                .willReturn(aResponse()
-//                        .withStatus(200)
+//                        .withStatus(HttpStatus.SC_OK)
 //                        .withBody("Example response")));
 //
 //
