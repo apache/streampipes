@@ -18,6 +18,7 @@
 package org.apache.streampipes.mail.template;
 
 import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
+import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.LinkPart;
 import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import org.apache.streampipes.mail.utils.MailUtils;
@@ -54,9 +55,8 @@ public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
   }
 
   @Override
-  protected void addTemplateParts(Map<String, MailTemplatePart> templateParts) {
-    templateParts.put(DefaultPlaceholders.INNER.key(), MailTemplatePart.MAIL_TEMPLATE_INNER_BUTTON);
-    templateParts.put(DefaultPlaceholders.FOOTER.key(), MailTemplatePart.MAIL_TEMPLATE_FOOTER);
+  protected void configureTemplate(MailTemplateBuilder builder) {
+    builder.withInnerPart(MailTemplatePart.MAIL_TEMPLATE_INNER_BUTTON);
   }
 
   private String makeLink() {

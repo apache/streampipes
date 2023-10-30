@@ -40,7 +40,7 @@ import java.util.Properties;
 
 import static org.apache.streampipes.extensions.management.util.LocalesUtil.makePath;
 
-public class LabelGenerator {
+public class LabelGenerator<T extends NamedStreamPipesEntity> {
 
   private static final Logger LOG = LoggerFactory.getLogger(LabelGenerator.class);
 
@@ -48,13 +48,13 @@ public class LabelGenerator {
   private static final String Title = "title";
   private static final String Description = "description";
 
-  private NamedStreamPipesEntity desc;
+  private T desc;
 
-  public LabelGenerator(NamedStreamPipesEntity desc) {
+  public LabelGenerator(T desc) {
     this.desc = desc;
   }
 
-  public NamedStreamPipesEntity generateLabels() throws IOException {
+  public T generateLabels() throws IOException {
     if (existsLocalesFile()) {
       Properties props = makeProperties();
       desc.setName(getTitle(props, desc.getAppId()));

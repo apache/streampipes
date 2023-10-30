@@ -67,13 +67,16 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
             .setEventGrounding(selectedGrounding);
       }
 
-      target
-          .getInputStreams()
-          .get(getIndex(target))
-          .setEventGrounding(selectedGrounding);
+      if (!target.getInputStreams().isEmpty()) {
 
-      if (target.getInputStreams().size() > 1) {
-        this.visitorHistory.put(target.getDom(), 1);
+        target
+            .getInputStreams()
+            .get(getIndex(target))
+            .setEventGrounding(selectedGrounding);
+
+        if (target.getInputStreams().size() > 1) {
+          this.visitorHistory.put(target.getDom(), 1);
+        }
       }
     }
   }

@@ -62,6 +62,7 @@
                 color="accent"
                 *ngIf="editMode"
                 (click)="openManageAssetLinksDialog()"
+                data-cy="assets-manage-links-button"
             >
                 <i class="material-icons">add</i><span>&nbsp;Manage links</span>
             </button>
@@ -74,7 +75,12 @@
                 <i class="material-icons">add</i><span>&nbsp;Add link</span>
             </button>
         </div>
-        <div fxLayout="column" fxFlex="100" *ngIf="assetLinkTypes">
+        <div
+            fxLayout="column"
+            fxFlex="100"
+            *ngIf="assetLinkTypes"
+            data-cy="linked-resources-list"
+        >
             <div
                 fxLayout="column"
                 *ngFor="let link of asset.assetLinks; let i = index"

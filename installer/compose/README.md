@@ -48,6 +48,7 @@ We provide three options to get you going:
 - **default**: the standard installation, uses Kafka as internal message broker (recommended)
 - **nats**: the standard installation which uses Nats as message broker (recommended for new installations)
 - **full**:  contains experimental Flink wrappers
+- **quickstart**:  contains pre-configured sample assets, including pipelines, dashboards, and data views. We recommend first-time StreamPipes users to use the Quickstart mode to experience the convenience of StreamPipes in IIoT! （Recommended for first-time users)
 
 The ``nats`` version will become the default version in a later release. You can already try it for new installations, 
 but there's not yet an automatic migration from current Kafka-based installations to Nats.
@@ -57,7 +58,7 @@ but there's not yet an automatic migration from current Kafka-based installation
 
 ```bash
 docker-compose up -d
-# go to after all services are started http://localhost
+# go to `http://localhost` after all services are started
 ```
 After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [documentation](https://streampipes.apache.org/docs/docs/user-guide-introduction.html) to learn more about StreamPipes!
 
@@ -71,23 +72,32 @@ docker-compose down
 Starting the **nats** option works as follows:
 ```bash
 docker-compose -f docker-compose.nats.yml up -d
-# go to after all services are started http://localhost
+# go to `http://localhost` after all services are started
 ```
 Stopping the **nats** option:
 ```bash
 docker-compose -f docker-compose.nats.yml down
-#docker-compose -f docker-compose.nats.yml down
 ```
 
 Starting the **full** option is almost the same, just specify the `docker-compose.full.yml` file:
 ```bash
 docker-compose -f docker-compose.full.yml up -d
-# go to after all services are started http://localhost
+# go to `http://localhost` after all services are started
 ```
 Stopping the **full** option:
 ```bash
 docker-compose -f docker-compose.full.yml down
-#docker-compose -f docker-compose.full.yml down
+```
+
+We introduce quickstart deployment that comes with a set of predefined StreamPipes assets, to use the quickstart mode, just build the Docker image and start **quickstart** option:
+```bash
+docker-compose -f docker-compose.quickstart.yml build script-runner
+docker-compose -f docker-compose.quickstart.yml up -d
+# go to `http://localhost` after all services are started
+```
+Stopping the **quickstart** option:
+```bash
+docker-compose -f docker-compose.quickstart.yml down
 ```
 
 ## Update services

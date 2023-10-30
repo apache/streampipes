@@ -64,6 +64,7 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(element.elementId)"
+                        data-cy="manage-assets-select-adapters-checkbox"
                         (change)="
                             selectLink(
                                 $event.checked,
@@ -189,7 +190,7 @@
                 <div fxLayout="row" fxLayoutAlign="start center" class="mb-10">
                     <div fxLayout="row" fxLayoutAlign="start center">
                         <span class="general-options-header mb-0"
-                            >Data Sources</span
+                            >Data Streams</span
                         >
                     </div>
                     <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
@@ -227,6 +228,7 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(source.elementId)"
+                        data-cy="manage-assets-select-data-sources-checkbox"
                         (change)="
                             selectLink(
                                 $event.checked,
@@ -403,6 +405,7 @@
         <button
             mat-button
             mat-raised-button
+            data-cy="assets-update-links-button"
             color="accent"
             (click)="store()"
             style="margin-right: 10px"

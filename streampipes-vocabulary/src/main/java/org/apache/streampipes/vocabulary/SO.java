@@ -459,6 +459,7 @@ public class SO {
   public static final String VOLUME_NUMBER = "http://schema.org/volumeNumber";
   public static final String WARNING = "http://schema.org/warning";
   public static final String WEB_CHECKIN_TIME = "http://schema.org/webCheckinTime";
+  public static final String WEIGHT = "http://schema.org/weight";
   public static final String WORD_COUNT = "http://schema.org/wordCount";
   public static final String WORK_HOURS = "http://schema.org/workHours";
   public static final String WORKLOAD = "http://schema.org/workload";

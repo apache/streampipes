@@ -31,6 +31,7 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.util.EntityUtils;
@@ -41,21 +42,21 @@ import java.io.IOException;
 
 public class GuessManagement {
 
-  private static Logger logger = LoggerFactory.getLogger(GuessManagement.class);
-  private WorkerUrlProvider workerUrlProvider;
+  private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
+  private final WorkerUrlProvider workerUrlProvider;
+  private final ObjectMapper objectMapper;
 
   public GuessManagement() {
     this.workerUrlProvider = new WorkerUrlProvider();
+    this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
-    var workerUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
-    workerUrl = workerUrl + WorkerPaths.getGuessSchemaPath();
-
-    var objectMapper = JacksonSerializer.getObjectMapper();
+    var workerUrl = getWorkerUrl(adapterDescription.getAppId());
     var description = objectMapper.writeValueAsString(adapterDescription);
-    logger.info("Guess schema at: " + workerUrl);
+
+    LOG.info("Guess schema at: " + workerUrl);
     Response requestResponse = ExtensionServiceExecutions
         .extServicePostRequest(workerUrl, description)
         .execute();
@@ -69,6 +70,11 @@ public class GuessManagement {
       var exception = objectMapper.readValue(responseString, SpConfigurationException.class);
       throw new WorkerAdapterException(exception.getMessage(), exception.getCause());
     }
+  }
+
+  private String getWorkerUrl(String appId) throws NoServiceEndpointsAvailableException {
+    var baseUrl = workerUrlProvider.getWorkerBaseUrl(appId);
+    return baseUrl + WorkerPaths.getGuessSchemaPath();
   }
 
   public String performAdapterEventPreview(AdapterEventPreview previewRequest) throws JsonProcessingException {

@@ -16,14 +16,7 @@
  *
  */
 
-import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { RestApi } from '../../../services/rest-api.service';
 import {
     PeCategory,
@@ -44,11 +37,8 @@ export class PipelineElementIconStandComponent
 {
     availableTypes = [
         {
-            title: 'Data Sources',
-            filters: [
-                PipelineElementType.DataStream,
-                PipelineElementType.DataSet,
-            ],
+            title: 'Data Streams',
+            filters: [PipelineElementType.DataStream],
             open: true,
             color: 'var(--color-stream)',
             sort: 'name',
@@ -71,9 +61,6 @@ export class PipelineElementIconStandComponent
 
     @Input()
     allElements: PipelineElementUnion[];
-
-    @Output()
-    startTourEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     elementFilter = '';
     allCategories: Map<PipelineElementType, PeCategory[]> = new Map();
@@ -178,10 +165,6 @@ export class PipelineElementIconStandComponent
     toggleOpen(availableType: any): void {
         availableType.open = !availableType.open;
         this.makeDraggable();
-    }
-
-    startCreatePipelineTour() {
-        this.startTourEmitter.emit();
     }
 
     changeSorting(availableType: any, sortMode: string) {

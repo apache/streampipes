@@ -62,11 +62,11 @@ public class SpOpcUaConfigExtractor {
     return config;
   }
 
-  public static OpcUaConfig extractSinkConfig(IParameterExtractor<?> extractor) {
+  public static OpcUaConfig extractSinkConfig(IParameterExtractor extractor) {
     return extractSharedConfig(extractor, new OpcUaConfig());
   }
 
-  public static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor<?> extractor,
+  public static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor extractor,
                                                                T config) {
 
     String selectedAlternativeConnection =

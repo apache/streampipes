@@ -18,21 +18,28 @@
 
 package org.apache.streampipes.connect.management.management;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
 import org.apache.streampipes.connect.management.health.AdapterOperationLock;
+import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class WorkerAdministrationManagement {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WorkerAdministrationManagement.class);
   private static final int MAX_RETRIES = 7;
 
   private final IAdapterStorage adapterDescriptionStorage;
@@ -44,24 +51,7 @@ public class WorkerAdministrationManagement {
     this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
   }
 
-  public void register(List<AdapterDescription> availableAdapterDescription) {
-    List<AdapterDescription> alreadyRegisteredAdapters = this.adapterDescriptionStorage.getAllAdapters();
-
-    availableAdapterDescription.forEach(adapterDescription -> {
-
-      // only install once adapter description per service group
-      boolean alreadyInstalled =
-          alreadyRegisteredAdapters.stream().anyMatch(a -> a.getAppId().equals(adapterDescription.getAppId()));
-      if (!alreadyInstalled) {
-        this.adapterDescriptionStorage.storeAdapter(adapterDescription);
-      }
-    });
-
-    int retryCount = 0;
-    checkAndRestore(retryCount);
-  }
-
-  private void checkAndRestore(int retryCount) {
+  public void checkAndRestore(int retryCount) {
     if (AdapterOperationLock.INSTANCE.isLocked()) {
       LOG.info("Adapter operation already in progress, {}/{}", (retryCount + 1), MAX_RETRIES);
       if (retryCount <= MAX_RETRIES) {
@@ -82,5 +72,33 @@ public class WorkerAdministrationManagement {
       this.adapterHealthCheck.checkAndRestoreAdapters();
       AdapterOperationLock.INSTANCE.unlock();
     }
+  }
+
+  public void performAdapterMigrations(List<SpServiceTag> tags) {
+    var installedAdapters = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage().getAllAdapters();
+    var adminSid = new SpResourceManager().manageUsers().getAdminUser().getPrincipalId();
+    installedAdapters.stream()
+        .filter(adapter -> tags.stream().anyMatch(tag -> tag.getValue().equals(adapter.getAppId())))
+        .forEach(adapter -> {
+          if (!AssetManager.existsAssetDir(adapter.getAppId())) {
+            try {
+              LOG.info("Updating assets for adapter {}", adapter.getAppId());
+              AssetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId());
+            } catch (IOException | NoServiceEndpointsAvailableException e) {
+              LOG.error(
+                  "Could not fetch asset for adapter {}, please try to manually update this adapter.",
+                  adapter.getAppId(),
+                  e);
+            }
+          }
+          var permissionStorage = CouchDbStorageManager.INSTANCE.getPermissionStorage();
+          var elementId = adapter.getElementId();
+          var permissions = permissionStorage.getUserPermissionsForObject(elementId);
+          if (permissions.isEmpty()) {
+            LOG.info("Adding default permission for adapter {}", adapter.getAppId());
+            new PermissionResourceManager()
+                .createDefault(elementId, AdapterDescription.class, adminSid, true);
+          }
+        });
   }
 }

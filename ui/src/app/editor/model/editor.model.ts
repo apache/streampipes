@@ -64,7 +64,6 @@ export interface PipelineElementRecommendationLayout {
 }
 
 export enum PipelineElementType {
-    DataSet,
     DataStream,
     DataProcessor,
     DataSink,

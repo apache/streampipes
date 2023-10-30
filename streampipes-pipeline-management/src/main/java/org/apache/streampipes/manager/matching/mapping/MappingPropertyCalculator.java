@@ -28,14 +28,12 @@ import java.util.List;
 
 public class MappingPropertyCalculator {
 
-  private EventSchema schema;
-  private List<String> availablePropertySelectors;
-  private EventProperty requirement;
+  private final EventSchema schema;
+  private final List<String> availablePropertySelectors;
+  private final EventProperty requirement;
 
-  public MappingPropertyCalculator() {
-  }
-
-  public MappingPropertyCalculator(EventSchema schema, List<String> availablePropertySelectors,
+  public MappingPropertyCalculator(EventSchema schema,
+                                   List<String> availablePropertySelectors,
                                    EventProperty requirement) {
     this.schema = schema;
     this.availablePropertySelectors = availablePropertySelectors;

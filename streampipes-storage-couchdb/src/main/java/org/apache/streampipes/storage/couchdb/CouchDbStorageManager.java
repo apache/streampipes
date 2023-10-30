@@ -42,7 +42,7 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineMonitoringDataStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
@@ -212,7 +212,7 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IPipelineElementDescriptionStorageCache getPipelineElementDescriptionStorage() {
+  public IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage() {
     return new PipelineElementDescriptionStorageImpl();
   }
 

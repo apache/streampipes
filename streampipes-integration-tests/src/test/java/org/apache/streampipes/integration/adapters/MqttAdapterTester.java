@@ -19,9 +19,10 @@
 package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.connect.iiot.protocol.stream.MqttProtocol;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
+import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 import org.apache.streampipes.integration.containers.MosquittoContainer;
 import org.apache.streampipes.integration.containers.MosquittoDevContainer;
 import org.apache.streampipes.integration.utils.Utils;
@@ -31,7 +32,6 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
-import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

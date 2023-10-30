@@ -251,6 +251,10 @@ export class PipelineAssemblyComponent implements OnInit, AfterViewInit {
             this.pipelineCanvasMetadata,
             pipelineModel,
         );
+        pipeline.valid = this.pipelineValidationService.isValidPipeline(
+            pipelineModel,
+            this.preview,
+        );
         pipeline.name = this.currentPipelineName;
         pipeline.description = this.currentPipelineDescription;
         if (this.currentModifiedPipelineId) {

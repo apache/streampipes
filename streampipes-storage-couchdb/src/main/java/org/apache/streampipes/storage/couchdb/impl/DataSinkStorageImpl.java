@@ -59,12 +59,20 @@ public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implem
   }
 
   @Override
-  public DataSinkDescription getDataSinkByAppId(String appId) {
+  public DataSinkDescription getFirstDataSinkByAppId(String appId) {
     return getAll()
         .stream()
         .filter(s -> s.getAppId().equals(appId))
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
+  }
+
+  @Override
+  public List<DataSinkDescription> getDataSinksByAppId(String appId) {
+    return getAll()
+            .stream()
+            .filter(s -> s.getAppId().equals(appId))
+            .toList();
   }
 
   private String getCurrentRev(String elementId) {

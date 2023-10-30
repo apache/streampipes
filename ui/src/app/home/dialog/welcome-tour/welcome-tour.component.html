@@ -1,0 +1,75 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15" fxLayout="column">
+        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <b><h2 class="welcome-animation">Hello!</h2></b>
+            <b
+                ><h3>Thank you for using {{ appConstants.APP_NAME }}.</h3></b
+            >
+        </div>
+        <div>
+            <img
+                src="assets/img/sp-pipeline-white-small.png"
+                style="margin-left: auto; margin-right: auto; display: block"
+            />
+        </div>
+        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <b
+                    >{{ appConstants.APP_NAME }} is your toolbox for IIoT data
+                    management and analytics.</b
+                >
+                <p>
+                    If you are using {{ appConstants.APP_NAME }} for the first
+                    time, we recommend taking the interactive tour!
+                </p>
+            </div>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="close(true)"
+            >
+                Start Tour
+            </button>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions actions-align-right" fxLayout="row">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="hideTourForever()"
+            style="margin-right: 10px"
+        >
+            Do not show again
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+            data-cy="close-tutorial-button"
+        >
+            Close
+        </button>
+    </div>
+</div>

@@ -22,7 +22,11 @@ import { map } from 'rxjs/operators';
 
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { AdapterDescription, Message } from '../model/gen/streampipes-model';
+import {
+    AdapterDescription,
+    Message,
+    PipelineUpdateInfo,
+} from '../model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class AdapterService {
@@ -95,20 +99,53 @@ export class AdapterService {
             .pipe(map(response => Message.fromData(response as any)));
     }
 
+    performPipelineMigrationPreflight(
+        adapter: AdapterDescription,
+    ): Observable<PipelineUpdateInfo[]> {
+        return this.http
+            .put(
+                `${this.connectPath}/master/adapters/pipeline-migration-preflight`,
+                adapter,
+            )
+            .pipe(
+                map(response => {
+                    return (response as any[]).map(p =>
+                        PipelineUpdateInfo.fromData(p),
+                    );
+                }),
+            );
+    }
+
     get adapterMasterUrl() {
         return `${this.connectPath}/master/adapters/`;
     }
 
-    deleteAdapter(adapter: AdapterDescription): Observable<any> {
-        return this.deleteRequest(adapter, '/master/adapters/');
+    deleteAdapter(
+        adapter: AdapterDescription,
+        deleteAssociatedPipelines: boolean,
+    ): Observable<any> {
+        return this.deleteRequest(
+            adapter,
+            deleteAssociatedPipelines,
+            '/master/adapters/',
+        );
     }
 
     getAdapterCategories(): Observable<any> {
         return this.http.get(`${this.baseUrl}/api/v2/categories/adapter`);
     }
 
-    private deleteRequest(adapter: AdapterDescription, url: string) {
-        return this.http.delete(this.connectPath + url + adapter.elementId);
+    private deleteRequest(
+        adapter: AdapterDescription,
+        deleteAssociatedPipelines: boolean,
+        url: string,
+    ) {
+        const queryString = deleteAssociatedPipelines
+            ? '?deleteAssociatedPipelines=true'
+            : '';
+        return this.http.delete(
+            `${this.connectPath}/${url}/${adapter.elementId}${queryString}`,
+        );
     }
 
     getAssetUrl(appId) {

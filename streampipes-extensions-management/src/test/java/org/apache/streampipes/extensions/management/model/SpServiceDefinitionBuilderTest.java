@@ -24,7 +24,13 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+import org.apache.streampipes.model.migration.MigrationResult;
+import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import org.junit.Test;
 
@@ -41,6 +47,27 @@ public class SpServiceDefinitionBuilderTest {
 
     assertEquals(1, result.getAdapters().size());
     assertEquals(expected, result.getAdapters().get(0));
+  }
+
+  @Test
+  public void registerMigration() {
+
+    var migration1 = new TestMigration("app-id", 1, 2);
+    var migration2 = new TestMigration("app-id", 0, 1);
+    var migration3 = new TestMigration("other-id", 0, 1);
+    var migration4 = new TestMigration("app-id", 0, 1);
+
+    var result = SpServiceDefinitionBuilder.create("", "", "", 1)
+            .registerMigrators(migration1, migration2, migration3, migration4)
+            .build();
+
+    // assert de-duplication (last migration should not be registered)
+    assertEquals(3, result.getMigrators().size());
+
+    // assert ordering
+    assertEquals(migration2, result.getMigrators().get(0));
+    assertEquals(migration1, result.getMigrators().get(1));
+    assertEquals(migration3, result.getMigrators().get(2));
   }
 
   private static class TestAdapter implements StreamPipesAdapter {
@@ -64,6 +91,31 @@ public class SpServiceDefinitionBuilderTest {
     @Override
     public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                          IAdapterGuessSchemaContext adapterGuessSchemaContext) {
+      return null;
+    }
+  }
+
+  private static class TestMigration implements IAdapterMigrator {
+
+    String appId;
+    int fromVersion;
+    int toVersion;
+
+    public TestMigration(String appId, int fromVersion, int toVersion) {
+      this.appId = appId;
+      this.fromVersion = fromVersion;
+      this.toVersion = toVersion;
+    }
+
+    @Override
+    public ModelMigratorConfig config() {
+      return new ModelMigratorConfig(appId, SpServiceTagPrefix.ADAPTER, fromVersion, toVersion);
+    }
+
+    @Override
+    public MigrationResult<AdapterDescription> migrate(
+            AdapterDescription element,
+            IStaticPropertyExtractor extractor) throws RuntimeException {
       return null;
     }
   }

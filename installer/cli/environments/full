@@ -25,6 +25,5 @@ taskmanager
 zookeeper
 kafka
 influxdb
-sources-watertank-simulator
 pipeline-elements-all-jvm
 pipeline-elements-all-flink

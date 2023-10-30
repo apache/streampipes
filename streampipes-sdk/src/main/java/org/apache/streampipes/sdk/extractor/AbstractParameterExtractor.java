@@ -64,7 +64,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity>
-    implements IParameterExtractor<T> {
+    implements IParameterExtractor {
 
   protected T sepaElement;
   private TypeParser typeParser;

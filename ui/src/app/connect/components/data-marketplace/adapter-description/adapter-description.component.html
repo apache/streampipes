@@ -23,46 +23,14 @@
             fxLayout="row"
             fxLayoutAlign="start start"
             fxFlex="100"
-        >
-            <div
-                fxLayout="row"
-                fxLayoutAlign="end end"
-                style="margin-left: 5px"
-            >
-                <button
-                    class="small-button-add mat-basic no-min-width"
-                    (click)="$event.stopPropagation()"
-                    mat-raised-button
-                    mat-button
-                    [matMenuTriggerFor]="menu"
-                >
-                    <span style="font-size: 12px">...</span>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="removeAdapter()">
-                        <mat-icon>delete</mat-icon>
-                        <span>&nbsp;Remove adapter</span>
-                    </button>
-                </mat-menu>
-            </div>
+        ></div>
+        <div class="adapter-icon large-icon">
+            <img *ngIf="iconUrl" [src]="iconUrl" class="icon" />
         </div>
-        <div fxLayoutAlign="start center" fxLayout="column" class="icon">
-            <img
-                *ngIf="getIconUrl() && !adapter.icon"
-                [src]="getIconUrl()"
-                class="iconImg"
-            />
-            <img
-                *ngIf="adapter.icon"
-                [src]="adapter.icon"
-                style="min-height: 50px"
-                class="iconImg"
-            />
-        </div>
-        <h3>{{ adapter.name }}</h3>
+        <h3 class="ml-10">{{ adapter.name }}</h3>
     </div>
     <div fxLayout="row">
-        <div fxFlex="70" class="description" fxLayoutAlign="start start">
+        <div fxFlex="70" class="ml-10 description" fxLayoutAlign="start start">
             <p [innerHTML]="adapter.description"></p>
         </div>
     </div>

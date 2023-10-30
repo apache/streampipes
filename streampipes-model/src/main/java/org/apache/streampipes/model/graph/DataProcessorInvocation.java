@@ -20,6 +20,7 @@ package org.apache.streampipes.model.graph;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
@@ -57,6 +58,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setIncludesAssets(other.isIncludesAssets());
     this.setIncludedAssets(other.getIncludedAssets());
     this.setElementId(ElementIdGenerator.makeElementId(this));
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
   }
 
   public DataProcessorInvocation(DataProcessorInvocation other) {
@@ -67,6 +69,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     }
     this.pathName = other.getPathName();
     this.category = new Cloner().epaTypes(other.getCategory());
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
   }
 
   public DataProcessorInvocation(DataProcessorDescription sepa, String domId) {
@@ -77,18 +80,19 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   public DataProcessorInvocation() {
     super();
     inputStreams = new ArrayList<>();
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
   }
 
   public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName,
                                  List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties) {
-    super(uri, name, description, iconUrl);
+    super(uri, name, description, iconUrl, SpServiceTagPrefix.DATA_PROCESSOR);
     this.pathName = pathName;
     this.inputStreams = spDataStreams;
     this.staticProperties = staticProperties;
   }
 
   public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName) {
-    super(uri, name, description, iconUrl);
+    super(uri, name, description, iconUrl, SpServiceTagPrefix.DATA_PROCESSOR);
     this.pathName = pathName;
     inputStreams = new ArrayList<>();
     staticProperties = new ArrayList<>();
