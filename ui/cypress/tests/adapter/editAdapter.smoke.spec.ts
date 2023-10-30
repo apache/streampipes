@@ -42,7 +42,6 @@ describe('Test Edit Adapter', () => {
         const newUserConfiguration = AdapterBuilder.create(
             'Machine_Data_Simulator',
         )
-            // .setName(name)
             .addInput('input', 'wait-time-ms', '2000')
             .addInput('radio', 'selected', 'simulator-option-pressure')
             .build();
