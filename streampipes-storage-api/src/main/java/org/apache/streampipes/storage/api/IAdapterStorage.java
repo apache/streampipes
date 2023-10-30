@@ -33,4 +33,8 @@ public interface IAdapterStorage extends CRUDStorage<String, AdapterDescription>
   AdapterDescription getAdapter(String adapterId);
 
   void deleteAdapter(String adapterId);
+
+  AdapterDescription getFirstAdapterByAppId(String appId);
+
+  List<AdapterDescription> getAdaptersByAppId(String appId);
 }

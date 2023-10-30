@@ -19,7 +19,7 @@
 package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TsModel
-public class AdapterDescription extends NamedStreamPipesEntity {
+public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   protected SpDataStream dataStream;
 
@@ -72,6 +72,16 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
+  }
+
+  public AdapterDescription(int version) {
+    super();
+    this.rules = new ArrayList<>();
+    this.eventGrounding = new EventGrounding();
+    this.config = new ArrayList<>();
+    this.category = new ArrayList<>();
+    this.dataStream = new SpDataStream();
+    this.setVersion(version);
   }
 
   public AdapterDescription(String elementId, String name, String description) {
@@ -249,5 +259,4 @@ public class AdapterDescription extends NamedStreamPipesEntity {
   public void setRunning(boolean running) {
     this.running = running;
   }
-
 }

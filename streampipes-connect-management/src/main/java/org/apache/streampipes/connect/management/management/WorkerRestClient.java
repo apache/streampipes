@@ -63,8 +63,7 @@ public class WorkerRestClient {
                                        AdapterDescription adapterStreamDescription) throws AdapterException {
     String url = baseUrl + WorkerPaths.getStreamStopPath();
 
-    var ad =
-        getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
+    var ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
 
     stopAdapter(ad, url);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
@@ -74,8 +73,8 @@ public class WorkerRestClient {
     try {
       LOG.info("Requesting all running adapter description instances: " + url);
       var responseString = ExtensionServiceExecutions
-          .extServiceGetRequest(url)
-          .execute().returnContent().asString();
+              .extServiceGetRequest(url)
+              .execute().returnContent().asString();
 
       return JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
     } catch (IOException e) {
@@ -84,15 +83,15 @@ public class WorkerRestClient {
     }
   }
 
-  public static void startAdapter(String url,
-                                  AdapterDescription ad) throws AdapterException {
+  private static void startAdapter(String url,
+                                   AdapterDescription ad) throws AdapterException {
     LOG.info("Trying to start adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "started");
   }
 
 
-  public static void stopAdapter(AdapterDescription ad,
-                                 String url) throws AdapterException {
+  private static void stopAdapter(AdapterDescription ad,
+                                  String url) throws AdapterException {
 
     LOG.info("Trying to stop adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "stopped");
@@ -134,14 +133,14 @@ public class WorkerRestClient {
   public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
                                                         String appId,
                                                         RuntimeOptionsRequest runtimeOptionsRequest)
-      throws AdapterException, SpConfigurationException {
+          throws AdapterException, SpConfigurationException {
     String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
       var response = ExtensionServiceExecutions.extServicePostRequest(url, payload)
-          .execute()
-          .returnResponse();
+              .execute()
+              .returnResponse();
 
       String responseString = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
@@ -163,9 +162,9 @@ public class WorkerRestClient {
 
     try {
       return Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asString();
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asString();
     } catch (IOException e) {
       LOG.error(e.getMessage());
       throw new AdapterException("Could not get assets endpoint: " + url);
@@ -178,9 +177,9 @@ public class WorkerRestClient {
 
     try {
       byte[] responseString = Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asBytes();
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asBytes();
       return responseString;
     } catch (IOException e) {
       LOG.error(e.getMessage());
@@ -193,9 +192,9 @@ public class WorkerRestClient {
 
     try {
       return Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asString();
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asString();
     } catch (IOException e) {
       LOG.error(e.getMessage());
       throw new AdapterException("Could not get documentation endpoint: " + url);

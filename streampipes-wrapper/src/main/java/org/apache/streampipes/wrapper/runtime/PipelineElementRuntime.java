@@ -32,7 +32,7 @@ public abstract class PipelineElementRuntime<
     PeT extends IStreamPipesPipelineElement<?>,
     IvT extends InvocableStreamPipesEntity,
     RcT extends RuntimeContext,
-    ExT extends IParameterExtractor<IvT>,
+    ExT extends IParameterExtractor,
     PepT extends IPipelineElementParameters<IvT, ExT>>
     implements IStreamPipesRuntime<PeT, IvT> {
 

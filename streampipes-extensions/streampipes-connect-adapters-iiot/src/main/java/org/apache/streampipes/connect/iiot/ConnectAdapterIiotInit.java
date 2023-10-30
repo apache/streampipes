@@ -30,6 +30,7 @@ import org.apache.streampipes.extensions.connectors.kafka.adapter.KafkaProtocol;
 import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.extensions.connectors.nats.adapter.NatsProtocol;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.pulsar.adapter.PulsarProtocol;
 import org.apache.streampipes.extensions.connectors.rocketmq.adapter.RocketMQProtocol;
 import org.apache.streampipes.extensions.connectors.tubemq.adapter.TubeMQProtocol;
@@ -63,6 +64,8 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
         .registerAdapter(new RocketMQProtocol())
         .registerAdapter(new HttpServerProtocol())
         .registerAdapter(new TubeMQProtocol())
+
+        .registerMigrators(new OpcUaAdapterMigrationV1())
         .build();
   }
 }

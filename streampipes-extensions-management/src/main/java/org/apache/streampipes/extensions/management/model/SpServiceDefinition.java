@@ -20,12 +20,15 @@ package org.apache.streampipes.extensions.management.model;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.migration.IModelMigrator;
+import org.apache.streampipes.extensions.api.migration.MigrationComparison;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +50,7 @@ public class SpServiceDefinition {
   private List<ConfigItem> kvConfigs;
 
   private List<IStreamPipesRuntimeProvider> runtimeProviders;
+  private List<IModelMigrator<?, ?>> migrators;
 
   public SpServiceDefinition() {
     this.serviceId = UUID.randomUUID().toString();
@@ -57,6 +61,7 @@ public class SpServiceDefinition {
     this.functions = new ArrayList<>();
     this.adapters = new ArrayList<>();
     this.runtimeProviders = new ArrayList<>();
+    this.migrators = new ArrayList<>();
   }
 
   public String getServiceGroup() {
@@ -181,5 +186,25 @@ public class SpServiceDefinition {
 
   public void addRuntimeProvider(IStreamPipesRuntimeProvider runtimeProvider) {
     this.runtimeProviders.add(runtimeProvider);
+  }
+
+  public List<IModelMigrator<?, ?>> getMigrators() {
+    return this.migrators;
+  }
+
+  /**
+   * Add a list of migrations to the service definition.
+   * This inherently checks for duplicates and sorts the migrations as such that
+   * migrations affecting lower versions always come first.
+   *
+   * @param migrators migrators to add
+   */
+  public void addMigrators(List<IModelMigrator<?, ?>> migrators) {
+    for (var migratorToAdd : migrators) {
+      if (this.migrators.stream().noneMatch(migrator -> MigrationComparison.isEqual(migrator, migratorToAdd))) {
+        this.migrators.add(migratorToAdd);
+      }
+    }
+    Collections.sort(this.migrators);
   }
 }

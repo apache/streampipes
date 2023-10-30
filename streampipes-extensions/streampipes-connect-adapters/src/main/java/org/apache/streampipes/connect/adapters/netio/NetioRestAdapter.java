@@ -113,7 +113,7 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
    *
    * @param extractor StaticPropertyExtractor
    */
-  private void applyConfiguration(IParameterExtractor<?> extractor) {
+  private void applyConfiguration(IParameterExtractor extractor) {
 
     this.ip = extractor.singleValueParameter(NETIO_IP, String.class);
     this.username = extractor.singleValueParameter(NETIO_USERNAME, String.class);

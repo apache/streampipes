@@ -25,6 +25,9 @@ import org.apache.streampipes.rest.extensions.connect.AdapterWorkerResource;
 import org.apache.streampipes.rest.extensions.connect.GuessResource;
 import org.apache.streampipes.rest.extensions.connect.HttpServerAdapterResource;
 import org.apache.streampipes.rest.extensions.connect.RuntimeResolvableResource;
+import org.apache.streampipes.rest.extensions.migration.AdapterMigrationResource;
+import org.apache.streampipes.rest.extensions.migration.DataProcessorMigrationResource;
+import org.apache.streampipes.rest.extensions.migration.DataSinkMigrationResource;
 import org.apache.streampipes.rest.extensions.monitoring.MonitoringResource;
 import org.apache.streampipes.rest.extensions.pe.DataProcessorPipelineElementResource;
 import org.apache.streampipes.rest.extensions.pe.DataSinkPipelineElementResource;
@@ -46,22 +49,23 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
   @Override
   public Set<Class<?>> getClassesToRegister() {
     return Set.of(
-        GuessResource.class,
-        RuntimeResolvableResource.class,
-        AdapterWorkerResource.class,
-        MultiPartFeature.class,
         AdapterAssetResource.class,
         AdapterDescriptionResource.class,
-        HttpServerAdapterResource.class,
-
-        DataSinkPipelineElementResource.class,
+        AdapterMigrationResource.class,
+        AdapterWorkerResource.class,
+        DataProcessorMigrationResource.class,
         DataProcessorPipelineElementResource.class,
+        DataSinkMigrationResource.class,
+        DataSinkPipelineElementResource.class,
         DataStreamPipelineElementResource.class,
-        WelcomePage.class,
-
-        ServiceHealthResource.class,
+        GuessResource.class,
+        HttpServerAdapterResource.class,
         JacksonSerializationProvider.class,
-        MonitoringResource.class
+        MonitoringResource.class,
+        MultiPartFeature.class,
+        RuntimeResolvableResource.class,
+        ServiceHealthResource.class,
+        WelcomePage.class
     );
   }
 

@@ -16,18 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-24 20:02:02.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-27 10:43:45.
 
 export class NamedStreamPipesEntity {
     '@class':
-        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
+        | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
+        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
         | 'org.apache.streampipes.model.graph.DataSinkInvocation';
@@ -82,7 +82,30 @@ export class NamedStreamPipesEntity {
     }
 }
 
-export class AdapterDescription extends NamedStreamPipesEntity {
+export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
+    '@class':
+        | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
+        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
+        | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
+        | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
+        | 'org.apache.streampipes.model.graph.DataSinkInvocation';
+    'version': number;
+
+    static 'fromData'(
+        data: VersionedNamedStreamPipesEntity,
+        target?: VersionedNamedStreamPipesEntity,
+    ): VersionedNamedStreamPipesEntity {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new VersionedNamedStreamPipesEntity();
+        super.fromData(data, instance);
+        instance.version = data.version;
+        return instance;
+    }
+}
+
+export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
     'category': string[];
     'config': StaticPropertyUnion[];
@@ -1159,7 +1182,7 @@ export class DataLakeMeasure {
 }
 
 export class InvocableStreamPipesEntity
-    extends NamedStreamPipesEntity
+    extends VersionedNamedStreamPipesEntity
     implements EndpointSelectable
 {
     '@class':
@@ -1173,6 +1196,7 @@ export class InvocableStreamPipesEntity
     'detachPath': string;
     'inputStreams': SpDataStream[];
     'selectedEndpointUrl': string;
+    'serviceTagPrefix': SpServiceTagPrefix;
     'staticProperties': StaticPropertyUnion[];
     'statusInfoSettings': ElementStatusInfoSettings;
     'streamRequirements': SpDataStream[];
@@ -1197,6 +1221,7 @@ export class InvocableStreamPipesEntity
             data.inputStreams,
         );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        instance.serviceTagPrefix = data.serviceTagPrefix;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);

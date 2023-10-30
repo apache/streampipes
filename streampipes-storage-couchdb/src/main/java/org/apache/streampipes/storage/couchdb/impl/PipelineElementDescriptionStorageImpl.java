@@ -80,7 +80,7 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public DataProcessorDescription getDataProcessorByAppId(String appId) {
-    return this.dataProcessorStorage.getDataProcessorByAppId(appId);
+    return this.dataProcessorStorage.getFirstDataProcessorByAppId(appId);
   }
 
   @Override
@@ -90,7 +90,7 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public DataSinkDescription getDataSinkByAppId(String appId) {
-    return this.dataSinkStorage.getDataSinkByAppId(appId);
+    return this.dataSinkStorage.getFirstDataSinkByAppId(appId);
   }
 
   @Override
@@ -100,7 +100,7 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public AdapterDescription getAdapterByAppId(String appId) {
-    throw new IllegalArgumentException("Not yet implemented");
+    return this.adapterStorage.getFirstAdapterByAppId(appId);
   }
 
   @Override
