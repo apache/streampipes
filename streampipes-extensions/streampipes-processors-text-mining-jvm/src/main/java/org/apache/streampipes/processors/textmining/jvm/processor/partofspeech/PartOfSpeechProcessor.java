@@ -86,7 +86,7 @@ public class PartOfSpeechProcessor extends StreamPipesDataProcessor {
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
-    byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
+    byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename, false);
     this.detection = parameters.extractor().mappingPropertyValue(DETECTION_FIELD_KEY);
 
     InputStream modelIn = new ByteArrayInputStream(fileContent);

@@ -186,7 +186,7 @@ public class CsvMetadataEnrichmentProcessor
 
   private String getFileContents(IParameterExtractor extractor) {
     String filename = extractor.selectedFilename(CSV_FILE_KEY);
-    return getStreamPipesClientInstance().fileApi().getFileContentAsString(filename);
+    return getStreamPipesClientInstance().fileApi().getFileContentAsString(filename, false);
   }
 
   private StreamPipesClient getStreamPipesClientInstance() {

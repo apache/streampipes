@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,17 @@ public class FileManager {
   public static List<FileMetadata> getAllFiles(String filetypes) {
     List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
+  }
+
+  public static File getFileByOriginalName(String originalName) throws IOException {
+    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
+
+    var file = allFiles.stream().filter(fileMetadata -> fileMetadata.getOriginalFilename().equals(originalName)).findFirst();
+
+    if (file.isEmpty()){
+      throw new IOException("No file with original name '%s' found".formatted(originalName));
+    }
+    return new FileHandler().getFile(file.get().getInternalFilename());
   }
 
   /**

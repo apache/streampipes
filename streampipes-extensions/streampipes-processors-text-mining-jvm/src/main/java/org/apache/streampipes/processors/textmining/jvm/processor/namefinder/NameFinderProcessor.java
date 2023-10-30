@@ -84,7 +84,7 @@ public class NameFinderProcessor extends StreamPipesDataProcessor {
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     String filename = parameters.extractor().selectedFilename(MODEL);
-    byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
+    byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename, false);
     this.tokens = parameters.extractor().mappingPropertyValue(TOKENS_FIELD_KEY);
     loadModel(fileContent);
   }

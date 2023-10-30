@@ -87,7 +87,7 @@ public class ZipFileImageIterator {
 
   private ZipInputStream fetchZipInputStream(String filename) {
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    byte[] result = client.fileApi().getFileContent(filename);
+    byte[] result = client.fileApi().getFileContent(filename, false);
     return new ZipInputStream(new ByteArrayInputStream(result));
   }
 

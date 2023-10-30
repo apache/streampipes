@@ -22,6 +22,9 @@ import org.apache.streampipes.client.http.BinaryGetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class FileApi extends AbstractClientApi implements IFileApi {
 
@@ -30,13 +33,15 @@ public class FileApi extends AbstractClientApi implements IFileApi {
   }
 
   @Override
-  public byte[] getFileContent(String filename) {
-    return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename), null).executeRequest();
+  public byte[] getFileContent(String filename, boolean isOriginalFileName) {
+    return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename)
+            .withQueryParameters(Map.of("isOriginalFilename", String.valueOf(isOriginalFileName))), null)
+            .executeRequest();
   }
 
   @Override
-  public String getFileContentAsString(String filename) {
-    return new String(getFileContent(filename));
+  public String getFileContentAsString(String filename, boolean isOriginalFileName) {
+    return new String(getFileContent(filename, isOriginalFileName));
   }
 
   @Override
