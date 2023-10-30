@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.admin;
+package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -30,7 +30,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MigrationResourceTest {
+public class MigrationUtilsTest {
 
   List<ModelMigratorConfig> migrationConfigs = List.of(
           new ModelMigratorConfig("app-id",  SpServiceTagPrefix.DATA_PROCESSOR, 0, 1),
@@ -60,18 +60,18 @@ public class MigrationResourceTest {
 
     assertEquals(
             migrationConfigs.get(0),
-            MigrationResource.getApplicableMigration(pipelineElement1, migrationConfigs).get()
+            MigrationUtils.getApplicableMigration(pipelineElement1, migrationConfigs).get()
     );
     assertEquals(
             migrationConfigs.get(1),
-            MigrationResource.getApplicableMigration(pipelineElement2, migrationConfigs).get()
+            MigrationUtils.getApplicableMigration(pipelineElement2, migrationConfigs).get()
     );
     assertEquals(
             migrationConfigs.get(2),
-            MigrationResource.getApplicableMigration(pipelineElement3, migrationConfigs).get()
+            MigrationUtils.getApplicableMigration(pipelineElement3, migrationConfigs).get()
     );
     assertTrue(
-            MigrationResource.getApplicableMigration(pipelineElement4, migrationConfigs).isEmpty()
+            MigrationUtils.getApplicableMigration(pipelineElement4, migrationConfigs).isEmpty()
     );
   }
 }

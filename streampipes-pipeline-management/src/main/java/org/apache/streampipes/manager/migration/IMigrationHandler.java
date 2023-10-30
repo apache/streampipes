@@ -16,31 +16,15 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+package org.apache.streampipes.manager.migration;
 
-import org.apache.streampipes.model.configuration.MessagingSettings;
-import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import java.util.List;
 
-public interface IAdminApi {
+public interface IMigrationHandler {
 
-  void registerService(SpServiceRegistration serviceRegistration);
-
-  void deregisterService(String serviceId);
-
-  void registerServiceConfiguration(SpServiceConfiguration serviceConfiguration);
-
-  SpServiceConfiguration getServiceConfiguration(String serviceGroup);
-
-  void registerFunctions(List<FunctionDefinition> functions);
-
-  void deregisterFunction(String functionId);
-
-  void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
-
-  MessagingSettings getMessagingSettings();
+  void handleMigrations(SpServiceRegistration serviceRegistration,
+                       List<ModelMigratorConfig> migrationConfigs);
 }
