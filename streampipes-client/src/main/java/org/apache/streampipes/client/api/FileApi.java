@@ -22,7 +22,6 @@ import org.apache.streampipes.client.http.BinaryGetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
