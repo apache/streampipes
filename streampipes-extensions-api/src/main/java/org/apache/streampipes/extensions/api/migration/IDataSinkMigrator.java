@@ -16,35 +16,10 @@
  *
  */
 
-package org.apache.streampipes.logging.model;
+package org.apache.streampipes.extensions.api.migration;
 
-public class LogRequest {
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 
-  private String sourceID;
-  private String dateFrom;
-  private String dateTo;
-
-  public String getSourceID() {
-    return sourceID;
-  }
-
-  public void setSourceID(String source) {
-    this.sourceID = source;
-  }
-
-  public String getDateFrom() {
-    return dateFrom;
-  }
-
-  public void setDateFrom(String dateFrom) {
-    this.dateFrom = dateFrom;
-  }
-
-  public String getDateTo() {
-    return dateTo;
-  }
-
-  public void setDateTo(String dateTo) {
-    this.dateTo = dateTo;
-  }
+public interface IDataSinkMigrator extends IModelMigrator<DataSinkInvocation, IDataSinkParameterExtractor> {
 }

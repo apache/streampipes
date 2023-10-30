@@ -18,12 +18,14 @@
 
 package org.apache.streampipes.manager.health;
 
+
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +56,7 @@ public class ServiceHealthCheck implements Runnable {
     try {
       var request = ExtensionServiceExecutions.extServiceGetRequest(healthCheckUrl);
       var response = request.execute();
-      if (response.returnResponse().getStatusLine().getStatusCode() != 200) {
+      if (response.returnResponse().getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
         processUnhealthyService(service);
       } else {
         if (service.getStatus() == SpServiceStatus.UNHEALTHY) {

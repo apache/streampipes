@@ -19,13 +19,13 @@
 package org.apache.streampipes.extensions.connectors.opcua.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
-import org.apache.streampipes.extensions.api.migration.AdapterMigrator;
+import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-public class OpcUaAdapterMigrationV1 extends AdapterMigrator {
+public class OpcUaAdapterMigrationV1 implements IAdapterMigrator {
 
   private static final String OldNamespaceIndexKey = "NAMESPACE_INDEX";
   private static final String OldNodeId = "NODE_ID";

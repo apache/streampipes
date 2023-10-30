@@ -23,7 +23,7 @@ import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-public interface ModelMigrator<
+public interface IModelMigrator<
         T extends VersionedNamedStreamPipesEntity,
         ExT extends IParameterExtractor
         > extends Comparable<Object> {
@@ -42,11 +42,11 @@ public interface ModelMigrator<
 
   @Override
   default int compareTo(Object o) {
-    if (!(o instanceof ModelMigrator<?, ?>)) {
-      throw new ClassCastException("Given object is not an instance of `ModelMigrator` - "
-              + "only instances of `ModelMigrator` can be compared.");
+    if (!(o instanceof IModelMigrator<?, ?>)) {
+      throw new ClassCastException("Given object is not an instance of `IModelMigrator` - "
+              + "only instances of `IModelMigrator` can be compared.");
     } else {
-      return config().compareTo(((ModelMigrator<?, ?>) o).config());
+      return config().compareTo(((IModelMigrator<?, ?>) o).config());
     }
   }
 }

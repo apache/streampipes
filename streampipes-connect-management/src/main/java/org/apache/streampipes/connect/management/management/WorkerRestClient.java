@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.management.management;
 
+
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
@@ -35,6 +36,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +108,7 @@ public class WorkerRestClient {
       var response = triggerPost(url, ad.getCorrespondingDataStreamElementId(), adapterDescription);
       var responseString = getResponseBody(response);
 
-      if (response.getStatusLine().getStatusCode() != 200) {
+      if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
         var exception = getSerializer().readValue(responseString, AdapterException.class);
         throw new AdapterException(exception.getMessage(), exception.getCause());
       }
@@ -144,7 +146,7 @@ public class WorkerRestClient {
 
       String responseString = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
-      if (response.getStatusLine().getStatusCode() == 200) {
+      if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
         return getSerializer().readValue(responseString, RuntimeOptionsResponse.class);
       } else {
         var exception = getSerializer().readValue(responseString, SpConfigurationException.class);

@@ -16,26 +16,10 @@
  *
  */
 
-package org.apache.streampipes.logging.impl;
+package org.apache.streampipes.extensions.api.migration;
 
-import java.io.Serializable;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-public class EventStatisticLogger implements Serializable {
-
-
-  // private String prefix;
-
-  // public static void log(org.apache.streampipes.model.base.InvocableStreamPipesEntity graph) {
-  public static void log(String name, String correspondingPipeline, String source) {
-    // TODO: Uncomment when "Event statistic" should be used
-        /*    String prefix =  "SYSTEMLOG EVENT STATISTIC" + " - "
-                // + "serviceName: " + peConfig.getName() + " - "
-                + "correspondingPipeline: " + correspondingPipeline + " - "
-                + "peURI: " + source + " - ";
-
-        org.slf4j.Logger logger = LoggerFactory.getLogger(EventStatisticLogger.class);
-        logger.info(prefix + 1);
-        */
-  }
-
+public interface IAdapterMigrator extends IModelMigrator<AdapterDescription, IStaticPropertyExtractor> {
 }

@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.rest.shared.impl;
 
+import org.apache.http.HttpStatus;
+
 import jakarta.ws.rs.core.Response;
 
 public abstract class AbstractSharedRestInterface {
@@ -28,19 +30,19 @@ public abstract class AbstractSharedRestInterface {
   }
 
   protected <T> Response badRequest(T entity) {
-    return error(entity, 400);
+    return error(entity, HttpStatus.SC_BAD_REQUEST);
   }
 
   protected <T> Response notFound(T entity) {
-    return error(entity, 404);
+    return error(entity, HttpStatus.SC_NOT_FOUND);
   }
 
   protected <T> Response notFound() {
-    return Response.status(404).build();
+    return Response.status(HttpStatus.SC_NOT_FOUND).build();
   }
 
   protected <T> Response serverError(T entity) {
-    return error(entity, 500);
+    return error(entity, HttpStatus.SC_INTERNAL_SERVER_ERROR);
   }
 
   protected <T> Response error(T entity, Integer statusCode) {
@@ -51,7 +53,7 @@ public abstract class AbstractSharedRestInterface {
   }
 
   protected Response badRequest() {
-    return Response.status(400).build();
+    return Response.status(HttpStatus.SC_BAD_REQUEST).build();
   }
 
   protected Response ok() {
@@ -59,7 +61,7 @@ public abstract class AbstractSharedRestInterface {
   }
 
   protected Response created() {
-    return Response.status(201).build();
+    return Response.status(HttpStatus.SC_CREATED).build();
   }
 
   protected Response fail() {

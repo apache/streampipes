@@ -19,7 +19,6 @@
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.DbDescription;
@@ -28,6 +27,9 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.StatementHand
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.TableDescription;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.SQLStatementUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,6 +40,8 @@ import java.util.Map;
 
 public class JdbcClient {
 
+  private static final Logger LOG = LoggerFactory.getLogger(JdbcClient.class);
+
   protected DbDescription dbDescription;
 
   protected TableDescription tableDescription;
@@ -45,8 +49,6 @@ public class JdbcClient {
   protected Connection connection = null;
 
   protected StatementHandler statementHandler;
-
-  protected Logger logger;
 
   /**
    * A wrapper class for all supported SQL data types (INT, BIGINT, FLOAT, DOUBLE, VARCHAR(255)).
@@ -57,12 +59,10 @@ public class JdbcClient {
 
   protected void initializeJdbc(EventSchema eventSchema,
                                 JdbcConnectionParameters connectionParameters,
-                                SupportedDbEngines dbEngine,
-                                Logger logger) throws SpRuntimeException {
+                                SupportedDbEngines dbEngine) throws SpRuntimeException {
     this.dbDescription = new DbDescription(connectionParameters, dbEngine);
     this.tableDescription = new TableDescription(connectionParameters.getDbTable(), eventSchema);
     this.statementHandler = new StatementHandler(null, null);
-    this.logger = logger;
     try {
       Class.forName(this.dbDescription.getDriverName());
     } catch (ClassNotFoundException e) {
@@ -115,9 +115,9 @@ public class JdbcClient {
   private void connectWithSSL(String host, int port, String databaseName) throws SpRuntimeException {
     String url =
         "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/" + databaseName
-            + "?user="
-            + this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword()
-            + "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
+        + "?user="
+        + this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword()
+        + "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
     try {
       connection = DriverManager.getConnection(url);
       ensureDatabaseExists(databaseName);
@@ -149,7 +149,7 @@ public class JdbcClient {
       // Checks whether the database already exists (using catalogs has not worked with postgres)
       this.statementHandler.setStatement(connection.createStatement());
       this.statementHandler.statement.executeUpdate(createStatement + databaseName + ";");
-      logger.info("Created new database '" + databaseName + "'");
+      LOG.info("Created new database '" + databaseName + "'");
     } catch (SQLException e1) {
       if (!e1.getSQLState().substring(0, 2).equals("42")) {
         throw new SpRuntimeException("Error while creating database: " + e1.getMessage());
@@ -214,7 +214,7 @@ public class JdbcClient {
       if (e.getSQLState().substring(0, 2).equals("42")) {
         // If the table does not exists (because it got deleted or something, will cause the error
         // code "42") we will try to create a new one. Otherwise we do not handle the exception.
-        logger.warn("Table '" + this.tableDescription.getName() + "' was unexpectedly not found and gets recreated.");
+        LOG.warn("Table '" + this.tableDescription.getName() + "' was unexpectedly not found and gets recreated.");
         this.tableDescription.setTableMissing();
         createTable();
         this.tableDescription.setTableExists();
@@ -266,7 +266,7 @@ public class JdbcClient {
       }
     } catch (SQLException e) {
       error = true;
-      logger.warn("Exception when closing the statement: " + e.getMessage());
+      LOG.warn("Exception when closing the statement: " + e.getMessage());
     }
     try {
       if (connection != null) {
@@ -275,7 +275,7 @@ public class JdbcClient {
       }
     } catch (SQLException e) {
       error = true;
-      logger.warn("Exception when closing the connection: " + e.getMessage());
+      LOG.warn("Exception when closing the connection: " + e.getMessage());
     }
     try {
       if (this.statementHandler.preparedStatement != null) {
@@ -284,10 +284,10 @@ public class JdbcClient {
       }
     } catch (SQLException e) {
       error = true;
-      logger.warn("Exception when closing the prepared statement: " + e.getMessage());
+      LOG.warn("Exception when closing the prepared statement: " + e.getMessage());
     }
     if (!error) {
-      logger.info("Shutdown all connections successfully.");
+      LOG.info("Shutdown all connections successfully.");
     }
   }
 

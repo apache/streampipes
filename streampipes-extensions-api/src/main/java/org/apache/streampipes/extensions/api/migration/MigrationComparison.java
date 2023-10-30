@@ -16,16 +16,12 @@
  *
  */
 
-package org.apache.streampipes.logging;
+package org.apache.streampipes.extensions.api.migration;
 
-import org.apache.streampipes.logging.api.Logger;
-import org.apache.streampipes.logging.impl.PeLogger;
+public class MigrationComparison {
 
-public class LoggerFactory {
-
-  //  public static Logger getPeLogger(Class clazz, String correspondingPipeline, String peUri, PeConfig peConfig) {
-  public static Logger getPeLogger(Class clazz, String correspondingPipeline, String peUri) {
-    //    return new PeLogger(clazz, correspondingPipeline, peUri, peConfig);
-    return new PeLogger(clazz, correspondingPipeline, peUri);
+  public static boolean isEqual(IModelMigrator<?, ?> first, IModelMigrator<?, ?> second) {
+    return first.config().equals(second.config());
   }
 }
+

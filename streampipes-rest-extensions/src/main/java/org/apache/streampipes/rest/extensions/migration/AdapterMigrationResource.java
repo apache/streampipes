@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
-import org.apache.streampipes.extensions.api.migration.AdapterMigrator;
+import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -45,7 +45,7 @@ import jakarta.ws.rs.core.Response;
 public class AdapterMigrationResource extends MigrateExtensionsResource<
     AdapterDescription,
     IStaticPropertyExtractor,
-    AdapterMigrator
+        IAdapterMigrator
     > {
 
   @POST

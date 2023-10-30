@@ -25,7 +25,7 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchema
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
-import org.apache.streampipes.extensions.api.migration.AdapterMigrator;
+import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -95,7 +95,7 @@ public class SpServiceDefinitionBuilderTest {
     }
   }
 
-  private static class TestMigration extends AdapterMigrator {
+  private static class TestMigration implements IAdapterMigrator {
 
     String appId;
     int fromVersion;

@@ -35,6 +35,7 @@ export class DeleteAdapterDialogComponent {
     isInProgress = false;
     currentStatus: any;
     adapterUsedByPipeline = false;
+    namesOfPipelinesUsingAdapter = '';
     numberOfPipelinesWithAdapter = 0;
 
     constructor(
@@ -46,21 +47,23 @@ export class DeleteAdapterDialogComponent {
         this.dialogRef.close(refreshAdapters);
     }
 
-    deleteAdapter() {
+    deleteAdapter(deleteAssociatedPipelines: boolean) {
         this.isInProgress = true;
         this.currentStatus = 'Deleting adapter...';
 
-        this.dataMarketplaceService.deleteAdapter(this.adapter).subscribe(
-            data => {
-                this.close(true);
-            },
-            error => {
-                if (error.status === 409) {
-                    this.numberOfPipelinesWithAdapter = error.error.length;
-                    this.adapterUsedByPipeline = true;
-                    this.isInProgress = false;
-                }
-            },
-        );
+        this.dataMarketplaceService
+            .deleteAdapter(this.adapter, deleteAssociatedPipelines)
+            .subscribe(
+                data => {
+                    this.close(true);
+                },
+                error => {
+                    if (error.status === 409) {
+                        this.namesOfPipelinesUsingAdapter = error.error;
+                        this.adapterUsedByPipeline = true;
+                        this.isInProgress = false;
+                    }
+                },
+            );
     }
 }
