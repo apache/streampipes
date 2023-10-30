@@ -17,26 +17,24 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.ws.rs.DefaultValue;
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.http.HttpStatus;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -46,7 +44,6 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -87,16 +84,16 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @Path("/{filename}")
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Operation(
-          summary = "Get file content by file name." +
-                  "If multiple files with the same name exist, only the first is returned." +
-                  "This can only be the case when the original file name is provided.", tags = {"Core", "Files"},
+          summary = "Get file content by file name."
+                  + "If multiple files with the same name exist, only the first is returned."
+                  + "This can only be the case when the original file name is provided.", tags = {"Core", "Files"},
           responses = {
-                  @ApiResponse(
-                          responseCode = "" + HttpStatus.SC_OK,
-                          description = "File could be found and is returned"),
-                  @ApiResponse(
-                          responseCode = "" + HttpStatus.SC_NOT_FOUND,
-                          description = "No file with the given file name could be found")
+              @ApiResponse(
+                      responseCode = "" + HttpStatus.SC_OK,
+                      description = "File could be found and is returned"),
+              @ApiResponse(
+                      responseCode = "" + HttpStatus.SC_NOT_FOUND,
+                      description = "No file with the given file name could be found")
           }
   )
   public Response getFile(
@@ -108,8 +105,8 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
           @PathParam("filename") String filename,
           @Parameter(
                   in = ParameterIn.QUERY,
-                  description = "Determines if the provided file name is the original file name" +
-                          "as per upload."
+                  description = "Determines if the provided file name is the original file name "
+                          + "as per upload."
           )
           @QueryParam("isOriginalFilename") @DefaultValue("false") boolean isOriginalFilename
   ) {
@@ -120,6 +117,6 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
         return notFound(filename);
       }
     }
-      return ok(FileManager.getFile(filename));
-    }
+    return ok(FileManager.getFile(filename));
+  }
 }
