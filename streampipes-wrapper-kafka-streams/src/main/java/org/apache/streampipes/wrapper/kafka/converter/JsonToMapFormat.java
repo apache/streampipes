@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.wrapper.kafka.converter;
 
-import org.apache.streampipes.logging.impl.EventStatisticLogger;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +42,6 @@ public class JsonToMapFormat implements ValueMapper<String, Iterable<Map<String,
   @Override
   public Iterable<Map<String, Object>> apply(String s) {
     try {
-      EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
       return Arrays.asList(mapper.readValue(s, HashMap.class));
     } catch (IOException e) {
       e.printStackTrace();

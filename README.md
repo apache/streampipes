@@ -133,7 +133,7 @@ Quick Links:
 * [Installation](https://streampipes.apache.org/docs/try-installation.html)
 * [Create adapters](https://streampipes.apache.org/docs/use-connect.html)
 * [Create pipelines](https://streampipes.apache.org/docs/use-pipeline-editor.html)
-* [Write you own pipeline elements](https://streampipes.apache.org/docs/extend-archetypes.html)
+* [Write your own pipeline elements](https://streampipes.apache.org/docs/extend-archetypes.html)
 
 ## Building StreamPipes
 
@@ -207,7 +207,7 @@ Here are some first steps in case you want to contribute:
 * Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](mailto:dev-subscribe@streampipes.apache.org)
 * Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
 * Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
-* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
+* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ label
 * Have a look at our developer [wiki](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
 
 Have fun!
