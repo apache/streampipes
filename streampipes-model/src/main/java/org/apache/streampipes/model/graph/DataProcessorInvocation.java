@@ -75,7 +75,6 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   public DataProcessorInvocation(DataProcessorDescription sepa, String domId) {
     this(sepa);
     this.dom = domId;
-    this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
   }
 
   public DataProcessorInvocation() {
