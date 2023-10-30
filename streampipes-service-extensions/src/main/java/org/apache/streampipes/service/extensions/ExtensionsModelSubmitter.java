@@ -52,8 +52,7 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
 
     // register all migrations at StreamPipes Core
     var migrationConfigs = serviceDef.getMigrators().stream().map(ModelMigrator::config).toList();
-    client.adminApi().
-        registerMigrations(migrationConfigs, serviceId());
+    client.adminApi().registerMigrations(migrationConfigs, serviceId());
 
     // initialize all function instances
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
