@@ -119,7 +119,7 @@ public class AdapterHealthCheck implements Runnable {
         allRunningInstancesOfOneWorker.forEach(adapterDescription ->
             allRunningInstancesAdapterDescription.remove(adapterDescription.getElementId()));
       } catch (AdapterException e) {
-        e.printStackTrace();
+        LOG.info("Could not recover adapter at endpoint {} due to {}", adapterEndpointUrl, e.getMessage());
       }
     });
 
@@ -135,7 +135,7 @@ public class AdapterHealthCheck implements Runnable {
           this.adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
         }
       } catch (AdapterException e) {
-        LOG.warn("Could not start adapter {}", adapterDescription.getName(), e);
+        LOG.warn("Could not start adapter {} ({})", adapterDescription.getName(), e.getMessage());
       }
     }
 
