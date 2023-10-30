@@ -36,8 +36,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -54,8 +52,6 @@ import java.util.List;
 @Component
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class MigrationResource extends AbstractAuthGuardedRestResource {
-
-  private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
 
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
