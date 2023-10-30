@@ -47,7 +47,7 @@
 	<commons-lang3.version>3.12.0</commons-lang3.version>
 	<commons-logging.version>1.2</commons-logging.version>
 	<consul-client.version>1.5.2</consul-client.version>
-	<elasticsearch.version>6.8.17</elasticsearch.version>
+	<elasticsearch.version>7.17.13</elasticsearch.version>
 	<file-management.version>3.1.0</file-management.version>
 	<flink.version>1.13.5</flink.version>
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
