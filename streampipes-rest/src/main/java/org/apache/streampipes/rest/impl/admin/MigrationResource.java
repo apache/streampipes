@@ -22,6 +22,7 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
+import org.apache.streampipes.manager.migration.AdapterDescriptionMigration093;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
@@ -64,6 +65,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
 
+  private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
 
   private final IDataProcessorStorage dataProcessorStorage = getNoSqlStorage().getDataProcessorStorage();
@@ -102,24 +104,27 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
     var serviceManager = new ServiceRegistrationManager(extensionsServiceStorage);
     var extensionsServiceConfig = serviceManager.getService(serviceId);
-    if (!migrationConfigs.isEmpty() && BackendConfig.INSTANCE.isConfigured()) {
-      if (serviceManager.isAnyServiceMigrating() || !isCoreReady()) {
-        LOG.info("Refusing migration request since precondition is not met.");
-        return Response.status(HttpStatus.SC_CONFLICT).build();
-      } else {
-        serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
-        var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
-        var pipelineElementMigrations = filterConfigs(
-            migrationConfigs,
-            List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
-        );
+    if (BackendConfig.INSTANCE.isConfigured()) {
+      new AdapterDescriptionMigration093(adapterDescriptionStorage).reinstallAdapters(extensionsServiceConfig);
+      if (!migrationConfigs.isEmpty()) {
+        if (serviceManager.isAnyServiceMigrating() || !isCoreReady()) {
+          LOG.info("Refusing migration request since precondition is not met.");
+          return Response.status(HttpStatus.SC_CONFLICT).build();
+        } else {
+          serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
+          var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
+          var pipelineElementMigrations = filterConfigs(
+              migrationConfigs,
+              List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
+          );
 
-        new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
-        new PipelineElementMigrationManager(
-            pipelineStorage,
-            dataProcessorStorage,
-            dataSinkStorage)
-            .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
+          new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
+          new PipelineElementMigrationManager(
+              pipelineStorage,
+              dataProcessorStorage,
+              dataSinkStorage)
+              .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
+        }
       }
     }
     new ServiceRegistrationManager(extensionsServiceStorage)

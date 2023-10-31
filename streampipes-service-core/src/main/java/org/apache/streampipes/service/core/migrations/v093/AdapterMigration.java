@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.service.core.migrations.v093;
 
+import org.apache.streampipes.manager.migration.AdapterDescriptionMigration093Provider;
 import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
 import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
 import org.apache.streampipes.service.core.migrations.Migration;
@@ -35,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.GENERIC_STREAM;
-import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.isSetAdapter;
 
 public class AdapterMigration implements Migration {
 
@@ -45,7 +45,7 @@ public class AdapterMigration implements Migration {
   private final CouchDbClient adapterInstanceClient;
   private final CouchDbClient adapterDescriptionClient;
   private final List<JsonObject> adaptersToMigrate;
-  private final List<JsonObject> adapterDescriptionsToMigrate;
+  private final List<JsonObject> adapterDescriptionsToRemove;
 
   private final MigrationHelpers helpers;
 
@@ -54,7 +54,7 @@ public class AdapterMigration implements Migration {
     this.adapterInstanceClient = Utils.getCouchDbAdapterInstanceClient();
     this.adapterDescriptionClient = Utils.getCouchDbAdapterDescriptionClient();
     this.adaptersToMigrate = new ArrayList<>();
-    this.adapterDescriptionsToMigrate = new ArrayList<>();
+    this.adapterDescriptionsToRemove = new ArrayList<>();
     this.helpers = new MigrationHelpers();
   }
 
@@ -64,9 +64,9 @@ public class AdapterMigration implements Migration {
     var adapterDescriptionUri = getAllDocsUri(adapterDescriptionClient);
 
     findDocsToMigrate(adapterInstanceClient, adapterInstanceUri, adaptersToMigrate);
-    findDocsToMigrate(adapterDescriptionClient, adapterDescriptionUri, adapterDescriptionsToMigrate);
+    findDocsToMigrate(adapterDescriptionClient, adapterDescriptionUri, adapterDescriptionsToRemove);
 
-    return !adaptersToMigrate.isEmpty() || !adapterDescriptionsToMigrate.isEmpty();
+    return !adaptersToMigrate.isEmpty() || !adapterDescriptionsToRemove.isEmpty();
   }
 
   private void findDocsToMigrate(CouchDbClient adapterClient,
@@ -89,16 +89,15 @@ public class AdapterMigration implements Migration {
   public void executeMigration() {
     var adapterInstanceBackupClient = Utils.getCouchDbAdapterInstanceBackupClient();
 
-    adapterDescriptionsToMigrate.forEach(ad -> {
-      var adapterType = ad.get("type").getAsString();
-      var appId = ad.get("appId");
-      if (isSetAdapter(adapterType)) {
-        LOG.info("Deleting adapter description data set {}", appId);
-        adapterDescriptionClient.remove(helpers.getDocId(ad), helpers.getRev(ad));
-      } else {
-        LOG.info("Migrating adapter description {} to new adapter model", appId);
-        getAdapterMigrator(adapterType).migrate(adapterDescriptionClient, ad);
-      }
+    LOG.info("Deleting {} adapter descriptions, which will be regenerated after migration",
+        adapterDescriptionsToRemove.size());
+
+    adapterDescriptionsToRemove.forEach(ad -> {
+      String docId = helpers.getDocId(ad);
+      String rev = helpers.getRev(ad);
+      String appId = ad.get("appId").getAsString();
+      AdapterDescriptionMigration093Provider.INSTANCE.addAppId(appId);
+      adapterDescriptionClient.remove(docId, rev);
     });
 
     LOG.info("Migrating {} adapter models", adaptersToMigrate.size());
