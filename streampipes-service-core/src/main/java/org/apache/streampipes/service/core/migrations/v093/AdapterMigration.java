@@ -95,7 +95,7 @@ public class AdapterMigration implements Migration {
     adapterDescriptionsToRemove.forEach(ad -> {
       String docId = helpers.getDocId(ad);
       String rev = helpers.getRev(ad);
-      String appId = ad.get("appId").getAsString();
+      String appId = helpers.getAppId(ad);
       AdapterDescriptionMigration093Provider.INSTANCE.addAppId(appId);
       adapterDescriptionClient.remove(docId, rev);
     });
