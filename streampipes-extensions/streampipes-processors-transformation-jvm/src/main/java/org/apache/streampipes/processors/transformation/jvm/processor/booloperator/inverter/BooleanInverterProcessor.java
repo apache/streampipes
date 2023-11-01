@@ -21,7 +21,6 @@ package org.apache.streampipes.processors.transformation.jvm.processor.boolopera
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -39,7 +38,6 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class BooleanInverterProcessor extends StreamPipesDataProcessor {
   public static final String INVERT_FIELD_ID = "invert-field";
-  private static Logger log;
   private String invertFieldName;
   @Override
   public DataProcessorDescription declareModel() {
@@ -62,7 +60,6 @@ public class BooleanInverterProcessor extends StreamPipesDataProcessor {
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
-    log = parameters.getGraph().getLogger(BooleanInverterProcessor.class);
     this.invertFieldName = extractor.mappingPropertyValue(INVERT_FIELD_ID);
   }
 

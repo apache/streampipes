@@ -57,6 +57,22 @@
                 (filterChangedEmitter)="applyFilter($event)"
             >
             </sp-connect-filter-toolbar>
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="end center"
+                style="padding-left: 10px; padding-right: 10px; font-size: 14px"
+                class="page-container-nav"
+            >
+                <button
+                    mat-icon-button
+                    id="startAdapterTutorial3"
+                    (click)="startAdapterTutorial()"
+                    matTooltip="Tutorial: Generic Adapter"
+                >
+                    <mat-icon color="accent">school</mat-icon>
+                </button>
+            </div>
             <button
                 mat-icon-button
                 matTooltip="Refresh adapters"
@@ -95,7 +111,11 @@
                         >
                             <ng-container matColumnDef="start">
                                 <th mat-header-cell *matHeaderCellDef>Start</th>
-                                <td mat-cell *matCellDef="let adapter">
+                                <td
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                    data-cy="adapters-table"
+                                >
                                     <button
                                         color="accent"
                                         mat-icon-button
@@ -188,12 +208,15 @@
                                     #Messages
                                 </th>
                                 <td mat-cell *matCellDef="let adapter">
-                                    <span class="monitoring-info">{{
-                                        adapterMetrics[adapter.elementId]
-                                            ? adapterMetrics[adapter.elementId]
-                                                  .messagesOut.counter
-                                            : 0
-                                    }}</span>
+                                    <h5 class="monitoring-info">
+                                        {{
+                                            adapterMetrics[adapter.elementId]
+                                                ? adapterMetrics[
+                                                      adapter.elementId
+                                                  ].messagesOut.counter
+                                                : 0
+                                        }}
+                                    </h5>
                                 </td>
                             </ng-container>
 
@@ -202,13 +225,18 @@
                                     Last message
                                 </th>
                                 <td mat-cell *matCellDef="let adapter">
-                                    <span class="monitoring-info">{{
-                                        adapterMetrics[adapter.elementId]
-                                            ? (adapterMetrics[adapter.elementId]
-                                                  .lastTimestamp
-                                              | date: 'medium')
-                                            : 'n/a'
-                                    }}</span>
+                                    <h5>
+                                        {{
+                                            adapterMetrics[adapter.elementId] &&
+                                            adapterMetrics[adapter.elementId]
+                                                .lastTimestamp > 0
+                                                ? (adapterMetrics[
+                                                      adapter.elementId
+                                                  ].lastTimestamp
+                                                  | date: 'dd.MM.yyyy HH:mm')
+                                                : 'n/a'
+                                        }}
+                                    </h5>
                                 </td>
                             </ng-container>
 
@@ -297,7 +325,6 @@
                                                 matTooltip="Edit adapter"
                                                 data-cy="edit-adapter"
                                                 matTooltipPosition="above"
-                                                [disabled]="adapter.running"
                                                 (click)="editAdapter(adapter)"
                                             >
                                                 <i class="material-icons"

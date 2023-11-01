@@ -66,17 +66,17 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 autoflake = "2.2.0"
-black = "23.9.1"
+black = "23.10.0"
 blacken-docs = "1.16.0"
 flake8 = "6.1.0"
 interrogate = { version = "1.5.0", extras = ["png"] }
 isort = "5.12.0"
-mypy = "1.5.0"
-ruff = "0.0.280"
-pre-commit = "3.4.0"
+mypy = "1.6.0"
+ruff = "0.1.0"
+pre-commit = "3.5.0"
 pytest = "7.4.0"
 pytest-cov = "4.1.0"
-pyupgrade = "3.13.0"
+pyupgrade = "3.15.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -90,7 +90,7 @@ mkdocs-jupyter = "0.24.0"
 mkdocs-literate-nav = "0.6.0"
 mkdocs-material = "9.3.1"
 mkdocstrings = { version = "0.23.0", extras = ["python"] }
-numpydoc = "1.5.0"
+numpydoc = "1.6.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
 
 [tool.poetry.group.stubs]

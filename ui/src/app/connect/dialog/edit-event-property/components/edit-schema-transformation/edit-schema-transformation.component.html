@@ -34,6 +34,7 @@
                     name="runtimename"
                     id="runtimename"
                     data-cy="connect-edit-field-runtime-name"
+                    (blur)="triggerTutorialStep()"
                     [(ngModel)]="cachedProperty.runtimeName"
                 />
             </mat-form-field>
@@ -89,7 +90,7 @@
     <sp-ep-settings-section
         sectionTitle="Field data type"
         sectionDescription="The data type of the field values"
-        *ngIf="!isTimestampProperty"
+        *ngIf="!isTimestampProperty && !isNestedProperty"
     >
         <sp-edit-data-type
             [cachedProperty]="cachedProperty"

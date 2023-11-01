@@ -17,7 +17,6 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ConnectService } from '../../../services/connect.service';
 import { MatDialog } from '@angular/material/dialog';
 import {
     AdapterDescription,
@@ -25,6 +24,8 @@ import {
 } from '@streampipes/platform-services';
 import { DialogService } from '@streampipes/shared-ui';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RestApi } from '../../../../services/rest-api.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'sp-adapter-description',
@@ -45,11 +46,12 @@ export class AdapterDescriptionComponent implements OnInit {
     className = '';
     isRunningAdapter = false;
     adapterLabel: string;
+    iconUrl: SafeUrl;
 
     constructor(
-        private connectService: ConnectService,
+        private restApi: RestApi,
         private dataMarketplaceService: AdapterService,
-        private dialogService: DialogService,
+        private sanitizer: DomSanitizer,
         public dialog: MatDialog,
         private _snackBar: MatSnackBar,
     ) {}
@@ -63,6 +65,9 @@ export class AdapterDescriptionComponent implements OnInit {
             !(this.adapter as any).isTemplate;
         this.adapterLabel = this.adapter.name.split(' ').join('_');
         this.className = this.getClassName();
+        this.iconUrl = this.sanitizer.bypassSecurityTrustUrl(
+            this.makeAssetIconUrl(),
+        );
     }
 
     getClassName() {
@@ -87,18 +92,7 @@ export class AdapterDescriptionComponent implements OnInit {
         }
     }
 
-    removeAdapter(): void {
-        this.dataMarketplaceService
-            .deleteAdapterDescription(this.adapter.elementId)
-            .subscribe({
-                next: () => {
-                    this.updateAdapterEmitter.emit();
-                },
-                error: () => {
-                    this._snackBar.open(
-                        'Cannot delete an adapter which has an active instance running.',
-                    );
-                },
-            });
+    makeAssetIconUrl() {
+        return this.restApi.getAssetUrl(this.adapter.appId) + '/icon';
     }
 }

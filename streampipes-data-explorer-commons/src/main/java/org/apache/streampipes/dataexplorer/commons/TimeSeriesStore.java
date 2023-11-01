@@ -43,7 +43,7 @@ public class TimeSeriesStore {
                          DataLakeMeasure measure,
                          boolean enableImageStore) {
 
-    measure = DataExplorerUtils.sanitizeAndRegisterAtDataLake(client, measure);
+    DataExplorerUtils.sanitizeAndRegisterAtDataLake(client, measure);
 
     if (enableImageStore) {
       // TODO check if event properties are replaces correctly

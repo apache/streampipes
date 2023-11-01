@@ -18,6 +18,7 @@
 package org.apache.streampipes.mail.template;
 
 import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
+import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.LinkPart;
 import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import org.apache.streampipes.mail.utils.MailUtils;
@@ -54,8 +55,8 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   }
 
   @Override
-  protected void addTemplateParts(Map<String, MailTemplatePart> templateParts) {
-    templateParts.put(DefaultPlaceholders.INNER.key(), MailTemplatePart.MAIL_TEMPLATE_INNER_BUTTON);
+  protected void configureTemplate(MailTemplateBuilder builder) {
+    builder.withInnerPart(MailTemplatePart.MAIL_TEMPLATE_INNER_BUTTON);
   }
 
   private String makeLink() {

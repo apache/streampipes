@@ -62,6 +62,7 @@ import org.apache.streampipes.rest.impl.admin.EmailConfigurationResource;
 import org.apache.streampipes.rest.impl.admin.ExtensionsServiceEndpointResource;
 import org.apache.streampipes.rest.impl.admin.GeneralConfigurationResource;
 import org.apache.streampipes.rest.impl.admin.MessagingConfigurationResource;
+import org.apache.streampipes.rest.impl.admin.MigrationResource;
 import org.apache.streampipes.rest.impl.admin.PermissionResource;
 import org.apache.streampipes.rest.impl.admin.PipelineElementImport;
 import org.apache.streampipes.rest.impl.admin.ServiceConfigurationResource;
@@ -73,7 +74,6 @@ import org.apache.streampipes.rest.impl.connect.DescriptionResource;
 import org.apache.streampipes.rest.impl.connect.GuessResource;
 import org.apache.streampipes.rest.impl.connect.RuntimeResolvableResource;
 import org.apache.streampipes.rest.impl.connect.UnitResource;
-import org.apache.streampipes.rest.impl.connect.WorkerAdministrationResource;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipelineResource;
@@ -131,6 +131,7 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         LabelResource.class,
         MeasurementUnitResource.class,
         MessagingConfigurationResource.class,
+        MigrationResource.class,
         Notification.class,
         OntologyMeasurementUnit.class,
         PermissionResource.class,
@@ -179,7 +180,6 @@ public class StreamPipesResourceConfig extends BaseResourceConfig {
         GuessResource.class,
 
         UnitResource.class,
-        WorkerAdministrationResource.class,
         RuntimeResolvableResource.class
     );
   }

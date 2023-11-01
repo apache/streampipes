@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.extensions;
 
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.rest.extensions.html.HTMLGenerator;
 import org.apache.streampipes.rest.extensions.html.JSONGenerator;
@@ -27,6 +29,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+
+import java.util.Collection;
 
 @Path("/")
 public class WelcomePage {
@@ -48,11 +52,22 @@ public class WelcomePage {
   }
 
   private WelcomePageGenerator getWelcomePageGenerator() {
-    return new WelcomePageGenerator(DeclarersSingleton
-        .getInstance()
-        .getBaseUri(), DeclarersSingleton
+    return new WelcomePageGenerator(
+        DeclarersSingleton.getInstance().getBaseUri(),
+        getPipelineElements(),
+        getAdapters());
+  }
+
+  private Collection<IStreamPipesPipelineElement<?>> getPipelineElements() {
+    return DeclarersSingleton
         .getInstance()
         .getDeclarers()
-        .values());
+        .values();
+  }
+
+  private Collection<StreamPipesAdapter> getAdapters() {
+    return DeclarersSingleton
+        .getInstance()
+        .getAdapters();
   }
 }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.stream;
 
-import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +28,12 @@ import java.util.Map;
  * If the same event is sent multiple times the timer is always reseted to cover polling of rest endpoints
  * User can configure how long events are stored in cache, it should be minimum 2x the polling intervall
  */
-public class DuplicateFilterPipelineElement implements IAdapterPipelineElement {
+public class DuplicateFilterPipelineElement implements TransformationRule {
 
   /**
    * Lifetime of events
    */
-  private long filterTimeWindow;
+  private final long filterTimeWindow;
 
   public DuplicateFilterPipelineElement(String filterTimeWindow) {
     // convert it to seconds
@@ -47,7 +47,7 @@ public class DuplicateFilterPipelineElement implements IAdapterPipelineElement {
   private long lastCleanUpTimestamp = System.currentTimeMillis();
 
   @Override
-  public Map<String, Object> process(Map<String, Object> event) {
+  public Map<String, Object> apply(Map<String, Object> event) {
     cleanUpEvenState();
 
     int hash = event.hashCode();

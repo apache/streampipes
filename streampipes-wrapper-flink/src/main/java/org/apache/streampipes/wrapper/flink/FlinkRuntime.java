@@ -69,7 +69,7 @@ public abstract class FlinkRuntime<
     PeT extends IStreamPipesPipelineElement<?>,
     IvT extends InvocableStreamPipesEntity,
     RcT extends RuntimeContext,
-    ExT extends IParameterExtractor<IvT>,
+    ExT extends IParameterExtractor,
     PepT extends IPipelineElementParameters<IvT, ExT>,
     FpT extends IFlinkProgram>
     extends DistributedRuntime<PeT, IvT, RcT, ExT, PepT>

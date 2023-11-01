@@ -24,6 +24,8 @@ import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
+import org.apache.http.HttpStatus;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -50,7 +52,7 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
               .getIncludedAssets()).makeZip());
     } catch (IOException e) {
       e.printStackTrace();
-      return jakarta.ws.rs.core.Response.status(500).build();
+      return jakarta.ws.rs.core.Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
     }
   }
 

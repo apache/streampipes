@@ -18,7 +18,5 @@
 
 package org.apache.streampipes.extensions.api.extractor;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-
-public interface IStaticPropertyExtractor extends IParameterExtractor<DataSinkInvocation> {
+public interface IStaticPropertyExtractor extends IParameterExtractor {
 }

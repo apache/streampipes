@@ -30,11 +30,6 @@
 .adapter-icon {
     max-height: 50px;
 }
-
-.historic {
-    cursor: pointer;
-    color: #ffa23b;
-}
 .real-time {
     cursor: pointer;
     color: #ffeb3b;
@@ -47,8 +42,13 @@
 
 .monitoring-info {
     color: var(--color-default-text);
-    background: var(--color-bg-3);
+    border: 1px solid var(--color-default-text);
+    background: var(--color-bg-0);
     border-radius: 5px;
     padding: 5px;
     text-align: center;
+}
+
+.icon {
+    max-width: 60px;
 }

@@ -19,6 +19,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyNary } from '@streampipes/platform-services';
+import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
 
 @Component({
     selector: 'sp-app-static-mapping-nary',
@@ -31,7 +32,7 @@ export class StaticMappingNaryComponent
 {
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    constructor() {
+    constructor(private displayRecommendedPipe: DisplayRecommendedPipe) {
         super();
     }
 
@@ -40,7 +41,12 @@ export class StaticMappingNaryComponent
         if (!this.staticProperty.selectedProperties) {
             this.selectNone();
         } else {
-            this.availableProperties.forEach(ep => {
+            let recommendedProperties = this.displayRecommendedPipe.transform(
+                this.availableProperties,
+                this.staticProperty.propertyScope,
+                this.displayRecommended,
+            );
+            recommendedProperties.forEach(ep => {
                 if (
                     this.staticProperty.selectedProperties.indexOf(
                         ep.propertySelector,
@@ -85,7 +91,12 @@ export class StaticMappingNaryComponent
 
     selectAll() {
         this.selectNone();
-        this.availableProperties.forEach(ep => {
+        let recommendedProperties = this.displayRecommendedPipe.transform(
+            this.availableProperties,
+            this.staticProperty.propertyScope,
+            this.displayRecommended,
+        );
+        recommendedProperties.forEach(ep => {
             ep['checked'] = true;
             this.addProperty(ep);
         });

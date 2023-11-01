@@ -23,7 +23,7 @@ services:
     environment:
       # see: https://github.com/confluentinc/schema-registry/issues/648
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094 #  Replace localhost with your external address if Kafka should be reachable from external systems.
       KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka

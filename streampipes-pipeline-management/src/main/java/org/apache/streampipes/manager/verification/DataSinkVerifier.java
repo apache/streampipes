@@ -41,7 +41,7 @@ public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
     if (!storageApi.exists(elementDescription)) {
       storageApi.storeDataSink(elementDescription);
     } else {
-      storageState = StorageState.ALREADY_IN_SESAME;
+      storageState = StorageState.ALREADY_STORED;
     }
     return storageState;
   }
@@ -61,14 +61,6 @@ public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
   protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
       AssetManager.storeAsset(SpServiceUrlProvider.DATA_SINK, elementDescription.getAppId());
-    }
-  }
-
-  @Override
-  protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
-    if (elementDescription.isIncludesAssets()) {
-      AssetManager.deleteAsset(elementDescription.getAppId());
-      storeAssets();
     }
   }
 }

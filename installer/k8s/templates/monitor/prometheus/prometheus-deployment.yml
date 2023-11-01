@@ -1,0 +1,108 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{{- if eq .Values.monitoringSystem true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.monitoring.prometheus.appName }}
+  labels:
+    app: {{ .Values.monitoring.prometheus.appName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.monitoring.prometheus.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.monitoring.prometheus.appName }}
+    spec:
+      volumes:
+        - name: shared-token
+          persistentVolumeClaim:
+            claimName: token
+        - name: {{ .Values.monitoring.prometheus.persistence.pvName }}
+          persistentVolumeClaim:
+            claimName:  {{ .Values.monitoring.prometheus.persistence.claimName }}
+        - name: prometheus-conf
+          configMap:
+            name: prometheus-conf
+      restartPolicy: {{ .Values.restartPolicy }}
+      initContainers:
+        - name: init-wait-consul-couchdb-core
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.streampipes.core.service.name }} {{ .Values.streampipes.core.service.port }} && nc -zvw1 {{ .Values.extensions.iiot.service.name }} {{ .Values.extensions.iiot.service.port }} && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: prometheus-token-refresher
+          image: luoluoyuyu/prometheus-token-refresher:1.0.0
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: SP_HOST
+              value: "{{ .Values.streampipes.core.service.name }}"
+            - name: SP_PORT
+              value: "{{ .Values.streampipes.core.service.port }}"
+            - name: SP_USERNAME
+              value: "{{ .Values.streampipes.auth.users.admin.user }}"
+            - name: SP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName}}
+                  key: sp-initial-admin-password
+            - name: PROMETHEUS_HOST
+              value: "{{ .Values.monitoring.prometheus.service.name }}"
+            - name: PROMETHEUS_PORT
+              value: "{{ .Values.monitoring.prometheus.service.port }}"
+            - name: TOKEN_FILE
+              value: "{{ .Values.monitoring.prometheus.config.tokenFileDir }}/{{ .Values.monitoring.prometheus.config.tokenFileName }}"
+          volumeMounts:
+            - name: shared-token
+              mountPath: {{ .Values.monitoring.prometheus.config.tokenFileDir }}
+              readOnly: false
+        - name: {{ .Values.monitoring.prometheus.appName }}
+          image: bitnami/prometheus:{{ .Values.monitoring.prometheus.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          args:
+            - --web.enable-lifecycle
+          ports:
+            - containerPort: {{ .Values.monitoring.prometheus.port }}
+          volumeMounts:
+            - name: prometheus-conf
+              mountPath: /opt/bitnami/prometheus/prometheus.yml
+              subPath: prometheus.yml
+            - name: {{ .Values.monitoring.prometheus.persistence.pvName }}
+              mountPath: /opt/bitnami/prometheus/data
+            - name: shared-token
+              mountPath: {{ .Values.monitoring.prometheus.config.tokenFileDir }}
+              readOnly: false
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.monitoring.prometheus.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.monitoring.prometheus.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.monitoring.prometheus.port }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+{{- end }}

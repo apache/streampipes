@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.html.page;
 
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
@@ -25,6 +26,8 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.rest.extensions.html.model.Description;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -39,34 +42,44 @@ public class WelcomePageGenerator {
 
   protected List<Description> descriptions;
   protected Collection<IStreamPipesPipelineElement<?>> pipelineElements;
+  protected Collection<StreamPipesAdapter> adapters;
   protected String baseUri;
 
   public WelcomePageGenerator(String baseUri,
-                              Collection<IStreamPipesPipelineElement<?>> pipelineElements) {
+                              Collection<IStreamPipesPipelineElement<?>> pipelineElements,
+                              Collection<StreamPipesAdapter> adapters) {
     this.pipelineElements = pipelineElements;
+    this.adapters = adapters;
     this.baseUri = baseUri;
     this.descriptions = new ArrayList<>();
-  }
-
-  public List<Description> getDescriptions() {
-    return descriptions;
   }
 
   public List<Description> buildUris() {
     List<Description> descriptions = new ArrayList<>();
 
-    for (IStreamPipesPipelineElement<?> pipelineElement : pipelineElements) {
-      descriptions.add(getDescription(pipelineElement));
-    }
+    pipelineElements.forEach(pipelineElement -> descriptions.add(getPipelineElementDescription(pipelineElement)));
+    adapters.forEach(adapter -> descriptions.add(getAdapterDescription(adapter)));
+
     return descriptions;
   }
 
-  private Description getDescription(IStreamPipesPipelineElement<?> declarer) {
-    NamedStreamPipesEntity entity = declarer.declareConfig().getDescription();
+  private Description getAdapterDescription(StreamPipesAdapter adapter) {
+    var entity = adapter.declareConfig().getAdapterDescription();
+    return getDescription(entity, "adapter", "api/v1/worker/adapters/");
+  }
+
+  private Description getPipelineElementDescription(IStreamPipesPipelineElement<?> declarer) {
+    var entity = declarer.declareConfig().getDescription();
+    return getDescription(entity, getType(declarer), getPathPrefix(declarer));
+  }
+
+  private Description getDescription(NamedStreamPipesEntity entity,
+                                     String type,
+                                     String pathPrefix) {
     Description desc = new Description();
     // TODO remove after full internationalization support has been implemented
     updateLabel(entity, desc);
-    desc.setType(getType(declarer));
+    desc.setType(type);
     desc.setElementId(entity.getElementId());
     desc.setAppId(entity.getAppId());
     desc.setEditable(!(entity.isInternallyManaged()));
@@ -74,16 +87,21 @@ public class WelcomePageGenerator {
         && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
     desc.setIncludesIcon(entity.isIncludesAssets()
         && entity.getIncludedAssets().contains(Assets.ICON));
-    String uri = baseUri;
-    if (declarer instanceof IStreamPipesDataSink) {
-      uri += "sec/";
-    } else if (declarer instanceof IStreamPipesDataProcessor) {
-      uri += "sepa/";
-    } else if (declarer instanceof IStreamPipesDataStream) {
-      uri += "stream/";
-    }
+    String uri = baseUri + pathPrefix;
     desc.setDescriptionUrl(uri + entity.getAppId());
     return desc;
+  }
+
+  private String getPathPrefix(IStreamPipesPipelineElement<?> pipelineElement) {
+    if (pipelineElement instanceof IStreamPipesDataSink) {
+      return "sec/";
+    } else if (pipelineElement instanceof IStreamPipesDataProcessor) {
+      return "sepa/";
+    } else if (pipelineElement instanceof IStreamPipesDataStream) {
+      return "stream/";
+    } else {
+      return "";
+    }
   }
 
   private String getType(IStreamPipesPipelineElement<?> pipelineElement) {
@@ -92,8 +110,12 @@ public class WelcomePageGenerator {
       return "action";
     } else if (elementDescription instanceof SpDataStream) {
       return "stream";
-    } else {
+    } else if (elementDescription instanceof DataProcessorDescription) {
       return "sepa";
+    } else if (elementDescription instanceof AdapterDescription) {
+      return "adapter";
+    } else {
+      throw new RuntimeException("Could not get type for element " + elementDescription.getClass());
     }
   }
 

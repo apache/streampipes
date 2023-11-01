@@ -36,7 +36,7 @@ public class DeleteTransformationRuleTest {
 
     DeleteTransformationRule deleteRule = new DeleteTransformationRule(List.of("key"));
 
-    Map<String, Object> result = deleteRule.transform(event);
+    Map<String, Object> result = deleteRule.apply(event);
 
     assertEquals(0, result.keySet().size());
   }
@@ -50,7 +50,7 @@ public class DeleteTransformationRuleTest {
 
     DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
-    Map<String, Object> result = deleteRule.transform(event);
+    Map<String, Object> result = deleteRule.apply(event);
 
     assertEquals(1, result.keySet().size());
   }

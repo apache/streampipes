@@ -19,28 +19,30 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
-import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class PipelineElementDescriptionStorageImpl implements IPipelineElementDescriptionStorageCache {
+public class PipelineElementDescriptionStorageImpl implements IPipelineElementDescriptionStorage {
 
-  private IDataProcessorStorage dataProcessorStorage;
-  private IDataStreamStorage dataStreamStorage;
-  private IDataSinkStorage dataSinkStorage;
+  private final IDataProcessorStorage dataProcessorStorage;
+  private final IDataStreamStorage dataStreamStorage;
+  private final IDataSinkStorage dataSinkStorage;
+  private final IAdapterStorage adapterStorage;
 
   public PipelineElementDescriptionStorageImpl() {
     this.dataProcessorStorage = new DataProcessorStorageImpl();
     this.dataStreamStorage = new DataStreamStorageImpl();
     this.dataSinkStorage = new DataSinkStorageImpl();
+    this.adapterStorage = new AdapterDescriptionStorageImpl();
   }
 
   @Override
@@ -56,25 +58,9 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
-  public boolean storeDataStream(String jsonld) {
-    return false;
-  }
-
-  @Override
   public boolean storeDataProcessor(DataProcessorDescription processorDescription) {
     this.dataProcessorStorage.createElement(processorDescription);
     return true;
-  }
-
-  @Override
-  public boolean storeDataProcessor(String jsonld) {
-    // TODO check if this can be deleted
-    return true;
-  }
-
-  @Override
-  public SpDataStream getDataStreamById(URI rdfId) {
-    return getDataStreamById(rdfId.toString());
   }
 
   @Override
@@ -93,13 +79,8 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
-  public DataProcessorDescription getDataProcessorById(URI rdfId) {
-    return this.getDataProcessorById(rdfId.toString());
-  }
-
-  @Override
   public DataProcessorDescription getDataProcessorByAppId(String appId) {
-    return this.dataProcessorStorage.getDataProcessorByAppId(appId);
+    return this.dataProcessorStorage.getFirstDataProcessorByAppId(appId);
   }
 
   @Override
@@ -108,13 +89,18 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
-  public DataSinkDescription getDataSinkById(URI rdfId) {
-    return getDataSinkById(rdfId.toString());
+  public DataSinkDescription getDataSinkByAppId(String appId) {
+    return this.dataSinkStorage.getFirstDataSinkByAppId(appId);
   }
 
   @Override
-  public DataSinkDescription getDataSinkByAppId(String appId) {
-    return this.dataSinkStorage.getDataSinkByAppId(appId);
+  public AdapterDescription getAdapterById(String elementId) {
+    return adapterStorage.getElementById(elementId);
+  }
+
+  @Override
+  public AdapterDescription getAdapterByAppId(String appId) {
+    return this.adapterStorage.getFirstAdapterByAppId(appId);
   }
 
   @Override
@@ -125,6 +111,11 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   @Override
   public List<DataProcessorDescription> getAllDataProcessors() {
     return this.dataProcessorStorage.getAll();
+  }
+
+  @Override
+  public List<AdapterDescription> getAllAdapterDescriptions() {
+    return null;
   }
 
   @Override
@@ -150,8 +141,25 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
+  public boolean deleteAdapterDescription(AdapterDescription adapterDescription) {
+    adapterStorage.deleteAdapter(adapterDescription.getElementId());
+    return true;
+  }
+
+  @Override
+  public boolean deleteAdapterDescription(String elementId) {
+    adapterStorage.deleteAdapter(elementId);
+    return true;
+  }
+
+  @Override
   public boolean exists(SpDataStream stream) {
     return getEventStreamById(stream.getElementId()) != null;
+  }
+
+  @Override
+  public boolean exists(AdapterDescription adapterDescription) {
+    return existsAdapterDescription(adapterDescription.getElementId());
   }
 
   @Override
@@ -195,6 +203,11 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
+  public boolean existsAdapterDescription(String elementId) {
+    return getAdapterById(elementId) != null;
+  }
+
+  @Override
   public boolean update(SpDataStream stream) {
     this.dataStreamStorage.updateElement(stream);
     return true;
@@ -218,6 +231,12 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
+  public boolean update(AdapterDescription adapter) {
+    adapterStorage.updateElement(adapter);
+    return true;
+  }
+
+  @Override
   public boolean deleteDataSink(DataSinkDescription sec) {
     this.dataSinkStorage.deleteElement(sec);
     return true;
@@ -235,33 +254,18 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
+  public boolean storeAdapterDescription(AdapterDescription adapterDescription) {
+    this.adapterStorage.storeAdapter(adapterDescription);
+    return true;
+  }
+
+  @Override
   public List<DataSinkDescription> getAllDataSinks() {
     return this.dataSinkStorage.getAll();
   }
 
   @Override
-  public StaticProperty getStaticPropertyById(String rdfId) {
-    // TODO Check if this is needed
-    return null;
-  }
-
-  @Override
   public SpDataStream getEventStreamById(String rdfId) {
     return dataStreamStorage.getElementById(rdfId);
-  }
-
-  @Override
-  public void refreshDataProcessorCache() {
-    // TODO no longer needed
-  }
-
-  @Override
-  public void refreshDataSinkCache() {
-    // TODO no longer needed
-  }
-
-  @Override
-  public void refreshDataSourceCache() {
-    // TODO no longer needed
   }
 }

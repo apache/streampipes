@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.extensions.html;
 
-import org.apache.streampipes.rest.extensions.html.model.DataSourceDescriptionHtml;
 import org.apache.streampipes.rest.extensions.html.model.Description;
 
 import com.google.gson.JsonArray;
@@ -29,7 +28,7 @@ import java.util.List;
 
 public class JSONGenerator {
 
-  private List<Description> description;
+  private final List<Description> description;
 
   public JSONGenerator(List<Description> description) {
     this.description = description;
@@ -42,16 +41,7 @@ public class JSONGenerator {
   }
 
   private JsonObject getJsonElement(Description d) {
-    JsonObject obj = makeDescription(d);
-    if (d instanceof DataSourceDescriptionHtml) {
-      DataSourceDescriptionHtml producerDesc = (DataSourceDescriptionHtml) d;
-      JsonArray array = new JsonArray();
-
-      producerDesc.getStreams().forEach(s -> array.add(makeDescription(s)));
-
-      obj.add("streams", array);
-    }
-    return obj;
+    return makeDescription(d);
   }
 
   private JsonObject makeDescription(Description d) {

@@ -41,7 +41,8 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
   public AdapterEventPreviewPipeline(AdapterEventPreview previewRequest) {
     this.objectMapper = new ObjectMapper();
-    this.pipelineElements = new AdapterPipelineGeneratorBase().makeAdapterPipelineElements(previewRequest.getRules());
+    this.pipelineElements = new AdapterPipelineGeneratorBase()
+        .makeAdapterPipelineElements(previewRequest.getRules(), false);
     this.event = previewRequest.getInputData();
   }
 

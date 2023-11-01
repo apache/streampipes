@@ -136,8 +136,12 @@ public class PipelineManager {
 
   private static Stream<? extends NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
     return Stream.concat(
-        Stream.concat(pipeline.getStreams().stream(), pipeline.getSepas().stream()),
-        pipeline.getActions().stream());
+        Stream.concat(
+            pipeline.getStreams().stream(),
+            pipeline.getSepas().stream()
+        ),
+        pipeline.getActions().stream()
+    );
   }
 
   private static void preparePipelineBasics(String username,

@@ -44,3 +44,7 @@ export interface EmailConfig {
     smtpPassEncrypted: boolean;
     proxyPassEncrypted: boolean;
 }
+
+export interface EmailTemplate {
+    template: string;
+}

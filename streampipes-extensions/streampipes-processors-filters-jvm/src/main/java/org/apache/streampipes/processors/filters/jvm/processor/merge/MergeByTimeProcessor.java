@@ -40,10 +40,10 @@ import java.util.List;
 
 public class MergeByTimeProcessor extends StreamPipesDataProcessor {
 
-  private static final String TIMESTAMP_MAPPING_STREAM_1_KEY = "timestamp_mapping_stream_1";
-  private static final String TIMESTAMP_MAPPING_STREAM_2_KEY = "timestamp_mapping_stream_2";
-  private static final String NUMBER_MAPPING = "number_mapping";
-  private static final String TIME_INTERVAL = "time-interval";
+  protected static final String TIMESTAMP_MAPPING_STREAM_1_KEY = "timestamp_mapping_stream_1";
+  protected static final String TIMESTAMP_MAPPING_STREAM_2_KEY = "timestamp_mapping_stream_2";
+  protected static final String NUMBER_MAPPING = "number_mapping";
+  protected static final String TIME_INTERVAL = "time-interval";
 
   private List<String> outputKeySelectors;
   private String timestampFieldStream0;

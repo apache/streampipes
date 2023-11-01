@@ -24,7 +24,6 @@ import {
     EventSchema,
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { ConnectService } from '../../services/connect.service';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
@@ -45,60 +44,46 @@ export class AdapterConfigurationComponent implements OnInit {
     myStepper: MatStepper;
     parentForm: UntypedFormGroup;
 
-    eventSchema: EventSchema;
-    oldEventSchema: EventSchema;
-
     private eventSchemaComponent: EventSchemaComponent;
 
     constructor(
         private transformationRuleService: TransformationRuleService,
         private shepherdService: ShepherdService,
-        private connectService: ConnectService,
         private _formBuilder: UntypedFormBuilder,
         private router: Router,
     ) {}
 
     ngOnInit() {
         this.parentForm = this._formBuilder.group({});
-
-        this.eventSchema = this.adapter.dataStream.eventSchema;
     }
 
     removeSelection() {
-        this.router.navigate(['connect', 'create']).then();
+        this.router.navigate(['connect']).then();
     }
 
     clickSpecificSettingsNextButton() {
         this.shepherdService.trigger('specific-settings-next-button');
-        this.guessEventSchema();
+        this.eventSchemaComponent.guessSchema();
         this.goForward();
     }
 
     clickEventSchemaNextButtonButton() {
-        this.setSchema();
+        this.applySchema();
 
         this.shepherdService.trigger('event-schema-next-button');
         this.goForward();
     }
 
-    guessEventSchema() {
-        const eventSchema: EventSchema = this.adapter.dataStream.eventSchema;
+    public applySchema() {
+        const originalSchema = this.eventSchemaComponent.getOriginalSchema();
+        const targetSchema = this.eventSchemaComponent.getTargetSchema();
+        this.adapter.dataStream.eventSchema = targetSchema;
 
-        if (eventSchema.eventProperties.length === 0) {
-            this.eventSchemaComponent.guessSchema();
-        } else {
-            this.oldEventSchema = eventSchema;
-        }
-    }
-
-    public setSchema() {
-        this.adapter.dataStream.eventSchema = this.eventSchema;
-
-        this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
-
-        this.transformationRuleService.setNewEventSchema(this.eventSchema);
         this.adapter.rules =
-            this.transformationRuleService.getTransformationRuleDescriptions();
+            this.transformationRuleService.getTransformationRuleDescriptions(
+                originalSchema,
+                targetSchema,
+            );
     }
 
     goBack() {
@@ -110,7 +95,7 @@ export class AdapterConfigurationComponent implements OnInit {
     }
 
     public adapterWasStarted() {
-        this.router.navigate(['connect']).then();
+        this.router.navigate(['connect']);
     }
 
     @ViewChild(EventSchemaComponent) set schemaComponent(

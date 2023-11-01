@@ -17,25 +17,14 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { EditorService } from './services/editor.service';
 import { PipelineElementService } from '@streampipes/platform-services';
 import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from './model/editor.model';
-import {
-    CurrentUserService,
-    DialogService,
-    PanelType,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
-import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
-import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
-import { ShepherdService } from '../services/tour/shepherd.service';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { zip } from 'rxjs';
-import { AppConstants } from '../services/app.constants';
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
 
 @Component({
@@ -51,25 +40,9 @@ export class EditorComponent implements OnInit {
 
     allElementsLoaded = false;
 
-    requiredStreamForTutorialAppId: any =
-        'org.apache.streampipes.sources.simulator.flowrate1';
-    requiredProcessorForTutorialAppId: any =
-        'org.apache.streampipes.processors.filters.jvm.numericalfilter';
-    requiredSinkForTutorialAppId: any =
-        'org.apache.streampipes.sinks.internal.jvm.datalake';
-    missingElementsForTutorial: any = [];
-
-    isTutorialOpen = false;
-
     constructor(
-        private editorService: EditorService,
         private pipelineElementService: PipelineElementService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private dialogService: DialogService,
-        private shepherdService: ShepherdService,
         private activatedRoute: ActivatedRoute,
-        private appConstants: AppConstants,
         private breadcrumbService: SpBreadcrumbService,
     ) {}
 
@@ -97,95 +70,6 @@ export class EditorComponent implements OnInit {
                     return a.name.localeCompare(b.name);
                 });
             this.allElementsLoaded = true;
-            this.checkForTutorial();
         });
-    }
-
-    checkForTutorial() {
-        const currentUser = this.currentUserService.getCurrentUser();
-        if (currentUser.showTutorial && !this.isTutorialOpen) {
-            if (this.requiredPipelineElementsForTourPresent()) {
-                this.isTutorialOpen = true;
-                this.dialogService.open(WelcomeTourComponent, {
-                    panelType: PanelType.STANDARD_PANEL,
-                    title: 'Welcome to ' + this.appConstants.APP_NAME,
-                    data: {
-                        userInfo: currentUser,
-                    },
-                });
-            }
-        }
-    }
-
-    startCreatePipelineTour() {
-        if (this.requiredPipelineElementsForTourPresent()) {
-            this.shepherdService.startCreatePipelineTour();
-        } else {
-            this.missingElementsForTutorial = [];
-            if (!this.requiredStreamForTourPresent()) {
-                this.missingElementsForTutorial.push({
-                    name: 'Flow Rate 1',
-                    appId: this.requiredStreamForTutorialAppId,
-                });
-            }
-            if (!this.requiredProcessorForTourPresent()) {
-                this.missingElementsForTutorial.push({
-                    name: 'Numerical Filter',
-                    appId: this.requiredProcessorForTutorialAppId,
-                });
-            }
-            if (!this.requiredSinkForTourPresent()) {
-                this.missingElementsForTutorial.push({
-                    name: 'Dashboard Sink',
-                    appId: this.requiredSinkForTutorialAppId,
-                });
-            }
-
-            this.dialogService.open(MissingElementsForTutorialComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: 'Tutorial requires pipeline elements',
-                data: {
-                    missingElementsForTutorial: this.missingElementsForTutorial,
-                },
-            });
-        }
-    }
-
-    requiredPipelineElementsForTourPresent() {
-        return (
-            this.requiredStreamForTourPresent() &&
-            this.requiredProcessorForTourPresent() &&
-            this.requiredSinkForTourPresent()
-        );
-    }
-
-    requiredStreamForTourPresent() {
-        return this.requiredPeForTourPresent(
-            this.allElements,
-            this.requiredStreamForTutorialAppId,
-        );
-    }
-
-    requiredProcessorForTourPresent() {
-        return this.requiredPeForTourPresent(
-            this.allElements,
-            this.requiredProcessorForTutorialAppId,
-        );
-    }
-
-    requiredSinkForTourPresent() {
-        return this.requiredPeForTourPresent(
-            this.allElements,
-            this.requiredSinkForTutorialAppId,
-        );
-    }
-
-    requiredPeForTourPresent(list, appId) {
-        return (
-            list &&
-            list.some(el => {
-                return el.appId === appId;
-            })
-        );
     }
 }

@@ -58,16 +58,30 @@
     max-height: 50px;
     max-width: 80%;
 }
-.historic {
-    cursor: pointer;
-    color: #ffa23b;
-}
 .real-time {
     cursor: pointer;
     color: #ffeb3b;
 }
 
+.adapter-icon {
+    margin-left: 10px;
+    box-shadow:
+        rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+        rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    text-align: center;
+    display: inline-block;
+}
+
 .icon {
-    margin-top: 20px;
-    height: 50px;
+    max-width: 60px;
+}
+
+.large-icon {
+    line-height: 90px;
+    width: 90px;
+    height: 90px;
+}
+
+.ml-10 {
+    margin-left: 10px;
 }

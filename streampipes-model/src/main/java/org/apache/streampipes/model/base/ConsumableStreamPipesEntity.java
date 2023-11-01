@@ -26,7 +26,7 @@ import org.apache.streampipes.model.util.Cloner;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity {
+public abstract class ConsumableStreamPipesEntity extends VersionedNamedStreamPipesEntity {
 
   private static final long serialVersionUID = -6617391345752016449L;
 
@@ -42,8 +42,8 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     this.staticProperties = new ArrayList<>();
   }
 
-  public ConsumableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
-    super(uri, name, description, iconUrl);
+  public ConsumableStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
+    super(elementId, name, description, iconUrl);
     this.spDataStreams = new ArrayList<>();
     this.staticProperties = new ArrayList<>();
   }

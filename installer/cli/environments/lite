@@ -21,5 +21,4 @@ couchdb
 kafka
 zookeeper
 influxdb
-sources-watertank-simulator
 extensions-all-jvm

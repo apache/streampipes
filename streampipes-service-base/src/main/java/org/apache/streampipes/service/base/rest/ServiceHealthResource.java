@@ -20,10 +20,13 @@ package org.apache.streampipes.service.base.rest;
 
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 
+import org.apache.http.HttpStatus;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+
 
 @Path("")
 public class ServiceHealthResource {
@@ -34,7 +37,7 @@ public class ServiceHealthResource {
     if (serviceId.equals(StreamPipesServiceBase.AUTO_GENERATED_SERVICE_ID)) {
       return Response.ok().build();
     } else {
-      return Response.status(404).build();
+      return Response.status(HttpStatus.SC_NOT_FOUND).build();
     }
   }
 }

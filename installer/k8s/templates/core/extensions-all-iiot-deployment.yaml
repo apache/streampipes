@@ -39,6 +39,8 @@ spec:
           ports:
             - containerPort: {{ .Values.extensions.iiot.port }}
           env:
+            - name: SP_SETUP_PROMETHEUS_ENDPOINT
+              value: "{{ .Values.monitoringSystem }}"
             - name: SP_CLIENT_USER
               value: "{{ .Values.streampipes.auth.users.service.user }}"
             - name: SP_CLIENT_SECRET

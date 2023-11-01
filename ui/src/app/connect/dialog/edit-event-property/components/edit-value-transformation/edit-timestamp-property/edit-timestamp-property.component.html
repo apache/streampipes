@@ -20,7 +20,7 @@
     <mat-form-field class="w-100" color="accent" fxFlex="100">
         <mat-select
             placeholder="Timestamp converter (unix timestamp)"
-            [(value)]="cachedProperty.timestampTransformationMode"
+            [(value)]="cachedProperty.additionalMetadata.mode"
             data-cy="connect-timestamp-converter"
         >
             <mat-option value="none">None</mat-option>
@@ -34,9 +34,7 @@
     <div class="form-group" fxFlexAlign="center" fxFlex="100">
         <mat-form-field
             class="w-100"
-            *ngIf="
-                cachedProperty.timestampTransformationMode === 'formatString'
-            "
+            *ngIf="cachedProperty.additionalMetadata.mode === 'formatString'"
             color="accent"
             fxFlex="100"
         >
@@ -45,12 +43,12 @@
                 matInput
                 placeholder="E.g. yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                 data-cy="connect-timestamp-string-regex"
-                [(ngModel)]="cachedProperty.timestampTransformationFormatString"
+                [(ngModel)]="cachedProperty.additionalMetadata.formatString"
             />
         </mat-form-field>
         <mat-form-field
             class="w-100"
-            *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'"
+            *ngIf="cachedProperty.additionalMetadata.mode === 'timeUnit'"
             color="accent"
             fxFlex="100"
         >
@@ -60,16 +58,14 @@
             >
                 <mat-option
                     value="milliseconds"
-                    (click)="
-                        cachedProperty.timestampTransformationMultiplier = 0
-                    "
+                    (click)="cachedProperty.additionalMetadata.multiplier = 0"
                 >
                     Milliseconds
                 </mat-option>
                 <mat-option
                     value="second"
                     (click)="
-                        cachedProperty.timestampTransformationMultiplier = 1000
+                        cachedProperty.additionalMetadata.multiplier = 1000
                     "
                     >Seconds
                 </mat-option>

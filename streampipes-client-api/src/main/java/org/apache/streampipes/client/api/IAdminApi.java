@@ -19,10 +19,10 @@
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.model.configuration.MessagingSettings;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import java.util.List;
 
@@ -36,11 +36,11 @@ public interface IAdminApi {
 
   SpServiceConfiguration getServiceConfiguration(String serviceGroup);
 
-  void registerAdapters(List<AdapterDescription> adapters);
-
   void registerFunctions(List<FunctionDefinition> functions);
 
   void deregisterFunction(String functionId);
+
+  void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
 
   MessagingSettings getMessagingSettings();
 }

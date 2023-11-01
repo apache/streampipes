@@ -38,7 +38,7 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
   }
 
   public List<String> findAllIdsOnly() {
-    return db.getAll().stream().map(NamedStreamPipesEntity::getElementId).collect(Collectors.toList());
+    return db.getAll().stream().map(NamedStreamPipesEntity::getAppId).collect(Collectors.toList());
   }
 
   public List<X> findAllAsInvocation() {

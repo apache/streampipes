@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.extensions.html;
 
-import org.apache.streampipes.rest.extensions.html.model.DataSourceDescriptionHtml;
 import org.apache.streampipes.rest.extensions.html.model.Description;
 
 import org.rendersnake.HtmlCanvas;
@@ -54,7 +53,7 @@ public class HTMLGenerator {
           .div(class_("container"))
           .div(class_("navbar-header"))
           .a(class_("navbar-brand").style("color:white;"))
-          .content("StreamPipes Pipeline Element Container")
+          .content("StreamPipes Extensions Service")
           ._div()
           ._div()
           ._nav()
@@ -69,17 +68,9 @@ public class HTMLGenerator {
         html.h3();
         html.write(description.getName());
         html._h3();
-        html.h4().write("URI: ").a(href(description.getDescriptionUrl().toString()))
-            .content(description.getDescriptionUrl().toString())._h4();
+        html.h4().write("URI: ").a(href(description.getDescriptionUrl()))
+            .content(description.getDescriptionUrl())._h4();
         html.h4().write("Description: ").write(description.getDescription())._h4();
-        if (description instanceof DataSourceDescriptionHtml) {
-          DataSourceDescriptionHtml semanticEventProducerDescription = (DataSourceDescriptionHtml) description;
-          for (Description agentDesc : semanticEventProducerDescription.getStreams()) {
-            html.h5().b().write(agentDesc.getName())._b()._h5();
-            html.h5().write(agentDesc.getDescription())._h5();
-
-          }
-        }
       }
       html._div();
       html._body();
