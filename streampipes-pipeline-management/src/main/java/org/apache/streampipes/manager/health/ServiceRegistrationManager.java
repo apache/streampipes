@@ -25,6 +25,8 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class ServiceRegistrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistrationManager.class);
@@ -36,8 +38,21 @@ public class ServiceRegistrationManager {
   }
 
   public void applyServiceStatus(String serviceId,
+                                 SpServiceStatus status,
+                                 long firstTimeSeenUnhealthy) {
+    var serviceRegistration = storage.getElementById(serviceId);
+    serviceRegistration.setFirstTimeSeenUnhealthy(firstTimeSeenUnhealthy);
+    applyServiceStatus(status, serviceRegistration);
+  }
+
+  public void applyServiceStatus(String serviceId,
                                  SpServiceStatus status) {
     var serviceRegistration = storage.getElementById(serviceId);
+    applyServiceStatus(status, serviceRegistration);
+  }
+
+  private void applyServiceStatus(SpServiceStatus status,
+                                  SpServiceRegistration serviceRegistration) {
     serviceRegistration.setStatus(status);
     storage.updateElement(serviceRegistration);
     logService(serviceRegistration);
@@ -48,6 +63,10 @@ public class ServiceRegistrationManager {
     serviceRegistration.setStatus(status);
     storage.createElement(serviceRegistration);
     logService(serviceRegistration);
+  }
+
+  public List<SpServiceRegistration> getAllServices() {
+    return storage.getAll();
   }
 
   public SpServiceRegistration getService(String serviceId) {
