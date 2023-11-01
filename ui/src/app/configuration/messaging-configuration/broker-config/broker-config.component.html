@@ -22,13 +22,23 @@
         <div>
             <mat-form-field class="form-field" fxFlex="100" color="accent">
                 <mat-label>Host</mat-label>
-                <input matInput [(ngModel)]="host" type="text" />
+                <input
+                    matInput
+                    [(ngModel)]="host"
+                    (ngModelChange)="hostChange.emit($event)"
+                    type="text"
+                />
             </mat-form-field>
         </div>
         <div>
             <mat-form-field class="form-field" fxFlex="100" color="accent">
                 <mat-label>Port</mat-label>
-                <input matInput [(ngModel)]="port" type="number" />
+                <input
+                    matInput
+                    [(ngModel)]="port"
+                    (ngModelChange)="portChange.emit($event)"
+                    type="number"
+                />
             </mat-form-field>
         </div>
     </div>
