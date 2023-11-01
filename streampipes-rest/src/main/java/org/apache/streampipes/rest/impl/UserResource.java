@@ -34,6 +34,7 @@ import org.apache.streampipes.user.management.encryption.SecretEncryptionManager
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
+import org.apache.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -241,7 +242,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       }
     }
 
-    return Response.status(401).build();
+    return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
   }
 
   @PUT

@@ -29,6 +29,8 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
+import org.apache.http.HttpStatus;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -65,7 +67,7 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
       }
     } catch (SpConfigurationException e) {
       return jakarta.ws.rs.core.Response
-          .status(400)
+          .status(HttpStatus.SC_BAD_REQUEST)
           .entity(e)
           .build();
     }

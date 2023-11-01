@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.extensions;
 
+import org.apache.http.HttpStatus;
+
 import jakarta.ws.rs.core.Response;
 
 public class AbstractExtensionsResource {
@@ -31,13 +33,13 @@ public class AbstractExtensionsResource {
 
   protected Response clientError() {
     return Response
-        .status(400)
+        .status(HttpStatus.SC_BAD_REQUEST)
         .build();
   }
 
   protected Response serverError() {
     return Response
-        .status(500)
+        .status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
         .build();
   }
 

@@ -171,26 +171,27 @@
         <sp-split-section
             title="Messaging layers"
             subtitle="Manage messaging layer connectivity"
+            *ngIf="loadingCompleted"
         >
             <sp-messaging-broker-config
                 title="JMS"
-                [host]="messagingSettings.jmsHost"
-                [port]="messagingSettings.jmsPort"
+                [(host)]="messagingSettings.jmsHost"
+                [(port)]="messagingSettings.jmsPort"
             ></sp-messaging-broker-config>
             <sp-messaging-broker-config
                 title="Kafka"
-                [host]="messagingSettings.kafkaHost"
-                [port]="messagingSettings.kafkaPort"
+                [(host)]="messagingSettings.kafkaHost"
+                [(port)]="messagingSettings.kafkaPort"
             ></sp-messaging-broker-config>
             <sp-messaging-broker-config
                 title="MQTT"
-                [host]="messagingSettings.mqttHost"
-                [port]="messagingSettings.mqttPort"
+                [(host)]="messagingSettings.mqttHost"
+                [(port)]="messagingSettings.mqttPort"
             ></sp-messaging-broker-config>
             <sp-messaging-broker-config
                 title="Nats"
-                [host]="messagingSettings.natsHost"
-                [port]="messagingSettings.natsPort"
+                [(host)]="messagingSettings.natsHost"
+                [(port)]="messagingSettings.natsPort"
             ></sp-messaging-broker-config>
             <div fxLayout="column">
                 <div class="subsection-title">Pulsar</div>
@@ -205,8 +206,8 @@
             </div>
             <sp-messaging-broker-config
                 title="Zookeeper"
-                [host]="messagingSettings.zookeeperHost"
-                [port]="messagingSettings.zookeeperPort"
+                [(host)]="messagingSettings.zookeeperHost"
+                [(port)]="messagingSettings.zookeeperPort"
             ></sp-messaging-broker-config>
             <div fxLayoutAlign="start center" class="mt-10">
                 <button

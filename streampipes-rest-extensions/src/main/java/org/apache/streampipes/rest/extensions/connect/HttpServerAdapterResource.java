@@ -19,6 +19,8 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
 
+import org.apache.http.HttpStatus;
+
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -36,7 +38,7 @@ public class HttpServerAdapterResource {
       HttpServerAdapterManagement.INSTANCE.notify(endpointId, body);
       return Response.ok().build();
     } catch (Exception e) {
-      return Response.status(400).entity(e.getMessage()).build();
+      return Response.status(HttpStatus.SC_BAD_REQUEST).entity(e.getMessage()).build();
     }
 
   }
