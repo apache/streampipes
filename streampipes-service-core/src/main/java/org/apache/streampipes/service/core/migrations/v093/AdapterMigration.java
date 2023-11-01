@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.GENERIC_STREAM;
+import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.isSetAdapter;
 
 public class AdapterMigration implements Migration {
 
@@ -94,10 +95,15 @@ public class AdapterMigration implements Migration {
 
     adapterDescriptionsToRemove.forEach(ad -> {
       String docId = helpers.getDocId(ad);
+      var adapterType = ad.get("type").getAsString();
       String rev = helpers.getRev(ad);
       String appId = helpers.getAppId(ad);
-      AdapterDescriptionMigration093Provider.INSTANCE.addAppId(appId);
-      adapterDescriptionClient.remove(docId, rev);
+      if (!isSetAdapter(adapterType)) {
+        AdapterDescriptionMigration093Provider.INSTANCE.addAppId(appId);
+      }
+      if (docId != null && rev != null) {
+        adapterDescriptionClient.remove(docId, rev);
+      }
     });
 
     LOG.info("Migrating {} adapter models", adaptersToMigrate.size());
