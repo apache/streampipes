@@ -100,8 +100,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           client.adminApi().registerService(serviceRegistration);
           return true;
         },
-        () -> "Successfully registered service at core.",
-        () -> String.format(
+        "Successfully registered service at core.",
+        String.format(
             "Could not register service at core at url %s",
             client.getConnectionConfig().getBaseUrl()
         ));
