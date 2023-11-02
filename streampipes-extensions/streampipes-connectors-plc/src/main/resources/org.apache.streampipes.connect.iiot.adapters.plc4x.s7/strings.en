@@ -42,3 +42,15 @@ plc_node_name.description=example: %Q0.4
 
 plc_node_type.title=Data Type
 plc_node_type.description=example: bool
+
+plc_node_input_code_block_altive.title=Advanced
+plc_node_input_code_block_altive.description=
+
+plc_code_block.title=Advanced
+plc_code_block.description=Enter the nodes in the code block below, acording to the described format
+
+plc_node_input_alternatives.title=Register Input
+plc_node_input_alternatives.description=The information about the registers can be entered in simple or advanced mode
+
+plc_node_input_collection_alternative.title=Simple
+plc_node_input_collection_alternative.description=
