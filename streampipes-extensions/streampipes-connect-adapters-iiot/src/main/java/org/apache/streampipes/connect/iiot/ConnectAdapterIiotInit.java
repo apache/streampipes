@@ -19,9 +19,6 @@
 package org.apache.streampipes.connect.iiot;
 
 import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
-import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xS7AdapterMigrationV1;
-import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter;
-import org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulatorAdapter;
 import org.apache.streampipes.connect.iiot.protocol.stream.FileReplayAdapter;
@@ -32,6 +29,9 @@ import org.apache.streampipes.extensions.connectors.mqtt.adapter.MqttProtocol;
 import org.apache.streampipes.extensions.connectors.nats.adapter.NatsProtocol;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV1;
+import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xS7AdapterMigrationV1;
+import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter;
+import org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter;
 import org.apache.streampipes.extensions.connectors.pulsar.adapter.PulsarProtocol;
 import org.apache.streampipes.extensions.connectors.rocketmq.adapter.RocketMQProtocol;
 import org.apache.streampipes.extensions.connectors.tubemq.adapter.TubeMQProtocol;
