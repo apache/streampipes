@@ -1120,11 +1120,6 @@
                 <version>${plc4x.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>com.google.protobuf</groupId>
-                <artifactId>protobuf-java</artifactId>
-                <version>${protobuf.version}</version>
-            </dependency>
 
             <!-- External dependencies -->
             <dependency>
