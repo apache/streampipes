@@ -16,11 +16,11 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
+package org.apache.streampipes.extensions.connectors.plc.adapter.s7;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.config.ConfigurationParser;
+import org.apache.streampipes.extensions.connectors.plc.adapter.s7.config.ConfigurationParser;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
@@ -82,17 +82,17 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
    */
   private static final String PLC_IP = "plc_ip";
   private static final String PLC_POLLING_INTERVAL = "plc_polling_interval";
-  private static final String PLC_NODES = "plc_nodes";
+  public static final String PLC_NODES = "plc_nodes";
   private static final String PLC_NODE_NAME = "plc_node_name";
   private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
   private static final String PLC_NODE_TYPE = "plc_node_type";
 
-  private static final String PLC_NODE_INPUT_CODE_BLOCK_ALTIVE = "plc_node_input_code_block_altive";
-  private static final String PLC_CODE_BLOCK = "plc_code_block";
-  private static final String PLC_NODE_INPUT_ALTERNATIVES = "plc_node_input_alternatives";
-  private static final String PLC_NODE_INPUT_COLLECTION_ALTERNATIVE = "plc_node_input_collection_alternative";
+  public static final String PLC_NODE_INPUT_CODE_BLOCK_ALTIVE = "plc_node_input_code_block_altive";
+  public static final String PLC_CODE_BLOCK = "plc_code_block";
+  public static final String PLC_NODE_INPUT_ALTERNATIVES = "plc_node_input_alternatives";
+  public static final String PLC_NODE_INPUT_COLLECTION_ALTERNATIVE = "plc_node_input_collection_alternative";
 
-  private static final String CODE_TEMPLATE = """
+  public static final String CODE_TEMPLATE = """
       // This code block can be used to manually specify the addresses of the PLC registers.
       // The syntax is based on the PLC4X syntax, see [1].
       // Address Pattern:
@@ -262,7 +262,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, Plc4xS7Adapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, Plc4xS7Adapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)

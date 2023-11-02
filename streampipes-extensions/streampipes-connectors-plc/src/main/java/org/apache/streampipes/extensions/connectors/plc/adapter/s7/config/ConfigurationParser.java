@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.plc4x.s7.config;
+package org.apache.streampipes.extensions.connectors.plc.adapter.s7.config;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.sdk.utils.Datatypes;

@@ -33,6 +33,7 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputSta
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.SupportedProperty;
@@ -48,6 +49,23 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StaticProperties {
+
+  public static StaticPropertyAlternatives alternatives(Label label, StaticPropertyAlternative... alternatives) {
+    return alternatives(label, Arrays.asList(alternatives));
+  }
+
+  public static StaticPropertyAlternatives alternatives(Label label, List<StaticPropertyAlternative> alternatives) {
+    StaticPropertyAlternatives alternativesContainer =
+        new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
+
+    for (int i = 0; i < alternatives.size(); i++) {
+      alternatives.get(i).setIndex(i);
+    }
+
+    alternativesContainer.setAlternatives(alternatives);
+
+    return alternativesContainer;
+  }
 
   public static MappingPropertyUnary mappingPropertyUnary(Label label, RequirementsSelector requirementsSelector,
                                                           PropertyScope propertyScope) {

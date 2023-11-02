@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.plc4x.s7.config;
+package org.apache.streampipes.extensions.connectors.plc.adapter.s7.config;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.sdk.utils.Datatypes;
@@ -26,8 +26,8 @@ import org.junit.Test;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.wildfly.common.Assert.assertFalse;
-import static org.wildfly.common.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ConfigurationParserTest {
 

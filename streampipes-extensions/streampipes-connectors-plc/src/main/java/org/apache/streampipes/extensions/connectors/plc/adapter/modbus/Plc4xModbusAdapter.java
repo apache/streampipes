@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.plc4x.modbus;
+package org.apache.streampipes.extensions.connectors.plc.adapter.modbus;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
