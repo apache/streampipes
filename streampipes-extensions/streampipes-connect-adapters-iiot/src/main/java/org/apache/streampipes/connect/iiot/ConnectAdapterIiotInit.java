@@ -64,7 +64,6 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
         .registerAdapter(new RocketMQProtocol())
         .registerAdapter(new HttpServerProtocol())
         .registerAdapter(new TubeMQProtocol())
-
         .registerMigrators(new OpcUaAdapterMigrationV1())
         .build();
   }

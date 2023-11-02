@@ -141,7 +141,6 @@
 	<bcprov.version>1.70</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
-	<checker-qual.version>3.40.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
 	<commons-compress.version>1.23.0</commons-compress.version>
 	<commons-text.version>1.10.0</commons-text.version>
@@ -1043,11 +1042,6 @@
 					<artifactId>bcpkix-jdk15on</artifactId>
 					<version>${bcpkix.version}</version>
 				</dependency>
-				<dependency>
-				    <groupId>org.checkerframework</groupId>
-				    <artifactId>checker-qual</artifactId>
-				    <version>${checker-qual.version}</version>
-                </dependency>
 				<dependency>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>animal-sniffer-annotations</artifactId>
