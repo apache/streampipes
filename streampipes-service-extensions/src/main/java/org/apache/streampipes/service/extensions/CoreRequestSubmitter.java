@@ -33,14 +33,14 @@ public class CoreRequestSubmitter {
   private static final int RETRY_INTERVAL_SECONDS = 3;
 
   public void submitRepeatedRequest(Supplier<Boolean> request,
-                                    Supplier<String> successMessage,
-                                    Supplier<String> failureMessage) {
+                                    String successMessage,
+                                    String failureMessage) {
     try {
       request.get();
-      LOG.info(successMessage.get());
+      LOG.info(successMessage);
     } catch (SpRuntimeException e) {
       LOG.warn(
-          failureMessage.get() + " Trying again in {} seconds",
+          failureMessage + " Trying again in {} seconds",
           RETRY_INTERVAL_SECONDS
       );
       try {

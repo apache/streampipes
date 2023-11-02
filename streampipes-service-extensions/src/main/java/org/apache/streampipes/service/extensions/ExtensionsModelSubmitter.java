@@ -57,8 +57,8 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
           client.adminApi().registerMigrations(migrationConfigs, serviceId());
           return true;
         },
-        () -> "Successfully sent migration request",
-        () -> "Core currently doesn't accept migration requests.");
+        "Successfully sent migration request",
+        "Core currently doesn't accept migration requests.");
 
     // initialize all function instances
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
