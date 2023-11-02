@@ -16,23 +16,10 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.extensions.api.migration;
 
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 
-import java.util.List;
-
-public interface ISpCoreConfigurationStorage {
-
-  boolean exists();
-
-  List<SpCoreConfiguration> getAll();
-
-  void createElement(SpCoreConfiguration element);
-
-  SpCoreConfiguration get();
-
-  SpCoreConfiguration updateElement(SpCoreConfiguration element);
-
-  void deleteElement();
+public interface IDataSinkMigrator extends IModelMigrator<DataSinkInvocation, IDataSinkParameterExtractor> {
 }

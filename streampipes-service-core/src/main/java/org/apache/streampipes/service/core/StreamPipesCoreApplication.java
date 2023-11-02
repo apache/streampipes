@@ -18,6 +18,8 @@
 package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
+import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
@@ -30,6 +32,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
+import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
@@ -37,6 +40,7 @@ import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -72,11 +76,13 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private static final int LOG_FETCH_INTERVAL = 60;
   private static final TimeUnit LOG_FETCH_UNIT = TimeUnit.SECONDS;
 
-  private static final int HEALTH_CHECK_INTERVAL = 60;
+  private static final int HEALTH_CHECK_INTERVAL = 30;
   private static final TimeUnit HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
 
-  private static final int SERVICE_HEALTH_CHECK_INTERVAL = 60;
-  private static final TimeUnit SERVICE_HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
+  private final ISpCoreConfigurationStorage coreConfigStorage = StorageDispatcher.INSTANCE
+      .getNoSqlStore().getSpCoreConfigurationStorage();
+
+  private final CoreServiceStatusManager coreStatusManager = new CoreServiceStatusManager(coreConfigStorage);
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -109,9 +115,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   @PostConstruct
   public void init() {
     var executorService = Executors.newSingleThreadScheduledExecutor();
-    var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     var logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
-    var serviceHealthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
@@ -119,28 +123,41 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     if (!isConfigured()) {
       doInitialSetup();
     } else {
+      // Check needs to be present since core configuration is part of migration
+      if (coreConfigStorage.exists()) {
+        coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.MIGRATING);
+      }
       new MigrationsHandler().performMigrations();
     }
+    coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
-    executorService.schedule(new PostStartupTask(getAllPipelines()), 10, TimeUnit.SECONDS);
+    executorService.schedule(new PostStartupTask(getPipelineStorage()), 10, TimeUnit.SECONDS);
 
-    LOG.info("Service health check will run every {} seconds", SERVICE_HEALTH_CHECK_INTERVAL);
-    serviceHealthCheckExecutorService.scheduleAtFixedRate(new ServiceHealthCheck(),
-        SERVICE_HEALTH_CHECK_INTERVAL,
-        SERVICE_HEALTH_CHECK_INTERVAL,
-        SERVICE_HEALTH_CHECK_UNIT);
-
-    LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
-    healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
-        HEALTH_CHECK_INTERVAL,
-        HEALTH_CHECK_INTERVAL,
-        HEALTH_CHECK_UNIT);
+    scheduleHealthChecks(List.of(
+        new ServiceHealthCheck(),
+        new PipelineHealthCheck(),
+        new AdapterHealthCheck()));
 
     LOG.info("Extensions logs will be fetched every {} seconds", LOG_FETCH_INTERVAL);
     logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(),
         LOG_FETCH_INTERVAL,
         LOG_FETCH_INTERVAL,
         LOG_FETCH_UNIT);
+  }
+
+  private void scheduleHealthChecks(List<Runnable> checks) {
+    var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    checks.forEach(check -> {
+      LOG.info(
+          "Health check {} configured to run every {} {}",
+          check.getClass().getCanonicalName(),
+          HEALTH_CHECK_INTERVAL,
+          HEALTH_CHECK_UNIT);
+      healthCheckExecutorService.scheduleAtFixedRate(check,
+          HEALTH_CHECK_INTERVAL,
+          HEALTH_CHECK_INTERVAL,
+          HEALTH_CHECK_UNIT);
+    });
   }
 
   private boolean isConfigured() {
@@ -162,8 +179,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       LOG.error("Ooops, something went wrong during the installation", e);
     }
   }
-
-
 
   @PreDestroy
   public void onExit() {

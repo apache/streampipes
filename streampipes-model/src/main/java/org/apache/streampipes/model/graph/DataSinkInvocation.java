@@ -59,6 +59,7 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
   public DataSinkInvocation(DataSinkDescription sec, String domId) {
     this(sec);
     this.setDom(domId);
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
   }
 
   public DataSinkInvocation() {

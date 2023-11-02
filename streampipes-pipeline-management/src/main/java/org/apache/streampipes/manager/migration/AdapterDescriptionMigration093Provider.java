@@ -16,23 +16,30 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.manager.migration;
 
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-
+import java.util.ArrayList;
 import java.util.List;
 
-public interface ISpCoreConfigurationStorage {
+public enum AdapterDescriptionMigration093Provider {
 
-  boolean exists();
+  INSTANCE;
 
-  List<SpCoreConfiguration> getAll();
+  private final List<String> appIdsToReinstall;
 
-  void createElement(SpCoreConfiguration element);
+  AdapterDescriptionMigration093Provider() {
+    this.appIdsToReinstall = new ArrayList<>();
+  }
 
-  SpCoreConfiguration get();
+  public void addAppId(String appId) {
+    this.appIdsToReinstall.add(appId);
+  }
 
-  SpCoreConfiguration updateElement(SpCoreConfiguration element);
+  public List<String> getAppIdsToReinstall() {
+    return appIdsToReinstall;
+  }
 
-  void deleteElement();
+  public boolean hasAppIdsToReinstall() {
+    return !appIdsToReinstall.isEmpty();
+  }
 }

@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-27 10:43:45.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-30 22:49:29.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3599,12 +3600,12 @@ export class SpServiceConfiguration {
 export class SpServiceRegistration {
     firstTimeSeenUnhealthy: number;
     healthCheckPath: string;
-    healthy: boolean;
     host: string;
     port: number;
     rev: string;
     scheme: string;
     serviceUrl: string;
+    status: SpServiceStatus;
     svcGroup: string;
     svcId: string;
     svcType: string;
@@ -3620,12 +3621,12 @@ export class SpServiceRegistration {
         const instance = target || new SpServiceRegistration();
         instance.firstTimeSeenUnhealthy = data.firstTimeSeenUnhealthy;
         instance.healthCheckPath = data.healthCheckPath;
-        instance.healthy = data.healthy;
         instance.host = data.host;
         instance.port = data.port;
         instance.rev = data.rev;
         instance.scheme = data.scheme;
         instance.serviceUrl = data.serviceUrl;
+        instance.status = data.status;
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
         instance.svcType = data.svcType;
@@ -4104,6 +4105,12 @@ export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 export type SpProtocol = 'KAFKA' | 'JMS' | 'MQTT' | 'NATS' | 'PULSAR';
 
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
+
+export type SpServiceStatus =
+    | 'REGISTERED'
+    | 'MIGRATING'
+    | 'HEALTHY'
+    | 'UNHEALTHY';
 
 export type SpServiceTagPrefix =
     | 'SYSTEM'

@@ -73,14 +73,12 @@ public class WorkerRestClient {
 
   public static List<AdapterDescription> getAllRunningAdapterInstanceDescriptions(String url) throws AdapterException {
     try {
-      LOG.info("Requesting all running adapter description instances: " + url);
       var responseString = ExtensionServiceExecutions
               .extServiceGetRequest(url)
               .execute().returnContent().asString();
 
       return JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
     } catch (IOException e) {
-      LOG.error("List of running adapters could not be fetched", e);
       throw new AdapterException("List of running adapters could not be fetched from: " + url);
     }
   }
@@ -112,9 +110,6 @@ public class WorkerRestClient {
         var exception = getSerializer().readValue(responseString, AdapterException.class);
         throw new AdapterException(exception.getMessage(), exception.getCause());
       }
-
-      LOG.info("Adapter {} on endpoint: " + url + " with Response: ", ad.getName() + responseString);
-
     } catch (IOException e) {
       LOG.error("Adapter was not {} successfully", action, e);
       throw new AdapterException("Adapter was not " + action + " successfully with url " + url, e);
@@ -153,8 +148,7 @@ public class WorkerRestClient {
         throw new SpConfigurationException(exception.getMessage(), exception.getCause());
       }
     } catch (IOException e) {
-      e.printStackTrace();
-      throw new AdapterException("Could not resolve runtime configurations from " + url);
+      throw new AdapterException("Could not resolve runtime configurations from " + url, e);
     }
   }
 
@@ -178,11 +172,10 @@ public class WorkerRestClient {
     String url = baseUrl + "/assets/icon";
 
     try {
-      byte[] responseString = Request.Get(url)
+      return Request.Get(url)
               .connectTimeout(1000)
               .socketTimeout(100000)
               .execute().returnContent().asBytes();
-      return responseString;
     } catch (IOException e) {
       LOG.error(e.getMessage());
       throw new AdapterException("Could not get icon endpoint: " + url);

@@ -19,6 +19,7 @@
 package org.apache.streampipes.svcdiscovery;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
@@ -62,7 +63,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
         .stream()
         .filter(service -> allFiltersSupported(service, filterByTags))
         .filter(service -> !restrictToHealthy
-            || service.isHealthy())
+            || service.getStatus() != SpServiceStatus.UNHEALTHY)
         .map(this::makeServiceUrl)
         .collect(Collectors.toList());
   }

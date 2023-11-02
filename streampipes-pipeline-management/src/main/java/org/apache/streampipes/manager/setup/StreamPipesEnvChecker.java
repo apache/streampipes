@@ -52,7 +52,7 @@ public class StreamPipesEnvChecker {
         .getNoSqlStore()
         .getSpCoreConfigurationStorage();
 
-    if (configStorage.getAll().size() > 0) {
+    if (configStorage.exists()) {
       this.coreConfig = configStorage.get();
 
       LOG.info("Checking and updating environment variables...");

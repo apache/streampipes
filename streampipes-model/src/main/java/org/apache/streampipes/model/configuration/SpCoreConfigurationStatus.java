@@ -16,10 +16,10 @@
  *
  */
 
-package org.apache.streampipes.extensions.api.migration;
+package org.apache.streampipes.model.configuration;
 
-import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-
-public interface DataSinkMigrator extends IModelMigrator<DataSinkInvocation, IDataSinkParameterExtractor> {
+public enum SpCoreConfigurationStatus {
+  INSTALLING,
+  MIGRATING,
+  READY
 }
