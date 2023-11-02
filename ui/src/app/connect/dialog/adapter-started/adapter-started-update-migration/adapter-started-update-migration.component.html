@@ -33,7 +33,11 @@
                 *ngIf="!updateInfo.canAutoMigrate"
                 fxLayoutAlign="start center"
             >
-                <i class="material-icons">warning</i>
+                <i
+                    class="material-icons"
+                    data-cy="sp-connect-adapter-edit-warning"
+                    >warning</i
+                >
                 &nbsp;Pipeline&nbsp;<b>{{ updateInfo.pipelineName }}</b
                 >&nbsp;will be stopped and needs manual review.
             </div>
@@ -50,6 +54,7 @@
             mat-raised-button
             color="accent"
             (click)="startUpdateEmitter.emit()"
+            data-cy="btn-update-adapter-migrate-pipelines"
         >
             Update adapter and migrate pipelines
         </button>
