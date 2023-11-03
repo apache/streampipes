@@ -38,34 +38,6 @@ services:
     networks:
       spnet:
 
-  connect-adapters:
-    image: "${SP_DOCKER_REGISTRY}/connect-adapters:${SP_VERSION}"
-    depends_on:
-      - consul
-    environment:
-      - SP_BACKEND_HOST=backend
-      - SP_CONNECT_CONTAINER_WORKER=connect-adapters
-    volumes:
-      - connect:/data/
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
-  connect-adapters-iiot:
-    image: "${SP_DOCKER_REGISTRY}/connect-adapters-iiot:${SP_VERSION}"
-    depends_on:
-      - consul
-    environment:
-      - SP_BACKEND_HOST=backend
-      - SP_CONNECT_CONTAINER_WORKER=connect-adapters
-    volumes:
-      - connect:/data/
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
   ui:
     image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
     ports:
@@ -196,8 +168,8 @@ services:
       spnet:
 
   # Lite version pipeline elements
-  pipeline-elements-all-jvm:
-    image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_VERSION}"
+  extensions-all-jvm:
+    image: "${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}"
     depends_on:
       - consul
     volumes:
