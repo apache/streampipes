@@ -16,46 +16,30 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.plc4x.modbus;
+package org.apache.streampipes.manager.migration;
 
-public class ModbusConfigFile {
+import java.util.ArrayList;
+import java.util.List;
 
-  private String name;
+public enum AdapterDescriptionMigration093Provider {
 
-  private String dataType;
+  INSTANCE;
 
-  private String logicalAddress;
+  private final List<String> appIdsToReinstall;
 
-  public ModbusConfigFile() {
+  AdapterDescriptionMigration093Provider() {
+    this.appIdsToReinstall = new ArrayList<>();
   }
 
-  public ModbusConfigFile(String name, String dataType, String logicalAddress) {
-    this.name = name;
-    this.setDataType(dataType);
-    this.setLogicalAddress(logicalAddress);
+  public void addAppId(String appId) {
+    this.appIdsToReinstall.add(appId);
   }
 
-  public String getName() {
-    return name;
+  public List<String> getAppIdsToReinstall() {
+    return appIdsToReinstall;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getDataType() {
-    return dataType;
-  }
-
-  public void setDataType(String dataType) {
-    this.dataType = dataType;
-  }
-
-  public String getLogicalAddress() {
-    return logicalAddress;
-  }
-
-  public void setLogicalAddress(String logicalAddress) {
-    this.logicalAddress = logicalAddress;
+  public boolean hasAppIdsToReinstall() {
+    return !appIdsToReinstall.isEmpty();
   }
 }

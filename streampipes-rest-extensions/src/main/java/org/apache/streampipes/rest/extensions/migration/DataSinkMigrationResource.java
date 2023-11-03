@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
-import org.apache.streampipes.extensions.api.migration.DataSinkMigrator;
+import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -42,7 +42,7 @@ import jakarta.ws.rs.core.Response;
 public class DataSinkMigrationResource extends MigrateExtensionsResource<
         DataSinkInvocation,
         IDataSinkParameterExtractor,
-        DataSinkMigrator
+    IDataSinkMigrator
         > {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)

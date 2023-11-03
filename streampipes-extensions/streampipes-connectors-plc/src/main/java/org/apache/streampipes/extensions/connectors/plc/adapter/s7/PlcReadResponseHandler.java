@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.plc4x.s7;
+package org.apache.streampipes.extensions.connectors.plc.adapter.s7;
 
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
 

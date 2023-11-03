@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AdapterHealthCheck {
+public class AdapterHealthCheck implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthCheck.class);
 
@@ -50,6 +50,11 @@ public class AdapterHealthCheck {
                             AdapterMasterManagement adapterMasterManagement) {
     this.adapterStorage = adapterStorage;
     this.adapterMasterManagement = adapterMasterManagement;
+  }
+
+  @Override
+  public void run() {
+    this.checkAndRestoreAdapters();
   }
 
   /**
@@ -114,7 +119,7 @@ public class AdapterHealthCheck {
         allRunningInstancesOfOneWorker.forEach(adapterDescription ->
             allRunningInstancesAdapterDescription.remove(adapterDescription.getElementId()));
       } catch (AdapterException e) {
-        e.printStackTrace();
+        LOG.info("Could not recover adapter at endpoint {} due to {}", adapterEndpointUrl, e.getMessage());
       }
     });
 
@@ -130,10 +135,9 @@ public class AdapterHealthCheck {
           this.adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
         }
       } catch (AdapterException e) {
-        LOG.warn("Could not start adapter {}", adapterDescription.getName(), e);
+        LOG.warn("Could not start adapter {} ({})", adapterDescription.getName(), e.getMessage());
       }
     }
 
   }
-
 }

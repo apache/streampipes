@@ -31,7 +31,7 @@ package org.apache.streampipes.connect.adapters;
 //
 //        stubFor(get(urlEqualTo("/"))
 //                .willReturn(aResponse()
-//                        .withStatus(200)
+//                        .withStatus(HttpStatus.SC_OK)
 //                        .withBody(expected)));
 //
 //        String result = PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
@@ -44,7 +44,7 @@ package org.apache.streampipes.connect.adapters;
 //    public void getDataFromEndpointStringFail() throws AdapterException {
 //        stubFor(get(urlEqualTo("/"))
 //                .willReturn(aResponse()
-//                        .withStatus(404)
+//                        .withStatus(HttpStatus.SC_NOT_FOUND)
 //                        .withBody("")));
 //
 //        PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");

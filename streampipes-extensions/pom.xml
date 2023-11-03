@@ -63,6 +63,7 @@
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
         <module>streampipes-sinks-notifications-jvm</module>
+        <module>streampipes-connectors-plc</module>
     </modules>
 
     <properties>
