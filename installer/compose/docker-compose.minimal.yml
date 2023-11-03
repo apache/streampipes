@@ -117,8 +117,7 @@ services:
     networks:
       spnet:
 
-  # Lite version pipeline elements
-  extensions-all-jvm:
+  extensions-iiot-minimal:
     image: "${SP_DOCKER_REGISTRY}/extensions-iiot-minimal:${SP_VERSION}"
     depends_on:
       - consul
@@ -130,7 +129,6 @@ services:
 volumes:
   backend:
   consul:
-  connect:
   couchdb:
   influxdb:
   influxdb2:
