@@ -74,7 +74,7 @@ describe('Test Edit Adapter and Pipeline', () => {
         ConnectUtils.closeAdapterPreview();
 
         // Go to pipelines, check for warning icon and edit pipeline
-        cy.visit('#/pipelines').wait(1000);
+        PipelineUtils.goToPipelines();
 
         cy.dataCy('pipeline-warning-icon', {
             timeout: 60000,
