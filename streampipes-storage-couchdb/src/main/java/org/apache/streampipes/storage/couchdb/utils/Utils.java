@@ -32,6 +32,8 @@ import org.lightcouch.CouchDbProperties;
 
 public class Utils {
 
+  public static final String USER_DB_NAME = "users";
+
   public static CouchDbClient getCouchDbDataProcessorDescriptionClient() {
     return getCouchDbGsonClient("data-processor");
   }
@@ -135,7 +137,7 @@ public class Utils {
   }
 
   public static CouchDbClient getCouchDbUserClient() {
-    return getCouchDbPrincipalClient("users");
+    return getCouchDbPrincipalClient(USER_DB_NAME);
   }
 
   public static CouchDbClient getCouchDbInternalUsersClient() {
@@ -188,20 +190,29 @@ public class Utils {
     return new CouchDbClient(props(dbname));
   }
 
+  public static CouchDbClient getCouchDbClient(String database, boolean createIfNotExists) {
+    return new CouchDbClient(props(database, createIfNotExists));
+  }
+
   public static CouchDbClient getCouchDbClient(String database) {
     return new CouchDbClient(props(database));
   }
 
-  private static CouchDbProperties props(String dbname) {
+  private static CouchDbProperties props(String dbname,
+                                         boolean createDbIfNotExists) {
     var env = getEnvironment();
     return new CouchDbProperties(
         dbname,
-        true,
+        createDbIfNotExists,
         env.getCouchDbProtocol().getValueOrDefault(),
         env.getCouchDbHost().getValueOrDefault(),
         env.getCouchDbPort().getValueOrDefault(),
         env.getCouchDbUsername().getValueOrDefault(),
         env.getCouchDbPassword().getValueOrDefault());
+  }
+
+  private static CouchDbProperties props(String dbname) {
+    return props(dbname, true);
   }
 
   public static String getDatabaseRoute(String databaseName) {

@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.service.core;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
+import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.health.ServiceHealthCheck;
@@ -41,6 +41,7 @@ import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -121,6 +122,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
 
     if (!isConfigured()) {
+      CoreInitialInstallationProgress.INSTANCE.triggerInitiallyInstallingMode();
       doInitialSetup();
     } else {
       // Check needs to be present since core configuration is part of migration
@@ -161,20 +163,17 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   private boolean isConfigured() {
-    return BackendConfig.INSTANCE.isConfigured();
+    return new UserStorage().existsDatabase();
   }
 
   private void doInitialSetup() {
     LOG.info("\n\n**********\n\nWelcome to Apache StreamPipes!\n\n**********\n\n");
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
-
-    BackendConfig.INSTANCE.updateSetupStatus(true);
     LOG.info("Auto-setup will start in 5 seconds to make sure all services are running...");
     try {
       TimeUnit.SECONDS.sleep(5);
       LOG.info("Starting installation procedure");
       new AutoInstallation().startAutoInstallation();
-      BackendConfig.INSTANCE.updateSetupStatus(false);
     } catch (InterruptedException e) {
       LOG.error("Ooops, something went wrong during the installation", e);
     }

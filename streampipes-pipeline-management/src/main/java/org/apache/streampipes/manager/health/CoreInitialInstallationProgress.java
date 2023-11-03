@@ -15,38 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.ServiceAccount;
-import org.apache.streampipes.model.client.user.UserAccount;
+package org.apache.streampipes.manager.health;
 
-import java.util.List;
+public enum CoreInitialInstallationProgress {
 
-public interface IUserStorage {
+  INSTANCE;
 
-  List<Principal> getAllUsers();
+  private boolean initiallyInstalling = false;
 
-  List<UserAccount> getAllUserAccounts();
+  public boolean isInitiallyInstalling() {
+    return initiallyInstalling;
+  }
 
-  List<ServiceAccount> getAllServiceAccounts();
-
-  Principal getUser(String username);
-
-  UserAccount getUserAccount(String username);
-
-  ServiceAccount getServiceAccount(String username);
-
-  void storeUser(Principal user);
-
-  void updateUser(Principal user);
-
-  boolean checkUser(String username);
-
-  void deleteUser(String principalId);
-
-  Principal getUserById(String principalId);
-
-  boolean existsDatabase();
-
+  public void triggerInitiallyInstallingMode() {
+    this.initiallyInstalling = true;
+  }
 }
