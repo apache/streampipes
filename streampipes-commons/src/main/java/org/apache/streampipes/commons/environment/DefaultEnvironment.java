@@ -225,6 +225,31 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public IntEnvironmentVariable getHealthCheckIntervalInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_HEALTH_CHECK_INTERVAL_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getInitialHealthCheckDelayInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_HEALTH_CHECK_INITIAL_DELAY_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getLogFetchIntervalInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_LOG_FETCH_INTERVAL_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getUnhealthyTimeBeforeServiceDeletionInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_HEALTH_SERVICE_MAX_UNHEALTHY_TIME_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getInitialWaitTimeBeforeInstallationInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_INITIAL_WAIT_BEFORE_INSTALLATION_MS);
+  }
+
+  @Override
   public StringEnvironmentVariable getConsulLocation() {
     return new StringEnvironmentVariable(Envs.SP_CONSUL_LOCATION);
   }
