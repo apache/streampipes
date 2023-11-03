@@ -22,7 +22,6 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
-import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
@@ -32,7 +31,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -51,7 +49,6 @@ public class AdapterMigrationResource extends MigrateExtensionsResource<
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   @Operation(
       summary = "Execute the migration for a specific adapter instance", tags = {"Extensions", "Migration"},
       responses = {

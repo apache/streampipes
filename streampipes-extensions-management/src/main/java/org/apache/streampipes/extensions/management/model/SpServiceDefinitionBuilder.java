@@ -19,6 +19,7 @@ package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
@@ -82,7 +83,21 @@ public class SpServiceDefinitionBuilder {
   }
 
   public SpServiceDefinitionBuilder addConfigs(List<ConfigItem> configItems) {
-    configItems.stream().forEach(configItem -> this.serviceDefinition.addConfig(configItem));
+    configItems.forEach(configItem -> this.serviceDefinition.addConfig(configItem));
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerModules(IExtensionModuleExport... moduleExports) {
+    Arrays.stream(moduleExports).forEach(this::registerModule);
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerModule(IExtensionModuleExport moduleExport) {
+    moduleExport.pipelineElements().forEach(this::registerPipelineElement);
+    moduleExport.adapters().forEach(this::registerAdapter);
+    moduleExport.migrators().forEach(this::registerMigrators);
+    moduleExport.configItems().forEach(this::addConfig);
+
     return this;
   }
 
