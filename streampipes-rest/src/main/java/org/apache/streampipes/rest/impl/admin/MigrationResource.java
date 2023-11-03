@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
+import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.manager.migration.AdapterDescriptionMigration093;
@@ -104,11 +104,17 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
     var serviceManager = new ServiceRegistrationManager(extensionsServiceStorage);
     var extensionsServiceConfig = serviceManager.getService(serviceId);
-    if (BackendConfig.INSTANCE.isConfigured()) {
+    if (!CoreInitialInstallationProgress.INSTANCE.isInitiallyInstalling()) {
       new AdapterDescriptionMigration093(adapterDescriptionStorage).reinstallAdapters(extensionsServiceConfig);
       if (!migrationConfigs.isEmpty()) {
-        if (serviceManager.isAnyServiceMigrating() || !isCoreReady()) {
-          LOG.info("Refusing migration request since precondition is not met.");
+        var anyServiceMigrating = serviceManager.isAnyServiceMigrating();
+        var coreReady = isCoreReady();
+        if (anyServiceMigrating || !coreReady) {
+          LOG.info(
+              "Refusing migration request since precondition is not met (anyServiceMigratione={}, coreReady={}.",
+              anyServiceMigrating,
+              coreReady
+          );
           return Response.status(HttpStatus.SC_CONFLICT).build();
         } else {
           serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
