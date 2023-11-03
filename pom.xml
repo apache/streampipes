@@ -117,7 +117,6 @@
 	<spring-security.version>6.1.1</spring-security.version>
 	<swagger.version>2.2.7</swagger.version>
 	<type-parser.version>0.8.1</type-parser.version>
-	<wildfly-common.version>1.7.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
 			<!-- Geo dependencies -->
@@ -849,11 +848,6 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-actuator</artifactId>
 					<version>${spring-boot.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.wildfly.common</groupId>
-					<artifactId>wildfly-common</artifactId>
-					<version>${wildfly-common.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.yaml</groupId>
