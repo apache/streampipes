@@ -35,7 +35,7 @@ public class ServiceHealthCheck implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceHealthCheck.class);
 
-  private static final int MAX_UNHEALTHY_DURATION_BEFORE_REMOVAL_MS = 20000;
+  private static final int MAX_UNHEALTHY_DURATION_BEFORE_REMOVAL_MS = 60000;
 
   private final ServiceRegistrationManager serviceRegistrationManager;
 
@@ -56,7 +56,7 @@ public class ServiceHealthCheck implements Runnable {
     try {
       var request = ExtensionServiceExecutions.extServiceGetRequest(healthCheckUrl);
       var response = request.execute();
-      if (response.returnResponse().getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+      if (response.returnResponse().getStatusLine().getStatusCode() != HttpStatus.SC_OK && !isStarting(service)) {
         processUnhealthyService(service);
       } else {
         if (service.getStatus() == SpServiceStatus.UNHEALTHY) {
@@ -66,6 +66,10 @@ public class ServiceHealthCheck implements Runnable {
     } catch (IOException e) {
       processUnhealthyService(service);
     }
+  }
+
+  private boolean isStarting(SpServiceRegistration service) {
+    return service.getStatus() == SpServiceStatus.REGISTERED || service.getStatus() == SpServiceStatus.MIGRATING;
   }
 
   private void processUnhealthyService(SpServiceRegistration service) {

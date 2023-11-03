@@ -89,7 +89,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
           TimeUnit.MILLISECONDS.sleep(1000);
           return findService(retryCount);
         } catch (InterruptedException e) {
-          e.printStackTrace();
+          LOG.warn("Could not find a service currently due to exception {}", e.getMessage());
           return Collections.emptyList();
         }
       } else {
