@@ -1364,7 +1364,7 @@
         <module>streampipes-serializers-json</module>
         <module>streampipes-service-base</module>
 		<module>streampipes-service-core</module>
-		<module>streampipes-service-core-nats</module>
+		<module>streampipes-service-core-minimal</module>
         <module>streampipes-service-discovery</module>
         <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>

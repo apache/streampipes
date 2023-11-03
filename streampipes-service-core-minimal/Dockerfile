@@ -15,6 +15,6 @@
 
 FROM eclipse-temurin:17-jre-focal
 
-COPY target/streampipes-core-nats.jar  /streampipes-core.jar
+COPY target/streampipes-core-minimal.jar  /streampipes-core.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-core.jar"]

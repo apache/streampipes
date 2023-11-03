@@ -16,8 +16,9 @@
  *
  */
 
-package org.apache.streampipes.service.core.nats;
+package org.apache.streampipes.service.core.minimal;
 
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.core.StreamPipesCoreApplication;
@@ -42,12 +43,13 @@ import java.util.List;
     SpPermissionEvaluator.class
 })
 @ComponentScan({"org.apache.streampipes.rest.*"})
-public class StreamPipesCoreApplicationNats extends StreamPipesCoreApplication {
+public class StreamPipesCoreApplicationMinimal extends StreamPipesCoreApplication {
 
   public static void main(String[] args) {
-    var application = new StreamPipesCoreApplicationNats();
+    var application = new StreamPipesCoreApplicationMinimal();
     application.initialize(() -> List.of(
-        new SpNatsProtocolFactory()
+        new SpNatsProtocolFactory(),
+        new SpMqttProtocolFactory()
     ));
   }
 }

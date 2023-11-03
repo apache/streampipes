@@ -30,6 +30,7 @@ import org.apache.streampipes.extensions.connectors.opcua.OpcUaConnectorsModuleE
 import org.apache.streampipes.extensions.connectors.plc.PlcConnectorsModuleExport;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.changedetection.jvm.ChangeDetectionExtensionModuleExport;
 import org.apache.streampipes.processors.enricher.jvm.EnricherExtensionModuleExport;
@@ -79,7 +80,8 @@ public class ExtensionsIIoTMinimalInit extends ExtensionsModelSubmitter {
             new SmileDataFormatFactory(),
             new FstDataFormatFactory())
         .registerMessagingProtocols(
-            new SpNatsProtocolFactory()
+            new SpNatsProtocolFactory(),
+            new SpMqttProtocolFactory()
         )
         .build();
   }
