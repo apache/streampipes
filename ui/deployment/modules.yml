@@ -77,8 +77,8 @@ spAdd:
     path: './add/add.module'
     link: 'add'
     url: '/add'
-    title: 'Install Pipeline Elements'
-    description: 'The pipeline element installation module can be used to extend StreamPipes with new algorithms and data sinks.'
+    title: 'Install Extensions'
+    description: 'The extension installation module can be used to install additional adapters, data streams, data processors, and sinks.'
     icon: 'cloud_download'
     homeImage: '/assets/img/home/add.png'
     admin: True

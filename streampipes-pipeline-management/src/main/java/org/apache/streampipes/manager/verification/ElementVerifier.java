@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.manager.verification.messages.VerificationError;
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
 import org.apache.streampipes.manager.verification.structure.GeneralVerifier;
@@ -34,7 +35,7 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,7 +58,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected List<VerificationResult> validationResults;
   protected List<Verifier> validators;
 
-  protected IPipelineElementDescriptionStorageCache storageApi =
+  protected IPipelineElementDescriptionStorage storageApi =
       StorageManager.INSTANCE.getPipelineElementStorage();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
@@ -107,7 +108,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
           e.printStackTrace();
         }
         return successMessage();
-      } else if (state == StorageState.ALREADY_IN_SESAME) {
+      } else if (state == StorageState.ALREADY_STORED) {
         return addedToUserSuccessMessage();
       } else {
         return skippedSuccessMessage();
@@ -141,7 +142,12 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   protected abstract void storeAssets() throws IOException, NoServiceEndpointsAvailableException;
 
-  protected abstract void updateAssets() throws IOException, NoServiceEndpointsAvailableException;
+  protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
+    if (elementDescription.isIncludesAssets()) {
+      AssetManager.deleteAsset(elementDescription.getAppId());
+      storeAssets();
+    }
+  }
 
   private Message errorMessage() {
     return new ErrorMessage(elementDescription.getName(), collectNotifications());

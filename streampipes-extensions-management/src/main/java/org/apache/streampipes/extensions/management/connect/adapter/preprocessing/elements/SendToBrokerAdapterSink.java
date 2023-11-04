@@ -19,51 +19,52 @@ package org.apache.streampipes.extensions.management.connect.adapter.preprocessi
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.connect.adapter.util.TransportFormatSelector;
 import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Map;
 
-public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> implements IAdapterPipelineElement {
+public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
 
   protected AdapterDescription adapterDescription;
   protected SpDataFormatDefinition dataFormatDefinition;
-  protected T protocol;
+  protected TransportProtocol protocol;
   private final EventProducer producer;
 
-  public SendToBrokerAdapterSink(AdapterDescription adapterDescription,
-                                 Class<T> protocolClass) {
+  public SendToBrokerAdapterSink(AdapterDescription adapterDescription) {
     this.adapterDescription = adapterDescription;
-    this.protocol = protocolClass.cast(adapterDescription
+    this.protocol = adapterDescription
         .getEventGrounding()
-        .getTransportProtocol());
+        .getTransportProtocol();
 
     if (getEnvironment().getSpDebug().getValueOrDefault()) {
       modifyProtocolForDebugging(this.protocol);
     }
 
-    this.producer = makeProducer(this.protocol);
+    var producerOpt = SpProtocolManager.INSTANCE.findDefinition(this.protocol);
+    if (producerOpt.isPresent()) {
+      this.producer = producerOpt.get().getProducer(this.protocol);
 
-    TransportFormat transportFormat = adapterDescription
-        .getEventGrounding()
-        .getTransportFormats()
-        .get(0);
+      TransportFormat transportFormat = adapterDescription
+          .getEventGrounding()
+          .getTransportFormats()
+          .get(0);
 
-    this.dataFormatDefinition =
-        new TransportFormatSelector(transportFormat).getDataFormatDefinition();
+      this.dataFormatDefinition =
+          new TransportFormatSelector(transportFormat).getDataFormatDefinition();
 
-    try {
       producer.connect();
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
+    } else {
+      throw new RuntimeException("Could not find protocol");
     }
   }
 
@@ -86,9 +87,12 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
     producer.publish(event);
   }
 
-  protected abstract EventProducer makeProducer(T protocol);
-
-  public abstract void modifyProtocolForDebugging(T protocol);
+  public void modifyProtocolForDebugging(TransportProtocol protocol) {
+    protocol.setBrokerHostname("localhost");
+    if (protocol instanceof KafkaTransportProtocol) {
+      ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+    }
+  }
 
   private Environment getEnvironment() {
     return Environments.getEnvironment();

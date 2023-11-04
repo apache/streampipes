@@ -30,10 +30,8 @@ import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -54,8 +52,6 @@ import java.net.URISyntaxException;
 @Component
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class PipelineElementImport extends AbstractAuthGuardedRestResource {
-
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementImport.class);
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -83,18 +79,22 @@ public class PipelineElementImport extends AbstractAuthGuardedRestResource {
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteElement(@PathParam("id") String elementId) {
-    IPipelineElementDescriptionStorageCache requestor = getPipelineElementRdfStorage();
+    IPipelineElementDescriptionStorage requestor = getPipelineElementStorage();
+    var resourceManager = getSpResourceManager();
     String appId;
     try {
       if (requestor.existsDataProcessor(elementId)) {
         appId = requestor.getDataProcessorById(elementId).getAppId();
-        getSpResourceManager().manageDataProcessors().delete(elementId);
+        resourceManager.manageDataProcessors().delete(elementId);
       } else if (requestor.existsDataStream(elementId)) {
         appId = requestor.getDataStreamById(elementId).getAppId();
-        getSpResourceManager().manageDataStreams().delete(elementId);
+        resourceManager.manageDataStreams().delete(elementId);
       } else if (requestor.existsDataSink(elementId)) {
         appId = requestor.getDataSinkById(elementId).getAppId();
-        getSpResourceManager().manageDataSinks().delete(elementId);
+        resourceManager.manageDataSinks().delete(elementId);
+      } else if (requestor.existsAdapterDescription(elementId)) {
+        appId = requestor.getAdapterById(elementId).getAppId();
+        resourceManager.manageAdapterDescriptions().delete(elementId);
       } else {
         return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
             NotificationType.STORAGE_ERROR.description()));
@@ -114,15 +114,17 @@ public class PipelineElementImport extends AbstractAuthGuardedRestResource {
   }
 
   private NamedStreamPipesEntity find(String elementId) {
-    if (getPipelineElementStorage().existsDataSink(elementId)) {
-      return getPipelineElementStorage().getDataSinkById(elementId);
-    } else if (getPipelineElementStorage().existsDataProcessor(elementId)) {
-      return getPipelineElementStorage().getDataProcessorById(elementId);
-    } else if (getPipelineElementStorage().existsDataStream(elementId)) {
-      return getPipelineElementStorage().getDataStreamById(elementId);
+    var extensionStorage = getPipelineElementStorage();
+    if (extensionStorage.existsDataSink(elementId)) {
+      return extensionStorage.getDataSinkById(elementId);
+    } else if (extensionStorage.existsDataProcessor(elementId)) {
+      return extensionStorage.getDataProcessorById(elementId);
+    } else if (extensionStorage.existsDataStream(elementId)) {
+      return extensionStorage.getDataStreamById(elementId);
+    } else if (extensionStorage.existsAdapterDescription(elementId)) {
+      return extensionStorage.getAdapterById(elementId);
     } else {
       throw new IllegalArgumentException("Could not find element for ID " + elementId);
     }
   }
-
 }

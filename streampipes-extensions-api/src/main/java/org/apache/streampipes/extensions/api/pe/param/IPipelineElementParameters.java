@@ -28,7 +28,7 @@ import java.util.Map;
 
 public interface IPipelineElementParameters<
     IvT extends InvocableStreamPipesEntity,
-    ExT extends IParameterExtractor<IvT>> {
+    ExT extends IParameterExtractor> {
 
   IvT getModel();
 

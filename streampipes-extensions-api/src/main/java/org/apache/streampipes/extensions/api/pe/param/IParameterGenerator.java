@@ -23,7 +23,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
 public interface IParameterGenerator<
     IvT extends InvocableStreamPipesEntity,
-    PeT extends IParameterExtractor<IvT>,
+    PeT extends IParameterExtractor,
     K extends IPipelineElementParameters<IvT, PeT>> {
 
 

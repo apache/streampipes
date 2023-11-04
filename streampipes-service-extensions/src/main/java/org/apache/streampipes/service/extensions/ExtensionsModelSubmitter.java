@@ -17,10 +17,12 @@
  */
 package org.apache.streampipes.service.extensions;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.migration.IModelMigrator;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
-import org.apache.streampipes.service.extensions.connect.ConnectWorkerRegistrationService;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
 
@@ -46,7 +48,19 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
 
   @Override
   public void afterServiceRegistered(SpServiceDefinition serviceDef) {
-    new ConnectWorkerRegistrationService().registerWorker();
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+
+    // register all migrations at StreamPipes Core
+    var migrationConfigs = serviceDef.getMigrators().stream().map(IModelMigrator::config).toList();
+    new CoreRequestSubmitter().submitRepeatedRequest(
+        () -> {
+          client.adminApi().registerMigrations(migrationConfigs, serviceId());
+          return true;
+        },
+        "Successfully sent migration request",
+        "Core currently doesn't accept migration requests.");
+
+    // initialize all function instances
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
   }
 

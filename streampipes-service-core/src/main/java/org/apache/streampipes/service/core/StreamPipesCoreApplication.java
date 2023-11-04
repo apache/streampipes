@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.service.core;
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
+import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
+import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.health.ServiceHealthCheck;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
@@ -30,6 +32,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
+import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
@@ -37,6 +40,8 @@ import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -51,11 +56,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -72,24 +74,16 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
 
-  private static final int MAX_PIPELINE_START_RETRIES = 3;
-  private static final int WAIT_TIME_AFTER_FAILURE_IN_SECONDS = 10;
-
   private static final int LOG_FETCH_INTERVAL = 60;
   private static final TimeUnit LOG_FETCH_UNIT = TimeUnit.SECONDS;
 
-  private static final int HEALTH_CHECK_INTERVAL = 60;
+  private static final int HEALTH_CHECK_INTERVAL = 30;
   private static final TimeUnit HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
 
-  private static final int SERVICE_HEALTH_CHECK_INTERVAL = 60;
-  private static final TimeUnit SERVICE_HEALTH_CHECK_UNIT = TimeUnit.SECONDS;
+  private final ISpCoreConfigurationStorage coreConfigStorage = StorageDispatcher.INSTANCE
+      .getNoSqlStore().getSpCoreConfigurationStorage();
 
-  private ScheduledExecutorService executorService;
-  private ScheduledExecutorService healthCheckExecutorService;
-  private ScheduledExecutorService serviceHealthCheckExecutorService;
-  private ScheduledExecutorService logCheckExecutorService;
-
-  private final Map<String, Integer> failedPipelines = new HashMap<>();
+  private final CoreServiceStatusManager coreStatusManager = new CoreServiceStatusManager(coreConfigStorage);
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -121,33 +115,30 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @PostConstruct
   public void init() {
-    this.executorService = Executors.newSingleThreadScheduledExecutor();
-    this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
-    this.logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
-    this.serviceHealthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    var executorService = Executors.newSingleThreadScheduledExecutor();
+    var logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
 
     if (!isConfigured()) {
+      CoreInitialInstallationProgress.INSTANCE.triggerInitiallyInstallingMode();
       doInitialSetup();
     } else {
+      // Check needs to be present since core configuration is part of migration
+      if (coreConfigStorage.exists()) {
+        coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.MIGRATING);
+      }
       new MigrationsHandler().performMigrations();
     }
+    coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
-    executorService.schedule(this::startAllPreviouslyStoppedPipelines, 10, TimeUnit.SECONDS);
+    executorService.schedule(new PostStartupTask(getPipelineStorage()), 10, TimeUnit.SECONDS);
 
-    LOG.info("Service health check will run every {} seconds", SERVICE_HEALTH_CHECK_INTERVAL);
-    serviceHealthCheckExecutorService.scheduleAtFixedRate(new ServiceHealthCheck(),
-        SERVICE_HEALTH_CHECK_INTERVAL,
-        SERVICE_HEALTH_CHECK_INTERVAL,
-        SERVICE_HEALTH_CHECK_UNIT);
-
-    LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
-    healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
-        HEALTH_CHECK_INTERVAL,
-        HEALTH_CHECK_INTERVAL,
-        HEALTH_CHECK_UNIT);
+    scheduleHealthChecks(List.of(
+        new ServiceHealthCheck(),
+        new PipelineHealthCheck(),
+        new AdapterHealthCheck()));
 
     LOG.info("Extensions logs will be fetched every {} seconds", LOG_FETCH_INTERVAL);
     logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(),
@@ -156,30 +147,36 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         LOG_FETCH_UNIT);
   }
 
+  private void scheduleHealthChecks(List<Runnable> checks) {
+    var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    checks.forEach(check -> {
+      LOG.info(
+          "Health check {} configured to run every {} {}",
+          check.getClass().getCanonicalName(),
+          HEALTH_CHECK_INTERVAL,
+          HEALTH_CHECK_UNIT);
+      healthCheckExecutorService.scheduleAtFixedRate(check,
+          HEALTH_CHECK_INTERVAL,
+          HEALTH_CHECK_INTERVAL,
+          HEALTH_CHECK_UNIT);
+    });
+  }
+
   private boolean isConfigured() {
-    return BackendConfig.INSTANCE.isConfigured();
+    return new UserStorage().existsDatabase();
   }
 
   private void doInitialSetup() {
     LOG.info("\n\n**********\n\nWelcome to Apache StreamPipes!\n\n**********\n\n");
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
-
-    BackendConfig.INSTANCE.updateSetupStatus(true);
     LOG.info("Auto-setup will start in 5 seconds to make sure all services are running...");
     try {
       TimeUnit.SECONDS.sleep(5);
       LOG.info("Starting installation procedure");
       new AutoInstallation().startAutoInstallation();
-      BackendConfig.INSTANCE.updateSetupStatus(false);
     } catch (InterruptedException e) {
       LOG.error("Ooops, something went wrong during the installation", e);
     }
-  }
-
-  private void schedulePipelineStart(Pipeline pipeline, boolean restartOnReboot) {
-    executorService.schedule(() -> {
-      startPipeline(pipeline, restartOnReboot);
-    }, WAIT_TIME_AFTER_FAILURE_IN_SECONDS, TimeUnit.SECONDS);
   }
 
   @PreDestroy
@@ -209,72 +206,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     });
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
-  }
-
-  private void startAllPreviouslyStoppedPipelines() {
-    LOG.info("Checking for orphaned pipelines...");
-    List<Pipeline> orphanedPipelines = getAllPipelines()
-        .stream()
-        .filter(Pipeline::isRunning)
-        .toList();
-
-    LOG.info("Found {} orphaned pipelines", orphanedPipelines.size());
-
-    orphanedPipelines.forEach(pipeline -> {
-      LOG.info("Restoring orphaned pipeline {}", pipeline.getName());
-      startPipeline(pipeline, false);
-    });
-
-    LOG.info("Checking for gracefully shut down pipelines to be restarted...");
-
-    List<Pipeline> pipelinesToRestart = getAllPipelines()
-        .stream()
-        .filter(p -> !(p.isRunning()))
-        .filter(Pipeline::isRestartOnSystemReboot)
-        .toList();
-
-    LOG.info("Found {} pipelines that we are attempting to restart...", pipelinesToRestart.size());
-
-    pipelinesToRestart.forEach(pipeline -> {
-      startPipeline(pipeline, false);
-    });
-
-    LOG.info("No more pipelines to restore...");
-  }
-
-  private void startPipeline(Pipeline pipeline, boolean restartOnReboot) {
-    PipelineOperationStatus status = Operations.startPipeline(pipeline);
-    if (status.isSuccess()) {
-      LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
-      Pipeline storedPipeline = getPipelineStorage().getPipeline(pipeline.getPipelineId());
-      storedPipeline.setRestartOnSystemReboot(restartOnReboot);
-      getPipelineStorage().updatePipeline(storedPipeline);
-    } else {
-      storeFailedRestartAttempt(pipeline);
-      int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
-      if (failedAttemptCount <= MAX_PIPELINE_START_RETRIES) {
-        LOG.error("Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
-            pipeline.getName(),
-            WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
-            failedAttemptCount,
-            MAX_PIPELINE_START_RETRIES);
-
-        schedulePipelineStart(pipeline, restartOnReboot);
-      } else {
-        LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?",
-            status.getPipelineName());
-      }
-    }
-  }
-
-  private void storeFailedRestartAttempt(Pipeline pipeline) {
-    String pipelineId = pipeline.getPipelineId();
-    if (!failedPipelines.containsKey(pipelineId)) {
-      failedPipelines.put(pipelineId, 1);
-    } else {
-      int failedAttempts = failedPipelines.get(pipelineId) + 1;
-      failedPipelines.put(pipelineId, failedAttempts);
-    }
   }
 
   private List<Pipeline> getAllPipelines() {

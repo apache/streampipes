@@ -127,7 +127,7 @@ export class AdapterService {
         return this.deleteRequest(
             adapter,
             deleteAssociatedPipelines,
-            '/master/adapters/',
+            'master/adapters',
         );
     }
 

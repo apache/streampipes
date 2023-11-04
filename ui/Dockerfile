@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM nginx
+FROM nginx:mainline-alpine3.18
 
 COPY dist/streampipes/ui/ /usr/share/nginx/html/
 

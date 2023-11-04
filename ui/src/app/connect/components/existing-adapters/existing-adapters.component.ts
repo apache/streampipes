@@ -48,6 +48,7 @@ import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
 import { zip } from 'rxjs';
+import { RestApi } from '../../../services/rest-api.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 
 @Component({
@@ -89,6 +90,7 @@ export class ExistingAdaptersComponent implements OnInit {
         private pipelineElementService: PipelineElementService,
         private pipelineService: PipelineService,
         private router: Router,
+        private restApi: RestApi,
         private adapterFilter: AdapterFilterPipe,
         private breadcrumbService: SpBreadcrumbService,
         private adapterMonitoringService: AdapterMonitoringService,
@@ -196,9 +198,7 @@ export class ExistingAdaptersComponent implements OnInit {
 
     getIconUrl(adapter: AdapterDescription) {
         if (adapter.includedAssets.length > 0) {
-            return this.adapterService.getAssetUrl(adapter.appId) + '/icon';
-        } else {
-            return 'assets/img/connect/' + adapter.iconUrl;
+            return this.restApi.getAssetUrl(adapter.appId) + '/icon';
         }
     }
 

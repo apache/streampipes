@@ -47,4 +47,6 @@ public interface IUserStorage {
 
   Principal getUserById(String principalId);
 
+  boolean existsDatabase();
+
 }

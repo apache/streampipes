@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.graph;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 
@@ -34,6 +35,7 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
   public DataSinkInvocation(DataSinkInvocation sec) {
     super(sec);
     this.category = sec.getCategory();
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
   }
 
   public DataSinkInvocation(DataSinkDescription other) {
@@ -51,16 +53,19 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.setIncludesAssets(other.isIncludesAssets());
     this.setElementId(ElementIdGenerator.makeElementId(this));
     this.setIncludedAssets(other.getIncludedAssets());
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
   }
 
   public DataSinkInvocation(DataSinkDescription sec, String domId) {
     this(sec);
     this.setDom(domId);
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
   }
 
   public DataSinkInvocation() {
     super();
     inputStreams = new ArrayList<>();
+    this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
   }
 
   public List<StaticProperty> getStaticProperties() {

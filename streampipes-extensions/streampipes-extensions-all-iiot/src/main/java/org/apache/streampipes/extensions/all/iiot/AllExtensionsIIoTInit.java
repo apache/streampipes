@@ -18,18 +18,20 @@
 
 package org.apache.streampipes.extensions.all.iiot;
 
-import org.apache.streampipes.connect.iiot.ConnectAdapterIiotInit;
+import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
-import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsInit;
-import org.apache.streampipes.extensions.connectors.kafka.sink.KafkaPublishSink;
-import org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink;
-import org.apache.streampipes.extensions.connectors.nats.sink.NatsSink;
-import org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink;
-import org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink;
-import org.apache.streampipes.extensions.connectors.tubemq.sink.TubeMQPublisherSink;
+import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.kafka.KafkaConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.nats.NatsConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.opcua.OpcUaConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.plc.PlcConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.pulsar.PulsarConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.rocketmq.RocketMqConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.tubemq.TubeMQConnectorsModuleExport;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
@@ -37,16 +39,16 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
-import org.apache.streampipes.processors.changedetection.jvm.ChangeDetectionJvmInit;
-import org.apache.streampipes.processors.enricher.jvm.EnricherJvmInit;
-import org.apache.streampipes.processors.filters.jvm.FiltersJvmInit;
-import org.apache.streampipes.processors.siddhi.FiltersSiddhiInit;
-import org.apache.streampipes.processors.transformation.jvm.TransformationJvmInit;
+import org.apache.streampipes.processors.changedetection.jvm.ChangeDetectionExtensionModuleExport;
+import org.apache.streampipes.processors.enricher.jvm.EnricherExtensionModuleExport;
+import org.apache.streampipes.processors.filters.jvm.FilterExtensionModuleExport;
+import org.apache.streampipes.processors.siddhi.SiddhiFilterExtensionModuleExport;
+import org.apache.streampipes.processors.transformation.jvm.TransformationExtensionModuleExport;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.sinks.brokers.jvm.BrokersJvmInit;
-import org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit;
-import org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit;
-import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
+import org.apache.streampipes.sinks.brokers.jvm.BrokerSinksExtensionModuleExport;
+import org.apache.streampipes.sinks.databases.jvm.DatabaseSinksExtensionModuleExport;
+import org.apache.streampipes.sinks.internal.jvm.InternalSinksExtensionModuleExports;
+import org.apache.streampipes.sinks.notifications.jvm.NotificationsExtensionModuleExport;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
@@ -60,24 +62,30 @@ public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.iiot",
             "StreamPipes Extensions (IIoT only)",
             "", 8090)
-        .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
-        .merge(new SinksInternalJvmInit().provideServiceDefinition())
-        .merge(new FiltersJvmInit().provideServiceDefinition())
-        .merge(new ChangeDetectionJvmInit().provideServiceDefinition())
-        .merge(new EnricherJvmInit().provideServiceDefinition())
-        .merge(new FiltersSiddhiInit().provideServiceDefinition())
-        .merge(new TransformationJvmInit().provideServiceDefinition())
-        .merge(new BrokersJvmInit().provideServiceDefinition())
-        .merge(new DatabasesJvmInit().provideServiceDefinition())
-        .merge(new SinksNotificationsJvmInit().provideServiceDefinition())
-        .merge(new InfluxConnectorsInit().provideServiceDefinition())
-        .registerPipelineElements(
-            new KafkaPublishSink(),
-            new MqttPublisherSink(),
-            new NatsSink(),
-            new PulsarPublisherSink(),
-            new RocketMQPublisherSink(),
-            new TubeMQPublisherSink())
+        .registerModules(
+            new IIoTAdaptersExtensionModuleExport(),
+
+            new InfluxConnectorsModuleExport(),
+            new KafkaConnectorsModuleExport(),
+            new MqttConnectorsModuleExport(),
+            new NatsConnectorsModuleExport(),
+            new OpcUaConnectorsModuleExport(),
+            new PlcConnectorsModuleExport(),
+            new PulsarConnectorsModuleExport(),
+            new RocketMqConnectorsModuleExport(),
+            new TubeMQConnectorsModuleExport(),
+
+            new ChangeDetectionExtensionModuleExport(),
+            new EnricherExtensionModuleExport(),
+            new FilterExtensionModuleExport(),
+            new SiddhiFilterExtensionModuleExport(),
+            new FilterExtensionModuleExport(),
+            new TransformationExtensionModuleExport(),
+            new BrokerSinksExtensionModuleExport(),
+            new DatabaseSinksExtensionModuleExport(),
+            new InternalSinksExtensionModuleExports(),
+            new NotificationsExtensionModuleExport()
+        )
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingFormats(
             new JsonDataFormatFactory(),

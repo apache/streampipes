@@ -161,7 +161,7 @@ public class ElementRecommender {
     return getTripleStore()
         .getAllDataProcessors()
         .stream()
-        .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getElementId())))
+        .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
         .map(DataProcessorDescription::new)
         .collect(Collectors.toList());
   }
@@ -172,7 +172,7 @@ public class ElementRecommender {
     return getTripleStore()
         .getAllDataSinks()
         .stream()
-        .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getElementId())))
+        .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
         .map(DataSinkDescription::new)
         .collect(Collectors.toList());
   }

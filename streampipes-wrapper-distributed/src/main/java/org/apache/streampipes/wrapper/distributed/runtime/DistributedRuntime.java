@@ -43,7 +43,7 @@ public abstract class DistributedRuntime<
     PeT extends IStreamPipesPipelineElement<?>,
     IvT extends InvocableStreamPipesEntity,
     RcT extends RuntimeContext,
-    ExT extends IParameterExtractor<IvT>,
+    ExT extends IParameterExtractor,
     PepT extends IPipelineElementParameters<IvT, ExT>>
     extends PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT>
     implements IStreamPipesRuntime<PeT, IvT> {

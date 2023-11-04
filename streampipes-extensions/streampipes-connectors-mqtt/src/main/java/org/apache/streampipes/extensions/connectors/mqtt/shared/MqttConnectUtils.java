@@ -69,11 +69,11 @@ public class MqttConnectUtils {
 
   }
 
-  public static MqttConfig getMqttConfig(IParameterExtractor<?> extractor) {
+  public static MqttConfig getMqttConfig(IParameterExtractor extractor) {
     return getMqttConfig(extractor, null);
   }
 
-  public static MqttConfig getMqttConfig(IParameterExtractor<?> extractor, String topicInput) {
+  public static MqttConfig getMqttConfig(IParameterExtractor extractor, String topicInput) {
     MqttConfig mqttConfig;
     String brokerUrl = extractor.singleValueParameter(BROKER_URL, String.class);
 

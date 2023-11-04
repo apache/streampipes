@@ -38,6 +38,7 @@ import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,11 +131,11 @@ public abstract class InvocablePipelineElementResource<
             new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
         return ok(responseOptions);
       } else {
-        return jakarta.ws.rs.core.Response.status(500).build();
+        return jakarta.ws.rs.core.Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
       }
     } catch (SpConfigurationException e) {
       return jakarta.ws.rs.core.Response
-          .status(400)
+          .status(HttpStatus.SC_BAD_REQUEST)
           .entity(e)
           .build();
     }

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'sp-messaging-broker-config',
@@ -31,4 +31,10 @@ export class SpMessagingBrokerConfigComponent {
 
     @Input()
     port: number;
+
+    @Output()
+    hostChange = new EventEmitter<string>();
+
+    @Output()
+    portChange = new EventEmitter<number>();
 }

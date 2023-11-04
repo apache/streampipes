@@ -33,6 +33,7 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
@@ -69,6 +70,16 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     return db.getServiceAccount(
         env.getInitialServiceUser().getValueOrDefault()
     );
+  }
+
+  public Principal getAdminUser() {
+    return CouchDbStorageManager.INSTANCE
+        .getUserStorageAPI()
+        .getAllUserAccounts()
+        .stream()
+        .filter(u -> u.getRoles().contains(Role.ROLE_ADMIN))
+        .findFirst()
+        .orElseThrow(IllegalArgumentException::new);
   }
 
   public boolean registerUser(RegistrationData data) throws UsernameAlreadyTakenException {
