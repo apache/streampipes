@@ -56,7 +56,7 @@ public class ServiceHealthCheck implements Runnable {
     try {
       var request = ExtensionServiceExecutions.extServiceGetRequest(healthCheckUrl);
       var response = request.execute();
-      if (response.returnResponse().getStatusLine().getStatusCode() != HttpStatus.SC_OK && !isStarting(service)) {
+      if (response.returnResponse().getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
         processUnhealthyService(service);
       } else {
         if (service.getStatus() == SpServiceStatus.UNHEALTHY) {
@@ -66,10 +66,6 @@ public class ServiceHealthCheck implements Runnable {
     } catch (IOException e) {
       processUnhealthyService(service);
     }
-  }
-
-  private boolean isStarting(SpServiceRegistration service) {
-    return service.getStatus() == SpServiceStatus.REGISTERED || service.getStatus() == SpServiceStatus.MIGRATING;
   }
 
   private void processUnhealthyService(SpServiceRegistration service) {
