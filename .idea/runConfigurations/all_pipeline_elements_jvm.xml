@@ -14,7 +14,6 @@
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.pe.jvm.AllPipelineElementsInit" />
     <module name="streampipes-pipeline-elements-all-jvm" />
-    <shortenClasspath name="ARGS_FILE" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
