@@ -174,7 +174,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private void doInitialSetup(int initialSleepBeforeInstallation) {
     LOG.info("\n\n**********\n\nWelcome to Apache StreamPipes!\n\n**********\n\n");
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
-    LOG.info("Auto-setup will start in 5 seconds to make sure all services are running...");
+    LOG.info(
+        "Auto-setup will start in {} milliseconds to make sure all services are running...",
+        initialSleepBeforeInstallation
+    );
     try {
       TimeUnit.MILLISECONDS.sleep(initialSleepBeforeInstallation);
       LOG.info("Starting installation procedure");
