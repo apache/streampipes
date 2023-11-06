@@ -49,7 +49,7 @@ mvn streampipes:extract-docs -DinitClass=org.apache.streampipes.extensions.all.j
 <plugin>
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-maven-plugin</artifactId>
-    <version>0.93.0</version>
+    <version>0.95.0</version>
     <dependencies>
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
