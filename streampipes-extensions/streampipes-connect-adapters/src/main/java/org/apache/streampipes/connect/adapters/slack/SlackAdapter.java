@@ -35,6 +35,7 @@ import org.apache.streampipes.vocabulary.SO;
 import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class SlackAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.slack";
