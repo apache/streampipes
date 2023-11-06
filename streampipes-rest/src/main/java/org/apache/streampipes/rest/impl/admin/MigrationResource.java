@@ -103,39 +103,44 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       List<ModelMigratorConfig> migrationConfigs) {
 
     var serviceManager = new ServiceRegistrationManager(extensionsServiceStorage);
-    var extensionsServiceConfig = serviceManager.getService(serviceId);
-    if (!CoreInitialInstallationProgress.INSTANCE.isInitiallyInstalling()) {
-      new AdapterDescriptionMigration093(adapterDescriptionStorage).reinstallAdapters(extensionsServiceConfig);
-      if (!migrationConfigs.isEmpty()) {
-        var anyServiceMigrating = serviceManager.isAnyServiceMigrating();
-        var coreReady = isCoreReady();
-        if (anyServiceMigrating || !coreReady) {
-          LOG.info(
-              "Refusing migration request since precondition is not met (anyServiceMigratione={}, coreReady={}.",
-              anyServiceMigrating,
-              coreReady
-          );
-          return Response.status(HttpStatus.SC_CONFLICT).build();
-        } else {
-          serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
-          var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
-          var pipelineElementMigrations = filterConfigs(
-              migrationConfigs,
-              List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
-          );
+    try {
+      var extensionsServiceConfig = serviceManager.getService(serviceId);
+      if (!CoreInitialInstallationProgress.INSTANCE.isInitiallyInstalling()) {
+        new AdapterDescriptionMigration093(adapterDescriptionStorage).reinstallAdapters(extensionsServiceConfig);
+        if (!migrationConfigs.isEmpty()) {
+          var anyServiceMigrating = serviceManager.isAnyServiceMigrating();
+          var coreReady = isCoreReady();
+          if (anyServiceMigrating || !coreReady) {
+            LOG.info(
+                "Refusing migration request since precondition is not met (anyServiceMigratione={}, coreReady={}.",
+                anyServiceMigrating,
+                coreReady
+            );
+            return Response.status(HttpStatus.SC_CONFLICT).build();
+          } else {
+            serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
+            var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
+            var pipelineElementMigrations = filterConfigs(
+                migrationConfigs,
+                List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
+            );
 
-          new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
-          new PipelineElementMigrationManager(
-              pipelineStorage,
-              dataProcessorStorage,
-              dataSinkStorage)
-              .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
+            new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
+            new PipelineElementMigrationManager(
+                pipelineStorage,
+                dataProcessorStorage,
+                dataSinkStorage)
+                .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
+          }
         }
       }
+      new ServiceRegistrationManager(extensionsServiceStorage)
+          .applyServiceStatus(extensionsServiceConfig.getSvcId(), SpServiceStatus.HEALTHY);
+      return ok();
+    } catch (IllegalArgumentException e) {
+      LOG.warn("Refusing migration request since the service {} is not registered.", serviceId);
+      return notFound();
     }
-    new ServiceRegistrationManager(extensionsServiceStorage)
-        .applyServiceStatus(extensionsServiceConfig.getSvcId(), SpServiceStatus.HEALTHY);
-    return ok();
   }
 
   private boolean isCoreReady() {
