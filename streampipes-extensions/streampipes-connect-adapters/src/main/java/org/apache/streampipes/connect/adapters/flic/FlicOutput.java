@@ -23,6 +23,7 @@ import com.google.gson.annotations.SerializedName;
 import jakarta.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class FlicOutput {
 
   @SerializedName("timestamp")
