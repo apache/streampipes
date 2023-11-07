@@ -32,9 +32,11 @@
                     <h4>
                         The adapter is currently used by these pipelines:
                         {{ namesOfPipelinesUsingAdapter }}
+                        (if you don't see those pipelines, they are created by
+                        other users)
                     </h4>
                     <h4>
-                        You need to delete these pipelines first before deleting
+                        You need to delete those pipelines first before deleting
                         the adapter.
                     </h4>
                     <h4>
@@ -70,7 +72,7 @@
                 <h4>
                     Unable to delete all associated pipelines because you are
                     not the owner of the following pipelines:
-                    {{ namesOfPipelinesOwnedByOthers }}
+                    {{ namesOfPipelinesNotOwnedByUser }}
                 </h4>
             </b>
         </div>

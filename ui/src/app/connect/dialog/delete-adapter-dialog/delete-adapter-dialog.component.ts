@@ -37,7 +37,7 @@ export class DeleteAdapterDialogComponent {
     adapterUsedByPipeline = false;
     deleteAssociatedPipelines = false;
     namesOfPipelinesUsingAdapter = '';
-    namesOfPipelinesOwnedByOthers = '';
+    namesOfPipelinesNotOwnedByUser = '';
 
     constructor(
         private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
@@ -62,7 +62,7 @@ export class DeleteAdapterDialogComponent {
                 error => {
                     if (error.status === 409) {
                         if (deleteAssociatedPipelines) {
-                            this.namesOfPipelinesOwnedByOthers = error.error;
+                            this.namesOfPipelinesNotOwnedByUser = error.error;
                         } else {
                             this.namesOfPipelinesUsingAdapter = error.error;
                         }

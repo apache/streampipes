@@ -23,6 +23,7 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -36,6 +37,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
@@ -188,10 +190,15 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       // find out the names of pipelines that have an owner and the owner is not the current user
       List<String> namesOfPipelinesNotOwnedByUser = pipelinesUsingAdapter.stream().filter(pipelineId ->
               !permissionResourceManager.findForObjectId(pipelineId).stream().findFirst().map(Permission::getOwnerSid)
+                  // if a pipeline has no owner, pretend the owner is the user so the user can delete it
                   .orElse(this.getAuthenticatedUserSid()).equals(this.getAuthenticatedUserSid()))
           .map(pipelineId -> pipelineStorageAPI.getPipeline(pipelineId).getName()).collect(Collectors.toList());
-      // if the user owns all pipelines using this adapter, it can delete all associated pipelines and this adapter
-      if (namesOfPipelinesNotOwnedByUser.isEmpty()) {
+      boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+          .anyMatch(r -> r.getAuthority().equals(
+              Role.ROLE_ADMIN.name()));
+      // if the user is admin or owns all pipelines using this adapter,
+      // the user can delete all associated pipelines and this adapter
+      if (isAdmin || namesOfPipelinesNotOwnedByUser.isEmpty()) {
         try {
           for (String pipelineId : pipelinesUsingAdapter) {
             PipelineManager.stopPipeline(pipelineId, false);
