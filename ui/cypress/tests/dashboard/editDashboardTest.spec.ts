@@ -31,11 +31,11 @@ describe('Test edit dashboard', () => {
         // Add new dashboard
         const dashboardName = 'testDashboard';
         DashboardUtils.addAndEditDashboard(dashboardName);
-
         DashboardUtils.addWidget('Persist_simulator', 'raw');
-
         cy.dataCy('save-data-explorer-go-back-to-overview').click();
         cy.dataCy('confirm-delete').click();
+
+        // Change dashboard name
         cy.dataCy('change-dashboard-settings-button').click();
         cy.dataCy('dashboard-name-input')
             .clear()
@@ -43,9 +43,31 @@ describe('Test edit dashboard', () => {
             .wait(1000);
         cy.dataCy('dashboard-save-btn').should('not.be.disabled');
         cy.dataCy('dashboard-save-btn').click();
-        //cy.contains('testDashboardv2').should('exist');
 
-        //cy.dataCy("edit-dashboard-testDashboard").click();
-        //DashboardUtils.addWidget('Persist_simulator', 'line-chart');
+        // Verify that new dashboard was renamed correctly
+        cy.contains('testDashboardNew').should('exist');
+
+        // Edit dashboard and change widget to line chart
+        cy.dataCy('edit-dashboard-testDashboardNew').click().wait(1000);
+        cy.dataCy('widget-settings-button').click();
+        cy.dataCy('edit-widget-back-btn').click();
+        cy.dataCy('dashboard-select-widget-line').click();
+        cy.dataCy('min-y-axis-key').type('40');
+        cy.dataCy('max-y-axis-key').type('50');
+        cy.dataCy('dashboard-new-widget-next-btn').should('not.be.disabled');
+        cy.dataCy('dashboard-new-widget-next-btn').click();
+
+        // Verify that new dashboard displays correct chart
+        cy.get('g').should('have.class', 'line-chart chart');
+
+        // Add second chart, single value chart
+        DashboardUtils.addWidget('Persist_simulator', 'number');
+
+        // Go back and check if two newly added charts are displayed correctly in standalone dashboard
+        cy.dataCy('save-data-explorer-go-back-to-overview').click();
+        cy.dataCy('confirm-delete').click();
+        cy.dataCy('show-dashboard-testDashboardNew').click();
+        cy.get('g').should('have.class', 'line-chart chart');
+        cy.get('div').should('have.class', 'circleNumber');
     });
 });
