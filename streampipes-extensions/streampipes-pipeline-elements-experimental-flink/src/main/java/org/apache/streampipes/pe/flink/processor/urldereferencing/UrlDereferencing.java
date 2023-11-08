@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.pe.flink.processor.urldereferencing;
 
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
 
@@ -31,12 +30,10 @@ public class UrlDereferencing implements FlatMapFunction<Event, Event> {
 
   private String urlString;
   private String appendHtml;
-  private Logger logger;
 
   public UrlDereferencing(String urlString, String appendHtml, DataProcessorInvocation graph) {
     this.urlString = urlString;
     this.appendHtml = appendHtml;
-    this.logger = graph.getLogger(UrlDereferencing.class);
   }
 
   @Override

@@ -70,13 +70,13 @@ jobs:
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
 
-      - name: Build and Push Docker Backend Nats Image
+      - name: Build and Push Docker Core Minimal Image
         uses: docker/build-push-action@v5
         with:
-          context: ./streampipes-service-core-nats
+          context: ./streampipes-service-core-minimal
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           push: true
-          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend-nats:${{ env.MVN_VERSION }}
+          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend-minimal:${{ env.MVN_VERSION }}
 
       - name: Build UI
         working-directory: ./ui
@@ -91,22 +91,6 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:${{ env.MVN_VERSION }}
-
-      - name: Build and Push Docker Image connect-adapters
-        uses: docker/build-push-action@v5
-        with:
-          context: ./streampipes-extensions/streampipes-connect-adapters
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
-          push: true
-          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-adapters:${{ env.MVN_VERSION }}
-
-      - name: Build and Push Docker Image connect-adapters-iiot
-        uses: docker/build-push-action@v5
-        with:
-          context: ./streampipes-extensions/streampipes-connect-adapters-iiot
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
-          push: true
-          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-adapters-iiot:${{ env.MVN_VERSION }}
 
       - name: Build and Push Docker Image extensions-all-jvm
         uses: docker/build-push-action@v5
@@ -132,11 +116,11 @@ jobs:
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-iiot:${{ env.MVN_VERSION }}
 
-      - name: Build and Push Docker Image pipeline-elements-all-jvm
+      - name: Build and Push Docker Image extensions-iiot-minimal
         uses: docker/build-push-action@v5
         with:
-          context: ./streampipes-extensions/streampipes-pipeline-elements-all-jvm
+          context: ./streampipes-extensions/streampipes-extensions-iiot-minimal
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           push: true
-          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-jvm:${{ env.MVN_VERSION }}
+          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-iiot-minimal:${{ env.MVN_VERSION }}
 

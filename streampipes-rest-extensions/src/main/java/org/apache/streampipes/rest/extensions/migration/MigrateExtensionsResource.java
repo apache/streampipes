@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
-import org.apache.streampipes.extensions.api.migration.ModelMigrator;
+import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
@@ -36,12 +36,12 @@ import java.util.Optional;
 public abstract class MigrateExtensionsResource<
         T extends VersionedNamedStreamPipesEntity,
         ExT extends IParameterExtractor,
-        MmT extends ModelMigrator<T, ExT>> extends AbstractExtensionsResource {
+        MmT extends IModelMigrator<T, ExT>> extends AbstractExtensionsResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrateExtensionsResource.class);
 
   /**
-   * Find and return the corresponding {@link ModelMigrator} instance within the registered migrators.
+   * Find and return the corresponding {@link IModelMigrator} instance within the registered migrators.
    * This allows to pass the corresponding model migrator to a {@link ModelMigratorConfig} which is exchanged
    * between Core and Extensions service.
    *

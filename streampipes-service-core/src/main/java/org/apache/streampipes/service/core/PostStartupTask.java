@@ -44,13 +44,13 @@ public class PostStartupTask implements Runnable {
   private static final int MAX_PIPELINE_START_RETRIES = 3;
   private static final int WAIT_TIME_AFTER_FAILURE_IN_SECONDS = 10;
 
-  private final List<Pipeline> allPipelines;
+  private final IPipelineStorage pipelineStorage;
   private final Map<String, Integer> failedPipelines = new HashMap<>();
   private final ScheduledExecutorService executorService;
   private final WorkerAdministrationManagement workerAdministrationManagement;
 
-  public PostStartupTask(List<Pipeline> allPipelines) {
-    this.allPipelines = allPipelines;
+  public PostStartupTask(IPipelineStorage pipelineStorage) {
+    this.pipelineStorage = pipelineStorage;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.workerAdministrationManagement = new WorkerAdministrationManagement();
   }
@@ -76,6 +76,7 @@ public class PostStartupTask implements Runnable {
   }
 
   private void startAllPreviouslyStoppedPipelines() {
+    var allPipelines = pipelineStorage.getAllPipelines();
     LOG.info("Checking for orphaned pipelines...");
     List<Pipeline> orphanedPipelines = allPipelines
         .stream()

@@ -28,6 +28,7 @@
         [dataSource]="dataSource"
         style="width: 100%"
         matSort
+        data-cy="all-pipelines-table"
     >
         <ng-container matColumnDef="status">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>Status</th>
@@ -82,13 +83,17 @@
                                         ? 's'
                                         : ''
                                 }}"
+                                data-cy="pipeline-warning-icon"
                             >
                                 <i class="material-icons pipeline-notification"
                                     >warning</i
                                 >
                             </button>
                         </div>
-                        <div class="ml-10 notification-icon">
+                        <div
+                            class="ml-10 notification-icon"
+                            data-cy="pipeline-sync-problem-icon"
+                        >
                             <mat-icon
                                 color="warn"
                                 matTooltip="Invalid pipeline: Modify to fix problems"
@@ -108,6 +113,7 @@
                     mat-icon-button
                     matTooltip="Start pipeline"
                     matTooltipPosition="above"
+                    data-cy="start-pipeline-button"
                     (click)="
                         pipelineOperationsService.startPipeline(
                             pipeline._id,
@@ -205,6 +211,7 @@
                                     pipeline._id
                                 )
                             "
+                            data-cy="modify-pipeline-btn"
                         >
                             <i class="material-icons">mode_edit</i>
                         </button>

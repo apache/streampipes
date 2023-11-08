@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class CoindeskBitcoinAdapter implements StreamPipesAdapter, IPullAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.coindesk";

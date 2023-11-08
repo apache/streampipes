@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
-import org.apache.streampipes.extensions.api.migration.DataProcessorMigrator;
+import org.apache.streampipes.extensions.api.migration.IDataProcessorMigrator;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -41,7 +41,7 @@ public class MigrateExtensionsResourceTest {
   public void executeMigration() {
     var migrationsResource = new DataProcessorMigrationResource();
 
-    var migrator = new DataProcessorMigrator() {
+    var migrator = new IDataProcessorMigrator() {
       @Override
       public ModelMigratorConfig config() {
         return new ModelMigratorConfig("app-id", SpServiceTagPrefix.DATA_PROCESSOR, 0, 1);
@@ -77,7 +77,7 @@ public class MigrateExtensionsResourceTest {
   public void executeMigrationWithFailure() {
     var migrationsResource = new DataProcessorMigrationResource();
 
-    var migrator = new DataProcessorMigrator() {
+    var migrator = new IDataProcessorMigrator() {
       @Override
       public ModelMigratorConfig config() {
         return new ModelMigratorConfig("app-id", SpServiceTagPrefix.DATA_PROCESSOR, 0, 1);
@@ -105,7 +105,7 @@ public class MigrateExtensionsResourceTest {
   public void executeMigrationWithUnknownFailure() {
     var migrationsResource = new DataProcessorMigrationResource();
 
-    var migrator = new DataProcessorMigrator() {
+    var migrator = new IDataProcessorMigrator() {
       @Override
       public ModelMigratorConfig config() {
         return new ModelMigratorConfig("app-id", SpServiceTagPrefix.DATA_PROCESSOR, 0, 1);

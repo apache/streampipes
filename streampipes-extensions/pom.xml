@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.93.0-SNAPSHOT</version>
+        <version>0.95.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -46,7 +46,6 @@
         <module>streampipes-extensions-all-iiot</module>
         <module>streampipes-extensions-all-jvm</module>
 
-        <module>streampipes-pipeline-elements-all-jvm</module>
         <module>streampipes-pipeline-elements-data-simulator</module>
         <module>streampipes-pipeline-elements-shared</module>
 
@@ -63,6 +62,8 @@
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
         <module>streampipes-sinks-notifications-jvm</module>
+        <module>streampipes-connectors-plc</module>
+        <module>streampipes-extensions-iiot-minimal</module>
     </modules>
 
     <properties>
@@ -127,7 +128,7 @@
             <plugin>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-maven-plugin</artifactId>
-                <version>0.93.0-SNAPSHOT</version>
+                <version>0.95.0-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>

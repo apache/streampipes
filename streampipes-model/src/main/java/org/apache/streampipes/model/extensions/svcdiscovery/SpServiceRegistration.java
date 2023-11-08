@@ -36,8 +36,8 @@ public class SpServiceRegistration {
   private int port;
   private List<SpServiceTag> tags;
   private String healthCheckPath;
-  private boolean healthy = true;
   private long firstTimeSeenUnhealthy = 0;
+  private SpServiceStatus status = SpServiceStatus.REGISTERED;
 
   public SpServiceRegistration() {
   }
@@ -133,14 +133,6 @@ public class SpServiceRegistration {
     this.rev = rev;
   }
 
-  public boolean isHealthy() {
-    return healthy;
-  }
-
-  public void setHealthy(boolean healthy) {
-    this.healthy = healthy;
-  }
-
   public String getScheme() {
     return scheme;
   }
@@ -167,5 +159,13 @@ public class SpServiceRegistration {
 
   public void setSvcType(String svcType) {
     this.svcType = svcType;
+  }
+
+  public SpServiceStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(SpServiceStatus status) {
+    this.status = status;
   }
 }

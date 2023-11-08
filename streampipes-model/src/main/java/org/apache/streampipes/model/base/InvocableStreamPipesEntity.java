@@ -19,8 +19,6 @@
 package org.apache.streampipes.model.base;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
-import org.apache.streampipes.logging.LoggerFactory;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -204,7 +202,4 @@ public abstract class InvocableStreamPipesEntity
     return "/" + InstanceIdExtractor.extractId(getElementId());
   }
 
-  public Logger getLogger(Class clazz) {
-    return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
-  }
 }

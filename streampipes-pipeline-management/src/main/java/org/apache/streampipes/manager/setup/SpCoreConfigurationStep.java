@@ -19,14 +19,22 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.model.configuration.DefaultSpCoreConfiguration;
+import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SpCoreConfigurationStep extends InstallationStep {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SpCoreConfigurationStep.class);
+
   @Override
   public void install() {
     var coreCfg = new DefaultSpCoreConfiguration().make();
-
+    coreCfg.setServiceStatus(SpCoreConfigurationStatus.INSTALLING);
     StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage().createElement(coreCfg);
+    LOG.info("Core is now in {} state", coreCfg.getServiceStatus());
     new StreamPipesEnvChecker().updateEnvironmentVariables();
   }
 

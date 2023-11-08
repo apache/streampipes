@@ -18,11 +18,15 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +44,8 @@ import jakarta.ws.rs.core.Response;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistrationResource.class);
+
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
 
@@ -52,7 +58,8 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public Response registerService(SpServiceRegistration serviceRegistration) {
-    extensionsServiceStorage.createElement(serviceRegistration);
+    new ServiceRegistrationManager(extensionsServiceStorage)
+        .addService(serviceRegistration, SpServiceStatus.REGISTERED);
     return ok();
   }
 
@@ -60,8 +67,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
   @Path("/{serviceId}")
   public Response unregisterService(@PathParam("serviceId") String serviceId) {
     try {
-      var serviceRegistration = extensionsServiceStorage.getElementById(serviceId);
-      extensionsServiceStorage.deleteElement(serviceRegistration);
+      new ServiceRegistrationManager(extensionsServiceStorage).removeService(serviceId);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest("Could not find registered service with id " + serviceId);

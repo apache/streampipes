@@ -1,6 +1,6 @@
 {
   "name": "apache-streampipes",
-  "version": "0.93.0-SNAPSHOT",
+  "version": "0.95.0-SNAPSHOT",
   "description": "Apache StreamPipes user interface",
   "homepage": "http://streampipes.apache.org",
   "repository": {
@@ -95,7 +95,7 @@
     "@angular-devkit/build-angular": "^15.1.6",
     "@angular-eslint/builder": "16.1.1",
     "@angular-eslint/eslint-plugin": "^15.2.0",
-    "@angular-eslint/eslint-plugin-template": "^15.2.0",
+    "@angular-eslint/eslint-plugin-template": "^16.2.0",
     "@angular-eslint/schematics": "^15.2.1",
     "@angular-eslint/template-parser": "^15.2.0",
     "@angular/cli": "^15.2.9",
@@ -108,7 +108,7 @@
     "@types/jqueryui": "^1.12.16",
     "@types/jshint": "^2.12.1",
     "@types/leaflet": "^1.9.0",
-    "@types/node": "^20.4.6",
+    "@types/node": "^20.8.10",
     "@types/rx": "^4.1.2",
     "@types/showdown": "1.9.4",
     "@typescript-eslint/eslint-plugin": "5.57.1",
@@ -120,7 +120,7 @@
     "csv-string": "^4.1.1",
     "cypress": "^13.2.0",
     "cypress-file-upload": "^5.0.8",
-    "eslint": "8.37.0",
+    "eslint": "8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.2",
@@ -143,7 +143,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "to-string-loader": "^1.2.0",
     "typescript": "4.8.2",
-    "webpack": "^5.88.2",
+    "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.8.0"
   },

@@ -30,6 +30,7 @@
             <useDefaultExcludes>true</useDefaultExcludes>
             <excludes>
                 <exclude>%regex[(?!((?!${project.build.directory}/)[^/]+/)*src/)(.*/)?\.gitignore]</exclude>
+                <exclude>${project.basedir}/compose/quickstart/zip_folder/*.zip</exclude>
             </excludes>
             <directory>${project.basedir}/installer</directory>
             <outputDirectory>.</outputDirectory>

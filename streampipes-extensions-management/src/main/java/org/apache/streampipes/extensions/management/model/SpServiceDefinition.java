@@ -20,7 +20,8 @@ package org.apache.streampipes.extensions.management.model;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
-import org.apache.streampipes.extensions.api.migration.ModelMigrator;
+import org.apache.streampipes.extensions.api.migration.IModelMigrator;
+import org.apache.streampipes.extensions.api.migration.MigrationComparison;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -49,7 +50,7 @@ public class SpServiceDefinition {
   private List<ConfigItem> kvConfigs;
 
   private List<IStreamPipesRuntimeProvider> runtimeProviders;
-  private List<ModelMigrator<?, ?>> migrators;
+  private List<IModelMigrator<?, ?>> migrators;
 
   public SpServiceDefinition() {
     this.serviceId = UUID.randomUUID().toString();
@@ -187,7 +188,7 @@ public class SpServiceDefinition {
     this.runtimeProviders.add(runtimeProvider);
   }
 
-  public List<ModelMigrator<?, ?>> getMigrators() {
+  public List<IModelMigrator<?, ?>> getMigrators() {
     return this.migrators;
   }
 
@@ -198,9 +199,9 @@ public class SpServiceDefinition {
    *
    * @param migrators migrators to add
    */
-  public void addMigrators(List<ModelMigrator<?, ?>> migrators) {
+  public void addMigrators(List<IModelMigrator<?, ?>> migrators) {
     for (var migratorToAdd : migrators) {
-      if (!this.migrators.contains(migratorToAdd)) {
+      if (this.migrators.stream().noneMatch(migrator -> MigrationComparison.isEqual(migrator, migratorToAdd))) {
         this.migrators.add(migratorToAdd);
       }
     }

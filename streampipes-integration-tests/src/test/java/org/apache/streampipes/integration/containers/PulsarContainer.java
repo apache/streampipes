@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.integration.containers;
 
+import org.apache.http.HttpStatus;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 
@@ -35,7 +36,7 @@ public class PulsarContainer extends GenericContainer<PulsarContainer> {
   public void start() {
     this.waitStrategy = new HttpWaitStrategy()
         .forPort(BROKER_HTTP_PORT)
-        .forStatusCode(200)
+        .forStatusCode(HttpStatus.SC_OK)
         .forPath("/admin/v2/namespaces/public/default")
         .withStartupTimeout(Duration.of(300, SECONDS));
     this.withExposedPorts(BROKER_SERVICE_PORT, BROKER_HTTP_PORT);

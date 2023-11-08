@@ -24,7 +24,7 @@
   <parent>
     <artifactId>streampipes-parent</artifactId>
     <groupId>org.apache.streampipes</groupId>
-    <version>0.93.0-SNAPSHOT</version>
+    <version>0.95.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -42,13 +42,13 @@
     <dependency>
       <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-client</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
+      <version>0.95.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-extensions-management</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
+      <version>0.95.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -59,35 +59,46 @@
     <dependency>
       <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-messaging-mqtt</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
+      <version>0.95.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-messaging-nats</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
+      <version>0.95.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
-      <artifactId>streampipes-connect-adapters-iiot</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
-      <classifier>embed</classifier>
+      <artifactId>streampipes-connectors-kafka</artifactId>
+      <version>0.95.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.streampipes</groupId>
+      <artifactId>streampipes-connectors-mqtt</artifactId>
+      <version>0.95.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.streampipes</groupId>
+      <artifactId>streampipes-connectors-pulsar</artifactId>
+      <version>0.95.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-pipeline-management</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
+      <version>0.95.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-pipeline-elements-shared</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
+      <version>0.95.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-service-discovery</artifactId>
-      <version>0.93.0-SNAPSHOT</version>
+      <version>0.95.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
@@ -110,6 +121,10 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
     </dependency>
   </dependencies>
 
