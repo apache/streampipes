@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.couchdb.dao.FindCommand;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class AdapterDescriptionStorageImpl extends AbstractDao<AdapterDescription> implements IAdapterStorage {
@@ -62,6 +63,23 @@ public class AdapterDescriptionStorageImpl extends AbstractDao<AdapterDescriptio
     AdapterDescription adapterDescription = getAdapter(adapterId);
     couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
 
+  }
+
+  @Override
+  public AdapterDescription getFirstAdapterByAppId(String appId) {
+    return getAll()
+            .stream()
+            .filter(p -> p.getAppId().equals(appId))
+            .findFirst()
+            .orElseThrow(NoSuchElementException::new);
+  }
+
+  @Override
+  public List<AdapterDescription> getAdaptersByAppId(String appId) {
+    return getAll()
+            .stream()
+            .filter(p -> p.getAppId().equals(appId))
+            .toList();
   }
 
   @Override

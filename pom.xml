@@ -28,7 +28,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.93.0-SNAPSHOT</version>
+    <version>0.95.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -117,7 +117,6 @@
 	<spring-security.version>6.1.1</spring-security.version>
 	<swagger.version>2.2.7</swagger.version>
 	<type-parser.version>0.8.1</type-parser.version>
-	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
 			<!-- Geo dependencies -->
@@ -126,7 +125,7 @@
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
-	<mockito.version>5.6.0</mockito.version>
+	<mockito.version>5.7.0</mockito.version>
 	<powermock.version>2.0.9</powermock.version>
 	<rest-assured.version>2.9.0</rest-assured.version>
 	<wiremock.version>2.27.2</wiremock.version>
@@ -185,7 +184,7 @@
 	<netty.version>4.1.72.Final</netty.version>
 	<opencsv.version>5.8</opencsv.version>
 	<plc4x.version>0.10.0</plc4x.version>
-	<protobuf.version>3.24.0</protobuf.version>
+	<protobuf.version>3.25.0</protobuf.version>
 	<proton-j.version>0.34.0</proton-j.version>
 
 	<apache-rat-plugin.version>0.13</apache-rat-plugin.version>
@@ -832,7 +831,7 @@
 				</dependency>
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-oauth2-client</artifactId>
+					<artifactId>spring-boot-starter-security</artifactId>
 					<version>${spring-boot.version}</version>
 				</dependency>
 				<dependency>
@@ -849,11 +848,6 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-actuator</artifactId>
 					<version>${spring-boot.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.wildfly.common</groupId>
-					<artifactId>wildfly-common</artifactId>
-					<version>${wildfly-common.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.yaml</groupId>
@@ -1339,7 +1333,6 @@
         <module>streampipes-dataformat-smile</module>
         <module>streampipes-extensions</module>
 		<module>streampipes-integration-tests</module>
-        <module>streampipes-logging</module>
 		<module>streampipes-mail</module>
         <module>streampipes-maven-plugin</module>
         <module>streampipes-measurement-units</module>
@@ -1365,7 +1358,7 @@
         <module>streampipes-serializers-json</module>
         <module>streampipes-service-base</module>
 		<module>streampipes-service-core</module>
-		<module>streampipes-service-core-nats</module>
+		<module>streampipes-service-core-minimal</module>
         <module>streampipes-service-discovery</module>
         <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>

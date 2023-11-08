@@ -20,14 +20,15 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-24 20:02:02.
+// Generated using typescript-generator version 3.2.1263 on 2023-10-30 22:49:29.
 
 export class NamedStreamPipesEntity {
     '@class':
-        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
+        | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
+        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
         | 'org.apache.streampipes.model.graph.DataSinkInvocation';
@@ -82,7 +83,30 @@ export class NamedStreamPipesEntity {
     }
 }
 
-export class AdapterDescription extends NamedStreamPipesEntity {
+export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
+    '@class':
+        | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
+        | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
+        | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
+        | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
+        | 'org.apache.streampipes.model.graph.DataSinkInvocation';
+    'version': number;
+
+    static 'fromData'(
+        data: VersionedNamedStreamPipesEntity,
+        target?: VersionedNamedStreamPipesEntity,
+    ): VersionedNamedStreamPipesEntity {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new VersionedNamedStreamPipesEntity();
+        super.fromData(data, instance);
+        instance.version = data.version;
+        return instance;
+    }
+}
+
+export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
     'category': string[];
     'config': StaticPropertyUnion[];
@@ -1159,7 +1183,7 @@ export class DataLakeMeasure {
 }
 
 export class InvocableStreamPipesEntity
-    extends NamedStreamPipesEntity
+    extends VersionedNamedStreamPipesEntity
     implements EndpointSelectable
 {
     '@class':
@@ -1173,6 +1197,7 @@ export class InvocableStreamPipesEntity
     'detachPath': string;
     'inputStreams': SpDataStream[];
     'selectedEndpointUrl': string;
+    'serviceTagPrefix': SpServiceTagPrefix;
     'staticProperties': StaticPropertyUnion[];
     'statusInfoSettings': ElementStatusInfoSettings;
     'streamRequirements': SpDataStream[];
@@ -1197,6 +1222,7 @@ export class InvocableStreamPipesEntity
             data.inputStreams,
         );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        instance.serviceTagPrefix = data.serviceTagPrefix;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
@@ -3574,12 +3600,12 @@ export class SpServiceConfiguration {
 export class SpServiceRegistration {
     firstTimeSeenUnhealthy: number;
     healthCheckPath: string;
-    healthy: boolean;
     host: string;
     port: number;
     rev: string;
     scheme: string;
     serviceUrl: string;
+    status: SpServiceStatus;
     svcGroup: string;
     svcId: string;
     svcType: string;
@@ -3595,12 +3621,12 @@ export class SpServiceRegistration {
         const instance = target || new SpServiceRegistration();
         instance.firstTimeSeenUnhealthy = data.firstTimeSeenUnhealthy;
         instance.healthCheckPath = data.healthCheckPath;
-        instance.healthy = data.healthy;
         instance.host = data.host;
         instance.port = data.port;
         instance.rev = data.rev;
         instance.scheme = data.scheme;
         instance.serviceUrl = data.serviceUrl;
+        instance.status = data.status;
         instance.svcGroup = data.svcGroup;
         instance.svcId = data.svcId;
         instance.svcType = data.svcType;
@@ -4079,6 +4105,12 @@ export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 export type SpProtocol = 'KAFKA' | 'JMS' | 'MQTT' | 'NATS' | 'PULSAR';
 
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
+
+export type SpServiceStatus =
+    | 'REGISTERED'
+    | 'MIGRATING'
+    | 'HEALTHY'
+    | 'UNHEALTHY';
 
 export type SpServiceTagPrefix =
     | 'SYSTEM'

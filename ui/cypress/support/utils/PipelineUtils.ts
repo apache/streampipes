@@ -31,6 +31,10 @@ export class PipelineUtils {
         PipelineUtils.startPipeline(pipelineInput);
     }
 
+    public static goToPipelines() {
+        cy.visit('#/pipelines');
+    }
+
     private static goToPipelineEditor() {
         // Go to StreamPipes editor
         cy.visit('#/pipelines');

@@ -19,7 +19,9 @@ package org.apache.streampipes.extensions.management.model;
 
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -36,7 +38,6 @@ public class SpServiceDefinitionBuilder {
   private static final Logger LOG = LoggerFactory.getLogger(SpServiceDefinitionBuilder.class);
 
   private SpServiceDefinition serviceDefinition;
-  //private SpConfig config;
 
   private SpServiceDefinitionBuilder(String serviceGroup,
                                      String serviceName,
@@ -47,7 +48,6 @@ public class SpServiceDefinitionBuilder {
     this.serviceDefinition.setServiceName(serviceName);
     this.serviceDefinition.setServiceDescription(serviceDescription);
     this.serviceDefinition.setDefaultPort(defaultPort);
-    //this.config = new ConsulSpConfig(serviceGroup);
   }
 
   public static SpServiceDefinitionBuilder create(String serviceGroup,
@@ -83,7 +83,21 @@ public class SpServiceDefinitionBuilder {
   }
 
   public SpServiceDefinitionBuilder addConfigs(List<ConfigItem> configItems) {
-    configItems.stream().forEach(configItem -> this.serviceDefinition.addConfig(configItem));
+    configItems.forEach(configItem -> this.serviceDefinition.addConfig(configItem));
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerModules(IExtensionModuleExport... moduleExports) {
+    Arrays.stream(moduleExports).forEach(this::registerModule);
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerModule(IExtensionModuleExport moduleExport) {
+    moduleExport.pipelineElements().forEach(this::registerPipelineElement);
+    moduleExport.adapters().forEach(this::registerAdapter);
+    moduleExport.migrators().forEach(this::registerMigrators);
+    moduleExport.configItems().forEach(this::addConfig);
+
     return this;
   }
 
@@ -123,9 +137,22 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
+  /**
+   * Include migrations in the service definition.
+   * <br>
+   * Please refrain from providing {@link IModelMigrator}s with overlapping version definitions for one application id.
+   * @param migrations List of migrations to be registered
+   * @return {@link SpServiceDefinitionBuilder}
+   */
+  public SpServiceDefinitionBuilder registerMigrators(IModelMigrator<?, ?>... migrations) {
+    this.serviceDefinition.addMigrators(List.of(migrations));
+    return this;
+  }
+
   public SpServiceDefinitionBuilder merge(SpServiceDefinition other) {
     this.serviceDefinition.addDeclarers(other.getDeclarers());
     this.serviceDefinition.addAdapters(other.getAdapters());
+    this.serviceDefinition.addMigrators(other.getMigrators());
     other.getKvConfigs().forEach(value -> {
       if (this.serviceDefinition.getKvConfigs().stream().anyMatch(c -> c.getKey().equals(value.getKey()))) {
         LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.",

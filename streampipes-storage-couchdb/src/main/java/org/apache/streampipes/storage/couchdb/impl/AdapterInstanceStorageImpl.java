@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.couchdb.dao.FindCommand;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> implements IAdapterStorage {
@@ -52,7 +53,7 @@ public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> 
   @Override
   public AdapterDescription getAdapter(String adapterId) {
     DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd =
-        new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
+            new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
     return cmd.execute().orElse(null);
   }
 
@@ -77,6 +78,23 @@ public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> 
   @Override
   public AdapterDescription getElementById(String id) {
     return findWithNullIfEmpty(id);
+  }
+
+  @Override
+  public AdapterDescription getFirstAdapterByAppId(String appId) {
+    return getAll()
+            .stream()
+            .filter(p -> p.getAppId().equals(appId))
+            .findFirst()
+            .orElseThrow(NoSuchElementException::new);
+  }
+
+  @Override
+  public List<AdapterDescription> getAdaptersByAppId(String appId) {
+    return getAll()
+            .stream()
+            .filter(p -> p.getAppId().equals(appId))
+            .toList();
   }
 
   @Override

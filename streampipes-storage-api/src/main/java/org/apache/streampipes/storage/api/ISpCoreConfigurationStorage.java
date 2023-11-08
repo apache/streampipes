@@ -24,6 +24,8 @@ import java.util.List;
 
 public interface ISpCoreConfigurationStorage {
 
+  boolean exists();
+
   List<SpCoreConfiguration> getAll();
 
   void createElement(SpCoreConfiguration element);

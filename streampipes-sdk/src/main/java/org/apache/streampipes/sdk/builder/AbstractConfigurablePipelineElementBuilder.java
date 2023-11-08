@@ -977,13 +977,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
 
   public K requiredAlternatives(Label label, StaticPropertyAlternative... alternatives) {
     StaticPropertyAlternatives alternativesContainer =
-        new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
-
-    for (int i = 0; i < alternatives.length; i++) {
-      alternatives[i].setIndex(i);
-    }
-
-    alternativesContainer.setAlternatives(Arrays.asList(alternatives));
+        StaticProperties.alternatives(label, alternatives);
     this.staticProperties.add(alternativesContainer);
 
     return me();

@@ -17,8 +17,12 @@
  */
 package org.apache.streampipes.service.extensions;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.migration.IModelMigrator;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
@@ -44,7 +48,15 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
   }
 
   @Override
-  public void afterServiceRegistered(SpServiceDefinition serviceDef) {
+  public void afterServiceRegistered(SpServiceDefinition serviceDef,
+                                     SpServiceRegistration serviceReg) {
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+
+    // register all migrations at StreamPipes Core
+    var migrationConfigs = serviceDef.getMigrators().stream().map(IModelMigrator::config).toList();
+    new CoreRequestSubmitter().submitMigrationRequest(client, migrationConfigs, serviceId(), serviceReg);
+
+    // initialize all function instances
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
   }
 

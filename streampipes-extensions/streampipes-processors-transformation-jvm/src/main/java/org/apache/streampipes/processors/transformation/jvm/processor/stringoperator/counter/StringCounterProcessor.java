@@ -21,7 +21,6 @@ package org.apache.streampipes.processors.transformation.jvm.processor.stringope
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -41,8 +40,6 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 import java.util.HashMap;
 
 public class StringCounterProcessor extends StreamPipesDataProcessor {
-
-  private static Logger log;
 
   protected static final String FIELD_ID = "field";
   private static final String COUNT_FIELD_ID = "countField";
@@ -85,7 +82,6 @@ public class StringCounterProcessor extends StreamPipesDataProcessor {
   public void onInvocation(ProcessorParams parameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    log = parameters.getGraph().getLogger(StringCounterProcessor.class);
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.selectedFieldName = extractor.mappingPropertyValue(FIELD_ID);
     this.fieldValueOfLastEvent = "";

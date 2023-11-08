@@ -19,8 +19,10 @@
 package org.apache.streampipes.rest.impl;
 
 
-import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonObject;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +36,9 @@ import jakarta.ws.rs.core.Response;
 @Path("/v2/setup")
 public class Setup extends AbstractRestResource {
 
+  private final ISpCoreConfigurationStorage storage = StorageDispatcher
+      .INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
+
   @GET
   @Path("/configured")
   @Produces(MediaType.APPLICATION_JSON)
@@ -41,13 +46,13 @@ public class Setup extends AbstractRestResource {
       tags = {"Configurated"})
   public Response isConfigured() {
     JsonObject obj = new JsonObject();
-    if (BackendConfig.INSTANCE.isConfigured()) {
+    var statusManager = new CoreServiceStatusManager(storage);
+    if (statusManager.isCoreReady()) {
       obj.addProperty("configured", true);
-      return ok(obj.toString());
     } else {
       obj.addProperty("configured", false);
-      obj.addProperty("setupRunning", BackendConfig.INSTANCE.isConfigured());
-      return ok(obj.toString());
+      obj.addProperty("setupRunning", false);
     }
+    return ok(obj.toString());
   }
 }

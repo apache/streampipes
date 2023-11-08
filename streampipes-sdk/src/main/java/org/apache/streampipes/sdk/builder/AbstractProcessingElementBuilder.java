@@ -264,6 +264,10 @@ public abstract class AbstractProcessingElementBuilder<K extends
     stream2 = true;
     return me();
   }
+  public K withVersion(int version) {
+    this.elementDescription.setVersion(version);
+    return me();
+  }
 
 
   @Override

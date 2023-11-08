@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class FlicUtils {
   public static final String TIMESTAMP_KEY = "timestamp";
   public static final String BUTTON_ID_KEY = "button_id";

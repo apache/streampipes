@@ -119,4 +119,16 @@ public interface Environment {
   StringEnvironmentVariable getPrometheusEndpointInclude();
 
   BooleanEnvironmentVariable getSetupPrometheusEndpoint();
+
+  // Health checks and logging
+  IntEnvironmentVariable getHealthCheckIntervalInMillis();
+
+  IntEnvironmentVariable getInitialHealthCheckDelayInMillis();
+
+  IntEnvironmentVariable getLogFetchIntervalInMillis();
+
+  IntEnvironmentVariable getUnhealthyTimeBeforeServiceDeletionInMillis();
+
+  IntEnvironmentVariable getInitialWaitTimeBeforeInstallationInMillis();
+
 }

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.wrapper.flink.logger;
 
-import org.apache.streampipes.logging.impl.EventStatisticLogger;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.Event;
 
@@ -35,7 +34,6 @@ public class StatisticLogger implements FlatMapFunction<Event, Event> {
 
   @Override
   public void flatMap(Event in, Collector<Event> out) throws Exception {
-    EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
     out.collect(in);
   }
 }

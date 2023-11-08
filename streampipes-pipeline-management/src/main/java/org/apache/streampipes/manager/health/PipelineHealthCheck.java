@@ -45,6 +45,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import static org.apache.streampipes.manager.pipeline.PipelineManager.getPipeline;
+
 public class PipelineHealthCheck implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineHealthCheck.class);
@@ -68,7 +70,7 @@ public class PipelineHealthCheck implements Runnable {
     pipelinesStats.setRunningPipelines(runningPipelines.size());
     pipelinesStats.setStoppedPipelines(pipelinesStats.getAllPipelines() - pipelinesStats.getRunningPipelines());
 
-    if (runningPipelines.size() > 0) {
+    if (!runningPipelines.isEmpty()) {
       Map<String, List<InvocableStreamPipesEntity>> endpointMap = generateEndpointMap();
       List<String> allRunningInstances = findRunningInstances(endpointMap.keySet());
 
@@ -115,15 +117,16 @@ public class PipelineHealthCheck implements Runnable {
           }
         });
         if (shouldUpdatePipeline.get()) {
-          if (failedInstances.size() > 0) {
-            pipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
+          var currentPipeline = getPipeline(pipeline.getPipelineId());
+          if (!failedInstances.isEmpty()) {
+            currentPipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
             pipelinesStats.failedIncrease();
-          } else if (recoveredInstances.size() > 0) {
-            pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+          } else if (!recoveredInstances.isEmpty()) {
+            currentPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
             pipelinesStats.attentionRequiredIncrease();
           }
-          pipeline.setPipelineNotifications(pipelineNotifications);
-          StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+          currentPipeline.setPipelineNotifications(pipelineNotifications);
+          StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(currentPipeline);
         }
       });
       int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
@@ -233,13 +236,11 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   private List<Pipeline> getAllPipelines() {
-    List<Pipeline> allPipelines = StorageDispatcher
+    return StorageDispatcher
             .INSTANCE
             .getNoSqlStore()
             .getPipelineStorageAPI()
             .getAllPipelines();
-
-    return allPipelines;
   }
 
   private int getElementsCount(List<Pipeline> allPipelines){

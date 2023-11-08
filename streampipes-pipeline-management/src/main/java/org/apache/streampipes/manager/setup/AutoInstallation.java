@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.setup;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 
 import org.slf4j.Logger;
@@ -121,7 +120,6 @@ public class AutoInstallation implements BackgroundTaskNotifier {
       if (errorCount.get() > 0) {
         LOG.error("{} errors occurred during the setup process", errorCount);
       } else {
-        BackendConfig.INSTANCE.setIsConfigured(true);
         LOG.info("Initial setup completed successfully - you can now open the login page in the browser.");
       }
       LOG.info("\n\n**********\n\nAuto-Setup finished\n\n**********\n\n");

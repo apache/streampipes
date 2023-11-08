@@ -45,13 +45,7 @@ public class SharedUserConfiguration {
   public static void appendSharedOpcUaConfig(AbstractConfigurablePipelineElementBuilder<?, ?> builder,
                                              boolean adapterConfig) {
 
-    var dependsOn = adapterConfig ? List.of(
-        ADAPTER_TYPE.name(),
-        ACCESS_MODE.name(),
-        OPC_HOST_OR_URL.name()
-    ) : List.of(
-        ACCESS_MODE.name(),
-        OPC_HOST_OR_URL.name());
+    var dependsOn = getDependsOn(adapterConfig);
 
     builder
         .requiredAlternatives(Labels.withId(ACCESS_MODE),
@@ -85,5 +79,15 @@ public class SharedUserConfiguration {
             true,
             adapterConfig
         );
+  }
+
+  public static List<String> getDependsOn(boolean adapterConfig) {
+    return adapterConfig ? List.of(
+        ADAPTER_TYPE.name(),
+        ACCESS_MODE.name(),
+        OPC_HOST_OR_URL.name()
+    ) : List.of(
+        ACCESS_MODE.name(),
+        OPC_HOST_OR_URL.name());
   }
 }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +45,10 @@ public class CouchDbViewGenerator {
               .getStatusLine()
               .getStatusCode();
 
-      if (status == 201) {
+      if (status == HttpStatus.SC_CREATED) {
         LOG.info("Database {} successfully created", DB_NAME);
         createViews();
-      } else if (status == 412) {
+      } else if (status == HttpStatus.SC_PRECONDITION_FAILED) {
         LOG.info("Database {} already present", DB_NAME);
       } else {
         LOG.warn("Status code {} from CouchDB - something went wrong during install!", status);
@@ -75,7 +76,7 @@ public class CouchDbViewGenerator {
         .getStatusLine()
         .getStatusCode();
 
-    if (status == 201) {
+    if (status == HttpStatus.SC_CREATED) {
       LOG.info("View {} successfully created", VIEW_NAME);
     } else {
       LOG.warn("Status code {} from CouchDB - something went wrong during view generation!", status);

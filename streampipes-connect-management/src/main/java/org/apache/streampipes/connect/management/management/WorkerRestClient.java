@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.management.management;
 
+
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
@@ -35,6 +36,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +65,7 @@ public class WorkerRestClient {
                                        AdapterDescription adapterStreamDescription) throws AdapterException {
     String url = baseUrl + WorkerPaths.getStreamStopPath();
 
-    var ad =
-        getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
+    var ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
 
     stopAdapter(ad, url);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
@@ -72,27 +73,25 @@ public class WorkerRestClient {
 
   public static List<AdapterDescription> getAllRunningAdapterInstanceDescriptions(String url) throws AdapterException {
     try {
-      LOG.info("Requesting all running adapter description instances: " + url);
       var responseString = ExtensionServiceExecutions
-          .extServiceGetRequest(url)
-          .execute().returnContent().asString();
+              .extServiceGetRequest(url)
+              .execute().returnContent().asString();
 
       return JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
     } catch (IOException e) {
-      LOG.error("List of running adapters could not be fetched", e);
       throw new AdapterException("List of running adapters could not be fetched from: " + url);
     }
   }
 
-  public static void startAdapter(String url,
-                                  AdapterDescription ad) throws AdapterException {
+  private static void startAdapter(String url,
+                                   AdapterDescription ad) throws AdapterException {
     LOG.info("Trying to start adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "started");
   }
 
 
-  public static void stopAdapter(AdapterDescription ad,
-                                 String url) throws AdapterException {
+  private static void stopAdapter(AdapterDescription ad,
+                                  String url) throws AdapterException {
 
     LOG.info("Trying to stop adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "stopped");
@@ -107,13 +106,10 @@ public class WorkerRestClient {
       var response = triggerPost(url, ad.getCorrespondingDataStreamElementId(), adapterDescription);
       var responseString = getResponseBody(response);
 
-      if (response.getStatusLine().getStatusCode() != 200) {
+      if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
         var exception = getSerializer().readValue(responseString, AdapterException.class);
         throw new AdapterException(exception.getMessage(), exception.getCause());
       }
-
-      LOG.info("Adapter {} on endpoint: " + url + " with Response: ", ad.getName() + responseString);
-
     } catch (IOException e) {
       LOG.error("Adapter was not {} successfully", action, e);
       throw new AdapterException("Adapter was not " + action + " successfully with url " + url, e);
@@ -134,26 +130,25 @@ public class WorkerRestClient {
   public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
                                                         String appId,
                                                         RuntimeOptionsRequest runtimeOptionsRequest)
-      throws AdapterException, SpConfigurationException {
+          throws AdapterException, SpConfigurationException {
     String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
       var response = ExtensionServiceExecutions.extServicePostRequest(url, payload)
-          .execute()
-          .returnResponse();
+              .execute()
+              .returnResponse();
 
       String responseString = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
-      if (response.getStatusLine().getStatusCode() == 200) {
+      if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
         return getSerializer().readValue(responseString, RuntimeOptionsResponse.class);
       } else {
         var exception = getSerializer().readValue(responseString, SpConfigurationException.class);
         throw new SpConfigurationException(exception.getMessage(), exception.getCause());
       }
     } catch (IOException e) {
-      e.printStackTrace();
-      throw new AdapterException("Could not resolve runtime configurations from " + url);
+      throw new AdapterException("Could not resolve runtime configurations from " + url, e);
     }
   }
 
@@ -163,9 +158,9 @@ public class WorkerRestClient {
 
     try {
       return Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asString();
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asString();
     } catch (IOException e) {
       LOG.error(e.getMessage());
       throw new AdapterException("Could not get assets endpoint: " + url);
@@ -177,11 +172,10 @@ public class WorkerRestClient {
     String url = baseUrl + "/assets/icon";
 
     try {
-      byte[] responseString = Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asBytes();
-      return responseString;
+      return Request.Get(url)
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asBytes();
     } catch (IOException e) {
       LOG.error(e.getMessage());
       throw new AdapterException("Could not get icon endpoint: " + url);
@@ -193,9 +187,9 @@ public class WorkerRestClient {
 
     try {
       return Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asString();
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asString();
     } catch (IOException e) {
       LOG.error(e.getMessage());
       throw new AdapterException("Could not get documentation endpoint: " + url);

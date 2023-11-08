@@ -22,6 +22,7 @@ import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import java.util.List;
 
@@ -38,6 +39,8 @@ public interface IAdminApi {
   void registerFunctions(List<FunctionDefinition> functions);
 
   void deregisterFunction(String functionId);
+
+  void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
 
   MessagingSettings getMessagingSettings();
 }

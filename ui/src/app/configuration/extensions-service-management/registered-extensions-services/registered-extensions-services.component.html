@@ -38,11 +38,14 @@
                 mat-cell
                 *matCellDef="let element"
             >
-                <span *ngIf="element.healthy" fxLayoutAlign="center center">
+                <span
+                    *ngIf="element.status === 'HEALTHY'"
+                    fxLayoutAlign="center center"
+                >
                     <mat-icon class="service-icon-passing">lens</mat-icon>
                 </span>
                 <span
-                    *ngIf="element.healthy === false"
+                    *ngIf="element.status !== 'HEALTHY'"
                     fxLayoutAlign="center center"
                 >
                     <mat-icon class="service-icon-critical">lens</mat-icon>

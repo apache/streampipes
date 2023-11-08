@@ -72,14 +72,21 @@ public class GenericAdapterConverter implements IAdapterConverter {
       helpers.updateFieldType(adapter);
     }
 
-    JsonObject formatDescription = getProperties(adapter).get(FORMAT_DESC_KEY).getAsJsonObject();
-    JsonObject protocolDescription = getProperties(adapter).get(PROTOCOL_DESC_KEY).getAsJsonObject();
+    var properties = getProperties(adapter);
 
+    if (!properties.has(CONFIG_KEY)) {
+      properties.add(CONFIG_KEY, new JsonArray());
+    }
+
+    JsonObject protocolDescription = properties.get(PROTOCOL_DESC_KEY).getAsJsonObject();
     migrateProtocolDescription(adapter, protocolDescription);
-    migrateFormatDescription(adapter, formatDescription);
+    properties.remove(PROTOCOL_DESC_KEY);
 
-    getProperties(adapter).remove(FORMAT_DESC_KEY);
-    getProperties(adapter).remove(PROTOCOL_DESC_KEY);
+    if (properties.has(FORMAT_DESC_KEY)) {
+      JsonObject formatDescription = properties.get(FORMAT_DESC_KEY).getAsJsonObject();
+      migrateFormatDescription(adapter, formatDescription);
+      properties.remove(FORMAT_DESC_KEY);
+    }
 
     return adapter;
   }

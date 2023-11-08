@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 
 import java.util.Map;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class FlicMQTTAdapter implements StreamPipesAdapter {
 
   private MqttConsumer mqttConsumer;

@@ -24,7 +24,6 @@ import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
 
 import java.util.List;
 
-import static org.apache.kafka.common.config.ConfigDef.Type.PASSWORD;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ACCESS_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.AVAILABLE_NODES;
@@ -33,6 +32,7 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_PORT;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_URL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_URL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PASSWORD;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.UNAUTHENTICATED;
@@ -62,11 +62,11 @@ public class SpOpcUaConfigExtractor {
     return config;
   }
 
-  public static OpcUaConfig extractSinkConfig(IParameterExtractor<?> extractor) {
+  public static OpcUaConfig extractSinkConfig(IParameterExtractor extractor) {
     return extractSharedConfig(extractor, new OpcUaConfig());
   }
 
-  public static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor<?> extractor,
+  public static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor extractor,
                                                                T config) {
 
     String selectedAlternativeConnection =

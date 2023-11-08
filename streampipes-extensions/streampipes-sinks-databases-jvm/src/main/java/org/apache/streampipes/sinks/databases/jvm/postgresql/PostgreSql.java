@@ -19,22 +19,23 @@
 package org.apache.streampipes.sinks.databases.jvm.postgresql;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEngines;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PostgreSql extends JdbcClient {
 
-  private PostgreSqlParameters params;
+  private static final Logger LOG = LoggerFactory.getLogger(PostgreSql.class);
 
-  private Logger log;
+  private PostgreSqlParameters params;
 
   public void onInvocation(PostgreSqlParameters parameters)
       throws SpRuntimeException {
 
     this.params = parameters;
-    this.log = parameters.getGraph().getLogger(PostgreSql.class);
 
     // get(0) because it is the only input stream of the sink (and not two)
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
@@ -42,8 +43,7 @@ public class PostgreSql extends JdbcClient {
     initializeJdbc(
         parameters.getGraph().getInputStreams().get(0).getEventSchema(),
         parameters,
-        SupportedDbEngines.POSTGRESQL,
-        this.log);
+        SupportedDbEngines.POSTGRESQL);
   }
 
   @Override
@@ -61,9 +61,7 @@ public class PostgreSql extends JdbcClient {
     try {
       save(event);
     } catch (SpRuntimeException e) {
-      //TODO: error or warn?
-      log.error(e.getMessage());
-      //e.printStackTrace();
+      LOG.error(e.getMessage());
     }
   }
 
