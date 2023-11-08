@@ -39,14 +39,13 @@
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-extensions</artifactId>
             <version>0.95.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
-        <!-- External dependencies -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
-        </dependency>
-        <!-- Test dependencies -->
     </dependencies>
     <build>
         <plugins>
