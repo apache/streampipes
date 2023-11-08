@@ -35,6 +35,7 @@ import static org.apache.streampipes.sdk.helpers.EpProperties.longEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.stringEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public abstract class WikipediaAdapter implements StreamPipesAdapter {
 
   public static final String TIMESTAMP = "timestamp";
