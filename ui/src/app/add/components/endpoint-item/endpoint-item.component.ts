@@ -20,10 +20,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddService } from '../../services/add.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import {
-    ExtensionsServiceEndpointItem,
-    PipelineElementEndpointService,
-} from '@streampipes/platform-services';
+import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
 import { AppConstants } from '../../../services/app.constants';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { PanelType, DialogService } from '@streampipes/shared-ui';
@@ -51,8 +48,6 @@ export class EndpointItemComponent implements OnInit {
     triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-        private snackBar: MatSnackBar,
-        private pipelineElementEndpointService: PipelineElementEndpointService,
         private addService: AddService,
         private sanitizer: DomSanitizer,
         public appConstants: AppConstants,
@@ -135,19 +130,6 @@ export class EndpointItemComponent implements OnInit {
         endpointItems.push(endpointItem);
         this.triggerInstallation.emit({ endpointItems, install: false });
         event.stopPropagation();
-    }
-
-    refresh(elementId: string) {
-        this.pipelineElementEndpointService
-            .update(elementId)
-            .subscribe(msg => {
-                this.snackBar.open(msg.notifications[0].title, 'Ok', {
-                    duration: 2000,
-                });
-            })
-            .add(() => {
-                // this.loadCurrentElements(type);
-            });
     }
 
     showPermissionsDialog(elementId: string, elementName: string) {
