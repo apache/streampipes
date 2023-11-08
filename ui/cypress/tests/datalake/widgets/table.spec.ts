@@ -20,17 +20,14 @@ import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        cy.login();
-        // cy.initStreamPipesTest()
-        // DataLakeUtils.loadRandomDataSetIntoDataLake();
+        cy.initStreamPipesTest();
+        DataLakeUtils.loadRandomDataSetIntoDataLake();
     });
 
     it('Perform Test', () => {
         DataLakeUtils.goToDatalake();
 
-        // DataLakeUtils.createAndEditDataView();
-        // Click edit button
-        cy.dataCy('edit-data-view').click();
+        DataLakeUtils.createAndEditDataView('view');
 
         DataLakeUtils.addNewWidget();
 
@@ -49,10 +46,16 @@ describe('Test Table View in Data Explorer', () => {
             DataLakeUtils.getFutureDate(),
         );
 
-        cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should(
-            'have.length',
-            10,
-        );
-        // Validate that X lines are available
+        // Check if table is displayed correctly
+        cy.dataCy('data-explorer-table-row-timestamp', {
+            timeout: 10000,
+        }).should('have.length', 10);
+
+        // Validate that filter is working
+        DataLakeUtils.addFilter('count', '>=', '125');
+        cy.dataCy('reload-data-view-button').click();
+        cy.dataCy('data-explorer-table-row-timestamp', {
+            timeout: 10000,
+        }).should('have.length', 7);
     });
 });

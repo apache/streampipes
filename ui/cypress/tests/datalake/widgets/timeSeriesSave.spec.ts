@@ -30,7 +30,6 @@ describe('Test if widget configuration is updated correctly', () => {
         // Create first test data view with one time series widget
         DataLakeUtils.addDataViewAndTimeSeriesWidget(testView1, dataSet);
         DataLakeUtils.saveDataExplorerWidgetConfiguration();
-        // DataLakeUtils.clickStartTab();
 
         // Create second test data view with one time series widget
         DataLakeUtils.addDataViewAndTimeSeriesWidget(testView2, dataSet);
@@ -49,25 +48,33 @@ describe('Test if widget configuration is updated correctly', () => {
 });
 
 const runTestCase = (editOption: boolean) => {
-    // Go to test view 1 tab and then back to view 2
-    DataLakeUtils.clickTab(testView1);
-    DataLakeUtils.clickTab(testView2);
-
-    // Change one setting in widget
-    const widgetName = 'datalake_configuration';
+    // Visit settings of widget
+    const widgetName = 'prepared_data-time-series-chart';
 
     if (editOption) {
-        cy.dataCy('more-options-' + widgetName).click();
-        cy.dataCy('start-edit-' + widgetName).click();
+        DataLakeUtils.startEditWidget(widgetName);
     } else {
         cy.dataCy('options-data-explorer').click();
         cy.dataCy('options-edit-dashboard').click();
-        cy.dataCy('edit-' + widgetName).click();
     }
 
+    // Change first field from line plot to scatter plot
     DataLakeUtils.selectVisualizationConfig();
     cy.get('div').contains('Line').click();
     cy.get('div').contains('Scatter').click();
 
-    cy.get('path[class="scatterpts"]');
+    // Check if scatter plot is displayed
+    cy.get('g').should('have.class', 'scatterlayer mlayer');
+
+    // Change second field from line plot to bar plot
+    cy.get('div').contains('Line').click();
+    cy.get('div').contains('Bar').click();
+
+    // Check if bar plot is displayed
+    cy.get('g').should('have.class', 'barlayer mlayer');
+
+    // Validate that filter works and displays correct amount of data points
+    DataLakeUtils.addFilter('count', '>=', '125');
+    cy.dataCy('reload-data-view-button').click();
+    cy.get('g.point', { timeout: 10000 }).should('have.length', 7);
 };

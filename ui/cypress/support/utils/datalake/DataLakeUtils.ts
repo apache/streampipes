@@ -342,4 +342,20 @@ export class DataLakeUtils {
 
         return currentDate;
     }
+
+    public static addFilter(field: string, operator: string, value: string) {
+        DataLakeUtils.selectDataConfig();
+        cy.dataCy('design-panel-data-settings-add-filter').click();
+        cy.dataCy('design-panel-data-settings-filter-field')
+            .click()
+            .get('mat-option')
+            .contains(field)
+            .click();
+        cy.dataCy('design-panel-data-settings-filter-operator')
+            .click()
+            .get('mat-option')
+            .contains(operator)
+            .click();
+        cy.dataCy('design-panel-data-settings-filter-value').type(value);
+    }
 }
