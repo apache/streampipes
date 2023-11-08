@@ -43,7 +43,6 @@ import java.util.List;
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
-  private static final int RETRY_INTERVAL_SECONDS = 3;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -67,7 +66,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   public abstract SpServiceDefinition provideServiceDefinition();
 
-  public abstract void afterServiceRegistered(SpServiceDefinition serviceDef);
+  public abstract void afterServiceRegistered(SpServiceDefinition serviceDef,
+                                              SpServiceRegistration serviceReg);
 
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
@@ -90,21 +90,12 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         networkingConfig
     );
 
-    this.afterServiceRegistered(serviceDef);
+    this.afterServiceRegistered(serviceDef, req);
   }
 
   private void registerService(SpServiceRegistration serviceRegistration) {
     var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    new CoreRequestSubmitter().submitRepeatedRequest(
-        () -> {
-          client.adminApi().registerService(serviceRegistration);
-          return true;
-        },
-        "Successfully registered service at core.",
-        String.format(
-            "Could not register service at core at url %s",
-            client.getConnectionConfig().getBaseUrl()
-        ));
+    new CoreRequestSubmitter().submitRegistrationRequest(client, serviceRegistration);
   }
 
   protected List<SpServiceTag> getServiceTags() {

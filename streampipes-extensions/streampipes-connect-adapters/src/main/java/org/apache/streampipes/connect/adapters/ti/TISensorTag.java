@@ -45,6 +45,7 @@ import static org.apache.streampipes.sdk.helpers.EpProperties.booleanEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.doubleEp;
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class TISensorTag implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.ti";
