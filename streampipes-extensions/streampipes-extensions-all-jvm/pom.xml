@@ -286,6 +286,11 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>streampipes-extensions-all-jvm</finalName>

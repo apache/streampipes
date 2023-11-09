@@ -13,8 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+FROM eclipse-temurin:17-jre-focal as builder
+ARG JAR_FILE=target/streampipes-core-minimal.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
+
 FROM eclipse-temurin:17-jre-focal
-
-COPY target/streampipes-core-minimal.jar  /streampipes-core.jar
-
-ENTRYPOINT ["java", "-jar", "/streampipes-core.jar"]
+COPY --from=builder dependencies/ ./
+COPY --from=builder snapshot-dependencies/ ./
+COPY --from=builder spring-boot-loader/ ./
+COPY --from=builder application/ ./
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]

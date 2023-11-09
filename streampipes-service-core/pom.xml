@@ -147,6 +147,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                     <environmentVariables>
                         <SP_COUCHDB_HOST>localhost</SP_COUCHDB_HOST>
                         <SP_BACKEND_HOST>localhost</SP_BACKEND_HOST>

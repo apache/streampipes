@@ -13,11 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:17-jre-focal
+FROM eclipse-temurin:17-jre-focal as builder
+ARG JAR_FILE=target/streampipes-extensions-all-jvm.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
 
+FROM eclipse-temurin:17-jre-focal
 # needed pkgs processors-image-processing-jvm
 RUN apt-get update && apt-get install ttf-dejavu-core && apt-get install fontconfig
 
-COPY target/streampipes-extensions-all-jvm.jar  /streampipes-extensions-all-jvm.jar
-
-ENTRYPOINT ["java", "-jar", "/streampipes-extensions-all-jvm.jar"]
+COPY --from=builder dependencies/ ./
+COPY --from=builder snapshot-dependencies/ ./
+COPY --from=builder spring-boot-loader/ ./
+COPY --from=builder application/ ./
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
