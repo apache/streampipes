@@ -250,6 +250,41 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getKafkaHost() {
+    return new StringEnvironmentVariable(Envs.SP_KAFKA_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getKafkaPort() {
+    return new IntEnvironmentVariable(Envs.SP_KAFKA_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getMqttHost() {
+    return new StringEnvironmentVariable(Envs.SP_MQTT_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMqttPort() {
+    return new IntEnvironmentVariable(Envs.SP_MQTT_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getNatsHost() {
+    return new StringEnvironmentVariable(Envs.SP_NATS_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getNatsPort() {
+    return new IntEnvironmentVariable(Envs.SP_NATS_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getPulsarUrl() {
+    return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
+  }
+
+  @Override
   public StringEnvironmentVariable getConsulLocation() {
     return new StringEnvironmentVariable(Envs.SP_CONSUL_LOCATION);
   }
