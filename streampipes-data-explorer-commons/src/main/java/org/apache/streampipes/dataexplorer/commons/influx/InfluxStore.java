@@ -148,6 +148,7 @@ public class InfluxStore {
         // timestamp should not be added as a field
         if (!measure.getTimestampField().endsWith(runtimeName)) {
           String sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
+
           try {
             var field = event.getOptionalFieldByRuntimeName(runtimeName);
             if (field.isPresent()) {
@@ -155,6 +156,7 @@ public class InfluxStore {
               if (eventPropertyPrimitiveField.getRawValue() == null) {
                 nullFields.add(sanitizedRuntimeName);
               } else {
+
                 // store property as tag when the field is a dimension property
                 if (PropertyScope.DIMENSION_PROPERTY.name().equals(ep.getPropertyScope())) {
                   point.tag(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsString());
