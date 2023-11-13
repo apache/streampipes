@@ -54,8 +54,6 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 import com.github.drapostolos.typeparser.TypeParser;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -150,53 +148,9 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return getStaticPropertyByName(internalName, ColorPickerStaticProperty.class).getSelectedColor();
   }
 
-  /**
-   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
-   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
-   **/
-  @Override
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public String fileContentsAsString(String internalName) throws IOException {
-    throw new IllegalArgumentException(
-        "Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
-  }
-
-  /**
-   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
-   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
-   **/
-  @Override
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public byte[] fileContentsAsByteArray(String internalName) throws IOException {
-    throw new IllegalArgumentException(
-        "Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
-  }
-
-  /**
-   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
-   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
-   **/
-  @Override
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public InputStream fileContentsAsStream(String internalName) throws IOException {
-    throw new IllegalArgumentException(
-        "Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
-  }
-
   @Override
   public String selectedFilename(String internalName) {
     return getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
-  }
-
-  /**
-   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
-   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
-   **/
-  @Override
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public String selectedFileFetchUrl(String internalName) {
-    throw new IllegalArgumentException(
-        "Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
   }
 
   private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass,
@@ -208,16 +162,6 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .findFirst()
         .get()
         .getName(), targetClass);
-  }
-
-
-  /**
-   * @deprecated Use {@link #selectedSingleValue(String, Class)} instead
-   */
-  @Override
-  @Deprecated
-  public <V> V selectedSingleValueFromRemote(String internalName, Class<V> targetClass) {
-    return selectedSingleValue(internalName, targetClass);
   }
 
   @Override

@@ -46,17 +46,6 @@
             </exclusions>
         </dependency>
 
-        <!-- 3rd party dependencies to avoid convergence errors -->
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.atteo.classindex</groupId>
-            <artifactId>classindex</artifactId>
-        </dependency>
-
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>

@@ -39,14 +39,24 @@
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-extensions</artifactId>
             <version>0.95.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- External dependencies -->
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <!-- Test dependencies -->
     </dependencies>
     <build>
         <plugins>

@@ -101,10 +101,6 @@
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.objenesis</groupId>
-            <artifactId>objenesis</artifactId>
-        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
