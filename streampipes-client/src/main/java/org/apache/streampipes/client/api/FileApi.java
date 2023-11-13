@@ -38,9 +38,17 @@ public class FileApi extends AbstractClientApi implements IFileApi {
             .executeRequest();
   }
 
+  public byte[] getFileContent(String fileId) {
+    return getFileContent(fileId, false);
+  }
+
   @Override
   public String getFileContentAsString(String filename, boolean isOriginalFileName) {
     return new String(getFileContent(filename, isOriginalFileName));
+  }
+
+  public String getFileContentAsString(String fileId) {
+    return getFileContentAsString(fileId, false);
   }
 
   @Override

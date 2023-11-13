@@ -98,7 +98,7 @@ public class ChunkerProcessor extends StreamPipesDataProcessor {
     this.tags = parameters.extractor().mappingPropertyValue(TAGS_FIELD_KEY);
     this.tokens = parameters.extractor().mappingPropertyValue(TOKENS_FIELD_KEY);
     String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
-    byte[] fileContent = context.getStreamPipesClient().fileApi().getFileContent(filename, false);
+    byte[] fileContent = context.getStreamPipesClient().fileApi().getFileContent(filename);
 
     InputStream modelIn = new ByteArrayInputStream(fileContent);
     ChunkerModel model;

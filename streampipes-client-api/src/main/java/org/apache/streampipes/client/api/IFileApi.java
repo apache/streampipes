@@ -19,9 +19,9 @@
 package org.apache.streampipes.client.api;
 
 public interface IFileApi {
-  byte[] getFileContent(String filename, boolean isOriginalFileName);
+  byte[] getFileContent(String filename);
 
-  String getFileContentAsString(String filename, boolean isOriginalFileName);
+  String getFileContentAsString(String filename);
 
   void writeToFile(String file, String fileLocation);
 }
