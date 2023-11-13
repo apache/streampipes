@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -121,6 +122,21 @@ public class InfluxStore {
       throw new SpRuntimeException("event is null");
     }
 
+    // sanitize event
+    Map<String, Object> renamedEntries = new HashMap<String, Object>();
+    // use iterator to do current modification
+    Iterator<Map.Entry<String, Object>> iter = event.getRaw().entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry<String, Object> entry = iter.next();
+      if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(entry.getKey()))) {
+        renamedEntries.put(entry.getKey() + "_", entry.getValue());
+        iter.remove();
+      }
+    }
+    for (Map.Entry<String, Object> entry : renamedEntries.entrySet()) {
+      event.addField(entry.getKey(), entry.getValue());
+    }
+
     Long timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
     Point.Builder point =
         Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
@@ -132,7 +148,6 @@ public class InfluxStore {
         // timestamp should not be added as a field
         if (!measure.getTimestampField().endsWith(runtimeName)) {
           String sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
-
           try {
             var field = event.getOptionalFieldByRuntimeName(runtimeName);
             if (field.isPresent()) {
@@ -140,7 +155,6 @@ public class InfluxStore {
               if (eventPropertyPrimitiveField.getRawValue() == null) {
                 nullFields.add(sanitizedRuntimeName);
               } else {
-
                 // store property as tag when the field is a dimension property
                 if (PropertyScope.DIMENSION_PROPERTY.name().equals(ep.getPropertyScope())) {
                   point.tag(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsString());
