@@ -31,22 +31,21 @@ public class FileApi extends AbstractClientApi implements IFileApi {
     super(clientConfig);
   }
 
-  @Override
   public byte[] getFileContent(String filename, boolean isOriginalFileName) {
     return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename)
             .withQueryParameters(Map.of("isOriginalFilename", String.valueOf(isOriginalFileName))), null)
             .executeRequest();
   }
-
+  @Override
   public byte[] getFileContent(String fileId) {
     return getFileContent(fileId, false);
   }
 
-  @Override
   public String getFileContentAsString(String filename, boolean isOriginalFileName) {
     return new String(getFileContent(filename, isOriginalFileName));
   }
 
+  @Override
   public String getFileContentAsString(String fileId) {
     return getFileContentAsString(fileId, false);
   }
