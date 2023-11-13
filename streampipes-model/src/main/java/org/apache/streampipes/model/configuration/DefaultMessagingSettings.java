@@ -32,8 +32,6 @@ public class DefaultMessagingSettings {
       protocolList = switch (env.getPrioritizedProtocol().getValueOrDefault().toLowerCase()) {
         case "mqtt" ->
             Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS, SpProtocol.NATS, SpProtocol.PULSAR);
-        case "kafka" ->
-            Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS, SpProtocol.PULSAR);
         case "jms" ->
             Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.NATS, SpProtocol.PULSAR);
         case "nats" ->
@@ -58,16 +56,16 @@ public class DefaultMessagingSettings {
     defaultSettings.setJmsHost("activemq");
     defaultSettings.setJmsPort(61616);
 
-    defaultSettings.setMqttHost("mosquitto");
-    defaultSettings.setMqttPort(1883);
+    defaultSettings.setMqttHost(env.getMqttHost().getValueOrDefault());
+    defaultSettings.setMqttPort(env.getMqttPort().getValueOrDefault());
 
-    defaultSettings.setNatsHost("nats");
-    defaultSettings.setNatsPort(4222);
+    defaultSettings.setNatsHost(env.getNatsHost().getValueOrDefault());
+    defaultSettings.setNatsPort(env.getNatsPort().getValueOrDefault());
 
-    defaultSettings.setKafkaHost("kafka");
-    defaultSettings.setKafkaPort(9092);
+    defaultSettings.setKafkaHost(env.getKafkaHost().getValueOrDefault());
+    defaultSettings.setKafkaPort(env.getKafkaPort().getValueOrDefault());
 
-    defaultSettings.setPulsarUrl("pulsar://localhost:6650");
+    defaultSettings.setPulsarUrl(env.getPulsarUrl().getValueOrDefault());
 
     defaultSettings.setZookeeperHost("zookeeper");
     defaultSettings.setZookeeperPort(2181);

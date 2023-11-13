@@ -131,4 +131,16 @@ public interface Environment {
 
   IntEnvironmentVariable getInitialWaitTimeBeforeInstallationInMillis();
 
+  // Broker defaults
+  StringEnvironmentVariable getKafkaHost();
+  IntEnvironmentVariable getKafkaPort();
+
+  StringEnvironmentVariable getMqttHost();
+  IntEnvironmentVariable getMqttPort();
+
+  StringEnvironmentVariable getNatsHost();
+  IntEnvironmentVariable getNatsPort();
+
+  StringEnvironmentVariable getPulsarUrl();
+
 }
