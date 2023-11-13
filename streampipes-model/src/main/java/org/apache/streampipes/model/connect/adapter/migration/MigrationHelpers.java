@@ -40,6 +40,10 @@ public class MigrationHelpers {
     return adapter.get(REV).getAsString();
   }
 
+  public String getAppId(JsonObject adapter) {
+    return adapter.get("properties").getAsJsonObject().get(APP_ID).getAsString();
+  }
+
   public void updateType(JsonObject adapter,
                          String typeFieldName) {
     adapter.add(typeFieldName, new JsonPrimitive(AdapterModels.NEW_MODEL));

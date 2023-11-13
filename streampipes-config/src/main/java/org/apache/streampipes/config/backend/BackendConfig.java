@@ -38,8 +38,6 @@ public enum BackendConfig {
     config = SpServiceDiscovery.getSpConfig("backend");
     config.register(BackendConfigKeys.IS_CONFIGURED, false,
         "Boolean that indicates whether streampipes is " + "already configured or not");
-    config.register(BackendConfigKeys.IS_SETUP_RUNNING, false,
-        "Boolean that indicates whether the initial setup " + "is currently running");
   }
 
   public String getJmsHost() {
@@ -127,9 +125,5 @@ public enum BackendConfig {
 
   private String makeDefaultJwtSecret() {
     return TokenGenerator.generateNewToken();
-  }
-
-  public void updateSetupStatus(boolean status) {
-    config.setBoolean(BackendConfigKeys.IS_SETUP_RUNNING, status);
   }
 }

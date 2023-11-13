@@ -39,6 +39,7 @@ import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter
 import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.USER;
 import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.WIKI;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class WikipediaModelConverter {
 
   private final WikipediaModel wikipediaModel;

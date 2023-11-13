@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.93.0-SNAPSHOT</version>
+        <version>0.95.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -33,17 +33,22 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-shared</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-sdk-bundle</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <artifactId>streampipes-extensions-management</artifactId>
+            <version>0.95.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -70,22 +75,6 @@
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
-        </dependency>
-
-        <!-- dependency convergence -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-resolver</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.graalvm.nativeimage</groupId>
-                    <artifactId>svm</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>

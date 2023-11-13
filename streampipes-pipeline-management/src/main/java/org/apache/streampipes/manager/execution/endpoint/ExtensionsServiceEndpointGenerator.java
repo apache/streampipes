@@ -72,7 +72,7 @@ public class ExtensionsServiceEndpointGenerator {
 
   private String selectService() throws NoServiceEndpointsAvailableException {
     List<String> serviceEndpoints = getServiceEndpoints();
-    if (serviceEndpoints.size() > 0) {
+    if (!serviceEndpoints.isEmpty()) {
       return getServiceEndpoints().get(0);
     } else {
       LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId,

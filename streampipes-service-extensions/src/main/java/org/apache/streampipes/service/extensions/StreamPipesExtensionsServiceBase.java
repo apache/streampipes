@@ -19,7 +19,6 @@
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
@@ -40,12 +39,10 @@ import jakarta.annotation.PreDestroy;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
-  private static final int RETRY_INTERVAL_SECONDS = 3;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -69,7 +66,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   public abstract SpServiceDefinition provideServiceDefinition();
 
-  public abstract void afterServiceRegistered(SpServiceDefinition serviceDef);
+  public abstract void afterServiceRegistered(SpServiceDefinition serviceDef,
+                                              SpServiceRegistration serviceReg);
 
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
@@ -92,27 +90,12 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         networkingConfig
     );
 
-    this.afterServiceRegistered(serviceDef);
+    this.afterServiceRegistered(serviceDef, req);
   }
 
   private void registerService(SpServiceRegistration serviceRegistration) {
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-    try {
-      client.adminApi().registerService(serviceRegistration);
-      LOG.info("Successfully registered service at core.");
-    } catch (SpRuntimeException e) {
-      LOG.warn(
-          "Could not register at core at url {}. Trying again in {} seconds",
-          client.getConnectionConfig().getBaseUrl(),
-          RETRY_INTERVAL_SECONDS
-      );
-      try {
-        TimeUnit.SECONDS.sleep(RETRY_INTERVAL_SECONDS);
-        registerService(serviceRegistration);
-      } catch (InterruptedException ex) {
-        throw new RuntimeException(ex);
-      }
-    }
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    new CoreRequestSubmitter().submitRegistrationRequest(client, serviceRegistration);
   }
 
   protected List<SpServiceTag> getServiceTags() {

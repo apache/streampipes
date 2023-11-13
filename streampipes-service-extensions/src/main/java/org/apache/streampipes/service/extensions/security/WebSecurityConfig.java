@@ -66,7 +66,9 @@ public class WebSecurityConfig {
           .and()
           .csrf().disable()
           .formLogin().disable()
-          .httpBasic().disable().authorizeHttpRequests().requestMatchers("/**").permitAll();
+          .httpBasic().disable()
+          .authorizeHttpRequests()
+          .requestMatchers(new AntPathRequestMatcher("/**")).permitAll();
     } else {
       http
           .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

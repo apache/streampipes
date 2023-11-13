@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.93.0-SNAPSHOT</version>
+        <version>0.95.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,22 +32,18 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-vocabulary</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.93.0-SNAPSHOT</version>
+        <version>0.95.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,28 +31,24 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-shared</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-sdk-bundle</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <artifactId>streampipes-extensions-management</artifactId>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>0.93.0-SNAPSHOT</version>
+            <version>0.95.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
         <dependency>
             <groupId>com.ullink.slack</groupId>
             <artifactId>simpleslackapi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mailapi</artifactId>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

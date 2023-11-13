@@ -225,6 +225,66 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public IntEnvironmentVariable getHealthCheckIntervalInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_HEALTH_CHECK_INTERVAL_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getInitialHealthCheckDelayInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_HEALTH_CHECK_INITIAL_DELAY_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getLogFetchIntervalInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_LOG_FETCH_INTERVAL_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getUnhealthyTimeBeforeServiceDeletionInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_HEALTH_SERVICE_MAX_UNHEALTHY_TIME_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getInitialWaitTimeBeforeInstallationInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_INITIAL_WAIT_BEFORE_INSTALLATION_MS);
+  }
+
+  @Override
+  public StringEnvironmentVariable getKafkaHost() {
+    return new StringEnvironmentVariable(Envs.SP_KAFKA_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getKafkaPort() {
+    return new IntEnvironmentVariable(Envs.SP_KAFKA_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getMqttHost() {
+    return new StringEnvironmentVariable(Envs.SP_MQTT_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMqttPort() {
+    return new IntEnvironmentVariable(Envs.SP_MQTT_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getNatsHost() {
+    return new StringEnvironmentVariable(Envs.SP_NATS_HOST);
+  }
+
+  @Override
+  public IntEnvironmentVariable getNatsPort() {
+    return new IntEnvironmentVariable(Envs.SP_NATS_PORT);
+  }
+
+  @Override
+  public StringEnvironmentVariable getPulsarUrl() {
+    return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
+  }
+
+  @Override
   public StringEnvironmentVariable getConsulLocation() {
     return new StringEnvironmentVariable(Envs.SP_CONSUL_LOCATION);
   }

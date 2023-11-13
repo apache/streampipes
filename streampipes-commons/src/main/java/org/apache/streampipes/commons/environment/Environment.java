@@ -119,4 +119,28 @@ public interface Environment {
   StringEnvironmentVariable getPrometheusEndpointInclude();
 
   BooleanEnvironmentVariable getSetupPrometheusEndpoint();
+
+  // Health checks and logging
+  IntEnvironmentVariable getHealthCheckIntervalInMillis();
+
+  IntEnvironmentVariable getInitialHealthCheckDelayInMillis();
+
+  IntEnvironmentVariable getLogFetchIntervalInMillis();
+
+  IntEnvironmentVariable getUnhealthyTimeBeforeServiceDeletionInMillis();
+
+  IntEnvironmentVariable getInitialWaitTimeBeforeInstallationInMillis();
+
+  // Broker defaults
+  StringEnvironmentVariable getKafkaHost();
+  IntEnvironmentVariable getKafkaPort();
+
+  StringEnvironmentVariable getMqttHost();
+  IntEnvironmentVariable getMqttPort();
+
+  StringEnvironmentVariable getNatsHost();
+  IntEnvironmentVariable getNatsPort();
+
+  StringEnvironmentVariable getPulsarUrl();
+
 }

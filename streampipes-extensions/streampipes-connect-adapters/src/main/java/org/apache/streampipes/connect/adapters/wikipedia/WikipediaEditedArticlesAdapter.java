@@ -23,6 +23,7 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.wikipedia.edit";

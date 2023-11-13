@@ -21,5 +21,5 @@ package org.apache.streampipes.extensions.api.migration;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-public  interface IAdapterMigrator extends IModelMigrator<AdapterDescription, IStaticPropertyExtractor> {
+public interface IAdapterMigrator extends IModelMigrator<AdapterDescription, IStaticPropertyExtractor> {
 }

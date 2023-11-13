@@ -19,8 +19,13 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
+import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
+import org.apache.streampipes.manager.health.CoreServiceStatusManager;
+import org.apache.streampipes.manager.health.ServiceRegistrationManager;
+import org.apache.streampipes.manager.migration.AdapterDescriptionMigration093;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -36,6 +41,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -53,15 +60,22 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class MigrationResource extends AbstractAuthGuardedRestResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
+
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
 
+  private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
 
   private final IDataProcessorStorage dataProcessorStorage = getNoSqlStorage().getDataProcessorStorage();
 
   private final IDataSinkStorage dataSinkStorage = getNoSqlStorage().getDataSinkStorage();
   private final IPipelineStorage pipelineStorage = getNoSqlStorage().getPipelineStorageAPI();
+
+  private final CoreServiceStatusManager coreServiceStatusManager = new CoreServiceStatusManager(
+      getNoSqlStorage().getSpCoreConfigurationStorage()
+  );
 
   @POST
   @Path("{serviceId}")
@@ -88,24 +102,53 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       )
       List<ModelMigratorConfig> migrationConfigs) {
 
-    var extensionsServiceConfig = extensionsServiceStorage.getElementById(serviceId);
-    var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
-    var pipelineElementMigrations = filterConfigs(
-        migrationConfigs,
-        List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
-    );
+    var serviceManager = new ServiceRegistrationManager(extensionsServiceStorage);
+    try {
+      var extensionsServiceConfig = serviceManager.getService(serviceId);
+      if (!CoreInitialInstallationProgress.INSTANCE.isInitiallyInstalling()) {
+        new AdapterDescriptionMigration093(adapterDescriptionStorage).reinstallAdapters(extensionsServiceConfig);
+        if (!migrationConfigs.isEmpty()) {
+          var anyServiceMigrating = serviceManager.isAnyServiceMigrating();
+          var coreReady = isCoreReady();
+          if (anyServiceMigrating || !coreReady) {
+            LOG.info(
+                "Refusing migration request since precondition is not met (anyServiceMigratione={}, coreReady={}.",
+                anyServiceMigrating,
+                coreReady
+            );
+            return Response.status(HttpStatus.SC_CONFLICT).build();
+          } else {
+            serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
+            var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
+            var pipelineElementMigrations = filterConfigs(
+                migrationConfigs,
+                List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
+            );
 
-    new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
-    new PipelineElementMigrationManager(
-        pipelineStorage,
-        dataProcessorStorage,
-        dataSinkStorage)
-        .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
-    return ok();
+            new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
+            new PipelineElementMigrationManager(
+                pipelineStorage,
+                dataProcessorStorage,
+                dataSinkStorage)
+                .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
+          }
+        }
+      }
+      new ServiceRegistrationManager(extensionsServiceStorage)
+          .applyServiceStatus(extensionsServiceConfig.getSvcId(), SpServiceStatus.HEALTHY);
+      return ok();
+    } catch (IllegalArgumentException e) {
+      LOG.warn("Refusing migration request since the service {} is not registered.", serviceId);
+      return notFound();
+    }
+  }
+
+  private boolean isCoreReady() {
+    return coreServiceStatusManager.isCoreReady();
   }
 
   private List<ModelMigratorConfig> filterConfigs(List<ModelMigratorConfig> migrationConfigs,
-                                                       List<SpServiceTagPrefix> modelTypes) {
+                                                  List<SpServiceTagPrefix> modelTypes) {
     return migrationConfigs
         .stream()
         .filter(config -> modelTypes.stream().anyMatch(modelType -> modelType == config.modelType()))

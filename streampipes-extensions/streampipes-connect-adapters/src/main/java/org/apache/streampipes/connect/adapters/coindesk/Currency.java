@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.coindesk;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public enum Currency {
   EUR,
   GBP,
