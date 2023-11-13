@@ -119,6 +119,14 @@ public class Event {
     }
   }
 
+  public void renameFieldByRuntimeName(String oldRuntimeName, String newRuntimeName) {
+    AbstractField field = getFieldByRuntimeName(oldRuntimeName);
+    String selector = makeKey(field);
+    removeFieldBySelector(selector);
+    field.rename(newRuntimeName);
+    addField(field);
+  }
+
   private void updateFieldMap(Map<String, AbstractField> currentFieldMap,
                               String selector, Integer position,
                               AbstractField field) {

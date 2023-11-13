@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -123,18 +122,10 @@ public class InfluxStore {
     }
 
     // sanitize event
-    Map<String, Object> renamedEntries = new HashMap<String, Object>();
-    // use iterator to do current modification
-    Iterator<Map.Entry<String, Object>> iter = event.getRaw().entrySet().iterator();
-    while (iter.hasNext()) {
-      Map.Entry<String, Object> entry = iter.next();
-      if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(entry.getKey()))) {
-        renamedEntries.put(entry.getKey() + "_", entry.getValue());
-        iter.remove();
+    for (String key : event.getRaw().keySet()) {
+      if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(key))) {
+        event.renameFieldByRuntimeName(key, key + "_");
       }
-    }
-    for (Map.Entry<String, Object> entry : renamedEntries.entrySet()) {
-      event.addField(entry.getKey(), entry.getValue());
     }
 
     Long timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
