@@ -121,6 +121,13 @@ public class InfluxStore {
       throw new SpRuntimeException("event is null");
     }
 
+    // sanitize event
+    for (String key : event.getRaw().keySet()) {
+      if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(key))) {
+        event.renameFieldByRuntimeName(key, key + "_");
+      }
+    }
+
     Long timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
     Point.Builder point =
         Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
