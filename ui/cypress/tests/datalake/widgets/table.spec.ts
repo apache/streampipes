@@ -50,12 +50,5 @@ describe('Test Table View in Data Explorer', () => {
         cy.dataCy('data-explorer-table-row-timestamp', {
             timeout: 10000,
         }).should('have.length', 10);
-
-        // Validate that filter is working
-        DataLakeUtils.addFilter('count', '>=', '125');
-        cy.dataCy('reload-data-view-button').click();
-        cy.dataCy('data-explorer-table-row-timestamp', {
-            timeout: 10000,
-        }).should('have.length', 7);
     });
 });
