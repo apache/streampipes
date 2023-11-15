@@ -22,7 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
-import * as FileSaver from 'file-saver';
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'sp-file-overview',
@@ -85,7 +85,7 @@ export class FileOverviewComponent implements OnInit {
         this.filesService
             .getFile(fileMetadata.internalFilename)
             .subscribe(response => {
-                FileSaver.saveAs(response, fileMetadata.originalFilename);
+                saveAs(response, fileMetadata.originalFilename);
             });
     }
 
