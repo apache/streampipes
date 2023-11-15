@@ -829,7 +829,6 @@
         <module>streampipes-client</module>
         <module>streampipes-client-api</module>
         <module>streampipes-commons</module>
-        <module>streampipes-config</module>
         <module>streampipes-connect-management</module>
         <module>streampipes-connect-shared</module>
         <module>streampipes-extensions-api</module>
@@ -871,7 +870,6 @@
         <module>streampipes-service-core</module>
         <module>streampipes-service-core-minimal</module>
         <module>streampipes-service-discovery</module>
-        <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>
         <module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
