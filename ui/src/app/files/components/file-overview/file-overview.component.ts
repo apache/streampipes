@@ -22,6 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
+import * as FileSaver from 'file-saver';
 
 @Component({
     selector: 'sp-file-overview',
@@ -78,6 +79,14 @@ export class FileOverviewComponent implements OnInit {
                     });
             }
         });
+    }
+
+    downloadFile(fileMetadata: FileMetadata) {
+        this.filesService
+            .getFile(fileMetadata.internalFilename)
+            .subscribe(response => {
+                FileSaver.saveAs(response, fileMetadata.originalFilename);
+            });
     }
 
     @ViewChild(MatPaginator) set content(paginator: MatPaginator) {

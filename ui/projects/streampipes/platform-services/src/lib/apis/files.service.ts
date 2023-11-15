@@ -81,4 +81,13 @@ export class FilesService {
             this.platformServicesCommons.apiBasePath + '/files/' + fileId,
         );
     }
+
+    getFile(filename: string): Observable<Blob> {
+        return this.http.get(
+            this.platformServicesCommons.apiBasePath + '/files/' + filename,
+            {
+                responseType: 'blob',
+            },
+        );
+    }
 }
