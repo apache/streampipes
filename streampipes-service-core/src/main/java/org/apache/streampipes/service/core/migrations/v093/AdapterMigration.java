@@ -111,7 +111,9 @@ public class AdapterMigration implements Migration {
     LOG.info("Performing backup of old models to database adapterinstance_backup");
 
     adaptersToMigrate.forEach(adapter -> {
-      new AdapterBackupWriter(adapterInstanceBackupClient, new MigrationHelpers()).writeBackup(adapter);
+      // Is required to keep the _rev field for the original object. This field must be removed for the backup
+      var copyAdapter = adapter.deepCopy();
+      new AdapterBackupWriter(adapterInstanceBackupClient, new MigrationHelpers()).writeBackup(copyAdapter);
     });
 
     LOG.info("Performing migration of adapters");
