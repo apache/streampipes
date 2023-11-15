@@ -98,16 +98,20 @@
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-jaxrs2-jakarta</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.datatype</groupId>
+                    <artifactId>jackson-datatype-jsr310</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.module</groupId>
+                    <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-        </dependency>
-
-        <!-- Dependency convergence -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
         </dependency>
     </dependencies>
 
@@ -143,6 +147,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                     <environmentVariables>
                         <SP_COUCHDB_HOST>localhost</SP_COUCHDB_HOST>
                         <SP_BACKEND_HOST>localhost</SP_BACKEND_HOST>

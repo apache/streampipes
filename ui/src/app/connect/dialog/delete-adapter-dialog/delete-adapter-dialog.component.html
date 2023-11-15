@@ -19,7 +19,11 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div
-            *ngIf="!isInProgress && adapterUsedByPipeline"
+            *ngIf="
+                !isInProgress &&
+                adapterUsedByPipeline &&
+                !deleteAssociatedPipelines
+            "
             fxLayout="column"
             style="width: 100%"
         >
@@ -28,9 +32,11 @@
                     <h4>
                         The adapter is currently used by these pipelines:
                         {{ namesOfPipelinesUsingAdapter }}
+                        (if you don't see those pipelines, they are created by
+                        other users)
                     </h4>
                     <h4>
-                        You need to delete these pipelines first before deleting
+                        You need to delete those pipelines first before deleting
                         the adapter.
                     </h4>
                     <h4>
@@ -50,6 +56,25 @@
                     DELETE ALL
                 </button>
             </div>
+        </div>
+        <div
+            *ngIf="
+                !isInProgress &&
+                adapterUsedByPipeline &&
+                deleteAssociatedPipelines
+            "
+            fxFlex="100"
+            fxLayoutAlign="center center"
+            fxLayout="column"
+            style="width: 100%"
+        >
+            <b>
+                <h4>
+                    Unable to delete all associated pipelines because you are
+                    not the owner of the following pipelines:
+                    {{ namesOfPipelinesNotOwnedByUser }}
+                </h4>
+            </b>
         </div>
         <div *ngIf="!isInProgress && !adapterUsedByPipeline" fxLayout="column">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">

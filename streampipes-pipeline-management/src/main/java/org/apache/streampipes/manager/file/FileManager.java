@@ -43,6 +43,20 @@ public class FileManager {
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
   }
 
+  public static File getFileByOriginalName(String originalName) throws IOException {
+    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
+
+    var file = allFiles
+            .stream()
+            .filter(fileMetadata -> fileMetadata.getOriginalFilename().equals(originalName))
+            .findFirst();
+
+    if (file.isEmpty()){
+      throw new IOException("No file with original name '%s' found".formatted(originalName));
+    }
+    return new FileHandler().getFile(file.get().getInternalFilename());
+  }
+
   /**
    * Store a file in the internal file storage.
    * For csv files the bom is removed
@@ -119,7 +133,7 @@ public class FileManager {
   }
 
   private static String makeInternalFilename(String filetype) {
-    return UUID.randomUUID().toString() + "." + filetype;
+    return UUID.randomUUID() + "." + filetype;
   }
 
   private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {

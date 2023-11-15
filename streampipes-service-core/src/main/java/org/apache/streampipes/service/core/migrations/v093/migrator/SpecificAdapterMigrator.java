@@ -44,6 +44,8 @@ public class SpecificAdapterMigrator implements AdapterMigrator {
     var adapterName = helpers.getAdapterName(adapter);
     var convertedAdapter = converter.convert(adapter);
 
+    LOG.info("Start migrating adapter {}", adapterName);
+
     couchDbClient.update(convertedAdapter);
 
     LOG.info("Successfully migrated adapter {}", adapterName);
