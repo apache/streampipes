@@ -37,7 +37,7 @@ By default, the goal runs in the `package` phase.
 ### Command line
 
 ```bash
-# Switch to a directory containing StreamPipes extensions and an Init class, e.g., streampipes-extensions-all-jvm
+# Switch to a directory containing StreamPipes extensions and an Init class, e.g., extensions-all-jvm
 
 mvn streampipes:extract-docs -DinitClass=org.apache.streampipes.extensions.all.jvm.AllExtensionsInit
 ```

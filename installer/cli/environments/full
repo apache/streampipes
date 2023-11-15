@@ -16,8 +16,7 @@
 [environment:full]
 ui
 backend
-connect-adapters
-connect-adapters-iiot
+extensions-all-jvm
 consul
 couchdb
 jobmanager
@@ -25,5 +24,4 @@ taskmanager
 zookeeper
 kafka
 influxdb
-pipeline-elements-all-jvm
 pipeline-elements-all-flink
