@@ -36,9 +36,9 @@ spec:
             claimName:  {{ .Values.monitoring.grafana.persistence.claimName }}
       restartPolicy: {{ .Values.restartPolicy }}
       initContainers:
-        - name: init-wait-consul-couchdb-core
+        - name: init-wait-couchdb-core
           image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.streampipes.core.service.name }} {{ .Values.streampipes.core.service.port }} && nc -zvw1 {{ .Values.extensions.iiot.service.name }} {{ .Values.extensions.iiot.service.port }} && exit 0 || sleep 3; done; exit 1"]
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.extensions.iiot.service.name }} {{ .Values.extensions.iiot.service.port }} && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: {{ .Values.monitoring.grafana.appName }}
           image: grafana/grafana:{{ .Values.monitoring.grafana.version }}

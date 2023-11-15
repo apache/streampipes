@@ -18,7 +18,6 @@ ui
 backend
 connect-adapters
 connect-adapters-iiot
-consul
 couchdb
 jobmanager
 taskmanager

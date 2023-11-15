@@ -21,7 +21,6 @@ services:
       - "80:80"
     depends_on:
       - couchdb
-      - consul
     volumes:
       - "../ui-custom-conf/default.conf:/etc/nginx/conf.d/default.conf"
     logging:
