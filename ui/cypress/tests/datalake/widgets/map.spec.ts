@@ -20,24 +20,11 @@ import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Map View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataLakeUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
-
-        DataLakeUtils.createAndEditDataView('view');
-
-        DataLakeUtils.addNewWidget();
-
-        DataLakeUtils.selectDataSet('Persist');
-
-        DataLakeUtils.dataConfigSelectAllFields();
-
-        DataLakeUtils.selectVisualizationConfig();
-
-        DataLakeUtils.selectVisualizationType('Map');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Map');
 
         // Change marker positions
         DataLakeUtils.selectVisualizationConfig();
@@ -51,12 +38,6 @@ describe('Test Map View in Data Explorer', () => {
             .get('mat-option')
             .contains('randomnumber (prepared_data #1)')
             .click();
-        DataLakeUtils.clickCreateButton();
-
-        DataLakeUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataLakeUtils.getFutureDate(),
-        );
 
         // Check if map with markers is visible
         cy.get('sp-data-explorer-map-widget').should('be.visible');

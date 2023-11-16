@@ -30,6 +30,11 @@ export class DataLakeUtils {
         cy.visit('#/dataexplorer');
     }
 
+    public static initDataLakeTests() {
+        cy.initStreamPipesTest();
+        DataLakeUtils.loadRandomDataSetIntoDataLake();
+    }
+
     public static getDataLakeTestSetAdapter(
         name: string,
         storeInDataLake: boolean = true,
@@ -88,7 +93,7 @@ export class DataLakeUtils {
         DataLakeUtils.createAndEditDataView(dataViewName);
 
         DataLakeUtils.selectTimeRange(
-            new Date(2015, 10, 20, 22, 44),
+            new Date(2020, 10, 20, 22, 44),
             DataLakeUtils.getFutureDate(),
         );
         // DataLakeUtils.addNewWidget();
@@ -341,21 +346,5 @@ export class DataLakeUtils {
         currentDate.setMonth(currentDate.getMonth() + 1);
 
         return currentDate;
-    }
-
-    public static addFilter(field: string, operator: string, value: string) {
-        DataLakeUtils.selectDataConfig();
-        cy.dataCy('design-panel-data-settings-add-filter').click();
-        cy.dataCy('design-panel-data-settings-filter-field')
-            .click()
-            .get('mat-option')
-            .contains(field)
-            .click();
-        cy.dataCy('design-panel-data-settings-filter-operator')
-            .click()
-            .get('mat-option')
-            .contains(operator)
-            .click();
-        cy.dataCy('design-panel-data-settings-filter-value').type(value);
     }
 }

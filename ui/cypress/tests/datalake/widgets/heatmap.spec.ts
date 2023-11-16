@@ -20,34 +20,15 @@ import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Heatmap View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataLakeUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
-
-        DataLakeUtils.createAndEditDataView('view');
-
-        DataLakeUtils.addNewWidget();
-
-        DataLakeUtils.selectDataSet('Persist');
-
-        DataLakeUtils.dataConfigSelectAllFields();
-
-        DataLakeUtils.selectVisualizationConfig();
-
-        DataLakeUtils.selectVisualizationType('Heatmap');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Heatmap');
 
         // Check checkbox
+        DataLakeUtils.selectVisualizationConfig();
         cy.get('mat-checkbox input').click({ force: true });
-
-        DataLakeUtils.clickCreateButton();
-
-        DataLakeUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataLakeUtils.getFutureDate(),
-        );
 
         // Check if heatmap chart is visible
         cy.get('sp-data-explorer-heatmap-widget').should('be.visible');

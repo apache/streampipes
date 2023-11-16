@@ -20,31 +20,11 @@ import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Test 2d Correlation View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataLakeUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
-
-        DataLakeUtils.createAndEditDataView('view');
-
-        DataLakeUtils.addNewWidget();
-
-        DataLakeUtils.selectDataSet('Persist');
-
-        DataLakeUtils.dataConfigSelectAllFields();
-
-        DataLakeUtils.selectVisualizationConfig();
-
-        DataLakeUtils.selectVisualizationType('2D Correlation');
-
-        DataLakeUtils.clickCreateButton();
-
-        DataLakeUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataLakeUtils.getFutureDate(),
-        );
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', '2D Correlation');
 
         // Check if scatter plot is displayed
         cy.get('g').should('have.class', 'scatterlayer mlayer');

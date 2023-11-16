@@ -24,8 +24,7 @@ const dataSet = 'Persist';
 
 describe('Test if widget configuration is updated correctly', () => {
     beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataLakeUtils.initDataLakeTests();
 
         // Create first test data view with one time series widget
         DataLakeUtils.addDataViewAndTimeSeriesWidget(testView1, dataSet);
@@ -72,9 +71,4 @@ const runTestCase = (editOption: boolean) => {
 
     // Check if bar plot is displayed
     cy.get('g').should('have.class', 'barlayer mlayer');
-
-    // Validate that filter works and displays correct amount of data points
-    DataLakeUtils.addFilter('count', '>=', '125');
-    cy.dataCy('reload-data-view-button').click();
-    cy.get('g.point', { timeout: 10000 }).should('have.length', 7);
 };

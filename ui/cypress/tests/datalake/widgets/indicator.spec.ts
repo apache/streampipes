@@ -20,39 +20,20 @@ import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Indicator View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataLakeUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
-
-        DataLakeUtils.createAndEditDataView('view');
-
-        DataLakeUtils.addNewWidget();
-
-        DataLakeUtils.selectDataSet('Persist');
-
-        DataLakeUtils.dataConfigSelectAllFields();
-
-        DataLakeUtils.selectVisualizationConfig();
-
-        DataLakeUtils.selectVisualizationType('Indicator');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Indicator');
 
         // Check checkbox
+        DataLakeUtils.selectVisualizationConfig();
         cy.get('mat-checkbox input').click({ force: true });
         cy.dataCy('data-explorer-select-delta-field')
             .click()
             .get('mat-option')
             .contains('count')
             .click();
-
-        DataLakeUtils.clickCreateButton();
-
-        DataLakeUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataLakeUtils.getFutureDate(),
-        );
 
         // Check if indicator is displayed
         cy.get('g').should('have.class', 'indicatorlayer');

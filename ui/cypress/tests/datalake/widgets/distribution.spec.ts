@@ -20,36 +20,16 @@ import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Distribution View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-        DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataLakeUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
-
-        DataLakeUtils.createAndEditDataView('view');
-
-        DataLakeUtils.addNewWidget();
-
-        DataLakeUtils.selectDataSet('Persist');
-
-        DataLakeUtils.dataConfigSelectAllFields();
-
-        DataLakeUtils.selectVisualizationConfig();
-
-        DataLakeUtils.selectVisualizationType('Distribution');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Distribution');
 
         // Change field for histogram
         DataLakeUtils.selectVisualizationConfig();
         cy.get('div').contains('randomtext (prepared_data #1)').click();
         cy.get('div').contains('randomnumber (prepared_data #1)').click();
-
-        DataLakeUtils.clickCreateButton();
-
-        DataLakeUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataLakeUtils.getFutureDate(),
-        );
 
         // Check if distribution chart is displayed
         cy.get('sp-data-explorer-distribution-chart-widget').should(
