@@ -13,4 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker-compose up -d && ../incubator-streampipes-extensions/docker-compose up -d
+docker-compose up -d && ../streampipes-extensions/docker-compose up -d
