@@ -60,6 +60,16 @@
                     >
                         <i class="material-icons">delete</i>
                     </button>
+                    <button
+                        color="accent"
+                        mat-icon-button
+                        matTooltip="Download File"
+                        matTooltipPosition="above"
+                        (click)="downloadFile(fileMetadata)"
+                        data-cy="download"
+                    >
+                        <i class="material-icons">download</i>
+                    </button>
                 </td>
             </ng-container>
 

@@ -25,6 +25,7 @@ describe('Test File Management', () => {
 
     it('Perform Test', () => {
         FileManagementUtils.addFile('fileTest/test.csv');
+        FileManagementUtils.downloadFile('test.csv');
         FileManagementUtils.deleteFile();
     });
 });

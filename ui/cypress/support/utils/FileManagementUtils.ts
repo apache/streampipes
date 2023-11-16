@@ -39,4 +39,18 @@ export class FileManagementUtils {
         cy.dataCy('confirm-delete').click();
         cy.dataCy('delete').should('have.length', 0);
     }
+
+    public static downloadFile(expectedFilename: string) {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+
+        // Go to StreamPipes file management
+        cy.visit('#/files');
+        // Check if file was uploaded
+        cy.dataCy('download').should('have.length', 1);
+
+        // Download file and verify it was downloaded
+        cy.dataCy('download').click();
+        cy.dataCy('download').should('have.length', 1);
+        cy.readFile(downloadsFolder + '/' + expectedFilename);
+    }
 }
