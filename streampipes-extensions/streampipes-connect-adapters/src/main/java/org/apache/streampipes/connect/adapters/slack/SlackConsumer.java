@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class SlackConsumer implements Runnable {
 
   private final IEventCollector collector;

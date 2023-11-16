@@ -27,6 +27,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class WikipediaSseConsumer {
 
   private Boolean running = true;

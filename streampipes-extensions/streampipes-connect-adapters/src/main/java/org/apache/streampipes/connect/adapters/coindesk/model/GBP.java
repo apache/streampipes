@@ -24,6 +24,7 @@ import jakarta.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
+@Deprecated(since = "0.93.0", forRemoval = true)
 public class GBP {
 
   @SerializedName("code")
