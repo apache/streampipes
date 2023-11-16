@@ -67,8 +67,8 @@
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.23</influxdb.version>
         <inlong.version>1.9.0</inlong.version>
-        <jackson.version>2.15.0</jackson.version>
-        <jackson.databind.version>2.15.0</jackson.databind.version>
+        <jackson.version>2.16.0</jackson.version>
+        <jackson.databind.version>2.16.0</jackson.databind.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jakarta-activation-api.version>2.0.1</jakarta-activation-api.version>
         <jakarta-inject-api.version>2.0.1</jakarta-inject-api.version>
