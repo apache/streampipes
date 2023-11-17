@@ -29,6 +29,8 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
@@ -133,15 +135,13 @@ public class InfluxStore {
         Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
 
     for (EventProperty ep : measure.getEventSchema().getEventProperties()) {
-      if (ep instanceof EventPropertyPrimitive) {
-        String runtimeName = ep.getRuntimeName();
-
-        // timestamp should not be added as a field
-        if (!measure.getTimestampField().endsWith(runtimeName)) {
-          String sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
-
-          try {
-            var field = event.getOptionalFieldByRuntimeName(runtimeName);
+      String runtimeName = ep.getRuntimeName();
+      // timestamp should not be added as a field
+      if (!measure.getTimestampField().endsWith(runtimeName)) {
+        String sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
+        var field = event.getOptionalFieldByRuntimeName(runtimeName);
+        try {
+          if (ep instanceof EventPropertyPrimitive) {
             if (field.isPresent()) {
               PrimitiveField eventPropertyPrimitiveField = field.get().getAsPrimitive();
               if (eventPropertyPrimitiveField.getRawValue() == null) {
@@ -162,10 +162,18 @@ public class InfluxStore {
             } else {
               missingFields.add(runtimeName);
             }
-          } catch (SpRuntimeException iae) {
-            LOG.warn("Runtime exception while extracting field value of field {} - this field will be ignored",
-                runtimeName, iae);
+          } else {
+            // Since InfluxDB can't store non-primitive types, store them as string
+            // and deserialize later in downstream processes
+            if (field.isPresent()) {
+              handleNonPrimitiveMeasurementProperty(point, event, sanitizedRuntimeName);
+            } else {
+              missingFields.add(runtimeName);
+            }
           }
+        } catch (SpRuntimeException iae) {
+          LOG.warn("Runtime exception while extracting field value of field {} - this field will be ignored",
+              runtimeName, iae);
         }
       }
     }
@@ -215,6 +223,21 @@ public class InfluxStore {
       }
     } catch (NumberFormatException e) {
       LOG.warn("Wrong number format for field {}, ignoring.", preparedRuntimeName);
+    }
+  }
+
+  private void handleNonPrimitiveMeasurementProperty(Point.Builder p, Event event, String preparedRuntimeName) {
+    var field = event.getRaw().get(preparedRuntimeName);
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      String json = mapper.writeValueAsString(field);
+      p.addField(preparedRuntimeName, json);
+      // Deserialize in this way, tested the primitive types can be correctly deducted from Object
+//      TypeFactory typeFactory = mapper.getTypeFactory();
+//      MapType mapType = typeFactory.constructMapType(HashMap.class, String.class, Object.class);
+//      Map<String, Object> map = mapper.readValue(json, mapType);
+    } catch (JsonProcessingException e) {
+      LOG.warn("Failed to serialize field {}, ignoring.", preparedRuntimeName);
     }
   }
 
