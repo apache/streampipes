@@ -34,6 +34,7 @@ USER nginx
 
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx_config/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY nginx_config/ssl.conf /app/nginx-confs/ssl.conf
 
 COPY docker-entrypoint.sh /

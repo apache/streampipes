@@ -19,7 +19,9 @@ if [ ! -z "$NGINX_SSL" ] && [ "$NGINX_SSL" = "true" ]; then
 
     rm /etc/nginx/conf.d/default.conf
     ln -s /app/nginx-confs/ssl.conf /etc/nginx/conf.d/default.conf
-
+elif [ ! -z "$SP_HTTP_SERVER_ADAPTER_ENDPOINT" ]; then
+    rm /etc/nginx/conf.d/default.conf
+    envsubst '\$SP_HTTP_SERVER_ADAPTER_ENDPOINT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 fi
 
 exec "$@"
