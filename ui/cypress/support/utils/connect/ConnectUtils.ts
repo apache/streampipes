@@ -228,6 +228,8 @@ export class ConnectUtils {
         this.checkAdapterAndAssociatedPipelinesDeleted();
     }
 
+    // NOTE: this function will leave the adapter and associated pipelines running,
+    // please make sure to clean up after calling this function
     public static deleteAdapterAndAssociatedPipelinesPermissionDenied() {
         // Associated pipelines not owned by the user (unless admin) should not be deleted during adapter deletion
         this.goToConnect();
@@ -244,39 +246,14 @@ export class ConnectUtils {
         }).should('be.visible');
         cy.get('.sp-dialog-actions').click();
         this.checkAdapterNotDeleted();
-
-        // Switch back to admin to clean up
-        cy.switchUser(UserUtils.adminUser);
-        this.goToConnect();
-        cy.dataCy('delete-adapter', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        this.clickDelete();
-        cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
-            timeout: 10000,
-        }).should('be.visible');
-        cy.dataCy(
-            'delete-adapter-and-associated-pipelines-confirmation',
-        ).click();
-        cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
-            'be.visible',
-        );
-        this.checkAdapterAndAssociatedPipelinesDeleted();
-        UserUtils.deleteUser(UserUtils.adapterAndPipelineAdminUser);
-        // Verify that the user is removed
-        cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
     }
 
-    private static clickDelete() {
+    public static clickDelete() {
         cy.dataCy('delete-adapter').click();
         cy.dataCy('delete-adapter-confirmation').click();
     }
 
-    private static checkAdapterNotDeleted() {
+    public static checkAdapterNotDeleted() {
         this.goToConnect();
         cy.dataCy('delete-adapter', { timeout: 20000 }).should(
             'have.length',
@@ -284,7 +261,7 @@ export class ConnectUtils {
         );
     }
 
-    private static checkAdapterAndAssociatedPipelinesDeleted() {
+    public static checkAdapterAndAssociatedPipelinesDeleted() {
         this.goToConnect();
         cy.dataCy('delete-adapter', { timeout: 20000 }).should(
             'have.length',
