@@ -65,25 +65,22 @@ public class TestSizeMeasureProcessor {
     Allowing up to 250 bytes comparison error in case of inconsistent base sizes across platforms
      */
     return Arrays.asList(new Object[][]{
-            {"Test", BYTE_SIZE, 10240 - 249, 10240.0, 250.0},
-            {"Test", KILOBYTE_SIZE, 10240 - 249, 10.0, 0.025},
-            {"Test", MEGABYTE_SIZE, (1024 * 1024) - 249, 1.0, 0.0025}
+            { BYTE_SIZE, 10240 - 249, 10240.0, 250.0},
+            { KILOBYTE_SIZE, 10240 - 249, 10.0, 0.025},
+            { MEGABYTE_SIZE, (1024 * 1024) - 249, 1.0, 0.0025}
     });
   }
 
   @Parameterized.Parameter
-  public String invertFieldName;
-
-  @Parameterized.Parameter(1)
   public String sizeUnit;
 
-  @Parameterized.Parameter(2)
+  @Parameterized.Parameter(1)
   public int numOfBytes;
 
-  @Parameterized.Parameter(3)
+  @Parameterized.Parameter(2)
   public double expectedSize;
 
-  @Parameterized.Parameter(4)
+  @Parameterized.Parameter(3)
   public double allowableError;
 
   @Test
