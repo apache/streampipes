@@ -43,7 +43,7 @@ public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, MachineDataSimulatorAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 0, MachineDataSimulatorAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Debugging)

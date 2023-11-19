@@ -266,14 +266,14 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   /**
-   * Describe the adapter adapter and define what user inputs are required. Currently users can just select one node,
+   * Describe the adapter and define what user inputs are required. Currently users can just select one node,
    * this will be extended in the future
    *
    * @return description of adapter
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, Plc4xModbusAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 0, Plc4xModbusAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)

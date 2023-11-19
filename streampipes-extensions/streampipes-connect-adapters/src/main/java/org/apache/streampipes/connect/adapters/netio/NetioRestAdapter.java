@@ -125,7 +125,7 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, NetioRestAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 0, NetioRestAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Energy)

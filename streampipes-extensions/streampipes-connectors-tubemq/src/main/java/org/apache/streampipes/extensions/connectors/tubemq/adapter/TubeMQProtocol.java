@@ -102,7 +102,7 @@ public class TubeMQProtocol implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, TubeMQProtocol::new)
+        .create(ID, 0, TubeMQProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
