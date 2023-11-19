@@ -48,7 +48,7 @@ const pipelineInput = PipelineBuilder.create('Pipeline Test')
 describe('Test Enhanced Adapter Deletion', () => {
     // In the beginning, create the non-admin user
     before(() => {
-        cy.login(UserUtils.adminUser);
+        cy.initStreamPipesTest();
         UserUtils.addUser(UserUtils.adapterAndPipelineAdminUser);
         cy.logout();
     });
