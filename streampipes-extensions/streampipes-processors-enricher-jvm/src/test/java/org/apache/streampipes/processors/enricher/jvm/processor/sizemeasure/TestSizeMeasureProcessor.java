@@ -128,7 +128,7 @@ public class TestSizeMeasureProcessor {
               .getAsPrimitive()
               .getAsDouble();
     } catch (IllegalArgumentException e) {
-
+      e.printStackTrace();
     }
     return size;
   }
