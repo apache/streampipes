@@ -53,7 +53,7 @@ public class NetioMQTTAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, NetioMQTTAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 0, NetioMQTTAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Energy)

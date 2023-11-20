@@ -57,7 +57,7 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID, InfluxDbStreamAdapter::new)
+    var builder = AdapterConfigurationBuilder.create(ID, 0, InfluxDbStreamAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN);
 
