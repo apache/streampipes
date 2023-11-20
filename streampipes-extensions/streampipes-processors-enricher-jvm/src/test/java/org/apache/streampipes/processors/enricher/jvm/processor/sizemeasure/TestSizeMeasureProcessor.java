@@ -141,7 +141,7 @@ public class TestSizeMeasureProcessor {
   }
 
   public static class ObjectWithSize implements Serializable {
-    private byte[] data;
+    private final byte[] data;
 
     public ObjectWithSize(int numOfBytes) {
       this.data = new byte[numOfBytes];
