@@ -76,11 +76,13 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
 
     try {
       adapterManagement.invokeAdapter(adapterStreamDescription);
-      String responseMessage = "Stream adapter with id " + adapterStreamDescription.getUri() + " successfully started";
+      String responseMessage = "Stream adapter with id "
+              + adapterStreamDescription.getElementId()
+              + " successfully started";
       logger.info(responseMessage);
       return ok(Notifications.success(responseMessage));
     } catch (AdapterException e) {
-      logger.error("Error while starting adapter with id " + adapterStreamDescription.getUri(), e);
+      logger.error("Error while starting adapter with id " + adapterStreamDescription.getElementId(), e);
       return serverError(SpLogMessage.from(e));
     }
   }
