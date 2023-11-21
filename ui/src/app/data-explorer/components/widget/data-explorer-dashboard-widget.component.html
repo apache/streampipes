@@ -70,7 +70,10 @@
                     *ngIf="!editMode"
                     [attr.data-cy]="
                         'more-options-' +
-                        configuredWidget.baseAppearanceConfig.widgetTitle
+                        configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
+                            ' ',
+                            ''
+                        )
                     "
                 >
                     <mat-icon>more_vert</mat-icon>
@@ -86,7 +89,10 @@
                         *ngIf="hasDataExplorerWritePrivileges"
                         [attr.data-cy]="
                             'start-edit-' +
-                            configuredWidget.baseAppearanceConfig.widgetTitle
+                            configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
+                                ' ',
+                                ''
+                            )
                         "
                     >
                         <mat-icon>edit</mat-icon>

@@ -130,9 +130,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
             );
         this.pipelineElementCssType = this.pipelineElement.type;
 
-        this.isDataSource =
-            this.pipelineElement.type === 'stream' ||
-            this.pipelineElement.type === 'set';
+        this.isDataSource = this.pipelineElement.type === 'stream';
 
         if (
             this.isDataSource ||

@@ -80,7 +80,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, FileReplayAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 0, FileReplayAdapter::new)
         .withSupportedParsers(
             new JsonParsers(),
             new CsvParser(),

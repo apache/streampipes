@@ -67,7 +67,7 @@ Coming soon
 
 The database, in which the epsg data will be imported, is already included as a service (Postgres DB). The Only step the user has to do is to fill the database with the required scripts.
 
-Therefore, the following empty scripts must be replaced in the `incubator-streampipes/installer/scripts/epsg` folder
+Therefore, the following empty scripts must be replaced in the `streampipes/installer/scripts/epsg` folder
 
 * PostgreSQL_Table_Script.sql
 * PostgreSQL_Data_Script.sql
@@ -90,14 +90,14 @@ Unzip the folder and replace files
 * PostgreSQL_Data_Script.sql
 * PostgreSQL_FKey_Script.sql
 
-in the `incubator-streampipes/installer/scripts/epsg` folder.
+in the `streampipes/installer/scripts/epsg` folder.
 
 For indexing the imported data and get better performance, go to 
 <a href="https://github.com/apache/sis/blob/master/core/sis-referencing/src/main/resources/org/apache/sis/referencing/factory/sql/EPSG_Finish.sql" target="_blank">this file</a>
 and replace it with the
 * EPSG_FINISH.sql
 
-in the `incubator-streampipes/installer/scripts/epsg` folder.
+in the `streampipes/installer/scripts/epsg` folder.
 
 # Import into Database
 

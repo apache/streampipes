@@ -20,39 +20,15 @@ import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
-        cy.login();
-        // cy.initStreamPipesTest()
-        // DataLakeUtils.loadRandomDataSetIntoDataLake();
+        DataLakeUtils.initDataLakeTests();
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalake();
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Table');
 
-        // DataLakeUtils.createAndEditDataView();
-        // Click edit button
-        cy.dataCy('edit-data-view').click();
-
-        DataLakeUtils.addNewWidget();
-
-        DataLakeUtils.selectDataSet('Persist');
-
-        DataLakeUtils.dataConfigSelectAllFields();
-
-        DataLakeUtils.selectVisualizationConfig();
-
-        DataLakeUtils.selectVisualizationType('Table');
-
-        DataLakeUtils.clickCreateButton();
-
-        DataLakeUtils.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            DataLakeUtils.getFutureDate(),
-        );
-
-        cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should(
-            'have.length',
-            10,
-        );
-        // Validate that X lines are available
+        // Check if table is displayed correctly
+        cy.dataCy('data-explorer-table-row-timestamp', {
+            timeout: 10000,
+        }).should('have.length', 10);
     });
 });

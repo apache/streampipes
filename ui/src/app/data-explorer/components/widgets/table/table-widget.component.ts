@@ -78,8 +78,8 @@ export class TableWidgetComponent
                 a[event.active] > b[event.active]
                     ? 1
                     : b[event.active] > a[event.active]
-                    ? -1
-                    : 0,
+                      ? -1
+                      : 0,
             );
         }
 
@@ -88,8 +88,8 @@ export class TableWidgetComponent
                 a[event.active] > b[event.active]
                     ? -1
                     : b[event.active] > a[event.active]
-                    ? 1
-                    : 0,
+                      ? 1
+                      : 0,
             );
         }
 
@@ -98,8 +98,8 @@ export class TableWidgetComponent
                 a['timestamp'] > b['timestamp']
                     ? 1
                     : b['timestamp'] > a['timestamp']
-                    ? -1
-                    : 0,
+                      ? -1
+                      : 0,
             );
         }
     }
