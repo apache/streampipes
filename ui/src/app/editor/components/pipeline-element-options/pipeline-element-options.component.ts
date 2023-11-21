@@ -228,23 +228,26 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     }
 
     deepCopy(obj) {
-        const clone = {};
-
+        let clone: any = {};
         if (
-            typeof obj !== 'object' ||
-            typeof obj === undefined ||
             obj === null ||
+            typeof obj !== 'object' ||
             Array.isArray(obj) ||
-            typeof obj == 'function'
+            obj === undefined
         ) {
             return obj;
         }
 
-        const keys = Object.keys(obj);
-
-        for (let key in keys) {
-            clone[keys[key]] = this.deepCopy(obj[keys[key]]);
+        if (Array.isArray(obj)) {
+            clone = obj.map(item => this.deepCopy(item));
         }
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                clone[key] = this.deepCopy(obj[key]);
+            }
+        }
+
         return clone;
     }
 }
