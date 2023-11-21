@@ -30,6 +30,11 @@ export class DataLakeUtils {
         cy.visit('#/dataexplorer');
     }
 
+    public static initDataLakeTests() {
+        cy.initStreamPipesTest();
+        DataLakeUtils.loadRandomDataSetIntoDataLake();
+    }
+
     public static getDataLakeTestSetAdapter(
         name: string,
         storeInDataLake: boolean = true,
@@ -88,7 +93,7 @@ export class DataLakeUtils {
         DataLakeUtils.createAndEditDataView(dataViewName);
 
         DataLakeUtils.selectTimeRange(
-            new Date(2015, 10, 20, 22, 44),
+            new Date(2020, 10, 20, 22, 44),
             DataLakeUtils.getFutureDate(),
         );
         // DataLakeUtils.addNewWidget();
