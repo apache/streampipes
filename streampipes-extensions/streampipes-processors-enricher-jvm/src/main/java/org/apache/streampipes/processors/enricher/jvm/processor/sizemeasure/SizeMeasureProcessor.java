@@ -43,7 +43,7 @@ import java.io.ObjectOutputStream;
 
 public class SizeMeasureProcessor extends StreamPipesDataProcessor {
 
-  private static final String SIZE_UNIT = "sizeUnit";
+  static final String SIZE_UNIT = "sizeUnit";
   static final String BYTE_SIZE = "BYTE";
   static final String KILOBYTE_SIZE = "KILOBYTE";
   static final String MEGABYTE_SIZE = "MEGABYTE";
