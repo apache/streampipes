@@ -53,33 +53,6 @@ describe('Test Enhanced Adapter Deletion', () => {
         cy.logout();
     });
 
-    // After the last test, let admin user clean up (delete the adapter, associated pipelines, and the non-admin user)
-    after(() => {
-        cy.switchUser(UserUtils.adminUser);
-        ConnectUtils.goToConnect();
-        cy.dataCy('delete-adapter', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        ConnectUtils.clickDelete();
-        cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
-            timeout: 10000,
-        }).should('be.visible');
-        cy.dataCy(
-            'delete-adapter-and-associated-pipelines-confirmation',
-        ).click();
-        cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
-            'be.visible',
-        );
-        ConnectUtils.checkAdapterAndAssociatedPipelinesDeleted();
-        UserUtils.deleteUser(UserUtils.adapterAndPipelineAdminUser);
-        // Verify that the user is removed
-        cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-    });
-
     beforeEach('Setup Test', () => {
         cy.visit('#/login');
         cy.dataCy('login-email').type(
