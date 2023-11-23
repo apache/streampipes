@@ -32,6 +32,8 @@ import { SpAssetRoutes } from '../../assets.routes';
 import { AssetUploadDialogComponent } from '../../dialog/asset-upload/asset-upload-dialog.component';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
+import { DataExportService } from '../../../configuration/export/data-export.service';
+import { mergeMap } from 'rxjs/operators';
 
 @Component({
     selector: 'sp-asset-overview-component',
@@ -50,6 +52,7 @@ export class SpAssetOverviewComponent implements OnInit {
         private breadcrumbService: SpBreadcrumbService,
         private dialogService: DialogService,
         private router: Router,
+        private dataExportService: DataExportService,
     ) {}
 
     ngOnInit(): void {
@@ -145,6 +148,28 @@ export class SpAssetOverviewComponent implements OnInit {
             )
             .subscribe(result => {
                 this.loadAssets();
+            });
+    }
+
+    downloadAsset(asset: SpAssetModel) {
+        this.dataExportService
+            .getExportPreview([asset._id])
+            .pipe(
+                mergeMap(preview =>
+                    this.dataExportService.triggerExport(preview),
+                ),
+            )
+            .subscribe((data: Blob) => {
+                const blob = new Blob([data], { type: 'application/zip' });
+                const url = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+
+                anchor.href = url;
+                anchor.download = 'data_export';
+                anchor.style.display = 'none';
+                document.body.appendChild(anchor);
+
+                anchor.click();
             });
     }
 }
