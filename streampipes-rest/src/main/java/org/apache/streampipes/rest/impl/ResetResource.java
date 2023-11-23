@@ -48,7 +48,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
   public Response reset() {
     ResetManagement.reset(getAuthenticatedUsername());
     var userStorage = getUserStorage();
-    // Delete all users other than admin and their resources
+    // Delete all users other than current user (admin) and their resources
     var allUsers = new ArrayList<Principal>(userStorage.getAllUsers());
     for (var user : allUsers) {
       if (user.getPrincipalType() == PrincipalType.USER_ACCOUNT
