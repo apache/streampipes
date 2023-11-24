@@ -73,7 +73,7 @@ public class RocketMQProtocol implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, RocketMQProtocol::new)
+        .create(ID, 0, RocketMQProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)

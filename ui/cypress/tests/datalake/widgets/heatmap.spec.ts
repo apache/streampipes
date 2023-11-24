@@ -16,20 +16,21 @@
  *
  */
 
-package org.apache.streampipes.storage.couchdb.utils;
+import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+describe('Test Heatmap View in Data Explorer', () => {
+    beforeEach('Setup Test', () => {
+        DataLakeUtils.initDataLakeTests();
+    });
 
-import java.util.List;
-import java.util.stream.Collectors;
+    it('Perform Test', () => {
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Heatmap');
 
-public class Filter {
+        // Check checkbox
+        DataLakeUtils.selectVisualizationConfig();
+        cy.get('mat-checkbox input').click({ force: true });
 
-  public static <T extends NamedStreamPipesEntity> List<T> byUri(List<T> allElements, List<String> userElements) {
-    return allElements
-        .stream()
-        .filter(e -> userElements.stream()
-            .anyMatch(u -> u.equals(e.getElementId()))).collect(Collectors.toList());
-  }
-
-}
+        // Check if heatmap chart is visible
+        cy.get('sp-data-explorer-heatmap-widget').should('be.visible');
+    });
+});

@@ -32,25 +32,25 @@ public class StreamBuilder {
   private SpDataStream stream;
   private EventSchema schema;
 
-  private StreamBuilder(String name, String description, String uri) {
+  private StreamBuilder(String name, String description, String elementId) {
     stream = new SpDataStream();
     stream.setName(name);
     stream.setDescription(description);
-    stream.setUri(uri);
+    stream.setElementId(elementId);
   }
 
-  private StreamBuilder(String uri) {
+  private StreamBuilder(String elementId) {
     stream = new SpDataStream();
-    stream.setUri(uri);
+    stream.setElementId(elementId);
     schema = new EventSchema();
   }
 
-  public static StreamBuilder createStream(String name, String description, String uri) {
-    return new StreamBuilder(name, description, uri);
+  public static StreamBuilder createStream(String name, String description, String elementId) {
+    return new StreamBuilder(name, description, elementId);
   }
 
-  public static StreamBuilder createStreamRestriction(String uri) {
-    return new StreamBuilder(uri);
+  public static StreamBuilder createStreamRestriction(String elementId) {
+    return new StreamBuilder(elementId);
   }
 
   public StreamBuilder property(String propertyName, URI propertyType, URI subclassOf) {

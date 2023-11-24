@@ -25,6 +25,7 @@
                 .selectedLatitudeProperty
         "
         (changeSelectedProperty)="setSelectedLatitudeProperty($event)"
+        data-cy="data-view-map-select-latitude"
     >
     </sp-select-property>
 
@@ -36,6 +37,7 @@
                 .selectedLongitudeProperty
         "
         (changeSelectedProperty)="setSelectedLongitudeProperty($event)"
+        data-cy="data-view-map-select-longitude"
     >
     </sp-select-property>
 
@@ -73,6 +75,7 @@
                     .selectedMarkerOrTrace
             "
             (selectionChange)="triggerViewRefresh()"
+            data-cy="data-view-map-select-marker-or-trace"
         >
             <mat-option [value]="'marker'">Marker</mat-option>
             <mat-option [value]="'trace'">Trace</mat-option>
