@@ -16,7 +16,7 @@
   ~
   -->
 
-## DateTime Parser
+## Datetime From String
 
 <p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -24,26 +24,48 @@
 
 ***
 
-## Description
+## Overview
 
-This processor parses a datetime string and puts it in a ZonedDateTime object.
+The "Datetime From String" processor is a handy tool that helps convert human-readable datetime information into a
+format that machines can understand. This is particularly useful when dealing with data that includes dates and times.
+
+### Why Use This Processor?
+
+In the context of event streams, you may encounter dates and times formatted for human readability but not necessarily
+optimized for computer processing. The "Datetime From String" processor addresses this by facilitating the conversion
+of human-readable datetime information within your continuous stream of events.
 
 ***
 
-## Required input
+## How It Works
 
-A string field that has an ISO DateTime format is required in the data stream.
-A String field from a selection of possible time zones. 
+When you input a data stream into this processor containing a datetime in a specific format (such as "2023-11-24 15:30:
+00"), it
+undergoes a transformation. The processor converts it into a computer-friendly format called a ZonedDateTime object.
+
+### Example
+
+Let's say you have an event stream with a property containing values like "2023-11-24 15:30:00" and you want to make
+sure your computer understands it. You can use
+this processor to convert it into a format that's machine-friendly.
 
 ***
 
-## Configuration
-A user can configure what TimeZone the datetime string applies to. This configuration will 
-only apply if the DateTime string does not already have the time zone information. 
+## Getting Started
+
+To use this processor, you need one thing in your data:
+
+1. **Datetime String**: This is the name of the event property that contains the human-readable datetime string, like "2023-11-24 15:30:00".
+
+
+### Configuration
+
+The only thing you need to configure is the time zone.
+1. **Time Zone**: Specify the time zone that applies to your datetime if it doesn't already have this information.This ensures that the processor understands the context of your
+datetime.
 
 ## Output
-The event is emitted each time a packet with a datetime is received. 
-The following field is appended to the event:
 
-* [ZonedDateTime] the parsed object from the input string
-Runtime Name: dateTime
+After the conversion happens, the processor adds a new piece of information to your data stream:
+
+* **dateTime**: This is the transformed datetime in a format that computers can easily work with.
