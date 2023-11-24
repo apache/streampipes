@@ -61,7 +61,7 @@ public class TestDateTimeFromStringProcessor {
     Iterable<Object[]> data = Arrays.asList(new Object[][] {
       // the first test just demonstrates that the testing and the source code is
       // functioning
-      { "field", "US/Eastern",
+      { "inputField", "US/Eastern",
         List.of("2020-11-13T21:07:38.146120+01:00", "2023-11-14T16:17:01.286299-05:00",
             "2023-11-14T14:05:57.519543100"),
         List.of("1605298058", "1699996621", "1699988757")
@@ -72,22 +72,22 @@ public class TestDateTimeFromStringProcessor {
        * affect the DateTime variable. (2) The same instant in the real world will
        * result in the same instant in the datetime variable
        */
-      { "field", "US/Pacific", List.of("2023-11-17T04:04:15.537187600-08:00[US/Pacific]"),
+      { "inputField", "US/Pacific", List.of("2023-11-17T04:04:15.537187600-08:00[US/Pacific]"),
         List.of("1700222655") },
-      { "field", "US/Pacific", List.of("2023-11-17T05:04:15.537187600-07:00[US/Arizona]"),
+      { "inputField", "US/Pacific", List.of("2023-11-17T05:04:15.537187600-07:00[US/Arizona]"),
           List.of("1700222655") },
-      { "field", "US/Pacific", List.of("2023-11-17T07:04:15.537187600-05:00[US/Eastern]"),
+      { "inputField", "US/Pacific", List.of("2023-11-17T07:04:15.537187600-05:00[US/Eastern]"),
             List.of("1700222655") },
       /*
        * The next three tests demonstrate that if a localdatetime is given, when the
        * user selects a time zone. An instant in time will be created for that
        * specific timezone.
        */
-      { "field", "US/Pacific", List.of("2023-11-17T04:04:15.537187600"),
+      { "inputField", "US/Pacific", List.of("2023-11-17T04:04:15.537187600"),
               List.of("1700222655") },
-      { "field", "US/Arizona", List.of("2023-11-17T04:04:15.537187600"),
+      { "inputField", "US/Arizona", List.of("2023-11-17T04:04:15.537187600"),
                 List.of("1700219055") },
-      { "field", "US/Eastern", List.of("2023-11-17T04:04:15.537187600"),
+      { "inputField", "US/Eastern", List.of("2023-11-17T04:04:15.537187600"),
                   List.of("1700211855") },
 
     });
