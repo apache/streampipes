@@ -18,12 +18,9 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.datetime;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.output.PropertyRenameRule;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
@@ -32,6 +29,7 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.test.extensions.api.StoreEventCollector;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
@@ -63,7 +61,7 @@ public class TestDateTimeProcessor {
     Iterable<Object[]> data = Arrays.asList(new Object[][] {
       // the first test just demonstrates that the testing and the source code is
       // functioning
-      { "dateTimeField", "US/Eastern",
+      { "field", "US/Eastern",
         List.of("2020-11-13T21:07:38.146120+01:00", "2023-11-14T16:17:01.286299-05:00",
             "2023-11-14T14:05:57.519543100"),
         List.of("1605298058", "1699996621", "1699988757")
@@ -74,22 +72,22 @@ public class TestDateTimeProcessor {
        * affect the DateTime variable. (2) The same instant in the real world will
        * result in the same instant in the datetime variable
        */
-      { "dateTimeField", "US/Pacific", List.of("2023-11-17T04:04:15.537187600-08:00[US/Pacific]"),
+      { "field", "US/Pacific", List.of("2023-11-17T04:04:15.537187600-08:00[US/Pacific]"),
         List.of("1700222655") },
-      { "dateTimeField", "US/Pacific", List.of("2023-11-17T05:04:15.537187600-07:00[US/Arizona]"),
+      { "field", "US/Pacific", List.of("2023-11-17T05:04:15.537187600-07:00[US/Arizona]"),
           List.of("1700222655") },
-      { "dateTimeField", "US/Pacific", List.of("2023-11-17T07:04:15.537187600-05:00[US/Eastern]"),
+      { "field", "US/Pacific", List.of("2023-11-17T07:04:15.537187600-05:00[US/Eastern]"),
             List.of("1700222655") },
       /*
        * The next three tests demonstrate that if a localdatetime is given, when the
        * user selects a time zone. An instant in time will be created for that
        * specific timezone.
        */
-      { "dateTimeField", "US/Pacific", List.of("2023-11-17T04:04:15.537187600"),
+      { "field", "US/Pacific", List.of("2023-11-17T04:04:15.537187600"),
               List.of("1700222655") },
-      { "dateTimeField", "US/Arizona", List.of("2023-11-17T04:04:15.537187600"),
+      { "field", "US/Arizona", List.of("2023-11-17T04:04:15.537187600"),
                 List.of("1700219055") },
-      { "dateTimeField", "US/Eastern", List.of("2023-11-17T04:04:15.537187600"),
+      { "field", "US/Eastern", List.of("2023-11-17T04:04:15.537187600"),
                   List.of("1700211855") },
 
     });
@@ -113,7 +111,7 @@ public class TestDateTimeProcessor {
 
   @Test
   public void testDateTime() {
-    DateTimeProcessor dateTime = new DateTimeProcessor();
+    DateTimeFromStringProcessor dateTime = new DateTimeFromStringProcessor();
     DataProcessorDescription originalGraph = dateTime.declareModel();
     originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
@@ -128,7 +126,7 @@ public class TestDateTimeProcessor {
     MappingPropertyUnary mappingPropertyUnary = graph.getStaticProperties().stream()
         .filter(p -> p instanceof MappingPropertyUnary)
         .map(p -> (MappingPropertyUnary) p)
-        .filter(p -> (DateTimeProcessor.INPUT_DATETIME_FIELD_ID).equals(p.getInternalName()))
+        .filter(p -> (DateTimeFromStringProcessor.FIELD_ID).equals(p.getInternalName()))
         .findFirst().orElse(null);
 
     assert mappingPropertyUnary != null;
@@ -137,7 +135,7 @@ public class TestDateTimeProcessor {
     OneOfStaticProperty selectedTimeZoneProperty = graph.getStaticProperties().stream()
         .filter(p -> p instanceof OneOfStaticProperty)
         .map(p -> (OneOfStaticProperty) p)
-        .filter(p -> (DateTimeProcessor.SELECTED_INPUT_TIMEZONE.equals(p.getInternalName())))
+        .filter(p -> (DateTimeFromStringProcessor.SELECTED_INPUT_TIMEZONE.equals(p.getInternalName())))
         .findFirst().orElse(null);
     assert selectedTimeZoneProperty != null;
     Option selectedTimeZoneOption = selectedTimeZoneProperty.getOptions().stream()
@@ -147,27 +145,7 @@ public class TestDateTimeProcessor {
     selectedTimeZoneOption.setSelected(true);
 
     ProcessorParams params = new ProcessorParams(graph);
-    SpOutputCollector spOut = new SpOutputCollector() {
-      @Override
-      public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
-      }
-
-      @Override
-      public void unregisterConsumer(String routeId) {
-      }
-
-      @Override
-      public void connect() throws SpRuntimeException {
-      }
-
-      @Override
-      public void disconnect() throws SpRuntimeException {
-      }
-
-      @Override
-      public void collect(Event event) {
-      }
-    };
+    SpOutputCollector spOut = new StoreEventCollector();
     dateTime.onInvocation(params, spOut, null);
     Tuple2<String, List<Long>> res = sendEvents(dateTime, spOut);
     List<Long> resValues = res.v;
@@ -180,11 +158,11 @@ public class TestDateTimeProcessor {
     }
   }
 
-  private Tuple2<String, List<Long>> sendEvents(DateTimeProcessor dateTime, SpOutputCollector spOut) {
+  private Tuple2<String, List<Long>> sendEvents(DateTimeFromStringProcessor dateTime, SpOutputCollector spOut) {
     String field = "";
     ZonedDateTime dateTimeValue = null;
     List<Event> events = makeEvents();
-    List<Long> dateTimeValueList = new ArrayList<Long>();
+    List<Long> dateTimeValueList = new ArrayList<>();
     for (Event event : events) {
       LOG.info("sending event with value "
           + event.getFieldBySelector(DEFAULT_STREAM_PREFIX + "::" + streamInputDateTimeFieldName).getAsPrimitive()
@@ -197,10 +175,11 @@ public class TestDateTimeProcessor {
         throw new RuntimeException(e);
       }
       try {
-        field = event.getFieldBySelector(DEFAULT_STREAM_PREFIX + "::" + DateTimeProcessor.INPUT_DATETIME_FIELD_ID)
+        field = event.getFieldBySelector(DEFAULT_STREAM_PREFIX + "::" + DateTimeFromStringProcessor.FIELD_ID)
             .getAsPrimitive()
             .getAsString();
-        dateTimeValue = (ZonedDateTime) event.getFieldBySelector(DateTimeProcessor.OUTPUT_DATETIME_RUNTIME_NAME)
+        dateTimeValue = (ZonedDateTime) event
+            .getFieldBySelector(DateTimeFromStringProcessor.OUTPUT_DATETIME_RUNTIME_NAME)
             .getRawValue();
         LOG.info(field + ":" + dateTimeValue);
       } catch (IllegalArgumentException e) {
@@ -212,7 +191,7 @@ public class TestDateTimeProcessor {
   }
 
   private List<Event> makeEvents() {
-    List<Event> events = new ArrayList<Event>();
+    List<Event> events = new ArrayList<>();
     for (String eventString : eventsString) {
       events.add(makeEvent(eventString));
     }
@@ -220,10 +199,10 @@ public class TestDateTimeProcessor {
   }
 
   private Event makeEvent(String value) {
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<>();
     map.put(streamInputDateTimeFieldName, value);
     return EventFactory.fromMap(map,
         new SourceInfo("test-topic", DEFAULT_STREAM_PREFIX),
-        new SchemaInfo(null, new ArrayList<PropertyRenameRule>()));
+        new SchemaInfo(null, new ArrayList<>()));
   }
 }

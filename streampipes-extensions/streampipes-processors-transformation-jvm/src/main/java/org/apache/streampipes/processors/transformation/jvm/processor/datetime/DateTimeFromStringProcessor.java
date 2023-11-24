@@ -43,23 +43,19 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Iterator;
-import java.util.Set;
 
-public class DateTimeProcessor extends StreamPipesDataProcessor {
+public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
 
-  public static final String INPUT_DATETIME_FIELD_ID = "dateTimeField";
+  public static final String FIELD_ID = "field";
   public static final String OUTPUT_DATETIME_RUNTIME_NAME = "dateTime";
   public static final String SELECTED_INPUT_TIMEZONE = "inputTimeZone";
 
-  private String[] possibleTimeZones;
   private String streamInputDateTimeFieldName;
   private String selectedTimeZone;
 
   @Override
   public DataProcessorDescription declareModel() {
-    possibleTimeZones = getTimeZoneOptions();
-    DataProcessorDescription dpd = ProcessingElementBuilder
+    return ProcessingElementBuilder
         .create("org.apache.streampipes.processors.transformation.jvm.timeoperator.datetime", 0)
         .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.TIME)
         .withLocales(Locales.EN)
@@ -67,30 +63,27 @@ public class DateTimeProcessor extends StreamPipesDataProcessor {
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredPropertyWithUnaryMapping(
                 EpRequirements.stringReq(),
-                Labels.withId(INPUT_DATETIME_FIELD_ID),
+                Labels.withId(FIELD_ID),
                 PropertyScope.NONE)
             .build())
         .requiredSingleValueSelection(Labels.withId(SELECTED_INPUT_TIMEZONE),
-            Options.from(possibleTimeZones))
+            Options.from(getTimeZoneOptions()))
         .outputStrategy(OutputStrategies.append(
             EpProperties.timestampProperty(OUTPUT_DATETIME_RUNTIME_NAME)))
         .build();
-
-    return dpd;
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
       EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
-    this.streamInputDateTimeFieldName = extractor.mappingPropertyValue(INPUT_DATETIME_FIELD_ID);
+    this.streamInputDateTimeFieldName = extractor.mappingPropertyValue(FIELD_ID);
     this.selectedTimeZone = extractor.selectedSingleValue(SELECTED_INPUT_TIMEZONE, String.class);
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) {
     String dateTimeString = event.getFieldBySelector(streamInputDateTimeFieldName).getAsPrimitive().getAsString();
-    // DateTimeFormatter dtFormatter = detectFormat(enteredInputFormat);
     DateTimeFormatter dtFormatter = DateTimeFormatter.ISO_DATE_TIME;
     ZonedDateTime zdt = parseDateTime(dateTimeString, dtFormatter);
 
@@ -121,17 +114,6 @@ public class DateTimeProcessor extends StreamPipesDataProcessor {
   }
 
   private static String[] getTimeZoneOptions() {
-    Set<String> possibleZonesSet = ZoneId.getAvailableZoneIds();
-    int setSize = possibleZonesSet.size();
-    String[] possibleZonesArray = new String[setSize];
-    Iterator<String> possibleZonesIterator = possibleZonesSet.iterator();
-    for (int i = 0; i < setSize; i++) {
-      if (possibleZonesIterator.hasNext()) {
-        possibleZonesArray[i] = possibleZonesIterator.next();
-      } else {
-        throw new RuntimeException("Time Zone option iterator & array mismatch");
-      }
-    }
-    return possibleZonesArray;
+    return ZoneId.getAvailableZoneIds().toArray(new String[0]);
   }
 }
