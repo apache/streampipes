@@ -53,8 +53,8 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class TestDateTimeProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(TestDateTimeProcessor.class);
+public class TestDateTimeFromStringProcessor {
+  private static final Logger LOG = LoggerFactory.getLogger(TestDateTimeFromStringProcessor.class);
 
   @org.junit.runners.Parameterized.Parameters
   public static Iterable<Object[]> data() {
