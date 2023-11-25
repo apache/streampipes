@@ -43,6 +43,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
 
@@ -56,7 +59,7 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.timeoperator.datetime", 0)
+        .create("org.apache.streampipes.processors.transformation.jvm.datetime", 0)
         .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.TIME)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
@@ -114,6 +117,8 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
   }
 
   private static String[] getTimeZoneOptions() {
-    return ZoneId.getAvailableZoneIds().toArray(new String[0]);
+    List<String> timeZones = new ArrayList<>(ZoneId.getAvailableZoneIds());
+    Collections.sort(timeZones);
+    return timeZones.toArray(new String[0]);
   }
 }
