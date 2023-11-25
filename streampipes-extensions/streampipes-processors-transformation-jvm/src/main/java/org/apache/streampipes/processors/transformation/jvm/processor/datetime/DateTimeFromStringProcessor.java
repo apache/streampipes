@@ -49,7 +49,7 @@ import java.util.List;
 
 public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
 
-  public static final String FIELD_ID = "field";
+  public static final String FIELD_ID = "inputField";
   public static final String OUTPUT_DATETIME_RUNTIME_NAME = "dateTime";
   public static final String SELECTED_INPUT_TIMEZONE = "inputTimeZone";
 
