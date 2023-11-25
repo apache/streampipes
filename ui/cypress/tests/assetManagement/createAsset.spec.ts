@@ -109,7 +109,7 @@ describe('Creates a new adapter, add to assets and export assets', () => {
         cy.visit('#/configuration/export');
         cy.dataCy('import-application-data-button').click();
         cy.get('input[type="file"]').selectFile(
-            'cypress/downloads/data_export.zip',
+            'cypress/downloads/assetExport.zip',
             { force: true },
         );
         cy.dataCy('next-import-button').click();
