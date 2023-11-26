@@ -42,6 +42,8 @@ services:
 
   ui:
     image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
+    environment:
+      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-jvm:8090
     ports:
       - "80:8088"
     depends_on:

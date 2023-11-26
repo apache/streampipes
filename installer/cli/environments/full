@@ -19,9 +19,6 @@ backend
 extensions-all-jvm
 consul
 couchdb
-jobmanager
-taskmanager
 zookeeper
 kafka
 influxdb
-pipeline-elements-all-flink
