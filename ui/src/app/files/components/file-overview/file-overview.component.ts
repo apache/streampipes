@@ -22,6 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'sp-file-overview',
@@ -36,6 +37,8 @@ export class FileOverviewComponent implements OnInit {
 
     paginator: MatPaginator;
     pageSize = 1;
+
+    private fileTypeColors: { [key: string]: string } = {};
 
     constructor(
         private filesService: FilesService,
@@ -78,6 +81,35 @@ export class FileOverviewComponent implements OnInit {
                     });
             }
         });
+    }
+
+    downloadFile(fileMetadata: FileMetadata) {
+        this.filesService
+            .getFile(fileMetadata.internalFilename)
+            .subscribe(response => {
+                saveAs(response, fileMetadata.originalFilename);
+            });
+    }
+
+    getFileColor(fileType: string) {
+        if (!this.fileTypeColors.hasOwnProperty(fileType)) {
+            this.fileTypeColors[fileType] = this.generateColorHash(fileType);
+        }
+
+        return this.fileTypeColors[fileType];
+    }
+
+    private generateColorHash(fileType: string) {
+        let hash = 0;
+
+        fileType.split('').forEach(char => {
+            hash = char.charCodeAt(0) + ((hash << 5) - hash);
+        });
+
+        const color = (Math.abs(hash) & 0x00ffffff).toString(16).toUpperCase();
+        const paddedColor = color.padStart(6, '0');
+
+        return `#${paddedColor}`;
     }
 
     @ViewChild(MatPaginator) set content(paginator: MatPaginator) {

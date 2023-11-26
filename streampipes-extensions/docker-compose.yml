@@ -33,14 +33,14 @@ x-logging:
 
 services:
 
-  #### apache/incubator-streampipes-extensions
+  #### apache/streampipes-extensions
   connect-worker-main:
     build:
       context: ./streampipes-connect-adapters
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_connect-worker-main:release-validation
+    image: streampipes_connect-worker-main:release-validation
     environment:
       - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
@@ -48,26 +48,26 @@ services:
     networks:
       spnet:
 
-  pipeline-elements-all-jvm:
+  extensions-all-jvm:
     build:
-      context: ./streampipes-pipeline-elements-all-jvm
+      context: ./streampipes-extensions-all-jvm
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
+    image: streampipes_extensions-all-jvm:release-validation
     volumes:
     - files:/spImages
     logging: *default-logging
     networks:
       spnet:
 
-  pipeline-elements-all-flink:
+  pipeline-elements-experimental-flink:
     build:
-      context: ./streampipes-pipeline-elements-all-flink
+      context: ./streampipes-pipeline-elements-experimental-flink
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_pipeline-elements-all-flink:release-validation
+    image: streampipes_pipeline-elements-experimental-flink:release-validation
     logging: *default-logging
     networks:
       spnet:

@@ -143,7 +143,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     boolean emptyValueReceived = false;
     List<DataValue> returnValues =
         response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
-    if (returnValues.size() == 0) {
+    if (returnValues.isEmpty()) {
       emptyValueReceived = true;
       LOG.warn("Empty value object returned - event will not be sent");
     } else {

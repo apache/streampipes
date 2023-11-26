@@ -34,7 +34,7 @@ fi
 
 cat <<EOF
 Version:      $(show_version)
-GitHub:       https://github.com/apache/incubator-streampipes-installer
+GitHub:       https://github.com/apache/streampipes-installer
 Website:      https://streampipes.apache.org
 Bug Report:   dev@streampipes.apache.org
 

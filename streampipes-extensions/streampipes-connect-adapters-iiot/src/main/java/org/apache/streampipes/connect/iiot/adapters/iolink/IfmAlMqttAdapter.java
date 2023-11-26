@@ -77,7 +77,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, IfmAlMqttAdapter::new)
+        .create(ID, 0, IfmAlMqttAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)

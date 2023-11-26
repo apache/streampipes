@@ -153,7 +153,7 @@ public class CsvMetadataEnrichmentProcessor
     CSVParser parser = getCsvParser(fileContents);
     List<EventProperty> propertiesToAppend = new ArrayList<>();
     List<CSVRecord> records = parser.getRecords();
-    if (records.size() > 0) {
+    if (!records.isEmpty()) {
       CSVRecord firstRecord = records.get(0);
       for (String column : columnsToInclude) {
         propertiesToAppend.add(makeEventProperty(column, firstRecord));
@@ -208,7 +208,7 @@ public class CsvMetadataEnrichmentProcessor
     } catch (IOException e) {
       throw new SpRuntimeException(e);
     }
-    if (this.columnMap.size() > 0) {
+    if (!this.columnMap.isEmpty()) {
       this.columnsToAppend = fieldsToAppend
           .stream()
           .map(c -> makeParser(c, this.columnMap.entrySet().stream().findFirst().get().getValue()))

@@ -106,7 +106,7 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, HttpStreamProtocol::new)
+        .create(ID, 0, HttpStreamProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)

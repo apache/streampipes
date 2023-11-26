@@ -22,6 +22,8 @@ import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
+import { UserUtils } from '../UserUtils';
+import { PipelineUtils } from '../PipelineUtils';
 
 export class ConnectUtils {
     public static testAdapter(adapterConfiguration: AdapterInput) {
@@ -193,15 +195,80 @@ export class ConnectUtils {
 
     public static deleteAdapter() {
         // Delete adapter
-        cy.visit('#/connect');
+        this.goToConnect();
 
         cy.dataCy('delete-adapter').should('have.length', 1);
-        cy.dataCy('delete-adapter').click();
-        cy.dataCy('delete-adapter-confirmation').click();
+        this.clickDelete();
         cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
             'be.visible',
         );
         cy.dataCy('delete-adapter', { timeout: 20000 }).should(
+            'have.length',
+            0,
+        );
+    }
+
+    public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {
+        // Delete adapter and associated pipelines
+        this.goToConnect();
+        cy.dataCy('delete-adapter').should('have.length', 1);
+        this.clickDelete();
+        cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
+            timeout: 10000,
+        }).should('be.visible');
+        cy.dataCy(
+            'delete-adapter-and-associated-pipelines-confirmation',
+        ).click();
+        cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should(
+            'be.visible',
+        );
+        if (switchUserCheck) {
+            cy.switchUser(UserUtils.adapterAndPipelineAdminUser);
+        }
+        this.checkAdapterAndAssociatedPipelinesDeleted();
+    }
+
+    // NOTE: this function will leave the adapter and associated pipelines running,
+    // please make sure to clean up after calling this function
+    public static deleteAdapterAndAssociatedPipelinesPermissionDenied() {
+        // Associated pipelines not owned by the user (unless admin) should not be deleted during adapter deletion
+        this.goToConnect();
+        cy.dataCy('delete-adapter').should('have.length', 1);
+        this.clickDelete();
+        cy.dataCy('delete-adapter-and-associated-pipelines-confirmation', {
+            timeout: 10000,
+        }).should('be.visible');
+        cy.dataCy(
+            'delete-adapter-and-associated-pipelines-confirmation',
+        ).click();
+        cy.dataCy('adapter-deletion-permission-denied', {
+            timeout: 10000,
+        }).should('be.visible');
+        cy.get('.sp-dialog-actions').click();
+        this.checkAdapterNotDeleted();
+    }
+
+    public static clickDelete() {
+        cy.dataCy('delete-adapter').click();
+        cy.dataCy('delete-adapter-confirmation').click();
+    }
+
+    public static checkAdapterNotDeleted() {
+        this.goToConnect();
+        cy.dataCy('delete-adapter', { timeout: 20000 }).should(
+            'have.length',
+            1,
+        );
+    }
+
+    public static checkAdapterAndAssociatedPipelinesDeleted() {
+        this.goToConnect();
+        cy.dataCy('delete-adapter', { timeout: 20000 }).should(
+            'have.length',
+            0,
+        );
+        PipelineUtils.goToPipelines();
+        cy.dataCy('delete-pipeline', { timeout: 10000 }).should(
             'have.length',
             0,
         );

@@ -128,16 +128,6 @@ public abstract class NamedStreamPipesEntity implements Serializable {
     this.iconUrl = iconUrl;
   }
 
-  @Deprecated
-  public String getUri() {
-    return elementId;
-  }
-
-  @Deprecated
-  public void setUri(String uri) {
-    this.elementId = uri;
-  }
-
   public String getDom() {
     return dom;
   }

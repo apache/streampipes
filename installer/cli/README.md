@@ -152,12 +152,12 @@ streampipes pull
 
 **Stop** existing StreamPipes containers
 ```bash
-streampipes stop pipeline-elements-all-jvm
+streampipes stop extensions-all-jvm
 ```
 
 **Start** existing StreamPipes containers
 ```bash
-streampipes start pipeline-elements-all-jvm
+streampipes start extensions-all-jvm
 ```
 
 **Restart** existing services
@@ -165,7 +165,7 @@ streampipes start pipeline-elements-all-jvm
 # restart backend couchdb container
 streampipes restart backend couchdb 
 # restart existing services by removing and recreating container instance
-streampipes restart --force-create pipeline-elements-all-jvm
+streampipes restart --force-create extensions-all-jvm
 ```
 
 **Clean** your system and remove created StreamPipes Docker volumes, StreamPipes docker network and dangling StreamPipes images of old image layers.
@@ -215,7 +215,7 @@ As of now, this step has to be done **manually**. All environments are located i
 ├── backend               # developing core backend features
 ├── basic                 # wanna run core, UI, connect etc from the IDE?
 ├── full                  # full version containing more pipeline elements
-├── lite                  # few pipeline elements, less memory  
+├── lite                  # few pipeline elements, less memory
 ├── pipeline-element      # developing new pipeline-elements
 └── ui                    # developing UI features
 ```
