@@ -20,20 +20,17 @@ package org.apache.streampipes.dataexplorer.commons.influx;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataexplorer.commons.influx.serializer.RawFieldSerializer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
-import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
-import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -50,6 +47,8 @@ public class InfluxStore {
   DataLakeMeasure measure;
   Map<String, String> sanitizedRuntimeNames = new HashMap<>();
   private InfluxDB influxDb = null;
+
+  private RawFieldSerializer rawFieldSerializer = new RawFieldSerializer();
 
   public InfluxStore(DataLakeMeasure measure,
                      InfluxConnectionSettings settings) {
@@ -78,7 +77,7 @@ public class InfluxStore {
     influxDb = InfluxClientProvider.getInfluxDBClient(settings);
 
     // Checking, if server is available
-    Pong response = influxDb.ping();
+    var response = influxDb.ping();
     if (response.getVersion().equalsIgnoreCase("unknown")) {
       throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
     }
@@ -92,8 +91,8 @@ public class InfluxStore {
 
     // setting up the database
     influxDb.setDatabase(databaseName);
-    int batchSize = 2000;
-    int flushDuration = 500;
+    var batchSize = 2000;
+    var flushDuration = 500;
     influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
   }
 
@@ -124,26 +123,26 @@ public class InfluxStore {
     }
 
     // sanitize event
-    for (String key : event.getRaw().keySet()) {
+    for (var key : event.getRaw().keySet()) {
       if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(key))) {
         event.renameFieldByRuntimeName(key, key + "_");
       }
     }
 
-    Long timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
-    Point.Builder point =
+    var timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
+    var point =
         Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
 
-    for (EventProperty ep : measure.getEventSchema().getEventProperties()) {
-      String runtimeName = ep.getRuntimeName();
+    for (var ep : measure.getEventSchema().getEventProperties()) {
+      var runtimeName = ep.getRuntimeName();
       // timestamp should not be added as a field
       if (!measure.getTimestampField().endsWith(runtimeName)) {
-        String sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
+        var sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
         var field = event.getOptionalFieldByRuntimeName(runtimeName);
         try {
           if (ep instanceof EventPropertyPrimitive) {
             if (field.isPresent()) {
-              PrimitiveField eventPropertyPrimitiveField = field.get().getAsPrimitive();
+              var eventPropertyPrimitiveField = field.get().getAsPrimitive();
               if (eventPropertyPrimitiveField.getRawValue() == null) {
                 nullFields.add(sanitizedRuntimeName);
               } else {
@@ -197,7 +196,7 @@ public class InfluxStore {
                                          PrimitiveField eventPropertyPrimitiveField) {
     try {
       // Store property according to property type
-      String runtimeType = ep.getRuntimeType();
+      var runtimeType = ep.getRuntimeType();
       if (XSD.INTEGER.toString().equals(runtimeType)) {
         try {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
@@ -227,16 +226,10 @@ public class InfluxStore {
   }
 
   private void handleNonPrimitiveMeasurementProperty(Point.Builder p, Event event, String preparedRuntimeName) {
-    var field = event.getRaw().get(preparedRuntimeName);
-    ObjectMapper mapper = new ObjectMapper();
     try {
-      String json = mapper.writeValueAsString(field);
+      var json = rawFieldSerializer.serialize(event.getRaw().get(preparedRuntimeName));
       p.addField(preparedRuntimeName, json);
-      // Deserialize in this way, tested the primitive types can be correctly deducted from Object
-//      TypeFactory typeFactory = mapper.getTypeFactory();
-//      MapType mapType = typeFactory.constructMapType(HashMap.class, String.class, Object.class);
-//      Map<String, Object> map = mapper.readValue(json, mapType);
-    } catch (JsonProcessingException e) {
+    } catch (SpRuntimeException e) {
       LOG.warn("Failed to serialize field {}, ignoring.", preparedRuntimeName);
     }
   }
