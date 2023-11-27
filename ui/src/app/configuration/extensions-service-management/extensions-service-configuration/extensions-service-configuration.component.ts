@@ -53,17 +53,17 @@ export class SpExtensionsServiceConfigurationComponent {
     dataSource = new MatTableDataSource<SpServiceConfiguration>();
 
     expandedElement: any;
-    consulServices: SpServiceConfiguration[];
+    serviceConfiguration: SpServiceConfiguration[];
 
     constructor(private configurationService: ConfigurationService) {
-        this.getConsulServices();
+        this.getConfigurationServices();
     }
 
-    getConsulServices(): void {
+    getConfigurationServices(): void {
         this.configurationService.getExtensionsServiceConfigs().subscribe(
             response => {
                 const sortedServices = this.sort(response);
-                this.consulServices = sortedServices;
+                this.serviceConfiguration = sortedServices;
                 this.dataSource.data = sortedServices;
             },
             error => {
@@ -93,12 +93,12 @@ export class SpExtensionsServiceConfigurationComponent {
         return serviceConfiguration;
     }
 
-    updateConsulService(config: SpServiceConfiguration): void {
+    updateConfigurationService(config: SpServiceConfiguration): void {
         this.configurationService
             .updateExtensionsServiceConfigs(config)
             .subscribe(
                 () => {
-                    this.getConsulServices();
+                    this.getConfigurationServices();
                 },
                 error => {
                     console.error(error);
