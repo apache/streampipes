@@ -939,7 +939,7 @@
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <doclint>none</doclint>
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
-                                    <source>11</source>
+                                    <source>17</source>
                                 </configuration>
                             </execution>
                         </executions>
