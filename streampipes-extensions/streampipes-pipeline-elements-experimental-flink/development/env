@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Those parameters are used by IntelliJ to set the default consul parameters for development
+# Those parameters are used by IntelliJ to set the default parameters for development
 SP_PORT=8005
 SP_HOST=host.docker.internal
 SP_DEBUG=true
