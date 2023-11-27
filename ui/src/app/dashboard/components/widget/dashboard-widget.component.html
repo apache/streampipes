@@ -31,7 +31,12 @@
                 >
                     <i class="material-icons">settings</i>
                 </button>
-                <button mat-icon-button color="white" (click)="removeWidget()">
+                <button
+                    mat-icon-button
+                    color="white"
+                    (click)="removeWidget()"
+                    data-cy="widget-remove-button"
+                >
                     <i class="material-icons">clear</i>
                 </button>
             </div>
