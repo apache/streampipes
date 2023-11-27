@@ -141,6 +141,7 @@ rm -rf ${HOME}/streampipes-k8s
 | Parameter Name                                  | Description                                             | Value                                    |
 |-------------------------------------------------|---------------------------------------------------------|------------------------------------------|
 | extensions.iiot.appName                         | IIoT extensions application name                        | extensions-all-iiot                      |
+| extensions.iiot.imageName                       | IIoT extensions image name                              | extensions-all-jvm                      |
 | extensions.iiot.port                            | Port for the IIoT extensions application                | 8090                                     |
 | extensions.iiot.service.name                    | Name of the IIoT extensions service                     | extensions-all-iiot                      |
 | extensions.iiot.service.port                    | TargetPort of the IIoT extensions service               | 8090                                     |

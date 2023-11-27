@@ -81,6 +81,7 @@ streampipes:
 extensions:
   iiot:
     appName: extensions-all-iiot
+    imageName: extensions-all-jvm
     port: 8090
     service:
       name: extensions-all-iiot
