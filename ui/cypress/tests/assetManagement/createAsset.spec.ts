@@ -89,9 +89,36 @@ describe('Creates a new adapter, add to assets and export assets', () => {
         cy.dataCy('import-button').click();
 
         // Check if import was successful
-        cy.visit('#/assets');
-        cy.dataCy('assets-table').should('have.length', 1);
         cy.visit('#/connect');
         cy.dataCy('adapters-table').children().should('have.length', 1);
+        cy.visit('#/assets');
+        cy.dataCy('assets-table').should('have.length', 1);
+
+        // Export Asset via Assets page
+        cy.dataCy('download').click();
+
+        // Delete Adapter and Asset
+        cy.visit('#/connect');
+        cy.dataCy('delete-adapter').click();
+        cy.dataCy('delete-adapter-confirmation').click();
+
+        cy.visit('#/assets');
+        cy.dataCy('delete').click();
+
+        // Import downloaded Asset
+        cy.visit('#/configuration/export');
+        cy.dataCy('import-application-data-button').click();
+        cy.get('input[type="file"]').selectFile(
+            'cypress/downloads/assetExport.zip',
+            { force: true },
+        );
+        cy.dataCy('next-import-button').click();
+        cy.dataCy('import-button').click();
+
+        // Check if import was successful
+        cy.visit('#/connect');
+        cy.dataCy('adapters-table').children().should('have.length', 1);
+        cy.visit('#/assets');
+        cy.dataCy('assets-table').should('have.length', 1);
     });
 });
