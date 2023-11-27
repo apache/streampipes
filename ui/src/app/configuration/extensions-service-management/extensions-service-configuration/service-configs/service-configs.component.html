@@ -24,7 +24,7 @@
     <form (ngSubmit)="updateConfiguration()" fxFlex="100" fxLayout="column">
         <div
             fxLayout="column"
-            *ngFor="let configuration of consulService.configs"
+            *ngFor="let configuration of serviceConfiguration.configs"
         >
             <h5>{{ configuration.key }}</h5>
             <sp-consul-configs-password

@@ -72,12 +72,14 @@ export class SpExtensionsServiceConfigurationComponent {
         );
     }
 
-    sort(consulServices: SpServiceConfiguration[]): SpServiceConfiguration[] {
-        if (!consulServices || consulServices.length === 0) {
+    sort(
+        serviceConfiguration: SpServiceConfiguration[],
+    ): SpServiceConfiguration[] {
+        if (!serviceConfiguration || serviceConfiguration.length === 0) {
             return null;
         }
 
-        consulServices.sort(
+        serviceConfiguration.sort(
             (a: SpServiceConfiguration, b: SpServiceConfiguration) => {
                 if (a.serviceGroup < b.serviceGroup) {
                     return -1;
@@ -88,7 +90,7 @@ export class SpExtensionsServiceConfigurationComponent {
                 }
             },
         );
-        return consulServices;
+        return serviceConfiguration;
     }
 
     updateConsulService(config: SpServiceConfiguration): void {

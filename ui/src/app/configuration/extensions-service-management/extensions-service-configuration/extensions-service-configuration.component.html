@@ -107,8 +107,10 @@
                 >
                     <div fxFlex="100">
                         <sp-service-configs
-                            [consulService]="element"
-                            (updateConsulService)="updateConsulService($event)"
+                            [serviceConfiguration]="element"
+                            (updateServiceConfiguration)="
+                                updateConsulService($event)
+                            "
                         ></sp-service-configs>
                     </div>
                 </div>
