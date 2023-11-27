@@ -46,7 +46,7 @@ public class ImageStreamAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, ImageStreamAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 0, ImageStreamAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))

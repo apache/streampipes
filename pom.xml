@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 ~ Licensed to the Apache Software Foundation (ASF) under one or more
 ~ contributor license agreements.  See the NOTICE file distributed with
@@ -99,13 +100,13 @@
         <nats.version>2.17.0</nats.version>
         <netty.version>4.1.72.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
-        <opencsv.version>5.8</opencsv.version>
+        <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.1.0</opennlp.version>
         <plc4x.version>0.10.0</plc4x.version>
         <plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>3.5.0</plexus-utils.version>
-        <postgresql.version>42.6.0</postgresql.version>
+        <postgresql.version>42.7.0</postgresql.version>
         <protobuf.version>3.25.0</protobuf.version>
         <pulsar.version>2.10.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
@@ -143,6 +144,7 @@
         <maven.dependency.check.plugin.version>8.4.0</maven.dependency.check.plugin.version>
         <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
+        <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
 
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -937,7 +939,7 @@
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <doclint>none</doclint>
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
-                                    <source>11</source>
+                                    <source>17</source>
                                 </configuration>
                             </execution>
                         </executions>
@@ -956,6 +958,11 @@
 
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>cz.habarta.typescript-generator</groupId>
+                    <artifactId>typescript-generator-maven-plugin</artifactId>
+                    <version>${typescript-generator-maven-plugin.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>net.revelc.code.formatter</groupId>
                     <artifactId>formatter-maven-plugin</artifactId>

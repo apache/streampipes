@@ -44,7 +44,6 @@ import {
 import { EditorService } from '../../services/editor.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
-import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 
@@ -131,9 +130,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
             );
         this.pipelineElementCssType = this.pipelineElement.type;
 
-        this.isDataSource =
-            this.pipelineElement.type === 'stream' ||
-            this.pipelineElement.type === 'set';
+        this.isDataSource = this.pipelineElement.type === 'stream';
 
         if (
             this.isDataSource ||
@@ -162,7 +159,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     }
 
     initRecs(pipelineElementDomId) {
-        const clonedModel: PipelineElementConfig[] = cloneDeep(
+        const clonedModel: PipelineElementConfig[] = this.deepCopy(
             this.rawPipelineModel,
         );
         const currentPipeline = this.objectProvider.makePipeline(clonedModel);
@@ -170,13 +167,13 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
             .recommendPipelineElement(currentPipeline, pipelineElementDomId)
             .subscribe(result => {
                 if (result.success) {
-                    this.possibleElements = cloneDeep(
+                    this.possibleElements = this.deepCopy(
                         this.pipelineElementRecommendationService.collectPossibleElements(
                             this.allElements,
                             result.possibleElements,
                         ),
                     );
-                    this.recommendedElements = cloneDeep(
+                    this.recommendedElements = this.deepCopy(
                         this.pipelineElementRecommendationService.populateRecommendedList(
                             this.allElements,
                             result.recommendedElements,
@@ -226,5 +223,29 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.pipelineElementConfiguredObservable.unsubscribe();
+    }
+
+    deepCopy(obj) {
+        let clone: any = {};
+        if (
+            obj === null ||
+            typeof obj !== 'object' ||
+            Array.isArray(obj) ||
+            obj === undefined
+        ) {
+            return obj;
+        }
+
+        if (Array.isArray(obj)) {
+            clone = obj.map(item => this.deepCopy(item));
+        }
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                clone[key] = this.deepCopy(obj[key]);
+            }
+        }
+
+        return clone;
     }
 }

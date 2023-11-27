@@ -15,7 +15,9 @@
   ~ limitations under the License.
   ~
   -->
+
 # StreamPipes k8s - The Operator's Dream
+
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
@@ -28,20 +30,25 @@ We provide two helm chart templates to get you going:
 - **full**:  contains more pipeline elements, requires **>16 GB RAM** (recommended)
 
 ## Prerequisite
+
 Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server.
 
 Tested with:
+
 * K8s v1.19.3
 * Helm v3.1.2
 * Minikube v1.15.1 (recommended for local testing)
 
-> **NOTE**: We experienced some problems with using host path volumes in Docker Desktop environments for persistent storage. Therefore, we suggest to use minikube for local testing.
+> **NOTE**: We experienced some problems with using host path volumes in Docker Desktop environments for persistent
+> storage. Therefore, we suggest to use minikube for local testing.
 
 ## Local testing
 
-We recommend using [minikube](https://minikube.sigs.k8s.io/docs/) for local testing. Follow instructions in their docs to setup test environment
+We recommend using [minikube](https://minikube.sigs.k8s.io/docs/) for local testing. Follow instructions in their docs
+to setup test environment
 
 Once installed, start local minikube node with a mapped host volume:
+
 ```bash
 minikube start --mount-string ${HOME}/streampipes-k8s:/streampipes-k8s --mount --memory=4g --cpus=4
 ```
@@ -55,7 +62,9 @@ helm install streampipes ./
 # full template only recommend if you have sufficient resources
 # helm install streampipes ./ --set deployment=full
 ```
+
 After a while, all containers should successfully started, indicated by the `Running` status.
+
 ```bash
 kubectl get pods
 NAME                                           READY   STATUS    RESTARTS   AGE
@@ -68,17 +77,23 @@ ui-b94bd9766-rm6zb                             2/2     Running   0          3m27
 ```
 
 For **minikube users**:
-> **NOTE**: If you're running Docker Desktop or Minikube with a local k8s cluster, the above step to use your host IP might not work. Luckily, you can port-forward a service port to your localhost using the following command to be able to access the UI either via `http://localhost` or `http://<HOST_IP>` (you require sudo to run this command in order to bind to a privileged port).
+> **NOTE**: If you're running Docker Desktop or Minikube with a local k8s cluster, the above step to use your host IP
+> might not work. Luckily, you can port-forward a service port to your localhost using the following command to be able to
+> access the UI either via `http://localhost` or `http://<HOST_IP>` (you require sudo to run this command in order to bind
+> to a privileged port).
+
 ```bash
 kubectl port-forward svc/ui --address=0.0.0.0 80:80
 ```
 
 **Deleting** the current helm chart deployment:
+
 ```bash
 helm del streampipes
 ```
 
 We retain the created persistent volume. You need to manually delete it:
+
 ```bash
 rm -rf ${HOME}/streampipes-k8s
 ```
@@ -234,74 +249,80 @@ rm -rf ${HOME}/streampipes-k8s
 | external.kafka.persistence.pvName               | Name of the Kafka PersistentVolume                       | "kafka-pv"                               |
 |
 
-####Zookeeper common parameters
-| Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
-| external.zookeeper.appName                      | ZooKeeper application name                               | "zookeeper"                              |
-| external.zookeeper.version                      | ZooKeeper version                                        | 3.4.13                                   |
-| external.zookeeper.port                         | Port for the ZooKeeper service                           | 2181                                     |
-| external.zookeeper.service.name                 | Name of the ZooKeeper service                            | "zookeeper"                              |
-| external.zookeeper.service.port                 | TargetPort of the ZooKeeper service                      | 2181                                     |
-| external.zookeeper.persistence.storageClassName | Storage class name for ZooKeeper PVs                     | "hostpath"                               |
-| external.zookeeper.persistence.storageSize      | Size of the ZooKeeper PV                                 | "1Gi"                                    |
-| external.zookeeper.persistence.claimName        | Name of the ZooKeeper PersistentVolumeClaim              | "zookeeper-pvc"                          |
-| external.zookeeper.persistence.pvName           | Name of the ZooKeeper PersistentVolume                   | "zookeeper-pv"                           |
+#### Zookeeper common parameters
 
+| Parameter Name                                  | Description                                 | Value           |
+|-------------------------------------------------|---------------------------------------------|-----------------|
+| external.zookeeper.appName                      | ZooKeeper application name                  | "zookeeper"     |
+| external.zookeeper.version                      | ZooKeeper version                           | 3.4.13          |
+| external.zookeeper.port                         | Port for the ZooKeeper service              | 2181            |
+| external.zookeeper.service.name                 | Name of the ZooKeeper service               | "zookeeper"     |
+| external.zookeeper.service.port                 | TargetPort of the ZooKeeper service         | 2181            |
+| external.zookeeper.persistence.storageClassName | Storage class name for ZooKeeper PVs        | "hostpath"      |
+| external.zookeeper.persistence.storageSize      | Size of the ZooKeeper PV                    | "1Gi"           |
+| external.zookeeper.persistence.claimName        | Name of the ZooKeeper PersistentVolumeClaim | "zookeeper-pvc" |
+| external.zookeeper.persistence.pvName           | Name of the ZooKeeper PersistentVolume      | "zookeeper-pv"  |
 
-####Pulsar common parameters
-| Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
-| external.pulsar.appName                         | pulsar application name                                  | "pulsar"                                 |
-| external.pulsar.version                         | pulsar version                                           | 3.0.0                                    |
-| external.pulsar.port                            | Port for the pulsar service                              | 6650                                     |
-| external.pulsar.service.name                    | Name of the pulsar service                               | "pulsar"                                 |
-| external.pulsar.service.port                    | TargetPort of the pulsar service                         | 6650                                     |
-| external.pulsar.persistence.storageClassName    | Storage class name for pulsar PVs                        | "hostpath"                               |
-| external.pulsar.persistence.storageSize         | Size of the pulsar PV                                    | "1Gi"                                    |
-| external.pulsar.persistence.claimName           | Name of the pulsar PersistentVolumeClaim                 | "pulsar-pvc"                             |
-| external.pulsar.persistence.pvName              | Name of the pulsar PersistentVolume                      | "pulsar-pv"                              |
+#### Pulsar common parameters
 
-###Monitoring common parameters
+| Parameter Name                               | Description                              | Value        |
+|----------------------------------------------|------------------------------------------|--------------|
+| external.pulsar.appName                      | pulsar application name                  | "pulsar"     |
+| external.pulsar.version                      | pulsar version                           | 3.0.0        |
+| external.pulsar.port                         | Port for the pulsar service              | 6650         |
+| external.pulsar.service.name                 | Name of the pulsar service               | "pulsar"     |
+| external.pulsar.service.port                 | TargetPort of the pulsar service         | 6650         |
+| external.pulsar.persistence.storageClassName | Storage class name for pulsar PVs        | "hostpath"   |
+| external.pulsar.persistence.storageSize      | Size of the pulsar PV                    | "1Gi"        |
+| external.pulsar.persistence.claimName        | Name of the pulsar PersistentVolumeClaim | "pulsar-pvc" |
+| external.pulsar.persistence.pvName           | Name of the pulsar PersistentVolume      | "pulsar-pv"  |
+
+### Monitoring common parameters
 
 #### Monitoring - Prometheus
-| Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
-| prometheus.appName                              | Prometheus application name                              | "prometheus"                             |
-| prometheus.version                              | Prometheus version                                       | 2.45.0                                   |
-| prometheus.port                                 | Prometheus port                                          | 9090                                     |
-| prometheus.service.name                         | Prometheus service name                                  | "prometheus"                             |
-| prometheus.service.port                         | Prometheus service port                                  | 9090                                     |
-| prometheus.persistence.storageClassName         | Prometheus storage class name                            | "hostpath"                               |
-| prometheus.persistence.storageSize              | Prometheus storage size                                  | "2Gi"                                    |
-| prometheus.persistence.claimName                | Prometheus PVC claim name                                | "prometheus-pvc"                         |
-| prometheus.persistence.pvName                   | Prometheus PV name                                       | "prometheus-pv"                          |
-| prometheus.persistence.tokenStorageSize         | Prometheus token storage size                            | "16Ki"                                   |
-| prometheus.config.scrapeInterval                | Prometheus scrape interval                               | 10s                                      |
-| prometheus.config.evaluationInterval            | Prometheus evaluation interval                           | 15s                                      |
-| prometheus.config.backendJobName                | Prometheus backend job name                              | "backend"                                |
-| prometheus.config.extensionsName                | Prometheus extensions job name                           | "extensions-all-iiot"                    |
-| prometheus.config.tokenFileName                 | Prometheus token file name                               | "token"                                  |
-| prometheus.config.tokenFileDir                  | Prometheus token file directory                          | "/opt/data"
+
+| Parameter Name                          | Description                     | Value                 |
+|-----------------------------------------|---------------------------------|-----------------------|
+| prometheus.appName                      | Prometheus application name     | "prometheus"          |
+| prometheus.version                      | Prometheus version              | 2.45.0                |
+| prometheus.port                         | Prometheus port                 | 9090                  |
+| prometheus.service.name                 | Prometheus service name         | "prometheus"          |
+| prometheus.service.port                 | Prometheus service port         | 9090                  |
+| prometheus.persistence.storageClassName | Prometheus storage class name   | "hostpath"            |
+| prometheus.persistence.storageSize      | Prometheus storage size         | "2Gi"                 |
+| prometheus.persistence.claimName        | Prometheus PVC claim name       | "prometheus-pvc"      |
+| prometheus.persistence.pvName           | Prometheus PV name              | "prometheus-pv"       |
+| prometheus.persistence.tokenStorageSize | Prometheus token storage size   | "16Ki"                |
+| prometheus.config.scrapeInterval        | Prometheus scrape interval      | 10s                   |
+| prometheus.config.evaluationInterval    | Prometheus evaluation interval  | 15s                   |
+| prometheus.config.backendJobName        | Prometheus backend job name     | "backend"             |
+| prometheus.config.extensionsName        | Prometheus extensions job name  | "extensions-all-iiot" |
+| prometheus.config.tokenFileName         | Prometheus token file name      | "token"               |
+| prometheus.config.tokenFileDir          | Prometheus token file directory | "/opt/data"           |
 
 #### Monitoring - Grafana
-| Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
-| grafana.appName                                 | Grafana application name                                 | "grafana"                                |
-| grafana.version                                 | Grafana version                                          | 10.1.2                                   |
-| grafana.port                                    | Grafana port                                             | 3000                                     |
-| grafana.service.name                            | Grafana service name                                     | "grafana"                                |
-| grafana.service.port                            | Grafana service port                                     | 3000                                     |
-| grafana.persistence.storageClassName            | Grafana storage class name                               | "hostpath"                               |
-| grafana.persistence.storageSize                 | Grafana storage size                                     | "1Gi"                                    |
-| grafana.persistence.claimName                   | Grafana PVC claim name                                   | "grafana-pvc"                            |
-| grafana.persistence.pvName                      | Grafana PV name                                          | "grafana-pv"                             |
+
+| Parameter Name                       | Description                | Value         |
+|--------------------------------------|----------------------------|---------------|
+| grafana.appName                      | Grafana application name   | "grafana"     |
+| grafana.version                      | Grafana version            | 10.1.2        |
+| grafana.port                         | Grafana port               | 3000          |
+| grafana.service.name                 | Grafana service name       | "grafana"     |
+| grafana.service.port                 | Grafana service port       | 3000          |
+| grafana.persistence.storageClassName | Grafana storage class name | "hostpath"    |
+| grafana.persistence.storageSize      | Grafana storage size       | "1Gi"         |
+| grafana.persistence.claimName        | Grafana PVC claim name     | "grafana-pvc" |
+| grafana.persistence.pvName           | Grafana PV name            | "grafana-pv"  |
 
 ## Bugs and Feature Requests
 
-If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue on [GitHub](https://github.com/apache/streampipes/issues).
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue
+on [GitHub](https://github.com/apache/streampipes/issues).
 
 ## Get help
-If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
+
+If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our
+community channels:
 
 - [Slack](https://slack.streampipes.org)
 - [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
@@ -309,20 +330,27 @@ If you have any problems during the installation or questions around StreamPipes
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 
 ## Contribute
+
 We welcome contributions to StreamPipes. If you are interested in contributing to StreamPipes, let us know! You'll
- get to know an open-minded and motivated team working together to build the next IIoT analytics toolbox.
+get to know an open-minded and motivated team working together to build the next IIoT analytics toolbox.
 
 Here are some first steps in case you want to contribute:
+
 * Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
-* Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
+* Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or
+  UI)!
 * Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
-* Find an issue  on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
-* Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
+* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
+* Have a look at our developer wiki
+  at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES)
+  to learn more about StreamPipes development.
 
 Have fun!
 
 ## Feedback
+
 We'd love to hear your feedback! Subscribe to [users@streampipes.apache.org](mailto:users@streampipes.apache.org)
 
 ## License
+
 [Apache License 2.0](../LICENSE)

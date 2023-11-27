@@ -94,7 +94,7 @@ public class PulsarProtocol implements StreamPipesAdapter, SupportsRuntimeConfig
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, PulsarProtocol::new)
+        .create(ID, 0, PulsarProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
