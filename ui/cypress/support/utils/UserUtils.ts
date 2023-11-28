@@ -27,6 +27,15 @@ export class UserUtils {
         .addRole(UserRole.ROLE_ADMIN)
         .build();
 
+    public static adapterAndPipelineAdminUser = UserBuilder.create(
+        'anpadmin@streampipes.apache.org',
+    )
+        .setName('anpadmin')
+        .setPassword('anpadmin')
+        .addRole(UserRole.ROLE_PIPELINE_ADMIN)
+        .addRole(UserRole.ROLE_CONNECT_ADMIN)
+        .build();
+
     public static goToUserConfiguration() {
         cy.visit('#/configuration/security');
     }
@@ -42,9 +51,11 @@ export class UserUtils {
         cy.dataCy('new-user-password-repeat').type(user.password);
 
         // Set role
-        cy.dataCy('role-' + user.role[0])
-            .children()
-            .click();
+        for (var i = 0; i < user.role.length; i++) {
+            cy.dataCy('role-' + user.role[i])
+                .children()
+                .click();
+        }
         cy.dataCy('new-user-enabled').children().click();
 
         // Store
