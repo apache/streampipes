@@ -22,5 +22,5 @@ inputField.title=DateTime String
 inputField.description=The event property that contains the timestamp strings
 
 inputTimeZone.title=Time Zone
-inputTimeZone.description=The desired time zone for which the string applies (only required if the string does not contain time zone information)
+inputTimeZone.description=The desired time zone for which the string applies (if the string already contains the time zone information, the user time zone will be ignored)
 

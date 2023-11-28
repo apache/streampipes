@@ -70,7 +70,7 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
                 PropertyScope.NONE)
             .build())
         .requiredSingleValueSelection(Labels.withId(SELECTED_INPUT_TIMEZONE),
-            Options.from(getTimeZoneOptions()))
+            Options.from(getTimeZoneOptions()), true)
         .outputStrategy(OutputStrategies.append(
             EpProperties.timestampProperty(OUTPUT_DATETIME_RUNTIME_NAME)))
         .build();
