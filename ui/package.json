@@ -31,7 +31,7 @@
     "postinstall": "npm run build-libraries"
   },
   "dependencies": {
-    "@angular-architects/module-federation": "^15.0.3",
+    "@angular-architects/module-federation": "^17.0.1",
     "@angular/animations": "^15.2.9",
     "@angular/cdk": "^15.2.9",
     "@angular/common": "^15.2.9",
