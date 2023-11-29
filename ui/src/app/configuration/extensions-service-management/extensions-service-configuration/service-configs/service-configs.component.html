@@ -24,17 +24,17 @@
     <form (ngSubmit)="updateConfiguration()" fxFlex="100" fxLayout="column">
         <div
             fxLayout="column"
-            *ngFor="let configuration of consulService.configs"
+            *ngFor="let configuration of serviceConfiguration.configs"
         >
             <h5>{{ configuration.key }}</h5>
-            <sp-consul-configs-password
+            <sp-service-configs-password
                 fxFlex="100"
                 *ngIf="configuration.isPassword"
                 [configuration]="configuration"
             >
-            </sp-consul-configs-password>
+            </sp-service-configs-password>
 
-            <sp-consul-configs-text
+            <sp-service-configs-text
                 fxFlex="100"
                 *ngIf="
                     configuration.valueType === service.XS_STRING &&
@@ -42,9 +42,9 @@
                 "
                 [configuration]="configuration"
             >
-            </sp-consul-configs-text>
+            </sp-service-configs-text>
 
-            <sp-consul-configs-number
+            <sp-service-configs-number
                 fxFlex="100"
                 *ngIf="
                     configuration.valueType === service.XS_INTEGER ||
@@ -52,14 +52,14 @@
                 "
                 [configuration]="configuration"
             >
-            </sp-consul-configs-number>
+            </sp-service-configs-number>
 
-            <sp-consul-configs-boolean
+            <sp-service-configs-boolean
                 fxFlex="100"
                 *ngIf="configuration.valueType === service.XS_BOOLEAN"
                 [configuration]="configuration"
             >
-            </sp-consul-configs-boolean>
+            </sp-service-configs-boolean>
         </div>
         <div fxLayoutAlign="end center">
             <button

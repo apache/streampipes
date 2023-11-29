@@ -20,15 +20,15 @@ table {
     width: 100%;
 }
 
-tr.consul-configuration-detail-row {
+tr.service-configuration-detail-row {
     height: 0;
 }
 
-.consul-configuration-row td {
+.service-configuration-row td {
     border-bottom-width: 0;
 }
 
-.consul-configuration-detail {
+.service-configuration-detail {
     overflow: hidden;
     display: flex;
 }
@@ -36,6 +36,6 @@ tr.consul-configuration-detail-row {
 .mat-table {
 }
 
-.consul-service {
+.service {
     padding: 5px;
 }

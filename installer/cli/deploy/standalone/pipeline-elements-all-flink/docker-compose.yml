@@ -18,7 +18,6 @@ services:
   pipeline-elements-all-flink:
     image: ${SP_DOCKER_REGISTRY}/pipeline-elements-all-flink:${SP_VERSION}
     depends_on:
-      - "consul"
       - "jobmanager"
     logging:
       driver: "json-file"

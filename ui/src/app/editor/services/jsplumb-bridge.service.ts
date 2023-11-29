@@ -41,7 +41,6 @@ export class JsplumbBridge {
 
     setEndpointType(endpointId: string, endpointType: string) {
         const endpoint = this.getEndpointById(endpointId);
-        // @ts-ignore
         endpoint.setType(endpointType);
     }
 

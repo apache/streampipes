@@ -125,7 +125,6 @@ services:
  ${svc_name}:
     image: ${svc_img_tag}
     depends_on:
-      - "consul"
       - "backend"
     environment:
       - SP_HOST=${svc_name}
