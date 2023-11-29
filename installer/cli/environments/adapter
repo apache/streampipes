@@ -15,7 +15,6 @@
 
 [environment:adapter]
 backend
-consul
 couchdb
 kafka
 ui

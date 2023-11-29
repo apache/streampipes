@@ -87,20 +87,6 @@ extensions:
       port: 8090
 
 external:
-  consul:
-    appName: "consul"
-    version: 1.14.3
-    webPort: 8500
-    dnsPort: 8600
-    persistence:
-      storageClassName: "hostpath"
-      storageSize: "1Gi"
-      claimName: "consul-pvc"
-      pvName: "consul-pv"
-    service:
-      name: "consul"
-      webPort: 8500
-      dnsPort: 8600
   couchdb:
     appName: "couchdb"
     version: 3.3.1

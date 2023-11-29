@@ -15,7 +15,6 @@
 
 [environment:ui]
 backend
-consul
 extensions-all-jvm
 couchdb
 kafka

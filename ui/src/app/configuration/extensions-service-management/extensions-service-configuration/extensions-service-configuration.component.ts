@@ -53,17 +53,17 @@ export class SpExtensionsServiceConfigurationComponent {
     dataSource = new MatTableDataSource<SpServiceConfiguration>();
 
     expandedElement: any;
-    consulServices: SpServiceConfiguration[];
+    serviceConfiguration: SpServiceConfiguration[];
 
     constructor(private configurationService: ConfigurationService) {
-        this.getConsulServices();
+        this.getConfigurationServices();
     }
 
-    getConsulServices(): void {
+    getConfigurationServices(): void {
         this.configurationService.getExtensionsServiceConfigs().subscribe(
             response => {
                 const sortedServices = this.sort(response);
-                this.consulServices = sortedServices;
+                this.serviceConfiguration = sortedServices;
                 this.dataSource.data = sortedServices;
             },
             error => {
@@ -72,12 +72,14 @@ export class SpExtensionsServiceConfigurationComponent {
         );
     }
 
-    sort(consulServices: SpServiceConfiguration[]): SpServiceConfiguration[] {
-        if (!consulServices || consulServices.length === 0) {
+    sort(
+        serviceConfiguration: SpServiceConfiguration[],
+    ): SpServiceConfiguration[] {
+        if (!serviceConfiguration || serviceConfiguration.length === 0) {
             return null;
         }
 
-        consulServices.sort(
+        serviceConfiguration.sort(
             (a: SpServiceConfiguration, b: SpServiceConfiguration) => {
                 if (a.serviceGroup < b.serviceGroup) {
                     return -1;
@@ -88,15 +90,15 @@ export class SpExtensionsServiceConfigurationComponent {
                 }
             },
         );
-        return consulServices;
+        return serviceConfiguration;
     }
 
-    updateConsulService(config: SpServiceConfiguration): void {
+    updateConfigurationService(config: SpServiceConfiguration): void {
         this.configurationService
             .updateExtensionsServiceConfigs(config)
             .subscribe(
                 () => {
-                    this.getConsulServices();
+                    this.getConfigurationServices();
                 },
                 error => {
                     console.error(error);

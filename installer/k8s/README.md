@@ -69,7 +69,6 @@ After a while, all containers should successfully started, indicated by the `Run
 kubectl get pods
 NAME                                           READY   STATUS    RESTARTS   AGE
 backend-76ddc486c8-nswpc                       1/1     Running   0          3m27s
-consul-55965f966b-gwb7l                        1/1     Running   0          3m27s
 couchdb-77db98cf7b-xnnvb                       1/1     Running   0          3m27s
 influxdb-b95b6479-r8wh8                        1/1     Running   0          3m27s
 extensions-all-jvm-79c445dbd9-m8xcs     1/1     Running   0          3m27s
@@ -165,22 +164,6 @@ rm -rf ${HOME}/streampipes-k8s
 
 ### External common parameters
 
-#### Consul common parameters
-
-| Parameter Name                               | Description                                        | Value        |
-|----------------------------------------------|----------------------------------------------------|--------------|
-| external.consul.appName                      | Consul application name                            | "consul"     |
-| external.consul.version                      | Consul version                                     | 1.14.3       |
-| external.consul.webPort                      | Port number for the Consul web interface           | 8500         |
-| external.consul.dnsPort                      | Port number for the Consul DNS interface           | 8600         |
-| external.consul.persistence.storageClassName | Storage class name for Consul PVs                  | "hostpath"   |
-| external.consul.persistence.storageSize      | Size of the Consul PV                              | "1Gi"        |
-| external.consul.persistence.claimName        | Name of the Consul PersistentVolumeClaim           | "consul-pvc" |
-| external.consul.persistence.pvName           | Name of the Consul PersistentVolume                | "consul-pv"  |
-| external.consul.service.name                 | Name of the Consul service                         | "consul"     |
-| external.consul.service.webPort              | TargetPort of the Consul service for web interface | 8500         |
-| external.consul.service.dnsPort              | TargetPort of the Consul service for DNS interface | 8600         |
-
 #### Couchdb common parameters
 
 | Parameter Name                                | Description                               | Value                  |
@@ -196,6 +179,20 @@ rm -rf ${HOME}/streampipes-k8s
 | external.couchdb.persistence.storageSize      | Size of the CouchDB PV                    | "1Gi"                  |
 | external.couchdb.persistence.claimName        | Name of the CouchDB PersistentVolumeClaim | "couchdb-pvc"          |
 | external.couchdb.persistence.pvName           | Name of the CouchDB PersistentVolume      | "couchdb-pv"           |
+####Couchdb common parameters
+| Parameter Name                                  | Description                                              | Value                                    |
+|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
+| external.couchdb.appName                        | CouchDB application name                                 | "couchdb"                                |
+| external.couchdb.version                        | CouchDB version                                          | 3.3.1                                    |
+| external.couchdb.user                           | CouchDB admin username                                   | "admin"                                  |
+| external.couchdb.password                       | CouchDB admin password                                   | empty (auto-generated)                   |
+| external.couchdb.port                           | Port for the CouchDB service                             | 5984                                     |
+| external.couchdb.service.name                   | Name of the CouchDB service                              | "couchdb"                                |
+| external.couchdb.service.port                   | TargetPort of the CouchDB service                        | 5984                                     |
+| external.couchdb.persistence.storageClassName   | Storage class name for CouchDB PVs                       | "hostpath"                               |
+| external.couchdb.persistence.storageSize        | Size of the CouchDB PV                                   | "1Gi"                                    |
+| external.couchdb.persistence.claimName          | Name of the CouchDB PersistentVolumeClaim                | "couchdb-pvc"                            |
+| external.couchdb.persistence.pvName             | Name of the CouchDB PersistentVolume                     | "couchdb-pv"                             |
 
 #### Influxdb common parameters
 

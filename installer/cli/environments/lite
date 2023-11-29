@@ -16,7 +16,6 @@
 [environment:lite]
 ui
 backend
-consul
 couchdb
 kafka
 zookeeper

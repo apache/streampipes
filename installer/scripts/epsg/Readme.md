@@ -40,7 +40,6 @@ Running the `pipeline-element` environment, your environment file should look li
 
 [environment:pipeline-element]
 backend
-consul
 extensions-all-jvm
 couchdb
 kafka

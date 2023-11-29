@@ -24,7 +24,6 @@ import org.apache.streampipes.service.core.migrations.v070.CreateDefaultAssetMig
 import org.apache.streampipes.service.core.migrations.v070.CreateFileAssetTypeMigration;
 import org.apache.streampipes.service.core.migrations.v090.UpdateUsernameViewMigration;
 import org.apache.streampipes.service.core.migrations.v093.AdapterMigration;
-import org.apache.streampipes.service.core.migrations.v093.ConsulConfigMigration;
 import org.apache.streampipes.service.core.migrations.v093.StoreEmailTemplatesMigration;
 
 import java.util.Arrays;
@@ -39,7 +38,6 @@ public class AvailableMigrations {
         new CreateFileAssetTypeMigration(),
         new UpdateUsernameViewMigration(),
         new AdapterMigration(),
-        new ConsulConfigMigration(),
         new StoreEmailTemplatesMigration()
     );
   }

@@ -26,16 +26,6 @@ import org.apache.streampipes.commons.environment.variable.StringEnvironmentVari
 public class DefaultEnvironment implements Environment {
 
   @Override
-  public StringEnvironmentVariable getConsulHost() {
-    return new StringEnvironmentVariable(Envs.SP_CONSUL_HOST);
-  }
-
-  @Override
-  public IntEnvironmentVariable getConsulPort() {
-    return new IntEnvironmentVariable(Envs.SP_CONSUL_PORT);
-  }
-
-  @Override
   public BooleanEnvironmentVariable getSpDebug() {
     return new BooleanEnvironmentVariable(Envs.SP_DEBUG);
   }
@@ -284,8 +274,4 @@ public class DefaultEnvironment implements Environment {
     return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
   }
 
-  @Override
-  public StringEnvironmentVariable getConsulLocation() {
-    return new StringEnvironmentVariable(Envs.SP_CONSUL_LOCATION);
-  }
 }
