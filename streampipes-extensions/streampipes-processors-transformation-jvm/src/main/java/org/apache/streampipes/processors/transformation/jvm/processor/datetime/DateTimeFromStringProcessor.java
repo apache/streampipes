@@ -51,6 +51,8 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
 
   public static final String FIELD_ID = "inputField";
   public static final String OUTPUT_DATETIME_RUNTIME_NAME = "dateTime";
+  public static final String OUTPUT_TIMESTAMP_RUNTIME_NAME = "timeStamp";
+  public static final String OUTPUT_TIMEZONE_RUNTIME_NAME = "timeZone";
   public static final String SELECTED_INPUT_TIMEZONE = "inputTimeZone";
 
   private String streamInputDateTimeFieldName;
@@ -91,6 +93,8 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
     ZonedDateTime zdt = parseDateTime(dateTimeString, dtFormatter);
 
     event.addField(OUTPUT_DATETIME_RUNTIME_NAME, zdt);
+    event.addField(OUTPUT_TIMESTAMP_RUNTIME_NAME, zdt.toInstant().toEpochMilli());
+    event.addField(OUTPUT_TIMEZONE_RUNTIME_NAME, selectedTimeZone);
     collector.collect(event);
   }
 
