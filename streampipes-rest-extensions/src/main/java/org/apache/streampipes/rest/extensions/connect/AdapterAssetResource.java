@@ -26,19 +26,19 @@ import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
-@Path("/api/v1/worker/adapters")
+@RestController
+@RequestMapping("/api/v1/worker/adapters")
 public class AdapterAssetResource extends AbstractSharedRestInterface {
 
   private ConnectWorkerDescriptionProvider connectWorkerDescriptionProvider;
@@ -48,10 +48,8 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
   }
 
 
-  @GET
-  @Path("/{id}/assets")
-  @Produces("application/zip")
-  public Response getAssets(@PathParam("id") String id) {
+  @GetMapping(path = "/{id}/assets", produces = "application/zip")
+  public ResponseEntity<?> getAssets(@PathVariable("id") String id) {
     Optional<AdapterDescription> adapterDescription = this.connectWorkerDescriptionProvider.getAdapterDescription(id);
     if (adapterDescription.isPresent()) {
       try {
@@ -66,18 +64,14 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
 
   }
 
-  @GET
-  @Path("/{id}/assets/icon")
-  @Produces("image/png")
-  public Response getIconAsset(@PathParam("id") String elementId) throws IOException {
+  @GetMapping(path = "/{id}/assets/icon", produces = MediaType.IMAGE_PNG_VALUE)
+  public ResponseEntity<byte[]> getIconAsset(@PathVariable("id") String elementId) throws IOException {
     URL iconUrl = Resources.getResource(AssetsUtil.makeIconPath(elementId));
     return ok(Resources.toByteArray(iconUrl));
   }
 
-  @GET
-  @Path("/{id}/assets/documentation")
-  @Produces(MediaType.TEXT_PLAIN)
-  public String getDocumentationAsset(@PathParam("id") String elementId) throws IOException {
+  @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  public String getDocumentationAsset(@PathVariable("id") String elementId) throws IOException {
     URL documentationUrl = Resources.getResource(AssetsUtil.makeDocumentationPath(elementId));
     return Resources.toString(documentationUrl, Charsets.UTF_8);
   }

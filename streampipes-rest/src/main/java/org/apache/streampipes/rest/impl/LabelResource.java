@@ -20,42 +20,41 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.labeling.Category;
 import org.apache.streampipes.model.labeling.Label;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Path("/v2/labeling/label")
-public class LabelResource extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/labeling/label")
+public class LabelResource extends AbstractSpringRestResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getAllLabels() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<Label>> getAllLabels() {
     return ok(StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getLabelStorageAPI()
         .getAllLabels());
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response addLabel(Label label) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<?> addLabel(@RequestBody Label label) {
     Category categoryForLabel = StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getCategoryStorageAPI()
@@ -77,23 +76,19 @@ public class LabelResource extends AbstractRestResource {
         .getLabel(labelId));
   }
 
-  @GET
-  @Path("/{labelId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getLabel(@PathParam("labelId") String labelId) {
+  @GetMapping(path = "/{labelId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Label> getLabel(@PathVariable("labelId") String labelId) {
     return ok(StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getLabelStorageAPI()
         .getLabel(labelId));
   }
 
-  @PUT
-  @Path("/{labelId}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response updateLabel(@PathParam("labelId") String labelId, Label label) {
+  @PutMapping(path = "/{labelId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updateLabel(@PathVariable("labelId") String labelId,
+                                       @RequestBody Label label) {
     if (!labelId.equals(label.getId())) {
       String resString = "LabelId not the same as in message body";
       Map<String, Object> errorDetails = new HashMap<>();
@@ -121,11 +116,8 @@ public class LabelResource extends AbstractRestResource {
         .getLabel(labelId));
   }
 
-  @DELETE
-  @Path("/{labelId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response deleteLabel(@PathParam("labelId") String labelId) {
+  @DeleteMapping(path = "/{labelId}")
+  public ResponseEntity<Void> deleteLabel(@PathVariable("labelId") String labelId) {
     StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getLabelStorageAPI()
@@ -133,11 +125,8 @@ public class LabelResource extends AbstractRestResource {
     return ok();
   }
 
-  @GET
-  @Path("category/{categoryId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getLabelsForCategory(@PathParam("categoryId") String categoryId) {
+  @GetMapping(path = "category/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<Label>> getLabelsForCategory(@PathVariable("categoryId") String categoryId) {
     return ok(StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getLabelStorageAPI()

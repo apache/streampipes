@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.rest.impl.connect;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
 import java.util.function.Supplier;
 
-public class AbstractAdapterResource<T> extends AbstractAuthGuardedRestResource {
+public class AbstractAdapterResource<T> extends AbstractAuthGuardedSpringRestResource {
 
   protected T managementService;
 

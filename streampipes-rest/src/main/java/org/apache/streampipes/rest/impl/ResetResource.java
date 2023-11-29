@@ -21,31 +21,26 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.ResetManagement;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 
-@Path("/v2/reset")
-public class ResetResource extends AbstractAuthGuardedRestResource {
-  private static final Logger logger = LoggerFactory.getLogger(ResetResource.class);
+@RestController
+@RequestMapping("/api/v2/reset")
+public class ResetResource extends AbstractAuthGuardedSpringRestResource {
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @PostMapping(path =  MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Resets StreamPipes instance")
-  public Response reset() {
+  public ResponseEntity<SuccessMessage> reset() {
     ResetManagement.reset(getAuthenticatedUsername());
     var userStorage = getUserStorage();
     // Delete all users other than current user (admin) and their resources

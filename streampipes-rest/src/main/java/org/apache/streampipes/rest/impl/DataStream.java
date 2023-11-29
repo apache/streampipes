@@ -19,23 +19,20 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/streams")
-public class DataStream extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/streams")
+public class DataStream extends AbstractSpringRestResource {
 
-  @Path("/update")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getStreamsBySource(SpDataStream stream) {
+  @PostMapping(path = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SpDataStream> getStreamsBySource(SpDataStream stream) {
     return ok(Operations.updateActualTopic(stream));
   }
 }

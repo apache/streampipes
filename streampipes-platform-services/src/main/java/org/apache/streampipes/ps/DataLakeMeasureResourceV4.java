@@ -22,26 +22,28 @@ import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.influx.DataLakeMeasurementCount;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-@Path("/v4/datalake/measure")
-public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v4/datalake/measure")
+public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedSpringRestResource {
 
   private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 
@@ -49,29 +51,23 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
     this.dataLakeMeasureManagement = new DataExplorerSchemaManagement();
   }
 
-  @POST
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response addDataLake(DataLakeMeasure dataLakeMeasure) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<DataLakeMeasure> addDataLake(DataLakeMeasure dataLakeMeasure) {
     DataLakeMeasure result = this.dataLakeMeasureManagement.createMeasurement(dataLakeMeasure);
     return ok(result);
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response getDataLakeInfos(@QueryParam("filter") List<String> measurementNames) {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Integer>> getDataLakeInfos(@RequestParam("filter") List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     return ok(new DataLakeMeasurementCount(allMeasurements, measurementNames).countMeasurementSizes());
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{id}")
-  public Response getDataLakeMeasure(@PathParam("id") String elementId) {
+  @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getDataLakeMeasure(@PathVariable("id") String elementId) {
     var measure = this.dataLakeMeasureManagement.getById(elementId);
     if (Objects.nonNull(measure)) {
       return ok(measure);
@@ -80,13 +76,9 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PUT
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{id}")
-  public Response updateDataLakeMeasure(@PathParam("id") String elementId,
-                                        DataLakeMeasure measure) {
+  @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updateDataLakeMeasure(@PathVariable("id") String elementId,
+                                                 @RequestBody DataLakeMeasure measure) {
     if (elementId.equals(measure.getElementId())) {
       try {
         this.dataLakeMeasureManagement.updateMeasurement(measure);
@@ -98,10 +90,8 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
     return badRequest();
   }
 
-  @DELETE
-  @JacksonSerialized
-  @Path("{id}")
-  public Response deleteDataLakeMeasure(@PathParam("id") String elementId) {
+  @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {
     try {
       this.dataLakeMeasureManagement.deleteMeasurement(elementId);
       return ok();

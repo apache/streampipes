@@ -18,73 +18,63 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.model.NotificationCount;
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/notifications")
-public class Notification extends AbstractAuthGuardedRestResource {
+import java.util.List;
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response addNotification(org.apache.streampipes.model.Notification notification) {
+@RestController
+@RequestMapping("/api/v2/notifications")
+public class Notification extends AbstractAuthGuardedSpringRestResource {
+
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> addNotification(@RequestBody org.apache.streampipes.model.Notification notification) {
     getNotificationStorage().addNotification(notification);
     return ok();
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @Path("/offset")
-  public Response getNotifications(@QueryParam("notificationType") String notificationTypeId,
-                                   @QueryParam("offset") Integer offset,
-                                   @QueryParam("count") Integer count) {
+  @GetMapping(path = "/offset", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<org.apache.streampipes.model.Notification>> getNotifications(@RequestParam("notificationType") String notificationTypeId,
+                                                                                          @RequestParam("offset") Integer offset,
+                                                                                          @RequestParam("count") Integer count) {
     return ok(getNotificationStorage()
         .getAllNotifications(notificationTypeId, offset, count));
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @Path("/time")
-  public Response getNotifications(@QueryParam("startTime") long startTime) {
+  @GetMapping(path = "/time", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<org.apache.streampipes.model.Notification>> getNotifications(@RequestParam("startTime") long startTime) {
     return ok(getNotificationStorage()
         .getAllNotificationsFromTimestamp(startTime));
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/count")
-  public Response getUnreadNotificationsCount() {
+  @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<NotificationCount> getUnreadNotificationsCount() {
     return ok(getNotificationStorage()
         .getUnreadNotificationsCount(getAuthenticatedUserSid()));
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/unread")
-  public Response getUnreadNotifications() {
+  @GetMapping(path = "/unread")
+  public ResponseEntity<List<org.apache.streampipes.model.Notification>> getUnreadNotifications() {
     return ok(getNotificationStorage()
         .getUnreadNotifications());
   }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{notificationId}")
-  public Response deleteNotification(@PathParam("notificationId") String notificationId) {
+  @DeleteMapping(path = "/{notificationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<? extends Message> deleteNotification(@PathVariable("notificationId") String notificationId) {
     boolean success = getNotificationStorage()
         .deleteNotification(notificationId);
     if (success) {
@@ -95,10 +85,8 @@ public class Notification extends AbstractAuthGuardedRestResource {
 
   }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{notificationId}")
-  public Response modifyNotificationStatus(@PathParam("notificationId") String notificationId) {
+  @PutMapping(path = "/{notificationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> modifyNotificationStatus(@PathVariable("notificationId") String notificationId) {
     boolean success = getNotificationStorage()
         .changeNotificationStatus(notificationId);
     if (success) {

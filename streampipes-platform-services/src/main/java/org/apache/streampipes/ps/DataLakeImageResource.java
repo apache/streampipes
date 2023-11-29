@@ -18,22 +18,24 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("v4/datalake/images")
-public class DataLakeImageResource extends AbstractAuthGuardedRestResource {
 
-  @GET
-  @Path("{imageId}")
-  @Produces("image/jpeg")
-  public Response getImage(@PathParam("imageId") String imageId) {
+import java.io.InputStream;
+
+@RestController
+@RequestMapping("/api/v4/datalake/images")
+public class DataLakeImageResource extends AbstractAuthGuardedSpringRestResource {
+
+  @GetMapping(path = "{imageId}", produces = "image/jpeg")
+  public ResponseEntity<InputStream> getImage(@PathVariable("imageId") String imageId) {
     return ok(StorageDispatcher.INSTANCE.getNoSqlStore().getImageStorage().getImageBytes(imageId));
   }
 }

@@ -18,28 +18,26 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/pipeline-canvas-metadata")
-public class PipelineCanvasMetadataResource extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/pipeline-canvas-metadata")
+public class PipelineCanvasMetadataResource extends AbstractSpringRestResource {
 
-  @GET
-  @Path("/pipeline/{pipelineId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getPipelineCanvasMetadataForPipeline(@PathParam("pipelineId") String pipelineId) {
+  @GetMapping(path = "/pipeline/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getPipelineCanvasMetadataForPipeline(@PathVariable("pipelineId") String pipelineId) {
     try {
       return ok(getPipelineCanvasMetadataStorage()
           .getPipelineCanvasMetadataForPipeline(pipelineId));
@@ -48,11 +46,8 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
     }
   }
 
-  @GET
-  @Path("{canvasId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getPipelineCanvasMetadata(@PathParam("canvasId") String pipelineCanvasId) {
+  @GetMapping(path = "{canvasId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getPipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId) {
     try {
       return ok(getPipelineCanvasMetadataStorage()
           .getElementById(pipelineCanvasId));
@@ -61,41 +56,30 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
     }
   }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response storePipelineCanvasMetadata(PipelineCanvasMetadata pipelineCanvasMetadata) {
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> storePipelineCanvasMetadata(PipelineCanvasMetadata pipelineCanvasMetadata) {
     getPipelineCanvasMetadataStorage().createElement(pipelineCanvasMetadata);
     return ok();
   }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{canvasId}")
-  @JacksonSerialized
-  public Response deletePipelineCanvasMetadata(@PathParam("canvasId") String pipelineCanvasId) {
+  @DeleteMapping(path = "{canvasId}")
+  public ResponseEntity<Void> deletePipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId) {
     PipelineCanvasMetadata metadata = find(pipelineCanvasId);
     getPipelineCanvasMetadataStorage().deleteElement(metadata);
     return ok();
   }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/pipeline/{pipelineId}")
-  @JacksonSerialized
-  public Response deletePipelineCanvasMetadataForPipeline(@PathParam("pipelineId") String pipelineId) {
+  @DeleteMapping(path = "/pipeline/{pipelineId}")
+  public ResponseEntity<Void> deletePipelineCanvasMetadataForPipeline(@PathVariable("pipelineId") String pipelineId) {
     PipelineCanvasMetadata metadata =
         getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId);
     getPipelineCanvasMetadataStorage().deleteElement(metadata);
     return ok();
   }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{canvasId}")
-  @JacksonSerialized
-  public Response updatePipelineCanvasMetadata(@PathParam("canvasId") String pipelineCanvasId,
-                                               PipelineCanvasMetadata pipelineCanvasMetadata) {
+  @PutMapping(path = "{canvasId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> updatePipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId,
+                                                           @RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
     try {
       getPipelineCanvasMetadataStorage().updateElement(pipelineCanvasMetadata);
     } catch (IllegalArgumentException e) {

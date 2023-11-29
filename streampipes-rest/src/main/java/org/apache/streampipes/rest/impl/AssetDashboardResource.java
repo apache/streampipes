@@ -18,85 +18,87 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 import org.apache.streampipes.storage.api.IAssetDashboardStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
-@Path("/v2/asset-dashboards")
-public class AssetDashboardResource extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/asset-dashboards")
+public class AssetDashboardResource extends AbstractSpringRestResource {
 
   private static final String APP_ID = "org.apache.streampipes.apps.assetdashboard";
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{dashboardId}")
-  public Response getAssetDashboard(@PathParam("dashboardId") String dashboardId) {
+  @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AssetDashboardConfig> getAssetDashboard(@PathVariable("dashboardId") String dashboardId) {
     return ok(getNoSqlStorage().getAssetDashboardStorage().getAssetDashboard(dashboardId));
   }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{dashboardId}")
-  public Response updateAssetDashboard(@PathParam("dashboardId") String dashboardId,
-                                       AssetDashboardConfig dashboardConfig) {
+  @PutMapping(
+      path = "/{dashboardId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> updateAssetDashboard(@PathVariable("dashboardId") String dashboardId,
+                                                   @RequestBody AssetDashboardConfig dashboardConfig) {
     AssetDashboardConfig dashboard = getAssetDashboardStorage().getAssetDashboard(dashboardId);
     dashboardConfig.setRev(dashboard.getRev());
     getNoSqlStorage().getAssetDashboardStorage().updateAssetDashboard(dashboardConfig);
     return ok();
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllDashboards() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<AssetDashboardConfig>> getAllDashboards() {
     return ok(getNoSqlStorage().getAssetDashboardStorage().getAllAssetDashboards());
   }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response storeAssetDashboard(AssetDashboardConfig dashboardConfig) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> storeAssetDashboard(@RequestBody AssetDashboardConfig dashboardConfig) {
     getNoSqlStorage().getAssetDashboardStorage().storeAssetDashboard(dashboardConfig);
     return ok();
   }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{dashboardId}")
-  public Response deleteAssetDashboard(@PathParam("dashboardId") String dashboardId) {
+  @DeleteMapping(path = "/{dashboardId}")
+  public ResponseEntity<Void> deleteAssetDashboard(@PathVariable("dashboardId") String dashboardId) {
     getNoSqlStorage().getAssetDashboardStorage().deleteAssetDashboard(dashboardId);
     return ok();
   }
 
-  @GET
-  @Path("/images/{imageName}")
-  public Response getDashboardImage(@PathParam("imageName") String imageName) {
+  @GetMapping(path = "/images/{imageName}")
+  public ResponseEntity<?> getDashboardImage(@PathVariable("imageName") String imageName) {
     try {
       java.nio.file.Path path = Paths.get(getTargetFile(imageName));
       File file = new File(path.toString());
       FileNameMap fileNameMap = URLConnection.getFileNameMap();
       String mimeType = fileNameMap.getContentTypeFor(file.getName());
-      return Response.ok(Files.readAllBytes(path)).type(mimeType).build();
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.parseMediaType(mimeType));
+      headers.setContentDispositionFormData("attachment", "filename"); // You can adjust the filename as needed
+
+      return new ResponseEntity<>(Files.readAllBytes(path), headers, org.springframework.http.HttpStatus.OK);
     } catch (IOException e) {
       e.printStackTrace();
       return fail();
@@ -104,20 +106,17 @@ public class AssetDashboardResource extends AbstractRestResource {
   }
 
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/images")
-  public Response storeDashboardImage(@FormDataParam("file_upload") InputStream uploadedInputStream,
-                                      @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
+  @PostMapping(path = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Void> storeDashboardImage(@RequestPart("file_upload") MultipartFile fileDetail) {
     File targetDirectory = new File(getTargetDirectory());
     if (!targetDirectory.exists()) {
       targetDirectory.mkdirs();
     }
 
-    File targetFile = new File(getTargetFile(fileDetail.getFileName()));
+    File targetFile = new File(getTargetFile(fileDetail.getName()));
 
     try {
-      FileUtils.copyInputStreamToFile(uploadedInputStream, targetFile);
+      FileUtils.copyInputStreamToFile(fileDetail.getInputStream(), targetFile);
       return ok();
     } catch (IOException e) {
       e.printStackTrace();

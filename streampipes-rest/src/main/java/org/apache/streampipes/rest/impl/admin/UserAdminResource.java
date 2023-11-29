@@ -20,33 +20,28 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.PrincipalType;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.utils.Utils;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/v2/admin/users")
-@Component
-public class UserAdminResource extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v2/admin/users")
+public class UserAdminResource extends AbstractAuthGuardedSpringRestResource {
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response getAllUsers(@QueryParam("type") String principalType) {
+  public ResponseEntity<List<Principal>> getAllUsers(@RequestParam("type") String principalType) {
     List<Principal> allPrincipals = new ArrayList<>();
     if (principalType != null && principalType.equals(PrincipalType.USER_ACCOUNT.name())) {
       allPrincipals.addAll(getUserStorage().getAllUserAccounts());

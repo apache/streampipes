@@ -35,22 +35,20 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-
+import java.util.List;
 import java.util.Map;
 
 public abstract class InvocablePipelineElementResource<
@@ -71,13 +69,12 @@ public abstract class InvocablePipelineElementResource<
 
   protected abstract String getInstanceId(String uri, String elementId);
 
-  @POST
-  @Path("{elementId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public jakarta.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId,
-                                                 K graph) {
+  @PostMapping(
+      path = "{elementId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> invokeRuntime(@PathVariable("elementId") String elementId,
+                                         @RequestBody K graph) {
 
     if (isDebug()) {
       LOG.info("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
@@ -109,13 +106,12 @@ public abstract class InvocablePipelineElementResource<
     return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
   }
 
-  @POST
-  @Path("{elementId}/configurations")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public jakarta.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
-                                                       RuntimeOptionsRequest req) {
+  @PostMapping(
+      path = "{elementId}/configurations",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> fetchConfigurations(@PathVariable("elementId") String elementId,
+                                                                    @RequestBody RuntimeOptionsRequest req) {
 
     T declarer = getDeclarerById(elementId);
     RuntimeOptionsResponse responseOptions;
@@ -131,23 +127,21 @@ public abstract class InvocablePipelineElementResource<
             new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
         return ok(responseOptions);
       } else {
-        return jakarta.ws.rs.core.Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
       }
     } catch (SpConfigurationException e) {
-      return jakarta.ws.rs.core.Response
+      return ResponseEntity
           .status(HttpStatus.SC_BAD_REQUEST)
-          .entity(e)
-          .build();
+          .body(e);
     }
   }
 
-  @POST
-  @Path("{elementId}/output")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public jakarta.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId,
-                                                       K runtimeOptionsRequest) {
+  @PostMapping(
+      path = "{elementId}/output",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> fetchOutputStrategy(@PathVariable("elementId") String elementId,
+                                                         @RequestBody K runtimeOptionsRequest) {
     try {
       //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
       ResolvesContainerProvidedOutputStrategy<K, W> resolvesOutput =
@@ -163,11 +157,9 @@ public abstract class InvocablePipelineElementResource<
 
 
   // TODO move endpoint to /elementId/instances/runningInstanceId
-  @DELETE
-  @Path("{elementId}/{runningInstanceId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public jakarta.ws.rs.core.Response detach(@PathParam("elementId") String elementId,
-                                          @PathParam("runningInstanceId") String runningInstanceId) {
+  @DeleteMapping(path = "{elementId}/{runningInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response> detach(@PathVariable("elementId") String elementId,
+                                         @PathVariable("runningInstanceId") String runningInstanceId) {
 
     IStreamPipesRuntime<?, ?> runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
 
@@ -184,10 +176,8 @@ public abstract class InvocablePipelineElementResource<
     return ok(new Response(elementId, false, "Could not find the running instance with id: " + runningInstanceId));
   }
 
-  @GET
-  @Path("{elementId}/instances")
-  @Produces(MediaType.APPLICATION_JSON)
-  public jakarta.ws.rs.core.Response listRunningInstances(@PathParam("elementId") String elementId) {
+  @GetMapping(path = "{elementId}/instances", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<String>> listRunningInstances(@PathVariable("elementId") String elementId) {
     return ok(RunningInstances.INSTANCE.getRunningInstanceIdsForElement(elementId));
   }
 

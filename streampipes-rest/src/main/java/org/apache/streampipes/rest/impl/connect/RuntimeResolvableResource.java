@@ -27,21 +27,19 @@ import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
-
-@Path("/v2/connect/master/resolvable")
+@RestController
+@RequestMapping("/api/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
@@ -53,13 +51,12 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
     this.workerUrlProvider = new WorkerUrlProvider();
   }
 
-  @POST
-  @Path("{id}/configurations")
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response fetchConfigurations(@PathParam("id") String appId,
-                                      RuntimeOptionsRequest runtimeOptionsRequest) {
+  @PostMapping(
+      path = "{id}/configurations",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> fetchConfigurations(@PathVariable("id") String appId,
+                                               @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
       String workerEndpoint = workerUrlProvider.getWorkerBaseUrl(appId);

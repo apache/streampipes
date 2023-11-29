@@ -23,51 +23,39 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.Category;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.storage.management.StorageManager;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/categories")
-public class PipelineElementCategory extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/categories")
+public class PipelineElementCategory extends AbstractAuthGuardedSpringRestResource {
 
-  @GET
-  @Path("/ep")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getEps() {
+  @GetMapping(path = "/ep", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<Category>> getEps() {
     return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllDataStreams()));
   }
 
-  @GET
-  @Path("/epa")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getEpaCategories() {
+  @GetMapping(path = "/epa", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<DataProcessorType[]> getEpaCategories() {
     return ok(DataProcessorType.values());
   }
 
-  @GET
-  @Path("/adapter")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getAdapterCategories() {
+  @GetMapping(path = "/adapter", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AdapterType[]> getAdapterCategories() {
     return ok(AdapterType.values());
   }
 
-  @GET
-  @Path("/ec")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getEcCategories() {
+  @GetMapping(path = "/ec", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<DataSinkType[]> getEcCategories() {
     return ok(DataSinkType.values());
   }
 

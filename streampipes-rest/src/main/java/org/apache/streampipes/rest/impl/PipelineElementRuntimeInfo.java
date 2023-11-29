@@ -21,24 +21,24 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/pipeline-element/runtime")
-public class PipelineElementRuntimeInfo extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/pipeline-element/runtime")
+public class PipelineElementRuntimeInfo extends AbstractSpringRestResource {
 
-  @POST
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response getRuntimeInfo(SpDataStream spDataStream) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<?> getRuntimeInfo(@RequestBody SpDataStream spDataStream) {
     try {
       return ok(Operations.getRuntimeInfo(spDataStream));
     } catch (SpRuntimeException e) {

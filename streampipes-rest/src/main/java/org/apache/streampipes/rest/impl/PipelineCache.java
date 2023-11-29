@@ -18,29 +18,29 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/pipeline-cache")
-public class PipelineCache extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v2/pipeline-cache")
+public class PipelineCache extends AbstractAuthGuardedSpringRestResource {
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateCachedPipeline(String rawPipelineModel) {
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> updateCachedPipeline(@RequestBody String rawPipelineModel) {
     PipelineCacheManager.updateCachedPipeline(getAuthenticatedUsername(), rawPipelineModel);
     return ok();
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getCachedPipeline() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getCachedPipeline() {
     String result = PipelineCacheManager.getCachedPipeline(getAuthenticatedUsername());
     if (result != null) {
       return ok(result);
@@ -49,9 +49,8 @@ public class PipelineCache extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response removePipelineFromCache() {
+  @DeleteMapping
+  public ResponseEntity<Void> removePipelineFromCache() {
     PipelineCacheManager.removeCachedPipeline(getAuthenticatedUsername());
     return ok();
   }

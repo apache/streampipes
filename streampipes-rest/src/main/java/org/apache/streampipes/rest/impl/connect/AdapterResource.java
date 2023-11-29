@@ -25,37 +25,37 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.DefaultValue;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/connect/master/adapters")
+@RestController
+@RequestMapping("/api/v2/connect/master/adapters")
 public class AdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
@@ -64,11 +64,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     super(AdapterMasterManagement::new);
   }
 
-  @POST
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public Response addAdapter(AdapterDescription adapterDescription) {
+  public ResponseEntity<? extends Message> addAdapter(@RequestBody AdapterDescription adapterDescription) {
     var principalSid = getAuthenticatedUserSid();
     var username = getAuthenticatedUsername();
     String adapterId;
@@ -85,11 +83,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterId));
   }
 
-  @PUT
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @PutMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public Response updateAdapter(AdapterDescription adapterDescription) {
+  public ResponseEntity<? extends Message> updateAdapter(@RequestBody AdapterDescription adapterDescription) {
     var updateManager = new AdapterUpdateManagement(managementService);
     try {
       updateManager.updateAdapter(adapterDescription);
@@ -101,24 +99,22 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterDescription.getElementId()));
   }
 
-  @PUT
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @PutMapping(
+      path = "pipeline-migration-preflight",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  @Path("pipeline-migration-preflight")
-  public Response performPipelineMigrationPreflight(AdapterDescription adapterDescription) {
+  public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
+      @RequestBody AdapterDescription adapterDescription) {
     var updateManager = new AdapterUpdateManagement(managementService);
     var migrations = updateManager.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);
   }
 
-  @GET
-  @JacksonSerialized
-  @Path("/{id}")
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
-  public Response getAdapter(@PathParam("id") String adapterId) {
+  public ResponseEntity<?> getAdapter(@PathVariable("id") String adapterId) {
 
     try {
       AdapterDescription adapterDescription = getAdapterDescription(adapterId);
@@ -130,12 +126,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     }
   }
 
-  @POST
-  @JacksonSerialized
-  @Path("/{id}/stop")
-  @Produces(MediaType.APPLICATION_JSON)
+  @PostMapping(path = "/{id}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public Response stopAdapter(@PathParam("id") String adapterId) {
+  public ResponseEntity<?> stopAdapter(@PathVariable("id") String adapterId) {
     try {
       managementService.stopStreamAdapter(adapterId);
       return ok(Notifications.success("Adapter started"));
@@ -145,12 +138,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     }
   }
 
-  @POST
-  @JacksonSerialized
-  @Path("/{id}/start")
-  @Produces(MediaType.APPLICATION_JSON)
+  @PostMapping(path = "/{id}/start", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public Response startAdapter(@PathParam("id") String adapterId) {
+  public ResponseEntity<?> startAdapter(@PathVariable("id") String adapterId) {
     try {
       managementService.startStreamAdapter(adapterId);
       return ok(Notifications.success("Adapter stopped"));
@@ -160,14 +150,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     }
   }
 
-  @DELETE
-  @JacksonSerialized
-  @Path("/{id}")
-  @Produces(MediaType.APPLICATION_JSON)
+  @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_DELETE_ADAPTER_PRIVILEGE)
-  public Response deleteAdapter(@PathParam("id") String elementId,
-                                @QueryParam("deleteAssociatedPipelines") @DefaultValue("false")
-                                boolean deleteAssociatedPipelines) {
+  public ResponseEntity<?> deleteAdapter(@PathVariable("id") String elementId,
+                                         @RequestParam(value = "deleteAssociatedPipelines", defaultValue = "false")
+                                         boolean deleteAssociatedPipelines) {
     List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
     IPipelineStorage pipelineStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
 
@@ -184,7 +171,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
           pipelinesUsingAdapter.stream().map(pipelineId -> pipelineStorageAPI.getPipeline(pipelineId).getName())
               .collect(
                   Collectors.toList());
-      return Response.status(HttpStatus.SC_CONFLICT).entity(String.join(", ", namesOfPipelinesUsingAdapter)).build();
+      return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(String.join(", ", namesOfPipelinesUsingAdapter));
     } else {
       PermissionResourceManager permissionResourceManager = new PermissionResourceManager();
       // find out the names of pipelines that have an owner and the owner is not the current user
@@ -213,22 +200,19 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         }
       } else {
         // otherwise, hint the user the names of pipelines using the adapter but not owned by the user
-        return Response.status(HttpStatus.SC_CONFLICT).entity(String.join(", ", namesOfPipelinesNotOwnedByUser))
-            .build();
+        return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(String.join(", ", namesOfPipelinesNotOwnedByUser));
       }
     }
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
-  public List<AdapterDescription> getAllAdapters() {
+  public ResponseEntity<?> getAllAdapters() {
     try {
-      return managementService.getAllAdapterInstances();
+      return ok(managementService.getAllAdapterInstances());
     } catch (AdapterException e) {
       LOG.error("Error while getting all adapters", e);
-      throw new WebApplicationException(500);
+      return ResponseEntity.status(500).build();
     }
   }
 

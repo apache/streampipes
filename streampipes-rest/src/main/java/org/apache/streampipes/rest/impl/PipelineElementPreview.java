@@ -20,39 +20,37 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.preview.PipelinePreview;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/pipeline-element-preview")
-public class PipelineElementPreview extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/pipeline-element-preview")
+public class PipelineElementPreview extends AbstractAuthGuardedSpringRestResource {
 
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response requestPipelinePreview(Pipeline pipeline) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<PipelinePreviewModel> requestPipelinePreview(@RequestBody Pipeline pipeline) {
     PipelinePreviewModel previewModel = new PipelinePreview().initiatePreview(pipeline);
 
     return ok(previewModel);
   }
 
-  @GET
-  @Path("{previewId}/{pipelineElementDomId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response getPipelinePreviewResult(@PathParam("previewId") String previewId,
-                                           @PathParam("pipelineElementDomId") String pipelineElementDomId) {
+  @GetMapping(path = "{previewId}/{pipelineElementDomId}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getPipelinePreviewResult(@PathVariable("previewId") String previewId,
+                                           @PathVariable("pipelineElementDomId") String pipelineElementDomId) {
     try {
       String runtimeInfo = new PipelinePreview().getPipelineElementPreview(previewId, pipelineElementDomId);
       return ok(runtimeInfo);
@@ -61,11 +59,10 @@ public class PipelineElementPreview extends AbstractRestResource {
     }
   }
 
-  @DELETE
-  @Path("{previewId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public void deletePipelinePreviewRequest(@PathParam("previewId") String previewId) {
+  @DeleteMapping(path = "{previewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> deletePipelinePreviewRequest(@PathVariable("previewId") String previewId) {
     new PipelinePreview().deletePreview(previewId);
+    return ok();
   }
 
 }

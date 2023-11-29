@@ -22,63 +22,60 @@ import org.apache.streampipes.manager.function.FunctionRegistrationService;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
+import org.apache.streampipes.model.monitoring.SpMetricsEntry;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.List;
 
-@Path("/v2/functions")
-public class FunctionsResource extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v2/functions")
+public class FunctionsResource extends AbstractAuthGuardedSpringRestResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getActiveFunctions() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Collection<FunctionDefinition>> getActiveFunctions() {
     return ok(FunctionRegistrationService.INSTANCE.getAllFunctions());
   }
 
-  @GET
-  @Path("{functionId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getFunction(@PathParam("functionId") String functionId) {
+  @GetMapping(path = "{functionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<FunctionDefinition> getFunction(@PathVariable("functionId") String functionId) {
     return ok(FunctionRegistrationService.INSTANCE.getFunction(functionId));
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response registerFunctions(List<FunctionDefinition> functions) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<SuccessMessage> registerFunctions(@RequestBody List<FunctionDefinition> functions) {
     functions.forEach(FunctionRegistrationService.INSTANCE::registerFunction);
     return ok(Notifications.success("Function successfully registered"));
   }
 
-  @DELETE
-  @Path("{functionId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response deregisterFunction(@PathParam("functionId") String functionId) {
+  @DeleteMapping(path = "{functionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SuccessMessage> deregisterFunction(@PathVariable("functionId") String functionId) {
     FunctionRegistrationService.INSTANCE.deregisterFunction(functionId);
     return ok(Notifications.success("Function successfully deregistered"));
   }
 
-  @GET
-  @Path("{functionId}/metrics")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getFunctionMetrics(@PathParam("functionId") String functionId) {
+  @GetMapping(path = "{functionId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SpMetricsEntry> getFunctionMetrics(@PathVariable("functionId") String functionId) {
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(functionId));
   }
 
-  @GET
-  @Path("{functionId}/logs")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getFunctionLogs(@PathParam("functionId") String functionId) {
+  @GetMapping(path = "{functionId}/logs")
+  public ResponseEntity<List<SpLogEntry>> getFunctionLogs(@PathVariable("functionId") String functionId) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(functionId));
   }
 }

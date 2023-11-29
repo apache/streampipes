@@ -20,32 +20,31 @@ package org.apache.streampipes.rest.impl;
 
 
 import org.apache.streampipes.model.labeling.Category;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Path("/v2/labeling/category")
-public class CategoryResource extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/labeling/category")
+public class CategoryResource extends AbstractSpringRestResource {
 
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getAll() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<Category>> getAll() {
     return ok(StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getCategoryStorageAPI()
@@ -53,11 +52,11 @@ public class CategoryResource extends AbstractRestResource {
     );
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response add(Category category) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Category> add(@RequestBody Category category) {
     String categoryId = StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getCategoryStorageAPI()
@@ -68,23 +67,20 @@ public class CategoryResource extends AbstractRestResource {
         .getCategoryStorageAPI().getCategory(categoryId));
   }
 
-  @GET
-  @Path("/{categoryId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getCategory(@PathParam("categoryId") String categoryId) {
+  @GetMapping(path = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Category> getCategory(@PathVariable("categoryId") String categoryId) {
     return ok(StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getCategoryStorageAPI()
         .getCategory(categoryId));
   }
 
-  @PUT
-  @Path("/{categoryId}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response update(@PathParam("categoryId") String categoryId, Category category) {
+  @PutMapping(
+      path = "/{categoryId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> update(@PathVariable("categoryId") String categoryId,
+                                  @RequestBody Category category) {
     if (!categoryId.equals(category.getId())) {
       String resString = "CategoryId not the same as in message body";
       Map<String, Object> errorDetails = new HashMap<>();
@@ -101,11 +97,8 @@ public class CategoryResource extends AbstractRestResource {
         .getCategoryStorageAPI().getCategory(categoryId));
   }
 
-  @DELETE
-  @Path("/{categoryId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response delete(@PathParam("categoryId") String key) {
+  @DeleteMapping(path = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> delete(@PathVariable("categoryId") String key) {
     StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getCategoryStorageAPI()

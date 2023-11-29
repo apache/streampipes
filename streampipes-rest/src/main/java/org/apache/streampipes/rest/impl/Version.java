@@ -19,30 +19,29 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.info.SystemInfoProvider;
 import org.apache.streampipes.manager.info.VersionInfoProvider;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.model.client.version.SystemInfo;
+import org.apache.streampipes.model.client.version.VersionInfo;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+@RestController
+@RequestMapping("/api/v2/info")
+public class Version extends AbstractAuthGuardedSpringRestResource {
 
-@Path("/v2/info")
-public class Version extends AbstractAuthGuardedRestResource {
-
-  @GET
-  @Path("/versions")
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(path = "/versions", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Provides health-check and information about current backend version.", tags = {"Version"})
-  public Response getVersionInfo() {
+  public ResponseEntity<VersionInfo> getVersionInfo() {
     return ok(new VersionInfoProvider().makeVersionInfo());
   }
 
-  @GET
-  @Path("/system")
-  public Response getSystemInfo() {
+  @GetMapping(path = "/system", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SystemInfo> getSystemInfo() {
     return ok(new SystemInfoProvider().getSystemInfo());
   }
 

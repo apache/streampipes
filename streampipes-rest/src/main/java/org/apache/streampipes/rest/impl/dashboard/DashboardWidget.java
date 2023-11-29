@@ -19,63 +19,57 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/dashboard/widgets")
-public class DashboardWidget extends AbstractRestResource {
+import java.util.List;
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllDashboardWidgets() {
+@RestController
+@RequestMapping("/api/v2/dashboard/widgets")
+public class DashboardWidget extends AbstractSpringRestResource {
+
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<DashboardWidgetModel>> getAllDashboardWidgets() {
     return ok(getDashboardWidgetStorage().getAllDashboardWidgets());
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{widgetId}")
-  public Response getDashboardWidget(@PathParam("widgetId") String widgetId) {
+  @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<DashboardWidgetModel> getDashboardWidget(@PathVariable("widgetId") String widgetId) {
     return ok(getDashboardWidgetStorage().getDashboardWidget(widgetId));
   }
 
-  @PUT
-  @JacksonSerialized
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{widgetId}")
-  public Response modifyDashboardWidget(DashboardWidgetModel dashboardWidgetModel) {
+  @PutMapping(
+      path = "/{widgetId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> modifyDashboardWidget(@RequestBody DashboardWidgetModel dashboardWidgetModel) {
     getDashboardWidgetStorage().updateDashboardWidget(dashboardWidgetModel);
     return ok();
   }
 
-  @DELETE
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{widgetId}")
-  public Response deleteDashboardWidget(@PathParam("widgetId") String widgetId) {
+  @DeleteMapping(path = "/{widgetId}")
+  public ResponseEntity<Void> deleteDashboardWidget(@PathVariable("widgetId") String widgetId) {
     getDashboardWidgetStorage().deleteDashboardWidget(widgetId);
     return ok();
   }
 
-  @POST
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response createDashboardWidget(DashboardWidgetModel dashboardWidgetModel) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<DashboardWidgetModel> createDashboardWidget(
+      @RequestBody DashboardWidgetModel dashboardWidgetModel) {
     String widgetId = getDashboardWidgetStorage().storeDashboardWidget(dashboardWidgetModel);
     return ok(getDashboardWidgetStorage().getDashboardWidget(widgetId));
   }

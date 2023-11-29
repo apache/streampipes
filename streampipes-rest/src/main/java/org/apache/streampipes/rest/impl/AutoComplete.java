@@ -18,23 +18,24 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 import org.apache.streampipes.vocabulary.SemanticTypeRegistry;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/autocomplete")
-public class AutoComplete extends AbstractRestResource {
+import java.util.List;
 
-  @GET
-  @Path("semantic-type")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getSemanticTypes(@QueryParam("text") String text) {
+@RestController
+@RequestMapping("/api/v2/autocomplete")
+public class AutoComplete extends AbstractSpringRestResource {
+
+  @GetMapping(path = "semantic-type", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<String>> getSemanticTypes(@RequestParam("text") String text) {
     return ok(SemanticTypeRegistry.INSTANCE.matches(text));
   }
 

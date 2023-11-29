@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({StreamPipesResourceConfig.class,
+@Import({
     WelcomePageController.class,
     StreamPipesPasswordEncoder.class,
     WebSecurityConfig.class,

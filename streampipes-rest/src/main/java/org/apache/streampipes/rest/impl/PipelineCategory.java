@@ -18,37 +18,38 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/pipelinecategories")
-public class PipelineCategory extends AbstractRestResource {
+import java.util.List;
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getCategories() {
+@RestController
+@RequestMapping("/api/v2/pipelinecategories")
+public class PipelineCategory extends AbstractSpringRestResource {
+
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<org.apache.streampipes.model.pipeline.PipelineCategory>> getCategories() {
     return ok(getPipelineCategoryStorage()
         .getPipelineCategories());
   }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response addCategory(org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<? extends Message> addCategory(@RequestBody org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
     boolean success = getPipelineCategoryStorage()
         .addPipelineCategory(pipelineCategory);
     if (success) {
@@ -58,11 +59,8 @@ public class PipelineCategory extends AbstractRestResource {
     }
   }
 
-  @DELETE
-  @Path("/{categoryId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response removeCategory(@PathParam("categoryId") String categoryId) {
+  @DeleteMapping(path = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<? extends Message> removeCategory(@PathVariable("categoryId") String categoryId) {
     boolean success = getPipelineCategoryStorage()
         .deletePipelineCategory(categoryId);
     if (success) {

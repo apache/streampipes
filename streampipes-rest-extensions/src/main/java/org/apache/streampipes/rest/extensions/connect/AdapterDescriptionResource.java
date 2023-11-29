@@ -21,26 +21,23 @@ package org.apache.streampipes.rest.extensions.connect;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@Path("/api/v1/worker/adapters")
+@RestController
+@RequestMapping("/api/v1/worker/adapters")
 public class AdapterDescriptionResource extends AbstractSharedRestInterface {
 
-  @GET
-  @Path("/{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getAdapterDescription(@PathParam("id") String id) {
+  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getAdapterDescription(@PathVariable("id") String id) {
     var adapterDescriptionOpt = DeclarersSingleton.getInstance().getAdapter(id);
     if (adapterDescriptionOpt.isPresent()) {
       try {

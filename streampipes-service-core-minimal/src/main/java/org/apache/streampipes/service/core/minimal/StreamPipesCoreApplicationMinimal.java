@@ -23,7 +23,6 @@ import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.core.StreamPipesCoreApplication;
 import org.apache.streampipes.service.core.StreamPipesPasswordEncoder;
-import org.apache.streampipes.service.core.StreamPipesResourceConfig;
 import org.apache.streampipes.service.core.WebSecurityConfig;
 import org.apache.streampipes.service.core.WelcomePageController;
 
@@ -36,7 +35,7 @@ import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({StreamPipesResourceConfig.class,
+@Import({//StreamPipesResourceConfig.class,
     WelcomePageController.class,
     StreamPipesPasswordEncoder.class,
     WebSecurityConfig.class,

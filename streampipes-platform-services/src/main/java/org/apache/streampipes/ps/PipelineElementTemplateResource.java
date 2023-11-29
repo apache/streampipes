@@ -24,8 +24,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,25 +33,24 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import java.util.List;
 
-@Path("/v2/pipeline-element-templates")
-public class PipelineElementTemplateResource extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v2/pipeline-element-templates")
+public class PipelineElementTemplateResource extends AbstractSpringRestResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all pipeline element templates",
       tags = {"Pipeline Element Templates"},
       responses = {
@@ -62,8 +60,9 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                   array = @ArraySchema(schema = @Schema(implementation = PipelineElementTemplate.class)))
           })
       })
-  public Response getAll(@Parameter(description = "Filter all templates by this appId")
-                         @QueryParam("appId") String appId) {
+  public ResponseEntity<List<PipelineElementTemplate>> getAll(
+      @Parameter(description = "Filter all templates by this appId")
+      @RequestParam("appId") String appId) {
     if (appId == null) {
       return ok(getPipelineElementTemplateStorage().getAll());
     } else {
@@ -71,10 +70,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
     }
   }
 
-  @GET
-  @Path("{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a single pipeline element template by a given id",
       tags = {"Pipeline Element Templates"},
       responses = {
@@ -85,8 +81,8 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
           }),
           @ApiResponse(responseCode = "400", description = "Template with given id not found")
       })
-  public Response getById(@Parameter(description = "The id of the pipeline element template", required = true)
-                          @PathParam("id") String s) {
+  public ResponseEntity<?> getById(@Parameter(description = "The id of the pipeline element template", required = true)
+                                   @PathVariable("id") String s) {
     try {
       return ok(getPipelineElementTemplateStorage().getElementById(s));
     } catch (RuntimeException e) {
@@ -94,26 +90,20 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
     }
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Store a new pipeline element template",
       tags = {"Pipeline Element Templates"},
       responses = {
           @ApiResponse(responseCode = "200", description = "Template successfully stored")
       })
-  public Response create(@RequestBody(description = "The pipeline element template to be stored",
+  public ResponseEntity<Void> create(@RequestBody(description = "The pipeline element template to be stored",
       content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
-                         PipelineElementTemplate entity) {
+                                     PipelineElementTemplate entity) {
     getPipelineElementTemplateStorage().createElement(entity);
     return ok();
   }
 
-  @PUT
-  @Path("{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @PutMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Update a pipeline element template",
       tags = {"Pipeline Element Templates"},
       responses = {
@@ -124,8 +114,9 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
           }, responseCode = "200", description = "Template successfully updated"),
           @ApiResponse(responseCode = "400", description = "Template with given id not found")
       })
-  public Response update(@Parameter(description = "The id of the pipeline element template", required = true)
-                         @PathParam("id") String id, PipelineElementTemplate entity) {
+  public ResponseEntity<?> update(@Parameter(description = "The id of the pipeline element template", required = true)
+                                  @PathVariable("id") String id,
+                                  @RequestBody PipelineElementTemplate entity) {
     try {
       if (id.equals(entity.getCouchDbId())) {
         return ok(getPipelineElementTemplateStorage().updateElement(entity));
@@ -137,26 +128,25 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
     }
   }
 
-  @DELETE
-  @Path("{id}")
+  @DeleteMapping(path = "{id}")
   @Operation(summary = "Delete a pipeline element template by a given id",
       tags = {"Pipeline Element Templates"},
       responses = {
           @ApiResponse(responseCode = "200", description = "Pipeline element template successfully deleted"),
           @ApiResponse(responseCode = "400", description = "Template with given id not found")
       })
-  public Response delete(@Parameter(description = "The id of the pipeline element template", required = true)
-                         @PathParam("id") String s) {
+  public ResponseEntity<Void> delete(
+      @Parameter(description = "The id of the pipeline element template", required = true)
+      @PathVariable("id") String s) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(s);
     getPipelineElementTemplateStorage().deleteElement(template);
     return ok();
   }
 
-  @POST
-  @Path("{id}/sink")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @PostMapping(
+      path = "{id}/sink",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Configure a data sink with a pipeline element template.",
       tags = {"Pipeline Element Templates"},
       responses = {
@@ -166,14 +156,14 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                   schema = @Schema(implementation = DataSinkInvocation.class))
           }, responseCode = "200", description = "The configured data sink invocation model"),
       })
-  public Response getPipelineElementForTemplate(
+  public ResponseEntity<DataSinkInvocation> getPipelineElementForTemplate(
       @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathParam("id") String id,
+      @PathVariable("id") String id,
 
       @Parameter(
           description = "Overwrite the name and description of the pipeline element"
               + "with the labels given in the pipeline element template")
-      @QueryParam("overwriteNames") String overwriteNameAndDescription,
+      @RequestParam("overwriteNames") String overwriteNameAndDescription,
 
       @RequestBody(description = "The data sink invocation that should be configured with the template contents",
           content = @Content(schema = @Schema(implementation = DataSinkInvocation.class)))
@@ -183,11 +173,10 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
         .applyTemplateOnPipelineElement());
   }
 
-  @POST
-  @Path("{id}/processor")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @PostMapping(
+      path = "{id}/processor",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Configure a data processor with a pipeline element template.",
       tags = {"Pipeline Element Templates"},
       responses = {
@@ -197,13 +186,13 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                   schema = @Schema(implementation = DataProcessorInvocation.class))
           }, responseCode = "200", description = "The configured data processor invocation model"),
       })
-  public Response getPipelineElementForTemplate(
+  public ResponseEntity<DataProcessorInvocation> getPipelineElementForTemplate(
       @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathParam("id") String id,
+      @PathVariable("id") String id,
 
       @Parameter(description = "Overwrite the name and description of the pipeline element with"
           + "the labels given in the pipeline element template")
-      @QueryParam("overwriteNames") String overwriteNameAndDescription,
+      @RequestParam("overwriteNames") String overwriteNameAndDescription,
 
       @RequestBody(description = "The data processor invocation that should be configured with the template contents",
           content = @Content(schema = @Schema(implementation = DataProcessorInvocation.class)))
@@ -213,11 +202,10 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
         .applyTemplateOnPipelineElement());
   }
 
-  @POST
-  @Path("{id}/adapter")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @PostMapping(
+      path = "{id}/adapter",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Configure an adapter with a pipeline element template.",
       tags = {"Pipeline Element Templates"},
       responses = {
@@ -227,13 +215,13 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                   schema = @Schema(implementation = AdapterDescription.class))
           }, responseCode = "200", description = "The configured adapter model"),
       })
-  public Response getPipelineElementForTemplate(
+  public ResponseEntity<AdapterDescription> getPipelineElementForTemplate(
       @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathParam("id") String id,
+      @PathVariable("id") String id,
 
       @Parameter(description = "Overwrite the name and description of the pipeline element"
           + "with the labels given in the pipeline element template")
-      @QueryParam("overwriteNames") String overwriteNameAndDescription,
+      @RequestParam("overwriteNames") String overwriteNameAndDescription,
 
       @RequestBody(description = "The adapter that should be configured with the template contents",
           content = @Content(schema = @Schema(implementation = AdapterDescription.class)))

@@ -24,27 +24,27 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Path("/v2/pipeline-templates")
-public class PipelineTemplate extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v2/pipeline-templates")
+public class PipelineTemplate extends AbstractAuthGuardedSpringRestResource {
 
-  @GET
-  @Path("/streams")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAvailableDataStreams() {
+  @GetMapping(path = "/streams", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SpDataStreamContainer> getAvailableDataStreams() {
     List<SpDataStream> sources = getPipelineElementRdfStorage().getAllDataStreams();
     List<SpDataStream> datasets = new ArrayList<>();
 
@@ -55,11 +55,11 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     return ok((new SpDataStreamContainer(datasets)));
   }
 
-  @GET
-  @Path("/invocation")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getPipelineTemplateInvocation(@QueryParam("streamId") String streamId,
-                                                @QueryParam("templateId") String pipelineTemplateId) {
+  @GetMapping(
+      path = "/invocation",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getPipelineTemplateInvocation(@RequestParam("streamId") String streamId,
+                                                         @RequestParam("templateId") String pipelineTemplateId) {
     if (pipelineTemplateId != null) {
       SpDataStream dataStream = getDataStream(streamId);
       var pipelineTemplateDescriptionOpt = getPipelineTemplateDescription(pipelineTemplateId);
@@ -80,9 +80,9 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response generatePipeline(PipelineTemplateInvocation pipelineTemplateInvocation) {
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<PipelineOperationStatus> generatePipeline(
+      @RequestBody PipelineTemplateInvocation pipelineTemplateInvocation) {
 
     PipelineOperationStatus status = Operations
         .handlePipelineTemplateInvocation(getAuthenticatedUserSid(), pipelineTemplateInvocation);

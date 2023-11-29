@@ -18,22 +18,17 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.configuration.GeneralConfig;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
-import org.glassfish.jersey.media.multipart.BodyPart;
-import org.glassfish.jersey.media.multipart.MultiPart;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.StringWriter;
 import java.security.Key;
@@ -41,23 +36,19 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.Base64;
 
-@Path("/v2/admin/general-config")
-@Component
-public class GeneralConfigurationResource extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v2/admin/general-config")
+public class GeneralConfigurationResource extends AbstractAuthGuardedSpringRestResource {
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public GeneralConfig getGeneralConfiguration() {
     return getSpCoreConfigurationStorage().get().getGeneralConfig();
   }
 
-  @PUT
-  @JacksonSerialized
-  @Consumes(MediaType.APPLICATION_JSON)
+  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response updateGeneralConfiguration(GeneralConfig config) {
+  public ResponseEntity<Void> updateGeneralConfiguration(GeneralConfig config) {
     config.setConfigured(true);
     var storage = getSpCoreConfigurationStorage();
     var cfg = storage.get();
@@ -67,11 +58,10 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
     return ok();
   }
 
-  @GET
-  @Path("keys")
-  @Produces("multipart/mixed")
+  // TODO
+  @GetMapping(path = "keys", produces = "multipart/mixed")
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response generateKeyPair() throws Exception {
+  public ResponseEntity<?> generateKeyPair() throws Exception {
     KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
     kpg.initialize(2048);
     KeyPair keyPair = kpg.genKeyPair();
@@ -79,11 +69,24 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
     String publicKeyPem = exportKeyAsPem(keyPair.getPublic(), "PUBLIC");
     String privateKeyPem = exportKeyAsPem(keyPair.getPrivate(), "PRIVATE");
 
-    MultiPart multiPartEntity = new MultiPart()
-        .bodyPart(new BodyPart().entity(publicKeyPem))
-        .bodyPart(new BodyPart().entity(privateKeyPem));
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.MULTIPART_MIXED);
 
-    return Response.ok(multiPartEntity).build();
+    String boundary = "boundarysp";
+    headers.set(HttpHeaders.CONTENT_TYPE, "multipart/mixed; boundary=" + boundary);
+
+    // Construct the response body with multiple parts
+    String responseBody = "--" + boundary + "\r\n"
+        + "Content-Type: text/plain\r\n\r\n"
+        + publicKeyPem + "\r\n"
+        + "--" + boundary + "\r\n"
+        + "Content-Type: text/plain\r\n\r\n"
+        + privateKeyPem + "\r\n"
+        + "--" + boundary + "--";
+
+    return ResponseEntity.ok()
+        .headers(headers)
+        .body(responseBody.getBytes());
   }
 
   private String exportKeyAsPem(Key key, String keyType) {

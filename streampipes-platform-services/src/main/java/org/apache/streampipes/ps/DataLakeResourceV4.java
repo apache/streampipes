@@ -26,7 +26,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,21 +37,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.StreamingOutput;
-import jakarta.ws.rs.core.UriInfo;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,8 +74,9 @@ import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams
 import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
 import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
 
-@Path("v4/datalake")
-public class DataLakeResourceV4 extends AbstractRestResource {
+@RestController
+@RequestMapping("/api/v4/datalake")
+public class DataLakeResourceV4 extends AbstractSpringRestResource {
 
   private static final Logger logger = LoggerFactory.getLogger(DataLakeResourceV4.class);
 
@@ -96,26 +94,24 @@ public class DataLakeResourceV4 extends AbstractRestResource {
   }
 
 
-  @DELETE
-  @Path("/measurements/{measurementID}")
+  @DeleteMapping(path = "/measurements/{measurementID}")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {"Data Lake"},
       responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
           @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
-  public Response deleteData(
+  public ResponseEntity<Void> deleteData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathParam("measurementID") String measurementID
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate")
+      @PathVariable("measurementID") String measurementID
+      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam("startDate")
       Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate")
+      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam("endDate")
       Long endDate) {
 
     SpQueryResult result = this.dataLakeManagement.deleteData(measurementID, startDate, endDate);
     return ok();
   }
 
-  @DELETE
-  @Path("/measurements/{measurementID}/drop")
+  @DeleteMapping(path = "/measurements/{measurementID}/drop")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
       + "remove related event property",
       tags = {
@@ -127,9 +123,9 @@ public class DataLakeResourceV4 extends AbstractRestResource {
           @ApiResponse(
               responseCode = "400",
               description = "Measurement series with given id or related event property not found")})
-  public Response dropMeasurementSeries(
+  public ResponseEntity<?> dropMeasurementSeries(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathParam("measurementID") String measurementID) {
+      @PathVariable("measurementID") String measurementID) {
 
     boolean isSuccessDataLake = this.dataLakeManagement.deleteData(measurementID);
 
@@ -138,41 +134,38 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       if (isSuccessEventProperty) {
         return ok();
       } else {
-        return Response.status(Response.Status.NOT_FOUND)
-            .entity("Event property related to measurement series with given id not found.").build();
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body("Event property related to measurement series with given id not found.");
       }
     } else {
-      return Response.status(Response.Status.NOT_FOUND).entity("Measurement series with given id not found.").build();
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body("Measurement series with given id not found.");
     }
   }
 
-  @GET
-  @Path("/measurements")
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
               responseCode = "200",
               description = "array of stored measurement series",
               content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))})
-  public Response getAll() {
+  public ResponseEntity<List<DataLakeMeasure>> getAll() {
     List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
     return ok(allMeasurements);
   }
 
-  @GET
-  @Path("/measurements/{measurementId}/tags")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getTagValues(@PathParam("measurementId") String measurementId,
-                               @QueryParam("fields") String fields) {
+  @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
+                                                          @RequestParam("fields") String fields) {
     Map<String, Object> tagValues = dataLakeManagement.getTagValues(measurementId, fields);
     return ok(tagValues);
   }
 
 
-  @GET
-  @Path("/measurements/{measurementID}")
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get data from a single measurement series by a given id", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
@@ -181,56 +174,54 @@ public class DataLakeResourceV4 extends AbstractRestResource {
           @ApiResponse(
               responseCode = "200",
               description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
-  public Response getData(
+  public ResponseEntity<?> getData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathParam("measurementID") String measurementID
+      @PathVariable("measurementID") String measurementID
       , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
-      @QueryParam(QP_COLUMNS) String columns
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam(QP_START_DATE)
+      @RequestParam(QP_COLUMNS) String columns
+      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(QP_START_DATE)
       Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam(QP_END_DATE)
+      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(QP_END_DATE)
       Long endDate
-      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam(QP_PAGE)
+      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @RequestParam(QP_PAGE)
       Integer page
       , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results")
-      @QueryParam(QP_LIMIT) Integer limit
-      , @Parameter(in = ParameterIn.QUERY, description = "offset") @QueryParam(QP_OFFSET) Integer offset
+      @RequestParam(QP_LIMIT) Integer limit
+      , @Parameter(in = ParameterIn.QUERY, description = "offset") @RequestParam(QP_OFFSET) Integer offset
       , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation")
-      @QueryParam(QP_GROUP_BY) String groupBy
+      @RequestParam(QP_GROUP_BY) String groupBy
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "ordering of retrieved query results (ASC or DESC - default is ASC)")
-      @QueryParam(QP_ORDER) String order
+      @RequestParam(QP_ORDER) String order
       , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation")
-      @QueryParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
+      @RequestParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation")
-      @QueryParam(QP_TIME_INTERVAL) String timeInterval
-      , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @QueryParam(QP_COUNT_ONLY)
+      @RequestParam(QP_TIME_INTERVAL) String timeInterval
+      , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @RequestParam(QP_COUNT_ONLY)
       String countOnly
       ,
       @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload")
-      @QueryParam(QP_AUTO_AGGREGATE) boolean autoAggregate
+      @RequestParam(QP_AUTO_AGGREGATE) boolean autoAggregate
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "filter conditions (a comma-separated list of filter conditions"
               + "such as [field,operator,condition])")
-      @QueryParam(QP_FILTER) String filter
+      @RequestParam(QP_FILTER) String filter
       , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)")
-      @QueryParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
+      @RequestParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "the maximum amount of resulting events,"
               + "when too high the query status is set to TOO_MUCH_DATA")
-      @QueryParam(QP_MAXIMUM_AMOUNT_OF_EVENTS) Integer maximumAmountOfResults
-      , @Context UriInfo uriInfo) {
-
-    MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+      @RequestParam(QP_MAXIMUM_AMOUNT_OF_EVENTS) Integer maximumAmountOfResults,
+      @RequestParam Map<String, String> queryParams) {
 
     if (!(checkProvidedQueryParams(queryParams))) {
       return badRequest();
@@ -246,11 +237,11 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
   }
 
-  @POST
-  @Path("/query")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response getData(List<Map<String, String>> queryParams) {
+  @PostMapping(
+      path = "/query",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<SpQueryResult>> getData(List<Map<String, String>> queryParams) {
     var results = queryParams
         .stream()
         .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))
@@ -260,9 +251,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     return ok(results);
   }
 
-  @GET
-  @Path("/measurements/{measurementID}/download")
-  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
@@ -271,52 +260,51 @@ public class DataLakeResourceV4 extends AbstractRestResource {
           @ApiResponse(
               responseCode = "200",
               description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
-  public Response downloadData(
+  public ResponseEntity<?> downloadData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathParam("measurementID") String measurementID
+      @PathVariable("measurementID") String measurementID
       , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
-      @QueryParam(QP_COLUMNS) String columns
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam(QP_START_DATE)
+      @RequestParam(QP_COLUMNS) String columns
+      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(QP_START_DATE)
       Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam(QP_END_DATE)
+      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(QP_END_DATE)
       Long endDate
-      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @QueryParam(QP_PAGE)
+      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @RequestParam(QP_PAGE)
       Integer page
       , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results")
-      @QueryParam(QP_LIMIT) Integer limit
-      , @Parameter(in = ParameterIn.QUERY, description = "offset") @QueryParam(QP_OFFSET) Integer offset
+      @RequestParam(QP_LIMIT) Integer limit
+      , @Parameter(in = ParameterIn.QUERY, description = "offset") @RequestParam(QP_OFFSET) Integer offset
       , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation")
-      @QueryParam(QP_GROUP_BY) String groupBy
+      @RequestParam(QP_GROUP_BY) String groupBy
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "ordering of retrieved query results (ASC or DESC - default is ASC)")
-      @QueryParam(QP_ORDER) String order
+      @RequestParam(QP_ORDER) String order
       , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation")
-      @QueryParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
+      @RequestParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation")
-      @QueryParam(QP_TIME_INTERVAL) String timeInterval
+      @RequestParam(QP_TIME_INTERVAL) String timeInterval
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "format specification (csv, json - default is csv) for data download")
-      @QueryParam(QP_FORMAT) String format
+      @RequestParam(QP_FORMAT) String format
       , @Parameter(in = ParameterIn.QUERY, description = "csv delimiter (comma or semicolon)")
-      @QueryParam(QP_CSV_DELIMITER) String csvDelimiter
+      @RequestParam(QP_CSV_DELIMITER) String csvDelimiter
       , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)")
-      @QueryParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
+      @RequestParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "filter conditions (a comma-separated list of filter conditions"
               + "such as [field,operator,condition])")
-      @QueryParam(QP_FILTER) String filter
-      , @Context UriInfo uriInfo) {
+      @RequestParam(QP_FILTER) String filter
+      , @RequestParam Map<String, String> queryParams) {
 
-    MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
     if (!(checkProvidedQueryParams(queryParams))) {
       return badRequest();
@@ -327,33 +315,36 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       }
 
       OutputFormat outputFormat = format.equals("csv") ? OutputFormat.CSV : OutputFormat.JSON;
-      StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(
+      StreamingResponseBody streamingOutput = output -> dataLakeManagement.getDataAsStream(
           sanitizedParams,
           outputFormat,
           isIgnoreMissingValues(missingValueBehaviour),
           output);
 
-      return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
-          header("Content-Disposition", "attachment; filename=\"datalake." + outputFormat + "\"")
-          .build();
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+      headers.setContentDispositionFormData("attachment", "datalake." + outputFormat);
+
+      return ResponseEntity.ok()
+          .headers(headers)
+          .body(streamingOutput);
     }
   }
 
-  @DELETE
-  @Path("/measurements")
+  @DeleteMapping(path = "/measurements")
   @Operation(summary = "Remove all stored measurement series from Data Lake", tags = {"Data Lake"},
       responses = {
           @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")})
-  public Response removeAll() {
+  public ResponseEntity<?> removeAll() {
     boolean isSuccess = this.dataLakeManagement.deleteAllData();
-    return Response.ok(isSuccess).build();
+    return ResponseEntity.ok(isSuccess);
   }
 
-  private boolean checkProvidedQueryParams(MultivaluedMap<String, String> providedParams) {
+  private boolean checkProvidedQueryParams(Map<String, String> providedParams) {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
   }
 
-  private ProvidedRestQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {
+  private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();
     rawParams.forEach((key, value) -> queryParamMap.put(key, String.join(",", value)));
 

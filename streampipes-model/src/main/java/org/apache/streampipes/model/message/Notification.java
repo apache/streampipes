@@ -34,7 +34,8 @@ public class Notification {
     this.description = description;
   }
 
-  public Notification(String title, String description,
+  public Notification(String title,
+                      String description,
                       String additionalInformation) {
     super();
     this.title = title;
@@ -42,7 +43,8 @@ public class Notification {
     this.additionalInformation = additionalInformation;
   }
 
-  public Notification(NotificationType notificationType, String additionalInformation) {
+  public Notification(NotificationType notificationType,
+                      String additionalInformation) {
     this(notificationType.title(), notificationType.description(), additionalInformation);
   }
 

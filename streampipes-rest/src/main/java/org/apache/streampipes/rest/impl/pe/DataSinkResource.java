@@ -20,67 +20,53 @@ package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Path("/v2/actions")
-@Component
-public class DataSinkResource extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v2/actions")
+public class DataSinkResource extends AbstractAuthGuardedSpringRestResource {
 
-  @GET
-  @Path("/available")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.elementId, 'READ')")
   public List<DataSinkDescription> getAvailable() {
     return getDataSinkResourceManager().findAll();
   }
 
-  @GET
-  @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
-  @JacksonSerialized
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.belongsTo, 'READ')")
   public List<DataSinkInvocation> getOwn() {
     return getDataSinkResourceManager().findAllAsInvocation();
   }
 
-  @DELETE
-  @Path("/{elementId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
-  public Response removeOwn(@PathParam("elementId") String elementId) {
+  public ResponseEntity<Message> removeOwn(@PathVariable("elementId") String elementId) {
     getDataSinkResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
-  @Path("/{elementId}")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @GetMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  public Response getElement(@PathParam("elementId") String elementId) {
+  public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
       return ok(getDataSinkResourceManager().findAsInvocation(elementId));
     } catch (IllegalArgumentException e) {

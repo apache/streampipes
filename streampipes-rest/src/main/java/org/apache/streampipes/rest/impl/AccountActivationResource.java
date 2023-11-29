@@ -18,24 +18,24 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/activate-account")
-public class AccountActivationResource extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v2/activate-account")
+public class AccountActivationResource extends AbstractAuthGuardedSpringRestResource {
 
-  @GET
-  @Path("{recoveryCode}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response activateUserAccount(@PathParam("recoveryCode") String recoveryCode) {
+  @GetMapping(
+      path = "{recoveryCode}",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> activateUserAccount(@PathVariable("recoveryCode") String recoveryCode) {
     try {
       getSpResourceManager().manageUsers().activateAccount(recoveryCode);
       return ok();
