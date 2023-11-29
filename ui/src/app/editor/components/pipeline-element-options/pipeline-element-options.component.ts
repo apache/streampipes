@@ -17,8 +17,6 @@
  */
 
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
-import { JsplumbService } from '../../services/jsplumb.service';
-import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import { RestApi } from '../../../services/rest-api.service';
 import {
     Component,
@@ -41,6 +39,7 @@ import {
     SpDataStream,
     WildcardTopicDefinition,
 } from '@streampipes/platform-services';
+import { cloneDeep } from 'lodash';
 import { EditorService } from '../../services/editor.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
@@ -91,7 +90,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
     pipelineElementConfiguredObservable: Subscription;
 
-    JsplumbBridge: JsplumbBridge;
+    jsplumbBridge: JsplumbBridge;
 
     constructor(
         private objectProvider: ObjectProvider,
@@ -99,15 +98,13 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
         private dialogService: DialogService,
         private editorService: EditorService,
         private jsplumbFactoryService: JsplumbFactoryService,
-        private jsplumbService: JsplumbService,
-        private pipelineValidationService: PipelineValidationService,
         private restApi: RestApi,
     ) {
         this.recommendationsAvailable = false;
         this.possibleElements = [];
         this.recommendedElements = [];
         this.recommendationsShown = false;
-        this.JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
+        this.jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
     }
 
     ngOnInit() {
@@ -158,8 +155,8 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
         // this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
     }
 
-    initRecs(pipelineElementDomId) {
-        const clonedModel: PipelineElementConfig[] = this.deepCopy(
+    initRecs(pipelineElementDomId: string) {
+        const clonedModel: PipelineElementConfig[] = cloneDeep(
             this.rawPipelineModel,
         );
         const currentPipeline = this.objectProvider.makePipeline(clonedModel);
@@ -167,13 +164,13 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
             .recommendPipelineElement(currentPipeline, pipelineElementDomId)
             .subscribe(result => {
                 if (result.success) {
-                    this.possibleElements = this.deepCopy(
+                    this.possibleElements = cloneDeep(
                         this.pipelineElementRecommendationService.collectPossibleElements(
                             this.allElements,
                             result.possibleElements,
                         ),
                     );
-                    this.recommendedElements = this.deepCopy(
+                    this.recommendedElements = cloneDeep(
                         this.pipelineElementRecommendationService.populateRecommendedList(
                             this.allElements,
                             result.recommendedElements,
@@ -203,16 +200,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
         e.stopPropagation();
     }
 
-    isRootElement() {
-        return (
-            this.JsplumbBridge.getConnections({
-                source: document.getElementById(
-                    this.pipelineElement.payload.dom,
-                ),
-            }).length === 0
-        );
-    }
-
     isWildcardTopic() {
         return (
             (this.pipelineElement.payload as SpDataStream).eventGrounding
@@ -223,29 +210,5 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.pipelineElementConfiguredObservable.unsubscribe();
-    }
-
-    deepCopy(obj) {
-        let clone: any = {};
-        if (
-            obj === null ||
-            typeof obj !== 'object' ||
-            Array.isArray(obj) ||
-            obj === undefined
-        ) {
-            return obj;
-        }
-
-        if (Array.isArray(obj)) {
-            clone = obj.map(item => this.deepCopy(item));
-        }
-
-        for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                clone[key] = this.deepCopy(obj[key]);
-            }
-        }
-
-        return clone;
     }
 }
