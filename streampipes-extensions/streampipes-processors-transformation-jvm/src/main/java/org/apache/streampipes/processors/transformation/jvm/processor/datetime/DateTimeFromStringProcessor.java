@@ -91,10 +91,12 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
     String dateTimeString = event.getFieldBySelector(streamInputDateTimeFieldName).getAsPrimitive().getAsString();
     DateTimeFormatter dtFormatter = DateTimeFormatter.ISO_DATE_TIME;
     ZonedDateTime zdt = parseDateTime(dateTimeString, dtFormatter);
-
     event.addField(OUTPUT_DATETIME_RUNTIME_NAME, zdt);
+
+    // workaround to enable rendering temporarily
     event.addField(OUTPUT_TIMESTAMP_RUNTIME_NAME, zdt.toInstant().toEpochMilli());
     event.addField(OUTPUT_TIMEZONE_RUNTIME_NAME, selectedTimeZone);
+
     collector.collect(event);
   }
 
