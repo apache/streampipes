@@ -98,7 +98,7 @@ streampipes env --set pipeline-element
 ```
 
 **Start** environment ( default: `dev` mode). Here the service definition in the selected environment is used to start the multi-container landscape.
-> **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `consul`, `couchdb`, `kafka` etc. to reach from the IDE when developing. If you don't want to map ports (except the UI port), then use the `--no-ports` flag.
+> **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `couchdb`, `kafka` etc. to reach from the IDE when developing. If you don't want to map ports (except the UI port), then use the `--no-ports` flag.
 
 ```bash
 streampipes up -d
@@ -120,12 +120,12 @@ streampipes down
 
 ## Additionally, useful commands
 
-**Start individual services only?** We got you! You chose a template that suits your needs and now you only want to start individual services from it, e.g. only Kafka and Consul.
+**Start individual services only?** We got you! You chose a template that suits your needs and now you only want to start individual services from it, e.g. only Kafka and CouchDB.
 
 > **NOTE**: the service names need to be present and match your current `.spenv` environment.
 
 ```bash
-streampipes up -d kafka consul
+streampipes up -d kafka couchdb
 ```
 
 **Get current environment** (if previously set using `streampipes env --set <environment>`).
@@ -162,8 +162,8 @@ streampipes start extensions-all-jvm
 
 **Restart** existing services
 ```bash
-# restart backend consul container
-streampipes restart backend consul
+# restart backend couchdb container
+streampipes restart backend couchdb 
 # restart existing services by removing and recreating container instance
 streampipes restart --force-create extensions-all-jvm
 ```

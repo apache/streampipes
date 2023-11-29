@@ -37,9 +37,9 @@ spec:
             claimName: {{ .Values.streampipes.core.persistence.claimName }}
       restartPolicy: {{ .Values.restartPolicy }}
       initContainers:
-        - name: init-wait-consul-couchdb
+        - name: init-wait-couchdb
           image: alpine
-          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.consul.service.name }} {{ .Values.external.consul.service.webPort }} && nc -zvw1 {{ .Values.external.couchdb.service.name }} {{ .Values.external.couchdb.service.port }} && exit 0 || sleep 3; done; exit 1"]
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.couchdb.service.name }} {{ .Values.external.couchdb.service.port }} && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: {{ .Values.streampipes.core.appName }}
           image: {{ .Values.streampipes.registry }}/backend:{{ .Values.streampipes.version }}

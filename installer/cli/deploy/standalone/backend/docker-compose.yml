@@ -18,7 +18,6 @@ services:
   backend:
     image: ${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}
     depends_on:
-      - consul
       - couchdb
     volumes:
       - backend:/root/.streampipes

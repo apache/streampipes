@@ -33,7 +33,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-describe('ConsulConfigsPasswordComponent', () => {
+describe('ServiceConfigsPasswordComponent', () => {
     let fixture: ComponentFixture<ServiceConfigsPasswordComponent>;
 
     let configurationServiceStub: Partial<ConfigurationService>;
@@ -44,8 +44,8 @@ describe('ConsulConfigsPasswordComponent', () => {
 
     beforeEach(waitForAsync(() => {
         configurationServiceStub = {
-            adjustConfigurationKey(consulKey) {
-                let str1 = consulKey.replace(/SP/g, '');
+            adjustConfigurationKey(key) {
+                let str1 = key.replace(/SP/g, '');
                 str1 = str1.replace(/_/g, ' ');
                 if (str1.startsWith(' ')) {
                     str1 = str1.slice(1, str1.length);

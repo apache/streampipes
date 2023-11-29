@@ -100,13 +100,8 @@ export class ConfigurationService {
         );
     }
 
-    adjustConfigurationKey(consulKey) {
-        const removedKey = consulKey.substr(
-            consulKey.lastIndexOf('/') + 1,
-            consulKey.length,
-        );
-
-        // console.log(removedKey);
+    adjustConfigurationKey(key) {
+        const removedKey = key.substr(key.lastIndexOf('/') + 1, key.length);
 
         let str1 = removedKey.replace(/SP/g, '');
         str1 = str1.replace(/_/g, ' ');
