@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.sinks.notifications.jvm.msteams;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -54,11 +55,10 @@ public class TestMSTeamsSink {
   }
 
   @Test
-  public void createMessageFromAdvancedContent() throws JsonProcessingException {
+  public void createMessageFromAdvancedContent() {
     var messageContent = "{\"text\": \"Hi this is a message from Apache StreamPipes\"}";
 
     var sink = new MSTeamsSink();
-
     assertEquals(
             messageContent,
             sink.createMessageFromAdvancedContent(messageContent)
@@ -71,7 +71,7 @@ public class TestMSTeamsSink {
 
     var sink = new MSTeamsSink();
 
-    assertThrows(JsonProcessingException.class, () -> sink.createMessageFromAdvancedContent(messageContent));
+    assertThrows(SpRuntimeException.class, () -> sink.createMessageFromAdvancedContent(messageContent));
   }
 
   @Test
@@ -116,13 +116,13 @@ public class TestMSTeamsSink {
     var payload = "<a>invalid</a>";
     var url = "https://webhook.com";
 
-    assertThrows(RuntimeException.class, () -> sink.sendPayloadToWebhook(mockedClient, payload, url));
+    assertThrows(SpRuntimeException.class, () -> sink.sendPayloadToWebhook(mockedClient, payload, url));
   }
 
   @Test
   public void validateWebhookUrl() {
     var sink = new MSTeamsSink();
-    assertThrows(RuntimeException.class, () -> sink.validateWebhookUrl(""));
-    assertThrows(RuntimeException.class, () -> sink.validateWebhookUrl("some-string"));
+    assertThrows(SpRuntimeException.class, () -> sink.validateWebhookUrl(""));
+    assertThrows(SpRuntimeException.class, () -> sink.validateWebhookUrl("some-string"));
   }
 }

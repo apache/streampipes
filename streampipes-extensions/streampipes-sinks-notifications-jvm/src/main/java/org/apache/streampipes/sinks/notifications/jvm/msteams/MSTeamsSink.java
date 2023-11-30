@@ -61,6 +61,12 @@ public class MSTeamsSink extends StreamPipesDataSink {
   private String messageContent;
   private boolean isSimpleMessageMode;
   private String webhookUrl;
+  private ObjectMapper objectMapper;
+
+  public MSTeamsSink(){
+    super();
+    this.objectMapper = new ObjectMapper();
+  }
 
   @Override
   public void onEvent(Event event) {
@@ -73,21 +79,10 @@ public class MSTeamsSink extends StreamPipesDataSink {
     if (isSimpleMessageMode) {
       teamsMessageContent = createMessageFromSimpleContent(processedMessageContent);
     } else {
-      try {
-        teamsMessageContent = createMessageFromAdvancedContent(processedMessageContent);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException(
-                "Advanced message content provided is not a valid JSON string: %s"
-                        .formatted(messageContent)
-        );
-      }
+      teamsMessageContent = createMessageFromAdvancedContent(processedMessageContent);
     }
 
-    try {
-      sendPayloadToWebhook(HttpClients.createDefault(), teamsMessageContent, webhookUrl);
-    } catch (IOException e) {
-      throw new RuntimeException("Sending notification to MS Teams failed.", e);
-    }
+    sendPayloadToWebhook(HttpClients.createDefault(), teamsMessageContent, webhookUrl);
   }
 
   @Override
@@ -130,6 +125,8 @@ public class MSTeamsSink extends StreamPipesDataSink {
           SinkParams parameters,
           EventSinkRuntimeContext runtimeContext
   ) throws SpRuntimeException {
+    this.objectMapper = new ObjectMapper();
+
     var extractor = parameters.extractor();
     webhookUrl = extractor.secretValue(KEY_WEBHOOK_URL);
 
@@ -177,10 +174,17 @@ public class MSTeamsSink extends StreamPipesDataSink {
    *
    * @param messageContent The JSON string representing the content of the message.
    * @return The original JSON string, unchanged.
-   * @throws JsonProcessingException If the provided message is not a valid JSON string.
+   * @throws SpRuntimeException If the provided message is not a valid JSON string.
    */
-  protected String createMessageFromAdvancedContent(String messageContent) throws JsonProcessingException {
-    new ObjectMapper().readValue(messageContent, Object.class);
+  protected String createMessageFromAdvancedContent(String messageContent) {
+    try {
+      objectMapper.readValue(messageContent, Object.class);
+    } catch (JsonProcessingException e) {
+      throw new SpRuntimeException(
+              "Advanced message content provided is not a valid JSON string: %s".formatted(messageContent),
+              e
+      );
+    }
     return messageContent;
   }
 
@@ -190,21 +194,26 @@ public class MSTeamsSink extends StreamPipesDataSink {
    * @param httpClient The HTTP client used to send the payload.
    * @param payload    The payload to be sent to the webhook.
    * @param webhookUrl The URL of the webhook to which the payload will be sent.
-   * @throws IOException If an I/O error occurs while sending the payload to the webhook.
+   * @throws SpRuntimeException If an I/O error occurs while sending the payload to the webhook or
+   *                          the payload sent is not accepted by the API.
    */
-  protected void sendPayloadToWebhook(HttpClient httpClient, String payload, String webhookUrl) throws IOException {
-    var contentEntity = new StringEntity(payload);
-    contentEntity.setContentType(ContentType.APPLICATION_JSON.toString());
+  protected void sendPayloadToWebhook(HttpClient httpClient, String payload, String webhookUrl) {
+    try {
+      var contentEntity = new StringEntity(payload);
+      contentEntity.setContentType(ContentType.APPLICATION_JSON.toString());
 
-    var postRequest = new HttpPost(webhookUrl);
-    postRequest.setEntity(contentEntity);
+      var postRequest = new HttpPost(webhookUrl);
+      postRequest.setEntity(contentEntity);
 
-    var result  = httpClient.execute(postRequest);
-    if (result.getStatusLine().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
-      throw new RuntimeException(
-              "The provided message payload was not accepted by the MS Teams API: %s"
-                      .formatted(payload)
-      );
+      var result = httpClient.execute(postRequest);
+      if (result.getStatusLine().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
+        throw new SpRuntimeException(
+                "The provided message payload was not accepted by the MS Teams API: %s"
+                        .formatted(payload)
+        );
+      }
+    } catch (IOException e) {
+      throw new SpRuntimeException("Sending notification to MS Teams failed.", e);
     }
   }
 
@@ -212,16 +221,16 @@ public class MSTeamsSink extends StreamPipesDataSink {
    * Validates a webhook URL to ensure it is not null, not empty, and has a valid URL format.
    *
    * @param webhookUrl The webhook URL to be validated.
-   * @throws RuntimeException If the webhook URL is null or empty, or if it is not a valid URL.
+   * @throws SpRuntimeException If the webhook URL is null or empty, or if it is not a valid URL.
    */
   protected void validateWebhookUrl(String webhookUrl) {
     if (webhookUrl == null || webhookUrl.isEmpty()) {
-      throw new RuntimeException("Given webhook URL is empty");
+      throw new SpRuntimeException("Given webhook URL is empty");
     }
     try {
       new URL(webhookUrl);
     } catch (MalformedURLException e) {
-      throw new RuntimeException("The given webhook is not a valid URL: %s".formatted(webhookUrl));
+      throw new SpRuntimeException("The given webhook is not a valid URL: %s".formatted(webhookUrl));
     }
   }
 }
