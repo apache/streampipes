@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.sinks.notifications.jvm.msteams;
 
-import org.apache.http.HttpStatus;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
@@ -38,6 +37,7 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -107,7 +107,11 @@ public class MSTeamsSink extends StreamPipesDataSink {
                     Labels.withId(KEY_MESSAGE_TYPE_ALTERNATIVES),
                     Alternatives.from(
                             Labels.withId(KEY_MESSAGE_SIMPLE),
-                            StaticProperties.stringFreeTextProperty(Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT), true, true),
+                            StaticProperties.stringFreeTextProperty(
+                                    Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT),
+                                    true,
+                                    true
+                            ),
                             true),
                     Alternatives.from(
                             Labels.withId(KEY_MESSAGE_ADVANCED),
