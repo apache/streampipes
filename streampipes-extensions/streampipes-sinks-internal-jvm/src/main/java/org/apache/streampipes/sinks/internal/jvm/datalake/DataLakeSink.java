@@ -32,6 +32,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
@@ -41,38 +42,54 @@ public class DataLakeSink extends StreamPipesDataSink {
 
   private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
   private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
+  private static final String SCHEMA_UPDATE_KEY = "schema_update";
+
 
   private TimeSeriesStore timeSeriesStore;
 
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.datalake")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.internal.jvm.datalake")
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.INTERNAL)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_MAPPING_KEY),
-                PropertyScope.NONE)
-            .build())
+        .requiredStream(StreamRequirementsBuilder
+                            .create()
+                            .requiredPropertyWithUnaryMapping(
+                                EpRequirements.timestampReq(),
+                                Labels.withId(TIMESTAMP_MAPPING_KEY),
+                                PropertyScope.NONE
+                            )
+                            .build())
         .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
+        .requiredSingleValueSelection(
+            Labels.withId(SCHEMA_UPDATE_KEY),
+            Options.from("Update schema", "Extend existing schema")
+        )
+
         .build();
   }
 
   @Override
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    var timestampField = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
-    var measureName = parameters.extractor().singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
-    var eventSchema = parameters.getInputSchemaInfos().get(0).getEventSchema();
+    var timestampField = parameters.extractor()
+                                   .mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+    var measureName = parameters.extractor()
+                                .singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
+    var eventSchema = parameters.getInputSchemaInfos()
+                                .get(0)
+                                .getEventSchema();
 
     var measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
 
-    this.timeSeriesStore = new TimeSeriesStore(Environments.getEnvironment(),
+    this.timeSeriesStore = new TimeSeriesStore(
+        Environments.getEnvironment(),
         runtimeContext.getStreamPipesClient(),
         measure,
-        true);
+        true
+    );
 
   }
 
