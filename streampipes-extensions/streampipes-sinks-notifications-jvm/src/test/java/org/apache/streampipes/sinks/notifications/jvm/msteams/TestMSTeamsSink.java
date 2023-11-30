@@ -78,7 +78,13 @@ public class TestMSTeamsSink {
   public void sendPayloadToWebhook() throws IOException {
 
     var mockedClient = mock(HttpClient.class);
+    var mockedResponse = mock(CloseableHttpResponse.class);
+    var mockedStatusLine = mock(StatusLine.class);
     var argumentCaptor = ArgumentCaptor.forClass(HttpPost.class);
+
+    when(mockedStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
+    when(mockedResponse.getStatusLine()).thenReturn(mockedStatusLine);
+    when(mockedClient.execute(any())).thenReturn(mockedResponse);
 
     var payload = "This is a test";
     var webhook = "https://webhook.com";
