@@ -31,7 +31,6 @@ import org.apache.streampipes.vocabulary.XSD;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,82 +43,21 @@ import java.util.concurrent.TimeUnit;
 public class InfluxStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxStore.class);
-  DataLakeMeasure measure;
-  Map<String, String> sanitizedRuntimeNames = new HashMap<>();
+
+  private DataLakeMeasure measure;
+  private Map<String, String> sanitizedRuntimeNames = new HashMap<>();
   private InfluxDB influxDb = null;
 
   private RawFieldSerializer rawFieldSerializer = new RawFieldSerializer();
 
-  /**
-   * This constructor is used for testing purposes
-   */
   public InfluxStore(
       DataLakeMeasure measure,
-      InfluxDB influxDb
-  ) {
-    this.measure = measure;
-    this.influxDb = influxDb;
-    sanitizeMeasure(measure);
-  }
-
-
-  public InfluxStore(
-      DataLakeMeasure measure,
-      InfluxConnectionSettings settings
-  ) {
-    this.measure = measure;
-    sanitizeMeasure(measure);
-    connect(settings);
-  }
-
-  public InfluxStore(
-      DataLakeMeasure measure,
-      Environment environment
+      Environment environment,
+      InfluxClientProvider influxClientProvider
   ) throws SpRuntimeException {
-    this(measure, InfluxConnectionSettings.from(environment));
-  }
-
-  /**
-   * Connects to the InfluxDB Server, sets the database and initializes the batch-behaviour
-   *
-   * @throws SpRuntimeException If not connection can be established or if the database could not
-   *                            be found
-   */
-  private void connect(InfluxConnectionSettings settings) throws SpRuntimeException {
-    influxDb = InfluxClientProvider.getInfluxDBClient(settings);
-
-    // Checking, if server is available
-    var response = influxDb.ping();
-    if (response.getVersion()
-                .equalsIgnoreCase("unknown")) {
-      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
-    }
-
-    String databaseName = settings.getDatabaseName();
-    // Checking whether the database exists
-    if (!InfluxRequests.databaseExists(influxDb, databaseName)) {
-      LOG.info("Database '" + databaseName + "' not found. Gets created ...");
-      createDatabase(databaseName);
-    }
-
-    // setting up the database
-    influxDb.setDatabase(databaseName);
-    var batchSize = 2000;
-    var flushDuration = 500;
-    influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
-  }
-
-  /**
-   * Creates a new database with the given name
-   *
-   * @param dbName The name of the database which should be created
-   */
-  private void createDatabase(String dbName) throws SpRuntimeException {
-    if (!dbName.matches("^[a-zA-Z_]\\w*$")) {
-      throw new SpRuntimeException(
-          "Database name '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
-    }
-    influxDb.query(new Query("CREATE DATABASE \"" + dbName + "\"", ""));
+    this.measure = measure;
+    sanitizeMeasure(measure);
+    influxDb = influxClientProvider.getInitializedInfluxDBClient(environment);
   }
 
   /**

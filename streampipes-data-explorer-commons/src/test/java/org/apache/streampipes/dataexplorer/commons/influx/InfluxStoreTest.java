@@ -50,8 +50,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class InfluxStoreTest {
 
@@ -376,13 +378,18 @@ public class InfluxStoreTest {
    * Initializes an influx store with the given event schema
    */
   private InfluxStore getInfluxStore(EventSchema eventSchema) {
+
     DataLakeMeasure measure = new DataLakeMeasure(
         EXPECTED_MEASUREMENT,
         "s0::%s".formatted(TIMESTAMP),
         eventSchema
     );
 
-    return new InfluxStore(measure, influxDBMock);
+    var influxClientProviderMock = mock(InfluxClientProvider.class);
+    when(influxClientProviderMock.getInitializedInfluxDBClient(any()))
+        .thenReturn(influxDBMock);
+
+    return new InfluxStore(measure, null, influxClientProviderMock);
   }
 
 }
