@@ -50,20 +50,32 @@ public class InfluxStore {
 
   private RawFieldSerializer rawFieldSerializer = new RawFieldSerializer();
 
-  public InfluxStore(DataLakeMeasure measure,
-                     InfluxConnectionSettings settings) {
+  /**
+   * This constructor is used for testing purposes
+   */
+  public InfluxStore(
+      DataLakeMeasure measure,
+      InfluxDB influxDb
+  ) {
     this.measure = measure;
-    // store sanitized target property runtime names in local variable
-    measure.getEventSchema()
-        .getEventProperties()
-        .forEach(ep -> sanitizedRuntimeNames.put(ep.getRuntimeName(),
-            InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
+    this.influxDb = influxDb;
+    sanitizeMeasure(measure);
+  }
 
+
+  public InfluxStore(
+      DataLakeMeasure measure,
+      InfluxConnectionSettings settings
+  ) {
+    this.measure = measure;
+    sanitizeMeasure(measure);
     connect(settings);
   }
 
-  public InfluxStore(DataLakeMeasure measure,
-                     Environment environment) throws SpRuntimeException {
+  public InfluxStore(
+      DataLakeMeasure measure,
+      Environment environment
+  ) throws SpRuntimeException {
     this(measure, InfluxConnectionSettings.from(environment));
   }
 
@@ -78,7 +90,8 @@ public class InfluxStore {
 
     // Checking, if server is available
     var response = influxDb.ping();
-    if (response.getVersion().equalsIgnoreCase("unknown")) {
+    if (response.getVersion()
+                .equalsIgnoreCase("unknown")) {
       throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
     }
 
@@ -123,39 +136,49 @@ public class InfluxStore {
     }
 
     // sanitize event
-    for (var key : event.getRaw().keySet()) {
-      if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(key))) {
+    for (var key : event.getRaw()
+                        .keySet()) {
+      if (InfluxDbReservedKeywords.KEYWORD_LIST.stream()
+                                               .anyMatch(k -> k.equalsIgnoreCase(key))) {
         event.renameFieldByRuntimeName(key, key + "_");
       }
     }
 
-    var timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
+    var timestampValue = event.getFieldBySelector(measure.getTimestampField())
+                              .getAsPrimitive()
+                              .getAsLong();
     var point =
-        Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
+        Point.measurement(measure.getMeasureName())
+             .time((long) timestampValue, TimeUnit.MILLISECONDS);
 
-    for (var ep : measure.getEventSchema().getEventProperties()) {
+    for (var ep : measure.getEventSchema()
+                         .getEventProperties()) {
       var runtimeName = ep.getRuntimeName();
       // timestamp should not be added as a field
-      if (!measure.getTimestampField().endsWith(runtimeName)) {
+      if (!measure.getTimestampField()
+                  .endsWith(runtimeName)) {
         var sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
         var field = event.getOptionalFieldByRuntimeName(runtimeName);
         try {
           if (ep instanceof EventPropertyPrimitive) {
             if (field.isPresent()) {
-              var eventPropertyPrimitiveField = field.get().getAsPrimitive();
+              var eventPropertyPrimitiveField = field.get()
+                                                     .getAsPrimitive();
               if (eventPropertyPrimitiveField.getRawValue() == null) {
                 nullFields.add(sanitizedRuntimeName);
               } else {
 
                 // store property as tag when the field is a dimension property
-                if (PropertyScope.DIMENSION_PROPERTY.name().equals(ep.getPropertyScope())) {
+                if (PropertyScope.DIMENSION_PROPERTY.name()
+                                                    .equals(ep.getPropertyScope())) {
                   point.tag(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsString());
                 } else {
                   handleMeasurementProperty(
                       point,
                       (EventPropertyPrimitive) ep,
                       sanitizedRuntimeName,
-                      eventPropertyPrimitiveField);
+                      eventPropertyPrimitiveField
+                  );
                 }
               }
             } else {
@@ -172,15 +195,18 @@ public class InfluxStore {
           }
         } catch (SpRuntimeException iae) {
           LOG.warn("Runtime exception while extracting field value of field {} - this field will be ignored",
-              runtimeName, iae);
+                   runtimeName, iae
+          );
         }
       }
     }
 
     if (missingFields.size() > 0) {
-      LOG.debug("Ignored {} fields which were present in the schema, but not in the provided event: {}",
+      LOG.debug(
+          "Ignored {} fields which were present in the schema, but not in the provided event: {}",
           missingFields.size(),
-          String.join(", ", missingFields));
+          String.join(", ", missingFields)
+      );
     }
 
     if (nullFields.size() > 0) {
@@ -190,30 +216,37 @@ public class InfluxStore {
     influxDb.write(point.build());
   }
 
-  private void handleMeasurementProperty(Point.Builder p,
-                                         @NotNull EventPropertyPrimitive ep,
-                                         String preparedRuntimeName,
-                                         PrimitiveField eventPropertyPrimitiveField) {
+  private void handleMeasurementProperty(
+      Point.Builder p,
+      @NotNull EventPropertyPrimitive ep,
+      String preparedRuntimeName,
+      PrimitiveField eventPropertyPrimitiveField
+  ) {
     try {
       // Store property according to property type
       var runtimeType = ep.getRuntimeType();
-      if (XSD.INTEGER.toString().equals(runtimeType)) {
+      if (XSD.INTEGER.toString()
+                     .equals(runtimeType)) {
         try {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
         } catch (NumberFormatException ef) {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
         }
-      } else if (XSD.LONG.toString().equals(runtimeType)) {
+      } else if (XSD.LONG.toString()
+                         .equals(runtimeType)) {
         try {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
         } catch (NumberFormatException ef) {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
         }
-      } else if (XSD.FLOAT.toString().equals(runtimeType)) {
+      } else if (XSD.FLOAT.toString()
+                          .equals(runtimeType)) {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
-      } else if (XSD.DOUBLE.toString().equals(runtimeType)) {
+      } else if (XSD.DOUBLE.toString()
+                           .equals(runtimeType)) {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
-      } else if (XSD.BOOLEAN.toString().equals(runtimeType)) {
+      } else if (XSD.BOOLEAN.toString()
+                            .equals(runtimeType)) {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
       } else if (SO.NUMBER.equals(runtimeType)) {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
@@ -225,9 +258,14 @@ public class InfluxStore {
     }
   }
 
-  private void handleNonPrimitiveMeasurementProperty(Point.Builder p, Event event, String preparedRuntimeName) {
+  private void handleNonPrimitiveMeasurementProperty(
+      Point.Builder p,
+      Event event,
+      String preparedRuntimeName
+  ) {
     try {
-      var json = rawFieldSerializer.serialize(event.getRaw().get(preparedRuntimeName));
+      var json = rawFieldSerializer.serialize(event.getRaw()
+                                                   .get(preparedRuntimeName));
       p.addField(preparedRuntimeName, json);
     } catch (SpRuntimeException e) {
       LOG.warn("Failed to serialize field {}, ignoring.", preparedRuntimeName);
@@ -245,5 +283,18 @@ public class InfluxStore {
       throw new SpRuntimeException(e);
     }
     influxDb.close();
+  }
+
+
+  /**
+   * store sanitized target property runtime names in local variable
+   */
+  private void sanitizeMeasure(DataLakeMeasure measure) {
+    measure.getEventSchema()
+           .getEventProperties()
+           .forEach(ep -> sanitizedRuntimeNames.put(
+               ep.getRuntimeName(),
+               InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())
+           ));
   }
 }
