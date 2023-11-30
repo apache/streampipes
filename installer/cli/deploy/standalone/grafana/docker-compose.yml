@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   grafana:
-    image: grafana/grafana:5.4.2
+    image: grafana/grafana:10.1.2
     volumes:
       - grafana:/var/lib/grafana
     logging:
