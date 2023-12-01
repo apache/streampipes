@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.notifications.jvm.email.EmailSink;
+import org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink;
 import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalSink;
 import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationSink;
 import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramSink;
@@ -40,6 +41,7 @@ public class NotificationsExtensionModuleExport implements IExtensionModuleExpor
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
     return List.of(
         new EmailSink(),
+        new MSTeamsSink(),
         new OneSignalSink(),
         new SlackNotificationSink(),
         new TelegramSink()
