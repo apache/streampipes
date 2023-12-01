@@ -74,13 +74,14 @@ public class DataLakeSink extends StreamPipesDataSink {
 
   @Override
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    var timestampField = parameters.extractor()
-                                   .mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
-    var measureName = parameters.extractor()
-                                .singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
+    var extractor = parameters.extractor();
+    var timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+    var measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
     var eventSchema = parameters.getInputSchemaInfos()
                                 .get(0)
                                 .getEventSchema();
+
+    String schemaUpdateOption = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
     var measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
 

@@ -39,6 +39,14 @@ import java.util.Optional;
 
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
+  IDataLakeStorage dataLakeStorage;
+
+  public DataExplorerSchemaManagement() {}
+
+  public DataExplorerSchemaManagement(IDataLakeStorage dataLakeStorage) {
+    this.dataLakeStorage = dataLakeStorage;
+  }
+
   @Override
   public List<DataLakeMeasure> getAllMeasurements() {
     return DataExplorerUtils.getInfos();
@@ -51,24 +59,30 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public DataLakeMeasure createMeasurement(DataLakeMeasure measure) {
-    List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
+    List<DataLakeMeasure> dataLakeMeasureList = dataLakeStorage.getAllDataLakeMeasures();
     Optional<DataLakeMeasure> optional =
-        dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure.getMeasureName()))
-            .findFirst();
+        dataLakeMeasureList.stream()
+                           .filter(entry -> entry.getMeasureName()
+                                                 .equals(measure.getMeasureName()))
+                           .findFirst();
 
     if (optional.isPresent()) {
       DataLakeMeasure oldEntry = optional.get();
-      if (!compareEventProperties(oldEntry.getEventSchema().getEventProperties(),
-          measure.getEventSchema().getEventProperties())) {
+      if (!compareEventProperties(
+          oldEntry.getEventSchema()
+                  .getEventProperties(),
+          measure.getEventSchema()
+                 .getEventProperties()
+      )) {
         oldEntry.setEventSchema(measure.getEventSchema());
         oldEntry.setTimestampField(measure.getTimestampField());
         oldEntry.setPipelineName(measure.getPipelineName());
-        getDataLakeStorage().updateDataLakeMeasure(oldEntry);
+        dataLakeStorage.updateDataLakeMeasure(oldEntry);
         return oldEntry;
       }
     } else {
       measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
-      getDataLakeStorage().storeDataLakeMeasure(measure);
+      dataLakeStorage.storeDataLakeMeasure(measure);
       return measure;
     }
 
@@ -88,12 +102,23 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   public boolean deleteMeasurementByName(String measureName) {
     boolean isSuccess = false;
     CouchDbClient couchDbClient = Utils.getCouchDbDataLakeClient();
-    List<JsonObject> docs = couchDbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+    List<JsonObject> docs = couchDbClient.view("_all_docs")
+                                         .includeDocs(true)
+                                         .query(JsonObject.class);
 
     for (JsonObject document : docs) {
-      if (document.get("measureName").toString().replace("\"", "").equals(measureName)) {
-        couchDbClient.remove(document.get("_id").toString().replace("\"", ""),
-            document.get("_rev").toString().replace("\"", ""));
+      if (document.get("measureName")
+                  .toString()
+                  .replace("\"", "")
+                  .equals(measureName)) {
+        couchDbClient.remove(
+            document.get("_id")
+                    .toString()
+                    .replace("\"", ""),
+            document.get("_rev")
+                    .toString()
+                    .replace("\"", "")
+        );
         isSuccess = true;
         break;
       }
@@ -118,8 +143,9 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     }
   }
 
-  private IDataLakeStorage getDataLakeStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  protected IDataLakeStorage getDataLakeStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore()
+                                     .getDataLakeStorage();
   }
 
   private boolean compareEventProperties(List<EventProperty> prop1, List<EventProperty> prop2) {
@@ -127,33 +153,39 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
       return false;
     }
 
-    return prop1.stream().allMatch(prop -> {
+    return prop1.stream()
+                .allMatch(prop -> {
 
-      for (EventProperty property : prop2) {
-        if (prop.getRuntimeName().equals(property.getRuntimeName())) {
+                  for (EventProperty property : prop2) {
+                    if (prop.getRuntimeName()
+                            .equals(property.getRuntimeName())) {
 
-          //primitive
-          if (prop instanceof EventPropertyPrimitive && property instanceof EventPropertyPrimitive) {
-            if (((EventPropertyPrimitive) prop)
-                .getRuntimeType()
-                .equals(((EventPropertyPrimitive) property).getRuntimeType())) {
-              return true;
-            }
+                      //primitive
+                      if (prop instanceof EventPropertyPrimitive && property instanceof EventPropertyPrimitive) {
+                        if (((EventPropertyPrimitive) prop)
+                            .getRuntimeType()
+                            .equals(((EventPropertyPrimitive) property).getRuntimeType())) {
+                          return true;
+                        }
 
-            //list
-          } else if (prop instanceof EventPropertyList && property instanceof EventPropertyList) {
-            return compareEventProperties(Collections.singletonList(((EventPropertyList) prop).getEventProperty()),
-                Collections.singletonList(((EventPropertyList) property).getEventProperty()));
+                        //list
+                      } else if (prop instanceof EventPropertyList && property instanceof EventPropertyList) {
+                        return compareEventProperties(
+                            Collections.singletonList(((EventPropertyList) prop).getEventProperty()),
+                            Collections.singletonList(((EventPropertyList) property).getEventProperty())
+                        );
 
-            //nested
-          } else if (prop instanceof EventPropertyNested && property instanceof EventPropertyNested) {
-            return compareEventProperties(((EventPropertyNested) prop).getEventProperties(),
-                ((EventPropertyNested) property).getEventProperties());
-          }
-        }
-      }
-      return false;
+                        //nested
+                      } else if (prop instanceof EventPropertyNested && property instanceof EventPropertyNested) {
+                        return compareEventProperties(
+                            ((EventPropertyNested) prop).getEventProperties(),
+                            ((EventPropertyNested) property).getEventProperties()
+                        );
+                      }
+                    }
+                  }
+                  return false;
 
-    });
+                });
   }
 }
