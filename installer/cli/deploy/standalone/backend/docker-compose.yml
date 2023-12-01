@@ -25,6 +25,7 @@ services:
     environment:
       - SP_PRIORITIZED_PROTOCOL=${SP_PRIORITIZED_PROTOCOL:-kafka}
       - SP_MQTT_HOST=${SP_MQTT_HOST:-activemq}
+      - SP_SETUP_PROMETHEUS_ENDPOINT=${SP_SETUP_PROMETHEUS_ENDPOINT}
     logging:
       driver: "json-file"
       options:
