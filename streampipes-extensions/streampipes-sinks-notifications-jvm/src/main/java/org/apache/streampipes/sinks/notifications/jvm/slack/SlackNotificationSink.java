@@ -58,7 +58,8 @@ public class SlackNotificationSink extends StreamPipesDataSink {
   @Override
   public DataSinkDescription declareModel() {
 
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.slack")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.notifications.jvm.slack", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)

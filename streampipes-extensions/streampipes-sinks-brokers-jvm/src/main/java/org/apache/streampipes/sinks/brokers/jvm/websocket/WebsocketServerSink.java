@@ -44,7 +44,7 @@ public class WebsocketServerSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket")
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket", 0)
         .category(DataSinkType.MESSAGING)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)

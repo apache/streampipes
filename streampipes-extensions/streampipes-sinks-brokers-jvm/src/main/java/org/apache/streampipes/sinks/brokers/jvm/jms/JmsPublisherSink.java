@@ -49,7 +49,7 @@ public class JmsPublisherSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms")
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms", 0)
         .category(DataSinkType.MESSAGING)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
