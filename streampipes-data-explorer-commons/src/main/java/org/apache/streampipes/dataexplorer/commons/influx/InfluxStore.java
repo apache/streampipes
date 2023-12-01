@@ -40,12 +40,12 @@ public class InfluxStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxStore.class);
 
-  private DataLakeMeasure measure;
-  private List<EventProperty> allEventProperties;
-  private Map<String, String> sanitizedRuntimeNames = new HashMap<>();
-  private InfluxDB influxDb = null;
+  private final DataLakeMeasure measure;
+  private final List<EventProperty> allEventProperties;
+  private final Map<String, String> sanitizedRuntimeNames = new HashMap<>();
+  private final InfluxDB influxDb;
 
-  private PropertyHandler propertyHandler;
+  private final PropertyHandler propertyHandler;
 
 
   public InfluxStore(
@@ -55,7 +55,7 @@ public class InfluxStore {
   ) throws SpRuntimeException {
     this.measure = measure;
     storeSanitizedRuntimeNames(measure);
-    this.allEventProperties = getAllEventPropertiesExceptTimestamp(measure);
+    allEventProperties = getAllEventPropertiesExceptTimestamp(measure);
     influxDb = influxClientProvider.getInitializedInfluxDBClient(environment);
     propertyHandler = new PropertyHandler();
   }
@@ -92,7 +92,7 @@ public class InfluxStore {
    */
   private void logMissingFields(Event event) {
     var missingFields = getMissingProperties(allEventProperties, event);
-    if (missingFields.size() > 0) {
+    if (!missingFields.isEmpty()) {
       LOG.debug(
           "Ignored {} fields which were present in the schema, but not in the provided event: {}",
           missingFields.size(),
@@ -120,7 +120,7 @@ public class InfluxStore {
         .map(EventProperty::getRuntimeName)
         .collect(Collectors.toList());
 
-    if (nullFields.size() > 0) {
+    if (!nullFields.isEmpty()) {
       LOG.warn("Ignored {} fields which had a value 'null': {}", nullFields.size(), String.join(", ", nullFields));
     }
   }
@@ -164,8 +164,8 @@ public class InfluxStore {
   ) {
     return allEventProperties.stream()
                              .map(EventProperty::getRuntimeName)
-                             .filter(runtimeName -> !event.getOptionalFieldByRuntimeName(runtimeName)
-                                                          .isPresent())
+                             .filter(runtimeName -> event.getOptionalFieldByRuntimeName(runtimeName)
+                                                          .isEmpty())
                              .collect(Collectors.toList());
   }
 

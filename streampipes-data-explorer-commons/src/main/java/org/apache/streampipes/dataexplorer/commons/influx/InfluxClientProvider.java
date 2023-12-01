@@ -130,17 +130,15 @@ public class InfluxClientProvider {
                                      .getSeries()
                                      .get(0)
                                      .getValues()) {
-      if (a.size() > 0 && dbName.equals(a.get(0))) {
+      if (!a.isEmpty() && dbName.equals(a.get(0))) {
         return true;
       }
     }
     return false;
   }
 
-
   private static Environment getEnvironment() {
     return Environments.getEnvironment();
   }
-
 
 }
