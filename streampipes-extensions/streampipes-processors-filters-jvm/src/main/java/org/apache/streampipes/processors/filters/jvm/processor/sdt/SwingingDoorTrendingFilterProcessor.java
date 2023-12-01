@@ -37,11 +37,11 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcessor {
 
-  private static final String SDT_TIMESTAMP_FIELD_KEY = "sdt-timestamp-field";
-  private static final String SDT_VALUE_FIELD_KEY = "sdt-value-field";
-  private static final String SDT_COMPRESSION_DEVIATION_KEY = "sdt-compression-deviation";
-  private static final String SDT_COMPRESSION_MIN_INTERVAL_KEY = "sdt-compression-min-interval";
-  private static final String SDT_COMPRESSION_MAX_INTERVAL_KEY = "sdt-compression-max-interval";
+  public static final String SDT_TIMESTAMP_FIELD_KEY = "sdt-timestamp-field";
+  public static final String SDT_VALUE_FIELD_KEY = "sdt-value-field";
+  public static final String SDT_COMPRESSION_DEVIATION_KEY = "sdt-compression-deviation";
+  public static final String SDT_COMPRESSION_MIN_INTERVAL_KEY = "sdt-compression-min-interval";
+  public static final String SDT_COMPRESSION_MAX_INTERVAL_KEY = "sdt-compression-max-interval";
 
   private String sdtTimestampField;
   private String sdtValueField;

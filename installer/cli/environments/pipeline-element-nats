@@ -15,7 +15,6 @@
 
 [environment:pipeline-element]
 backend
-consul
 couchdb
 ui
 nats

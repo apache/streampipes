@@ -108,7 +108,7 @@ public class NatsProtocol implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, NatsProtocol::new)
+        .create(ID, 0, NatsProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withCategory(AdapterType.Generic)
         .withLocales(Locales.EN)

@@ -47,6 +47,7 @@ jobs:
       - name: Build package
         working-directory: ./streampipes-client-python
         run: |
+          poetry version $(echo ${{ github.ref_name }} | awk -F'/' '{print $2}')  # extract release version from tag name
           poetry build
           poetry run twine check --strict dist/*
 

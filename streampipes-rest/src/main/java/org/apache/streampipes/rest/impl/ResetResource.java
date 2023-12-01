@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -34,6 +35,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
+
 @Path("/v2/reset")
 public class ResetResource extends AbstractAuthGuardedRestResource {
   private static final Logger logger = LoggerFactory.getLogger(ResetResource.class);
@@ -44,7 +47,17 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Resets StreamPipes instance")
   public Response reset() {
     ResetManagement.reset(getAuthenticatedUsername());
-    SuccessMessage message = Notifications.success("Reset of system successfully performed");
+    var userStorage = getUserStorage();
+    // Delete all users other than current user (admin) and their resources
+    var allUsers = new ArrayList<Principal>(userStorage.getAllUsers());
+    for (var user : allUsers) {
+      if (user.getPrincipalType() == PrincipalType.USER_ACCOUNT
+          && !user.getPrincipalId().equals(getAuthenticatedUserSid())) {
+        ResetManagement.reset(user.getUsername());
+        userStorage.deleteUser(user.getPrincipalId());
+      }
+    }
+    var message = Notifications.success("Reset of system successfully performed");
     return ok(message);
   }
 

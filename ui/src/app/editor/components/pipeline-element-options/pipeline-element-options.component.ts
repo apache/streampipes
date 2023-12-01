@@ -17,8 +17,6 @@
  */
 
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
-import { JsplumbService } from '../../services/jsplumb.service';
-import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import { RestApi } from '../../../services/rest-api.service';
 import {
     Component,
@@ -41,10 +39,10 @@ import {
     SpDataStream,
     WildcardTopicDefinition,
 } from '@streampipes/platform-services';
+import { cloneDeep } from 'lodash';
 import { EditorService } from '../../services/editor.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
-import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 
@@ -92,7 +90,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
     pipelineElementConfiguredObservable: Subscription;
 
-    JsplumbBridge: JsplumbBridge;
+    jsplumbBridge: JsplumbBridge;
 
     constructor(
         private objectProvider: ObjectProvider,
@@ -100,15 +98,13 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
         private dialogService: DialogService,
         private editorService: EditorService,
         private jsplumbFactoryService: JsplumbFactoryService,
-        private jsplumbService: JsplumbService,
-        private pipelineValidationService: PipelineValidationService,
         private restApi: RestApi,
     ) {
         this.recommendationsAvailable = false;
         this.possibleElements = [];
         this.recommendedElements = [];
         this.recommendationsShown = false;
-        this.JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
+        this.jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
     }
 
     ngOnInit() {
@@ -131,9 +127,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
             );
         this.pipelineElementCssType = this.pipelineElement.type;
 
-        this.isDataSource =
-            this.pipelineElement.type === 'stream' ||
-            this.pipelineElement.type === 'set';
+        this.isDataSource = this.pipelineElement.type === 'stream';
 
         if (
             this.isDataSource ||
@@ -161,7 +155,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
         // this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
     }
 
-    initRecs(pipelineElementDomId) {
+    initRecs(pipelineElementDomId: string) {
         const clonedModel: PipelineElementConfig[] = cloneDeep(
             this.rawPipelineModel,
         );
@@ -204,16 +198,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     showRecommendations(e) {
         this.recommendationsShown = !this.recommendationsShown;
         e.stopPropagation();
-    }
-
-    isRootElement() {
-        return (
-            this.JsplumbBridge.getConnections({
-                source: document.getElementById(
-                    this.pipelineElement.payload.dom,
-                ),
-            }).length === 0
-        );
     }
 
     isWildcardTopic() {

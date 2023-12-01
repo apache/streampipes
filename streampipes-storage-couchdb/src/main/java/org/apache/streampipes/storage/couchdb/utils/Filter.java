@@ -29,7 +29,7 @@ public class Filter {
     return allElements
         .stream()
         .filter(e -> userElements.stream()
-            .anyMatch(u -> u.equals(e.getUri()))).collect(Collectors.toList());
+            .anyMatch(u -> u.equals(e.getElementId()))).collect(Collectors.toList());
   }
 
 }

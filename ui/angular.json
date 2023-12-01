@@ -18,7 +18,7 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
-            "allowedCommonJsDependencies": ["lodash", "codemirror"],
+            "allowedCommonJsDependencies": ["codemirror"],
             "assets": [
               "src/assets",
               {
@@ -34,7 +34,8 @@
               "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",
               "node_modules/quill/dist/quill.js"
-            ]
+            ],
+            "outputHashing": "bundles"
           },
           "configurations": {
             "production": {
@@ -51,7 +52,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "bundles",
               "sourceMap": false,
               "namedChunks": false,
               "aot": true,

@@ -103,7 +103,7 @@ public class HttpServerProtocol implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, HttpServerProtocol::new)
+        .create(ID, 0, HttpServerProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)

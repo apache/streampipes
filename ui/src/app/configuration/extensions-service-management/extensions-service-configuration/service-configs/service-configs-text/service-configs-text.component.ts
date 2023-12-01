@@ -21,7 +21,7 @@ import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-consul-configs-text',
+    selector: 'sp-service-configs-text',
     templateUrl: './service-configs-text.component.html',
     providers: [ConfigurationService],
 })

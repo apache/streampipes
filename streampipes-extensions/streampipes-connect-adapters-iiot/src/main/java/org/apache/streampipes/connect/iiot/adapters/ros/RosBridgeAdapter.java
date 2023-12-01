@@ -92,7 +92,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, RosBridgeAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 0, RosBridgeAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)

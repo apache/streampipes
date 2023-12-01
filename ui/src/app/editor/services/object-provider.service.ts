@@ -17,7 +17,6 @@
  */
 
 import { Injectable } from '@angular/core';
-import { RestApi } from '../../services/rest-api.service';
 import {
     InvocablePipelineElementUnion,
     PipelineElementConfig,
@@ -29,7 +28,6 @@ import { JsplumbFactoryService } from './jsplumb-factory.service';
 @Injectable({ providedIn: 'root' })
 export class ObjectProvider {
     constructor(
-        private restApi: RestApi,
         private editorService: EditorService,
         private jsplumbFactoryService: JsplumbFactoryService,
     ) {}
@@ -50,11 +48,11 @@ export class ObjectProvider {
         return pipeline;
     }
 
-    makeFinalPipeline(currentPipelineElements) {
+    makeFinalPipeline(currentPipelineElements: PipelineElementConfig[]) {
         return this.makePipeline(currentPipelineElements);
     }
 
-    makePipeline(currentPipelineElements): Pipeline {
+    makePipeline(currentPipelineElements: PipelineElementConfig[]): Pipeline {
         let pipeline = this.preparePipeline();
         pipeline = this.addElementNew(pipeline, currentPipelineElements);
         return pipeline;
@@ -100,28 +98,34 @@ export class ObjectProvider {
         pipeline,
         currentPipelineElements: PipelineElementConfig[],
     ): Pipeline {
-        const JsplumbBridge =
+        const jsplumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(false);
-        currentPipelineElements.forEach(pe => {
-            if (pe.settings.disabled === undefined || !pe.settings.disabled) {
-                if (pe.type === 'sepa' || pe.type === 'action') {
-                    let payload = pe.payload;
+        currentPipelineElements.forEach(pipelineElementConfig => {
+            if (
+                pipelineElementConfig.settings.disabled === undefined ||
+                !pipelineElementConfig.settings.disabled
+            ) {
+                if (
+                    pipelineElementConfig.type === 'sepa' ||
+                    pipelineElementConfig.type === 'action'
+                ) {
+                    let payload = pipelineElementConfig.payload;
                     payload = this.prepareElement(
                         payload as InvocablePipelineElementUnion,
                     );
-                    const connections = JsplumbBridge.getConnections({
+                    const connections = jsplumbBridge.getConnections({
                         target: document.getElementById(payload.dom),
                     });
                     for (let i = 0; i < connections.length; i++) {
                         payload.connectedTo.push(connections[i].sourceId);
                     }
                     if (payload.connectedTo && payload.connectedTo.length > 0) {
-                        pe.type === 'action'
+                        pipelineElementConfig.type === 'action'
                             ? pipeline.actions.push(payload)
                             : pipeline.sepas.push(payload);
                     }
                 } else {
-                    pipeline.streams.push(pe.payload);
+                    pipeline.streams.push(pipelineElementConfig.payload);
                 }
             }
         });
