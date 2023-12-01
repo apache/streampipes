@@ -87,37 +87,38 @@ public class MSTeamsSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.msteams")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.NOTIFICATION)
-            .requiredStream(
-                    StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build()
-            )
-            .requiredSecret(Labels.withId(KEY_WEBHOOK_URL))
-            .requiredAlternatives(
-                    Labels.withId(KEY_MESSAGE_TYPE_ALTERNATIVES),
-                    Alternatives.from(
-                            Labels.withId(KEY_MESSAGE_SIMPLE),
-                            StaticProperties.stringFreeTextProperty(
-                                    Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT),
-                                    true,
-                                    true
-                            ),
-                            true),
-                    Alternatives.from(
-                            Labels.withId(KEY_MESSAGE_ADVANCED),
-                            StaticProperties.stringFreeTextProperty(
-                                    Labels.withId(KEY_MESSAGE_ADVANCED_CONTENT),
-                                    true,
-                                    true
-                            )
-                    )
-            )
-            .build();
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.notifications.jvm.msteams", 0)
+          .withLocales(Locales.EN)
+          .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+          .category(DataSinkType.NOTIFICATION)
+          .requiredStream(
+                  StreamRequirementsBuilder
+                          .create()
+                          .requiredProperty(EpRequirements.anyProperty())
+                          .build()
+          )
+          .requiredSecret(Labels.withId(KEY_WEBHOOK_URL))
+          .requiredAlternatives(
+                  Labels.withId(KEY_MESSAGE_TYPE_ALTERNATIVES),
+                  Alternatives.from(
+                          Labels.withId(KEY_MESSAGE_SIMPLE),
+                          StaticProperties.stringFreeTextProperty(
+                                  Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT),
+                                  true,
+                                  true
+                          ),
+                          true),
+                  Alternatives.from(
+                          Labels.withId(KEY_MESSAGE_ADVANCED),
+                          StaticProperties.stringFreeTextProperty(
+                                  Labels.withId(KEY_MESSAGE_ADVANCED_CONTENT),
+                                  true,
+                                  true
+                          )
+                  )
+          )
+          .build();
   }
 
   @Override

@@ -59,11 +59,13 @@ public class TubeMQPublisherSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         TubeMQPublisherSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.tubemq").category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN).withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
-            .requiredTextParameter(Labels.withId(MASTER_HOST_AND_PORT_KEY)).requiredTextParameter(Labels.withId(TOPIC_KEY))
-            .build()
+        DataSinkBuilder
+                .create("org.apache.streampipes.sinks.brokers.jvm.tubemq", 0)
+                .category(DataSinkType.MESSAGING)
+                .withLocales(Locales.EN).withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+                .requiredTextParameter(Labels.withId(MASTER_HOST_AND_PORT_KEY)).requiredTextParameter(Labels.withId(TOPIC_KEY))
+                .build()
     );
   }
 

@@ -49,7 +49,7 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua")
+    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.FORWARD)

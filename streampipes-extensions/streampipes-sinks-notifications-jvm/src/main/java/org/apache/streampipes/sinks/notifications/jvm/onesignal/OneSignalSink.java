@@ -54,7 +54,8 @@ public class OneSignalSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.onesignal")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.notifications.jvm.onesignal", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
