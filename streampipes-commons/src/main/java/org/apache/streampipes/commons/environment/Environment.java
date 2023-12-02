@@ -24,14 +24,6 @@ import org.apache.streampipes.commons.environment.variable.StringEnvironmentVari
 
 public interface Environment {
 
-  // Consul env variables
-  StringEnvironmentVariable getConsulHost();
-
-  IntEnvironmentVariable getConsulPort();
-
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  StringEnvironmentVariable getConsulLocation();
-
   BooleanEnvironmentVariable getSpDebug();
 
   // Service base configuration

@@ -16,8 +16,6 @@
 ARG BASE_IMAGE=arm32v7/openjdk:11-jre-slim
 FROM $BASE_IMAGE
 
-ENV CONSUL_LOCATION consul
-
 EXPOSE 8090
 
 COPY ../../../../../../../delme/automated-test/target/automated-test.jar  /streampipes-extensions-service.jar

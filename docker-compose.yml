@@ -40,7 +40,6 @@ services:
       dockerfile: Dockerfile
     image: streampipes_backend:release-validation
     depends_on:
-      - consul
       - couchdb
     volumes:
       - backend:/root/.streampipes
@@ -58,7 +57,6 @@ services:
       - "80:8088"
     depends_on:
       - couchdb
-      - consul
       - backend
     logging: *default-logging
     networks:
@@ -74,32 +72,6 @@ services:
     logging: *default-logging
     networks:
       spnet:
-
-  consul:
-    image: consul:1.14.3
-    environment:
-      - "CONSUL_LOCAL_CONFIG={\"rpc_streaming\": false, \"disable_update_check\": true, \"rpc\": {\"enable_streaming\": false}, \"use_streaming_backend\": false}"
-      - "CONSUL_BIND_INTERFACE=eth0"
-      - "CONSUL_HTTP_ADDR=0.0.0.0"
-      - "CONSUL_RPC_ENABLE_STREAMING=false"
-      - "CONSUL_USE_STREAMING_BACKEND=false"
-    entrypoint:
-      - consul
-      - agent
-      - -server
-      - -bootstrap-expect=1
-      - -data-dir=/consul/data
-      - -node=consul-one
-      - -bind={{ GetInterfaceIP "eth0" }}
-      - -client=0.0.0.0
-      - -enable-script-checks=true
-      - -ui
-    logging: *default-logging
-    volumes:
-      - consul:/consul/data
-    networks:
-      spnet:
-        ipv4_address: 172.31.0.9
 
   couchdb:
     image: couchdb:2.3.1
@@ -162,7 +134,6 @@ services:
 volumes:
   kafka:
   files:
-  consul:
   couchdb:
   zookeeper:
   influxdb:

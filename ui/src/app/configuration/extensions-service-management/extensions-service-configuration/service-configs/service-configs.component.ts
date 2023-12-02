@@ -26,13 +26,13 @@ import { SpServiceConfiguration } from '@streampipes/platform-services';
     providers: [XsService],
 })
 export class ServiceConfigsComponent {
-    @Input() consulService: SpServiceConfiguration;
-    @Output() updateConsulService: EventEmitter<SpServiceConfiguration> =
+    @Input() serviceConfiguration: SpServiceConfiguration;
+    @Output() updateServiceConfiguration: EventEmitter<SpServiceConfiguration> =
         new EventEmitter<SpServiceConfiguration>();
 
     constructor(private service: XsService) {}
 
     updateConfiguration(): void {
-        this.updateConsulService.emit(this.consulService);
+        this.updateServiceConfiguration.emit(this.serviceConfiguration);
     }
 }

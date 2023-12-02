@@ -48,7 +48,7 @@
         <checker-qual.version>3.39.0</checker-qual.version>
         <commons-codec.version>1.15</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <commons-compress.version>1.23.0</commons-compress.version>
+        <commons-compress.version>1.25.0</commons-compress.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
@@ -831,7 +831,6 @@
         <module>streampipes-client</module>
         <module>streampipes-client-api</module>
         <module>streampipes-commons</module>
-        <module>streampipes-config</module>
         <module>streampipes-connect-management</module>
         <module>streampipes-connect-shared</module>
         <module>streampipes-extensions-api</module>
@@ -873,7 +872,6 @@
         <module>streampipes-service-core</module>
         <module>streampipes-service-core-minimal</module>
         <module>streampipes-service-discovery</module>
-        <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>
         <module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
@@ -939,7 +937,7 @@
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <doclint>none</doclint>
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
-                                    <source>11</source>
+                                    <source>17</source>
                                 </configuration>
                             </execution>
                         </executions>

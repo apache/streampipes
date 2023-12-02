@@ -18,8 +18,9 @@ services:
   extensions-all-jvm:
     image: ${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}
     depends_on:
-      - consul
-      - couchdb  
+      - couchdb
+    environment:
+      - SP_SETUP_PROMETHEUS_ENDPOINT=${SP_SETUP_PROMETHEUS_ENDPOINT}
     volumes:
       - files:/spImages
     logging:

@@ -48,7 +48,8 @@ public class DataLakeSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.datalake")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.internal.jvm.datalake", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.INTERNAL)

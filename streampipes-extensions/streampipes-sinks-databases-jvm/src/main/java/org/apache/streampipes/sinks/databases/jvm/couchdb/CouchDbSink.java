@@ -48,7 +48,7 @@ public class CouchDbSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.couchdb")
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.couchdb", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.DATABASE)

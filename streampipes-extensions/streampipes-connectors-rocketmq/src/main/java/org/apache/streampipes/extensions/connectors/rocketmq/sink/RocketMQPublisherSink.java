@@ -70,7 +70,7 @@ public class RocketMQPublisherSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         RocketMQPublisherSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rocketmq")
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rocketmq", 0)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
