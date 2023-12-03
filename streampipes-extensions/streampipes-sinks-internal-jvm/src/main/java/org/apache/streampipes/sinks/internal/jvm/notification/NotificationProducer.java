@@ -106,7 +106,8 @@ public class NotificationProducer extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.notification")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.internal.jvm.notification", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.INTERNAL, DataSinkType.NOTIFICATION)

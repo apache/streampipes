@@ -62,7 +62,8 @@ public class BufferRestPublisherSink extends StreamPipesDataSink implements Buff
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.bufferrest")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.brokers.jvm.bufferrest", 0)
         .category(DataSinkType.NOTIFICATION)
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder

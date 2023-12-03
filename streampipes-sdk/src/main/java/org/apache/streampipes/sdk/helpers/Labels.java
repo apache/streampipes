@@ -20,22 +20,16 @@ package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.commons.resources.Resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
 public class Labels {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Labels.class);
-
   /**
    * @deprecated Externalize labels by using
    * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
    * to ease future support for multiple languages.
-   *
    * Creates a new label with internalId, label and description. Fully-configured labels are required by static
    * properties and are mandatory for event properties.
    *
@@ -47,22 +41,6 @@ public class Labels {
   @Deprecated(since = "0.90.0", forRemoval = true)
   public static Label from(String internalId, String label, String description) {
     return new Label(internalId, label, description);
-  }
-
-  /**
-   * @deprecated Externalize labels by using
-   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
-   * to ease future support for multiple languages.
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public static Label fromResources(String resourceIdentifier, String resourceName) {
-    try {
-      return new Label(resourceName, findTitleLabel(resourceIdentifier, resourceName),
-          findDescriptionLabel(resourceIdentifier, resourceName));
-    } catch (Exception e) {
-      LOG.error("Could not find resource " + resourceIdentifier);
-      return new Label(resourceName, "", "");
-    }
   }
 
   /**
