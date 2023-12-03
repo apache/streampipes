@@ -22,7 +22,6 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
-
   - package-ecosystem: "docker"
     directory: "/installer/compose"
     labels:
@@ -31,9 +30,24 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
-
   - package-ecosystem: "docker"
     directory: "/installer/cli/deploy/standalone/grafana"
+    labels:
+      - "dependencies"
+      - "installer"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
+  - package-ecosystem: "docker"
+    directory: "/installer/cli/deploy/standalone/prometheus"
+    labels:
+      - "dependencies"
+      - "installer"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
+  - package-ecosystem: "docker"
+    directory: "/installer/cli/deploy/standalone/prometheus-alertmanager"
     labels:
       - "dependencies"
       - "installer"
@@ -61,7 +75,7 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 1
   - package-ecosystem: "npm"
     directory: "/ui/projects/streampipes/platform-services"
@@ -69,7 +83,7 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 1
   - package-ecosystem: "npm"
     directory: "/ui/projects/streampipes/shared-ui"
@@ -77,7 +91,7 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 1
   - package-ecosystem: "pip"
     directory: "/streampipes-client-python"

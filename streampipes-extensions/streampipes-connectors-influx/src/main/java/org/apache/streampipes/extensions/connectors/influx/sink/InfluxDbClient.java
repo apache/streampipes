@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.connectors.influx.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
-import org.apache.streampipes.dataexplorer.commons.influx.InfluxRequests;
 import org.apache.streampipes.extensions.connectors.influx.shared.SharedInfluxClient;
 import org.apache.streampipes.model.runtime.Event;
 
@@ -41,6 +41,8 @@ public class InfluxDbClient extends SharedInfluxClient {
   private final Integer batchSize;
   private final Integer flushDuration;
 
+  private final InfluxClientProvider influxClientProvider;
+
 
   InfluxDbClient(InfluxConnectionSettings connectionSettings,
                  String measureName,
@@ -52,6 +54,7 @@ public class InfluxDbClient extends SharedInfluxClient {
     this.timestampField = timestampField;
     this.batchSize = batchSize;
     this.flushDuration = flushDuration;
+    this.influxClientProvider = new InfluxClientProvider();
 
     connect();
   }
@@ -67,7 +70,7 @@ public class InfluxDbClient extends SharedInfluxClient {
     var databaseName = connectionSettings.getDatabaseName();
 
     // Checking whether the database exists
-    if (!InfluxRequests.databaseExists(influxDb, databaseName)) {
+    if (!influxClientProvider.databaseExists(influxDb, databaseName)) {
       LOG.info("Database '" + databaseName + "' not found. Gets created ...");
       createDatabase(databaseName);
     }

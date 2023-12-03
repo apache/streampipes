@@ -13,26 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "3.4"
+version: "3"
 services:
-  extensions-all-jvm:
-    image: ${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}
-    depends_on:
-      - couchdb
-    environment:
-      - SP_SETUP_PROMETHEUS_ENDPOINT=${SP_SETUP_PROMETHEUS_ENDPOINT}
-    volumes:
-      - files:/spImages
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "1"
+  prometheus-alertmanager:
+    image: prom/alertmanager:v0.26.0
     networks:
       spnet:
-
-volumes:
-  files:
+    volumes:
+      - ../prometheus-alertmanager/alertmanager.yml:/etc/prometheus-alertmanager/alertmanager.yml
+    command:
+      - --config.file=/etc/prometheus-alertmanager/alertmanager.yml
 
 networks:
   spnet:
