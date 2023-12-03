@@ -19,60 +19,186 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
+import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
+import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
+import org.apache.streampipes.vocabulary.XSD;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.net.URI;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class DataExplorerSchemaManagementTest {
+  public static final String NEW_PROPERTY = "newProperty";
+  public static final String OLD_PROPERTY = "oldProperty";
 
-  @Test
-  public void createMeasurement() {
-    // Arrange
-    var dataLakeStorage = mock(IDataLakeStorage.class);
-    DataLakeMeasure measure = new DataLakeMeasure();
-    measure.setMeasureName("testMeasure");
-    when(dataLakeStorage.getAllDataLakeMeasures()).thenReturn(List.of());
-    when(dataLakeStorage.storeDataLakeMeasure(any())).thenReturn(true);
+  private IDataLakeStorage dataLakeStorageMock;
 
-    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
-
-    // Act
-    var updatedMeasure = schemaManagement.createMeasurement(measure);
-
-    // Assert
-    assertEquals(measure.getMeasureName(), updatedMeasure.getMeasureName());
-    verify(dataLakeStorage, Mockito.times(1))
-        .storeDataLakeMeasure(any());
-
+  @Before
+  public void setUp() {
+    dataLakeStorageMock = mock(IDataLakeStorage.class);
   }
 
   @Test
-  public void createMeasurementUpdate() {
-    // Arrange
-    var dataLakeStorage = mock(IDataLakeStorage.class);
-    DataLakeMeasure measure = new DataLakeMeasure();
-    measure.setMeasureName("testMeasure");
-    when(dataLakeStorage.getAllDataLakeMeasures()).thenReturn(List.of(measure));
-    when(dataLakeStorage.storeDataLakeMeasure(any())).thenReturn(true);
+  public void createMeasurementThatNotExisted() {
+    when(dataLakeStorageMock.getAllDataLakeMeasures()).thenReturn(List.of());
+    when(dataLakeStorageMock.storeDataLakeMeasure(any())).thenReturn(true);
+    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
 
-    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
+    var oldMeasure = getSampleMeasure(
+        DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
+        List.of()
+    );
+    var resultingMeasure = schemaManagement.createOrUpdateMeasurement(oldMeasure);
 
-    // Act
-    var updatedMeasure = schemaManagement.createMeasurement(measure);
-
-    // Assert
-    assertEquals(measure.getMeasureName(), updatedMeasure.getMeasureName());
-    verify(dataLakeStorage, Mockito.times(1))
+    assertEquals(oldMeasure.getMeasureName(), resultingMeasure.getMeasureName());
+    verify(dataLakeStorageMock, Mockito.times(1))
         .storeDataLakeMeasure(any());
+  }
 
+
+  @Test
+  public void createMeasurementWithUpdateStrategy() {
+
+    var oldMeasure = getSampleMeasure(
+        DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
+        List.of(
+            getEventProperty(OLD_PROPERTY, XSD.STRING)
+        )
+    );
+
+    when(dataLakeStorageMock.getAllDataLakeMeasures()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.findOne(any())).thenReturn(oldMeasure);
+    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
+
+    var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+
+    var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
+
+    assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
+    verify(dataLakeStorageMock, Mockito.times(1))
+        .updateDataLakeMeasure(any());
+    assertFalse(containsPropertyWithName(resultMeasure, OLD_PROPERTY));
+    assertTrue(containsPropertyWithName(resultMeasure, NEW_PROPERTY));
+
+  }
+
+
+  @Test
+  public void createMeasurementWithExtendSchemaStrategy() {
+
+    var oldMeasure = getSampleMeasure(
+        DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
+        List.of(
+            getEventProperty(OLD_PROPERTY, XSD.STRING)
+        )
+    );
+    when(dataLakeStorageMock.getAllDataLakeMeasures()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.findOne(any())).thenReturn(oldMeasure);
+    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
+    var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+
+    var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
+
+    assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
+    verify(dataLakeStorageMock, Mockito.times(1)).updateDataLakeMeasure(any());
+    assertTrue(containsPropertyWithName(resultMeasure, OLD_PROPERTY));
+    assertTrue(containsPropertyWithName(resultMeasure, NEW_PROPERTY));
+  }
+
+
+  @Test
+  public void createMeasurementWithExtendSchemaStrategyAndDifferentPropertyTypes() {
+    var oldMeasure = getSampleMeasure(
+        DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
+        List.of(
+            getEventProperty(OLD_PROPERTY, XSD.STRING),
+            getEventProperty(NEW_PROPERTY, XSD.INTEGER)
+        )
+    );
+
+    when(dataLakeStorageMock.getAllDataLakeMeasures()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.findOne(any())).thenReturn(oldMeasure);
+
+    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
+
+    var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+
+    var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
+    assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
+    verify(dataLakeStorageMock, Mockito.times(1)).updateDataLakeMeasure(any());
+    assertEquals(
+        2,
+        resultMeasure.getEventSchema()
+                     .getEventProperties()
+                     .size()
+    );
+    assertTrue(containsPropertyWithName(resultMeasure, OLD_PROPERTY));
+    assertTrue(containsPropertyWithName(resultMeasure, NEW_PROPERTY));
+  }
+
+  private EventProperty getEventProperty(
+      String runtimeName,
+      URI runtimeType
+  ) {
+    return EventPropertyPrimitiveTestBuilder
+        .create()
+        .withRuntimeName(runtimeName)
+        .withRuntimeType(runtimeType)
+        .build();
+  }
+
+  private DataLakeMeasure getNewMeasure(DataLakeMeasureSchemaUpdateStrategy updateStrategy) {
+    return getSampleMeasure(
+        updateStrategy,
+        List.of(getEventProperty(NEW_PROPERTY, XSD.STRING))
+    );
+  }
+
+  private DataLakeMeasure getSampleMeasure(
+      DataLakeMeasureSchemaUpdateStrategy updateStrategy,
+      List<EventProperty> eventProperties
+  ) {
+    var measure = new DataLakeMeasure();
+    measure.setMeasureName("testMeasure");
+    measure.setSchemaUpdateStrategy(updateStrategy);
+
+    measure.setEventSchema(
+        EventSchemaTestBuilder
+            .create()
+            .withEventProperties(
+                eventProperties
+            )
+            .build()
+    );
+
+    return measure;
+  }
+
+  private boolean containsPropertyWithName(
+      DataLakeMeasure measure,
+      String runtimeName
+  ) {
+    return measure
+        .getEventSchema()
+        .getEventProperties()
+        .stream()
+        .anyMatch(
+            eventProperty -> eventProperty.getRuntimeName()
+                                          .equals(runtimeName)
+        );
   }
 }
