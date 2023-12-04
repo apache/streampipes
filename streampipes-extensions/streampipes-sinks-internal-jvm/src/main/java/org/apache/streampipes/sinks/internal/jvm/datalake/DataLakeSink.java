@@ -24,6 +24,7 @@ import org.apache.streampipes.dataexplorer.commons.TimeSeriesStore;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -80,9 +81,16 @@ public class DataLakeSink extends StreamPipesDataSink {
                                 .get(0)
                                 .getEventSchema();
 
-    String schemaUpdateOption = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
     var measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
+
+    var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
+
+    if (schemaUpdateOptionString.equals(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA.toString())) {
+      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+    } else {
+      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+    }
 
     this.timeSeriesStore = new TimeSeriesStore(
         Environments.getEnvironment(),

@@ -86,6 +86,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
       DataLakeMeasure measure,
       DataLakeMeasure existingMeasure
   ) {
+    measure.setElementId(existingMeasure.getElementId());
     if (DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
       // For the update schema strategy the old schema is overwritten with the new one
       updateMeasurement(measure);
