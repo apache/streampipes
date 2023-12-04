@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.Path;
 import org.apache.http.HttpStatus;
 
 import jakarta.ws.rs.Consumes;
@@ -37,6 +38,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+@Path("api/v1/migrations/sink")
 public class DataSinkMigrationResource extends MigrateExtensionsResource<
         DataSinkInvocation,
         IDataSinkParameterExtractor,
