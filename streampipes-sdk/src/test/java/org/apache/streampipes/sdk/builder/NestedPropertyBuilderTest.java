@@ -92,39 +92,6 @@ public class NestedPropertyBuilderTest {
   }
 
   @Test
-  public void clearBuilder() {
-    EventPropertyNested result1 = NestedPropertyBuilder.create("TestProperty")
-                                                       .withEventProperty(PrimitivePropertyBuilder.create(
-                                                                                                      Datatypes.String,
-                                                                                                      "SubProperty1"
-                                                                                                  )
-                                                                                                  .build())
-                                                       .clear()
-                                                       .build();
-
-    assertNotNull(result1);
-    assertEquals("TestProperty", result1.getRuntimeName());
-    assertTrue(result1.getEventProperties()
-                      .isEmpty());
-
-    EventPropertyNested result2 = NestedPropertyBuilder.create("NewTestProperty")
-                                                       .withEventProperty(PrimitivePropertyBuilder.create(
-                                                                                                      Datatypes.String,
-                                                                                                      "SubProperty3"
-                                                                                                  )
-                                                                                                  .build())
-                                                       .build();
-
-    assertNotNull(result2);
-    assertEquals("NewTestProperty", result2.getRuntimeName());
-    assertEquals(
-        1,
-        result2.getEventProperties()
-               .size()
-    );
-  }
-
-  @Test
   public void createBuilderWithNullName() {
     assertThrows(IllegalArgumentException.class, () -> NestedPropertyBuilder.create(null));
   }

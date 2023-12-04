@@ -91,14 +91,4 @@ public class NestedPropertyBuilder {
     built.setEventProperties(containedEventProperties);
     return built;
   }
-
-  /**
-   * Resets the builder state, allowing it to be reused for creating another instance.
-   *
-   * @return A new instance of {@code NestedPropertyBuilder}.
-   */
-  public NestedPropertyBuilder clear() {
-    // Reset the builder state
-    return new NestedPropertyBuilder(eventPropertyNested.getRuntimeName());
-  }
 }
