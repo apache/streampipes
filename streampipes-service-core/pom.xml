@@ -94,6 +94,11 @@
             <artifactId>streampipes-platform-services</artifactId>
             <version>0.95.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>6.1.2</version>
+        </dependency>
         <!-- External dependencies -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>

@@ -25,7 +25,9 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,29 +60,27 @@ public class PipelineTemplate extends AbstractAuthGuardedSpringRestResource {
   @GetMapping(
       path = "/invocation",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getPipelineTemplateInvocation(@RequestParam("streamId") String streamId,
-                                                         @RequestParam("templateId") String pipelineTemplateId) {
-    if (pipelineTemplateId != null) {
-      SpDataStream dataStream = getDataStream(streamId);
-      var pipelineTemplateDescriptionOpt = getPipelineTemplateDescription(pipelineTemplateId);
-      if (pipelineTemplateDescriptionOpt.isPresent()) {
-        PipelineTemplateInvocation invocation =
-            Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescriptionOpt.get());
-        PipelineTemplateInvocation clonedInvocation = new PipelineTemplateInvocation(invocation);
-        return ok(new PipelineTemplateInvocation(clonedInvocation));
-      } else {
-        return badRequest(Notifications.error(
-            String.format(
-                "Could not create pipeline template %s - did you install all pipeline elements?",
-                pipelineTemplateId.substring(pipelineTemplateId.lastIndexOf(".") + 1))
-        ));
-      }
+  public ResponseEntity<PipelineTemplateInvocation> getPipelineTemplateInvocation(@RequestParam(value = "streamId", required = false) String streamId,
+                                                                                  @RequestParam(value = "templateId") String pipelineTemplateId) {
+    SpDataStream dataStream = getDataStream(streamId);
+    var pipelineTemplateDescriptionOpt = getPipelineTemplateDescription(pipelineTemplateId);
+    if (pipelineTemplateDescriptionOpt.isPresent()) {
+      PipelineTemplateInvocation invocation =
+          Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescriptionOpt.get());
+      PipelineTemplateInvocation clonedInvocation = new PipelineTemplateInvocation(invocation);
+      return ok(new PipelineTemplateInvocation(clonedInvocation));
     } else {
-      return fail();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(
+          String.format(
+              "Could not create pipeline template %s - did you install all pipeline elements?",
+              pipelineTemplateId.substring(pipelineTemplateId.lastIndexOf(".") + 1))
+      ));
     }
   }
 
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PipelineOperationStatus> generatePipeline(
       @RequestBody PipelineTemplateInvocation pipelineTemplateInvocation) {
 
@@ -88,9 +88,7 @@ public class PipelineTemplate extends AbstractAuthGuardedSpringRestResource {
         .handlePipelineTemplateInvocation(getAuthenticatedUserSid(), pipelineTemplateInvocation);
 
     return ok(status);
-
   }
-
 
   private Optional<PipelineTemplateDescription> getPipelineTemplateDescription(String pipelineTemplateId) {
     return Operations

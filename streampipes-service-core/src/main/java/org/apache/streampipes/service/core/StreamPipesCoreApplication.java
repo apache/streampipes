@@ -70,7 +70,7 @@ import java.util.concurrent.TimeUnit;
     SpPermissionEvaluator.class,
     StreamPipesPrometheusConfig.class
 })
-@ComponentScan({"org.apache.streampipes.rest.*"})
+@ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());

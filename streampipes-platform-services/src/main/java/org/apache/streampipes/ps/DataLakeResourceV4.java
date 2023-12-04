@@ -25,8 +25,10 @@ import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -145,7 +147,7 @@ public class DataLakeResourceV4 extends AbstractSpringRestResource {
     }
   }
 
-  @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/measurements/", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
@@ -178,49 +180,50 @@ public class DataLakeResourceV4 extends AbstractSpringRestResource {
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
       , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
-      @RequestParam(QP_COLUMNS) String columns
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(QP_START_DATE)
-      Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(QP_END_DATE)
-      Long endDate
-      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @RequestParam(QP_PAGE)
-      Integer page
+      @RequestParam(value = QP_COLUMNS, required = false) String columns
+      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
+      @RequestParam(value = QP_START_DATE, required = false) Long startDate
+      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
+      @RequestParam(value = QP_END_DATE, required = false) Long endDate
+      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation")
+      @RequestParam(value = QP_PAGE, required = false) Integer page
       , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results")
-      @RequestParam(QP_LIMIT) Integer limit
-      , @Parameter(in = ParameterIn.QUERY, description = "offset") @RequestParam(QP_OFFSET) Integer offset
+      @RequestParam(value = QP_LIMIT, required = false) Integer limit
+      , @Parameter(in = ParameterIn.QUERY, description = "offset")
+      @RequestParam(value = QP_OFFSET, required = false) Integer offset
       , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation")
-      @RequestParam(QP_GROUP_BY) String groupBy
+      @RequestParam(value = QP_GROUP_BY, required = false) String groupBy
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "ordering of retrieved query results (ASC or DESC - default is ASC)")
-      @RequestParam(QP_ORDER) String order
+      @RequestParam(value = QP_ORDER, required = false) String order
       , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation")
-      @RequestParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
+      @RequestParam(value = QP_AGGREGATION_FUNCTION, required = false) String aggregationFunction
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation")
-      @RequestParam(QP_TIME_INTERVAL) String timeInterval
-      , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @RequestParam(QP_COUNT_ONLY)
-      String countOnly
+      @RequestParam(value = QP_TIME_INTERVAL, required = false) String timeInterval
+      , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results")
+      @RequestParam(value = QP_COUNT_ONLY, required = false) String countOnly
       ,
       @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload")
-      @RequestParam(QP_AUTO_AGGREGATE) boolean autoAggregate
+      @RequestParam(value = QP_AUTO_AGGREGATE, required = false) boolean autoAggregate
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "filter conditions (a comma-separated list of filter conditions"
               + "such as [field,operator,condition])")
-      @RequestParam(QP_FILTER) String filter
+      @RequestParam(value = QP_FILTER, required = false) String filter
       , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)")
-      @RequestParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
+      @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "the maximum amount of resulting events,"
               + "when too high the query status is set to TOO_MUCH_DATA")
-      @RequestParam(QP_MAXIMUM_AMOUNT_OF_EVENTS) Integer maximumAmountOfResults,
+      @RequestParam(value = QP_MAXIMUM_AMOUNT_OF_EVENTS, required = false) Integer maximumAmountOfResults,
       @RequestParam Map<String, String> queryParams) {
 
     if (!(checkProvidedQueryParams(queryParams))) {
@@ -260,54 +263,55 @@ public class DataLakeResourceV4 extends AbstractSpringRestResource {
           @ApiResponse(
               responseCode = "200",
               description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
-  public ResponseEntity<?> downloadData(
+  public ResponseEntity<StreamingResponseBody> downloadData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
       , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
-      @RequestParam(QP_COLUMNS) String columns
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(QP_START_DATE)
-      Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(QP_END_DATE)
-      Long endDate
-      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation") @RequestParam(QP_PAGE)
-      Integer page
+      @RequestParam(value = QP_COLUMNS, required = false) String columns
+      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
+      @RequestParam(value = QP_START_DATE, required = false) Long startDate
+      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
+      @RequestParam(value = QP_END_DATE, required = false) Long endDate
+      , @Parameter(in = ParameterIn.QUERY, description = "page number for paging operation")
+      @RequestParam(value = QP_PAGE, required = false) Integer page
       , @Parameter(in = ParameterIn.QUERY, description = "maximum number of retrieved query results")
-      @RequestParam(QP_LIMIT) Integer limit
-      , @Parameter(in = ParameterIn.QUERY, description = "offset") @RequestParam(QP_OFFSET) Integer offset
+      @RequestParam(value = QP_LIMIT, required = false) Integer limit
+      , @Parameter(in = ParameterIn.QUERY, description = "offset")
+      @RequestParam(value = QP_OFFSET, required = false) Integer offset
       , @Parameter(in = ParameterIn.QUERY, description = "grouping tags (comma-separated) for grouping operation")
-      @RequestParam(QP_GROUP_BY) String groupBy
+      @RequestParam(value = QP_GROUP_BY, required = false) String groupBy
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "ordering of retrieved query results (ASC or DESC - default is ASC)")
-      @RequestParam(QP_ORDER) String order
+      @RequestParam(value = QP_ORDER, required = false) String order
       , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation")
-      @RequestParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
+      @RequestParam(value = QP_AGGREGATION_FUNCTION, required = false) String aggregationFunction
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation")
-      @RequestParam(QP_TIME_INTERVAL) String timeInterval
+      @RequestParam(value = QP_TIME_INTERVAL, required = false) String timeInterval
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "format specification (csv, json - default is csv) for data download")
-      @RequestParam(QP_FORMAT) String format
+      @RequestParam(value = QP_FORMAT, required = false) String format
       , @Parameter(in = ParameterIn.QUERY, description = "csv delimiter (comma or semicolon)")
-      @RequestParam(QP_CSV_DELIMITER) String csvDelimiter
+      @RequestParam(value = QP_CSV_DELIMITER, required = false) String csvDelimiter
       , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)")
-      @RequestParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
+      @RequestParam(value = QP_MISSING_VALUE_BEHAVIOUR, required = false) String missingValueBehaviour
       ,
       @Parameter(
           in = ParameterIn.QUERY,
           description = "filter conditions (a comma-separated list of filter conditions"
               + "such as [field,operator,condition])")
-      @RequestParam(QP_FILTER) String filter
-      , @RequestParam Map<String, String> queryParams) {
+      @RequestParam(value = QP_FILTER, required = false) String filter,
+      @RequestParam Map<String, String> queryParams) {
 
 
     if (!(checkProvidedQueryParams(queryParams))) {
-      return badRequest();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error("Wrong query parameters provided"));
     } else {
       ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
       if (format == null) {

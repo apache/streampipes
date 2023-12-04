@@ -42,7 +42,7 @@ public class DataExportResource extends AbstractAuthGuardedSpringRestResource {
       path = "/preview",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getExportPreview(List<String> selectedAssetIds) {
+  public ResponseEntity<ExportConfiguration> getExportPreview(List<String> selectedAssetIds) {
     var exportConfig = ExportManager.getExportPreview(selectedAssetIds);
     return ok(exportConfig);
   }

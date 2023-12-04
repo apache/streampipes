@@ -20,11 +20,14 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.mail.MailTester;
 import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.model.configuration.EmailTemplateConfig;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.simplejavamail.MailException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -85,12 +88,12 @@ public class EmailConfigurationResource extends AbstractAuthGuardedSpringRestRes
 
   @PostMapping(path = "/test", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public ResponseEntity<?> sendTestMail(@RequestBody EmailConfig config) {
+  public ResponseEntity<Void> sendTestMail(@RequestBody EmailConfig config) {
     try {
       new MailTester().sendTestMail(config);
       return ok();
     } catch (MailException | IllegalArgumentException | IOException e) {
-      return badRequest(e);
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
     }
   }
 }

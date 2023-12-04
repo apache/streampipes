@@ -55,13 +55,13 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedSpringRestReso
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  public ResponseEntity<DataLakeMeasure> addDataLake(DataLakeMeasure dataLakeMeasure) {
+  public ResponseEntity<DataLakeMeasure> addDataLake(@RequestBody DataLakeMeasure dataLakeMeasure) {
     DataLakeMeasure result = this.dataLakeMeasureManagement.createMeasurement(dataLakeMeasure);
     return ok(result);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, Integer>> getDataLakeInfos(@RequestParam("filter") List<String> measurementNames) {
+  public ResponseEntity<Map<String, Integer>> getDataLakeInfos(@RequestParam(value = "filter", required = false) List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     return ok(new DataLakeMeasurementCount(allMeasurements, measurementNames).countMeasurementSizes());
   }

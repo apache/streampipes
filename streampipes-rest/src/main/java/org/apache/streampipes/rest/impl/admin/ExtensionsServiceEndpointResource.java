@@ -29,10 +29,12 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 
 import org.apache.http.client.fluent.Request;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -99,12 +101,12 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedSpring
   }
 
   @PostMapping(path = "/items/icon", produces = "image/png")
-  public ResponseEntity<?> getEndpointItemIcon(@RequestBody ExtensionsServiceEndpointItem endpointItem) {
+  public ResponseEntity<byte[]> getEndpointItemIcon(@RequestBody ExtensionsServiceEndpointItem endpointItem) {
     try {
       byte[] imageBytes = Request.Get(makeIconUrl(endpointItem)).execute().returnContent().asBytes();
       return ok(imageBytes);
     } catch (IOException e) {
-      return fail();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
   }
 

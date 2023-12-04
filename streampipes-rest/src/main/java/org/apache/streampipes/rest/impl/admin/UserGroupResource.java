@@ -18,10 +18,13 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Group;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,10 +58,12 @@ public class UserGroupResource extends AbstractAuthGuardedSpringRestResource {
 
   @PutMapping(path = "{groupId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public ResponseEntity<?> updateUserGroup(@PathVariable("groupId") String groupId,
+  public ResponseEntity<Group> updateUserGroup(@PathVariable("groupId") String groupId,
                                            @RequestBody Group group) {
     if (!groupId.equals(group.getGroupId())) {
-      return badRequest();
+      throw new SpMessageException(
+          HttpStatus.BAD_REQUEST,
+          Notifications.error("Wrong group id provided"));
     } else {
       return ok(getUserGroupStorage().updateElement(group));
     }

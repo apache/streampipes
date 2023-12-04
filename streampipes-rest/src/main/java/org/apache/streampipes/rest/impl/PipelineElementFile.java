@@ -19,8 +19,10 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,21 +42,23 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/files")
 public class PipelineElementFile extends AbstractAuthGuardedSpringRestResource {
 
-  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public ResponseEntity<?> storeFile(@RequestPart("file_upload") InputStream uploadedInputStream,
-                                     @RequestPart("file_upload") MultipartFile fileDetail) {
+  public ResponseEntity<?> storeFile(@RequestPart("file_upload") MultipartFile fileDetail) {
     try {
       FileMetadata metadata =
-          FileManager.storeFile(getAuthenticatedUsername(), fileDetail.getName(), fileDetail.getInputStream());
+          FileManager.storeFile(getAuthenticatedUsername(), fileDetail.getOriginalFilename(), fileDetail.getInputStream());
       return ok(metadata);
     } catch (Exception e) {
       return fail();
@@ -70,11 +74,11 @@ public class PipelineElementFile extends AbstractAuthGuardedSpringRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
-  public ResponseEntity<List<FileMetadata>> getFileInfo(@RequestParam("filetypes") String filetypes) {
+  public ResponseEntity<List<FileMetadata>> getFileInfo(@RequestParam(value = "filetypes", required = false) String filetypes) {
     return ok(FileManager.getAllFiles(filetypes));
   }
 
-  @GetMapping(path = "/{filename}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @Operation(
       summary = "Get file content by file name."
           + "If multiple files with the same name exist, only the first is returned."
@@ -88,7 +92,7 @@ public class PipelineElementFile extends AbstractAuthGuardedSpringRestResource {
               description = "No file with the given file name could be found")
       }
   )
-  public ResponseEntity<?> getFile(
+  public ResponseEntity<byte[]> getFile(
       @Parameter(
           in = ParameterIn.PATH,
           description = "The name of the file to be retrieved",
@@ -102,13 +106,20 @@ public class PipelineElementFile extends AbstractAuthGuardedSpringRestResource {
       )
       @RequestParam(value = "isOriginalFilename", defaultValue = "false") boolean isOriginalFilename
   ) {
-    if (isOriginalFilename) {
-      try {
-        return ok(FileManager.getFileByOriginalName(filename));
-      } catch (IOException e) {
-        return notFound(filename);
+    try {
+      if (isOriginalFilename) {
+        return ok(getFileContents(FileManager.getFileByOriginalName(filename)));
+      } else {
+        return ok(getFileContents(FileManager.getFile(filename)));
       }
+    } catch (IOException e) {
+      throw new SpMessageException(
+          org.springframework.http.HttpStatus.NOT_FOUND,
+          Notifications.error("File not found"));
     }
-    return ok(FileManager.getFile(filename));
+  }
+
+  private byte[] getFileContents(File file) throws IOException {
+    return Files.readAllBytes(file.toPath());
   }
 }

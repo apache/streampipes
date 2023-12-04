@@ -28,10 +28,13 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,7 +58,7 @@ public class PipelineElementImport extends AbstractAuthGuardedSpringRestResource
   @PostMapping(
       consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> addElement(@RequestBody MultiValueMap<String, String> formDataMap) {
+  public ResponseEntity<Message> addElement(@RequestBody MultiValueMap<String, String> formDataMap) {
     if (formDataMap.containsKey("uri") && formDataMap.containsKey("publicElement")) {
       return ok(verifyAndAddElement(
           formDataMap.get("uri").get(0),
@@ -63,7 +66,7 @@ public class PipelineElementImport extends AbstractAuthGuardedSpringRestResource
           Boolean.parseBoolean(formDataMap.get("publicElement").get(0))
       ));
     } else {
-      return badRequest();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error("Invalid input"));
     }
   }
 

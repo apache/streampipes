@@ -22,7 +22,6 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/adapter-monitoring")
-public class AdapterMonitoringResource extends AbstractAuthGuardedSpringRestResource {
+public class AdapterMonitoringResource extends AbstractMonitoringResource {
 
   @GetMapping(path = "adapter/{elementId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpLogEntry>> getLogInfoForAdapter(@PathVariable("elementId") String elementId) {

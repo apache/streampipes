@@ -66,7 +66,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedSprin
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<Void> createDashboard(DashboardModel dashboardModel) {
+  public ResponseEntity<Void> createDashboard(@RequestBody DashboardModel dashboardModel) {
     getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
     return ok();
   }

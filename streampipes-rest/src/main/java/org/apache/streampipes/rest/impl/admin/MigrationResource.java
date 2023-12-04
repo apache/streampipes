@@ -30,6 +30,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
@@ -86,7 +87,7 @@ public class MigrationResource extends AbstractAuthGuardedSpringRestResource {
                   + "the corresponding actions are taken.")
       }
   )
-  public ResponseEntity<?> performMigrations(
+  public ResponseEntity<Void> performMigrations(
       @Parameter(
           in = ParameterIn.PATH,
           description = "the id of the extensions service that requests migrations",
@@ -136,7 +137,7 @@ public class MigrationResource extends AbstractAuthGuardedSpringRestResource {
       return ok();
     } catch (IllegalArgumentException e) {
       LOG.warn("Refusing migration request since the service {} is not registered.", serviceId);
-      return notFound();
+      throw new SpMessageException(org.springframework.http.HttpStatus.NOT_FOUND, e);
     }
   }
 

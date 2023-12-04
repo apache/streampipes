@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.shared.exception;
 
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notifications;
 
 import org.springframework.http.HttpStatus;
 
@@ -31,6 +32,12 @@ public class SpMessageException extends RuntimeException {
                             Message message) {
     this.status = status;
     this.message = message;
+  }
+
+  public SpMessageException(HttpStatus status,
+                            Throwable throwable) {
+    this.status = status;
+    this.message = Notifications.error(throwable.getMessage());
   }
 
   public Message getSpMessage() {

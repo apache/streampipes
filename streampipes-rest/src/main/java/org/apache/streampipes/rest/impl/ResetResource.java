@@ -38,7 +38,7 @@ import java.util.ArrayList;
 @RequestMapping("/api/v2/reset")
 public class ResetResource extends AbstractAuthGuardedSpringRestResource {
 
-  @PostMapping(path =  MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(produces =  MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Resets StreamPipes instance")
   public ResponseEntity<SuccessMessage> reset() {
     ResetManagement.reset(getAuthenticatedUsername());

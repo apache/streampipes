@@ -19,10 +19,13 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,9 +54,13 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedSpringRestR
   }
 
   @GetMapping(path = "{serviceGroup}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getServiceConfiguration(@PathVariable("serviceGroup") String serviceGroup) {
+  public ResponseEntity<SpServiceConfiguration> getServiceConfiguration(@PathVariable("serviceGroup") String serviceGroup) {
     var config = extensionsServicesConfigStorage.getElementById(serviceGroup);
-    return config != null ? ok(config) : notFound();
+    if (config != null) {
+      return ok(config);
+    } else {
+      throw new SpMessageException(HttpStatus.NOT_FOUND, Notifications.error("Configuration not found"));
+    }
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

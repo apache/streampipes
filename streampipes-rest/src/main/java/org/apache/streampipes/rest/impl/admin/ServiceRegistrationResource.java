@@ -21,12 +21,15 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,12 +65,14 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedSpringRestRe
   }
 
   @PostMapping(path = "/{serviceId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> unregisterService(@PathVariable("serviceId") String serviceId) {
+  public ResponseEntity<Void> unregisterService(@PathVariable("serviceId") String serviceId) {
     try {
       new ServiceRegistrationManager(extensionsServiceStorage).removeService(serviceId);
       return ok();
     } catch (IllegalArgumentException e) {
-      return badRequest("Could not find registered service with id " + serviceId);
+      throw new SpMessageException(
+          HttpStatus.BAD_REQUEST,
+          Notifications.error("Could not find registered service with id " + serviceId));
     }
   }
 }
