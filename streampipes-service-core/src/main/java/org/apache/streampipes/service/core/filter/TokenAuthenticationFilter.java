@@ -35,6 +35,7 @@ import org.apache.streampipes.user.management.util.TokenUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -89,10 +90,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
           }
         }
       } else {
-        var authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {
+        var authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith(HttpConstants.BASIC)) {
           if (supportedBasicAuthPaths.contains(request.getServletPath())) {
-            String base64Credentials = authorizationHeader.substring("Basic ".length()).trim();
+            String base64Credentials = authorizationHeader.substring(HttpConstants.BASIC.length()).trim();
             String credentials = new String(Base64.getDecoder().decode(base64Credentials));
 
             String[] splitCredentials = credentials.split(":");
