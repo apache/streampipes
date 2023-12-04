@@ -86,7 +86,7 @@ public class DataLakeSink extends StreamPipesDataSink {
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
-    if (schemaUpdateOptionString.equals(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA.toString())) {
+    if (schemaUpdateOptionString.equals("Extend existing schema")) {
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
     } else {
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);

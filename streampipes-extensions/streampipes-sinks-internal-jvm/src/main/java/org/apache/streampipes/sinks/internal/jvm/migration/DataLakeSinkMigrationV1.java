@@ -42,7 +42,8 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
   }
 
   /**
-   * Adds the static property for schema update to the sink and selects the option to update the schema as a default
+   * Adds the static property for schema update to the sink and selects the option to update the
+   * schema as a default
    */
   @Override
   public MigrationResult<DataSinkInvocation> migrate(
@@ -63,12 +64,16 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
         "Schema Update",
         "Update existing schemas with the new one or extend the existing schema with new properties"
     );
-    var oneOfStaticProperty = new OneOfStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+    var schemaUpdateStaticProperty = new OneOfStaticProperty(
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription()
+    );
 
     var options = Options.from("Update schema", "Extend existing schema");
     options.get(0)
            .setSelected(true);
-    oneOfStaticProperty.setOptions(options);
-    return oneOfStaticProperty;
+    schemaUpdateStaticProperty.setOptions(options);
+    return schemaUpdateStaticProperty;
   }
 }
