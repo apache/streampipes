@@ -95,7 +95,10 @@ public class ResetManagement {
     });
 
     // Remove all data in data lake
-    IDataExplorerSchemaManagement dataLakeMeasureManagement = new DataExplorerSchemaManagement();
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
+    IDataExplorerSchemaManagement dataLakeMeasureManagement = new DataExplorerSchemaManagement(dataLakeStorage);
     DataExplorerQueryManagement dataExplorerQueryManagement =
         new DataExplorerQueryManagement(dataLakeMeasureManagement);
     List<DataLakeMeasure> allMeasurements = dataLakeMeasureManagement.getAllMeasurements();

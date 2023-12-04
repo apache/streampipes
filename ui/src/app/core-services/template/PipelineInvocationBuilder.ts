@@ -20,6 +20,8 @@ import {
     MappingPropertyUnary,
     PipelineTemplateInvocation,
 } from '@streampipes/platform-services';
+import { OneOfStaticProperty } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { optionsProviders } from '@danielmoncada/angular-datetime-picker';
 
 export class PipelineInvocationBuilder {
     private pipelineTemplateInvocation: PipelineTemplateInvocation;
@@ -51,6 +53,26 @@ export class PipelineInvocationBuilder {
                 'jsplumb_domId2' + name === property.internalName
             ) {
                 property.value = value;
+            }
+        });
+
+        return this;
+    }
+
+    public setOneOfStaticProperty(name: string, value: string) {
+        this.pipelineTemplateInvocation.staticProperties.forEach(property => {
+            if (
+                // property instanceof OneOfStaticProperty &&
+                property['@class'] ===
+                    'org.apache.streampipes.model.staticproperty.OneOfStaticProperty' &&
+                'jsplumb_domId2' + name === property.internalName
+            ) {
+                // set selected for selected option
+                property.options.forEach(option => {
+                    if (option.name === value) {
+                        option.selected = true;
+                    }
+                });
             }
         });
 

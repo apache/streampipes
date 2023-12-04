@@ -25,7 +25,6 @@ import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
@@ -46,8 +45,6 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   IDataLakeStorage dataLakeStorage;
 
-  public DataExplorerSchemaManagement() {}
-
   public DataExplorerSchemaManagement(IDataLakeStorage dataLakeStorage) {
     this.dataLakeStorage = dataLakeStorage;
   }
@@ -59,7 +56,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public DataLakeMeasure getById(String elementId) {
-    return getDataLakeStorage().findOne(elementId);
+    return dataLakeStorage.findOne(elementId);
   }
 
   /**
@@ -118,8 +115,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public void deleteMeasurement(String elementId) {
-    if (getDataLakeStorage().findOne(elementId) != null) {
-      getDataLakeStorage().deleteDataLakeMeasure(elementId);
+    if (dataLakeStorage.findOne(elementId) != null) {
+      dataLakeStorage.deleteDataLakeMeasure(elementId);
     } else {
       throw new IllegalArgumentException("Could not find measure with this ID");
     }
@@ -169,12 +166,6 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
       dataLakeStorage.storeDataLakeMeasure(measure);
     }
   }
-
-  protected IDataLakeStorage getDataLakeStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-                                     .getDataLakeStorage();
-  }
-
 
   private void setSchemaVersionAndStoreMeasurement(DataLakeMeasure measure) {
     measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);

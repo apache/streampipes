@@ -24,6 +24,7 @@ import org.apache.streampipes.dataexplorer.influx.DataLakeMeasurementCount;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -46,7 +47,10 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 
   public DataLakeMeasureResourceV4() {
-    this.dataLakeMeasureManagement = new DataExplorerSchemaManagement();
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
+    this.dataLakeMeasureManagement = new DataExplorerSchemaManagement(dataLakeStorage);
   }
 
   @POST
@@ -85,8 +89,10 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("{id}")
-  public Response updateDataLakeMeasure(@PathParam("id") String elementId,
-                                        DataLakeMeasure measure) {
+  public Response updateDataLakeMeasure(
+      @PathParam("id") String elementId,
+      DataLakeMeasure measure
+  ) {
     if (elementId.equals(measure.getElementId())) {
       try {
         this.dataLakeMeasureManagement.updateMeasurement(measure);
