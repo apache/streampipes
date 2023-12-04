@@ -37,12 +37,11 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-
 public class DataLakeSink extends StreamPipesDataSink {
 
   private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
   private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
-  private static final String SCHEMA_UPDATE_KEY = "schema_update";
+  public static final String SCHEMA_UPDATE_KEY = "schema_update";
 
 
   private TimeSeriesStore timeSeriesStore;
@@ -51,7 +50,7 @@ public class DataLakeSink extends StreamPipesDataSink {
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.internal.jvm.datalake")
+        .create("org.apache.streampipes.sinks.internal.jvm.datalake", 1)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.INTERNAL)
