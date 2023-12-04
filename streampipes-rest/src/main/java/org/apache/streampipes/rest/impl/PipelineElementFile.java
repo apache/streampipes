@@ -46,6 +46,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.stream.Collectors;
 
 @Path("/v2/files")
 @Component
@@ -118,5 +119,14 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
       }
     }
     return ok(FileManager.getFile(filename));
+  }
+
+  @GET
+  @Path("/allFilenames")
+  @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
+  public Response getAllFilenames() {
+    return ok(FileManager.getAllFiles().stream().map(fileMetadata -> fileMetadata.getOriginalFilename()).collect(
+        Collectors.toList()));
   }
 }

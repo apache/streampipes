@@ -29,6 +29,8 @@ import { FilesService } from '@streampipes/platform-services';
 export class FileUploadDialogComponent {
     inputValue: string;
     fileNames: string[] = [];
+    overlappingFileNames: string[] = [];
+    renamedFileNames: string[] = [];
 
     selectedUploadFiles: FileList;
 
@@ -56,10 +58,18 @@ export class FileUploadDialogComponent {
     }
 
     store() {
-        this.uploadStatus = 0;
-        if (this.selectedUploadFiles.length > 0) {
-            this.uploadFile(0);
-        }
+        this.filesService.getAllFilenames().subscribe(data => {
+            const allFileNames = new Set(data);
+            this.overlappingFileNames = this.fileNames.filter(fileName =>
+                allFileNames.has(fileName),
+            );
+            if (this.overlappingFileNames.length == 0) {
+                this.uploadStatus = 0;
+                if (this.selectedUploadFiles.length > 0) {
+                    this.uploadFile(0);
+                }
+            }
+        });
     }
 
     uploadFile(index: number): void {
@@ -86,5 +96,26 @@ export class FileUploadDialogComponent {
 
     cancel() {
         this.dialogRef.close();
+    }
+
+    renameOverlappingFiles() {
+        const dataTransfer = new DataTransfer();
+        for (let i = 0; i < this.fileNames.length; i++) {
+            let fileName = this.fileNames[i];
+            let index = this.overlappingFileNames.indexOf(fileName);
+            if (index != -1) {
+                this.fileNames[i] = this.renamedFileNames[index];
+                fileName = this.renamedFileNames[index];
+            }
+            let selectedUploadFile = this.selectedUploadFiles[i];
+            const renamedFile = new File([selectedUploadFile], fileName, {
+                type: selectedUploadFile.type,
+                lastModified: selectedUploadFile.lastModified,
+            });
+            dataTransfer.items.add(renamedFile);
+        }
+        this.selectedUploadFiles = dataTransfer.files;
+        this.overlappingFileNames = [];
+        this.renamedFileNames = [];
     }
 }

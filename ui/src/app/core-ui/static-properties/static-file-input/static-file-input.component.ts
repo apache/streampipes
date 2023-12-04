@@ -41,6 +41,7 @@ export class StaticFileInputComponent
     public chooseExistingFileControl = new UntypedFormControl();
 
     fileName: string;
+    fileAlreadyExists: boolean;
 
     selectedUploadFile: File;
 
@@ -122,24 +123,35 @@ export class StaticFileInputComponent
     }
 
     upload() {
-        this.uploadStatus = 0;
         if (this.selectedUploadFile !== undefined) {
-            this.filesService.uploadFile(this.selectedUploadFile).subscribe(
-                event => {
-                    if (event.type === HttpEventType.UploadProgress) {
-                        this.uploadStatus = Math.round(
-                            (100 * event.loaded) / event.total,
+            this.filesService.getAllFilenames().subscribe(allFileNames => {
+                if (!allFileNames.includes(this.selectedUploadFile.name)) {
+                    this.uploadStatus = 0;
+                    this.filesService
+                        .uploadFile(this.selectedUploadFile)
+                        .subscribe(
+                            event => {
+                                if (
+                                    event.type === HttpEventType.UploadProgress
+                                ) {
+                                    this.uploadStatus = Math.round(
+                                        (100 * event.loaded) / event.total,
+                                    );
+                                } else if (event instanceof HttpResponse) {
+                                    const internalFilename =
+                                        event.body.internalFilename;
+                                    this.parentForm.controls[
+                                        this.fieldName
+                                    ].setValue(internalFilename);
+                                    this.fetchFileMetadata(internalFilename);
+                                }
+                            },
+                            error => {},
                         );
-                    } else if (event instanceof HttpResponse) {
-                        const internalFilename = event.body.internalFilename;
-                        this.parentForm.controls[this.fieldName].setValue(
-                            internalFilename,
-                        );
-                        this.fetchFileMetadata(internalFilename);
-                    }
-                },
-                error => {},
-            );
+                } else {
+                    this.fileAlreadyExists = true;
+                }
+            });
         }
     }
 
@@ -162,5 +174,9 @@ export class StaticFileInputComponent
     onValueChange(value: any) {
         this.staticProperty.locationPath = value.internalFilename;
         this.parentForm.updateValueAndValidity();
+    }
+
+    reenableFileUpload() {
+        this.fileAlreadyExists = false;
     }
 }
