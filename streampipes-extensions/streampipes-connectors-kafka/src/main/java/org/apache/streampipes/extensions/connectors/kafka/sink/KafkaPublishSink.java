@@ -59,7 +59,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         KafkaPublishSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka")
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka", 0)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)

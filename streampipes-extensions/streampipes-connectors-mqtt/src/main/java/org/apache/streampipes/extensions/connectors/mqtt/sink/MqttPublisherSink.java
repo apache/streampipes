@@ -74,7 +74,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         MqttPublisherSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt")
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 0)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)

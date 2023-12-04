@@ -90,6 +90,26 @@ public class StaticProperties {
     return property;
   }
 
+  /**
+   * Creates a FreeTextStaticProperty with the specified configuration options allowing only plaintext as input.
+   *
+   * @param label                    The label for the FreeTextStaticProperty.
+   * @param isMultiLine              {@code true} if the FreeTextStaticProperty should support multiline text,
+   *                                 {@code false} otherwise.
+   * @param arePlaceholdersSupported {@code true} if the FreeTextStaticProperty should support placeholders,
+   *                                 {@code false} otherwise.
+   * @return A configured FreeTextStaticProperty instance.
+   */
+  public static FreeTextStaticProperty stringFreeTextProperty(
+          Label label,
+          boolean isMultiLine,
+          boolean arePlaceholdersSupported) {
+    var property = stringFreeTextProperty(label);
+    property.setMultiLine(isMultiLine);
+    property.setPlaceholdersSupported(arePlaceholdersSupported);
+    return property;
+  }
+
   public static FreeTextStaticProperty integerFreeTextProperty(Label label) {
     return freeTextProperty(label, Datatypes.Integer);
   }
