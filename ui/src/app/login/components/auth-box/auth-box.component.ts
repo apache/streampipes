@@ -17,6 +17,7 @@
  */
 
 import { Component } from '@angular/core';
+import { AppConstants } from '../../../services/app.constants';
 
 @Component({
     selector: 'sp-auth-box',
@@ -24,7 +25,5 @@ import { Component } from '@angular/core';
     styleUrls: ['./auth-box.component.scss'],
 })
 export class AuthBoxComponent {
-    openDocumentation() {
-        window.open('https://streampipes.apache.org/docs', '_blank');
-    }
+    constructor(public appConstants: AppConstants) {}
 }
