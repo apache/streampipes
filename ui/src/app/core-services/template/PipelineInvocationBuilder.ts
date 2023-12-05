@@ -20,6 +20,8 @@ import {
     MappingPropertyUnary,
     PipelineTemplateInvocation,
 } from '@streampipes/platform-services';
+import { OneOfStaticProperty } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { optionsProviders } from '@danielmoncada/angular-datetime-picker';
 
 export class PipelineInvocationBuilder {
     private pipelineTemplateInvocation: PipelineTemplateInvocation;
