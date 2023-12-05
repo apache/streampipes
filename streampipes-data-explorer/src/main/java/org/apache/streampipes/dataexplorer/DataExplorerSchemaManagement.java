@@ -61,7 +61,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   /**
    * For new measurements an entry is generated in the database. For existing measurements the schema is updated
-   * according to the provided update strategy.
+   * according to the update strategy defined by the measurement.
    */
   @Override
   public DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure) {
@@ -200,24 +200,25 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
       DataLakeMeasure measure1,
       DataLakeMeasure measure2
   ) {
-    return new ArrayList<>(
-        Stream
-            .concat(
-                measure1
-                    .getEventSchema()
-                    .getEventProperties()
-                    .stream(),
-                measure2
-                    .getEventSchema()
-                    .getEventProperties()
-                    .stream()
-            )
-            .collect(Collectors.toMap(
-                EventProperty::getRuntimeName,
-                Function.identity(),
-                (eventProperty, eventProperty2) -> eventProperty
-            ))
-            .values());
+    // Combine the event properties from both measures into a single Stream
+    var allMeasurementProperties = Stream.concat(
+        measure1.getEventSchema()
+                .getEventProperties()
+                .stream(),
+        measure2.getEventSchema()
+                .getEventProperties()
+                .stream()
+    );
 
+    // Filter event properties by removing duplicate runtime names
+    // If there are duplicate keys, choose the first occurrence
+    var unifiedEventProperties = allMeasurementProperties
+        .collect(Collectors.toMap(
+            EventProperty::getRuntimeName,
+            Function.identity(),
+            (eventProperty, eventProperty2) -> eventProperty
+        ))
+        .values();
+    return new ArrayList<>(unifiedEventProperties);
   }
 }
