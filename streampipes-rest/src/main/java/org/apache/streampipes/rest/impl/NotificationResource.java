@@ -22,7 +22,7 @@ import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.NotificationCount;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +40,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/notifications")
-public class NotificationResource extends AbstractAuthGuardedSpringRestResource {
+public class NotificationResource extends AbstractAuthGuardedRestResource {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> addNotification(@RequestBody Notification notification) {

@@ -38,7 +38,7 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
@@ -77,7 +77,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestController
 @RequestMapping("/api/v2/pipelines")
 @Component
-public class PipelineResource extends AbstractAuthGuardedSpringRestResource {
+public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineResource.class);
 

@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/pe/options")
-public class ContainerProvidedOptions extends AbstractSpringRestResource {
+public class ContainerProvidedOptions extends AbstractRestResource {
 
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,

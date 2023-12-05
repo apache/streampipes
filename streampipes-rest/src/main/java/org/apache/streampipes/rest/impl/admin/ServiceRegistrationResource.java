@@ -22,7 +22,7 @@ import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -45,7 +45,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/extensions-services")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public class ServiceRegistrationResource extends AbstractAuthGuardedSpringRestResource {
+public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistrationResource.class);
 

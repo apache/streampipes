@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-public abstract class AbstractDashboardResource extends AbstractAuthGuardedSpringRestResource {
+public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")

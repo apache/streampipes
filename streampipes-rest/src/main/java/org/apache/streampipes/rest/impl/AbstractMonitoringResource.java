@@ -19,12 +19,12 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
-public abstract class AbstractMonitoringResource extends AbstractAuthGuardedSpringRestResource {
+public abstract class AbstractMonitoringResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping
   public ResponseEntity<Void> triggerMonitoringUpdate() {

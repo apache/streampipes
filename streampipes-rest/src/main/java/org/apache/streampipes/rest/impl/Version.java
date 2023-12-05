@@ -21,7 +21,7 @@ import org.apache.streampipes.manager.info.SystemInfoProvider;
 import org.apache.streampipes.manager.info.VersionInfoProvider;
 import org.apache.streampipes.model.client.version.SystemInfo;
 import org.apache.streampipes.model.client.version.VersionInfo;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/info")
-public class Version extends AbstractAuthGuardedSpringRestResource {
+public class Version extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/versions", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Provides health-check and information about current backend version.", tags = {"Version"})

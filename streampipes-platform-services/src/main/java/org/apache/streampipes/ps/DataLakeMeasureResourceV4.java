@@ -22,7 +22,7 @@ import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.influx.DataLakeMeasurementCount;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +43,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v4/datalake/measure")
-public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedSpringRestResource {
+public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
 
   private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 

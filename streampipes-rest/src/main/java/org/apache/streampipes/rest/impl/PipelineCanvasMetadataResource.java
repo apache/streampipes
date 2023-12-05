@@ -19,7 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 
@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-canvas-metadata")
-public class PipelineCanvasMetadataResource extends AbstractSpringRestResource {
+public class PipelineCanvasMetadataResource extends AbstractRestResource {
 
   @GetMapping(path = "/pipeline/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PipelineCanvasMetadata> getPipelineCanvasMetadataForPipeline(

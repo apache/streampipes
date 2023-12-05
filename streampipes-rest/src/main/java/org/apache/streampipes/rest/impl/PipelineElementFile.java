@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
@@ -49,7 +49,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/files")
-public class PipelineElementFile extends AbstractAuthGuardedSpringRestResource {
+public class PipelineElementFile extends AbstractAuthGuardedRestResource {
 
   @PostMapping(
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,

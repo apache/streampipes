@@ -28,7 +28,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -58,7 +58,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/migrations")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public class MigrationResource extends AbstractAuthGuardedSpringRestResource {
+public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
 

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.units.UnitProvider;
 
 import com.github.jqudt.Unit;
@@ -33,7 +33,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/measurement-units")
-public class MeasurementUnitResource extends AbstractSpringRestResource {
+public class MeasurementUnitResource extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Unit>> getAllMeasurementUnits() {

@@ -30,7 +30,7 @@ import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
@@ -54,7 +54,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2/auth")
-public class Authentication extends AbstractSpringRestResource {
+public class Authentication extends AbstractRestResource {
 
   @Autowired
   AuthenticationManager authenticationManager;

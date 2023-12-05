@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.assets.AssetManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v2/pe")
-public class PipelineElementAsset extends AbstractSpringRestResource {
+public class PipelineElementAsset extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 

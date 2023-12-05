@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.MediaType;
@@ -34,7 +34,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/admin/permissions")
-public class PermissionResource extends AbstractAuthGuardedSpringRestResource {
+public class PermissionResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "objects/{objectInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)

@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.configuration.GeneralConfig;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.HttpHeaders;
@@ -39,7 +39,7 @@ import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/v2/admin/general-config")
-public class GeneralConfigurationResource extends AbstractAuthGuardedSpringRestResource {
+public class GeneralConfigurationResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)

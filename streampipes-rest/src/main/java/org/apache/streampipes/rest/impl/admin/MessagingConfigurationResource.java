@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.configuration.MessagingSettings;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.MediaType;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/messaging")
-public class MessagingConfigurationResource extends AbstractAuthGuardedSpringRestResource {
+public class MessagingConfigurationResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)

@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ExportManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/export")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public class DataExportResource extends AbstractAuthGuardedSpringRestResource {
+public class DataExportResource extends AbstractAuthGuardedRestResource {
 
   @PostMapping(
       path = "/preview",

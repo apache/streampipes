@@ -23,7 +23,7 @@ import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.ResetManagement;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/v2/reset")
-public class ResetResource extends AbstractAuthGuardedSpringRestResource {
+public class ResetResource extends AbstractAuthGuardedRestResource {
 
   @PostMapping(produces =  MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Resets StreamPipes instance")

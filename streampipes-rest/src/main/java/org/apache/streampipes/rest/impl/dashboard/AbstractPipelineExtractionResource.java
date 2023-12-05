@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.dashboard;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.ResponseEntity;
 
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPipelineExtractionResource<T> extends AbstractSpringRestResource {
+public abstract class AbstractPipelineExtractionResource<T> extends AbstractRestResource {
 
   protected ResponseEntity<?> getPipelineByIdAndFieldValue(String appId,
                                                         String pipelineId,

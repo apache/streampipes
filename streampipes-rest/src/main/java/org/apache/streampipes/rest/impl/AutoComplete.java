@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.vocabulary.SemanticTypeRegistry;
 
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/autocomplete")
-public class AutoComplete extends AbstractSpringRestResource {
+public class AutoComplete extends AbstractRestResource {
 
   @GetMapping(path = "/semantic-type", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<String>> getSemanticTypes(@RequestParam("text") String text) {

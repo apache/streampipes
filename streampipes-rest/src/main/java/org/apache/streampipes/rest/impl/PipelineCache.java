@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-cache")
-public class PipelineCache extends AbstractAuthGuardedSpringRestResource {
+public class PipelineCache extends AbstractAuthGuardedRestResource {
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> updateCachedPipeline(@RequestBody String rawPipelineModel) {

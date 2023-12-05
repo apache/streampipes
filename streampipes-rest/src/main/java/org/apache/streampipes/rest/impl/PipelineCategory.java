@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/pipelinecategories")
-public class PipelineCategory extends AbstractSpringRestResource {
+public class PipelineCategory extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<org.apache.streampipes.model.pipeline.PipelineCategory>> getCategories() {

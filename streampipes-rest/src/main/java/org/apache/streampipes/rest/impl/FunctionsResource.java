@@ -25,7 +25,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +42,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/functions")
-public class FunctionsResource extends AbstractAuthGuardedSpringRestResource {
+public class FunctionsResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Collection<FunctionDefinition>> getActiveFunctions() {

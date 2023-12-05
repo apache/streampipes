@@ -19,7 +19,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
@@ -41,7 +41,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/usergroups")
-public class UserGroupResource extends AbstractAuthGuardedSpringRestResource {
+public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)

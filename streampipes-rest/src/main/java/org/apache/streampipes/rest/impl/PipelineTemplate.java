@@ -24,7 +24,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import org.springframework.http.HttpStatus;
@@ -43,7 +43,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-templates")
-public class PipelineTemplate extends AbstractAuthGuardedSpringRestResource {
+public class PipelineTemplate extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/streams", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SpDataStreamContainer> getAvailableDataStreams() {

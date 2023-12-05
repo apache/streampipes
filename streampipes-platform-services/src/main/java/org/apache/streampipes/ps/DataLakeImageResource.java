@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ import java.io.InputStream;
 
 @RestController
 @RequestMapping("/api/v4/datalake/images")
-public class DataLakeImageResource extends AbstractAuthGuardedSpringRestResource {
+public class DataLakeImageResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{imageId}", produces = "image/jpeg")
   public ResponseEntity<InputStream> getImage(@PathVariable("imageId") String imageId) {

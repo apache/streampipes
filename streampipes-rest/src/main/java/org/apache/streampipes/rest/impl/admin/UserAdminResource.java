@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.PrincipalType;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
 
@@ -37,7 +37,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/admin/users")
-public class UserAdminResource extends AbstractAuthGuardedSpringRestResource {
+public class UserAdminResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)

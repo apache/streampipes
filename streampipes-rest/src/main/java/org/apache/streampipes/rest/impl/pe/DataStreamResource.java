@@ -23,7 +23,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.MediaType;
@@ -41,7 +41,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/streams")
-public class DataStreamResource extends AbstractAuthGuardedSpringRestResource {
+public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)

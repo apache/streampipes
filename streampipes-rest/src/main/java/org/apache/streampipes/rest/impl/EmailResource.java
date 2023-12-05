@@ -19,7 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.mail.SpEmail;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/mail")
-public class EmailResource extends AbstractAuthGuardedSpringRestResource {
+public class EmailResource extends AbstractAuthGuardedRestResource {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> sendEmail(@RequestBody SpEmail email) {

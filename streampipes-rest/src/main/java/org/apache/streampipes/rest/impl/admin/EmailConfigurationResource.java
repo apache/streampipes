@@ -21,7 +21,7 @@ import org.apache.streampipes.mail.MailTester;
 import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.model.configuration.EmailTemplateConfig;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
@@ -42,7 +42,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v2/admin/mail-config")
-public class EmailConfigurationResource extends AbstractAuthGuardedSpringRestResource {
+public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)

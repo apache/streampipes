@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
-public class DataLakeWidgetResource extends AbstractSpringRestResource {
+public class DataLakeWidgetResource extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<DataExplorerWidgetModel>> getAllDataExplorerWidgets() {

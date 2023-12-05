@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.streampipes.model.client.user.Role;
@@ -33,7 +34,7 @@ public class AbstractAuthGuardedRestResource extends AbstractRestResource {
       Role.Constants.ROLE_SERVICE_ADMIN_VALUE);
 
   protected boolean isAuthenticated() {
-    return SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+    return SecurityContextHolder.getContext().getAuthentication() != null;
   }
 
   protected String getAuthenticatedUsername() {
@@ -61,11 +62,10 @@ public class AbstractAuthGuardedRestResource extends AbstractRestResource {
   protected boolean hasAnyAuthority(List<String> authorities) {
     return isAuthenticated()
         && SecurityContextHolder
-            .getContext()
-            .getAuthentication()
-            .getAuthorities()
-            .stream()
-            .anyMatch(a -> authorities.contains(a.getAuthority()));
+        .getContext()
+        .getAuthentication()
+        .getAuthorities()
+        .stream()
+        .anyMatch(a -> authorities.contains(a.getAuthority()));
   }
-
 }

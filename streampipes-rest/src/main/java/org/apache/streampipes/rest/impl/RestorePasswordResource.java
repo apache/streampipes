@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.user.RegistrationData;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ import java.security.spec.InvalidKeySpecException;
 
 @RestController
 @RequestMapping("/api/v2/restore-password")
-public class RestorePasswordResource extends AbstractSpringRestResource {
+public class RestorePasswordResource extends AbstractRestResource {
 
   @GetMapping(path = "{recoveryCode}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> checkTokenValidity(@PathVariable("recoveryCode") String recoveryCode) {

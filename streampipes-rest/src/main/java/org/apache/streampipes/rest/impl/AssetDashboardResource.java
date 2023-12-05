@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IAssetDashboardStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -51,7 +51,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/asset-dashboards")
-public class AssetDashboardResource extends AbstractSpringRestResource {
+public class AssetDashboardResource extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AssetDashboardResource.class);
 

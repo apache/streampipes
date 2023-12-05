@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 
 import org.apache.streampipes.model.labeling.Category;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
@@ -40,7 +40,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2/labeling/category")
-public class CategoryResource extends AbstractSpringRestResource {
+public class CategoryResource extends AbstractRestResource {
 
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

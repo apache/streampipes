@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/activate-account")
-public class AccountActivationResource extends AbstractAuthGuardedSpringRestResource {
+public class AccountActivationResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(
       path = "{recoveryCode}",

@@ -27,7 +27,7 @@ import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/users")
-public class UserResource extends AbstractAuthGuardedSpringRestResource {
+public class UserResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ShortUserInfo>> listUsers() {

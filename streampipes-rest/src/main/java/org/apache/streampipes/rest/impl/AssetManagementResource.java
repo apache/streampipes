@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IGenericStorage;
@@ -45,7 +45,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2/assets")
-public class AssetManagementResource extends AbstractAuthGuardedSpringRestResource {
+public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AssetManagementResource.class);
 

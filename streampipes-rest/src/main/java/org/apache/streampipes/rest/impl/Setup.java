@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/setup")
-public class Setup extends AbstractSpringRestResource {
+public class Setup extends AbstractRestResource {
 
   private final ISpCoreConfigurationStorage storage = StorageDispatcher
       .INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();

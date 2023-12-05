@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-canvas-cache")
-public class PipelineCanvasMetadataCache extends AbstractAuthGuardedSpringRestResource {
+public class PipelineCanvasMetadataCache extends AbstractAuthGuardedRestResource {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> updateCachedCanvasMetadata(@RequestBody String canvasMetadata) {

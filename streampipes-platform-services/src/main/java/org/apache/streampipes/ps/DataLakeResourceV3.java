@@ -20,7 +20,7 @@ package org.apache.streampipes.ps;
 
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v3/datalake")
 @Deprecated
-public class DataLakeResourceV3 extends AbstractSpringRestResource {
+public class DataLakeResourceV3 extends AbstractRestResource {
   public DataLakeResourceV3() {
   }
 

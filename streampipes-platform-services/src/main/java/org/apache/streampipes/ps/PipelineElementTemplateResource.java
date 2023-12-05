@@ -24,7 +24,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,7 +48,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-element-templates")
-public class PipelineElementTemplateResource extends AbstractSpringRestResource {
+public class PipelineElementTemplateResource extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all pipeline element templates",

@@ -29,7 +29,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
@@ -53,7 +53,7 @@ import java.net.URISyntaxException;
 @RestController
 @RequestMapping("/api/v2/element")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public class PipelineElementImport extends AbstractAuthGuardedSpringRestResource {
+public class PipelineElementImport extends AbstractAuthGuardedRestResource {
 
   @PostMapping(
       consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,

@@ -27,7 +27,7 @@ import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,7 +78,7 @@ import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams
 
 @RestController
 @RequestMapping("/api/v4/datalake")
-public class DataLakeResourceV4 extends AbstractSpringRestResource {
+public class DataLakeResourceV4 extends AbstractRestResource {
 
   private static final Logger logger = LoggerFactory.getLogger(DataLakeResourceV4.class);
 

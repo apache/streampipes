@@ -23,7 +23,7 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.Category;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageManager;
 
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/categories")
-public class PipelineElementCategory extends AbstractAuthGuardedSpringRestResource {
+public class PipelineElementCategory extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/ep", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Category>> getEps() {

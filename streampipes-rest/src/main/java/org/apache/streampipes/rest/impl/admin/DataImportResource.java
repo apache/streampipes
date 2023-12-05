@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ImportManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v2/import")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public class DataImportResource extends AbstractAuthGuardedSpringRestResource {
+public class DataImportResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataImportResource.class);
 

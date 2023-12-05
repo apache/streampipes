@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
@@ -42,7 +42,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/extensions-services-configurations")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-public class ServiceConfigurationResource extends AbstractAuthGuardedSpringRestResource {
+public class ServiceConfigurationResource extends AbstractAuthGuardedRestResource {
 
   private final CRUDStorage<String, SpServiceConfiguration> extensionsServicesConfigStorage =
       getNoSqlStorage().getExtensionsServiceConfigurationStorage();
