@@ -61,7 +61,7 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
   private static OneOfStaticProperty createDefaultSchemaUpdateStrategy() {
     var label = Labels.from(
         DataLakeSink.SCHEMA_UPDATE_KEY,
-        "Schema Update",
+        DataLakeSink.SCHEMA_UPDATE_OPTION,
         "Update existing schemas with the new one or extend the existing schema with new properties"
     );
     var schemaUpdateStaticProperty = new OneOfStaticProperty(
@@ -70,7 +70,7 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
         label.getDescription()
     );
 
-    var options = Options.from("Update schema", "Extend existing schema");
+    var options = Options.from(DataLakeSink.SCHEMA_UPDATE_OPTION, DataLakeSink.EXTEND_EXISTING_SCHEMA_OPTION);
     options.get(0)
            .setSelected(true);
     schemaUpdateStaticProperty.setOptions(options);

@@ -44,6 +44,9 @@ public class DataLakeSink extends StreamPipesDataSink {
   private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
   public static final String SCHEMA_UPDATE_KEY = "schema_update";
 
+  public static final String SCHEMA_UPDATE_OPTION = "Update schema";
+
+  public static final String EXTEND_EXISTING_SCHEMA_OPTION = "Extend existing schema";
 
   private TimeSeriesStore timeSeriesStore;
 
@@ -66,7 +69,7 @@ public class DataLakeSink extends StreamPipesDataSink {
         .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
         .requiredSingleValueSelection(
             Labels.withId(SCHEMA_UPDATE_KEY),
-            Options.from("Update schema", "Extend existing schema")
+            Options.from(SCHEMA_UPDATE_OPTION, EXTEND_EXISTING_SCHEMA_OPTION)
         )
 
         .build();
@@ -86,7 +89,7 @@ public class DataLakeSink extends StreamPipesDataSink {
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
-    if (schemaUpdateOptionString.equals("Extend existing schema")) {
+    if (schemaUpdateOptionString.equals(EXTEND_EXISTING_SCHEMA_OPTION)) {
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
     } else {
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
