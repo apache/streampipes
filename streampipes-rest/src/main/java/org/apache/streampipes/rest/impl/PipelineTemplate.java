@@ -60,8 +60,9 @@ public class PipelineTemplate extends AbstractAuthGuardedSpringRestResource {
   @GetMapping(
       path = "/invocation",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PipelineTemplateInvocation> getPipelineTemplateInvocation(@RequestParam(value = "streamId", required = false) String streamId,
-                                                                                  @RequestParam(value = "templateId") String pipelineTemplateId) {
+  public ResponseEntity<PipelineTemplateInvocation> getPipelineTemplateInvocation(
+      @RequestParam(value = "streamId", required = false) String streamId,
+      @RequestParam(value = "templateId") String pipelineTemplateId) {
     SpDataStream dataStream = getDataStream(streamId);
     var pipelineTemplateDescriptionOpt = getPipelineTemplateDescription(pipelineTemplateId);
     if (pipelineTemplateDescriptionOpt.isPresent()) {

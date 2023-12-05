@@ -36,12 +36,14 @@ import java.util.Map;
 public class PipelineMonitoring extends AbstractMonitoringResource {
 
   @GetMapping(value = "/pipeline/{pipelineId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(@PathVariable("pipelineId") String pipelineId) {
+  public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(
+      @PathVariable("pipelineId") String pipelineId) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForPipeline(pipelineId));
   }
 
   @GetMapping(value = "/pipeline/{pipelineId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(@PathVariable("pipelineId") String pipelineId) {
+  public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(
+      @PathVariable("pipelineId") String pipelineId) {
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }
 

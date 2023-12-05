@@ -54,7 +54,8 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedSpringRestR
   }
 
   @GetMapping(path = "{serviceGroup}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SpServiceConfiguration> getServiceConfiguration(@PathVariable("serviceGroup") String serviceGroup) {
+  public ResponseEntity<SpServiceConfiguration> getServiceConfiguration(
+      @PathVariable("serviceGroup") String serviceGroup) {
     var config = extensionsServicesConfigStorage.getElementById(serviceGroup);
     if (config != null) {
       return ok(config);

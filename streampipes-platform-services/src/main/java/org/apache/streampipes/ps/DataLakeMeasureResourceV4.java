@@ -61,7 +61,8 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedSpringRestReso
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, Integer>> getDataLakeInfos(@RequestParam(value = "filter", required = false) List<String> measurementNames) {
+  public ResponseEntity<Map<String, Integer>> getDataLakeInfos(
+      @RequestParam(value = "filter", required = false) List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
     return ok(new DataLakeMeasurementCount(allMeasurements, measurementNames).countMeasurementSizes());
   }

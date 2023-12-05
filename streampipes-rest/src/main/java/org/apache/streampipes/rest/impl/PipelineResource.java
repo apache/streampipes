@@ -256,7 +256,7 @@ public class PipelineResource extends AbstractAuthGuardedSpringRestResource {
       path = "/contains/{elementId}")
   @Operation(summary = "Returns all pipelines that contain the element with the elementId", tags = {
       "Pipeline"}, responses = {@ApiResponse(content = {
-      @Content(mediaType = "application/json",
+        @Content(mediaType = "application/json",
           array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))})})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")

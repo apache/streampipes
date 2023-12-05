@@ -53,7 +53,8 @@ public class DataLakeWidgetResource extends AbstractSpringRestResource {
       path = "/{widgetId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(@RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
+  public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
+      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     getDataExplorerWidgetStorage().updateDataExplorerWidget(dataExplorerWidgetModel);
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(dataExplorerWidgetModel.getId()));
   }
@@ -68,7 +69,8 @@ public class DataLakeWidgetResource extends AbstractSpringRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(@RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
+  public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
+      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     String widgetId = getDataExplorerWidgetStorage().storeDataExplorerWidget(dataExplorerWidgetModel);
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(widgetId));
   }

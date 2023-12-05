@@ -50,9 +50,9 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
   }
 
   @GetMapping(path = "{pipelineId}/{visualizationName}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getVisualizablePipelineByPipelineIdAndVisualizationName(@PathVariable("pipelineId") String pipelineId,
-                                                                                   @PathVariable("visualizationName")
-                                                                                   String visualizationName) {
+  public ResponseEntity<?> getVisPipelineByIdAndVisualizationName(@PathVariable("pipelineId") String pipelineId,
+                                                                  @PathVariable("visualizationName")
+                                                                  String visualizationName) {
     return getPipelineByIdAndFieldValue(DashboardAppId, pipelineId, visualizationName);
   }
 
