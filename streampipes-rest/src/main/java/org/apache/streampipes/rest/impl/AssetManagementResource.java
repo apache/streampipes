@@ -20,11 +20,13 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,13 +74,13 @@ public class AssetManagementResource extends AbstractAuthGuardedSpringRestResour
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
-  public ResponseEntity<?> getCategory(@PathVariable("id") String assetId) {
+  public ResponseEntity<Map<String, Object>> getCategory(@PathVariable("id") String assetId) {
     try {
       Map<String, Object> obj = getGenericStorage().findOne(assetId);
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      return fail();
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -87,14 +89,14 @@ public class AssetManagementResource extends AbstractAuthGuardedSpringRestResour
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<?> update(@PathVariable("id") String assetId,
-                         @RequestBody String asset) {
+  public ResponseEntity<Map<String, Object>> update(@PathVariable("id") String assetId,
+                                                    @RequestBody String asset) {
     try {
       Map<String, Object> obj = getGenericStorage().update(assetId, asset);
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      return fail();
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -107,13 +109,12 @@ public class AssetManagementResource extends AbstractAuthGuardedSpringRestResour
       return ok();
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      return fail();
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
   private IGenericStorage getGenericStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
   }
-
 
 }

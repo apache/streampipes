@@ -27,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,7 +43,7 @@ public class DataExportResource extends AbstractAuthGuardedSpringRestResource {
       path = "/preview",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<ExportConfiguration> getExportPreview(List<String> selectedAssetIds) {
+  public ResponseEntity<ExportConfiguration> getExportPreview(@RequestBody List<String> selectedAssetIds) {
     var exportConfig = ExportManager.getExportPreview(selectedAssetIds);
     return ok(exportConfig);
   }
@@ -51,7 +52,7 @@ public class DataExportResource extends AbstractAuthGuardedSpringRestResource {
       path = "/download",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  public ResponseEntity<byte[]> download(ExportConfiguration exportConfiguration) throws IOException {
+  public ResponseEntity<byte[]> download(@RequestBody ExportConfiguration exportConfiguration) throws IOException {
     var applicationPackage = ExportManager.getExportPackage(exportConfiguration);
     return ok(applicationPackage);
   }

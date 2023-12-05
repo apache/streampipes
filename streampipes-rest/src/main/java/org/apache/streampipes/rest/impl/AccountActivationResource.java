@@ -19,7 +19,9 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedSpringRestResource;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +37,12 @@ public class AccountActivationResource extends AbstractAuthGuardedSpringRestReso
       path = "{recoveryCode}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> activateUserAccount(@PathVariable("recoveryCode") String recoveryCode) {
+  public ResponseEntity<Void> activateUserAccount(@PathVariable("recoveryCode") String recoveryCode) {
     try {
       getSpResourceManager().manageUsers().activateAccount(recoveryCode);
       return ok();
     } catch (UserNotFoundException e) {
-      return badRequest();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
   }
 }

@@ -64,11 +64,12 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableAutoConfiguration
 @Import({
-    WelcomePageController.class,
-    StreamPipesPasswordEncoder.class,
-    WebSecurityConfig.class,
+    OpenApiConfiguration.class,
     SpPermissionEvaluator.class,
-    StreamPipesPrometheusConfig.class
+    StreamPipesPasswordEncoder.class,
+    StreamPipesPrometheusConfig.class,
+    WebSecurityConfig.class,
+    WelcomePageController.class,
 })
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {

@@ -49,7 +49,8 @@ public class PipelineCategory extends AbstractSpringRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  public ResponseEntity<? extends Message> addCategory(@RequestBody org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
+  public ResponseEntity<? extends Message> addCategory(
+      @RequestBody org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
     boolean success = getPipelineCategoryStorage()
         .addPipelineCategory(pipelineCategory);
     if (success) {

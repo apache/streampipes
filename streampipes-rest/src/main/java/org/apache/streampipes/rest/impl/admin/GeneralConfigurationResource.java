@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +49,7 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedSpringRestR
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public ResponseEntity<Void> updateGeneralConfiguration(GeneralConfig config) {
+  public ResponseEntity<Void> updateGeneralConfiguration(@RequestBody GeneralConfig config) {
     config.setConfigured(true);
     var storage = getSpCoreConfigurationStorage();
     var cfg = storage.get();

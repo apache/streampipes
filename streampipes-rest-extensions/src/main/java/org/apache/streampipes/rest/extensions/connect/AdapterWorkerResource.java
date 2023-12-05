@@ -24,11 +24,14 @@ import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +71,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       path = "/stream/invoke",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> invokeAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
+  public ResponseEntity<SuccessMessage> invokeAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
     try {
       adapterManagement.invokeAdapter(adapterStreamDescription);
@@ -79,7 +82,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       return ok(Notifications.success(responseMessage));
     } catch (AdapterException e) {
       logger.error("Error while starting adapter with id " + adapterStreamDescription.getElementId(), e);
-      return serverError(SpLogMessage.from(e));
+      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     }
   }
 
@@ -87,7 +90,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       path = "/stream/stop",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> stopAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
+  public ResponseEntity<SuccessMessage> stopAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
     String responseMessage;
     try {
@@ -102,7 +105,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       return ok(Notifications.success(responseMessage));
     } catch (AdapterException e) {
       logger.error("Error while stopping adapter with id " + adapterStreamDescription.getElementId(), e);
-      return serverError(SpLogMessage.from(e));
+      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     }
   }
 

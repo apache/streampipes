@@ -121,7 +121,7 @@
         <snakeyaml.version>2.2</snakeyaml.version>
         <spring-boot.version>3.1.5</spring-boot.version>
         <spring-security.version>6.1.5</spring-security.version>
-        <swagger.version>2.2.7</swagger.version>
+        <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <hawtbuf.version>1.11</hawtbuf.version>
 
@@ -508,6 +508,11 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
                 <version>${spring-security.version}</version>
             </dependency>
             <dependency>

@@ -19,11 +19,15 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IAssetDashboardStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,6 +52,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/asset-dashboards")
 public class AssetDashboardResource extends AbstractSpringRestResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AssetDashboardResource.class);
 
   private static final String APP_ID = "org.apache.streampipes.apps.assetdashboard";
 
@@ -88,7 +94,7 @@ public class AssetDashboardResource extends AbstractSpringRestResource {
   }
 
   @GetMapping(path = "/images/{imageName}")
-  public ResponseEntity<?> getDashboardImage(@PathVariable("imageName") String imageName) {
+  public ResponseEntity<byte[]> getDashboardImage(@PathVariable("imageName") String imageName) {
     try {
       java.nio.file.Path path = Paths.get(getTargetFile(imageName));
       File file = new File(path.toString());
@@ -100,8 +106,8 @@ public class AssetDashboardResource extends AbstractSpringRestResource {
 
       return new ResponseEntity<>(Files.readAllBytes(path), headers, org.springframework.http.HttpStatus.OK);
     } catch (IOException e) {
-      e.printStackTrace();
-      return fail();
+      LOG.error(e.getMessage(), e);
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -119,8 +125,8 @@ public class AssetDashboardResource extends AbstractSpringRestResource {
       FileUtils.copyInputStreamToFile(fileDetail.getInputStream(), targetFile);
       return ok();
     } catch (IOException e) {
-      e.printStackTrace();
-      return fail();
+      LOG.error(e.getMessage(), e);
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 

@@ -46,7 +46,7 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> fetchConfigurations(@PathVariable("id") String elementId,
-                                                                    @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
+                                               @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     var adapter = RuntimeResovable.getAdapter(elementId);
     RuntimeOptionsResponse response;

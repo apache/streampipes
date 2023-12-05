@@ -58,7 +58,10 @@ public class PipelineElementFile extends AbstractAuthGuardedSpringRestResource {
   public ResponseEntity<?> storeFile(@RequestPart("file_upload") MultipartFile fileDetail) {
     try {
       FileMetadata metadata =
-          FileManager.storeFile(getAuthenticatedUsername(), fileDetail.getOriginalFilename(), fileDetail.getInputStream());
+          FileManager.storeFile(
+              getAuthenticatedUsername(),
+              fileDetail.getOriginalFilename(),
+              fileDetail.getInputStream());
       return ok(metadata);
     } catch (Exception e) {
       return fail();
@@ -74,7 +77,8 @@ public class PipelineElementFile extends AbstractAuthGuardedSpringRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
-  public ResponseEntity<List<FileMetadata>> getFileInfo(@RequestParam(value = "filetypes", required = false) String filetypes) {
+  public ResponseEntity<List<FileMetadata>> getFileInfo(
+      @RequestParam(value = "filetypes", required = false) String filetypes) {
     return ok(FileManager.getAllFiles(filetypes));
   }
 

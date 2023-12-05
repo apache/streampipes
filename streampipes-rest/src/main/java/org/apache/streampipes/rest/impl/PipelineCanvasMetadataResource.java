@@ -18,9 +18,12 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,39 +40,47 @@ import org.springframework.web.bind.annotation.RestController;
 public class PipelineCanvasMetadataResource extends AbstractSpringRestResource {
 
   @GetMapping(path = "/pipeline/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getPipelineCanvasMetadataForPipeline(@PathVariable("pipelineId") String pipelineId) {
+  public ResponseEntity<PipelineCanvasMetadata> getPipelineCanvasMetadataForPipeline(
+      @PathVariable("pipelineId") String pipelineId) {
     try {
       return ok(getPipelineCanvasMetadataStorage()
           .getPipelineCanvasMetadataForPipeline(pipelineId));
     } catch (IllegalArgumentException e) {
-      return badRequest();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
     }
   }
 
   @GetMapping(path = "{canvasId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getPipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId) {
+  public ResponseEntity<PipelineCanvasMetadata> getPipelineCanvasMetadata(
+      @PathVariable("canvasId") String pipelineCanvasId) {
     try {
       return ok(getPipelineCanvasMetadataStorage()
           .getElementById(pipelineCanvasId));
     } catch (IllegalArgumentException e) {
-      return badRequest();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
     }
   }
 
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> storePipelineCanvasMetadata(PipelineCanvasMetadata pipelineCanvasMetadata) {
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> storePipelineCanvasMetadata(@RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
     getPipelineCanvasMetadataStorage().createElement(pipelineCanvasMetadata);
     return ok();
   }
 
-  @DeleteMapping(path = "{canvasId}")
+  @DeleteMapping(
+      path = "{canvasId}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> deletePipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId) {
     PipelineCanvasMetadata metadata = find(pipelineCanvasId);
     getPipelineCanvasMetadataStorage().deleteElement(metadata);
     return ok();
   }
 
-  @DeleteMapping(path = "/pipeline/{pipelineId}")
+  @DeleteMapping(
+      path = "/pipeline/{pipelineId}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> deletePipelineCanvasMetadataForPipeline(@PathVariable("pipelineId") String pipelineId) {
     PipelineCanvasMetadata metadata =
         getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId);
@@ -77,7 +88,10 @@ public class PipelineCanvasMetadataResource extends AbstractSpringRestResource {
     return ok();
   }
 
-  @PutMapping(path = "{canvasId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(
+      path = "{canvasId}",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> updatePipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId,
                                                            @RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
     try {

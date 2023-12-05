@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.NotificationCount;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
@@ -39,24 +40,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/notifications")
-public class Notification extends AbstractAuthGuardedSpringRestResource {
+public class NotificationResource extends AbstractAuthGuardedSpringRestResource {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> addNotification(@RequestBody org.apache.streampipes.model.Notification notification) {
+  public ResponseEntity<Void> addNotification(@RequestBody Notification notification) {
     getNotificationStorage().addNotification(notification);
     return ok();
   }
 
   @GetMapping(path = "/offset", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<org.apache.streampipes.model.Notification>> getNotifications(@RequestParam("notificationType") String notificationTypeId,
-                                                                                          @RequestParam("offset") Integer offset,
-                                                                                          @RequestParam("count") Integer count) {
+  public ResponseEntity<List<Notification>> getNotifications(@RequestParam("notificationType") String notTypeId,
+                                                             @RequestParam("offset") Integer offset,
+                                                             @RequestParam("count") Integer count) {
     return ok(getNotificationStorage()
-        .getAllNotifications(notificationTypeId, offset, count));
+        .getAllNotifications(notTypeId, offset, count));
   }
 
   @GetMapping(path = "/time", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<org.apache.streampipes.model.Notification>> getNotifications(@RequestParam("startTime") long startTime) {
+  public ResponseEntity<List<Notification>> getNotifications(@RequestParam("startTime") long startTime) {
     return ok(getNotificationStorage()
         .getAllNotificationsFromTimestamp(startTime));
   }
@@ -68,7 +69,7 @@ public class Notification extends AbstractAuthGuardedSpringRestResource {
   }
 
   @GetMapping(path = "/unread")
-  public ResponseEntity<List<org.apache.streampipes.model.Notification>> getUnreadNotifications() {
+  public ResponseEntity<List<Notification>> getUnreadNotifications() {
     return ok(getNotificationStorage()
         .getUnreadNotifications());
   }

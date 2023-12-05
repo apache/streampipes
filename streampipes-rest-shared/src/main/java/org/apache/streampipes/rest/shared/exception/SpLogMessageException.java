@@ -16,23 +16,28 @@
  *
  */
 
-import { Component, ElementRef, OnInit } from '@angular/core';
-import SwaggerUI from 'swagger-ui';
+package org.apache.streampipes.rest.shared.exception;
 
-@Component({
-    selector: 'sp-apidocs',
-    templateUrl: './apidocs.component.html',
-    styleUrls: ['./apidocs.component.scss'],
-})
-export class ApidocsComponent implements OnInit {
-    constructor(private el: ElementRef) {}
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 
-    ngOnInit(): void {
-        SwaggerUI({
-            url: '/streampipes-backend/apidocs',
-            domNode: this.el.nativeElement.querySelector('.swagger-ui'),
-            deepLinking: false,
-            presets: [SwaggerUI.presets.apis],
-        });
-    }
+import org.springframework.http.HttpStatus;
+
+public class SpLogMessageException extends RuntimeException {
+
+  private final SpLogMessage message;
+  private final HttpStatus status;
+
+  public SpLogMessageException(HttpStatus status,
+                               SpLogMessage message) {
+    this.status = status;
+    this.message = message;
+  }
+
+  public SpLogMessage getSpMessage() {
+    return message;
+  }
+
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

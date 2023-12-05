@@ -34,7 +34,7 @@ import java.util.List;
 @RequestMapping("/api/v2/autocomplete")
 public class AutoComplete extends AbstractSpringRestResource {
 
-  @GetMapping(path = "semantic-type", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/semantic-type", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<String>> getSemanticTypes(@RequestParam("text") String text) {
     return ok(SemanticTypeRegistry.INSTANCE.matches(text));
   }

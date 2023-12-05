@@ -41,7 +41,8 @@ public class UserAdminResource extends AbstractAuthGuardedSpringRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public ResponseEntity<List<Principal>> getAllUsers(@RequestParam("type") String principalType) {
+  public ResponseEntity<List<Principal>> getAllUsers(
+      @RequestParam(value = "type", required = false) String principalType) {
     List<Principal> allPrincipals = new ArrayList<>();
     if (principalType != null && principalType.equals(PrincipalType.USER_ACCOUNT.name())) {
       allPrincipals.addAll(getUserStorage().getAllUserAccounts());

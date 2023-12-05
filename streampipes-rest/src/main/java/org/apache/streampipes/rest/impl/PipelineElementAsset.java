@@ -37,7 +37,7 @@ public class PipelineElementAsset extends AbstractSpringRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 
-  @GetMapping(path = "{appId}/assets/icon", produces = "image/png")
+  @GetMapping(path = "/{appId}/assets/icon", produces = "image/png")
   public ResponseEntity<?> getIconAsset(@PathVariable("appId") String appId) {
     try {
       return ok(AssetManager.getAssetIcon(appId));
@@ -46,7 +46,7 @@ public class PipelineElementAsset extends AbstractSpringRestResource {
     }
   }
 
-  @GetMapping(path = "{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  @GetMapping(path = "/{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<?> getDocumentationAsset(@PathVariable("appId") String appId) {
     try {
       return ok(AssetManager.getAssetDocumentation(appId));
@@ -55,7 +55,7 @@ public class PipelineElementAsset extends AbstractSpringRestResource {
     }
   }
 
-  @GetMapping(path = "{appId}/assets/{assetName}", produces = "image/png")
+  @GetMapping(path = "/{appId}/assets/{assetName}", produces = "image/png")
   public ResponseEntity<?> getAsset(@PathVariable("appId") String appId, @PathVariable("assetName") String
       assetName) {
     try {

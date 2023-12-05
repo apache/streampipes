@@ -22,10 +22,13 @@ import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
 import org.apache.streampipes.extensions.management.connect.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.extensions.management.util.AssetsUtil;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,17 +52,18 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
 
 
   @GetMapping(path = "/{id}/assets", produces = "application/zip")
-  public ResponseEntity<?> getAssets(@PathVariable("id") String id) {
+  public ResponseEntity<byte[]> getAssets(@PathVariable("id") String id) {
     Optional<AdapterDescription> adapterDescription = this.connectWorkerDescriptionProvider.getAdapterDescription(id);
     if (adapterDescription.isPresent()) {
       try {
         return ok(new AssetZipGenerator(id, adapterDescription.get().getIncludedAssets()).makeZip());
       } catch (IOException e) {
-        e.printStackTrace();
-        return fail();
+        throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
       }
     } else {
-      return fail();
+      throw new SpMessageException(
+          HttpStatus.NOT_FOUND,
+          Notifications.error(String.format("Could not find adapter with id %s", id)));
     }
 
   }

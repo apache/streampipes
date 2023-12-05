@@ -104,10 +104,10 @@ public class DataLakeResourceV4 extends AbstractSpringRestResource {
   public ResponseEntity<Void> deleteData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
-      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam("startDate")
-      Long startDate
-      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam("endDate")
-      Long endDate) {
+      , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
+      @RequestParam(value = "startDate", required = false) Long startDate
+      , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
+      @RequestParam(value = "endDate", required = false) Long endDate) {
 
     SpQueryResult result = this.dataLakeManagement.deleteData(measurementID, startDate, endDate);
     return ok();

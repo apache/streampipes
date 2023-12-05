@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +33,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class HttpServerAdapterResource {
 
   @PostMapping(path = "{endpointId}")
-  public ResponseEntity<?> receiveEvent(@PathVariable("endpointId") String endpointId,
-                                           @RequestBody byte[] body) {
+  public ResponseEntity<Void> receiveEvent(@PathVariable("endpointId") String endpointId,
+                                        @RequestBody byte[] body) {
 
     try {
       HttpServerAdapterManagement.INSTANCE.notify(endpointId, body);
       return ResponseEntity.ok().build();
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
 
   }

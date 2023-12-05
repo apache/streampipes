@@ -27,11 +27,11 @@ import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.message.ErrorMessage;
-import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractSpringRestResource;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
@@ -90,7 +90,7 @@ public class Authentication extends AbstractSpringRestResource {
       path = "/register",
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
       consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<? extends Message> doRegister(@RequestBody RegistrationData data) {
+  public ResponseEntity<SuccessMessage> doRegister(@RequestBody RegistrationData data) {
     GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     if (!config.isAllowSelfRegistration()) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -100,7 +100,9 @@ public class Authentication extends AbstractSpringRestResource {
       getSpResourceManager().manageUsers().registerUser(data);
       return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     } catch (UsernameAlreadyTakenException e) {
-      return badRequest(Notifications.error("This email address already exists. Please choose another address."));
+      throw new SpMessageException(
+          HttpStatus.BAD_REQUEST,
+          Notifications.error("This email address already exists. Please choose another address."));
     }
   }
 
@@ -114,7 +116,7 @@ public class Authentication extends AbstractSpringRestResource {
     } catch (UserNotFoundException e) {
       return ok();
     } catch (Exception e) {
-      return badRequest();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
   }
 

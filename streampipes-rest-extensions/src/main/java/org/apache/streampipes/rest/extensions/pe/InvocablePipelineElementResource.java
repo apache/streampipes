@@ -73,7 +73,7 @@ public abstract class InvocablePipelineElementResource<
       path = "{elementId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> invokeRuntime(@PathVariable("elementId") String elementId,
+  public ResponseEntity<Response> invokeRuntime(@PathVariable("elementId") String elementId,
                                          @RequestBody K graph) {
 
     if (isDebug()) {
@@ -111,7 +111,7 @@ public abstract class InvocablePipelineElementResource<
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> fetchConfigurations(@PathVariable("elementId") String elementId,
-                                                                    @RequestBody RuntimeOptionsRequest req) {
+                                               @RequestBody RuntimeOptionsRequest req) {
 
     T declarer = getDeclarerById(elementId);
     RuntimeOptionsResponse responseOptions;
@@ -141,7 +141,7 @@ public abstract class InvocablePipelineElementResource<
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> fetchOutputStrategy(@PathVariable("elementId") String elementId,
-                                                         @RequestBody K runtimeOptionsRequest) {
+                                               @RequestBody K runtimeOptionsRequest) {
     try {
       //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
       ResolvesContainerProvidedOutputStrategy<K, W> resolvesOutput =

@@ -25,20 +25,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
 
-@RestController("/api/v2/pipeline-monitoring")
+@RestController
+@RequestMapping("/api/v2/pipeline-monitoring")
 public class PipelineMonitoring extends AbstractMonitoringResource {
 
-  @GetMapping(value = "pipeline/{pipelineId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/pipeline/{pipelineId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(@PathVariable("pipelineId") String pipelineId) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForPipeline(pipelineId));
   }
 
-  @GetMapping(value = "pipeline/{pipelineId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/pipeline/{pipelineId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(@PathVariable("pipelineId") String pipelineId) {
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }
