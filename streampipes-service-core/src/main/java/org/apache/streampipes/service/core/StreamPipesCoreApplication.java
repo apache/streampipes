@@ -37,6 +37,7 @@ import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.rest.shared.serializer.SpringJacksonSerializer;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
@@ -69,7 +70,7 @@ import java.util.concurrent.TimeUnit;
     StreamPipesPasswordEncoder.class,
     StreamPipesPrometheusConfig.class,
     WebSecurityConfig.class,
-    WelcomePageController.class,
+    WelcomePageController.class
 })
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {

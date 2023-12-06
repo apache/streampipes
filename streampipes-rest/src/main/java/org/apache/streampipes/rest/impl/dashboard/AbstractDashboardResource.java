@@ -52,9 +52,9 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
 
   @PutMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
-  public DashboardModel modifyDashboard(@RequestBody DashboardModel dashboardModel) {
+  public ResponseEntity<DashboardModel> modifyDashboard(@RequestBody DashboardModel dashboardModel) {
     getResourceManager().update(dashboardModel);
-    return getResourceManager().find(dashboardModel.getCouchDbId());
+    return ok(getResourceManager().find(dashboardModel.getCouchDbId()));
   }
 
   @DeleteMapping(path = "/{dashboardId}")
