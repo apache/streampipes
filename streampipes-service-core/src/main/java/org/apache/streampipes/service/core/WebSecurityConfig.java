@@ -105,5 +105,4 @@ public class WebSecurityConfig {
     return new RequestAttributeSecurityContextRepository();
   }
 
-
 }

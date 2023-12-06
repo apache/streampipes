@@ -38,8 +38,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -81,7 +79,7 @@ import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams
 @RequestMapping("/api/v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
 
-  private DataExplorerQueryManagement dataLakeManagement;
+  private final DataExplorerQueryManagement dataLakeManagement;
   private final DataExplorerSchemaManagement dataExplorerSchemaManagement;
 
   public DataLakeResourceV4() {
