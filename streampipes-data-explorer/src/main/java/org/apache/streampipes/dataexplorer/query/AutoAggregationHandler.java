@@ -24,6 +24,7 @@ import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectColumn;
 import org.apache.streampipes.dataexplorer.querybuilder.DataLakeQueryOrdering;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,10 @@ public class AutoAggregationHandler {
   }
 
   private IDataExplorerQueryManagement getDataLakeQueryManagement() {
-    return new DataExplorerQueryManagement(new DataExplorerSchemaManagement());
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
+    return new DataExplorerQueryManagement(new DataExplorerSchemaManagement(dataLakeStorage));
   }
 
   public ProvidedRestQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
@@ -106,7 +110,13 @@ public class AutoAggregationHandler {
 
     SpQueryResult result = dataLakeQueryManagement.getData(countParams, true);
 
-    return result.getTotal() > 0 ? ((Double) result.getAllDataSeries().get(0).getRows().get(0).get(1)).intValue() : 0;
+    return result.getTotal() > 0 ? (
+        (Double) result.getAllDataSeries()
+                       .get(0)
+                       .getRows()
+                       .get(0)
+                       .get(1)
+    ).intValue() : 0;
   }
 
   private SpQueryResult fireQuery(ProvidedRestQueryParams params) {
@@ -116,7 +126,8 @@ public class AutoAggregationHandler {
   private int getAggregationValue(SpQueryResult newest, SpQueryResult oldest) throws ParseException {
     long timerange = extractTimestamp(newest) - extractTimestamp(oldest);
     double v = timerange / MAX_RETURN_LIMIT;
-    return Double.valueOf(v).intValue();
+    return Double.valueOf(v)
+                 .intValue();
   }
 
   private SpQueryResult getSingleRecord(DataLakeQueryOrdering order) throws ParseException {
@@ -131,8 +142,12 @@ public class AutoAggregationHandler {
 
   private String transformColumns(String rawQuery) {
     List<SelectColumn> columns =
-        Arrays.stream(rawQuery.split(COMMA)).map(SelectColumn::fromApiQueryString).collect(Collectors.toList());
-    return columns.stream().map(SelectColumn::getOriginalField).collect(Collectors.joining(COMMA));
+        Arrays.stream(rawQuery.split(COMMA))
+              .map(SelectColumn::fromApiQueryString)
+              .collect(Collectors.toList());
+    return columns.stream()
+                  .map(SelectColumn::getOriginalField)
+                  .collect(Collectors.joining(COMMA));
   }
 
   private String getSampleField(SpQueryResult result) {
@@ -145,8 +160,14 @@ public class AutoAggregationHandler {
   }
 
   private long extractTimestamp(SpQueryResult result) throws ParseException {
-    int timestampIndex = result.getHeaders().indexOf(TIMESTAMP_FIELD);
-    return tryParseDate(result.getAllDataSeries().get(0).getRows().get(0).get(timestampIndex).toString()).getTime();
+    int timestampIndex = result.getHeaders()
+                               .indexOf(TIMESTAMP_FIELD);
+    return tryParseDate(result.getAllDataSeries()
+                              .get(0)
+                              .getRows()
+                              .get(0)
+                              .get(timestampIndex)
+                              .toString()).getTime();
   }
 
   private Date tryParseDate(String v) throws ParseException {

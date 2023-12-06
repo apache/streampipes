@@ -16,23 +16,19 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.api;
+package org.apache.streampipes.model.datalake;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+/**
+ * This enum contains the different options that are available for the update strategy of the data lake measure
+ */
+public enum DataLakeMeasureSchemaUpdateStrategy {
+  /**
+   * This strategy will update the schema of the data lake measure when it changes
+   */
+  UPDATE_SCHEMA,
+  /**
+   * This strategy will extend the schema of the data lake measure when it changes and keep the old fields
+   */
+  EXTEND_EXISTING_SCHEMA
 
-import java.util.List;
-
-public interface IDataExplorerSchemaManagement {
-
-  List<DataLakeMeasure> getAllMeasurements();
-
-  DataLakeMeasure getById(String elementId);
-
-  DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure);
-
-  void deleteMeasurement(String elementId);
-
-  boolean deleteMeasurementByName(String measureName);
-
-  void updateMeasurement(DataLakeMeasure measure);
 }
