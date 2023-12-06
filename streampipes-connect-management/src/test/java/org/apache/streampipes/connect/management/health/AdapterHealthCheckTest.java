@@ -54,12 +54,15 @@ public class AdapterHealthCheckTest {
   @Test
   public void getAllRunningInstancesAdapterDescriptionsMixed() {
 
+    var nameRunningAdapter = "running-adapter";
+    var nameStoppedAdapter = "stopped-adapter";
+
     var stoppedAdapter = new AdapterDescription();
-    stoppedAdapter.setElementId("stopped-adapter");
+    stoppedAdapter.setElementId(nameStoppedAdapter);
     stoppedAdapter.setRunning(false);
 
     var runningAdapter = new AdapterDescription();
-    runningAdapter.setElementId("running-adapter");
+    runningAdapter.setElementId(nameRunningAdapter);
     runningAdapter.setRunning(true);
 
     when(adapterInstanceStorageMock.getAllAdapters()).thenReturn(List.of(stoppedAdapter, runningAdapter));
@@ -68,8 +71,8 @@ public class AdapterHealthCheckTest {
     var result = healthCheck.getAllRunningInstancesAdapterDescriptions();
 
     assertEquals(1, result.size());
-    assertTrue(result.containsKey("running-adapter"));
-    assertEquals(runningAdapter, result.get("running-adapter"));
+    assertTrue(result.containsKey(nameRunningAdapter));
+    assertEquals(runningAdapter, result.get(nameRunningAdapter));
 
   }
 
