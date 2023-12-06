@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.util.GroundingUtils;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
@@ -32,7 +33,7 @@ import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,6 +150,10 @@ public class AdapterMasterManagement {
 
     WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
     ExtensionsLogProvider.INSTANCE.reset(elementId);
+
+    // remove the adapter from the metrics manager so that
+    // no metrics for this adapter are exposed anymore
+    AdapterMetricsManager.INSTANCE.getAdapterMetrics().remove(ad.getElementId(), ad.getName());
   }
 
   public void startStreamAdapter(String elementId) throws AdapterException {
@@ -165,6 +170,9 @@ public class AdapterMasterManagement {
 
       // Invoke adapter instance
       WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
+
+      // register the adapter at the metrics manager so that the AdapterHealthCheck can send metrics
+      AdapterMetricsManager.INSTANCE.getAdapterMetrics().register(ad.getElementId(), ad.getName());
 
       LOG.info("Started adapter " + elementId + " on: " + baseUrl);
     } catch (NoServiceEndpointsAvailableException | URISyntaxException e) {
@@ -184,6 +192,6 @@ public class AdapterMasterManagement {
   }
 
   private IAdapterStorage getAdapterInstanceStorage() {
-    return new AdapterInstanceStorageImpl();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
   }
 }
