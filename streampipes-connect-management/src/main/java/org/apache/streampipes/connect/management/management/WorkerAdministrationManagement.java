@@ -28,6 +28,7 @@ import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -47,7 +48,11 @@ public class WorkerAdministrationManagement {
   private final AdapterHealthCheck adapterHealthCheck;
 
   public WorkerAdministrationManagement() {
-    this.adapterHealthCheck = new AdapterHealthCheck();
+    this.adapterHealthCheck = new AdapterHealthCheck(
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getAdapterInstanceStorage(),
+        new AdapterMasterManagement()
+    );
     this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
   }
 
