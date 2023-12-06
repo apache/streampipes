@@ -74,7 +74,7 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
     headers.setContentType(MediaType.MULTIPART_MIXED);
 
     String boundary = "boundarysp";
-    headers.set(HttpHeaders.CONTENT_TYPE, "multipart/mixed; boundary=" + boundary);
+    headers.set(HttpHeaders.CONTENT_TYPE, "multipart/mixed;boundary=" + boundary);
 
     // Construct the response body with multiple parts
     String responseBody = "--" + boundary + "\r\n"
