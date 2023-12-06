@@ -24,7 +24,6 @@ import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,13 +40,10 @@ public class AdapterHealthCheck implements Runnable {
   private final IAdapterStorage adapterStorage;
   private final AdapterMasterManagement adapterMasterManagement;
 
-  public AdapterHealthCheck() {
-    this.adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterInstanceStorage();
-    this.adapterMasterManagement = new AdapterMasterManagement();
-  }
-
-  public AdapterHealthCheck(IAdapterStorage adapterStorage,
-                            AdapterMasterManagement adapterMasterManagement) {
+  public AdapterHealthCheck(
+      IAdapterStorage adapterStorage,
+      AdapterMasterManagement adapterMasterManagement
+  ) {
     this.adapterStorage = adapterStorage;
     this.adapterMasterManagement = adapterMasterManagement;
   }
@@ -82,8 +78,14 @@ public class AdapterHealthCheck implements Runnable {
   public Map<String, AdapterDescription> getAllRunningInstancesAdapterDescriptions() {
     Map<String, AdapterDescription> result = new HashMap<>();
     List<AdapterDescription> allRunningInstancesAdapterDescription = this.adapterStorage.getAllAdapters();
-    allRunningInstancesAdapterDescription.forEach(adapterDescription ->
-        result.put(adapterDescription.getElementId(), adapterDescription));
+    allRunningInstancesAdapterDescription
+        .stream()
+        .filter(AdapterDescription::isRunning)
+        .forEach(adapterDescription ->
+                     result.put(
+                         adapterDescription.getElementId(),
+                         adapterDescription
+                     ));
 
     return result;
   }

@@ -25,6 +25,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,7 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/migrations/sink")
+@RequestMapping("/api/v1/migrations/sink")
 public class DataSinkMigrationResource extends MigrateExtensionsResource<
     DataSinkInvocation,
     IDataSinkParameterExtractor,

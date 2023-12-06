@@ -23,3 +23,6 @@ db_measurement.description=The name of the identifier under which the data is to
 
 timestamp_mapping.title=Timestamp Field
 timestamp_mapping.description=The value which contains a timestamp
+
+schema_update.title=Schema Update
+schema_update.description=Update existing schemas with the new one or extend the existing schema with new properties

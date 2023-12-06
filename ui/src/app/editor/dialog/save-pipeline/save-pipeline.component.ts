@@ -180,7 +180,6 @@ export class SavePipelineComponent implements OnInit {
             entity.elementId.substring(0, lastIdIndex + 1) +
             this.jsplumbService.makeId(5);
         entity.elementId = newElementId;
-        entity.uri = newElementId;
     }
 
     storePipelineCanvasMetadata(pipelineId: string, updateMode: boolean) {

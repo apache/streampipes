@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
+import org.apache.streampipes.sinks.internal.jvm.migration.DataLakeSinkMigrationV1;
 import org.apache.streampipes.sinks.internal.jvm.notification.NotificationProducer;
 
 import java.util.Collections;
@@ -44,6 +45,6 @@ public class InternalSinksExtensionModuleExports implements IExtensionModuleExpo
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return Collections.emptyList();
+    return List.of(new DataLakeSinkMigrationV1());
   }
 }

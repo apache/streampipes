@@ -312,7 +312,6 @@ export class JsplumbService {
         newElementId: string,
     ) {
         pipelineElement.elementId = newElementId;
-        pipelineElement.uri = newElementId;
     }
 
     makeId(count: number) {

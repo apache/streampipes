@@ -29,6 +29,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -80,21 +81,24 @@ import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams
 @RequestMapping("/api/v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
 
-  private static final Logger logger = LoggerFactory.getLogger(DataLakeResourceV4.class);
-
   private DataExplorerQueryManagement dataLakeManagement;
   private final DataExplorerSchemaManagement dataExplorerSchemaManagement;
 
   public DataLakeResourceV4() {
-    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement();
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
+    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
     this.dataLakeManagement = new DataExplorerQueryManagement(dataExplorerSchemaManagement);
   }
 
   public DataLakeResourceV4(DataExplorerQueryManagement dataLakeManagement) {
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
     this.dataLakeManagement = dataLakeManagement;
-    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement();
+    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
   }
-
 
   @DeleteMapping(path = "/measurements/{measurementID}")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {"Data Lake"},

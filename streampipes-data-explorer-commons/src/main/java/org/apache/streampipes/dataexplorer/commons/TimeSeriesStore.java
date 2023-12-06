@@ -47,7 +47,6 @@ public class TimeSeriesStore {
     DataExplorerUtils.sanitizeAndRegisterAtDataLake(client, measure);
 
     if (enableImageStore) {
-      // TODO check if event properties are replaces correctly
       this.imageStore = new ImageStore(measure, environment);
     }
 
@@ -64,11 +63,6 @@ public class TimeSeriesStore {
     // Store event in time series database
     this.influxStore.onEvent(event);
 
-    return true;
-  }
-
-
-  public boolean alterRetentionTime(DataLakeMeasure dataLakeMeasure) {
     return true;
   }
 

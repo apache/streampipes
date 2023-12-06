@@ -19,6 +19,7 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
+import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
@@ -141,7 +142,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         List.of(
             new ServiceHealthCheck(),
             new PipelineHealthCheck(),
-            new AdapterHealthCheck())
+            new AdapterHealthCheck(
+                StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                new AdapterMasterManagement()
+            ))
     );
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
