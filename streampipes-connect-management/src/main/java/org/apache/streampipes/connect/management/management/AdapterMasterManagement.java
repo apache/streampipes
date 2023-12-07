@@ -32,6 +32,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -53,6 +54,13 @@ public class AdapterMasterManagement {
   private final AdapterResourceManager adapterResourceManager;
 
   private final DataStreamResourceManager dataStreamResourceManager;
+
+  public AdapterMasterManagement() {
+    this.adapterInstanceStorage = getAdapterInstanceStorage();
+    this.adapterMetrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
+    this.adapterResourceManager = new SpResourceManager().manageAdapters();
+    this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
+  }
 
   public AdapterMasterManagement(IAdapterStorage adapterStorage,
                                  AdapterResourceManager adapterResourceManager,
@@ -151,7 +159,7 @@ public class AdapterMasterManagement {
 
     // remove the adapter from the metrics manager so that
     // no metrics for this adapter are exposed anymore
-    AdapterMetricsManager.INSTANCE.getAdapterMetrics().remove(ad.getElementId(), ad.getName());
+    adapterMetrics.remove(ad.getElementId(), ad.getName());
   }
 
   public void startStreamAdapter(String elementId) throws AdapterException {
@@ -170,7 +178,7 @@ public class AdapterMasterManagement {
       WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
 
       // register the adapter at the metrics manager so that the AdapterHealthCheck can send metrics
-      AdapterMetricsManager.INSTANCE.getAdapterMetrics().register(ad.getElementId(), ad.getName());
+      adapterMetrics.register(ad.getElementId(), ad.getName());
 
       LOG.info("Started adapter " + elementId + " on: " + baseUrl);
     } catch (NoServiceEndpointsAvailableException | URISyntaxException e) {

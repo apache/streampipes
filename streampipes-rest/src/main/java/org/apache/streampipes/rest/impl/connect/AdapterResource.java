@@ -19,7 +19,6 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -29,7 +28,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IPipelineStorage;
@@ -63,14 +61,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
 
   public AdapterResource() {
-    super(() -> new AdapterMasterManagement(
-              StorageDispatcher.INSTANCE.getNoSqlStore()
-                                        .getAdapterInstanceStorage(),
-              new SpResourceManager().manageAdapters(),
-              new SpResourceManager().manageDataStreams(),
-              AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-          )
-    );
+    super(AdapterMasterManagement::new);
   }
 
   @POST
