@@ -28,26 +28,27 @@ import static org.junit.Assert.assertThrows;
 
 public class AdapterMetricsTest {
 
+  private static final String ADAPTER_ID = "adapterId";
+  private static final String ADAPTER_NAME = "adapterName";
+
   @Test
   public void register() {
 
     var metrics = new AdapterMetrics();
-    var adapterId = "adapterId";
-    var adapterName = "adapterName";
 
     assertEquals(0, metrics.size());
 
-    metrics.register(adapterId, adapterName);
+    metrics.register(ADAPTER_ID, ADAPTER_NAME);
 
     assertEquals(1, metrics.size());
-    assertTrue(metrics.contains(adapterId));
+    assertTrue(metrics.contains(ADAPTER_ID));
   }
 
   @Test
   public void removeNoSuchElement() {
     var metrics = new AdapterMetrics();
 
-    assertThrows(NoSuchElementException.class, () -> metrics.remove("test-id", "test-name"));
+    assertThrows(NoSuchElementException.class, () -> metrics.remove(ADAPTER_ID, ADAPTER_NAME));
   }
 
   @Test
@@ -56,7 +57,7 @@ public class AdapterMetricsTest {
 
     assertThrows(
         NoSuchElementException.class,
-        () -> metrics.updateTotalEventsPublished("test-id", "test-name", 0)
+        () -> metrics.updateTotalEventsPublished(ADAPTER_ID, ADAPTER_NAME, 0)
     );
 
   }
