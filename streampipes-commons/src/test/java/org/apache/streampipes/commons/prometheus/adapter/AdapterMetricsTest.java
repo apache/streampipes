@@ -34,7 +34,7 @@ public class AdapterMetricsTest {
   @Test
   public void register() {
 
-    var metrics = new AdapterMetrics();
+    var metrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
 
     assertEquals(0, metrics.size());
 
@@ -46,14 +46,14 @@ public class AdapterMetricsTest {
 
   @Test
   public void removeNoSuchElement() {
-    var metrics = new AdapterMetrics();
+    var metrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
 
     assertThrows(NoSuchElementException.class, () -> metrics.remove(ADAPTER_ID, ADAPTER_NAME));
   }
 
   @Test
   public void updateTotalEventsPublishedNoSuchElement() {
-    var metrics = new AdapterMetrics();
+    var metrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
 
     assertThrows(
         NoSuchElementException.class,
