@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.util.GroundingUtils;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
@@ -31,7 +32,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -49,20 +49,18 @@ public class AdapterMasterManagement {
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
   private final IAdapterStorage adapterInstanceStorage;
+  private final AdapterMetrics adapterMetrics;
   private final AdapterResourceManager adapterResourceManager;
 
   private final DataStreamResourceManager dataStreamResourceManager;
 
-  public AdapterMasterManagement() {
-    this.adapterInstanceStorage = getAdapterInstanceStorage();
-    this.adapterResourceManager = new SpResourceManager().manageAdapters();
-    this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
-  }
-
   public AdapterMasterManagement(IAdapterStorage adapterStorage,
                                  AdapterResourceManager adapterResourceManager,
-                                 DataStreamResourceManager dataStreamResourceManager) {
+                                 DataStreamResourceManager dataStreamResourceManager,
+                                 AdapterMetrics adapterMetrics
+  ) {
     this.adapterInstanceStorage = adapterStorage;
+    this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
   }
