@@ -55,13 +55,6 @@ public class AdapterMasterManagement {
 
   private final DataStreamResourceManager dataStreamResourceManager;
 
-  public AdapterMasterManagement() {
-    this.adapterInstanceStorage = getAdapterInstanceStorage();
-    this.adapterMetrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
-    this.adapterResourceManager = new SpResourceManager().manageAdapters();
-    this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
-  }
-
   public AdapterMasterManagement(IAdapterStorage adapterStorage,
                                  AdapterResourceManager adapterResourceManager,
                                  DataStreamResourceManager dataStreamResourceManager,
