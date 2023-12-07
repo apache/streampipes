@@ -22,5 +22,5 @@ inputField.title=DateTime String
 inputField.description=The event property that contains the timestamp ISO 8601 formatted strings, e.g., '2023-11-29T18:30:22'
 
 inputTimeZone.title=Time Zone
-inputTimeZone.description=The desired time zone for which the string applies (if the string already contains the time zone information, the user time zone will be ignored)
+inputTimeZone.description=The time zone for which the string applies (if the string already contains the time zone information, the user time zone will be ignored)
 

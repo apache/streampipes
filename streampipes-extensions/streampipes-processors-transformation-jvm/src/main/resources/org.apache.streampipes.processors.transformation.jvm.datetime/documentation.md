@@ -68,4 +68,5 @@ datetime.
 
 After the conversion happens, the processor adds a new piece of information to your data stream:
 
-* **dateTime**: This is the transformed datetime in a format that computers can easily work with.
+* **timestringInMillis**: This is the transformed datetime in a format that computers can easily work with (UNIX timestamp in milliseconds).
+* **timeZone**: The name of the timezone the `dateTime` value refers to. Can be used to reconstitute the actual time.

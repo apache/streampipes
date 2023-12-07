@@ -35,6 +35,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
@@ -50,10 +51,9 @@ import java.util.List;
 public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
 
   public static final String FIELD_ID = "inputField";
-  public static final String OUTPUT_DATETIME_RUNTIME_NAME = "dateTime";
-  public static final String OUTPUT_TIMESTAMP_RUNTIME_NAME = "timeStamp";
+  public static final String OUTPUT_TIMESTAMP_RUNTIME_NAME = "timestringInMillis";
   public static final String OUTPUT_TIMEZONE_RUNTIME_NAME = "timeZone";
-  public static final String SELECTED_INPUT_TIMEZONE = "inputTimeZone";
+  public static final String INPUT_TIMEZONE_KEY = "inputTimeZone";
 
   private String streamInputDateTimeFieldName;
   private String selectedTimeZone;
@@ -66,29 +66,44 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.stringReq(),
-                Labels.withId(FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(SELECTED_INPUT_TIMEZONE),
-            Options.from(getTimeZoneOptions()), true)
-        .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(OUTPUT_DATETIME_RUNTIME_NAME)))
-        .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(OUTPUT_TIMEZONE_RUNTIME_NAME)))
+                                                 .requiredPropertyWithUnaryMapping(
+                                                     EpRequirements.stringReq(),
+                                                     Labels.withId(FIELD_ID),
+                                                     PropertyScope.NONE
+                                                 )
+                                                 .build())
+        .requiredSingleValueSelection(Labels.withId(INPUT_TIMEZONE_KEY),
+                                      Options.from(getTimeZoneOptions()), true
+        )
+        .outputStrategy(
+            OutputStrategies.append(
+                EpProperties.timestampProperty(OUTPUT_TIMESTAMP_RUNTIME_NAME),
+                EpProperties.stringEp(
+                    // We can use the labels from the input timezone here
+                    Labels.withId(INPUT_TIMEZONE_KEY),
+                    OUTPUT_TIMEZONE_RUNTIME_NAME,
+                    SO.SCHEDULE_TIMEZONE
+                )
+            )
+        )
         .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-      EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(
+      ProcessorParams parameters, SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.streamInputDateTimeFieldName = extractor.mappingPropertyValue(FIELD_ID);
-    this.selectedTimeZone = extractor.selectedSingleValue(SELECTED_INPUT_TIMEZONE, String.class);
+    this.selectedTimeZone = extractor.selectedSingleValue(INPUT_TIMEZONE_KEY, String.class);
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) {
-    String dateTimeString = event.getFieldBySelector(streamInputDateTimeFieldName).getAsPrimitive().getAsString();
+    String dateTimeString = event.getFieldBySelector(streamInputDateTimeFieldName)
+                                 .getAsPrimitive()
+                                 .getAsString();
     DateTimeFormatter dtFormatter = DateTimeFormatter.ISO_DATE_TIME;
     ZonedDateTime zdt = parseDateTime(dateTimeString, dtFormatter);
 
@@ -98,8 +113,11 @@ public class DateTimeFromStringProcessor extends StreamPipesDataProcessor {
      * long to reconstitute the actual time after the event has been sent.
      * event.addField(OUTPUT_DATETIME_RUNTIME_NAME, zdt);
      */
-
-    event.addField(OUTPUT_TIMESTAMP_RUNTIME_NAME, zdt.toInstant().toEpochMilli());
+    event.addField(
+        OUTPUT_TIMESTAMP_RUNTIME_NAME,
+        zdt.toInstant()
+           .toEpochMilli()
+    );
     event.addField(OUTPUT_TIMEZONE_RUNTIME_NAME, selectedTimeZone);
 
     collector.collect(event);
