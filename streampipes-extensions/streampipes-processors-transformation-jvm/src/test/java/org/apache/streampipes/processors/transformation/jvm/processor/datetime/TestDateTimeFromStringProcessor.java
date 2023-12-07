@@ -144,7 +144,10 @@ public class TestDateTimeFromStringProcessor {
                                                      .stream()
                                                      .filter(p -> p instanceof MappingPropertyUnary)
                                                      .map(p -> (MappingPropertyUnary) p)
-                                                     .filter(p -> (DateTimeFromStringProcessor.FIELD_ID).equals(p.getInternalName()))
+                                                     .filter(p -> DateTimeFromStringProcessor.FIELD_ID.equals(
+                                                                 p.getInternalName()
+                                                             )
+                                                     )
                                                      .findFirst()
                                                      .orElse(null);
 
@@ -156,7 +159,9 @@ public class TestDateTimeFromStringProcessor {
                                                         .filter(p -> p instanceof OneOfStaticProperty)
                                                         .map(p -> (OneOfStaticProperty) p)
                                                         .filter(p -> (
-                                                            DateTimeFromStringProcessor.INPUT_TIMEZONE_KEY.equals(p.getInternalName())
+                                                            DateTimeFromStringProcessor.INPUT_TIMEZONE_KEY.equals(
+                                                                p.getInternalName()
+                                                            )
                                                         ))
                                                         .findFirst()
                                                         .orElse(null);
