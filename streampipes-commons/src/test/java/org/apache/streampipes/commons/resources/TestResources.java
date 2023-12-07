@@ -16,7 +16,7 @@
  *
  */
 
-import org.apache.streampipes.commons.resources.Resources;
+package org.apache.streampipes.commons.resources;
 
 import org.junit.Test;
 
@@ -31,6 +31,6 @@ public class TestResources {
   public void testResourceLoader() throws IOException {
     String filename = "test.txt";
     String content = Resources.asString(filename, StandardCharsets.UTF_8);
-    assertEquals("HelloWorld", content.replaceAll("\\s+",""));
+    assertEquals("HelloWorld", content.replaceAll("\\s+", ""));
   }
 }

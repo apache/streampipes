@@ -18,11 +18,13 @@
 
 package org.apache.streampipes.service.core;
 
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -52,7 +54,13 @@ public class PostStartupTask implements Runnable {
   public PostStartupTask(IPipelineStorage pipelineStorage) {
     this.pipelineStorage = pipelineStorage;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
-    this.workerAdministrationManagement = new WorkerAdministrationManagement();
+    this.workerAdministrationManagement = new WorkerAdministrationManagement(
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getAdapterInstanceStorage(),
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+        new SpResourceManager().manageAdapters(),
+        new SpResourceManager().manageDataStreams()
+    );
   }
 
   @Override
@@ -63,11 +71,13 @@ public class PostStartupTask implements Runnable {
   }
 
   private void performAdapterAssetUpdate() {
-    var installedAppIds = CouchDbStorageManager.INSTANCE.getExtensionsServiceStorage().getAll()
-        .stream()
-        .flatMap(config -> config.getTags().stream())
-        .filter(tag -> tag.getPrefix() == SpServiceTagPrefix.ADAPTER)
-        .toList();
+    var installedAppIds = CouchDbStorageManager.INSTANCE.getExtensionsServiceStorage()
+                                                        .getAll()
+                                                        .stream()
+                                                        .flatMap(config -> config.getTags()
+                                                                                 .stream())
+                                                        .filter(tag -> tag.getPrefix() == SpServiceTagPrefix.ADAPTER)
+                                                        .toList();
     workerAdministrationManagement.performAdapterMigrations(installedAppIds);
   }
 
@@ -118,16 +128,20 @@ public class PostStartupTask implements Runnable {
       storeFailedRestartAttempt(pipeline);
       int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
       if (failedAttemptCount <= MAX_PIPELINE_START_RETRIES) {
-        LOG.error("Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
+        LOG.error(
+            "Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
             pipeline.getName(),
             WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
             failedAttemptCount,
-            MAX_PIPELINE_START_RETRIES);
+            MAX_PIPELINE_START_RETRIES
+        );
 
         schedulePipelineStart(pipeline, restartOnReboot);
       } else {
-        LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?",
-            status.getPipelineName());
+        LOG.error(
+            "Pipeline {} could not be restarted - are all pipeline element containers running?",
+            status.getPipelineName()
+        );
       }
     }
   }
