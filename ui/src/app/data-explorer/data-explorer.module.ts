@@ -101,6 +101,9 @@ import { DataExplorerDashboardSlideViewComponent } from './components/widget-vie
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { DataExplorerPanelCanDeactivateGuard } from './data-explorer-panel.can-deactivate.guard';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { ImageViewerComponent } from './components/widgets/image/image-viewer/image-viewer.component';
+import { ImageBarComponent } from './components/widgets/image/image-bar/image-bar.component';
+import { ImageBarPreviewComponent } from './components/widgets/image/image-bar/image-bar-preview/image-bar-preview.component';
 
 export const MY_NATIVE_FORMATS = {
     fullPickerInput: {
@@ -197,6 +200,8 @@ export const MY_NATIVE_FORMATS = {
         FilterSelectionPanelComponent,
         GroupConfigurationComponent,
         ImageWidgetComponent,
+        ImageBarComponent,
+        ImageBarPreviewComponent,
         ImageWidgetConfigComponent,
         IndicatorChartWidgetComponent,
         IndicatorWidgetConfigComponent,
@@ -215,6 +220,7 @@ export const MY_NATIVE_FORMATS = {
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
         HeatmapWidgetComponent,
+        ImageViewerComponent,
         TimeRangeSelectorComponent,
         DataExplorerVisualisationSettingsComponent,
         GroupSelectionPanelComponent,

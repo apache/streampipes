@@ -17,7 +17,6 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { ColorService } from '../../../image/services/color.service';
 import { LabelService } from '../../services/label.service';
 import { Category, Label } from '@streampipes/platform-services';
 
@@ -27,10 +26,7 @@ import { Category, Label } from '@streampipes/platform-services';
     styleUrls: ['./configure-labels.component.css'],
 })
 export class ConfigureLabelsComponent implements OnInit {
-    constructor(
-        public colorService: ColorService,
-        public labelService: LabelService,
-    ) {}
+    constructor(public labelService: LabelService) {}
 
     public categories: Category[];
     public selectedCategory: Category;
