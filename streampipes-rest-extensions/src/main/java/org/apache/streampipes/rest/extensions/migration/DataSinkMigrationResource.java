@@ -25,6 +25,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,9 +35,12 @@ import org.apache.http.HttpStatus;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+
+@Path("api/v1/migrations/sink")
 public class DataSinkMigrationResource extends MigrateExtensionsResource<
         DataSinkInvocation,
         IDataSinkParameterExtractor,

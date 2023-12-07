@@ -51,6 +51,8 @@ public class DataLakeMeasure {
 
   private String schemaVersion;
 
+  private DataLakeMeasureSchemaUpdateStrategy schemaUpdateStrategy = DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA;
+
   public DataLakeMeasure() {
     super();
   }
@@ -127,6 +129,14 @@ public class DataLakeMeasure {
   public void setTimestampField(String timestampField) {
     assert timestampField.split(STREAM_PREFIX_DELIMITER).length == 2 : ASSERTION_ERROR_MESSAGE;
     this.timestampField = timestampField;
+  }
+
+  public DataLakeMeasureSchemaUpdateStrategy getSchemaUpdateStrategy() {
+    return schemaUpdateStrategy;
+  }
+
+  public void setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy schemaUpdateStrategy) {
+    this.schemaUpdateStrategy = schemaUpdateStrategy;
   }
 
   /**

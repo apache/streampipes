@@ -45,8 +45,8 @@
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
-        <checker-qual.version>3.39.0</checker-qual.version>
-        <commons-codec.version>1.15</commons-codec.version>
+        <checker-qual.version>3.41.0</checker-qual.version>
+        <commons-codec.version>1.16.0</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-compress.version>1.25.0</commons-compress.version>
         <commons-io.version>2.11.0</commons-io.version>
