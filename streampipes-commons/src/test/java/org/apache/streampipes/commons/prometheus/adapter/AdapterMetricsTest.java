@@ -30,6 +30,7 @@ public class AdapterMetricsTest {
 
   private static final String ADAPTER_ID = "adapterId";
   private static final String ADAPTER_NAME = "adapterName";
+  private static final String OTHER_ADAPTER_ID = "otherAdapterId";
 
   @Test
   public void register() {
@@ -48,7 +49,7 @@ public class AdapterMetricsTest {
   public void removeNoSuchElement() {
     var metrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
 
-    assertThrows(NoSuchElementException.class, () -> metrics.remove(ADAPTER_ID, ADAPTER_NAME));
+    assertThrows(NoSuchElementException.class, () -> metrics.remove(OTHER_ADAPTER_ID, ADAPTER_NAME));
   }
 
   @Test
@@ -57,7 +58,7 @@ public class AdapterMetricsTest {
 
     assertThrows(
         NoSuchElementException.class,
-        () -> metrics.updateTotalEventsPublished(ADAPTER_ID, ADAPTER_NAME, 0)
+        () -> metrics.updateTotalEventsPublished(OTHER_ADAPTER_ID, ADAPTER_NAME, 0)
     );
 
   }
