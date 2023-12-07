@@ -98,9 +98,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
             String[] splitCredentials = credentials.split(":");
             String username = splitCredentials[0];
-            String providedProperty = splitCredentials[1];
+            String passphrase = splitCredentials[1];
             var principal = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(username);
-            if (principal != null && checkCredentials(principal, providedProperty)) {
+            if (principal != null && checkCredentials(principal, passphrase)) {
               applySuccessfulAuth(request, username);
             }
           }
@@ -113,12 +113,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private boolean checkCredentials(Principal principal, String providedProperty)
+  private boolean checkCredentials(Principal principal, String passphrase)
       throws NoSuchAlgorithmException, InvalidKeySpecException {
     if (principal instanceof UserAccount) {
-      return PasswordUtil.validatePassword(providedProperty, ((UserAccount) principal).getPassword());
+      return PasswordUtil.validatePassword(passphrase, ((UserAccount) principal).getPassword());
     } else if (principal instanceof ServiceAccount) {
-      return providedProperty.equals(SecretEncryptionManager.decrypt(((ServiceAccount) principal).getClientSecret()));
+      return passphrase.equals(SecretEncryptionManager.decrypt(((ServiceAccount) principal).getClientSecret()));
     } else {
       throw new IllegalArgumentException("Unknown user instance");
     }
