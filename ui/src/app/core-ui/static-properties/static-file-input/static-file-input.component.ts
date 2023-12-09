@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    NgModule,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     FilesService,
@@ -26,6 +32,8 @@ import {
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FileRenameDialogComponent } from '../../../files/dialog/file-rename/file-rename-dialog.component';
 
 @Component({
     selector: 'sp-static-file-input',
@@ -40,8 +48,9 @@ export class StaticFileInputComponent
 
     public chooseExistingFileControl = new UntypedFormControl();
 
+    dialogRef: MatDialogRef<FileRenameDialogComponent>;
+
     fileName: string;
-    fileAlreadyExists: boolean;
 
     selectedUploadFile: File;
 
@@ -55,7 +64,10 @@ export class StaticFileInputComponent
 
     filesLoaded = false;
 
-    constructor(private filesService: FilesService) {
+    constructor(
+        private filesService: FilesService,
+        public dialog: MatDialog,
+    ) {
         super();
     }
 
@@ -124,34 +136,43 @@ export class StaticFileInputComponent
 
     upload() {
         if (this.selectedUploadFile !== undefined) {
-            this.filesService.getAllFilenames().subscribe(allFileNames => {
-                if (!allFileNames.includes(this.selectedUploadFile.name)) {
-                    this.uploadStatus = 0;
-                    this.filesService
-                        .uploadFile(this.selectedUploadFile)
-                        .subscribe(
-                            event => {
-                                if (
-                                    event.type === HttpEventType.UploadProgress
-                                ) {
-                                    this.uploadStatus = Math.round(
-                                        (100 * event.loaded) / event.total,
-                                    );
-                                } else if (event instanceof HttpResponse) {
-                                    const internalFilename =
-                                        event.body.internalFilename;
-                                    this.parentForm.controls[
-                                        this.fieldName
-                                    ].setValue(internalFilename);
-                                    this.fetchFileMetadata(internalFilename);
-                                }
-                            },
-                            error => {},
-                        );
-                } else {
-                    this.fileAlreadyExists = true;
-                }
-            });
+            this.filesService
+                .getAllOriginalFilenames()
+                .subscribe(allFileNames => {
+                    if (
+                        !allFileNames.includes(
+                            this.selectedUploadFile.name.toLowerCase(),
+                        )
+                    ) {
+                        this.uploadStatus = 0;
+                        this.filesService
+                            .uploadFile(this.selectedUploadFile)
+                            .subscribe(
+                                event => {
+                                    if (
+                                        event.type ===
+                                        HttpEventType.UploadProgress
+                                    ) {
+                                        this.uploadStatus = Math.round(
+                                            (100 * event.loaded) / event.total,
+                                        );
+                                    } else if (event instanceof HttpResponse) {
+                                        const internalFilename =
+                                            event.body.internalFilename;
+                                        this.parentForm.controls[
+                                            this.fieldName
+                                        ].setValue(internalFilename);
+                                        this.fetchFileMetadata(
+                                            internalFilename,
+                                        );
+                                    }
+                                },
+                                error => {},
+                            );
+                    } else {
+                        this.openRenameDialog();
+                    }
+                });
         }
     }
 
@@ -176,7 +197,20 @@ export class StaticFileInputComponent
         this.parentForm.updateValueAndValidity();
     }
 
-    reenableFileUpload() {
-        this.fileAlreadyExists = false;
+    openRenameDialog() {
+        this.dialogRef = this.dialog.open(FileRenameDialogComponent);
+        this.dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.fileName = data;
+                this.selectedUploadFile = new File(
+                    [this.selectedUploadFile],
+                    this.fileName,
+                    {
+                        type: this.selectedUploadFile.type,
+                        lastModified: this.selectedUploadFile.lastModified,
+                    },
+                );
+            }
+        });
     }
 }

@@ -85,31 +85,31 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @Path("/{filename}")
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Operation(
-          summary = "Get file content by file name."
-                  + "If multiple files with the same name exist, only the first is returned."
-                  + "This can only be the case when the original file name is provided.", tags = {"Core", "Files"},
-          responses = {
-              @ApiResponse(
-                      responseCode = "" + HttpStatus.SC_OK,
-                      description = "File could be found and is returned"),
-              @ApiResponse(
-                      responseCode = "" + HttpStatus.SC_NOT_FOUND,
-                      description = "No file with the given file name could be found")
-          }
+      summary = "Get file content by file name."
+          + "If multiple files with the same name exist, only the first is returned."
+          + "This can only be the case when the original file name is provided.", tags = {"Core", "Files"},
+      responses = {
+          @ApiResponse(
+              responseCode = "" + HttpStatus.SC_OK,
+              description = "File could be found and is returned"),
+          @ApiResponse(
+              responseCode = "" + HttpStatus.SC_NOT_FOUND,
+              description = "No file with the given file name could be found")
+      }
   )
   public Response getFile(
-          @Parameter(
-                  in = ParameterIn.PATH,
-                  description = "The name of the file to be retrieved",
-                  required = true
-          )
-          @PathParam("filename") String filename,
-          @Parameter(
-                  in = ParameterIn.QUERY,
-                  description = "Determines if the provided file name is the original file name "
-                          + "as per upload."
-          )
-          @QueryParam("isOriginalFilename") @DefaultValue("false") boolean isOriginalFilename
+      @Parameter(
+          in = ParameterIn.PATH,
+          description = "The name of the file to be retrieved",
+          required = true
+      )
+      @PathParam("filename") String filename,
+      @Parameter(
+          in = ParameterIn.QUERY,
+          description = "Determines if the provided file name is the original file name "
+              + "as per upload."
+      )
+      @QueryParam("isOriginalFilename") @DefaultValue("false") boolean isOriginalFilename
   ) {
     if (isOriginalFilename) {
       try {
@@ -125,8 +125,9 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @Path("/allFilenames")
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
-  public Response getAllFilenames() {
-    return ok(FileManager.getAllFiles().stream().map(fileMetadata -> fileMetadata.getOriginalFilename()).collect(
-        Collectors.toList()));
+  public Response getAllOriginalFilenames() {
+    return ok(FileManager.getAllFiles().stream().map(fileMetadata -> fileMetadata.getOriginalFilename().toLowerCase())
+        .collect(
+            Collectors.toList()));
   }
 }

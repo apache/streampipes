@@ -18,7 +18,7 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxFlex="100" *ngIf="this.overlappingFileNames.length == 0">
+        <div fxFlex="100" *ngIf="this.duplicateFileNames.length == 0">
             <div fxFlex="100" style="margin: 5px; width: 100%">
                 <mat-form-field
                     style="width: 95%"
@@ -83,7 +83,7 @@
             </div>
         </div>
         <div
-            *ngIf="this.overlappingFileNames.length != 0"
+            *ngIf="this.duplicateFileNames.length != 0"
             fxLayout="column"
             style="width: 100%"
         >
@@ -94,10 +94,7 @@
                     </h4>
                 </b>
                 <div
-                    *ngFor="
-                        let name of this.overlappingFileNames;
-                        let i = index
-                    "
+                    *ngFor="let name of this.duplicateFileNames; let i = index"
                 >
                     <div class="input-group">
                         <span style="margin-right: 10px">{{ name }}:</span>
@@ -116,7 +113,7 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <button
-            *ngIf="this.overlappingFileNames.length == 0"
+            *ngIf="this.duplicateFileNames.length == 0"
             mat-button
             mat-raised-button
             color="accent"
@@ -129,15 +126,15 @@
         </button>
 
         <button
-            *ngIf="this.overlappingFileNames.length != 0"
+            *ngIf="this.duplicateFileNames.length != 0"
             mat-button
             mat-raised-button
             color="accent"
-            (click)="renameOverlappingFiles()"
+            (click)="renameDuplicateFiles()"
             [disabled]="fileNames.length === 0"
             style="margin-right: 10px"
         >
-            Rename Files
+            Rename files
         </button>
         <button
             mat-button

@@ -29,7 +29,7 @@ import { FilesService } from '@streampipes/platform-services';
 export class FileUploadDialogComponent {
     inputValue: string;
     fileNames: string[] = [];
-    overlappingFileNames: string[] = [];
+    duplicateFileNames: string[] = [];
     renamedFileNames: string[] = [];
 
     selectedUploadFiles: FileList;
@@ -58,12 +58,12 @@ export class FileUploadDialogComponent {
     }
 
     store() {
-        this.filesService.getAllFilenames().subscribe(data => {
+        this.filesService.getAllOriginalFilenames().subscribe(data => {
             const allFileNames = new Set(data);
-            this.overlappingFileNames = this.fileNames.filter(fileName =>
-                allFileNames.has(fileName),
+            this.duplicateFileNames = this.fileNames.filter(fileName =>
+                allFileNames.has(fileName.toLowerCase()),
             );
-            if (this.overlappingFileNames.length == 0) {
+            if (this.duplicateFileNames.length == 0) {
                 this.uploadStatus = 0;
                 if (this.selectedUploadFiles.length > 0) {
                     this.uploadFile(0);
@@ -98,11 +98,11 @@ export class FileUploadDialogComponent {
         this.dialogRef.close();
     }
 
-    renameOverlappingFiles() {
+    renameDuplicateFiles() {
         const dataTransfer = new DataTransfer();
         for (let i = 0; i < this.fileNames.length; i++) {
             let fileName = this.fileNames[i];
-            let index = this.overlappingFileNames.indexOf(fileName);
+            let index = this.duplicateFileNames.indexOf(fileName);
             if (index != -1) {
                 this.fileNames[i] = this.renamedFileNames[index];
                 fileName = this.renamedFileNames[index];
@@ -115,7 +115,7 @@ export class FileUploadDialogComponent {
             dataTransfer.items.add(renamedFile);
         }
         this.selectedUploadFiles = dataTransfer.files;
-        this.overlappingFileNames = [];
+        this.duplicateFileNames = [];
         this.renamedFileNames = [];
     }
 }

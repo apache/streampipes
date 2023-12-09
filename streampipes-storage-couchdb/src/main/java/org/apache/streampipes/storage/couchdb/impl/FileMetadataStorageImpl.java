@@ -65,4 +65,9 @@ public class FileMetadataStorageImpl extends AbstractDao<FileMetadata> implement
   public void addFileMetadata(FileMetadata fileMetadata) {
     persist(fileMetadata);
   }
+
+  @Override
+  public void updateFileMetadata(FileMetadata fileMetadata) {
+    update(fileMetadata);
+  }
 }

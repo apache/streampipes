@@ -67,7 +67,7 @@
                 </mat-autocomplete>
             </mat-form-field>
         </div>
-        <div *ngIf="!chooseExistingFileControl.value && !fileAlreadyExists">
+        <div *ngIf="!chooseExistingFileControl.value">
             <mat-form-field
                 style="width: 95%"
                 (click)="fileInput.click()"
@@ -122,21 +122,6 @@
                     Upload
                 </button>
             </div>
-        </div>
-        <div *ngIf="!chooseExistingFileControl.value && fileAlreadyExists">
-            <h4>
-                The file you uploaded already exists, please select it or upload
-                a file with a different name.
-            </h4>
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                (click)="reenableFileUpload()"
-                style="margin-right: 10px"
-            >
-                Reupload
-            </button>
         </div>
     </div>
 </div>
