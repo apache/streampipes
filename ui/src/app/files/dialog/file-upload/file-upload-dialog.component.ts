@@ -63,7 +63,7 @@ export class FileUploadDialogComponent {
             this.duplicateFileNames = this.fileNames.filter(fileName =>
                 allFileNames.has(fileName.toLowerCase()),
             );
-            if (this.duplicateFileNames.length == 0) {
+            if (this.duplicateFileNames.length === 0) {
                 this.uploadStatus = 0;
                 if (this.selectedUploadFiles.length > 0) {
                     this.uploadFile(0);
@@ -103,7 +103,7 @@ export class FileUploadDialogComponent {
         for (let i = 0; i < this.fileNames.length; i++) {
             let fileName = this.fileNames[i];
             let index = this.duplicateFileNames.indexOf(fileName);
-            if (index != -1) {
+            if (index !== -1) {
                 this.fileNames[i] = this.renamedFileNames[index];
                 fileName = this.renamedFileNames[index];
             }
