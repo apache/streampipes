@@ -92,7 +92,7 @@ public class InfluxDbSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb")
+    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.DATABASE);

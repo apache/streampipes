@@ -27,6 +27,7 @@ import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,8 +36,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -80,21 +79,24 @@ import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams
 @Path("v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
 
-  private static final Logger logger = LoggerFactory.getLogger(DataLakeResourceV4.class);
-
   private DataExplorerQueryManagement dataLakeManagement;
   private final DataExplorerSchemaManagement dataExplorerSchemaManagement;
 
   public DataLakeResourceV4() {
-    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement();
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
+    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
     this.dataLakeManagement = new DataExplorerQueryManagement(dataExplorerSchemaManagement);
   }
 
   public DataLakeResourceV4(DataExplorerQueryManagement dataLakeManagement) {
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
     this.dataLakeManagement = dataLakeManagement;
-    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement();
+    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
   }
-
 
   @DELETE
   @Path("/measurements/{measurementID}")

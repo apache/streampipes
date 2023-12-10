@@ -21,23 +21,33 @@ package org.apache.streampipes.dataexplorer;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyList;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerSchemaManagement.class);
+
+  IDataLakeStorage dataLakeStorage;
+
+  public DataExplorerSchemaManagement(IDataLakeStorage dataLakeStorage) {
+    this.dataLakeStorage = dataLakeStorage;
+  }
 
   @Override
   public List<DataLakeMeasure> getAllMeasurements() {
@@ -46,39 +56,68 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public DataLakeMeasure getById(String elementId) {
-    return getDataLakeStorage().findOne(elementId);
+    return dataLakeStorage.findOne(elementId);
   }
 
+  /**
+   * For new measurements an entry is generated in the database. For existing measurements the schema is updated
+   * according to the update strategy defined by the measurement.
+   */
   @Override
-  public DataLakeMeasure createMeasurement(DataLakeMeasure measure) {
-    List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
-    Optional<DataLakeMeasure> optional =
-        dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure.getMeasureName()))
-            .findFirst();
+  public DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure) {
 
-    if (optional.isPresent()) {
-      DataLakeMeasure oldEntry = optional.get();
-      if (!compareEventProperties(oldEntry.getEventSchema().getEventProperties(),
-          measure.getEventSchema().getEventProperties())) {
-        oldEntry.setEventSchema(measure.getEventSchema());
-        oldEntry.setTimestampField(measure.getTimestampField());
-        oldEntry.setPipelineName(measure.getPipelineName());
-        getDataLakeStorage().updateDataLakeMeasure(oldEntry);
-        return oldEntry;
-      }
+    setDefaultUpdateStrategyIfNoneProvided(measure);
+
+    var existingMeasure = getExistingMeasureByName(measure.getMeasureName());
+
+    if (existingMeasure.isEmpty()) {
+      setSchemaVersionAndStoreMeasurement(measure);
     } else {
-      measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
-      getDataLakeStorage().storeDataLakeMeasure(measure);
-      return measure;
+      handleExistingMeasurement(measure, existingMeasure.get());
     }
 
     return measure;
   }
 
+  /**
+   * Destiguishes between the update straregy for existing measurments
+   */
+  private void handleExistingMeasurement(
+      DataLakeMeasure measure,
+      DataLakeMeasure existingMeasure
+  ) {
+    measure.setElementId(existingMeasure.getElementId());
+    if (DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
+      // For the update schema strategy the old schema is overwritten with the new one
+      updateMeasurement(measure);
+    } else {
+      // For the extent existing schema strategy the old schema is merged with the new one
+      unifyEventSchemaAndUpdateMeasure(measure, existingMeasure);
+    }
+  }
+
+
+  /**
+   * Returns the existing measure that has the provided measure name
+   */
+  private Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
+    return dataLakeStorage.getAllDataLakeMeasures()
+                          .stream()
+                          .filter(m -> m.getMeasureName()
+                                        .equals(measureName))
+                          .findFirst();
+  }
+
+  private static void setDefaultUpdateStrategyIfNoneProvided(DataLakeMeasure measure) {
+    if (measure.getSchemaUpdateStrategy() == null) {
+      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+    }
+  }
+
   @Override
   public void deleteMeasurement(String elementId) {
-    if (getDataLakeStorage().findOne(elementId) != null) {
-      getDataLakeStorage().deleteDataLakeMeasure(elementId);
+    if (dataLakeStorage.findOne(elementId) != null) {
+      dataLakeStorage.deleteDataLakeMeasure(elementId);
     } else {
       throw new IllegalArgumentException("Could not find measure with this ID");
     }
@@ -88,12 +127,23 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   public boolean deleteMeasurementByName(String measureName) {
     boolean isSuccess = false;
     CouchDbClient couchDbClient = Utils.getCouchDbDataLakeClient();
-    List<JsonObject> docs = couchDbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+    List<JsonObject> docs = couchDbClient.view("_all_docs")
+                                         .includeDocs(true)
+                                         .query(JsonObject.class);
 
     for (JsonObject document : docs) {
-      if (document.get("measureName").toString().replace("\"", "").equals(measureName)) {
-        couchDbClient.remove(document.get("_id").toString().replace("\"", ""),
-            document.get("_rev").toString().replace("\"", ""));
+      if (document.get("measureName")
+                  .toString()
+                  .replace("\"", "")
+                  .equals(measureName)) {
+        couchDbClient.remove(
+            document.get("_id")
+                    .toString()
+                    .replace("\"", ""),
+            document.get("_rev")
+                    .toString()
+                    .replace("\"", "")
+        );
         isSuccess = true;
         break;
       }
@@ -102,58 +152,73 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     try {
       couchDbClient.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.error("Could not close CouchDB client", e);
     }
     return isSuccess;
   }
 
   @Override
   public void updateMeasurement(DataLakeMeasure measure) {
-    var existingMeasure = getDataLakeStorage().findOne(measure.getElementId());
+    var existingMeasure = dataLakeStorage.findOne(measure.getElementId());
     if (existingMeasure != null) {
       measure.setRev(existingMeasure.getRev());
-      getDataLakeStorage().updateDataLakeMeasure(measure);
+      dataLakeStorage.updateDataLakeMeasure(measure);
     } else {
-      getDataLakeStorage().storeDataLakeMeasure(measure);
+      dataLakeStorage.storeDataLakeMeasure(measure);
     }
   }
 
-  private IDataLakeStorage getDataLakeStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  private void setSchemaVersionAndStoreMeasurement(DataLakeMeasure measure) {
+    measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+    dataLakeStorage.storeDataLakeMeasure(measure);
   }
 
-  private boolean compareEventProperties(List<EventProperty> prop1, List<EventProperty> prop2) {
-    if (prop1.size() != prop2.size()) {
-      return false;
-    }
+  /**
+   * First the event schemas of the measurements are merged and then the measure is updated in the database
+   */
+  private void unifyEventSchemaAndUpdateMeasure(
+      DataLakeMeasure measure,
+      DataLakeMeasure existingMeasure
+  ) {
+    var properties = getUnifiedEventProperties(
+        existingMeasure,
+        measure
+    );
 
-    return prop1.stream().allMatch(prop -> {
+    measure
+        .getEventSchema()
+        .setEventProperties(properties);
 
-      for (EventProperty property : prop2) {
-        if (prop.getRuntimeName().equals(property.getRuntimeName())) {
+    updateMeasurement(measure);
+  }
 
-          //primitive
-          if (prop instanceof EventPropertyPrimitive && property instanceof EventPropertyPrimitive) {
-            if (((EventPropertyPrimitive) prop)
-                .getRuntimeType()
-                .equals(((EventPropertyPrimitive) property).getRuntimeType())) {
-              return true;
-            }
+  /**
+   * Returns the union of the unique event properties of the two measures.
+   * They are unique by runtime name.
+   */
+  private List<EventProperty> getUnifiedEventProperties(
+      DataLakeMeasure measure1,
+      DataLakeMeasure measure2
+  ) {
+// Combine the event properties from both measures into a single Stream
+    var allMeasurementProperties = Stream.concat(
+        measure1.getEventSchema()
+                .getEventProperties()
+                .stream(),
+        measure2.getEventSchema()
+                .getEventProperties()
+                .stream()
+    );
 
-            //list
-          } else if (prop instanceof EventPropertyList && property instanceof EventPropertyList) {
-            return compareEventProperties(Collections.singletonList(((EventPropertyList) prop).getEventProperty()),
-                Collections.singletonList(((EventPropertyList) property).getEventProperty()));
-
-            //nested
-          } else if (prop instanceof EventPropertyNested && property instanceof EventPropertyNested) {
-            return compareEventProperties(((EventPropertyNested) prop).getEventProperties(),
-                ((EventPropertyNested) property).getEventProperties());
-          }
-        }
-      }
-      return false;
-
-    });
+    // Filter event properties by removing duplicate runtime names
+    // If there are duplicate keys, choose the first occurrence
+    var unifiedEventProperties = allMeasurementProperties
+        .collect(Collectors.toMap(
+            EventProperty::getRuntimeName,
+            Function.identity(),
+            (eventProperty, eventProperty2) -> eventProperty
+        ))
+        .values();
+    return new ArrayList<>(unifiedEventProperties);
   }
 }

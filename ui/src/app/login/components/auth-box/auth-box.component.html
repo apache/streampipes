@@ -17,62 +17,56 @@
   -->
 
 <div
-    class="md-padding full-background sp-fade light-mode"
-    fxLayout="row"
+    class="full-background sp-fade light-mode"
+    fxLayout="row wrap"
     fxLayoutAlign="center center"
     style="min-height: 100vh !important"
 >
-    <div fxFlex="40" fxLayout="column" fxLayoutAlign="center center">
-        <mat-card
-            class="card-100-center box-shadow-login"
-            style="padding: 20px; position: relative; top: -25px"
-        >
-            <div fxFlex="100" fxLayout="column">
-                <div
-                    fxLayout="row"
-                    fxFlex="60"
-                    fxLayoutAlign="center center"
-                    style="margin-left: auto; margin-right: auto"
-                >
-                    <div
-                        fxFlex="60"
-                        fxLayoutAlign="center center"
-                        fxLayout="row"
-                        style="color: white; width: 100%"
-                    >
-                        <img
-                            alt="icon"
-                            src="../../../../assets/img/sp/logo.png"
-                            style="width: 100%"
-                        />
-                    </div>
-                </div>
-                <ng-content></ng-content>
+    <div
+        fxFlex.gt-md="50"
+        fxFlex.lt-md="100"
+        fxLayout="row"
+        fxLayoutAlign="start start"
+        class="full-height"
+    >
+        <div fxFlex="100" fxLayout="column" class="full-height">
+            <div fxLayoutAlign="end end" fxLayout="row" class="logo-outer">
+                <img
+                    alt="icon"
+                    src="../../../../assets/img/sp/logo.png"
+                    class="logo"
+                />
             </div>
-        </mat-card>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                (click)="openDocumentation()"
-                style="
-                    min-width: 0px;
-                    padding-left: 20px;
-                    padding-right: 20px;
-                    font-size: 18px;
-                "
-            >
-                View Docs
-            </button>
-            <span style="margin-top: 10px"
-                ><a
+            <div fxLayout="row" fxFlex fxLayoutAlign="center center">
+                <div fxLayout="column" class="content-box">
+                    <ng-content></ng-content>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="end end" class="auth-box-footer">
+                <a
+                    class="footer-link"
+                    href="https://streampipes.apache.org/docs/user-guide-introduction"
+                >
+                    Documentation
+                </a>
+                <span style="margin-left: 10px; margin-right: 10px"> | </span>
+                <a
+                    class="footer-link"
                     data-cy="view-api-docs-link"
                     routerLink="/apidocs"
                     routerLinkActive="active"
-                    >View API docs</a
-                ></span
-            >
+                    >API Documentation</a
+                >
+            </div>
         </div>
+    </div>
+    <div
+        fxFlex.gt-md="50"
+        fxFlex.lt-md="100"
+        fxLayout="column wrap"
+        fxLayoutAlign="center center"
+        class="background-auth-box full-height"
+    >
+        <h1 class="app-name-text">{{ appConstants.APP_NAME }}</h1>
     </div>
 </div>

@@ -58,7 +58,8 @@ public class TelegramSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.telegram")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.notifications.jvm.telegram", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)

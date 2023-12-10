@@ -18,6 +18,7 @@
 package org.apache.streampipes.test.generator;
 
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.PropertyScope;
 
 import java.net.URI;
 import java.util.List;
@@ -27,6 +28,16 @@ public class EventPropertyPrimitiveTestBuilder
 
   protected EventPropertyPrimitiveTestBuilder() {
     super(new EventPropertyPrimitive());
+  }
+
+  public EventPropertyPrimitiveTestBuilder withRuntimeType(URI runtimeType) {
+    this.eventProperty.setRuntimeType(runtimeType.toString());
+    return this;
+  }
+
+  public EventPropertyPrimitiveTestBuilder withPropertyScope(PropertyScope propertyScope) {
+    this.eventProperty.setPropertyScope(propertyScope.toString());
+    return this;
   }
 
   public EventPropertyPrimitiveTestBuilder withSemanticType(String semanticType) {

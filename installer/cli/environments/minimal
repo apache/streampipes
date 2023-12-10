@@ -16,7 +16,6 @@
 [environment:minimal]
 ui
 backend
-consul
 couchdb
 influxdb
 mosquitto

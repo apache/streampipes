@@ -30,7 +30,7 @@ spec:
     spec:
       restartPolicy: {{ .Values.restartPolicy }}
       initContainers:
-        - name: init-wait-consul
+        - name: init-wait
           image: alpine
           command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ .Values.external.zookeeper.service.name }} {{ .Values.external.zookeeper.service.port }} && exit 0 || sleep 3; done; exit 1"]
       volumes:

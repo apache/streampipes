@@ -20,8 +20,8 @@ package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
-import org.apache.streampipes.dataexplorer.commons.influx.InfluxRequests;
 import org.apache.streampipes.extensions.connectors.influx.shared.SharedInfluxClient;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -56,6 +56,8 @@ public class InfluxDbClient extends SharedInfluxClient {
 
   private boolean connected;
 
+  private final InfluxClientProvider influxClientProvider;
+
   public static class Column {
     private final String name;
     private final Datatypes datatypes;
@@ -79,6 +81,7 @@ public class InfluxDbClient extends SharedInfluxClient {
                  boolean replaceNullValues) {
     super(connectionSettings, measurement);
     this.replaceNullValues = replaceNullValues;
+    this.influxClientProvider = new InfluxClientProvider();
 
     this.connected = false;
   }
@@ -89,7 +92,7 @@ public class InfluxDbClient extends SharedInfluxClient {
       var database = connectionSettings.getDatabaseName();
 
       // Checking whether the database exists
-      if (!InfluxRequests.databaseExists(influxDb, database)) {
+      if (!influxClientProvider.databaseExists(influxDb, database)) {
         throw new AdapterException("Database " + database + " could not be found.");
       }
 

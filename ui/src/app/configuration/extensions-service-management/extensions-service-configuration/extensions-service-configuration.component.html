@@ -71,7 +71,7 @@
                 <button
                     mat-icon-button
                     color="accent"
-                    (click)="getConsulServices()"
+                    (click)="getConfigurationServices()"
                     matTooltip="Refresh"
                 >
                     <mat-icon>refresh</mat-icon>
@@ -100,15 +100,17 @@
                 [attr.colspan]="displayedColumns.length"
             >
                 <div
-                    class="consul-configuration-detail"
+                    class="service-configuration-detail"
                     [@detailExpand]="
                         element === expandedElement ? 'expanded' : 'collapsed'
                     "
                 >
                     <div fxFlex="100">
                         <sp-service-configs
-                            [consulService]="element"
-                            (updateConsulService)="updateConsulService($event)"
+                            [serviceConfiguration]="element"
+                            (updateServiceConfiguration)="
+                                updateConfigurationService($event)
+                            "
                         ></sp-service-configs>
                     </div>
                 </div>
@@ -119,15 +121,15 @@
         <tr
             mat-row
             *matRowDef="let element; columns: displayedColumns"
-            class="consul-configuration-row"
-            [class.consul-configuration-row-expanded]="
+            class="service-configuration-row"
+            [class.service-configuration-row-expanded]="
                 expandedElement === element
             "
         ></tr>
         <tr
             mat-row
             *matRowDef="let row; columns: ['expandedDetail']"
-            class="consul-configuration-detail-row"
+            class="service-configuration-detail-row"
         ></tr>
     </table>
 </div>

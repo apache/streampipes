@@ -24,56 +24,83 @@ import org.apache.streampipes.dataexplorer.commons.TimeSeriesStore;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
-
 
 public class DataLakeSink extends StreamPipesDataSink {
 
   private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
   private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
+  public static final String SCHEMA_UPDATE_KEY = "schema_update";
+
+  public static final String SCHEMA_UPDATE_OPTION = "Update schema";
+
+  public static final String EXTEND_EXISTING_SCHEMA_OPTION = "Extend existing schema";
 
   private TimeSeriesStore timeSeriesStore;
 
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.datalake")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.internal.jvm.datalake", 1)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.INTERNAL)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_MAPPING_KEY),
-                PropertyScope.NONE)
-            .build())
+        .requiredStream(StreamRequirementsBuilder
+                            .create()
+                            .requiredPropertyWithUnaryMapping(
+                                EpRequirements.timestampReq(),
+                                Labels.withId(TIMESTAMP_MAPPING_KEY),
+                                PropertyScope.NONE
+                            )
+                            .build())
         .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
+        .requiredSingleValueSelection(
+            Labels.withId(SCHEMA_UPDATE_KEY),
+            Options.from(SCHEMA_UPDATE_OPTION, EXTEND_EXISTING_SCHEMA_OPTION)
+        )
+
         .build();
   }
 
   @Override
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    String timestampField = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
-    String measureName = parameters.extractor().singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
-    EventSchema eventSchema = parameters.getInputSchemaInfos().get(0).getEventSchema();
+    var extractor = parameters.extractor();
+    var timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+    var measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
+    var eventSchema = parameters.getInputSchemaInfos()
+                                .get(0)
+                                .getEventSchema();
 
-    DataLakeMeasure measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
 
-    this.timeSeriesStore = new TimeSeriesStore(Environments.getEnvironment(),
+    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
+
+    var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
+
+    if (schemaUpdateOptionString.equals(EXTEND_EXISTING_SCHEMA_OPTION)) {
+      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+    } else {
+      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+    }
+
+    this.timeSeriesStore = new TimeSeriesStore(
+        Environments.getEnvironment(),
         runtimeContext.getStreamPipesClient(),
         measure,
-        true);
+        true
+    );
 
   }
 

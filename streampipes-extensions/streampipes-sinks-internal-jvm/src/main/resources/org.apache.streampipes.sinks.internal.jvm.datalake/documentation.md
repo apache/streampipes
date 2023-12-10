@@ -27,7 +27,8 @@
 ## Description
 
 Stores events in the internal data lake so that data can be visualized in the live dashboard or in the data explorer.
-Simply create a pipeline with a data lake sink, switch to one of the data exploration tool and start exploring your data!
+Simply create a pipeline with a data lake sink, switch to one of the data exploration tool and start exploring your
+data!
 
 ***
 
@@ -40,7 +41,22 @@ This sink requires an event that provides a timestamp value (a field that is mar
 
 ## Configuration
 
-### Index
+### Identifier
 
-The name of the storage group of this event. 
+The name of the measurement (table) where the events are stored.
 
+### Schema Update Options
+
+The Schema Update Options dictate the behavior when encountering a measurement (table) with the same identifier.
+
+#### Option 1: Update Schema
+
+- **Description:** Overrides the existing schema.
+- **Effect on Data:** The data remains in the data lake, but accessing old data is restricted to file export.
+- **Impact on Features:** Other StreamPipes features, such as the Data Explorer, will only display the new event schema.
+
+#### Option 2: Extend Existing Schema
+
+- **Description:** Keeps old event fields in the event schema.
+- **Strategy:** This follows an append-only strategy, allowing continued work with historic data.
+- **Consideration:** Old properties may exist for which no new data is generated.

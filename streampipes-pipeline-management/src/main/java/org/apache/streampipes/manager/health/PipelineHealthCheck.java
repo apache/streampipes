@@ -133,8 +133,8 @@ public class PipelineHealthCheck implements Runnable {
           - pipelinesStats.getAttentionRequiredPipelines();
       pipelinesStats.setHealthyPipelines(healthNum);
       pipelinesStats.setElementCount(getElementsCount(allPipelines));
-      pipelinesStats.metrics();
     }
+    pipelinesStats.metrics();
   }
 
   private String findEndpointUrl(InvocableStreamPipesEntity graph) throws NoServiceEndpointsAvailableException {

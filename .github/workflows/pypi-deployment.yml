@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.8
 
@@ -47,6 +47,7 @@ jobs:
       - name: Build package
         working-directory: ./streampipes-client-python
         run: |
+          poetry version $(echo ${{ github.ref_name }} | awk -F'/' '{print $2}')  # extract release version from tag name
           poetry build
           poetry run twine check --strict dist/*
 

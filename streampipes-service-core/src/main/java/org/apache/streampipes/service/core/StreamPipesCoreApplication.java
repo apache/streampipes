@@ -18,7 +18,9 @@
 package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
+import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
@@ -36,6 +38,7 @@ import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -139,7 +142,16 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         List.of(
             new ServiceHealthCheck(),
             new PipelineHealthCheck(),
-            new AdapterHealthCheck())
+            new AdapterHealthCheck(
+                StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                new AdapterMasterManagement(
+                    StorageDispatcher.INSTANCE.getNoSqlStore()
+                                              .getAdapterInstanceStorage(),
+                    new SpResourceManager().manageAdapters(),
+                    new SpResourceManager().manageDataStreams(),
+                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+                )
+            ))
     );
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();

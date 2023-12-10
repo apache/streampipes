@@ -16,7 +16,6 @@
 [environment:lite-pulsar]
 ui
 backend
-consul
 couchdb
 influxdb
 extensions-all-jvm

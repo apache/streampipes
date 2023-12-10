@@ -43,6 +43,14 @@ public class StreamPipesCollectorRegistry {
       .register(collectorRegistry);
   }
 
+  public static Gauge registerGauge(String name, String help, String... labelNames) {
+    return Gauge.build()
+                .name(name)
+                .help(help)
+                .labelNames(labelNames)
+                .register(collectorRegistry);
+  }
+
   public static Counter registerCounter(String name, String help) {
     return Counter.build()
       .name(name)

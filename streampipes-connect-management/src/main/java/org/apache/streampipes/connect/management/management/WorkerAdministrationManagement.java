@@ -19,11 +19,14 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
 import org.apache.streampipes.connect.management.health.AdapterOperationLock;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.resource.management.AdapterResourceManager;
+import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
@@ -46,8 +49,21 @@ public class WorkerAdministrationManagement {
 
   private final AdapterHealthCheck adapterHealthCheck;
 
-  public WorkerAdministrationManagement() {
-    this.adapterHealthCheck = new AdapterHealthCheck();
+  public WorkerAdministrationManagement(
+      IAdapterStorage adapterStorage,
+      AdapterMetrics adapterMetrics,
+      AdapterResourceManager adapterResourceManager,
+      DataStreamResourceManager dataStreamResourceManager
+  ) {
+    this.adapterHealthCheck = new AdapterHealthCheck(
+        adapterStorage,
+        new AdapterMasterManagement(
+            adapterStorage,
+            adapterResourceManager,
+            dataStreamResourceManager,
+            adapterMetrics
+        )
+    );
     this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
   }
 

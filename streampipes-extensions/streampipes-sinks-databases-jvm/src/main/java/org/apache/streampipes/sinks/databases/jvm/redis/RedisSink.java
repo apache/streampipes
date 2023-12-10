@@ -64,7 +64,8 @@ public class RedisSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.redis")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.databases.jvm.redis", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.DATABASE)

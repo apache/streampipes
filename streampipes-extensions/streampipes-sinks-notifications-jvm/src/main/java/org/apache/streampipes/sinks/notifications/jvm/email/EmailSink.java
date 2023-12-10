@@ -55,7 +55,8 @@ public class EmailSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.email")
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.notifications.jvm.email", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
