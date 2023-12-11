@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.compose;
 
-import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.runtime.Event;
@@ -108,18 +106,17 @@ public class TestComposeProcessor {
   @Test
   public void testComposeProcessor() {
     LOG.info("Executing test: {}", testName);
-    ComposeProcessor processor = new ComposeProcessor();
-    DataProcessorDescription originalGraph = processor.declareModel();
+    var processor = new ComposeProcessor();
+    var originalGraph = processor.declareModel();
     originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
-    DataProcessorInvocation graph =
-            InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
+    var graph = InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
     List<OutputStrategy> outputStrategies = new ArrayList<>();
     outputStrategies.add(new CustomOutputStrategy(List.of("s0::" + outputKeySelector1, "s1::" + outputKeySelector2)));
     graph.setOutputStrategies(outputStrategies);
-    ProcessorParams params = new ProcessorParams(graph);
+    var params = new ProcessorParams(graph);
 
-    StoreEventCollector eventCollector = new StoreEventCollector();
+    var eventCollector = new StoreEventCollector();
     processor.onInvocation(params, eventCollector, null);
 
     List<Event> collectedEvents = sendEvents(processor, eventCollector);
