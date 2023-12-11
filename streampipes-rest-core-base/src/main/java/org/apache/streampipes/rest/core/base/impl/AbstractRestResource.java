@@ -24,6 +24,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.INoSqlStorage;
@@ -36,7 +37,6 @@ import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.http.ResponseEntity;
 
@@ -45,50 +45,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
-public class AbstractRestResource {
-
-  protected <T> ResponseEntity<T> ok(T entity) {
-    return ResponseEntity
-        .ok(entity);
-  }
-
-  protected <T> ResponseEntity<T> badRequest(T entity) {
-    return error(entity, HttpStatus.SC_BAD_REQUEST);
-  }
-
-  protected <T> ResponseEntity<T> notFound(T entity) {
-    return error(entity, HttpStatus.SC_NOT_FOUND);
-  }
-
-  protected ResponseEntity<Void> notFound() {
-    return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).build();
-  }
-
-  protected <T> ResponseEntity<T> serverError(T entity) {
-    return error(entity, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-  }
-
-  protected <T> ResponseEntity<T> error(T entity, Integer statusCode) {
-    return ResponseEntity
-        .status(statusCode)
-        .body(entity);
-  }
-
-  protected ResponseEntity<Void> badRequest() {
-    return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
-  }
-
-  protected ResponseEntity<Void> ok() {
-    return ResponseEntity.ok().build();
-  }
-
-  protected ResponseEntity<Void> created() {
-    return ResponseEntity.status(HttpStatus.SC_CREATED).build();
-  }
-
-  protected ResponseEntity<Void> fail() {
-    return ResponseEntity.internalServerError().build();
-  }
+public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected ISpCoreConfigurationStorage getSpCoreConfigurationStorage() {
     return getNoSqlStorage().getSpCoreConfigurationStorage();

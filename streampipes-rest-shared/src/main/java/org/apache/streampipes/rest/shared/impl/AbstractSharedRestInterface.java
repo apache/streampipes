@@ -32,7 +32,7 @@ public abstract class AbstractSharedRestInterface {
   }
 
   protected <T> ResponseEntity<T> notFound(T entity) {
-    return error(entity, HttpStatus.BAD_REQUEST.value());
+    return error(entity, HttpStatus.NOT_FOUND.value());
   }
 
   protected <T> ResponseEntity<Void> notFound() {
