@@ -27,8 +27,13 @@ import {
     UserService,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    ConfirmDialogComponent,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Directive()
 export abstract class AbstractSecurityPrincipalConfig<
@@ -47,6 +52,7 @@ export abstract class AbstractSecurityPrincipalConfig<
         protected userService: UserService,
         protected userAdminService: UserAdminService,
         protected dialogService: DialogService,
+        private dialog: MatDialog,
     ) {}
 
     ngOnInit(): void {
@@ -86,8 +92,24 @@ export abstract class AbstractSecurityPrincipalConfig<
     }
 
     deleteUser(account: UserAccount | ServiceAccount) {
-        this.userService.deleteUser(account.principalId).subscribe(() => {
-            this.load();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: 'Are you sure you want to delete this account?',
+                subtitle: 'This action cannot be reversed!',
+                cancelTitle: 'Cancel',
+                okTitle: 'Delete User',
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.userService
+                    .deleteUser(account.principalId)
+                    .subscribe(() => {
+                        this.load();
+                    });
+            }
         });
     }
 
