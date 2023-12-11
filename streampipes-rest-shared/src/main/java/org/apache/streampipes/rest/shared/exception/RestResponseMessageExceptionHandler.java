@@ -28,7 +28,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestResponseMessageExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(value = { SpMessageException.class })
-  protected ResponseEntity<Object> handleConflict(
+  protected ResponseEntity<Object> handleException(
       RuntimeException ex, WebRequest request) {
     var messageException = (SpMessageException) ex;
     return ResponseEntity

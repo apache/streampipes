@@ -25,14 +25,14 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestResponseLogMessageExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(value = { SpNotificationException.class })
+  @ExceptionHandler(value = {SpLogMessageException.class})
   protected ResponseEntity<Object> handleException(
       RuntimeException ex, WebRequest request) {
-    var notificationException = (SpNotificationException) ex;
+    var exception = (SpLogMessageException) ex;
     return ResponseEntity
-        .status(notificationException.getStatus())
-        .body(notificationException.getNotification());
+        .status(exception.getStatus())
+        .body(exception.getSpMessage());
   }
 }
