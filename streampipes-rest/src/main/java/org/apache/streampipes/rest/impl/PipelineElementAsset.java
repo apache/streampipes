@@ -37,7 +37,7 @@ public class PipelineElementAsset extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 
-  @GetMapping(path = "/{appId}/assets/icon", produces = "image/png")
+  @GetMapping(path = "/{appId}/assets/icon", produces = MediaType.IMAGE_PNG_VALUE)
   public ResponseEntity<?> getIconAsset(@PathVariable("appId") String appId) {
     try {
       return ok(AssetManager.getAssetIcon(appId));
@@ -55,7 +55,7 @@ public class PipelineElementAsset extends AbstractRestResource {
     }
   }
 
-  @GetMapping(path = "/{appId}/assets/{assetName}", produces = "image/png")
+  @GetMapping(path = "/{appId}/assets/{assetName}", produces = MediaType.IMAGE_PNG_VALUE)
   public ResponseEntity<?> getAsset(@PathVariable("appId") String appId, @PathVariable("assetName") String
       assetName) {
     try {

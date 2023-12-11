@@ -81,7 +81,6 @@ export class DataDownloadDialogUtils {
                 cy.readFile(
                     `cypress/fixtures/dataDownloadDialog/${resultFileLocation}`,
                 ).then(expectedResult => {
-                    console.log(expectedResult);
                     // Replace whitespaces on Windows systems
                     if (typeof expectedResult === 'string') {
                         expectedResult = expectedResult.replace(/\r/g, '');

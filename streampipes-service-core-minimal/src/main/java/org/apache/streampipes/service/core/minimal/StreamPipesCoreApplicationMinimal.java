@@ -21,8 +21,10 @@ package org.apache.streampipes.service.core.minimal;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.service.core.OpenApiConfiguration;
 import org.apache.streampipes.service.core.StreamPipesCoreApplication;
 import org.apache.streampipes.service.core.StreamPipesPasswordEncoder;
+import org.apache.streampipes.service.core.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.core.WebSecurityConfig;
 import org.apache.streampipes.service.core.WelcomePageController;
 
@@ -35,13 +37,15 @@ import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({//StreamPipesResourceConfig.class,
-    WelcomePageController.class,
+@Import({
+    OpenApiConfiguration.class,
+    SpPermissionEvaluator.class,
     StreamPipesPasswordEncoder.class,
+    StreamPipesPrometheusConfig.class,
     WebSecurityConfig.class,
-    SpPermissionEvaluator.class
+    WelcomePageController.class
 })
-@ComponentScan({"org.apache.streampipes.rest.*"})
+@ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps"})
 public class StreamPipesCoreApplicationMinimal extends StreamPipesCoreApplication {
 
   public static void main(String[] args) {

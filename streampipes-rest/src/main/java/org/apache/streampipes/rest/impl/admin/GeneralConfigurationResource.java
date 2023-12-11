@@ -59,8 +59,7 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
     return ok();
   }
 
-  // TODO
-  @GetMapping(path = "keys", produces = "multipart/mixed")
+  @GetMapping(path = "keys", produces = MediaType.MULTIPART_MIXED_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> generateKeyPair() throws Exception {
     KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
