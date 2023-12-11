@@ -21,12 +21,15 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +50,13 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
   private final WorkerUrlProvider workerUrlProvider;
 
   public RuntimeResolvableResource() {
-    super(WorkerAdministrationManagement::new);
+    super(() -> new WorkerAdministrationManagement(
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getAdapterInstanceStorage(),
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+        new SpResourceManager().manageAdapters(),
+        new SpResourceManager().manageDataStreams()
+    ));
     this.workerUrlProvider = new WorkerUrlProvider();
   }
 

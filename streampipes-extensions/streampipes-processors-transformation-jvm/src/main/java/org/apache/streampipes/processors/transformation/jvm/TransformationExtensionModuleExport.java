@@ -32,6 +32,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.booloperat
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.datetime.DateTimeFromStringProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.hasher.FieldHasherProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
@@ -67,6 +68,7 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
         new TimestampExtractorProcessor(),
         new BooleanCounterProcessor(),
         new BooleanInverterProcessor(),
+        new DateTimeFromStringProcessor(),
         new BooleanTimekeepingProcessor(),
         new BooleanTimerProcessor(),
         new CsvMetadataEnrichmentProcessor(),
@@ -84,7 +86,7 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
         new BooleanOperatorProcessor(),
         new FiledRenameProcessor(),
         new RoundProcessor()
-    );
+        );
   }
 
   @Override

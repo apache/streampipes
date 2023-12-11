@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,15 +13,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-[environment:lite-monitoring]
-ui
-backend
-couchdb
-kafka
-zookeeper
-influxdb
-extensions-all-jvm
-grafana
-prometheus
-prometheus-alertmanager
+org.apache.streampipes.processors.transformation.jvm.datetime.title=Datetime From String
+org.apache.streampipes.processors.transformation.jvm.datetime.description=Converts a human-readable timestamp from a textual (string) representation into a computer-readable object
+
+inputField.title=DateTime String
+inputField.description=The event property that contains the timestamp ISO 8601 formatted strings, e.g., '2023-11-29T18:30:22'
+
+inputTimeZone.title=Time Zone
+inputTimeZone.description=The time zone for which the string applies (if the string already contains the time zone information, the user time zone will be ignored)
+

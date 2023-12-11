@@ -18,6 +18,7 @@
 package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.health.AdapterHealthCheck;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
@@ -37,6 +38,7 @@ import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -143,7 +145,13 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
             new PipelineHealthCheck(),
             new AdapterHealthCheck(
                 StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                new AdapterMasterManagement()
+                new AdapterMasterManagement(
+                    StorageDispatcher.INSTANCE.getNoSqlStore()
+                                              .getAdapterInstanceStorage(),
+                    new SpResourceManager().manageAdapters(),
+                    new SpResourceManager().manageDataStreams(),
+                    AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+                )
             ))
     );
 

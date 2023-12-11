@@ -24,15 +24,18 @@ import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.model.ServiceAccountDetails;
 import org.apache.streampipes.user.management.model.UserAccountDetails;
 import org.apache.streampipes.user.management.service.TokenService;
+import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,11 +50,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
+import java.util.List;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider tokenProvider;
   private final IUserStorage userStorage;
+
+  private final List<String> supportedBasicAuthPaths = List.of(
+      "/actuator/prometheus"
+  );
 
   private RequestAttributeSecurityContextRepository repo = new RequestAttributeSecurityContextRepository();
 
@@ -74,7 +85,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         applySuccessfulAuth(request, username);
         SecurityContext context = SecurityContextHolder.getContext();
         repo.saveContext(context, request, response);
-      } else {
+      } else if (isApiKeyAuth(request)) {
         String apiKey = getApiKeyFromRequest(request);
         String apiUser = getApiUserFromRequest(request);
         if (StringUtils.hasText(apiKey) && StringUtils.hasText(apiUser)) {
@@ -84,12 +95,43 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             applySuccessfulAuth(request, apiUser);
           }
         }
+      } else {
+        var authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith(HttpConstants.BASIC)) {
+          if (supportedBasicAuthPaths.contains(request.getServletPath())) {
+            String base64Credentials = authorizationHeader.substring(HttpConstants.BASIC.length()).trim();
+            String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+
+            String[] splitCredentials = credentials.split(":");
+            String username = splitCredentials[0];
+            String passphrase = splitCredentials[1];
+            var principal = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(username);
+            if (principal != null && checkCredentials(principal, passphrase)) {
+              applySuccessfulAuth(request, username);
+            }
+          }
+        }
       }
     } catch (Exception ex) {
       logger.error("Could not set user authentication in security context", ex);
     }
 
     filterChain.doFilter(request, response);
+  }
+
+  private boolean checkCredentials(Principal principal, String passphrase)
+      throws NoSuchAlgorithmException, InvalidKeySpecException {
+    if (principal instanceof UserAccount) {
+      return PasswordUtil.validatePassword(passphrase, ((UserAccount) principal).getPassword());
+    } else if (principal instanceof ServiceAccount) {
+      return passphrase.equals(SecretEncryptionManager.decrypt(((ServiceAccount) principal).getClientSecret()));
+    } else {
+      throw new IllegalArgumentException("Unknown user instance");
+    }
+  }
+
+  private boolean isApiKeyAuth(HttpServletRequest request) {
+    return request.getHeader(HttpConstants.X_API_USER) != null && request.getHeader(HttpConstants.X_API_KEY) != null;
   }
 
   private void applySuccessfulAuth(HttpServletRequest request,
