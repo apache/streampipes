@@ -16,13 +16,21 @@
  *
  */
 
-export class Image {
-    id: number;
-    width: number;
-    height: number;
-    file_name: Date;
-    license: number;
-    flickr_url: Date;
-    coco_url: Date;
-    date_captured: Date;
+package org.apache.streampipes.commons.resources;
+
+import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import static junit.framework.TestCase.assertEquals;
+
+public class TestResources {
+
+  @Test
+  public void testResourceLoader() throws IOException {
+    String filename = "test.txt";
+    String content = Resources.asString(filename, StandardCharsets.UTF_8);
+    assertEquals("HelloWorld", content.replaceAll("\\s+", ""));
+  }
 }

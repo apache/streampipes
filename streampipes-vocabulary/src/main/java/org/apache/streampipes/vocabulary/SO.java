@@ -374,6 +374,7 @@ public class SO {
   public static final String SAME_AS = "http://schema.org/sameAs";
   public static final String SAMPLE_TYPE = "http://schema.org/sampleType";
   public static final String SATURATED_FAT_CONTENT = "http://schema.org/saturatedFatContent";
+  public static final String SCHEDULE_TIMEZONE = "https://schema.org/scheduleTimezone";
   public static final String SCHEDULED_TIME = "http://schema.org/scheduledTime";
   public static final String SCREENSHOT = "http://schema.org/screenshot";
   public static final String SEASON_NUMBER = "http://schema.org/seasonNumber";

@@ -31,19 +31,6 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
-import { ImageAnnotationsComponent } from './image/components/image-annotations/image-annotations.component';
-import { ImageBarComponent } from './image/components/image-bar/image-bar.component';
-import { ImageContainerComponent } from './image/components/image-container/image-container.component';
-import { SelectLabelComponent } from './labels/components/select-label/select-label.component';
-import { ImageLabelingComponent } from './image/image-labeling/image-labeling.component';
-import { ImageViewerComponent } from './image/image-viewer/image-viewer.component';
-import { ImageComponent } from './image/image.component';
-import { BrushLabelingService } from './image/services/BrushLabeling.service';
-import { ColorService } from './image/services/color.service';
-import { PolygonLabelingService } from './image/services/PolygonLabeling.service';
-import { ReactLabelingService } from './image/services/ReactLabeling.service';
-import { CocoFormatService } from './image/services/CocoFormat.service';
-import { LabelingModeService } from './image/services/LabelingMode.service';
 import { PortalModule } from '@angular/cdk/portal';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { StaticAnyInputComponent } from './static-properties/static-any-input/static-any-input.component';
@@ -79,7 +66,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar-preview/image-bar-preview.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
@@ -131,14 +117,6 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         ConfigureLabelsComponent,
         DataDownloadDialogComponent,
         DisplayRecommendedPipe,
-        ImageBarPreviewComponent,
-        ImageComponent,
-        ImageContainerComponent,
-        ImageLabelingComponent,
-        SelectLabelComponent,
-        ImageBarComponent,
-        ImageAnnotationsComponent,
-        ImageViewerComponent,
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplatePipe,
@@ -174,22 +152,13 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
     ],
     providers: [
         MatDatepickerModule,
-        ColorService,
         DisplayRecommendedPipe,
-        ReactLabelingService,
-        PolygonLabelingService,
-        BrushLabelingService,
-        CocoFormatService,
-        LabelingModeService,
         RuntimeResolvableService,
     ],
     exports: [
         ConfigureLabelsComponent,
         DataDownloadDialogComponent,
-        ImageComponent,
-        ImageLabelingComponent,
         PipelineElementTemplateConfigComponent,
-        SelectLabelComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,
@@ -206,7 +175,6 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StaticSlideToggleComponent,
-        ImageViewerComponent,
         ErrorHintComponent,
         PipelineStartedStatusComponent,
         SpSimpleLogsComponent,

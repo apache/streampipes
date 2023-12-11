@@ -18,9 +18,12 @@
 
 package org.apache.streampipes.connect.management.health;
 
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +48,16 @@ public class AdapterHealthCheckTest {
   public void getAllRunningInstancesAdapterDescriptionsEmpty() {
     when(adapterInstanceStorageMock.getAllAdapters()).thenReturn(List.of());
 
-    var healthCheck = new AdapterHealthCheck(adapterInstanceStorageMock, new AdapterMasterManagement());
+    var healthCheck = new AdapterHealthCheck(
+        adapterInstanceStorageMock,
+        new AdapterMasterManagement(
+            StorageDispatcher.INSTANCE.getNoSqlStore()
+                                      .getAdapterInstanceStorage(),
+            new SpResourceManager().manageAdapters(),
+            new SpResourceManager().manageDataStreams(),
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        )
+    );
     var result = healthCheck.getAllRunningInstancesAdapterDescriptions();
 
     assertTrue(result.isEmpty());
@@ -67,7 +79,16 @@ public class AdapterHealthCheckTest {
 
     when(adapterInstanceStorageMock.getAllAdapters()).thenReturn(List.of(stoppedAdapter, runningAdapter));
 
-    var healthCheck = new AdapterHealthCheck(adapterInstanceStorageMock, new AdapterMasterManagement());
+    var healthCheck = new AdapterHealthCheck(
+        adapterInstanceStorageMock,
+        new AdapterMasterManagement(
+            StorageDispatcher.INSTANCE.getNoSqlStore()
+                                      .getAdapterInstanceStorage(),
+            new SpResourceManager().manageAdapters(),
+            new SpResourceManager().manageDataStreams(),
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        )
+    );
     var result = healthCheck.getAllRunningInstancesAdapterDescriptions();
 
     assertEquals(1, result.size());

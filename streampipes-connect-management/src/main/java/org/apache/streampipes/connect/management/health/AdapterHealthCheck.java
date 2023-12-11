@@ -19,9 +19,12 @@
 package org.apache.streampipes.connect.management.health;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
+import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
@@ -57,11 +60,17 @@ public class AdapterHealthCheck implements Runnable {
    * In this method it is checked which adapters are currently running.
    * Then it calls all workers to validate if the adapter instance is
    * still running as expected. If the adapter is not running anymore a new worker instance is invoked.
+   * In addition, it publishes monitoring metrics for all running adapters (in line with
+   * {@link org.apache.streampipes.manager.health.PipelineHealthCheck}).
    */
   public void checkAndRestoreAdapters() {
-    // Get all adapters
+    // Get all running adapters
     Map<String, AdapterDescription> allRunningInstancesAdapterDescriptions =
         this.getAllRunningInstancesAdapterDescriptions();
+
+    if (!allRunningInstancesAdapterDescriptions.isEmpty()) {
+      updateMonitoringMetrics(allRunningInstancesAdapterDescriptions);
+    }
 
     // Get all worker containers that run adapters
     Map<String, List<AdapterDescription>> groupByWorker =
@@ -74,6 +83,37 @@ public class AdapterHealthCheck implements Runnable {
     // Recover Adapters
     this.recoverAdapters(allAdaptersToRecover);
   }
+
+  /**
+   * Updates the monitoring metrics based on the descriptions of running adapters.
+   *
+   * @param runningAdapterDescriptions A map containing the descriptions of running adapters, where the key is the
+   *                                   adapter's element ID and the value is the corresponding adapter description.
+   */
+  protected void updateMonitoringMetrics(Map<String, AdapterDescription> runningAdapterDescriptions) {
+
+    var adapterMetrics = AdapterMetricsManager.getInstance()
+                                              .getAdapterMetrics();
+    runningAdapterDescriptions.values()
+                              .forEach(
+                                  adapterDescription -> updateTotalEventsPublished(
+                                      adapterMetrics,
+                                      adapterDescription.getElementId(),
+                                      adapterDescription.getName()
+                                  ));
+    LOG.info("Monitoring {} adapter instances", adapterMetrics.size());
+  }
+
+  private void updateTotalEventsPublished(AdapterMetrics adapterMetrics, String adapterId, String adapterName) {
+    adapterMetrics.updateTotalEventsPublished(
+        adapterId,
+        adapterName,
+        ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(adapterId)
+                                      .getMessagesOut()
+                                      .getCounter()
+    );
+  }
+
 
   public Map<String, AdapterDescription> getAllRunningInstancesAdapterDescriptions() {
     Map<String, AdapterDescription> result = new HashMap<>();
