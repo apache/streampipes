@@ -24,15 +24,14 @@ import org.apache.streampipes.model.connect.unit.UnitDescription;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
-@Path("/v2/connect/master/unit")
+@RestController
+@RequestMapping("/api/v2/connect/master/unit")
 public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> {
 
   private static final Logger logger = LoggerFactory.getLogger(UnitResource.class);
@@ -41,10 +40,11 @@ public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> 
     super(UnitMasterManagement::new);
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getFittingUnits(UnitDescription unitDescription) {
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<?> getFittingUnits(UnitDescription unitDescription) {
     try {
       String resultingJson = managementService.getFittingUnits(unitDescription);
       return ok(resultingJson);

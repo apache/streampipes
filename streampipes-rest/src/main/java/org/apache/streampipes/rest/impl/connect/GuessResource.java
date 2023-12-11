@@ -26,23 +26,21 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-
-@Path("/v2/connect/master/guess")
+@RestController
+@RequestMapping("/api/v2/connect/master/guess")
 public class GuessResource extends AbstractAdapterResource<GuessManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessResource.class);
@@ -51,11 +49,11 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     super(GuessManagement::new);
   }
 
-  @POST
-  @JacksonSerialized
-  @Path("/schema")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response guessSchema(AdapterDescription adapterDescription) {
+  @PostMapping(
+      path = "/schema",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> guessSchema(@RequestBody AdapterDescription adapterDescription) {
 
     try {
       GuessSchema result = managementService.guessSchema(adapterDescription);
@@ -72,12 +70,11 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     }
   }
 
-  @POST
-  @JacksonSerialized
-  @Path("/schema/preview")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response getAdapterEventPreview(AdapterEventPreview previewRequest) {
+  @PostMapping(
+      path = "/schema/preview",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterEventPreview previewRequest) {
     try {
       return ok(managementService.performAdapterEventPreview(previewRequest));
     } catch (JsonProcessingException e) {

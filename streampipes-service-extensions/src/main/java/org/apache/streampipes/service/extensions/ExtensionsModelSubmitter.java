@@ -24,10 +24,13 @@ import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.rest.extensions.WelcomePage;
+import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -37,7 +40,8 @@ import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({ExtensionsResourceConfig.class, WebSecurityConfig.class})
+@Import({WebSecurityConfig.class, WelcomePage.class, ServiceHealthResource.class})
+@ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServiceBase {
 
   @PreDestroy

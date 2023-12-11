@@ -17,55 +17,52 @@
  */
 package org.apache.streampipes.rest.shared.impl;
 
-import org.apache.http.HttpStatus;
-
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public abstract class AbstractSharedRestInterface {
 
-  protected <T> Response ok(T entity) {
-    return Response
-        .ok(entity)
-        .build();
+  protected <T> ResponseEntity<T> ok(T entity) {
+    return ResponseEntity
+        .ok(entity);
   }
 
-  protected <T> Response badRequest(T entity) {
-    return error(entity, HttpStatus.SC_BAD_REQUEST);
+  protected <T> ResponseEntity<T> badRequest(T entity) {
+    return error(entity, HttpStatus.BAD_REQUEST.value());
   }
 
-  protected <T> Response notFound(T entity) {
-    return error(entity, HttpStatus.SC_NOT_FOUND);
+  protected <T> ResponseEntity<T> notFound(T entity) {
+    return error(entity, HttpStatus.NOT_FOUND.value());
   }
 
-  protected <T> Response notFound() {
-    return Response.status(HttpStatus.SC_NOT_FOUND).build();
+  protected <T> ResponseEntity<Void> notFound() {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }
 
-  protected <T> Response serverError(T entity) {
-    return error(entity, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+  protected <T> ResponseEntity<T> serverError(T entity) {
+    return error(entity, HttpStatus.INTERNAL_SERVER_ERROR.value());
   }
 
-  protected <T> Response error(T entity, Integer statusCode) {
-    return Response
+  protected <T> ResponseEntity<T> error(T entity, Integer statusCode) {
+    return ResponseEntity
         .status(statusCode)
-        .entity(entity)
-        .build();
+        .body(entity);
   }
 
-  protected Response badRequest() {
-    return Response.status(HttpStatus.SC_BAD_REQUEST).build();
+  protected ResponseEntity<Void> badRequest() {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
   }
 
-  protected Response ok() {
-    return Response.ok().build();
+  protected ResponseEntity<Void> ok() {
+    return ResponseEntity.ok().build();
   }
 
-  protected Response created() {
-    return Response.status(HttpStatus.SC_CREATED).build();
+  protected ResponseEntity<Void> created() {
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  protected Response fail() {
-    return Response.serverError().build();
+  protected ResponseEntity<Void> fail() {
+    return ResponseEntity.internalServerError().build();
   }
 
 }

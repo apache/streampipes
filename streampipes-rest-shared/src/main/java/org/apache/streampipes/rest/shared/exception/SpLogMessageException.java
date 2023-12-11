@@ -15,16 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.util;
 
-import jakarta.ws.rs.core.MediaType;
+package org.apache.streampipes.rest.shared.exception;
 
-public class SpMediaType {
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 
-  public static final String JSONLD = "application/ld+json";
-  public static final MediaType JSONLD_TYPE = new MediaType("application", "ld+json");
+import org.springframework.http.HttpStatus;
 
-  public static final String APPLICATION_ZIP = "application/zip";
-  public static final MediaType APPLICATION_ZIP_TYPE = new MediaType("application", "zip");
+public class SpLogMessageException extends RuntimeException {
 
+  private final SpLogMessage message;
+  private final HttpStatus status;
+
+  public SpLogMessageException(HttpStatus status,
+                               SpLogMessage message) {
+    this.status = status;
+    this.message = message;
+  }
+
+  public SpLogMessage getSpMessage() {
+    return message;
+  }
+
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

@@ -30,6 +30,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
@@ -43,20 +44,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Path("v2/migrations")
-@Component
+@RestController
+@RequestMapping("/api/v2/migrations")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class MigrationResource extends AbstractAuthGuardedRestResource {
 
@@ -77,9 +77,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       getNoSqlStorage().getSpCoreConfigurationStorage()
   );
 
-  @POST
-  @Path("{serviceId}")
-  @Consumes(MediaType.APPLICATION_JSON)
+  @PostMapping(path = "{serviceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
       summary = "Migrate adapters and pipeline elements based on migration configs", tags = {"Core", "Migration"},
       responses = {
@@ -89,18 +87,18 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                   + "the corresponding actions are taken.")
       }
   )
-  public Response performMigrations(
+  public ResponseEntity<Void> performMigrations(
       @Parameter(
           in = ParameterIn.PATH,
           description = "the id of the extensions service that requests migrations",
           required = true
       )
-      @PathParam("serviceId") String serviceId,
+      @PathVariable("serviceId") String serviceId,
       @Parameter(
           description = "list of configs (ModelMigratorConfig) that describe the requested migrations",
           required = true
       )
-      List<ModelMigratorConfig> migrationConfigs) {
+      @RequestBody List<ModelMigratorConfig> migrationConfigs) {
 
     var serviceManager = new ServiceRegistrationManager(extensionsServiceStorage);
     try {
@@ -116,7 +114,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                 anyServiceMigrating,
                 coreReady
             );
-            return Response.status(HttpStatus.SC_CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.SC_CONFLICT).build();
           } else {
             serviceManager.applyServiceStatus(serviceId, SpServiceStatus.MIGRATING);
             var adapterMigrations = filterConfigs(migrationConfigs, List.of(SpServiceTagPrefix.ADAPTER));
@@ -139,7 +137,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       return ok();
     } catch (IllegalArgumentException e) {
       LOG.warn("Refusing migration request since the service {} is not registered.", serviceId);
-      return notFound();
+      throw new SpMessageException(org.springframework.http.HttpStatus.NOT_FOUND, e);
     }
   }
 

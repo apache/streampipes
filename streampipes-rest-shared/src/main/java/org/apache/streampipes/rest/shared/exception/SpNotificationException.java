@@ -15,28 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.service.base.rest;
 
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
+package org.apache.streampipes.rest.shared.exception;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
-public abstract class BaseResourceConfig extends ResourceConfig {
+import org.apache.streampipes.model.message.Notification;
 
-  public BaseResourceConfig() {
-    var customConfigs = new HashMap<String, Object>();
-    addAdditionalConfigs(customConfigs);
-    property(ServerProperties.WADL_FEATURE_DISABLE, true);
-    addProperties(customConfigs);
-    getClassesToRegister().forEach(this::register);
+import org.springframework.http.HttpStatus;
 
+public class SpNotificationException extends RuntimeException {
+
+  private final Notification notification;
+  private final HttpStatus status;
+
+  public SpNotificationException(HttpStatus status,
+                                 Notification notification) {
+    this.status = status;
+    this.notification = notification;
   }
 
-  public abstract Set<Class<?>> getClassesToRegister();
+  public Notification getNotification() {
+    return notification;
+  }
 
-  public abstract void addAdditionalConfigs(Map<String, Object> configs);
-
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

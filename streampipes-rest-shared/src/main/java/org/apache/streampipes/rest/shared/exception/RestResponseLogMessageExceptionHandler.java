@@ -16,19 +16,23 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
-
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+package org.apache.streampipes.rest.shared.exception;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-public abstract class AbstractMonitoringResource extends AbstractAuthGuardedRestResource {
+@ControllerAdvice
+public class RestResponseLogMessageExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @GetMapping
-  public ResponseEntity<Void> triggerMonitoringUpdate() {
-    new ExtensionsServiceLogExecutor().triggerUpdate();
-    return ok();
+  @ExceptionHandler(value = {SpLogMessageException.class})
+  protected ResponseEntity<Object> handleException(
+      RuntimeException ex, WebRequest request) {
+    var exception = (SpLogMessageException) ex;
+    return ResponseEntity
+        .status(exception.getStatus())
+        .body(exception.getSpMessage());
   }
 }

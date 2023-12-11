@@ -21,64 +21,52 @@ package org.apache.streampipes.rest.impl.dashboard;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.couchDbId, 'READ')")
   public List<DashboardModel> getAllDashboards() {
     return getResourceManager().findAll();
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{dashboardId}")
+  @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
-  public DashboardModel getDashboard(@PathParam("dashboardId") String dashboardId) {
+  public DashboardModel getDashboard(@PathVariable("dashboardId") String dashboardId) {
     return getResourceManager().find(dashboardId);
   }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{dashboardId}")
+  @PutMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
-  public DashboardModel modifyDashboard(DashboardModel dashboardModel) {
+  public ResponseEntity<DashboardModel> modifyDashboard(@RequestBody DashboardModel dashboardModel) {
     getResourceManager().update(dashboardModel);
-    return getResourceManager().find(dashboardModel.getCouchDbId());
+    return ok(getResourceManager().find(dashboardModel.getCouchDbId()));
   }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{dashboardId}")
+  @DeleteMapping(path = "/{dashboardId}")
   @PreAuthorize("this.hasDeleteAuthority() and hasPermission(#dashboardId, 'DELETE')")
-  public Response deleteDashboard(@PathParam("dashboardId") String dashboardId) {
+  public ResponseEntity<Void> deleteDashboard(@PathVariable("dashboardId") String dashboardId) {
     getResourceManager().delete(dashboardId);
     return ok();
   }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public Response createDashboard(DashboardModel dashboardModel) {
+  public ResponseEntity<Void> createDashboard(@RequestBody DashboardModel dashboardModel) {
     getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
     return ok();
   }

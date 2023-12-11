@@ -18,27 +18,29 @@
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
-import org.apache.http.HttpStatus;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Response;
-
-@Path("/api/v1/worker/live")
+@RestController
+@RequestMapping("/api/v1/worker/live")
 public class HttpServerAdapterResource {
 
-  @POST
-  @Path("{endpointId}")
-  public Response receiveEvent(@PathParam("endpointId") String endpointId,
-                               byte[] body) {
+  @PostMapping(path = "{endpointId}")
+  public ResponseEntity<Void> receiveEvent(@PathVariable("endpointId") String endpointId,
+                                        @RequestBody byte[] body) {
 
     try {
       HttpServerAdapterManagement.INSTANCE.notify(endpointId, body);
-      return Response.ok().build();
+      return ResponseEntity.ok().build();
     } catch (Exception e) {
-      return Response.status(HttpStatus.SC_BAD_REQUEST).entity(e.getMessage()).build();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
 
   }

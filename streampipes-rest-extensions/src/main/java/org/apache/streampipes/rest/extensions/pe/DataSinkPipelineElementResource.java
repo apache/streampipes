@@ -30,11 +30,13 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
-import jakarta.ws.rs.Path;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Path(SpServicePathPrefix.DATA_SINK)
+@RestController
+@RequestMapping(SpServicePathPrefix.DATA_SINK)
 public class DataSinkPipelineElementResource extends InvocablePipelineElementResource
     <DataSinkInvocation,
         IStreamPipesDataSink,
