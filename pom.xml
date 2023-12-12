@@ -52,7 +52,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
-        <commons-text.version>1.10.0</commons-text.version>
+        <commons-text.version>1.11.0</commons-text.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <eclipse.milo.version>0.6.9</eclipse.milo.version>
         <file-management.version>3.1.0</file-management.version>
