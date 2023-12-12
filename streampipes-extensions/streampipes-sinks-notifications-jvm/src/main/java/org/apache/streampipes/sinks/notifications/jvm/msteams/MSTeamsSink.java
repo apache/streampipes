@@ -32,6 +32,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sinks.internal.jvm.notification.NotificationSink;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -48,7 +49,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MSTeamsSink extends StreamPipesDataSink {
+public class MSTeamsSink extends NotificationSink {
 
   private static final String KEY_MESSAGE_ADVANCED = "messageAdvanced";
   private static final String KEY_MESSAGE_ADVANCED_CONTENT = "messageContentAdvanced";
@@ -63,13 +64,37 @@ public class MSTeamsSink extends StreamPipesDataSink {
   private String webhookUrl;
   private ObjectMapper objectMapper;
 
-  public MSTeamsSink(){
+  public MSTeamsSink() {
     super();
     this.objectMapper = new ObjectMapper();
   }
 
   @Override
-  public void onEvent(Event event) {
+  public void onInvocation(
+      SinkParams parameters,
+      EventSinkRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    super.onInvocation(parameters, runtimeContext);
+
+    this.objectMapper = new ObjectMapper();
+
+    var extractor = parameters.extractor();
+    webhookUrl = extractor.secretValue(KEY_WEBHOOK_URL);
+
+    validateWebhookUrl(webhookUrl);
+
+    var selectedAlternative = extractor.selectedAlternativeInternalId(KEY_MESSAGE_TYPE_ALTERNATIVES);
+    if (selectedAlternative.equals(KEY_MESSAGE_ADVANCED)) {
+      isSimpleMessageMode = false;
+      messageContent = extractor.singleValueParameter(KEY_MESSAGE_ADVANCED_CONTENT, String.class);
+    } else {
+      isSimpleMessageMode = true;
+      messageContent = extractor.singleValueParameter(KEY_MESSAGE_SIMPLE_CONTENT, String.class);
+    }
+  }
+
+  @Override
+  public void onNotificationEvent(Event event) {
 
     // This sink allows to use placeholders for event properties when defining the message content in the UI
     // Therefore, we need to replace these placeholders based on the actual event before actually sending the message
@@ -86,62 +111,39 @@ public class MSTeamsSink extends StreamPipesDataSink {
   }
 
   @Override
-  public DataSinkDescription declareModel() {
+  public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
         .create("org.apache.streampipes.sinks.notifications.jvm.msteams", 0)
-          .withLocales(Locales.EN)
-          .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-          .category(DataSinkType.NOTIFICATION)
-          .requiredStream(
-                  StreamRequirementsBuilder
-                          .create()
-                          .requiredProperty(EpRequirements.anyProperty())
-                          .build()
-          )
-          .requiredSecret(Labels.withId(KEY_WEBHOOK_URL))
-          .requiredAlternatives(
-                  Labels.withId(KEY_MESSAGE_TYPE_ALTERNATIVES),
-                  Alternatives.from(
-                          Labels.withId(KEY_MESSAGE_SIMPLE),
-                          StaticProperties.stringFreeTextProperty(
-                                  Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT),
-                                  true,
-                                  true
-                          ),
-                          true),
-                  Alternatives.from(
-                          Labels.withId(KEY_MESSAGE_ADVANCED),
-                          StaticProperties.stringFreeTextProperty(
-                                  Labels.withId(KEY_MESSAGE_ADVANCED_CONTENT),
-                                  true,
-                                  true
-                          )
-                  )
-          )
-          .build();
-  }
-
-  @Override
-  public void onInvocation(
-          SinkParams parameters,
-          EventSinkRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
-    this.objectMapper = new ObjectMapper();
-
-    var extractor = parameters.extractor();
-    webhookUrl = extractor.secretValue(KEY_WEBHOOK_URL);
-
-    validateWebhookUrl(webhookUrl);
-
-    var selectedAlternative = extractor.selectedAlternativeInternalId(KEY_MESSAGE_TYPE_ALTERNATIVES);
-    if (selectedAlternative.equals(KEY_MESSAGE_ADVANCED)) {
-      isSimpleMessageMode = false;
-      messageContent = extractor.singleValueParameter(KEY_MESSAGE_ADVANCED_CONTENT, String.class);
-    } else {
-      isSimpleMessageMode = true;
-      messageContent = extractor.singleValueParameter(KEY_MESSAGE_SIMPLE_CONTENT, String.class);
-    }
-
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.NOTIFICATION)
+        .requiredStream(
+            StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build()
+        )
+        .requiredSecret(Labels.withId(KEY_WEBHOOK_URL))
+        .requiredAlternatives(
+            Labels.withId(KEY_MESSAGE_TYPE_ALTERNATIVES),
+            Alternatives.from(
+                Labels.withId(KEY_MESSAGE_SIMPLE),
+                StaticProperties.stringFreeTextProperty(
+                    Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT),
+                    true,
+                    true
+                ),
+                true
+            ),
+            Alternatives.from(
+                Labels.withId(KEY_MESSAGE_ADVANCED),
+                StaticProperties.stringFreeTextProperty(
+                    Labels.withId(KEY_MESSAGE_ADVANCED_CONTENT),
+                    true,
+                    true
+                )
+            )
+        );
   }
 
   @Override
@@ -182,8 +184,8 @@ public class MSTeamsSink extends StreamPipesDataSink {
       objectMapper.readValue(messageContent, Object.class);
     } catch (JsonProcessingException e) {
       throw new SpRuntimeException(
-              "Advanced message content provided is not a valid JSON string: %s".formatted(messageContent),
-              e
+          "Advanced message content provided is not a valid JSON string: %s".formatted(messageContent),
+          e
       );
     }
     return messageContent;
@@ -196,7 +198,7 @@ public class MSTeamsSink extends StreamPipesDataSink {
    * @param payload    The payload to be sent to the webhook.
    * @param webhookUrl The URL of the webhook to which the payload will be sent.
    * @throws SpRuntimeException If an I/O error occurs while sending the payload to the webhook or
-   *                          the payload sent is not accepted by the API.
+   *                            the payload sent is not accepted by the API.
    */
   protected void sendPayloadToWebhook(HttpClient httpClient, String payload, String webhookUrl) {
     try {
@@ -207,10 +209,11 @@ public class MSTeamsSink extends StreamPipesDataSink {
       postRequest.setEntity(contentEntity);
 
       var result = httpClient.execute(postRequest);
-      if (result.getStatusLine().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
+      if (result.getStatusLine()
+                .getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
         throw new SpRuntimeException(
-                "The provided message payload was not accepted by the MS Teams API: %s"
-                        .formatted(payload)
+            "The provided message payload was not accepted by the MS Teams API: %s"
+                .formatted(payload)
         );
       }
     } catch (IOException e) {

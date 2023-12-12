@@ -29,6 +29,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sinks.internal.jvm.notification.NotificationSink;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -42,7 +43,7 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class OneSignalSink extends StreamPipesDataSink {
+public class OneSignalSink extends NotificationSink {
 
   private static final String CONTENT_KEY = "content";
   private static final String APP_ID = "app_id";
@@ -53,7 +54,7 @@ public class OneSignalSink extends StreamPipesDataSink {
   private String apiKey;
 
   @Override
-  public DataSinkDescription declareModel() {
+  public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
         .create("org.apache.streampipes.sinks.notifications.jvm.onesignal", 0)
         .withLocales(Locales.EN)
@@ -65,13 +66,14 @@ public class OneSignalSink extends StreamPipesDataSink {
             .build())
         .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
         .requiredTextParameter(Labels.withId(APP_ID))
-        .requiredTextParameter(Labels.withId(REST_API_KEY))
-        .build();
+        .requiredTextParameter(Labels.withId(REST_API_KEY));
   }
 
   @Override
   public void onInvocation(SinkParams parameters,
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    super.onInvocation(parameters, runtimeContext);
+
     var extractor = parameters.extractor();
     content = extractor.singleValueParameter(CONTENT_KEY, String.class);
     appId = extractor.singleValueParameter(APP_ID, String.class);
@@ -79,7 +81,7 @@ public class OneSignalSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onEvent(Event event) throws SpRuntimeException {
+  public void onNotificationEvent(Event event) throws SpRuntimeException {
     String jsondata =
         "{\"app_id\": \"" + appId + "\",\"contents\": {\"en\": \"" + content + "\"}, \"included_segments\":[\"All\"]}";
 
@@ -103,7 +105,6 @@ public class OneSignalSink extends StreamPipesDataSink {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    HttpEntity entity = response.getEntity();
   }
 
   @Override

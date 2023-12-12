@@ -29,6 +29,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sinks.internal.jvm.notification.NotificationSink;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -42,7 +43,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class TelegramSink extends StreamPipesDataSink {
+public class TelegramSink extends NotificationSink {
   private static final String CHANNEL_NAME_OR_CHAT_ID = "channel-chat-name";
   private static final String MESSAGE_TEXT = "message-text";
   private static final String BOT_API_KEY = "api-key";
@@ -57,7 +58,7 @@ public class TelegramSink extends StreamPipesDataSink {
   private String message;
 
   @Override
-  public DataSinkDescription declareModel() {
+  public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
         .create("org.apache.streampipes.sinks.notifications.jvm.telegram", 0)
         .withLocales(Locales.EN)
@@ -69,14 +70,15 @@ public class TelegramSink extends StreamPipesDataSink {
             .build())
         .requiredSecret(Labels.withId(BOT_API_KEY))
         .requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
-        .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true)
-        .build();
+        .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true);
   }
 
 
   @Override
   public void onInvocation(SinkParams parameters,
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    super.onInvocation(parameters, runtimeContext);
+
     var extractor = parameters.extractor();
     apiKey = extractor.secretValue(BOT_API_KEY);
     channelOrChatId = extractor.singleValueParameter(CHANNEL_NAME_OR_CHAT_ID, String.class);
@@ -84,7 +86,7 @@ public class TelegramSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onEvent(Event event) throws SpRuntimeException {
+  public void onNotificationEvent(Event event) throws SpRuntimeException {
     try {
       String content = replacePlaceholders(event, this.message);
       content = trimHTML(content);

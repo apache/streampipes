@@ -30,6 +30,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.sinks.internal.jvm.notification.NotificationSink;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -40,7 +41,7 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 
 import java.io.IOException;
 
-public class SlackNotificationSink extends StreamPipesDataSink {
+public class SlackNotificationSink extends NotificationSink {
 
   private static final String CHANNEL_TYPE = "channel-type";
   private static final String RECEIVER = "receiver";
@@ -56,7 +57,7 @@ public class SlackNotificationSink extends StreamPipesDataSink {
   private String originalMessage;
 
   @Override
-  public DataSinkDescription declareModel() {
+  public DataSinkBuilder declareModelWithoutSilentPeriod() {
 
     return DataSinkBuilder
         .create("org.apache.streampipes.sinks.notifications.jvm.slack", 0)
@@ -71,13 +72,14 @@ public class SlackNotificationSink extends StreamPipesDataSink {
         .requiredTextParameter(Labels.withId(CONTENT), false, true)
         .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
             Options.from("User", "Channel"))
-        .requiredSecret(Labels.withId(AUTH_TOKEN))
-        .build();
+        .requiredSecret(Labels.withId(AUTH_TOKEN));
   }
 
   @Override
   public void onInvocation(SinkParams parameters,
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    super.onInvocation(parameters, runtimeContext);
+
     var extractor = parameters.extractor();
 
     userChannel = extractor.singleValueParameter(RECEIVER, String.class);
@@ -114,7 +116,7 @@ public class SlackNotificationSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onEvent(Event event) throws SpRuntimeException {
+  public void onNotificationEvent(Event event) throws SpRuntimeException {
     String message = replacePlaceholders(event, originalMessage);
     if (this.sendToUser) {
       this.session.sendMessageToUser(userChannel,
