@@ -33,7 +33,6 @@ import org.influxdb.dto.QueryResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
 
@@ -48,18 +47,6 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   public DataExplorerInfluxQueryExecutor(int maximumAmountOfEvents) {
     super(maximumAmountOfEvents);
   }
-
-
-  private double getMaxCount(List<Object> rows) {
-    return rows.stream()
-        .skip(1)
-        .filter(Objects::nonNull)
-        .filter(Number.class::isInstance)
-        .mapToDouble(r -> ((Number) r).doubleValue())
-        .max()
-        .orElse(Double.NEGATIVE_INFINITY);
-  }
-
 
   protected DataSeries convertResult(QueryResult.Series series,
                                      boolean ignoreMissingValues) {
@@ -131,12 +118,6 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   @Override
-  protected Query makeCountQuery(SelectQueryParams params) {
-    var builder = getQueryBuilder(params.getIndex());
-    return getQueryWithDatabaseName(params.toCountQuery(builder));
-  }
-
-  @Override
   protected Query makeSelectQuery(SelectQueryParams params) {
     var builder = getQueryBuilder(params.getIndex());
     return getQueryWithDatabaseName(params.toQuery(builder));
@@ -144,7 +125,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
 
   private boolean hasResult(QueryResult queryResult) {
     return queryResult.getResults() != null
-        && queryResult.getResults().size() > 0
+        && !queryResult.getResults().isEmpty()
         && queryResult.getResults().get(0).getSeries() != null;
   }
 

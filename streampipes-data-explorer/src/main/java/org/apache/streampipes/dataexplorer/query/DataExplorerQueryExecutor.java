@@ -115,7 +115,5 @@ public abstract class DataExplorerQueryExecutor<X, W> {
 
   protected abstract X makeDeleteQuery(DeleteQueryParams params);
 
-  protected abstract X makeCountQuery(SelectQueryParams params);
-
   protected abstract X makeSelectQuery(SelectQueryParams params);
 }
