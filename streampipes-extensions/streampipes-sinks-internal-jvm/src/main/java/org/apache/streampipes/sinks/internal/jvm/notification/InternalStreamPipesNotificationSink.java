@@ -33,11 +33,12 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class InternalStreamPipesNotificationSink extends org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink {
+public class InternalStreamPipesNotificationSink extends StreamPipesNotificationSink {
 
   private static final String TITLE_KEY = "title";
   private static final String CONTENT_KEY = "content";
