@@ -37,7 +37,7 @@ public class DuplicateFilesRenameMigration implements Migration {
   public void executeMigration() {
     var duplicateFiles = new HashMap<String, List<FileMetadata>>();
     var fileMetadataStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();
-    for (var metadata : StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage()
+    for (var metadata : fileMetadataStorage
         .getAllFileMetadataDescriptions()) {
       var originalFilename = metadata.getOriginalFilename().toLowerCase();
       if (!duplicateFiles.containsKey(originalFilename)) {
