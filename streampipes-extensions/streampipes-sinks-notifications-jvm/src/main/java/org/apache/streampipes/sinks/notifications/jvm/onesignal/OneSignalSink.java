@@ -60,9 +60,9 @@ public class OneSignalSink extends StreamPipesDataSink {
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
+                            .create()
+                            .requiredProperty(EpRequirements.anyProperty())
+                            .build())
         .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
         .requiredTextParameter(Labels.withId(APP_ID))
         .requiredTextParameter(Labels.withId(REST_API_KEY))
