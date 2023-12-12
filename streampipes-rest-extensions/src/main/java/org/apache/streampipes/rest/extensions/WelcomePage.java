@@ -25,26 +25,25 @@ import org.apache.streampipes.rest.extensions.html.HTMLGenerator;
 import org.apache.streampipes.rest.extensions.html.JSONGenerator;
 import org.apache.streampipes.rest.extensions.html.page.WelcomePageGenerator;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 
-@Path("/")
+@RestController
+@RequestMapping("/")
 public class WelcomePage {
 
-  @GET
-  @Produces(MediaType.TEXT_HTML)
+  @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
   public String getWelcomePageHtml() {
     WelcomePageGenerator welcomePage = getWelcomePageGenerator();
     HTMLGenerator html = new HTMLGenerator(welcomePage.buildUris());
     return html.buildHtml();
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public String getWelcomePageJson() {
     WelcomePageGenerator welcomePage = getWelcomePageGenerator();
     JSONGenerator json = new JSONGenerator(welcomePage.buildUris());

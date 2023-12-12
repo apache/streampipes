@@ -30,11 +30,13 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
-import jakarta.ws.rs.Path;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Path(SpServicePathPrefix.DATA_PROCESSOR)
+@RestController
+@RequestMapping(SpServicePathPrefix.DATA_PROCESSOR)
 public class DataProcessorPipelineElementResource extends InvocablePipelineElementResource<
     DataProcessorInvocation,
     IStreamPipesDataProcessor,

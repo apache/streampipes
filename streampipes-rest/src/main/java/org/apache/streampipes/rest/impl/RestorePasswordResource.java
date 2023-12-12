@@ -20,25 +20,24 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-@Path("/v2/restore-password")
+@RestController
+@RequestMapping("/api/v2/restore-password")
 public class RestorePasswordResource extends AbstractRestResource {
 
-  @GET
-  @Path("{recoveryCode}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response checkTokenValidity(@PathParam("recoveryCode") String recoveryCode) {
+  @GetMapping(path = "{recoveryCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> checkTokenValidity(@PathVariable("recoveryCode") String recoveryCode) {
     try {
       getSpResourceManager().manageUsers().checkPasswordRecoveryCode(recoveryCode);
       return ok();
@@ -47,12 +46,12 @@ public class RestorePasswordResource extends AbstractRestResource {
     }
   }
 
-  @POST
-  @Path("{recoveryCode}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response changePassword(@PathParam("recoveryCode") String recoveryCode,
-                                 RegistrationData registrationData) {
+  @PostMapping(
+      path = "{recoveryCode}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> changePassword(@PathVariable("recoveryCode") String recoveryCode,
+                                             @RequestBody RegistrationData registrationData) {
     try {
       getSpResourceManager().manageUsers().changePassword(recoveryCode, registrationData);
       return ok();

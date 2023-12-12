@@ -23,49 +23,43 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-@Path("/v2/import")
-@Component
+@RestController
+@RequestMapping("/api/v2/import")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class DataImportResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataImportResource.class);
 
-  @Path("/preview")
-  @POST
-  @Consumes(MediaType.MULTIPART_FORM_DATA)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getImportPreview(@FormDataParam("file_upload") InputStream uploadedInputStream,
-                                   @FormDataParam("file_upload") FormDataContentDisposition fileDetail)
+  @PostMapping(
+      path = "/preview",
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AssetExportConfiguration> getImportPreview(@RequestPart("file_upload") MultipartFile fileDetail)
       throws IOException {
-    var importConfig = ImportManager.getImportPreview(uploadedInputStream);
+    var importConfig = ImportManager.getImportPreview(fileDetail.getInputStream());
     return ok(importConfig);
   }
 
-  @POST
-  @Consumes(MediaType.MULTIPART_FORM_DATA)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response importData(@FormDataParam("file_upload") InputStream uploadedInputStream,
-                             @FormDataParam("file_upload") FormDataContentDisposition fileDetail,
-                             @FormDataParam("configuration") AssetExportConfiguration exportConfiguration) {
+  @PostMapping(
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> importData(@RequestPart("file_upload") MultipartFile fileDetail,
+                                         @RequestPart("configuration") AssetExportConfiguration exportConfiguration) {
     try {
-      ImportManager.performImport(uploadedInputStream, exportConfiguration, getAuthenticatedUserSid());
+      ImportManager.performImport(fileDetail.getInputStream(), exportConfiguration, getAuthenticatedUserSid());
       return ok();
     } catch (IOException e) {
       LOG.error("An error occurred while importing resources", e);

@@ -19,31 +19,30 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.units.UnitProvider;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import com.github.jqudt.Unit;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/measurement-units")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v2/measurement-units")
 public class MeasurementUnitResource extends AbstractRestResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getAllMeasurementUnits() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<Unit>> getAllMeasurementUnits() {
     return ok(UnitProvider.INSTANCE.getAvailableUnits());
   }
 
-  @GET
-  @Path("/{measurementResourceUri}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getMeasurementUnitInfo(@PathParam("measurementResourceUri") String measurementResourceUri) {
+  @GetMapping(path = "/{measurementResourceUri}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Unit> getMeasurementUnitInfo(
+      @PathVariable("measurementResourceUri") String measurementResourceUri) {
     return ok(UnitProvider.INSTANCE.getUnit(measurementResourceUri));
   }
 }

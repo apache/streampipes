@@ -36,7 +36,7 @@ public class UnauthenticatedInterfaces {
         "/api/v2/pe/*/assets/icon",
         "/api/v2/pe/*/assets/icon.png",
         "/api/v2/connect/master/description/*/assets/icon",
-        "/api/openapi.json",
+        "/apidocs/**",
         "/api/auth/**",
         "/oauth2/**",
         "/api/all",

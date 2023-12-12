@@ -15,19 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.api;
 
-import jakarta.ws.rs.core.Response;
+package org.apache.streampipes.rest.shared.serializer;
 
-public interface CRUDResource<K, V> {
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-  Response getAll();
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
-  Response getById(K k);
+public class SpringJacksonSerializer {
 
-  Response create(V entity);
-
-  Response update(K k, V entity);
-
-  Response delete(K k);
+  @Bean
+  @Primary
+  public ObjectMapper objectMapper() {
+    return JacksonSerializer.getObjectMapper();
+  }
 }
