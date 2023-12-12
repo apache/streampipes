@@ -51,26 +51,41 @@ public abstract class DataExplorerQueryExecutor<X, W> {
     this.maximumAmountOfEvents = maximumAmountOfEvents;
   }
 
+  /**
+   * Execute the data explorer query and return the result or a warning message
+   * in case the maximum amount of events to return is defined
+   */
   public SpQueryResult executeQuery(SelectQueryParams params,
                                     boolean ignoreMissingValues) throws RuntimeException {
-
     X query = makeSelectQuery(params);
     var result = executeQuery(query, ignoreMissingValues);
     if (this.maximumAmountOfEvents != -1) {
-      var limit = params.getLimit();
-      var amountOfResults = result.getAllDataSeries().stream().mapToInt(DataSeries::getTotal).sum();
-      var amountOfQueryResults = limit == Integer.MIN_VALUE ? amountOfResults : Math.min(amountOfResults, limit);
-      if (amountOfQueryResults > this.maximumAmountOfEvents) {
-        SpQueryResult tooMuchData = new SpQueryResult();
-        tooMuchData.setSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA);
-        tooMuchData.setTotal(amountOfQueryResults);
-        return tooMuchData;
-      } else {
-        return result;
-      }
+      return validateAndReturnQueryResult(result, params.getLimit());
     } else {
       return result;
     }
+  }
+
+  private SpQueryResult validateAndReturnQueryResult(SpQueryResult queryResult,
+                                                     int limit) {
+    var amountOfResults = queryResult.getAllDataSeries()
+        .stream()
+        .mapToInt(DataSeries::getTotal)
+        .sum();
+
+    var amountOfQueryResults = limit == Integer.MIN_VALUE ? amountOfResults : Math.min(amountOfResults, limit);
+    if (amountOfQueryResults > this.maximumAmountOfEvents) {
+      return makeTooMuchDataResult(amountOfQueryResults);
+    } else {
+      return queryResult;
+    }
+  }
+
+  private SpQueryResult makeTooMuchDataResult(int amountOfQueryResults) {
+    SpQueryResult tooMuchData = new SpQueryResult();
+    tooMuchData.setSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA);
+    tooMuchData.setTotal(amountOfQueryResults);
+    return tooMuchData;
   }
 
   public SpQueryResult executeQuery(DeleteQueryParams params) {
