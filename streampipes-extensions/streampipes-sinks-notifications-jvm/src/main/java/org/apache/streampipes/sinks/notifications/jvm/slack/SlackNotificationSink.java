@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.notifications.jvm.slack;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -29,8 +30,8 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
@@ -39,7 +40,7 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 
 import java.io.IOException;
 
-public class SlackNotificationSink extends StreamPipesNotificationSink {
+public class SlackNotificationSink extends StreamPipesDataSink {
 
   private static final String CHANNEL_TYPE = "channel-type";
   private static final String RECEIVER = "receiver";
@@ -55,7 +56,7 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
   private String originalMessage;
 
   @Override
-  public DataSinkBuilder declareModelWithoutSilentPeriod() {
+  public DataSinkDescription declareModel() {
 
     return DataSinkBuilder
         .create("org.apache.streampipes.sinks.notifications.jvm.slack", 0)
@@ -63,21 +64,20 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
+                            .create()
+                            .requiredProperty(EpRequirements.anyProperty())
+                            .build())
         .requiredTextParameter(Labels.withId(RECEIVER))
         .requiredTextParameter(Labels.withId(CONTENT), false, true)
         .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
-            Options.from("User", "Channel"))
-        .requiredSecret(Labels.withId(AUTH_TOKEN));
+                                      Options.from("User", "Channel"))
+        .requiredSecret(Labels.withId(AUTH_TOKEN))
+        .build();
   }
 
   @Override
   public void onInvocation(SinkParams parameters,
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    super.onInvocation(parameters, runtimeContext);
-
     var extractor = parameters.extractor();
 
     userChannel = extractor.singleValueParameter(RECEIVER, String.class);
@@ -106,19 +106,19 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
       SlackChannel channel = session.findChannelByName(userChannel);
       if (channel == null || channel.getId() == null) {
         throw new SpRuntimeException("The channel: '" + userChannel + "' does not "
-            + "exists or "
-            + "the bot has no rights to access it");
+                                         + "exists or "
+                                         + "the bot has no rights to access it");
       }
     }
 
   }
 
   @Override
-  public void onNotificationEvent(Event event) throws SpRuntimeException {
+  public void onEvent(Event event) throws SpRuntimeException {
     String message = replacePlaceholders(event, originalMessage);
     if (this.sendToUser) {
       this.session.sendMessageToUser(userChannel,
-          message, null);
+                                     message, null);
     } else {
       SlackChannel channel = this.session.findChannelByName(userChannel);
       this.session.sendMessage(channel, message);
