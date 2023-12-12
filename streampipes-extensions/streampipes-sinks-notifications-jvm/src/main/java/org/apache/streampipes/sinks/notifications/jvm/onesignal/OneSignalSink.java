@@ -21,7 +21,6 @@ package org.apache.streampipes.sinks.notifications.jvm.onesignal;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -29,11 +28,9 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.sinks.internal.jvm.notification.NotificationSink;
+import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -43,7 +40,7 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class OneSignalSink extends NotificationSink {
+public class OneSignalSink extends StreamPipesNotificationSink {
 
   private static final String CONTENT_KEY = "content";
   private static final String APP_ID = "app_id";

@@ -37,7 +37,7 @@ import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import java.util.Date;
 import java.util.UUID;
 
-public class StreamPipesNotificationSink extends NotificationSink {
+public class InternalStreamPipesNotificationSink extends org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink {
 
   private static final String TITLE_KEY = "title";
   private static final String CONTENT_KEY = "content";

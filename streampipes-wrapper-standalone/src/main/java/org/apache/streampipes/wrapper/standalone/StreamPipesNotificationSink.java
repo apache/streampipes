@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.notification;
+package org.apache.streampipes.wrapper.standalone;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -30,14 +30,14 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 import java.time.Instant;
 
 /**
- * An abstract class representing a NotificationSink in StreamPipes.
+ * An abstract class representing a StreamPipesNotificationSink in StreamPipes.
  * <p>
  * It provides some share functionalities for all notification sinks in StreamPipes.
  * Thereby, it slightly modifies the interfaces to implement for the actual data sink compared
  * to sinks directly inheriting from {@link StreamPipesDataSink}.
  */
 
-public abstract class NotificationSink extends StreamPipesDataSink {
+public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
 
   /**
    * Default waiting time in minutes between two consecutive notifications.
