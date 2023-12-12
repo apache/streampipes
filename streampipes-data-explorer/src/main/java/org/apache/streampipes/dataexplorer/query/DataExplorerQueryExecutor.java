@@ -21,6 +21,7 @@ package org.apache.streampipes.dataexplorer.query;
 import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
+import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.SpQueryStatus;
 
@@ -53,23 +54,23 @@ public abstract class DataExplorerQueryExecutor<X, W> {
   public SpQueryResult executeQuery(SelectQueryParams params,
                                     boolean ignoreMissingValues) throws RuntimeException {
 
+    X query = makeSelectQuery(params);
+    var result = executeQuery(query, ignoreMissingValues);
     if (this.maximumAmountOfEvents != -1) {
-      X countQuery = makeCountQuery(params);
-      W countQueryResult = executeQuery(countQuery);
       var limit = params.getLimit();
-      var amountOfResults = getAmountOfResults(countQueryResult);
-      Double amountOfQueryResults = limit == Integer.MIN_VALUE ? amountOfResults : Math.min(amountOfResults, limit);
-
+      var amountOfResults = result.getAllDataSeries().stream().mapToInt(DataSeries::getTotal).sum();
+      var amountOfQueryResults = limit == Integer.MIN_VALUE ? amountOfResults : Math.min(amountOfResults, limit);
       if (amountOfQueryResults > this.maximumAmountOfEvents) {
         SpQueryResult tooMuchData = new SpQueryResult();
         tooMuchData.setSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA);
-        tooMuchData.setTotal(amountOfQueryResults.intValue());
+        tooMuchData.setTotal(amountOfQueryResults);
         return tooMuchData;
+      } else {
+        return result;
       }
+    } else {
+      return result;
     }
-
-    X query = makeSelectQuery(params);
-    return executeQuery(query, ignoreMissingValues);
   }
 
   public SpQueryResult executeQuery(DeleteQueryParams params) {
