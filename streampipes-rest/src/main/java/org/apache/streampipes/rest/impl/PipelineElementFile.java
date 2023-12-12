@@ -127,7 +127,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public Response getAllOriginalFilenames() {
     return ok(FileManager.getAllFiles().stream().map(fileMetadata -> fileMetadata.getOriginalFilename().toLowerCase())
-        .collect(
+        .toList();
             Collectors.toList()));
   }
 }
