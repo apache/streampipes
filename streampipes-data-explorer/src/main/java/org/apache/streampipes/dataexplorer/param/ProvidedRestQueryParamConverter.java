@@ -55,8 +55,6 @@ public class ProvidedRestQueryParamConverter {
   public static SelectQueryParams getSelectQueryParams(ProvidedRestQueryParams params) {
     SelectQueryParams queryParameters = new SelectQueryParams(params.getMeasurementId());
 
-    String measurementId = params.getMeasurementId();
-
     if (params.has(QP_COUNT_ONLY) && params.getAsBoolean(QP_COUNT_ONLY)) {
       queryParameters.withSelectParams(SelectClauseParams.from(params.getAsString(QP_COLUMNS), true));
     } else {

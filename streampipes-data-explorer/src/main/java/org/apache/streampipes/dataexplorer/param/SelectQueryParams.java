@@ -93,12 +93,6 @@ public class SelectQueryParams {
     return builder.build();
   }
 
-  public <T> T toCountQuery(IDataLakeQueryBuilder<T> builder) {
-    this.selectParams.buildCountStatement(builder);
-    prepareBuilder(builder);
-    return builder.build();
-  }
-
   public int getLimit() {
     if (Objects.nonNull(limitParams)) {
       return limitParams.getLimit();
