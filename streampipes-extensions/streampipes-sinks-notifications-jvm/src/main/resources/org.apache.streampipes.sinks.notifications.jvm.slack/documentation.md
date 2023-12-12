@@ -55,6 +55,11 @@ The channel type, should be "User" or "Channel"
 
 The message that should be sent.
 
+### Silent Period
+
+The *Silent Period* is the duration, expressed in minutes, during which notifications are temporarily disabled after one
+has been sent. This feature is implemented to prevent overwhelming the target with frequent notifications, avoiding
+potential spam behavior.
 
 ## Output
 
