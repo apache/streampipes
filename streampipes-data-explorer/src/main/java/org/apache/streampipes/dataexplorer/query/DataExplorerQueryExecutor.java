@@ -106,8 +106,6 @@ public abstract class DataExplorerQueryExecutor<X, W> {
     return postQuery(result, ignoreMissingValues);
   }
 
-  protected abstract double getAmountOfResults(W countQueryResult);
-
   protected abstract SpQueryResult postQuery(W queryResult,
                                              boolean ignoreMissingValues);
 

@@ -50,16 +50,6 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
 
-  @Override
-  protected double getAmountOfResults(QueryResult countQueryResult) {
-    if (countQueryResult.getResults().get(0).getSeries() != null
-        && countQueryResult.getResults().get(0).getSeries().get(0).getValues() != null) {
-      return getMaxCount(countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0));
-    } else {
-      return 0.0;
-    }
-  }
-
   private double getMaxCount(List<Object> rows) {
     return rows.stream()
         .skip(1)
