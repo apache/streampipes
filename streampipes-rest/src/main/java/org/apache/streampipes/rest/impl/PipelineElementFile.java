@@ -128,6 +128,5 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   public Response getAllOriginalFilenames() {
     return ok(FileManager.getAllFiles().stream().map(fileMetadata -> fileMetadata.getOriginalFilename().toLowerCase())
         .toList();
-            Collectors.toList()));
   }
 }
