@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * This class is responsible for managing all the adapter instances which are executed on worker nodes
@@ -150,7 +151,11 @@ public class AdapterMasterManagement {
 
     // remove the adapter from the metrics manager so that
     // no metrics for this adapter are exposed anymore
-    adapterMetrics.remove(ad.getElementId(), ad.getName());
+    try {
+      adapterMetrics.remove(ad.getElementId(), ad.getName());
+    } catch (NoSuchElementException e) {
+      LOG.error("Could not remove adapter metrics for adapter {}", ad.getName());
+    }
   }
 
   public void startStreamAdapter(String elementId) throws AdapterException {

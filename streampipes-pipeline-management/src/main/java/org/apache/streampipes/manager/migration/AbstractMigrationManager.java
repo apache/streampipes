@@ -80,9 +80,10 @@ public abstract class AbstractMigrationManager {
       TypeReference<MigrationResult<T>> typeReference = new TypeReference<>() {
       };
 
+      String migrationResponseString = migrationResponse.returnContent().asString();
       return JacksonSerializer
           .getObjectMapper()
-          .readValue(migrationResponse.returnContent().asString(), typeReference);
+          .readValue(migrationResponseString, typeReference);
     } catch (JsonProcessingException e) {
       LOG.error(
           "Migration of pipeline element failed before sending to the extensions service, "
