@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.rest.extensions.WelcomePage;
+import org.apache.streampipes.rest.shared.serializer.SpringJacksonSerializer;
 import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
@@ -40,7 +41,7 @@ import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({WebSecurityConfig.class, WelcomePage.class, ServiceHealthResource.class})
+@Import({WebSecurityConfig.class, WelcomePage.class, ServiceHealthResource.class, SpringJacksonSerializer.class})
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServiceBase {
 
