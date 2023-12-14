@@ -25,44 +25,41 @@ import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.utils.Utils;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
 import org.apache.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/users")
-@Component
+@RestController
+@RequestMapping("/api/v2/users")
 public class UserResource extends AbstractAuthGuardedRestResource {
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response listUsers() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<ShortUserInfo>> listUsers() {
     var users = getUserStorage()
         .getAllUserAccounts()
         .stream()
@@ -73,11 +70,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   }
 
 
-  @GET
-  @JacksonSerialized
-  @Path("{principalId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getUserDetails(@PathParam("principalId") String principalId) {
+  @GetMapping(path = "{principalId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getUserDetails(@PathVariable("principalId") String principalId) {
     Principal principal = getPrincipalById(principalId);
     Utils.removeCredentials(principal);
 
@@ -88,11 +82,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @GET
-  @JacksonSerialized
-  @Path("username/{username}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getUserDetailsByName(@PathParam("username") String username) {
+  @GetMapping(path = "username/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getUserDetailsByName(@PathVariable("username") String username) {
     Principal principal = getPrincipal(username);
     Utils.removeCredentials(principal);
 
@@ -103,11 +94,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @DELETE
-  @JacksonSerialized
-  @Path("{principalId}")
+  @DeleteMapping(path = "{principalId}")
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response deleteUser(@PathParam("principalId") String principalId) {
+  public ResponseEntity<?> deleteUser(@PathVariable("principalId") String principalId) {
     Principal principal = getPrincipalById(principalId);
 
     if (principal != null) {
@@ -118,10 +107,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @Path("{userId}/appearance/mode/{darkMode}")
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateAppearanceMode(@PathParam("darkMode") boolean darkMode) {
+  @PutMapping(path = "{userId}/appearance/mode/{darkMode}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<? extends Message> updateAppearanceMode(@PathVariable("darkMode") boolean darkMode) {
     String authenticatedUsername = getAuthenticatedUsername();
     if (authenticatedUsername != null) {
       UserAccount user = getUser(authenticatedUsername);
@@ -134,13 +121,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @POST
-  @Path("/user")
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
+  @PostMapping(
+      path = "/user",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response registerUser(UserAccount userAccount) {
+  public ResponseEntity<?> registerUser(@RequestBody UserAccount userAccount) {
     try {
       if (getUserStorage().getUser(userAccount.getUsername()) == null) {
         String property = userAccount.getPassword();
@@ -160,13 +146,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @POST
-  @Path("/service")
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
+  @PostMapping(
+      path = "/service",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response registerService(ServiceAccount serviceAccount) {
+  public ResponseEntity<?> registerService(@RequestBody ServiceAccount serviceAccount) {
     if (getUserStorage().getUser(serviceAccount.getUsername()) == null) {
       serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(serviceAccount.getClientSecret()));
       serviceAccount.setSecretEncrypted(true);
@@ -177,13 +162,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @POST
-  @Path("{userId}/tokens")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response createNewApiToken(@PathParam("userId") String username,
-                                    RawUserApiToken rawToken) {
+  @PostMapping(
+      path = "{userId}/tokens",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> createNewApiToken(@PathVariable("userId") String username,
+                                             @RequestBody RawUserApiToken rawToken) {
     String authenticatedUserName = getAuthenticatedUsername();
     if (authenticatedUserName.equals(username)) {
       RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken);
@@ -193,12 +177,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PUT
-  @Path("user/{principalId}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateUserAccountDetails(@PathParam("principalId") String principalId,
-                                           UserAccount user) {
+  @PutMapping(
+      path = "user/{principalId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updateUserAccountDetails(@PathVariable("principalId") String principalId,
+                                                    @RequestBody UserAccount user) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
@@ -211,12 +195,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PUT
-  @Path("user/{principalId}/username")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateUsername(@PathParam("principalId") String principalId,
-                                 UserAccount user) {
+  @PutMapping(
+      path = "user/{principalId}/username",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updateUsername(@PathVariable("principalId") String principalId,
+                                 @RequestBody UserAccount user) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
@@ -242,15 +226,14 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       }
     }
 
-    return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
+    return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).build();
   }
 
-  @PUT
-  @Path("user/{principalId}/password")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updatePassword(@PathParam("principalId") String principalId,
-                                 ChangePasswordRequest passwordRequest) {
+  @PutMapping(path = "user/{principalId}/password",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updatePassword(@PathVariable("principalId") String principalId,
+                                 @RequestBody ChangePasswordRequest passwordRequest) {
     String authenticatedUserId = getAuthenticatedUserSid();
     UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
     if (principalId.equals(authenticatedUserId) || isAdmin()) {
@@ -273,12 +256,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PUT
-  @Path("service/{principalId}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateServiceAccountDetails(@PathParam("principalId") String principalId,
-                                              ServiceAccount user) {
+  @PutMapping(
+      path = "service/{principalId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<? extends Message> updateServiceAccountDetails(@PathVariable("principalId") String principalId,
+                                              @RequestBody ServiceAccount user) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);

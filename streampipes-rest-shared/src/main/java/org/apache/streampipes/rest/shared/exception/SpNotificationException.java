@@ -15,17 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.annotation;
 
-import jakarta.ws.rs.NameBinding;
+package org.apache.streampipes.rest.shared.exception;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
-@NameBinding
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface JacksonSerialized {
+import org.apache.streampipes.model.message.Notification;
+
+import org.springframework.http.HttpStatus;
+
+public class SpNotificationException extends RuntimeException {
+
+  private final Notification notification;
+  private final HttpStatus status;
+
+  public SpNotificationException(HttpStatus status,
+                                 Notification notification) {
+    this.status = status;
+    this.notification = notification;
+  }
+
+  public Notification getNotification() {
+    return notification;
+  }
+
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

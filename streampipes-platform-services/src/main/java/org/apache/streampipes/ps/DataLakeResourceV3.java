@@ -21,27 +21,24 @@ package org.apache.streampipes.ps;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Path("/v3/datalake")
+@RestController
+@RequestMapping("/api/v3/datalake")
 @Deprecated
 public class DataLakeResourceV3 extends AbstractRestResource {
   public DataLakeResourceV3() {
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/info")
-  public Response getAllInfos() {
+  @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<DataLakeMeasure>> getAllInfos() {
     List<DataLakeMeasure> result = DataExplorerUtils.getInfos();
     return ok(result);
   }

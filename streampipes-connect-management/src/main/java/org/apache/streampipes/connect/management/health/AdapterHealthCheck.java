@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class AdapterHealthCheck implements Runnable {
 
@@ -68,10 +70,6 @@ public class AdapterHealthCheck implements Runnable {
     Map<String, AdapterDescription> allRunningInstancesAdapterDescriptions =
         this.getAllRunningInstancesAdapterDescriptions();
 
-    if (!allRunningInstancesAdapterDescriptions.isEmpty()) {
-      updateMonitoringMetrics(allRunningInstancesAdapterDescriptions);
-    }
-
     // Get all worker containers that run adapters
     Map<String, List<AdapterDescription>> groupByWorker =
         this.getAllWorkersWithAdapters(allRunningInstancesAdapterDescriptions);
@@ -79,6 +77,21 @@ public class AdapterHealthCheck implements Runnable {
     // Get adapters that are not running anymore
     Map<String, AdapterDescription> allAdaptersToRecover =
         this.getAdaptersToRecover(groupByWorker, allRunningInstancesAdapterDescriptions);
+
+    try {
+      if (!allRunningInstancesAdapterDescriptions.isEmpty()) {
+        // Filter adapters so that only healthy and running adapters are updated in the metrics endpoint
+        updateMonitoringMetrics(
+            allRunningInstancesAdapterDescriptions
+                .entrySet()
+                .stream()
+                .filter((entry -> !allAdaptersToRecover.containsKey(entry.getKey())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+        );
+      }
+    } catch (NoSuchElementException e) {
+      LOG.error("Could not update adapter metrics due to an invalid state. ({})", e.getMessage());
+    }
 
     // Recover Adapters
     this.recoverAdapters(allAdaptersToRecover);

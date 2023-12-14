@@ -64,13 +64,13 @@ public class SlackNotificationSink extends StreamPipesDataSink {
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
+                            .create()
+                            .requiredProperty(EpRequirements.anyProperty())
+                            .build())
         .requiredTextParameter(Labels.withId(RECEIVER))
         .requiredTextParameter(Labels.withId(CONTENT), false, true)
         .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
-            Options.from("User", "Channel"))
+                                      Options.from("User", "Channel"))
         .requiredSecret(Labels.withId(AUTH_TOKEN))
         .build();
   }
@@ -106,8 +106,8 @@ public class SlackNotificationSink extends StreamPipesDataSink {
       SlackChannel channel = session.findChannelByName(userChannel);
       if (channel == null || channel.getId() == null) {
         throw new SpRuntimeException("The channel: '" + userChannel + "' does not "
-            + "exists or "
-            + "the bot has no rights to access it");
+                                         + "exists or "
+                                         + "the bot has no rights to access it");
       }
     }
 
@@ -118,7 +118,7 @@ public class SlackNotificationSink extends StreamPipesDataSink {
     String message = replacePlaceholders(event, originalMessage);
     if (this.sendToUser) {
       this.session.sendMessageToUser(userChannel,
-          message, null);
+                                     message, null);
     } else {
       SlackChannel channel = this.session.findChannelByName(userChannel);
       this.session.sendMessage(channel, message);

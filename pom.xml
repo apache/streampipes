@@ -52,7 +52,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
-        <commons-text.version>1.10.0</commons-text.version>
+        <commons-text.version>1.11.0</commons-text.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <eclipse.milo.version>0.6.9</eclipse.milo.version>
         <file-management.version>3.1.0</file-management.version>
@@ -81,7 +81,6 @@
         <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
-        <jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <jboss-logging.version>3.5.2.Final</jboss-logging.version>
         <jedis.version>4.4.3</jedis.version>
@@ -94,8 +93,8 @@
         <lightcouch.version>0.2.0</lightcouch.version>
         <maven-plugin-annotations.version>3.7.1</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
-        <micrometer-prometheus.version>1.11.5</micrometer-prometheus.version>
-        <micrometer-observation.version>1.11.5</micrometer-observation.version>
+        <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
+        <micrometer-observation.version>1.12.0</micrometer-observation.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <nats.version>2.17.0</nats.version>
         <netty.version>4.1.72.Final</netty.version>
@@ -119,9 +118,11 @@
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <spring-boot.version>3.1.5</spring-boot.version>
-        <spring-security.version>6.1.5</spring-security.version>
-        <swagger.version>2.2.7</swagger.version>
+        <springdoc.version>2.3.0</springdoc.version>
+        <spring.version>6.1.1</spring.version>
+        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-security.version>6.2.0</spring-security.version>
+        <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <hawtbuf.version>1.11</hawtbuf.version>
 
@@ -154,6 +155,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
@@ -340,11 +348,6 @@
                 <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.ws.rs</groupId>
-                <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${jakarta.ws.rs.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
                 <version>${activemq-client.version}</version>
@@ -508,6 +511,11 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
                 <version>${spring-security.version}</version>
             </dependency>
             <dependency>
@@ -744,6 +752,11 @@
                 <version>${quartz.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
@@ -975,6 +988,7 @@
                     <configuration>
                         <release>17</release>
                         <encoding>UTF-8</encoding>
+                        <parameters>true</parameters>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -1264,6 +1278,7 @@
                 <configuration>
                     <release>17</release>
                     <encoding>UTF-8</encoding>
+                    <parameters>true</parameters>
                 </configuration>
             </plugin>
             <plugin>

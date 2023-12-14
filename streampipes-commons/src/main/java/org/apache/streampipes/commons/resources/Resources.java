@@ -28,10 +28,26 @@ public class Resources {
 
   public static String asString(String resourceName,
                                 Charset charset) throws IOException {
-    return IOUtils.resourceToString(resourceName, charset, ClassLoader.getSystemClassLoader());
+    var loader = getLoader();
+    return IOUtils.resourceToString(resourceName, charset, loader);
   }
 
   public static URL asUrl(String resourceName) throws IOException {
-    return IOUtils.resourceToURL(resourceName, ClassLoader.getSystemClassLoader());
+    var loader = getLoader();
+    return IOUtils.resourceToURL(resourceName, loader);
+  }
+
+  private static ClassLoader getLoader() {
+    return firstNonNull(Thread.currentThread().getContextClassLoader(), Resources.class.getClassLoader());
+  }
+
+  private static <T> T firstNonNull(T first, T second) {
+    if (first != null) {
+      return first;
+    } else if (second != null) {
+      return second;
+    } else {
+      throw new NullPointerException("Both parameters are null");
+    }
   }
 }

@@ -15,19 +15,36 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.api;
 
-import jakarta.ws.rs.core.Response;
+package org.apache.streampipes.rest.shared.exception;
 
-public interface CRUDResource<K, V> {
+import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.Notifications;
 
-  Response getAll();
+import org.springframework.http.HttpStatus;
 
-  Response getById(K k);
+public class SpMessageException extends RuntimeException {
 
-  Response create(V entity);
+  private final Message message;
+  private final HttpStatus status;
 
-  Response update(K k, V entity);
+  public SpMessageException(HttpStatus status,
+                            Message message) {
+    this.status = status;
+    this.message = message;
+  }
 
-  Response delete(K k);
+  public SpMessageException(HttpStatus status,
+                            Throwable throwable) {
+    this.status = status;
+    this.message = Notifications.error(throwable.getMessage());
+  }
+
+  public Message getSpMessage() {
+    return message;
+  }
+
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

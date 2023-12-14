@@ -21,32 +21,31 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Path("/v2/admin/permissions")
-@Component
+@RestController
+@RequestMapping("/api/v2/admin/permissions")
 public class PermissionResource extends AbstractAuthGuardedRestResource {
 
-  @GET
-  @Path("objects/{objectInstanceId}")
+  @GetMapping(path = "objects/{objectInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public List<Permission> getPermissionForObject(@PathParam("objectInstanceId") String objectInstanceId) {
+  public List<Permission> getPermissionForObject(@PathVariable("objectInstanceId") String objectInstanceId) {
     return getSpResourceManager().managePermissions().findForObjectId(objectInstanceId);
   }
 
-  @PUT
-  @Path("{permissionId}")
+  @PutMapping(path = "{permissionId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public void updatePermission(@PathParam("permissionId") String permissionId,
-                               Permission permission) {
+  public void updatePermission(@PathVariable("permissionId") String permissionId,
+                               @RequestBody Permission permission) {
     if (permissionId.equals(permission.getPermissionId())) {
       getSpResourceManager().managePermissions().update(permission);
     }

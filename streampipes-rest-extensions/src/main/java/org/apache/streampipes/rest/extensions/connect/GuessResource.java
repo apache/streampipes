@@ -24,20 +24,21 @@ import org.apache.streampipes.extensions.management.connect.GuessManagement;
 import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
-
-@Path("/api/v1/worker/guess")
+@RestController
+@RequestMapping("/api/v1/worker/guess")
 public class GuessResource extends AbstractSharedRestInterface {
 
   private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);
@@ -52,11 +53,11 @@ public class GuessResource extends AbstractSharedRestInterface {
     this.guessManagement = guessManagement;
   }
 
-  @POST
-  @JacksonSerialized
-  @Path("/schema")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response guessSchema(AdapterDescription adapterDescription) {
+  @PostMapping(
+      path = "/schema",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<GuessSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
 
     try {
       GuessSchema result = guessManagement.guessSchema(adapterDescription);
@@ -64,11 +65,11 @@ public class GuessResource extends AbstractSharedRestInterface {
       return ok(result);
     } catch (ParseException e) {
       logger.error("Error while parsing events: ", e);
-      return serverError(e);
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     } catch (AdapterException e) {
       logger.error("Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(),
           e.getMessage());
-      return serverError(e);
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
   }

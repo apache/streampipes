@@ -24,23 +24,26 @@ import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import java.util.Collection;
 
-
-@Path("/api/v1/worker")
+@RestController
+@RequestMapping("/api/v1/worker")
 public class AdapterWorkerResource extends AbstractSharedRestInterface {
 
   private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerResource.class);
@@ -58,21 +61,17 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
     this.adapterManagement = adapterManagement;
   }
 
-  @GET
-  @JacksonSerialized
-  @Path("/running")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getRunningAdapterInstances() {
+  @GetMapping(path = "/running", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Collection<AdapterDescription>> getRunningAdapterInstances() {
     return ok(adapterManagement.getAllRunningAdapterInstances());
   }
 
 
-  @POST
-  @JacksonSerialized
-  @Path("/stream/invoke")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response invokeAdapter(AdapterDescription adapterStreamDescription) {
+  @PostMapping(
+      path = "/stream/invoke",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SuccessMessage> invokeAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
     try {
       adapterManagement.invokeAdapter(adapterStreamDescription);
@@ -83,16 +82,15 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       return ok(Notifications.success(responseMessage));
     } catch (AdapterException e) {
       logger.error("Error while starting adapter with id " + adapterStreamDescription.getElementId(), e);
-      return serverError(SpLogMessage.from(e));
+      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     }
   }
 
-  @POST
-  @JacksonSerialized
-  @Path("/stream/stop")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response stopAdapter(AdapterDescription adapterStreamDescription) {
+  @PostMapping(
+      path = "/stream/stop",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SuccessMessage> stopAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
     String responseMessage;
     try {
@@ -107,7 +105,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       return ok(Notifications.success(responseMessage));
     } catch (AdapterException e) {
       logger.error("Error while stopping adapter with id " + adapterStreamDescription.getElementId(), e);
-      return serverError(SpLogMessage.from(e));
+      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     }
   }
 

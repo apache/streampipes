@@ -20,62 +20,57 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v3/datalake/dashboard/widgets")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v3/datalake/dashboard/widgets")
 public class DataLakeWidgetResource extends AbstractRestResource {
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllDataExplorerWidgets() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<DataExplorerWidgetModel>> getAllDataExplorerWidgets() {
     return ok(getDataExplorerWidgetStorage().getAllDataExplorerWidgets());
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{widgetId}")
-  public Response getDataExplorerWidget(@PathParam("widgetId") String widgetId) {
+  @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(widgetId));
   }
 
-  @PUT
-  @JacksonSerialized
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{widgetId}")
-  public Response modifyDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel) {
+  @PutMapping(
+      path = "/{widgetId}",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
+      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     getDataExplorerWidgetStorage().updateDataExplorerWidget(dataExplorerWidgetModel);
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(dataExplorerWidgetModel.getId()));
   }
 
-  @DELETE
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{widgetId}")
-  public Response deleteDataExplorerWidget(@PathParam("widgetId") String widgetId) {
+  @DeleteMapping(path = "/{widgetId}")
+  public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
     getDataExplorerWidgetStorage().deleteDataExplorerWidget(widgetId);
     return ok();
   }
 
-  @POST
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response createDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel) {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
+      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     String widgetId = getDataExplorerWidgetStorage().storeDataExplorerWidget(dataExplorerWidgetModel);
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(widgetId));
   }

@@ -23,45 +23,37 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.impl.dashboard.AbstractPipelineExtractionResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/v3/datalake/pipelines")
-@Component
+@RestController
+@RequestMapping("/api/v3/datalake/pipelines")
 public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DataLakeMeasure> {
 
   private static final String DataLakeAppId = "org.apache.streampipes.sinks.internal.jvm.datalake";
   private static final String MeasureFieldInternalName = "db_measurement";
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<DataLakeMeasure> getPersistedDataStreams() {
     return extract(new ArrayList<>(), DataLakeAppId);
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{pipelineId}/{measureName}")
-  public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
-                                                                          @PathParam("measureName")
-                                                                          String measureName) {
+  @GetMapping(path = "{pipelineId}/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getVisualizablePipelineByPipelineIdAndVisualizationName(
+      @PathVariable("pipelineId") String pipelineId,
+      @PathVariable("measureName") String measureName) {
     return getPipelineByIdAndFieldValue(DataLakeAppId, pipelineId, measureName);
   }
 

@@ -21,19 +21,19 @@ import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-
-@Path("v2/mail")
+@RestController
+@RequestMapping("/api/v2/mail")
 public class EmailResource extends AbstractAuthGuardedRestResource {
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response sendEmail(SpEmail email) {
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> sendEmail(@RequestBody SpEmail email) {
     if (getSpCoreConfigurationStorage().get().getEmailConfig().isEmailConfigured()) {
       try {
         new MailSender().sendEmail(email);
