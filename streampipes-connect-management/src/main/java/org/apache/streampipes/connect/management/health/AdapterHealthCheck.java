@@ -216,9 +216,10 @@ public class AdapterHealthCheck implements Runnable {
 
                                        // only keep adapters where there is no running adapter instance
                                        // therefore, all others are removed
-                                       allRunningInstancesOfOneWorker.forEach(adapterDescription ->
-                                                                                  adaptersToRecover.remove(
-                                                                                      adapterDescription.getElementId()));
+                                       allRunningInstancesOfOneWorker.forEach(
+                                           adapterDescription ->
+                                               adaptersToRecover.remove(
+                                                   adapterDescription.getElementId()));
                                      } catch (AdapterException e) {
                                        LOG.info(
                                            "Could not recover adapter at endpoint {} due to {}",
