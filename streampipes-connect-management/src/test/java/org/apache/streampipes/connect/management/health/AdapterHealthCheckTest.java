@@ -23,7 +23,6 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,14 +50,13 @@ public class AdapterHealthCheckTest {
     var healthCheck = new AdapterHealthCheck(
         adapterInstanceStorageMock,
         new AdapterMasterManagement(
-            StorageDispatcher.INSTANCE.getNoSqlStore()
-                                      .getAdapterInstanceStorage(),
+            adapterInstanceStorageMock,
             new SpResourceManager().manageAdapters(),
             new SpResourceManager().manageDataStreams(),
             AdapterMetricsManager.INSTANCE.getAdapterMetrics()
         )
     );
-    var result = healthCheck.getAllRunningInstancesAdapterDescriptions();
+    var result = healthCheck.getAllAdaptersSupposedToRun();
 
     assertTrue(result.isEmpty());
   }
@@ -82,14 +80,13 @@ public class AdapterHealthCheckTest {
     var healthCheck = new AdapterHealthCheck(
         adapterInstanceStorageMock,
         new AdapterMasterManagement(
-            StorageDispatcher.INSTANCE.getNoSqlStore()
-                                      .getAdapterInstanceStorage(),
+            adapterInstanceStorageMock,
             new SpResourceManager().manageAdapters(),
             new SpResourceManager().manageDataStreams(),
             AdapterMetricsManager.INSTANCE.getAdapterMetrics()
         )
     );
-    var result = healthCheck.getAllRunningInstancesAdapterDescriptions();
+    var result = healthCheck.getAllAdaptersSupposedToRun();
 
     assertEquals(1, result.size());
     assertTrue(result.containsKey(nameRunningAdapter));
