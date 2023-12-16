@@ -39,7 +39,7 @@ Data sent to this endpoint via POST requests is transformed into StreamPipes eve
 Provides an option to define the event schema manually.
 
 ##### Import from file
-Use a file with example data to automatically detect the event schema
+Use a file with example data to automatically detect a first event schema.
 
 ***
 
