@@ -52,7 +52,7 @@ public class RestSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rest")
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rest", 0)
         .category(DataSinkType.FORWARD)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION)

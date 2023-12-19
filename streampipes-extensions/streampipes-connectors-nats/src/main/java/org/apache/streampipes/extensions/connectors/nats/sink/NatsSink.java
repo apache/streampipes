@@ -79,7 +79,7 @@ public class NatsSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         NatsSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.nats")
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.nats", 0)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)

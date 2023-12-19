@@ -22,8 +22,9 @@ import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtract
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,46 +32,50 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
+@RestController
+@RequestMapping("/api/v1/migrations/sink")
 public class DataSinkMigrationResource extends MigrateExtensionsResource<
-        DataSinkInvocation,
-        IDataSinkParameterExtractor,
+    DataSinkInvocation,
+    IDataSinkParameterExtractor,
     IDataSinkMigrator
-        > {
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @Operation(
-          summary = "Execute the migration for a specific data sink instance", tags = {"Extensions", "Migration"},
-          responses = {
-              @ApiResponse(
-                      responseCode = "" + HttpStatus.SC_OK,
-                      description = "The migration was executed. It's result is described in the response. "
-                              + "The Response needs to be handled accordingly.",
-                      content = @Content(
-                              examples = @ExampleObject(
-                                      name = "Successful migration",
-                                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
-                              ),
-                              mediaType = MediaType.APPLICATION_JSON
-                      )
-              )
-          }
+    > {
+  @PostMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  public Response migrateDataSink(
-          @Parameter(
-                  description = "Request that encompasses the data sink description (DataSinkInvocation) and "
-                          + "the configuration of the migration to be performed",
-                  example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\", "
-                          + "\"modelType\": \"dsink\", \"fromVersion\": 0, \"toVersion\": 1}}",
-                  required = true
+  @Operation(
+      summary = "Execute the migration for a specific data sink instance", tags = {"Extensions", "Migration"},
+      responses = {
+          @ApiResponse(
+              responseCode = "" + HttpStatus.SC_OK,
+              description = "The migration was executed. It's result is described in the response. "
+                  + "The Response needs to be handled accordingly.",
+              content = @Content(
+                  examples = @ExampleObject(
+                      name = "Successful migration",
+                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
+                  ),
+                  mediaType = MediaType.APPLICATION_JSON_VALUE
+              )
           )
-          MigrationRequest<DataSinkInvocation> sinkMigrationRequest) {
+      }
+  )
+  public ResponseEntity<MigrationResult<DataSinkInvocation>> migrateDataSink(
+      @Parameter(
+          description = "Request that encompasses the data sink description (DataSinkInvocation) and "
+              + "the configuration of the migration to be performed",
+          example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\", "
+              + "\"modelType\": \"dsink\", \"fromVersion\": 0, \"toVersion\": 1}}",
+          required = true
+      )
+      @RequestBody MigrationRequest<DataSinkInvocation> sinkMigrationRequest) {
     return ok(handleMigration(sinkMigrationRequest));
   }
 

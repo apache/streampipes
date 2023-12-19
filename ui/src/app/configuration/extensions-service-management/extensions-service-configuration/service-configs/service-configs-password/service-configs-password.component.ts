@@ -23,7 +23,7 @@ import { ConfigItem } from '@streampipes/platform-services';
 const hiddenPasswordString = '*****';
 
 @Component({
-    selector: 'sp-consul-configs-password',
+    selector: 'sp-service-configs-password',
     templateUrl: './service-configs-password.component.html',
     styleUrls: ['./service-configs-password.component.css'],
     providers: [ConfigurationService],

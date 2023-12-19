@@ -24,20 +24,9 @@ public enum Envs {
 
   SP_CORE_ASSET_BASE_DIR("SP_CORE_ASSET_BASE_DIR"),
 
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  SP_CONSUL_LOCATION("CONSUL_LOCATION",
-      DefaultEnvValues.CONSUL_HOST_DEFAULT,
-      DefaultEnvValues.LOCALHOST),
-
-  SP_CONSUL_HOST("SP_CONSUL_HOST",
-      DefaultEnvValues.CONSUL_HOST_DEFAULT,
-      DefaultEnvValues.LOCALHOST),
-
   SP_CORE_SCHEME("SP_CORE_SCHEME", "http", "http"),
   SP_CORE_HOST("SP_CORE_HOST", "backend", "localhost"),
   SP_CORE_PORT("SP_CORE_PORT", "8030", "8030"),
-
-  SP_CONSUL_PORT("SP_CONSUL_PORT", DefaultEnvValues.CONSUL_PORT_DEFAULT),
   SP_KAFKA_RETENTION_MS("SP_KAFKA_RETENTION_MS", DefaultEnvValues.SP_KAFKA_RETENTION_MS_DEFAULT),
   SP_PRIORITIZED_PROTOCOL("SP_PRIORITIZED_PROTOCOL", "kafka"),
   SP_JWT_SECRET("SP_JWT_SECRET"),

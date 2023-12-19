@@ -20,8 +20,9 @@ services:
     environment:
       - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-jvm:8090
     depends_on:
-      - consul
-      - couchdb  
+      - couchdb
+    environment:
+      - SP_SETUP_PROMETHEUS_ENDPOINT=${SP_SETUP_PROMETHEUS_ENDPOINT}
     volumes:
       - files:/spImages
     logging:

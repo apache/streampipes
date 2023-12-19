@@ -24,7 +24,6 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { ColorService } from '../../../image/services/color.service';
 import { Category, Label } from '@streampipes/platform-services';
 import { LabelService } from '../../services/label.service';
 
@@ -45,10 +44,7 @@ export class SelectLabelComponent implements OnInit {
 
     public noCategories = true;
 
-    constructor(
-        public labelService: LabelService,
-        public colorService: ColorService,
-    ) {}
+    constructor(public labelService: LabelService) {}
 
     ngOnInit(): void {
         this.labelService.getCategories().subscribe(res => {

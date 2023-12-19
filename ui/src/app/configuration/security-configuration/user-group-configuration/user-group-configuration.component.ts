@@ -21,8 +21,13 @@ import { Group, UserGroupService } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import {
+    ConfirmDialogComponent,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'sp-security-user-group-config',
@@ -41,6 +46,7 @@ export class SecurityUserGroupConfigComponent implements OnInit {
     constructor(
         private userGroupService: UserGroupService,
         private dialogService: DialogService,
+        private dialog: MatDialog,
     ) {}
 
     ngOnInit(): void {
@@ -60,8 +66,22 @@ export class SecurityUserGroupConfigComponent implements OnInit {
     }
 
     deleteGroup(group: Group) {
-        this.userGroupService.deleteGroup(group).subscribe(response => {
-            this.loadAllGroups();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: 'Are you sure you want to delete this group?',
+                subtitle: 'This action cannot be reversed!',
+                cancelTitle: 'Cancel',
+                okTitle: 'Delete Group',
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.userGroupService.deleteGroup(group).subscribe(response => {
+                    this.loadAllGroups();
+                });
+            }
         });
     }
 

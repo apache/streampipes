@@ -19,10 +19,10 @@
 package org.apache.streampipes.rest;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
@@ -31,6 +31,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.IDashboardStorage;
 import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
@@ -73,7 +74,13 @@ public class ResetManagement {
     });
 
     // Stop and delete all adapters
-    AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
+    AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getAdapterInstanceStorage(),
+        new SpResourceManager().manageAdapters(),
+        new SpResourceManager().manageDataStreams(),
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+    );
 
     try {
       List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
@@ -95,8 +102,11 @@ public class ResetManagement {
     });
 
     // Remove all data in data lake
-    IDataExplorerSchemaManagement dataLakeMeasureManagement = new DataExplorerSchemaManagement();
-    DataExplorerQueryManagement dataExplorerQueryManagement =
+    var dataLakeStorage = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getDataLakeStorage();
+    var dataLakeMeasureManagement = new DataExplorerSchemaManagement(dataLakeStorage);
+    var dataExplorerQueryManagement =
         new DataExplorerQueryManagement(dataLakeMeasureManagement);
     List<DataLakeMeasure> allMeasurements = dataLakeMeasureManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {

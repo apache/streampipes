@@ -23,7 +23,6 @@ services:
       - "80:8088"
     depends_on:
       - couchdb
-      - consul
     volumes:
       - nginx:/etc/nginx/
     logging:

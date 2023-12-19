@@ -45,7 +45,7 @@ class Registration:
         self: Registration
             The updated Registration instance
         """
-        self.functions.append(streampipes_function)  # TODO register function to AdminAPI + consul
+        self.functions.append(streampipes_function)  # TODO register function to AdminAPI
         return self
 
     def getFunctions(self) -> List[StreamPipesFunction]:

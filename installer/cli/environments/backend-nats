@@ -14,7 +14,6 @@
 # limitations under the License.
 
 [environment:backend]
-consul
 couchdb
 influxdb
 nats

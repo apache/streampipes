@@ -22,6 +22,7 @@ import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.image.ImageStore;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxStore;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
@@ -46,11 +47,10 @@ public class TimeSeriesStore {
     DataExplorerUtils.sanitizeAndRegisterAtDataLake(client, measure);
 
     if (enableImageStore) {
-      // TODO check if event properties are replaces correctly
       this.imageStore = new ImageStore(measure, environment);
     }
 
-    this.influxStore = new InfluxStore(measure, environment);
+    this.influxStore = new InfluxStore(measure, environment, new InfluxClientProvider());
 
   }
 
@@ -63,11 +63,6 @@ public class TimeSeriesStore {
     // Store event in time series database
     this.influxStore.onEvent(event);
 
-    return true;
-  }
-
-
-  public boolean alterRetentionTime(DataLakeMeasure dataLakeMeasure) {
     return true;
   }
 

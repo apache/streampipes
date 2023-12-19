@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.connect.management.util.GroundingUtils;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
@@ -30,15 +31,15 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * This class is responsible for managing all the adapter instances which are executed on worker nodes
@@ -48,20 +49,18 @@ public class AdapterMasterManagement {
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
   private final IAdapterStorage adapterInstanceStorage;
+  private final AdapterMetrics adapterMetrics;
   private final AdapterResourceManager adapterResourceManager;
 
   private final DataStreamResourceManager dataStreamResourceManager;
 
-  public AdapterMasterManagement() {
-    this.adapterInstanceStorage = getAdapterInstanceStorage();
-    this.adapterResourceManager = new SpResourceManager().manageAdapters();
-    this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
-  }
-
   public AdapterMasterManagement(IAdapterStorage adapterStorage,
                                  AdapterResourceManager adapterResourceManager,
-                                 DataStreamResourceManager dataStreamResourceManager) {
+                                 DataStreamResourceManager dataStreamResourceManager,
+                                 AdapterMetrics adapterMetrics
+  ) {
     this.adapterInstanceStorage = adapterStorage;
+    this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
   }
@@ -149,6 +148,14 @@ public class AdapterMasterManagement {
 
     WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
     ExtensionsLogProvider.INSTANCE.reset(elementId);
+
+    // remove the adapter from the metrics manager so that
+    // no metrics for this adapter are exposed anymore
+    try {
+      adapterMetrics.remove(ad.getElementId(), ad.getName());
+    } catch (NoSuchElementException e) {
+      LOG.error("Could not remove adapter metrics for adapter {}", ad.getName());
+    }
   }
 
   public void startStreamAdapter(String elementId) throws AdapterException {
@@ -165,6 +172,9 @@ public class AdapterMasterManagement {
 
       // Invoke adapter instance
       WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
+
+      // register the adapter at the metrics manager so that the AdapterHealthCheck can send metrics
+      adapterMetrics.register(ad.getElementId(), ad.getName());
 
       LOG.info("Started adapter " + elementId + " on: " + baseUrl);
     } catch (NoServiceEndpointsAvailableException | URISyntaxException e) {
@@ -184,6 +194,6 @@ public class AdapterMasterManagement {
   }
 
   private IAdapterStorage getAdapterInstanceStorage() {
-    return new AdapterInstanceStorageImpl();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
   }
 }

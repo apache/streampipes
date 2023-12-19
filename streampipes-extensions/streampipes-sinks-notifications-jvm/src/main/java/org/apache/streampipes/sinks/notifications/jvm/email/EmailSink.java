@@ -22,7 +22,6 @@ import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
@@ -33,81 +32,66 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
+import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
-import java.time.Instant;
 import java.util.Collections;
 
-public class EmailSink extends StreamPipesDataSink {
+public class EmailSink extends StreamPipesNotificationSink {
 
   private static final String TO_EMAIL_ADRESS = "to_email";
   private static final String EMAIL_SUBJECT = "email_subject";
   private static final String EMAIL_CONTENT = "email_content";
-  private static final String SILENT_PERIOD = "silent-period";
-
   private SpEmail preparedEmail;
-  private long silentPeriodInSeconds;
-  private long lastMailEpochSecond = -1;
 
   private String originalContent;
 
   private IStreamPipesClient client;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.email")
+  public DataSinkBuilder declareModelWithoutSilentPeriod() {
+    return DataSinkBuilder
+        .create("org.apache.streampipes.sinks.notifications.jvm.email", 0)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
         .requiredTextParameter(Labels.withId(TO_EMAIL_ADRESS))
         .requiredTextParameter(Labels.withId(EMAIL_SUBJECT))
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT))
-        .requiredIntegerParameter(Labels.withId(SILENT_PERIOD))
-        .build();
+                            .create()
+                            .requiredProperty(EpRequirements.anyProperty())
+                            .build())
+        .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT));
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(
+      SinkParams parameters,
+      EventSinkRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    super.onInvocation(parameters, runtimeContext);
+
     var extractor = parameters.extractor();
     String toEmail = extractor.singleValueParameter(TO_EMAIL_ADRESS, String.class);
     String subject = extractor.singleValueParameter(EMAIL_SUBJECT, String.class);
-    Integer silentPeriod = extractor.singleValueParameter(SILENT_PERIOD, Integer.class);
 
     this.preparedEmail = new SpEmail();
     this.preparedEmail.setRecipients(Collections.singletonList(toEmail));
     this.preparedEmail.setSubject(subject);
 
-    this.silentPeriodInSeconds = silentPeriod * 60;
     this.client = runtimeContext.getStreamPipesClient();
     this.originalContent = extractor.singleValueParameter(EMAIL_CONTENT, String.class);
   }
 
   @Override
-  public void onEvent(Event event) throws SpRuntimeException {
-    if (shouldSendMail()) {
-      String message = PlaceholderExtractor.replacePlaceholders(event, this.originalContent);
-      this.preparedEmail.setMessage(message);
-      this.client.deliverEmail(this.preparedEmail);
-      this.lastMailEpochSecond = Instant.now().getEpochSecond();
-    }
+  public void onNotificationEvent(Event event) throws SpRuntimeException {
+    String message = PlaceholderExtractor.replacePlaceholders(event, this.originalContent);
+    this.preparedEmail.setMessage(message);
+    this.client.deliverEmail(this.preparedEmail);
   }
 
   @Override
   public void onDetach() throws SpRuntimeException {
 
-  }
-
-  private boolean shouldSendMail() {
-    if (this.lastMailEpochSecond == -1) {
-      return true;
-    } else {
-      return Instant.now().getEpochSecond() >= (this.lastMailEpochSecond + this.silentPeriodInSeconds);
-    }
   }
 }
 

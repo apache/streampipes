@@ -22,45 +22,37 @@ import org.apache.streampipes.model.dashboard.VisualizablePipeline;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/v2/dashboard/pipelines")
-@Component
+@RestController
+@RequestMapping("/api/v2/dashboard/pipelines")
 public class VisualizablePipelineResource extends AbstractPipelineExtractionResource<VisualizablePipeline> {
 
   private static final String DashboardAppId = "org.apache.streampipes.sinks.internal.jvm.dashboard";
   private static final String VisualizationFieldInternalName = "visualization-name";
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DASHBOARD_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<VisualizablePipeline> getVisualizablePipelines() {
     return extract(new ArrayList<>(), DashboardAppId);
   }
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{pipelineId}/{visualizationName}")
-  public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
-                                                                          @PathParam("visualizationName")
-                                                                          String visualizationName) {
+  @GetMapping(path = "{pipelineId}/{visualizationName}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getVisPipelineByIdAndVisualizationName(@PathVariable("pipelineId") String pipelineId,
+                                                                  @PathVariable("visualizationName")
+                                                                  String visualizationName) {
     return getPipelineByIdAndFieldValue(DashboardAppId, pipelineId, visualizationName);
   }
 

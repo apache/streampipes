@@ -20,20 +20,21 @@
 package org.apache.streampipes.rest.extensions.monitoring;
 
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
+import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("monitoring")
+@RestController
+@RequestMapping("monitoring")
 public class MonitoringResource extends AbstractExtensionsResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getMonitoringInfos() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SpEndpointMonitoringInfo> getMonitoringInfos() {
     try {
       return ok(SpMonitoringManager.INSTANCE.getMonitoringInfo());
     } finally {

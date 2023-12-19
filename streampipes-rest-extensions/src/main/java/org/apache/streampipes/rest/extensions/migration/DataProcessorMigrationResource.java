@@ -22,7 +22,7 @@ import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterEx
 import org.apache.streampipes.extensions.api.migration.IDataProcessorMigrator;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,23 +31,24 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
-@Path("api/v1/migrations/processor")
+@RestController
+@RequestMapping("api/v1/migrations/processor")
 public class DataProcessorMigrationResource extends MigrateExtensionsResource<
         DataProcessorInvocation,
         IDataProcessorParameterExtractor,
         IDataProcessorMigrator
         > {
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
           summary = "Execute the migration for a specific data processor instance", tags = {"Extensions", "Migration"},
           responses = {
@@ -60,12 +61,12 @@ public class DataProcessorMigrationResource extends MigrateExtensionsResource<
                                       name = "Successful migration",
                                       value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
                               ),
-                              mediaType = MediaType.APPLICATION_JSON
+                              mediaType = MediaType.APPLICATION_JSON_VALUE
                       )
               )
           }
   )
-  public Response migrateDataProcessor(
+  public ResponseEntity<MigrationResult<DataProcessorInvocation>> migrateDataProcessor(
           @Parameter(
                   description = "Request that encompasses the data processor description (DataProcessorInvocation) and "
                           + "the configuration of the migration to be performed",
@@ -73,7 +74,7 @@ public class DataProcessorMigrationResource extends MigrateExtensionsResource<
                           + "\"modelType\": \"dprocessor\", \"fromVersion\": 0, \"toVersion\": 1}}",
                   required = true
           )
-          MigrationRequest<DataProcessorInvocation> processorMigrationRequest) {
+          @RequestBody MigrationRequest<DataProcessorInvocation> processorMigrationRequest) {
     return ok(handleMigration(processorMigrationRequest));
   }
 

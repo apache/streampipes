@@ -17,7 +17,6 @@
 ui
 backend
 extensions-all-jvm
-consul
 couchdb
 zookeeper
 kafka

@@ -69,7 +69,7 @@ public class PulsarPublisherSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         PulsarPublisherSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.pulsar")
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.pulsar", 0)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
