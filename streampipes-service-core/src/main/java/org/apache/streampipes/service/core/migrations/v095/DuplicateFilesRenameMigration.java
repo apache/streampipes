@@ -33,6 +33,8 @@ public class DuplicateFilesRenameMigration implements Migration {
     return true;
   }
 
+  // Starting from v0.95, StreamPipes will use file name as the unique identifier of files
+  // This migration renames all the files that have duplicate names to ensure uniqueness
   @Override
   public void executeMigration() {
     var duplicateFiles = new HashMap<String, List<FileMetadata>>();
