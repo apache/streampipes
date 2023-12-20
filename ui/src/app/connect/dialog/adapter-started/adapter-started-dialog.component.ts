@@ -231,6 +231,10 @@ export class AdapterStartedDialog implements OnInit {
                                     'timestamp_mapping',
                                     's0::' + this.dataLakeTimestampField,
                                 )
+                                .setOneOfStaticProperty(
+                                    'schema_update',
+                                    'Update schema',
+                                )
                                 .build();
 
                         this.pipelineTemplateService

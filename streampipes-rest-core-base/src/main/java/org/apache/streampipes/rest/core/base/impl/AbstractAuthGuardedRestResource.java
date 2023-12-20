@@ -15,15 +15,13 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,15 +32,13 @@ public class AbstractAuthGuardedRestResource extends AbstractRestResource {
   private static final List<String> adminRoles = Arrays.asList(
       Role.Constants.ROLE_ADMIN_VALUE,
       Role.Constants.ROLE_SERVICE_ADMIN_VALUE);
-  @Context
-  protected SecurityContext securityContext;
 
   protected boolean isAuthenticated() {
-    return this.securityContext.getUserPrincipal() != null;
+    return SecurityContextHolder.getContext().getAuthentication() != null;
   }
 
   protected String getAuthenticatedUsername() {
-    return this.securityContext.getUserPrincipal().getName();
+    return SecurityContextHolder.getContext().getAuthentication().getName();
   }
 
   protected PrincipalUserDetails<?> getPrincipal() {
@@ -66,11 +62,10 @@ public class AbstractAuthGuardedRestResource extends AbstractRestResource {
   protected boolean hasAnyAuthority(List<String> authorities) {
     return isAuthenticated()
         && SecurityContextHolder
-            .getContext()
-            .getAuthentication()
-            .getAuthorities()
-            .stream()
-            .anyMatch(a -> authorities.contains(a.getAuthority()));
+        .getContext()
+        .getAuthentication()
+        .getAuthorities()
+        .stream()
+        .anyMatch(a -> authorities.contains(a.getAuthority()));
   }
-
 }

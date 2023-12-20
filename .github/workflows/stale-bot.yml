@@ -26,7 +26,7 @@ jobs:
   mark-stale-prs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v8
+      - uses: actions/stale@v9
         with:
           close-pr-message: "Hello there :wave:<br> <br> Unfortunately, we didn't hear back from you regarding your pull request, so we're closing it now. Don't worry, you can always reopen the PR at any time if you wish to continue working on it :raised_hands:.<br> <br> Please note that the branch associated with this pull request will not be deleted, so you can still access your changes and continue to work on them as needed :computer:.<br> <br> Thank you for your contributions to our project, and we hope to see you again soon!"
           days-before-close: 7

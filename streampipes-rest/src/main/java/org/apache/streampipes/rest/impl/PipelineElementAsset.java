@@ -22,25 +22,23 @@ import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@Path("/v2/pe")
+@RestController
+@RequestMapping("/api/v2/pe")
 public class PipelineElementAsset extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 
-  @GET
-  @Path("{appId}/assets/icon")
-  @Produces("image/png")
-  public Response getIconAsset(@PathParam("appId") String appId) {
+  @GetMapping(path = "/{appId}/assets/icon", produces = MediaType.IMAGE_PNG_VALUE)
+  public ResponseEntity<?> getIconAsset(@PathVariable("appId") String appId) {
     try {
       return ok(AssetManager.getAssetIcon(appId));
     } catch (IOException e) {
@@ -48,10 +46,8 @@ public class PipelineElementAsset extends AbstractRestResource {
     }
   }
 
-  @GET
-  @Path("{appId}/assets/documentation")
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response getDocumentationAsset(@PathParam("appId") String appId) {
+  @GetMapping(path = "/{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<?> getDocumentationAsset(@PathVariable("appId") String appId) {
     try {
       return ok(AssetManager.getAssetDocumentation(appId));
     } catch (IOException e) {
@@ -59,10 +55,8 @@ public class PipelineElementAsset extends AbstractRestResource {
     }
   }
 
-  @GET
-  @Path("{appId}/assets/{assetName}")
-  @Produces("image/png")
-  public Response getAsset(@PathParam("appId") String appId, @PathParam("assetName") String
+  @GetMapping(path = "/{appId}/assets/{assetName}", produces = MediaType.IMAGE_PNG_VALUE)
+  public ResponseEntity<?> getAsset(@PathVariable("appId") String appId, @PathVariable("assetName") String
       assetName) {
     try {
       byte[] asset = AssetManager.getAsset(appId, assetName);

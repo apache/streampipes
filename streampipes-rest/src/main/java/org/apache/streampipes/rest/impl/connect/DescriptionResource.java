@@ -24,47 +24,41 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.DescriptionManagement;
 import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
 
-@Path("/v2/connect/master/description")
+@RestController
+@RequestMapping("/api/v2/connect/master/description")
 public class DescriptionResource extends AbstractAdapterResource<DescriptionManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
-  private WorkerUrlProvider workerUrlProvider;
+  private final WorkerUrlProvider workerUrlProvider;
 
   public DescriptionResource() {
     super(DescriptionManagement::new);
     workerUrlProvider = new WorkerUrlProvider();
   }
 
-  @GET
-  @JacksonSerialized
-  @Path("/adapters")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAdapters() {
+  @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<AdapterDescription>> getAdapters() {
     List<AdapterDescription> result = managementService.getAdapters();
 
     return ok(result);
   }
 
-  @GET
-  @Path("/{id}/assets")
-  @Produces("application/zip")
-  public Response getAdapterAssets(@PathParam("id") String id) {
+  @GetMapping(path = "/{id}/assets", produces = "application/zip")
+  public ResponseEntity<?> getAdapterAssets(@PathVariable("id") String id) {
     try {
       String result = null;
 
@@ -90,10 +84,8 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     }
   }
 
-  @GET
-  @Path("/{id}/assets/icon")
-  @Produces("image/png")
-  public Response getAdapterIconAsset(@PathParam("id") String id) {
+  @GetMapping(path = "/{id}/assets/icon", produces = "image/png")
+  public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id) {
     try {
 
       byte[] result = null;
@@ -120,10 +112,8 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     }
   }
 
-  @GET
-  @Path("/{id}/assets/documentation")
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response getAdapterDocumentationAsset(@PathParam("id") String id) {
+  @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<?> getAdapterDocumentationAsset(@PathVariable("id") String id) {
     try {
       String result = null;
 
@@ -149,9 +139,8 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     }
   }
 
-  @DELETE
-  @Path("{adapterId}")
-  public Response deleteAdapter(@PathParam("adapterId") String adapterId) {
+  @DeleteMapping(path = "{adapterId}")
+  public ResponseEntity<?> deleteAdapter(@PathVariable("adapterId") String adapterId) {
     try {
       this.managementService.deleteAdapterDescription(adapterId);
       return ok();

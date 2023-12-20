@@ -18,54 +18,60 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Group;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Response;
+import java.util.List;
 
-@Path("/v2/usergroups")
-@Component
+@RestController
+@RequestMapping("/api/v2/usergroups")
 public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
-  @GET
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response getAllUserGroups() {
+  public ResponseEntity<List<Group>> getAllUserGroups() {
     return ok(getUserGroupStorage().getAll());
   }
 
-  @POST
+  @PostMapping
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response addUserGroup(Group group) {
+  public ResponseEntity<Void> addUserGroup(@RequestBody Group group) {
     getUserGroupStorage().createElement(group);
     return ok();
   }
 
-  @PUT
-  @Path("{groupId}")
+  @PutMapping(path = "{groupId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response updateUserGroup(@PathParam("groupId") String groupId,
-                                  Group group) {
+  public ResponseEntity<Group> updateUserGroup(@PathVariable("groupId") String groupId,
+                                           @RequestBody Group group) {
     if (!groupId.equals(group.getGroupId())) {
-      return badRequest();
+      throw new SpMessageException(
+          HttpStatus.BAD_REQUEST,
+          Notifications.error("Wrong group id provided"));
     } else {
       return ok(getUserGroupStorage().updateElement(group));
     }
   }
 
-  @DELETE
-  @Path("{groupId}")
+  @DeleteMapping(path = "{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response deleteUserGroup(@PathParam("groupId") String groupId) {
+  public ResponseEntity<Void> deleteUserGroup(@PathVariable("groupId") String groupId) {
     Group group = getUserGroupStorage().getElementById(groupId);
     if (group != null) {
       getUserGroupStorage().deleteElement(group);

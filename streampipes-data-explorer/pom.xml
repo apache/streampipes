@@ -30,11 +30,6 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
-            <version>0.95.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-data-explorer-commons</artifactId>
             <version>0.95.0-SNAPSHOT</version>
         </dependency>
@@ -48,13 +43,23 @@
             <artifactId>streampipes-storage-management</artifactId>
             <version>0.95.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-test-utils</artifactId>
+            <version>0.95.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.influxdb</groupId>
             <artifactId>influxdb-java</artifactId>

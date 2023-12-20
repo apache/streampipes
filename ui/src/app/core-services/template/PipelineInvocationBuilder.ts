@@ -57,6 +57,26 @@ export class PipelineInvocationBuilder {
         return this;
     }
 
+    public setOneOfStaticProperty(name: string, value: string) {
+        this.pipelineTemplateInvocation.staticProperties.forEach(property => {
+            if (
+                // property instanceof OneOfStaticProperty &&
+                property['@class'] ===
+                    'org.apache.streampipes.model.staticproperty.OneOfStaticProperty' &&
+                'jsplumb_domId2' + name === property.internalName
+            ) {
+                // set selected for selected option
+                property.options.forEach(option => {
+                    if (option.name === value) {
+                        option.selected = true;
+                    }
+                });
+            }
+        });
+
+        return this;
+    }
+
     public setMappingPropertyUnary(name: string, value: string) {
         this.pipelineTemplateInvocation.staticProperties.forEach(property => {
             if (

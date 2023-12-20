@@ -28,21 +28,16 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -59,18 +54,13 @@ public abstract class AbstractPipelineElementResource<
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractPipelineElementResource.class);
 
-  @GET
-  @Path("{appId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public NamedStreamPipesEntity getDescription(@PathParam("appId") String appId) {
+  @GetMapping(path = "{appId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public NamedStreamPipesEntity getDescription(@PathVariable("appId") String appId) {
     return prepareElement(appId);
   }
 
-  @GET
-  @Path("{appId}/assets")
-  @Produces(SpMediaType.APPLICATION_ZIP)
-  public Response getAssets(@PathParam("appId") String appId) {
+  @GetMapping(path = "{appId}/assets", produces = "application/zip")
+  public ResponseEntity<?> getAssets(@PathVariable("appId") String appId) {
     List<String> includedAssets = getDeclarerById(appId).declareConfig().getDescription().getIncludedAssets();
     try {
       return ok(new AssetZipGenerator(appId, includedAssets).makeZip());
@@ -80,29 +70,25 @@ public abstract class AbstractPipelineElementResource<
     }
   }
 
-  @GET
-  @Path("{appId}/assets/icon")
-  @Produces("image/png")
-  public Response getIconAsset(@PathParam("appId") String appId) throws IOException {
+  @GetMapping(path = "{appId}/assets/icon", produces = MediaType.IMAGE_PNG_VALUE)
+  public ResponseEntity<byte[]> getIconAsset(@PathVariable("appId") String appId) throws IOException {
     try {
       URL iconUrl = Resources.getResource(makeIconPath(appId));
       return ok(Resources.toByteArray(iconUrl));
     } catch (IllegalArgumentException e) {
       LOG.warn("No icon resource found for pipeline element {}", appId);
-      return Response.status(HttpStatus.SC_BAD_REQUEST).build();
+      return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
     }
   }
 
-  @GET
-  @Path("{id}/assets/documentation")
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response getDocumentationAsset(@PathParam("id") String elementId) throws IOException {
+  @GetMapping(path = "{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<String> getDocumentationAsset(@PathVariable("id") String elementId) throws IOException {
     try {
       URL documentationUrl = Resources.getResource(makeDocumentationPath(elementId));
       return ok(Resources.toString(documentationUrl, Charsets.UTF_8));
     } catch (IllegalArgumentException e) {
       LOG.warn("No documentation resource found for pipeline element {}", elementId);
-      return Response.status(HttpStatus.SC_BAD_REQUEST).build();
+      return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
     }
   }
 
