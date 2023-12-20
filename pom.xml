@@ -107,7 +107,7 @@
         <plexus-utils.version>3.5.0</plexus-utils.version>
         <postgresql.version>42.7.0</postgresql.version>
         <protobuf.version>3.25.0</protobuf.version>
-        <pulsar.version>2.10.1</pulsar.version>
+        <pulsar.version>3.1.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
