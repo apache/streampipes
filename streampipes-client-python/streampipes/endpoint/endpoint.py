@@ -210,9 +210,7 @@ class APIEndpoint(Endpoint):
         if identifier:
             query_url += f"/{identifier}"
 
-        response = self._make_request(
-            request_method=self._parent_client.request_session.get, url=query_url
-        )
+        response = self._make_request(request_method=self._parent_client.request_session.get, url=query_url)
 
         return self._container_cls._resource_cls()(**response.json())
 
