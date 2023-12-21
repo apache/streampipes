@@ -74,10 +74,10 @@ public class LabelGeneratorTest {
     when(mockDescription.getAppId()).thenReturn(TEST_APP_ID);
 
     var labelGenerator = new LabelGenerator(mockDescription);
-    var mockGenerator = spy(labelGenerator);
-    doReturn(false).when(mockGenerator)
+    var labelGeneratorMock = spy(labelGenerator);
+    doReturn(false).when(labelGeneratorMock)
                    .existsLocalesFile();
-    return mockGenerator;
+    return labelGeneratorMock;
   }
 
   private LabelGenerator getLabelGeneratorWithProperties(Properties properties) throws IOException {
