@@ -96,9 +96,10 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
       responses = {
           @ApiResponse(responseCode = "200", description = "Template successfully stored")
       })
-  public ResponseEntity<Void> create(@RequestBody(description = "The pipeline element template to be stored",
-      content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
-                                     PipelineElementTemplate entity) {
+  public ResponseEntity<Void> create(
+      @RequestBody(description = "The pipeline element template to be stored",
+          content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
+      @org.springframework.web.bind.annotation.RequestBody PipelineElementTemplate entity) {
     getPipelineElementTemplateStorage().createElement(entity);
     return ok();
   }
@@ -167,7 +168,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
 
       @RequestBody(description = "The data sink invocation that should be configured with the template contents",
           content = @Content(schema = @Schema(implementation = DataSinkInvocation.class)))
-      DataSinkInvocation invocation) {
+      @org.springframework.web.bind.annotation.RequestBody DataSinkInvocation invocation) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
     return ok(new DataSinkTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
         .applyTemplateOnPipelineElement());
@@ -196,7 +197,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
 
       @RequestBody(description = "The data processor invocation that should be configured with the template contents",
           content = @Content(schema = @Schema(implementation = DataProcessorInvocation.class)))
-      DataProcessorInvocation invocation) {
+      @org.springframework.web.bind.annotation.RequestBody DataProcessorInvocation invocation) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
     return ok(new DataProcessorTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
         .applyTemplateOnPipelineElement());
@@ -225,7 +226,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
 
       @RequestBody(description = "The adapter that should be configured with the template contents",
           content = @Content(schema = @Schema(implementation = AdapterDescription.class)))
-      AdapterDescription adapterDescription) {
+      @org.springframework.web.bind.annotation.RequestBody AdapterDescription adapterDescription) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
     var desc =
         new AdapterTemplateHandler(template, adapterDescription, Boolean.parseBoolean(overwriteNameAndDescription))
