@@ -85,10 +85,10 @@ public class LabelGeneratorTest {
     when(mockDescription.getAppId()).thenReturn(TEST_APP_ID);
 
     var labelGenerator = new LabelGenerator(mockDescription);
-    var mockGenerator = spy(labelGenerator);
-    doReturn(properties).when(mockGenerator)
+    var labelGeneratorMock = spy(labelGenerator);
+    doReturn(properties).when(labelGeneratorMock)
                         .checkIfResourceFileExistsAndMakeProperties();
-    return mockGenerator;
+    return labelGeneratorMock;
   }
 
   private Properties getProperties(String key, String value) {
