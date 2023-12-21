@@ -21,7 +21,7 @@ __all__ = [
 
 from typing import Dict, Optional
 
-from pydantic import StrictStr, Field, validator
+from pydantic import StrictStr, validator
 
 from streampipes.model.resource.resource import Resource
 
@@ -44,6 +44,9 @@ class Version(Resource):
     backend_version: Optional[StrictStr] = None
 
     @validator("backend_version", always=True)
-    def set_name(cls, backend_version):
-        # if there is no version returned by the backend, StreamPipes is run locally in development mode
+    def validate_backend_version(cls, backend_version):
+        """Validates the backend version of the StreamPipes.
+        Sets 'development' if none is returned since this the behavior of StreamPipes backend running
+        in development mode.
+        """
         return backend_version or "development"
