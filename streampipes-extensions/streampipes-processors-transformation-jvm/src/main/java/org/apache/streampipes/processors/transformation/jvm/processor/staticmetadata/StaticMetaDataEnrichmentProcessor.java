@@ -44,7 +44,6 @@ public class StaticMetaDataEnrichmentProcessor extends StreamPipesDataProcessor
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String STATIC_METADATA_INPUT = "static-metadata-input";
-  private static final String STATIC_METADATA_INPUT_COLLECTION = "static-metadata-input-collection";
   private static final String STATIC_METADATA_INPUT_RUNTIME_NAME = "static-metadata-input-runtime-name";
   private static final String STATIC_METADATA_INPUT_VALUE = "static-metadata-input-value";
   private static final String STATIC_METADATA_INPUT_DATATYPE = "static-metadata-input-datatype";
@@ -64,22 +63,19 @@ public class StaticMetaDataEnrichmentProcessor extends StreamPipesDataProcessor
                                    .category(DataProcessorType.ENRICH)
                                    .withLocales(Locales.EN)
                                    .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                                   .requiredParameterAsCollection(
+                                   .requiredCollection(
                                        Labels.withId(STATIC_METADATA_INPUT),
-                                       StaticProperties.collection(
-                                           Labels.withId(STATIC_METADATA_INPUT_COLLECTION),
-                                           StaticProperties.stringFreeTextProperty(Labels.withId(
-                                               STATIC_METADATA_INPUT_RUNTIME_NAME)),
-                                           StaticProperties.stringFreeTextProperty(
-                                               Labels.withId(STATIC_METADATA_INPUT_VALUE)),
-                                           StaticProperties.singleValueSelection(
-                                               Labels.withId(STATIC_METADATA_INPUT_DATATYPE),
-                                               Options.from(
-                                                   OPTION_BOOL,
-                                                   OPTION_STRING,
-                                                   OPTION_FLOAT,
-                                                   OPTION_INTEGER
-                                               )
+                                       StaticProperties.stringFreeTextProperty(Labels.withId(
+                                           STATIC_METADATA_INPUT_RUNTIME_NAME)),
+                                       StaticProperties.stringFreeTextProperty(
+                                           Labels.withId(STATIC_METADATA_INPUT_VALUE)),
+                                       StaticProperties.singleValueSelection(
+                                           Labels.withId(STATIC_METADATA_INPUT_DATATYPE),
+                                           Options.from(
+                                               OPTION_BOOL,
+                                               OPTION_STRING,
+                                               OPTION_FLOAT,
+                                               OPTION_INTEGER
                                            )
                                        )
                                    )

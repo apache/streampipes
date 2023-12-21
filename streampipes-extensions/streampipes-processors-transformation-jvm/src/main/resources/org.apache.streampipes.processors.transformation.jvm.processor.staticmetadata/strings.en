@@ -21,9 +21,6 @@ org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata.de
 static-metadata-input.title=Metadata Input
 static-metadata-input.description=Input collection of metadata that will be enriched to the event
 
-static-metadata-input-collection.title=Input Collection
-static-metadata-input-collection.description=
-
 static-metadata-input-runtime-name.title=Runtime Name
 static-metadata-input-runtime-name.description=This is used for the runtime name in the event
 
