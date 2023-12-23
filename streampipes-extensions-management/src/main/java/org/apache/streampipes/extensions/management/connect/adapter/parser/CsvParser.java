@@ -79,7 +79,7 @@ public class CsvParser implements IParser {
 
   @Override
   public IParser fromDescription(List<StaticProperty> config) {
-    StaticPropertyExtractor extractor = StaticPropertyExtractor.from(config);
+    var extractor = StaticPropertyExtractor.from(config);
 
     char delimiter = extractor.singleValueParameter(DELIMITER, String.class).charAt(0);
 
