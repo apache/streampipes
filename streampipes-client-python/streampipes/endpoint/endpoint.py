@@ -205,9 +205,12 @@ class APIEndpoint(Endpoint):
             The specified resource as an instance of the corresponding model class.
         """
 
-        response = self._make_request(
-            request_method=self._parent_client.request_session.get, url=f"{self.build_url()}/{identifier}"
-        )
+        query_url = f"{self.build_url()}"
+
+        if identifier:
+            query_url += f"/{identifier}"
+
+        response = self._make_request(request_method=self._parent_client.request_session.get, url=query_url)
 
         return self._container_cls._resource_cls()(**response.json())
 
@@ -226,7 +229,7 @@ class APIEndpoint(Endpoint):
 
         self._make_request(
             request_method=self._parent_client.request_session.post,
-            url=f"{self.build_url()}/",
+            url=f"{self.build_url()}",
             data=json.dumps(resource.to_dict(use_source_names=True)),
             headers={"Content-type": "application/json"},
         )

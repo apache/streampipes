@@ -235,7 +235,7 @@ class TestStreamPipesEndpoints(TestCase):
         client.dataStreamApi.post(DataStream(**self.data_stream_get))
 
         http_session_mock.post.assert_called_with(
-            url="https://localhost:80/streampipes-backend/api/v2/streams/",
+            url="https://localhost:80/streampipes-backend/api/v2/streams",
             data=json.dumps(self.data_stream_get),
             headers={"Content-type": "application/json"},
         )

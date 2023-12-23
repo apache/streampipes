@@ -44,9 +44,9 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
 
   private static final Logger LOG = LoggerFactory.getLogger(LabelGenerator.class);
 
-  private static final String Delimiter = ".";
-  private static final String Title = "title";
-  private static final String Description = "description";
+  protected static final String DELIMITER = ".";
+  protected static final String TITLE = "title";
+  protected static final String DESCRIPTION = "description";
 
   private T desc;
 
@@ -56,34 +56,51 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
 
   public T generateLabels() throws IOException {
     if (existsLocalesFile()) {
-      Properties props = makeProperties();
+      Properties props = laodResourceAndMakeProperties();
       desc.setName(getTitle(props, desc.getAppId()));
       desc.setDescription(getDescription(props, desc.getAppId()));
 
       if (isAdapter()) {
-        ((AdapterDescription) desc).getConfig().forEach(sp -> generateLabels(props, sp));
+        ((AdapterDescription) desc).getConfig()
+                                   .forEach(sp -> generateLabels(props, sp));
       }
 
       if (isConsumable()) {
-        ((ConsumableStreamPipesEntity) desc).getStaticProperties().forEach(sp -> {
-          generateLabels(props, sp);
-        });
+        ((ConsumableStreamPipesEntity) desc).getStaticProperties()
+                                            .forEach(sp -> {
+                                              generateLabels(props, sp);
+                                            });
       }
 
       if (isDataProcessor()) {
-        ((DataProcessorDescription) desc).getOutputStrategies().forEach(os -> {
-          if (os instanceof AppendOutputStrategy) {
-            ((AppendOutputStrategy) os).getEventProperties().forEach(ep -> {
-              ep.setLabel(getTitle(props, ep.getRuntimeId()));
-              ep.setDescription(getDescription(props, ep.getRuntimeId()));
-            });
-          } else if (os instanceof FixedOutputStrategy) {
-            ((FixedOutputStrategy) os).getEventProperties().forEach(ep -> {
-              ep.setLabel(getTitle(props, ep.getRuntimeId()));
-              ep.setDescription(getDescription(props, ep.getRuntimeId()));
-            });
-          }
-        });
+        ((DataProcessorDescription) desc).getOutputStrategies()
+                                         .forEach(os -> {
+                                           if (os instanceof AppendOutputStrategy) {
+                                             ((AppendOutputStrategy) os).getEventProperties()
+                                                                        .forEach(ep -> {
+                                                                          ep.setLabel(getTitle(
+                                                                              props,
+                                                                              ep.getRuntimeId()
+                                                                          ));
+                                                                          ep.setDescription(getDescription(
+                                                                              props,
+                                                                              ep.getRuntimeId()
+                                                                          ));
+                                                                        });
+                                           } else if (os instanceof FixedOutputStrategy) {
+                                             ((FixedOutputStrategy) os).getEventProperties()
+                                                                       .forEach(ep -> {
+                                                                         ep.setLabel(getTitle(
+                                                                             props,
+                                                                             ep.getRuntimeId()
+                                                                         ));
+                                                                         ep.setDescription(getDescription(
+                                                                             props,
+                                                                             ep.getRuntimeId()
+                                                                         ));
+                                                                       });
+                                           }
+                                         });
       }
     } else {
       LOG.error("Could not find assets directory to generate labels for app id:" + desc.getAppId());
@@ -92,31 +109,52 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
     return desc;
   }
 
+
+  /**
+   * Returns the tile of the element description based on the data of the resource files
+   */
+  public String getElementTitle() throws IOException {
+    var props = checkIfResourceFileExistsAndMakeProperties();
+    return getTitle(props, desc.getAppId());
+  }
+
+  /**
+   * Returns the description of the element description based on the data of the resource files
+   */
+  public String getElementDescription() throws IOException {
+    var props = checkIfResourceFileExistsAndMakeProperties();
+    return getDescription(props, desc.getAppId());
+  }
+
+
   private StaticProperty generateLabels(Properties props, StaticProperty sp) {
     sp.setLabel(getTitle(props, sp.getInternalName(), sp.getLabel()));
     sp.setDescription(getDescription(props, sp.getInternalName(), sp.getDescription()));
     if (sp instanceof CollectionStaticProperty) {
 
       if (((CollectionStaticProperty) sp).getMembers() != null) {
-        ((CollectionStaticProperty) sp).getMembers().forEach(a -> {
-          generateLabels(props, a);
-        });
+        ((CollectionStaticProperty) sp).getMembers()
+                                       .forEach(a -> {
+                                         generateLabels(props, a);
+                                       });
       } else {
         ((StaticPropertyGroup) ((CollectionStaticProperty) sp).getStaticPropertyTemplate()).getStaticProperties()
-            .forEach(a -> {
-              generateLabels(props, a);
-            });
+                                                                                           .forEach(a -> {
+                                                                                             generateLabels(props, a);
+                                                                                           });
       }
 
     } else if (sp instanceof StaticPropertyGroup) {
-      ((StaticPropertyGroup) sp).getStaticProperties().forEach(g -> {
-        g.setLabel(getTitle(props, g.getInternalName(), g.getLabel()));
-        g.setDescription(getDescription(props, g.getInternalName(), g.getDescription()));
-      });
+      ((StaticPropertyGroup) sp).getStaticProperties()
+                                .forEach(g -> {
+                                  g.setLabel(getTitle(props, g.getInternalName(), g.getLabel()));
+                                  g.setDescription(getDescription(props, g.getInternalName(), g.getDescription()));
+                                });
     } else if (sp instanceof StaticPropertyAlternatives) {
-      ((StaticPropertyAlternatives) sp).getAlternatives().forEach(a -> {
-        generateLabels(props, a);
-      });
+      ((StaticPropertyAlternatives) sp).getAlternatives()
+                                       .forEach(a -> {
+                                         generateLabels(props, a);
+                                       });
     } else if (sp instanceof StaticPropertyAlternative) {
       if (((StaticPropertyAlternative) sp).getStaticProperty() != null) {
         generateLabels(props, ((StaticPropertyAlternative) sp).getStaticProperty());
@@ -126,26 +164,37 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
     return sp;
   }
 
-  private Properties makeProperties() throws IOException {
+  protected Properties checkIfResourceFileExistsAndMakeProperties() throws IOException {
+    throwIOExceptionIfResourceDoesNotExist();
+    return laodResourceAndMakeProperties();
+  }
+
+  private Properties laodResourceAndMakeProperties() throws IOException {
     Properties props = new Properties();
     props.load(new InputStreamReader(loadResource(), StandardCharsets.UTF_8));
 
     return props;
   }
 
-  public String getElementTitle() throws IOException {
-    Properties props = makeProperties();
-    return getTitle(props, desc.getAppId());
+  protected boolean existsLocalesFile() {
+    return this.getClass()
+               .getClassLoader()
+               .getResource(
+                   getPath()
+               ) != null;
   }
 
-  public String getElementDescription() throws IOException {
-    Properties props = makeProperties();
-    return getDescription(props, desc.getAppId());
+  private void throwIOExceptionIfResourceDoesNotExist() throws IOException {
+    if (!existsLocalesFile()) {
+      throw new IOException(
+          "Could not find assets directory to generate labels for app id: %s".formatted(desc.getAppId())
+      );
+    }
   }
 
-  private boolean existsLocalesFile() {
-    return this.getClass().getClassLoader().getResourceAsStream(makePath(desc,
-        this.desc.getIncludedLocales().get(0))) != null;
+  private String getPath() {
+    return makePath(desc, desc.getIncludedLocales()
+                              .get(0));
   }
 
   private boolean isConsumable() {
@@ -161,36 +210,41 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
   }
 
   private InputStream loadResource() {
-    if (desc.getIncludedLocales().size() > 0) {
-      return getResourceFile(desc.getIncludedLocales().get(0));
+    if (desc.getIncludedLocales()
+            .size() > 0) {
+      return getResourceFile(desc.getIncludedLocales()
+                                 .get(0));
     } else {
-      throw new IllegalArgumentException("Could not find any language files");
+      throw new IllegalArgumentException("Could not find any language files for %s".formatted(desc.getAppId()));
     }
   }
 
   private String getTitle(Properties props, String id, String defaultValue) {
-    return getValue(props, Title, id, defaultValue);
+    return getValue(props, TITLE, id, defaultValue);
   }
 
   private String getTitle(Properties props, String id) {
-    return getValue(props, Title, id, "");
+    return getValue(props, TITLE, id, "");
   }
 
   private String getDescription(Properties props, String id) {
-    return getValue(props, Description, id, "");
+    return getValue(props, DESCRIPTION, id, "");
   }
 
   private String getDescription(Properties props, String id, String defaultValue) {
-    return getValue(props, Description, id, defaultValue);
+    return getValue(props, DESCRIPTION, id, defaultValue);
   }
 
   private String getValue(Properties props, String type, String id, String defaultValue) {
-    return props.getProperty(id + Delimiter + type, defaultValue);
+    return props.getProperty(id + DELIMITER + type, defaultValue);
   }
 
 
   private InputStream getResourceFile(String filename) {
-    return this.getClass().getClassLoader().getResourceAsStream(makePath(desc, filename));
+    var path = makePath(desc, filename);
+    return this.getClass()
+               .getClassLoader()
+               .getResourceAsStream(path);
   }
 
 }
