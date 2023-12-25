@@ -45,7 +45,7 @@ public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSink
     return new StaticPropertyExtractor(dataSinkInvocation);
   }
 
-  public static StaticPropertyExtractor from(List<StaticProperty> staticProperties) {
+  public static IStaticPropertyExtractor from(List<StaticProperty> staticProperties) {
     return from(staticProperties, new ArrayList<>());
   }
 

@@ -72,7 +72,7 @@ public class XmlParser implements IParser {
 
   @Override
   public IParser fromDescription(List<StaticProperty> configuration) {
-    StaticPropertyExtractor extractor = StaticPropertyExtractor.from(configuration);
+    var extractor = StaticPropertyExtractor.from(configuration);
 
     var configuredTag = extractor.singleValueParameter(TAG, String.class);
 
