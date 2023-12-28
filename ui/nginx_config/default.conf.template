@@ -44,7 +44,7 @@ server {
   }
 
   location ~/endpoints/(?<endpointName>.*)$ {
-    set $upstream extensions-all-jvm:8090/api/v1/worker/live/$endpointName;
+    set $upstream ${SP_HTTP_SERVER_ADAPTER_ENDPOINT}/api/v1/worker/live/$endpointName;
 
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
