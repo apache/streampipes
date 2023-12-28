@@ -79,6 +79,22 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     }
   }
 
+  @PostMapping(
+      path = "/{appDocName}/find",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
+  public ResponseEntity<List<Map<String, Object>>> find(@PathVariable(APP_DOC_NAME) String appDocName,
+                                                        @RequestBody Map<String, Object> query) {
+    try {
+      var docs = getGenericStorage().find(appDocName, query);
+      return ok(docs);
+    } catch (IOException e) {
+      LOG.error("Could not connect to storage", e);
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+    }
+  }
+
   @GetMapping(path = "/{appDocName}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> getCategory(@PathVariable(APP_DOC_NAME) String appDocName,
@@ -98,8 +114,8 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> update(@PathVariable(APP_DOC_NAME) String appDocName,
-                                  @PathVariable("id") String documentId,
-                                  @RequestBody String document) {
+                                                    @PathVariable("id") String documentId,
+                                                    @RequestBody String document) {
     try {
       Map<String, Object> obj = getGenericStorage().update(documentId, document);
       return ok(obj);
