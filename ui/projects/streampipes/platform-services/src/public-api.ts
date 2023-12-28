@@ -62,6 +62,7 @@ export * from './lib/model/gen/streampipes-model';
 export * from './lib/model/datalake/data-lake-query-config.model';
 export * from './lib/query/DatalakeQueryParameterBuilder';
 export * from './lib/query/data-view-query-generator.service';
+export * from './lib/query/generic-storage-query-builder';
 export * from './lib/model/user/user.model';
 
 export * from './lib/model/assets/asset.model';
