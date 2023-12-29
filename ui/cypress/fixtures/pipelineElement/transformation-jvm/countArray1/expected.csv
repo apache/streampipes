@@ -1,5 +1,5 @@
-timestamp;countValue
-1623871499055;4.0
-1623871500059;2.0
-1623871507091;5.0
-1623871508093;1.0
+timestamp;arrayProperty;countValue
+1623871499055;["java.util.ArrayList",[1,2,4,4]];4.0
+1623871500059;["java.util.ArrayList",[1,4]];2.0
+1623871507091;["java.util.ArrayList",[1,3,3,3,4]];5.0
+1623871508093;["java.util.ArrayList",[1]];1.0
