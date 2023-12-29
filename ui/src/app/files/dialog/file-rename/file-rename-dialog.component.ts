@@ -15,23 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.file.FileMetadata;
+import { Component, Inject } from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import java.util.List;
+@Component({
+    selector: 'sp-file-rename-dialog-component',
+    templateUrl: './file-rename-dialog.component.html',
+    styleUrls: ['./file-rename-dialog.component.scss'],
+})
+export class FileRenameDialogComponent {
+    constructor(
+        private dialogRef: DialogRef<FileRenameDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public fileName: string,
+    ) {}
 
-public interface IFileMetadataStorage {
-
-  FileMetadata getMetadataById(String id);
-
-  List<FileMetadata> getAllFileMetadataDescriptions();
-
-  List<FileMetadata> getFilteredFileMetadataDescriptions(String filetype);
-
-  void deleteFileMetadata(String id);
-
-  void addFileMetadata(FileMetadata fileMetadata);
-
-  void updateFileMetadata(FileMetadata fileMetadata);
+    cancel() {
+        this.dialogRef.close();
+    }
 }
