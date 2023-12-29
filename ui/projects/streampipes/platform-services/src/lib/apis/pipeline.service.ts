@@ -157,7 +157,10 @@ export class PipelineService {
         currentDomId: string,
     ): Observable<PipelineElementRecommendationMessage> {
         return this.http
-            .post(`${this.apiBasePath}/recommend/${currentDomId}`, pipeline)
+            .post(
+                `${this.apiBasePath}/pipelines/recommend/${currentDomId}`,
+                pipeline,
+            )
             .pipe(
                 map(data =>
                     PipelineElementRecommendationMessage.fromData(data as any),
@@ -170,11 +173,13 @@ export class PipelineService {
      * The message describe how the pipeline should be modified.
      */
     validatePipeline(pipeline): Observable<PipelineModificationMessage> {
-        return this.http.post(`${this.apiBasePath}/update`, pipeline).pipe(
-            map(data => {
-                return PipelineModificationMessage.fromData(data as any);
-            }),
-        );
+        return this.http
+            .post(`${this.apiBasePath}/pipelines/update`, pipeline)
+            .pipe(
+                map(data => {
+                    return PipelineModificationMessage.fromData(data as any);
+                }),
+            );
     }
 
     get apiBasePath() {
