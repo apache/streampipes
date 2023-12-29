@@ -205,7 +205,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Hidden
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  public ResponseEntity<?> update(@RequestBody Pipeline pipeline) {
+  public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
       return ok(Operations.validatePipeline(pipeline));
     } catch (JsonSyntaxException e) {

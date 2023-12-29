@@ -24,6 +24,8 @@ import {
     Message,
     Pipeline,
     PipelineCategory,
+    PipelineElementRecommendationMessage,
+    PipelineModificationMessage,
     PipelineOperationStatus,
     PipelineStatusMessage,
 } from '../model/gen/streampipes-model';
@@ -148,6 +150,31 @@ export class PipelineService {
                     return (response as any[]).map(p => Pipeline.fromData(p));
                 }),
             );
+    }
+
+    recommendPipelineElement(
+        pipeline: Pipeline,
+        currentDomId: string,
+    ): Observable<PipelineElementRecommendationMessage> {
+        return this.http
+            .post(`${this.apiBasePath}/recommend/${currentDomId}`, pipeline)
+            .pipe(
+                map(data =>
+                    PipelineElementRecommendationMessage.fromData(data as any),
+                ),
+            );
+    }
+
+    /**
+     * Validates the given pipeline and returns a pipeline modification message.
+     * The message describe how the pipeline should be modified.
+     */
+    validatePipeline(pipeline): Observable<PipelineModificationMessage> {
+        return this.http.post(`${this.apiBasePath}/update`, pipeline).pipe(
+            map(data => {
+                return PipelineModificationMessage.fromData(data as any);
+            }),
+        );
     }
 
     get apiBasePath() {
