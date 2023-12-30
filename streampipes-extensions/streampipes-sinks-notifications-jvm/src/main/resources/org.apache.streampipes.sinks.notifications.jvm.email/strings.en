@@ -26,6 +26,3 @@ email_subject.description=The subject of the email
 
 email_content.title=Content
 email_content.description=Enter the email text. You can use place holders like #fieldName# to add the value of a field.
-
-silent-period.title=Silent Period [min]
-silent-period.description=The minimum number of minutes between two consecutive mails that are sent.

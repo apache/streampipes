@@ -27,7 +27,6 @@ import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.processors.filters.jvm.processor.merge.TestMergeByTimeProcessor;
 import org.apache.streampipes.test.extensions.api.StoreEventCollector;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
@@ -53,7 +52,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class TestSwingingDoorTrendingFilterProcessor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TestMergeByTimeProcessor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TestSwingingDoorTrendingFilterProcessor.class);
 
   @org.junit.runners.Parameterized.Parameter
   public String testName;

@@ -57,8 +57,9 @@ public enum Role {
   ),
   ROLE_CONNECT_ADMIN(
       Constants.ROLE_CONNECT_ADMIN_VALUE,
-      Privilege.PRIVILEGE_WRITE_ADAPTER
-
+      Privilege.PRIVILEGE_WRITE_ADAPTER,
+      Privilege.PRIVILEGE_READ_ADAPTER,
+      Privilege.PRIVILEGE_DELETE_ADAPTER
   ),
 
   ROLE_DASHBOARD_USER(

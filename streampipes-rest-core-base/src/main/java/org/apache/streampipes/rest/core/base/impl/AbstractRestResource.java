@@ -38,15 +38,14 @@ import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.http.client.ClientProtocolException;
-
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
-public abstract class AbstractRestResource extends AbstractSharedRestInterface {
+public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected ISpCoreConfigurationStorage getSpCoreConfigurationStorage() {
     return getNoSqlStorage().getSpCoreConfigurationStorage();
@@ -103,11 +102,11 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     return HttpJsonParser.getContentFromUrl(uri, mediaType);
   }
 
-  protected Response constructSuccessMessage(Notification... notifications) {
+  protected ResponseEntity<Message> constructSuccessMessage(Notification... notifications) {
     return statusMessage(new SuccessMessage(notifications));
   }
 
-  protected Response constructErrorMessage(Notification... notifications) {
+  protected ResponseEntity<Message> constructErrorMessage(Notification... notifications) {
     return statusMessage(new ErrorMessage(notifications));
   }
 
@@ -116,25 +115,17 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     return URLDecoder.decode(encodedString);
   }
 
-  protected Response statusMessage(Message message) {
-    return Response
+  protected ResponseEntity<Message> statusMessage(Message message) {
+    return ResponseEntity
         .ok()
-        .entity(message)
-        .build();
+        .body(message);
   }
 
-  protected Response statusMessage(Message message, Response.ResponseBuilder builder) {
-    return builder
-        .entity(message)
-        .build();
-  }
-
-  protected Response unauthorized() {
-    return Response.status(Response.Status.UNAUTHORIZED).build();
+  protected ResponseEntity unauthorized() {
+    return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
   }
 
   protected SpResourceManager getSpResourceManager() {
     return new SpResourceManager();
   }
-
 }

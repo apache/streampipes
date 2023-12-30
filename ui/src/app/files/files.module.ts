@@ -41,6 +41,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { FileRenameDialogComponent } from './dialog/file-rename/file-rename-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     imports: [
@@ -76,11 +78,13 @@ import { SharedUiModule } from '@streampipes/shared-ui';
                 ],
             },
         ]),
+        MatDialogModule,
     ],
     declarations: [
         FilesComponent,
         FileOverviewComponent,
         FileUploadDialogComponent,
+        FileRenameDialogComponent,
     ],
     providers: [],
 })

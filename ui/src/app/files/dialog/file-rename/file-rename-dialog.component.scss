@@ -15,28 +15,5 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.service.base.rest;
 
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-public abstract class BaseResourceConfig extends ResourceConfig {
-
-  public BaseResourceConfig() {
-    var customConfigs = new HashMap<String, Object>();
-    addAdditionalConfigs(customConfigs);
-    property(ServerProperties.WADL_FEATURE_DISABLE, true);
-    addProperties(customConfigs);
-    getClassesToRegister().forEach(this::register);
-
-  }
-
-  public abstract Set<Class<?>> getClassesToRegister();
-
-  public abstract void addAdditionalConfigs(Map<String, Object> configs);
-
-}
+@import 'src/scss/sp/sp-dialog';

@@ -79,11 +79,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>2.0.6</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

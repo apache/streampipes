@@ -15,16 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.util;
 
-import jakarta.ws.rs.core.MediaType;
+package org.apache.streampipes.rest.shared.exception;
 
-public class SpMediaType {
 
-  public static final String JSONLD = "application/ld+json";
-  public static final MediaType JSONLD_TYPE = new MediaType("application", "ld+json");
+import org.apache.streampipes.model.message.Notification;
 
-  public static final String APPLICATION_ZIP = "application/zip";
-  public static final MediaType APPLICATION_ZIP_TYPE = new MediaType("application", "zip");
+import org.springframework.http.HttpStatus;
 
+public class SpNotificationException extends RuntimeException {
+
+  private final Notification notification;
+  private final HttpStatus status;
+
+  public SpNotificationException(HttpStatus status,
+                                 Notification notification) {
+    this.status = status;
+    this.notification = notification;
+  }
+
+  public Notification getNotification() {
+    return notification;
+  }
+
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

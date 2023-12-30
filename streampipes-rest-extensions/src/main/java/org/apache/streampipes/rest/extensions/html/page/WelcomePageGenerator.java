@@ -32,6 +32,9 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.rest.extensions.html.model.Description;
 import org.apache.streampipes.sdk.utils.Assets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +42,8 @@ import java.util.List;
 
 
 public class WelcomePageGenerator {
+
+  private static final Logger LOG = LoggerFactory.getLogger(WelcomePageGenerator.class);
 
   protected List<Description> descriptions;
   protected Collection<IStreamPipesPipelineElement<?>> pipelineElements;
@@ -129,7 +134,7 @@ public class WelcomePageGenerator {
         desc.setName(lg.getElementTitle());
         desc.setDescription(lg.getElementDescription());
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.error("Error while updating description of %s".formatted(entity.getAppId()), e);
       }
     }
   }

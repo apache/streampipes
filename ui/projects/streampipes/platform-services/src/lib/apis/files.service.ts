@@ -90,4 +90,10 @@ export class FilesService {
             },
         );
     }
+
+    getAllOriginalFilenames(): Observable<string[]> {
+        return this.http.get<string[]>(
+            this.platformServicesCommons.apiBasePath + '/files/allFilenames',
+        );
+    }
 }

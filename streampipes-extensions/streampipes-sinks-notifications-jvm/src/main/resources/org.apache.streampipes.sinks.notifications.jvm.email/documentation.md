@@ -30,7 +30,7 @@ This sink sends an email to a specified receiver.
 
 Before you use this sink, the settings of your email server need to be configured.
 After you've installed the element, navigate to ``Settings``, open the panel ``Sinks Notifications JVM`` and add your
- mail server and credentials.
+mail server and credentials.
 
 ***
 
@@ -55,6 +55,12 @@ The subject of the email.
 ### Content
 
 The mail text.
+
+### Silent Period
+
+The *Silent Period* is the duration, expressed in minutes, during which notifications are temporarily disabled after one
+has been sent. This feature is implemented to prevent overwhelming the target with frequent notifications, avoiding
+potential spam behavior.
 
 ## Output
 

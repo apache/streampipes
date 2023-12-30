@@ -15,14 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.apache.streampipes.rest.shared.exception;
 
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface NoAuthenticationRequired {
+import org.apache.streampipes.model.monitoring.SpLogMessage;
+
+import org.springframework.http.HttpStatus;
+
+public class SpLogMessageException extends RuntimeException {
+
+  private final SpLogMessage message;
+  private final HttpStatus status;
+
+  public SpLogMessageException(HttpStatus status,
+                               SpLogMessage message) {
+    this.status = status;
+    this.message = message;
+  }
+
+  public SpLogMessage getSpMessage() {
+    return message;
+  }
+
+  public HttpStatus getStatus() {
+    return status;
+  }
 }
