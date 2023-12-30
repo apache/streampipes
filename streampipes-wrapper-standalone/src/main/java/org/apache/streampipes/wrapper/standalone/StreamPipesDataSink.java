@@ -29,8 +29,10 @@ import org.apache.streampipes.wrapper.params.compat.SinkParams;
 public abstract class StreamPipesDataSink implements IStreamPipesDataSink {
 
   @Override
-  public void onPipelineStarted(IDataSinkParameters params,
-                                EventSinkRuntimeContext runtimeContext) {
+  public void onPipelineStarted(
+      IDataSinkParameters params,
+      EventSinkRuntimeContext runtimeContext
+  ) {
     SinkParams parameters = new SinkParams(params);
     this.onInvocation(parameters, runtimeContext);
   }
@@ -40,7 +42,8 @@ public abstract class StreamPipesDataSink implements IStreamPipesDataSink {
     return DataSinkConfiguration.create(
         () -> {
           try {
-            return this.getClass().newInstance();
+            return this.getClass()
+                       .newInstance();
           } catch (InstantiationException e) {
             throw new RuntimeException(e);
           } catch (IllegalAccessException e) {
@@ -58,8 +61,10 @@ public abstract class StreamPipesDataSink implements IStreamPipesDataSink {
 
   public abstract DataSinkDescription declareModel();
 
-  public abstract void onInvocation(SinkParams parameters,
-                                    EventSinkRuntimeContext runtimeContext) throws SpRuntimeException;
+  public abstract void onInvocation(
+      SinkParams parameters,
+      EventSinkRuntimeContext runtimeContext
+  ) throws SpRuntimeException;
 
   public abstract void onDetach();
 }

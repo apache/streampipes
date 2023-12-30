@@ -66,14 +66,15 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({StreamPipesResourceConfig.class,
-    WelcomePageController.class,
-    StreamPipesPasswordEncoder.class,
-    WebSecurityConfig.class,
+@Import({
+    OpenApiConfiguration.class,
     SpPermissionEvaluator.class,
-    StreamPipesPrometheusConfig.class
+    StreamPipesPasswordEncoder.class,
+    StreamPipesPrometheusConfig.class,
+    WebSecurityConfig.class,
+    WelcomePageController.class
 })
-@ComponentScan({"org.apache.streampipes.rest.*"})
+@ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());

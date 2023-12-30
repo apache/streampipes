@@ -29,7 +29,7 @@ export class ApidocsComponent implements OnInit {
 
     ngOnInit(): void {
         SwaggerUI({
-            url: '/streampipes-backend/api/openapi.json',
+            url: '/streampipes-backend/apidocs',
             domNode: this.el.nativeElement.querySelector('.swagger-ui'),
             deepLinking: false,
             presets: [SwaggerUI.presets.apis],

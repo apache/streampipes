@@ -41,8 +41,11 @@ public class GenericStorageImpl implements IGenericStorage {
   private static final String ID = "id";
   private static final String SLASH = "/";
 
+  private static final String DOCS_KEY = "docs";
+
   private final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
   };
+
   private final ObjectMapper mapper;
 
   public GenericStorageImpl() {
@@ -66,6 +69,22 @@ public class GenericStorageImpl implements IGenericStorage {
     }
 
     return result;
+  }
+
+  @Override
+  public List<Map<String, Object>> find(String appDocType,
+                                        Map<String, Object> query) throws IOException {
+    var request = Utils.postRequest(
+        getDatabaseRoute() + "/_find",
+        mapper.writeValueAsString(query)
+    );
+    Content content = executeAndReturnContent(request);
+    var responseObj = deserialize(content.asString(StandardCharsets.UTF_8));
+    if (responseObj != null & responseObj.containsKey("docs")) {
+      return (List<Map<String, Object>>) responseObj.get(DOCS_KEY);
+    } else {
+      return List.of();
+    }
   }
 
   @Override
@@ -110,7 +129,7 @@ public class GenericStorageImpl implements IGenericStorage {
                                byte[] payload,
                                String rev) throws IOException {
     Request req = Utils.putRequest(
-            getDatabaseRoute() + SLASH + docId + SLASH + attachmentName + "?rev=" + rev, payload, contentType
+        getDatabaseRoute() + SLASH + docId + SLASH + attachmentName + "?rev=" + rev, payload, contentType
     );
     executeAndReturnContent(req);
   }
@@ -118,7 +137,7 @@ public class GenericStorageImpl implements IGenericStorage {
   @Override
   public GenericStorageAttachment findAttachment(String docId, String attachmentName) throws IOException {
     Request req = Utils.getRequest(getDatabaseRoute() + SLASH + docId + SLASH + attachmentName);
-    Content content =  executeAndReturnContent(req);
+    Content content = executeAndReturnContent(req);
     return new GenericStorageAttachment(content.getType().getMimeType(), content.asBytes());
   }
 

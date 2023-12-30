@@ -22,7 +22,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractPipelineExtractionResource<T> extends AbstractRestResource {
 
-  protected Response getPipelineByIdAndFieldValue(String appId,
-                                                  String pipelineId,
-                                                  String fieldValue) {
+  protected ResponseEntity<?> getPipelineByIdAndFieldValue(String appId,
+                                                        String pipelineId,
+                                                        String fieldValue) {
     List<T> pipelines = extract(new ArrayList<>(), appId);
 
     Optional<T> matchedPipeline =

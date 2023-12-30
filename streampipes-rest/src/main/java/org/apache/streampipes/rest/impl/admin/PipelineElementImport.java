@@ -28,42 +28,50 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.FormParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-@Path("/v2/element")
-@Component
+@RestController
+@RequestMapping("/api/v2/element")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class PipelineElementImport extends AbstractAuthGuardedRestResource {
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response addElement(@FormParam("uri") String uri,
-                             @FormParam("publicElement") boolean publicElement) {
-    return ok(verifyAndAddElement(uri, getAuthenticatedUserSid(), publicElement));
+  @PostMapping(
+      consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Message> addElement(@RequestBody MultiValueMap<String, String> formDataMap) {
+    if (formDataMap.containsKey("uri") && formDataMap.containsKey("publicElement")) {
+      return ok(verifyAndAddElement(
+          formDataMap.get("uri").get(0),
+          getAuthenticatedUserSid(),
+          Boolean.parseBoolean(formDataMap.get("publicElement").get(0))
+      ));
+    } else {
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error("Invalid input"));
+    }
   }
 
-  @PUT
-  @Path("/{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateElement(@PathParam("id") String elementId) {
+  @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Message> updateElement(@PathVariable("id") String elementId) {
     try {
       NamedStreamPipesEntity entity = find(elementId);
       String url = new ExtensionsServiceEndpointGenerator(entity).getEndpointResourceUrl();
@@ -75,10 +83,8 @@ public class PipelineElementImport extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @Path("/{id}")
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response deleteElement(@PathParam("id") String elementId) {
+  @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Message> deleteElement(@PathVariable("id") String elementId) {
     IPipelineElementDescriptionStorage requestor = getPipelineElementStorage();
     var resourceManager = getSpResourceManager();
     String appId;

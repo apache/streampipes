@@ -15,19 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.shared.api;
 
-import jakarta.ws.rs.core.Response;
+import { Component, Inject } from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-public interface CRUDResource<K, V> {
+@Component({
+    selector: 'sp-file-rename-dialog-component',
+    templateUrl: './file-rename-dialog.component.html',
+    styleUrls: ['./file-rename-dialog.component.scss'],
+})
+export class FileRenameDialogComponent {
+    constructor(
+        private dialogRef: DialogRef<FileRenameDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public fileName: string,
+    ) {}
 
-  Response getAll();
-
-  Response getById(K k);
-
-  Response create(V entity);
-
-  Response update(K k, V entity);
-
-  Response delete(K k);
+    cancel() {
+        this.dialogRef.close();
+    }
 }
