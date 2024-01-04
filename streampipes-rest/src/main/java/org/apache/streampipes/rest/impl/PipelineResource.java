@@ -200,7 +200,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   }
 
   @PostMapping(
-      path = "/update",
+      path = "/validate",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Hidden
