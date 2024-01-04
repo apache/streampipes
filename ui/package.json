@@ -100,7 +100,7 @@
     "@angular-eslint/template-parser": "^15.2.0",
     "@angular/cli": "^15.2.9",
     "@angular/compiler-cli": "^15.2.9",
-    "@cypress/webpack-batteries-included-preprocessor": "2.4.1",
+    "@cypress/webpack-batteries-included-preprocessor": "3.0.2",
     "@cypress/webpack-preprocessor": "5.17.0",
     "@ngtools/webpack": "^15.2.9",
     "@types/angular": "^1.8.4",
