@@ -71,6 +71,10 @@ public class GenericStorageImpl implements IGenericStorage {
     return result;
   }
 
+  /**
+   * This endpoint uses /db/_find endpoint of CouchDB to query documents.
+   * You can find the docuemntation for the parameters at https://docs.couchdb.org/en/stable/api/database/find.html
+   */
   @Override
   public List<Map<String, Object>> find(String appDocType,
                                         Map<String, Object> query) throws IOException {
