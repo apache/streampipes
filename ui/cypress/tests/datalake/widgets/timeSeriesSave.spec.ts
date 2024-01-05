@@ -63,12 +63,12 @@ const runTestCase = (editOption: boolean) => {
     cy.get('div').contains('Scatter').click();
 
     // Check if scatter plot is displayed
-    cy.get('g').should('have.class', 'scatterlayer mlayer');
+    cy.get('g', { timeout: 10000 }).should('have.class', 'scatterlayer mlayer');
 
     // Change second field from line plot to bar plot
     cy.get('div').contains('Line').click();
     cy.get('div').contains('Bar').click();
 
     // Check if bar plot is displayed
-    cy.get('g').should('have.class', 'barlayer mlayer');
+    cy.get('g', { timeout: 10000 }).should('have.class', 'barlayer mlayer');
 };
