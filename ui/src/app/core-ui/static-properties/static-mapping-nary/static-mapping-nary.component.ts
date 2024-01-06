@@ -41,7 +41,7 @@ export class StaticMappingNaryComponent
         if (!this.staticProperty.selectedProperties) {
             this.selectNone();
         } else {
-            let recommendedProperties = this.displayRecommendedPipe.transform(
+            const recommendedProperties = this.displayRecommendedPipe.transform(
                 this.availableProperties,
                 this.staticProperty.propertyScope,
                 this.displayRecommended,
@@ -91,7 +91,7 @@ export class StaticMappingNaryComponent
 
     selectAll() {
         this.selectNone();
-        let recommendedProperties = this.displayRecommendedPipe.transform(
+        const recommendedProperties = this.displayRecommendedPipe.transform(
             this.availableProperties,
             this.staticProperty.propertyScope,
             this.displayRecommended,
