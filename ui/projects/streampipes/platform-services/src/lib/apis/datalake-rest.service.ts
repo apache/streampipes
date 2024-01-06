@@ -224,8 +224,7 @@ export class DatalakeRestService {
         aggregationFunction?: string,
         timeInterval?: string,
     ): DatalakeQueryParameters {
-        const queryParams: DatalakeQueryParameters =
-            new DatalakeQueryParameters();
+        const queryParams: DatalakeQueryParameters = {};
 
         if (columns) {
             queryParams.columns = columns;

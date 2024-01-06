@@ -16,11 +16,11 @@
   ~
   -->
 
-<p
-    showdown="{{ documentationMarkdown }}"
+<markdown
+    [data]="documentationMarkdown"
     *ngIf="documentationMarkdown && !error"
     [ngClass]="useStyling ? 'note' : ''"
-></p>
+></markdown>
 <p *ngIf="error" [ngClass]="useStyling ? 'note' : ''">
     (no documentation available)
 </p>
