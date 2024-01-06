@@ -77,7 +77,7 @@
     "material-icons": "^1.13.1",
     "marked": "^4.3.0",
     "ngx-color-picker": "^14.0.0",
-    "ngx-echarts": "^15.0.3",
+    "ngx-echarts": "^16.1.1",
     "ngx-markdown": "16.0.0",
     "ngx-quill": "^23.0.2",
     "plotly.js": "^2.26.2",
