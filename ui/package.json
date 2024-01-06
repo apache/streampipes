@@ -64,7 +64,7 @@
     "dagre": "0.8.5",
     "datatables.net": "^1.13.1",
     "datatables.net-dt": "^1.13.1",
-    "echarts": "^5.4.1",
+    "echarts": "^5.4.3",
     "echarts-wordcloud": "^2.1.0",
     "echarts-simple-transform": "^1.0.0",
     "file-saver": "2.0.5",
