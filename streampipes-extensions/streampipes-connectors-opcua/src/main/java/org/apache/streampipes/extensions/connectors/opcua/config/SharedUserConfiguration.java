@@ -69,7 +69,7 @@ public class SharedUserConfiguration {
                     Labels.withId(HOST_PORT),
                     StaticProperties.stringFreeTextProperty(
                         Labels.withId(OPC_SERVER_HOST)),
-                    StaticProperties.stringFreeTextProperty(
+                    StaticProperties.integerFreeTextProperty(
                         Labels.withId(OPC_SERVER_PORT))
                 ))
         )
