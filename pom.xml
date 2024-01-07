@@ -114,7 +114,7 @@
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
         <siddhi.version>5.1.27</siddhi.version>
-        <simple-java-mail.version>8.3.1</simple-java-mail.version>
+        <simple-java-mail.version>8.5.1</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
         <snakeyaml.version>2.2</snakeyaml.version>
@@ -143,7 +143,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven.dependency.check.plugin.version>8.4.0</maven.dependency.check.plugin.version>
-        <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
 
