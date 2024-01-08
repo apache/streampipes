@@ -174,7 +174,7 @@ export class PipelineService {
      */
     validatePipeline(pipeline): Observable<PipelineModificationMessage> {
         return this.http
-            .post(`${this.apiBasePath}/pipelines/update`, pipeline)
+            .post(`${this.apiBasePath}/pipelines/validate`, pipeline)
             .pipe(
                 map(data => {
                     return PipelineModificationMessage.fromData(data as any);
