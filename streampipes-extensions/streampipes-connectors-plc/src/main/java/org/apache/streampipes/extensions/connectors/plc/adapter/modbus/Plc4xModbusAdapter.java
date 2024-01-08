@@ -77,7 +77,7 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    * Keys of user configuration parameters
    */
   private static final String PLC_IP = "plc_ip";
-  private static final String PLC_PORT = "plc_port";
+  public static final String PLC_PORT = "plc_port";
 
   private static final String PLC_NODES = "plc_nodes";
   private static final String PLC_NODE_ID = "plc_node_id";
@@ -273,7 +273,7 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, Plc4xModbusAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, Plc4xModbusAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)
