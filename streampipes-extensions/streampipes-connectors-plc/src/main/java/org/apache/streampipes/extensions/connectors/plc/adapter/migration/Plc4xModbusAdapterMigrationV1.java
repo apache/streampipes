@@ -11,8 +11,6 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.XSD;
 
-import java.net.URI;
-
 import static org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter.PLC_PORT;
 
 public class Plc4xModbusAdapterMigrationV1 implements IAdapterMigrator {

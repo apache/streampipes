@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xModbusAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xS7AdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter;
@@ -46,7 +47,8 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
     return List.of(
-        new Plc4xS7AdapterMigrationV1()
+        new Plc4xS7AdapterMigrationV1(),
+        new Plc4xModbusAdapterMigrationV1()
     );
   }
 }
