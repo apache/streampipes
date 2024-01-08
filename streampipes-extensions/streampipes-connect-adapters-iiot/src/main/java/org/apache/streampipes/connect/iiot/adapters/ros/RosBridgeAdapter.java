@@ -97,7 +97,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))
+        .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
         .requiredSingleValueSelectionFromContainer(
             Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
         .buildConfiguration();
