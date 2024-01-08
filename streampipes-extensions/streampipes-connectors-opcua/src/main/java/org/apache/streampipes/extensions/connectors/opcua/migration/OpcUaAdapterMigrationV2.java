@@ -7,12 +7,9 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
-
-import java.util.List;
 
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.*;
 
