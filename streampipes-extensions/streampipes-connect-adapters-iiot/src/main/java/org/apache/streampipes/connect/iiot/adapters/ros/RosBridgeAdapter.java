@@ -61,7 +61,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.ros";
 
   private static final String ROS_HOST_KEY = "ROS_HOST_KEY";
-  private static final String ROS_PORT_KEY = "ROS_PORT_KEY";
+  public static final String ROS_PORT_KEY = "ROS_PORT_KEY";
   private static final String TOPIC_KEY = "TOPIC_KEY";
 
   private String topic;
@@ -92,7 +92,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, RosBridgeAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, RosBridgeAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)
