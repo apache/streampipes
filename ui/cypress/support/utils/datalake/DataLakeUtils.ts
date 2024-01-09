@@ -316,9 +316,9 @@ export class DataLakeUtils {
 
     public static selectTimeRange(from: Date, to: Date) {
         DataLakeUtils.setTimeInput('time-range-from', from);
-        DataLakeUtils.clickSetTime();
+        DataLakeUtils.clickCancelTime();
         DataLakeUtils.setTimeInput('time-range-to', to);
-        DataLakeUtils.clickSetTime();
+        DataLakeUtils.clickCancelTime();
     }
 
     public static setTimeInput(field: string, date: Date) {
@@ -327,8 +327,9 @@ export class DataLakeUtils {
             .type(DataLakeUtils.makeTimeString(date), { force: true });
     }
 
-    public static clickSetTime() {
-        cy.get('.owl-dt-container-buttons > button:nth-child(2)').click();
+    public static clickCancelTime() {
+        cy.get('.owl-dt-container-buttons > button:nth-child(1)').click();
+        cy.wait(1000);
     }
 
     public static makeTimeString(date: Date) {
