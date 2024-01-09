@@ -29,70 +29,61 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 
 import org.apache.http.client.fluent.Request;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/rdfendpoints")
-@Component
+@RestController
+@RequestMapping("/api/v2/rdfendpoints")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getAllEndpoints() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<ExtensionsServiceEndpoint>> getAllEndpoints() {
     //TODO: return the endpoint of passing services
     return ok(getEndpoints());
   }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response addRdfEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint) {
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> addRdfEndpoint(@RequestBody ExtensionsServiceEndpoint extensionsServiceEndpoint) {
     getRdfEndpointStorage()
         .addExtensionsServiceEndpoint(extensionsServiceEndpoint);
 
-    return Response.status(Response.Status.OK).build();
+    return ok();
   }
 
 
-  @DELETE
-  @Path("/{rdfEndpointId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
+  @DeleteMapping(
+      path = "/{rdfEndpointId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> removeRdfEndpoint(@PathVariable("rdfEndpointId") String rdfEndpointId) {
     getRdfEndpointStorage()
         .removeExtensionsServiceEndpoint(rdfEndpointId);
 
-    return Response.status(Response.Status.OK).build();
+    return ok();
   }
 
-  @GET
-  @Path("/items")
-  @Produces(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  public Response getEndpointContents() {
+  @GetMapping(path = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<ExtensionsServiceEndpointItem>> getEndpointContents() {
     List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
     String username = getAuthenticatedUsername();
 
@@ -109,15 +100,13 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     return ok(items);
   }
 
-  @POST
-  @Path("/items/icon")
-  @Produces("image/png")
-  public Response getEndpointItemIcon(ExtensionsServiceEndpointItem endpointItem) {
+  @PostMapping(path = "/items/icon", produces = "image/png")
+  public ResponseEntity<byte[]> getEndpointItemIcon(@RequestBody ExtensionsServiceEndpointItem endpointItem) {
     try {
       byte[] imageBytes = Request.Get(makeIconUrl(endpointItem)).execute().returnContent().asBytes();
       return ok(imageBytes);
     } catch (IOException e) {
-      return fail();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
   }
 

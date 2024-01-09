@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.migration;
 
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+
 /**
  * Models the outcome of a migration.
  * @param success whether the migration was successfully or not.
@@ -25,13 +27,13 @@ package org.apache.streampipes.model.migration;
  * @param message message that describes the outcome of the migration
  * @param <T> type of the migration element
  */
-public record MigrationResult<T> (boolean success, T element, String message){
+public record MigrationResult<T extends NamedStreamPipesEntity> (boolean success, T element, String message){
 
-  public static <T> MigrationResult<T> failure(T element, String message) {
+  public static <T extends NamedStreamPipesEntity> MigrationResult<T> failure(T element, String message) {
     return new MigrationResult<>(false, element, message);
   }
 
-  public static <T> MigrationResult<T> success(T element) {
+  public static <T extends NamedStreamPipesEntity> MigrationResult<T> success(T element) {
     return new MigrationResult<>(true, element, "SUCCESS");
   }
 }

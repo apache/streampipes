@@ -21,7 +21,7 @@
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.93.0-SNAPSHOT
+**Current version:** 0.95.0-SNAPSHOT
 <!-- END do not edit -->
 
 We provide two helm chart templates to get you going:
@@ -119,7 +119,7 @@ rm -rf ${HOME}/streampipes-k8s
 
 | Parameter Name                                | Description                                             | Value                                    |
 |-----------------------------------------------|---------------------------------------------------------|------------------------------------------|
-| streampipes.version                           | StreamPipes version                                     | "0.93.0-SNAPSHOT"                        |
+| streampipes.version                           | StreamPipes version                                     | "0.95.0-SNAPSHOT"                        |
 | streampipes.registry                          | StreamPipes registry URL                                | "apachestreampipes"                      |
 | streampipes.auth.secretName                   | The secret name for storing secrets                     | "sp-secrets"                             |
 | streampipes.auth.users.admin.user             | The initial admin user                                  | "admin@streampipes.apache.org"           |
@@ -158,6 +158,7 @@ rm -rf ${HOME}/streampipes-k8s
 | Parameter Name               | Description                               | Value               |
 |------------------------------|-------------------------------------------|---------------------|
 | extensions.iiot.appName      | IIoT extensions application name          | extensions-all-iiot |
+| extensions.iiot.imageName    | IIoT extensions image name                | extensions-all-jvm  |
 | extensions.iiot.port         | Port for the IIoT extensions application  | 8090                |
 | extensions.iiot.service.name | Name of the IIoT extensions service       | extensions-all-iiot |
 | extensions.iiot.service.port | TargetPort of the IIoT extensions service | 8090                |
@@ -179,20 +180,7 @@ rm -rf ${HOME}/streampipes-k8s
 | external.couchdb.persistence.storageSize      | Size of the CouchDB PV                    | "1Gi"                  |
 | external.couchdb.persistence.claimName        | Name of the CouchDB PersistentVolumeClaim | "couchdb-pvc"          |
 | external.couchdb.persistence.pvName           | Name of the CouchDB PersistentVolume      | "couchdb-pv"           |
-####Couchdb common parameters
-| Parameter Name                                  | Description                                              | Value                                    |
-|-------------------------------------------------|----------------------------------------------------------|------------------------------------------|
-| external.couchdb.appName                        | CouchDB application name                                 | "couchdb"                                |
-| external.couchdb.version                        | CouchDB version                                          | 3.3.1                                    |
-| external.couchdb.user                           | CouchDB admin username                                   | "admin"                                  |
-| external.couchdb.password                       | CouchDB admin password                                   | empty (auto-generated)                   |
-| external.couchdb.port                           | Port for the CouchDB service                             | 5984                                     |
-| external.couchdb.service.name                   | Name of the CouchDB service                              | "couchdb"                                |
-| external.couchdb.service.port                   | TargetPort of the CouchDB service                        | 5984                                     |
-| external.couchdb.persistence.storageClassName   | Storage class name for CouchDB PVs                       | "hostpath"                               |
-| external.couchdb.persistence.storageSize        | Size of the CouchDB PV                                   | "1Gi"                                    |
-| external.couchdb.persistence.claimName          | Name of the CouchDB PersistentVolumeClaim                | "couchdb-pvc"                            |
-| external.couchdb.persistence.pvName             | Name of the CouchDB PersistentVolume                     | "couchdb-pv"                             |
+
 
 #### Influxdb common parameters
 

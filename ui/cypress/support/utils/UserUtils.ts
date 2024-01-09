@@ -66,5 +66,6 @@ export class UserUtils {
         this.goToUserConfiguration();
 
         cy.dataCy('user-delete-btn-' + user.name).click();
+        cy.dataCy('confirm-delete').click();
     }
 }

@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-10-30 22:49:29.
+// Generated using typescript-generator version 3.2.1263 on 2023-12-04 13:14:24.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -45,10 +44,6 @@ export class NamedStreamPipesEntity {
     'includesLocales': boolean;
     'internallyManaged': boolean;
     'name': string;
-    /**
-     * @deprecated
-     */
-    'uri': string;
 
     static 'fromData'(
         data: NamedStreamPipesEntity,
@@ -78,7 +73,6 @@ export class NamedStreamPipesEntity {
         instance.includesLocales = data.includesLocales;
         instance.internallyManaged = data.internallyManaged;
         instance.name = data.name;
-        instance.uri = data.uri;
         return instance;
     }
 }
@@ -1157,6 +1151,7 @@ export class DataLakeMeasure {
     'pipelineId': string;
     'pipelineIsRunning': boolean;
     'pipelineName': string;
+    'schemaUpdateStrategy': DataLakeMeasureSchemaUpdateStrategy;
     'schemaVersion': string;
     'timestampField': string;
 
@@ -1176,6 +1171,7 @@ export class DataLakeMeasure {
         instance.pipelineId = data.pipelineId;
         instance.pipelineIsRunning = data.pipelineIsRunning;
         instance.pipelineName = data.pipelineName;
+        instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
         instance.schemaVersion = data.schemaVersion;
         instance.timestampField = data.timestampField;
         return instance;
@@ -4062,6 +4058,10 @@ export type ConfigurationScope =
     | 'CONTAINER_STARTUP_CONFIG'
     | 'CONTAINER_GLOBAL_CONFIG'
     | 'PIPELINE_ELEMENT_CONFIG';
+
+export type DataLakeMeasureSchemaUpdateStrategy =
+    | 'UPDATE_SCHEMA'
+    | 'EXTEND_EXISTING_SCHEMA';
 
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';
 

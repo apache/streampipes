@@ -30,37 +30,44 @@ export class GenericStorageService {
         private platformServicesCommons: PlatformServicesCommons,
     ) {}
 
-    createDocument(appDocName: string, document: any): Observable<any> {
-        return this.http.post(this.getAppDocPath(appDocName), document);
+    createDocument(appDocType: string, document: any): Observable<any> {
+        return this.http.post(this.getAppDocPath(appDocType), document);
     }
 
-    getAllDocuments(appDocName: string): Observable<any> {
-        return this.http.get(this.getAppDocPath(appDocName));
+    getAllDocuments(appDocType: string): Observable<any> {
+        return this.http.get(this.getAppDocPath(appDocType));
     }
 
-    getDocument(appDocName: string, documentId: string): Observable<any> {
-        return this.http.get(`${this.getAppDocPath(appDocName)}/${documentId}`);
+    findDocuments(
+        appDocType: string,
+        query: Record<string, any>,
+    ): Observable<any> {
+        return this.http.post(`${this.getAppDocPath(appDocType)}/find`, query);
     }
 
-    updateDocument(appDocName: string, document: any): Observable<any> {
+    getDocument(appDocType: string, documentId: string): Observable<any> {
+        return this.http.get(`${this.getAppDocPath(appDocType)}/${documentId}`);
+    }
+
+    updateDocument(appDocType: string, document: any): Observable<any> {
         return this.http.put(
-            `${this.getAppDocPath(appDocName)}/${document._id}`,
+            `${this.getAppDocPath(appDocType)}/${document._id}`,
             document,
         );
     }
 
     deleteDocument(
-        appDocName: string,
+        appDocType: string,
         documentId: string,
         rev: string,
     ): Observable<any> {
         return this.http.delete(
-            `${this.getAppDocPath(appDocName)}/${documentId}/${rev}`,
+            `${this.getAppDocPath(appDocType)}/${documentId}/${rev}`,
         );
     }
 
-    private getAppDocPath(appDocName: string): string {
-        return this.genericStorageBasePath + '/' + appDocName;
+    private getAppDocPath(appDocType: string): string {
+        return this.genericStorageBasePath + '/' + appDocType;
     }
 
     private get genericStorageBasePath() {

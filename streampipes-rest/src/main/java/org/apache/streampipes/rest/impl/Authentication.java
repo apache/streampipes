@@ -31,41 +31,39 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("/v2/auth")
+@RestController
+@RequestMapping("/api/v2/auth")
 public class Authentication extends AbstractRestResource {
 
   @Autowired
   AuthenticationManager authenticationManager;
 
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @POST
-  @Path("/login")
-  public Response doLogin(LoginRequest token) {
+  @PostMapping(
+      path = "/login",
+      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+      consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> doLogin(@RequestBody LoginRequest token) {
     try {
       org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(token.getUsername(), token.getPassword()));
@@ -76,12 +74,10 @@ public class Authentication extends AbstractRestResource {
     }
   }
 
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @JacksonSerialized
-  @GET
-  @Path("/token/renew")
-  public Response doLogin() {
+  @GetMapping(
+      path = "/token/renew",
+      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> doLogin() {
     try {
       org.springframework.security.core.Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       return processAuth(auth);
@@ -90,44 +86,44 @@ public class Authentication extends AbstractRestResource {
     }
   }
 
-  @Path("/register")
-  @POST
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response doRegister(RegistrationData data) {
+  @PostMapping(
+      path = "/register",
+      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+      consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SuccessMessage> doRegister(@RequestBody RegistrationData data) {
     GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     if (!config.isAllowSelfRegistration()) {
-      throw new WebApplicationException(Response.Status.FORBIDDEN);
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
     data.setRoles(config.getDefaultUserRoles());
     try {
       getSpResourceManager().manageUsers().registerUser(data);
       return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     } catch (UsernameAlreadyTakenException e) {
-      return badRequest(Notifications.error("This email address already exists. Please choose another address."));
+      throw new SpMessageException(
+          HttpStatus.BAD_REQUEST,
+          Notifications.error("This email address already exists. Please choose another address."));
     }
   }
 
-  @Path("restore/{username}")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response sendPasswordRecoveryLink(@PathParam("username") String username) {
+  @PostMapping(
+      path = "restore/{username}",
+      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> sendPasswordRecoveryLink(@PathVariable("username") String username) {
     try {
       getSpResourceManager().manageUsers().sendPasswordRecoveryLink(username);
       return ok(new SuccessMessage(NotificationType.PASSWORD_RECOVERY_LINK_SENT.uiNotification()));
     } catch (UserNotFoundException e) {
       return ok();
     } catch (Exception e) {
-      return badRequest();
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
   }
 
-  @Path("settings")
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAuthSettings() {
+  @GetMapping(
+      path = "settings",
+      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> getAuthSettings() {
     GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     Map<String, Object> response = new HashMap<>();
     response.put("allowSelfRegistration", config.isAllowSelfRegistration());
@@ -136,7 +132,7 @@ public class Authentication extends AbstractRestResource {
     return ok(response);
   }
 
-  private Response processAuth(org.springframework.security.core.Authentication auth) {
+  private ResponseEntity<JwtAuthenticationResponse> processAuth(org.springframework.security.core.Authentication auth) {
     Principal principal = ((PrincipalUserDetails<?>) auth.getPrincipal()).getDetails();
     if (principal instanceof UserAccount) {
       JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
@@ -150,6 +146,4 @@ public class Authentication extends AbstractRestResource {
     String jwt = new JwtTokenProvider().createToken(auth);
     return JwtAuthenticationResponse.from(jwt);
   }
-
-
 }

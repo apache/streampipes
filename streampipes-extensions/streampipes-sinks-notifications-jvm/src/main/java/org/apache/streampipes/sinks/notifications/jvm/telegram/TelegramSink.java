@@ -64,9 +64,9 @@ public class TelegramSink extends StreamPipesDataSink {
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
+                            .create()
+                            .requiredProperty(EpRequirements.anyProperty())
+                            .build())
         .requiredSecret(Labels.withId(BOT_API_KEY))
         .requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
         .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true)

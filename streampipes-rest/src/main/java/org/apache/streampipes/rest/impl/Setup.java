@@ -26,25 +26,23 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonObject;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
-@Path("/v2/setup")
+@RestController
+@RequestMapping("/api/v2/setup")
 public class Setup extends AbstractRestResource {
 
   private final ISpCoreConfigurationStorage storage = StorageDispatcher
       .INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
 
-  @GET
-  @Path("/configured")
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(path = "/configured", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Endpoint is used by UI to determine whether the core is running upon startup",
       tags = {"Configurated"})
-  public Response isConfigured() {
+  public ResponseEntity<String> isConfigured() {
     JsonObject obj = new JsonObject();
     var statusManager = new CoreServiceStatusManager(storage);
     if (statusManager.isCoreReady()) {

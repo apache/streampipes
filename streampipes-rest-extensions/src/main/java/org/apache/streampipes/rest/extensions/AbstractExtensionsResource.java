@@ -19,42 +19,19 @@
 package org.apache.streampipes.rest.extensions;
 
 import org.apache.http.HttpStatus;
-
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.ResponseEntity;
 
 public class AbstractExtensionsResource {
 
-  protected <T> Response ok(T entity) {
-    return Response
+  protected <T> ResponseEntity<T> ok(T entity) {
+    return ResponseEntity
         .ok()
-        .entity(entity)
-        .build();
+        .body(entity);
   }
 
-  protected Response clientError() {
-    return Response
-        .status(HttpStatus.SC_BAD_REQUEST)
-        .build();
-  }
-
-  protected Response serverError() {
-    return Response
+  protected ResponseEntity<Void> serverError() {
+    return ResponseEntity
         .status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
         .build();
   }
-
-  protected <T> Response notModified(T entity) {
-    return Response
-        .notModified()
-        .entity(entity)
-        .build();
-  }
-
-  protected <T> Response noContent(T entity) {
-    return Response
-        .noContent()
-        .entity(entity)
-        .build();
-  }
-
 }

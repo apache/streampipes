@@ -20,27 +20,27 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/v2/pipeline-canvas-cache")
+@RestController
+@RequestMapping("/api/v2/pipeline-canvas-cache")
 public class PipelineCanvasMetadataCache extends AbstractAuthGuardedRestResource {
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateCachedCanvasMetadata(String canvasMetadata) {
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> updateCachedCanvasMetadata(@RequestBody String canvasMetadata) {
     PipelineCanvasMetadataCacheManager.updateCachedCanvasMetadata(getAuthenticatedUsername(), canvasMetadata);
     return ok();
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getCachedCanvasMetadata() {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getCachedCanvasMetadata() {
     String result = PipelineCanvasMetadataCacheManager.getCachedCanvasMetadata(getAuthenticatedUsername());
     if (result != null) {
       return ok(result);
@@ -49,9 +49,8 @@ public class PipelineCanvasMetadataCache extends AbstractAuthGuardedRestResource
     }
   }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response removeCanvasMetadataFromCache() {
+  @DeleteMapping
+  public ResponseEntity<Void> removeCanvasMetadataFromCache() {
     PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(getAuthenticatedUsername());
     return ok();
   }

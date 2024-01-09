@@ -14,51 +14,90 @@
 # limitations under the License.
 
 backend:
-  - "streampipes-*/**/*.java"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-*/**/*.java"
 
 connect:
-  - "streampipes-extensions/streampipes-connect-adapters/**/*"
-  - "streampipes-extensions/streampipes-connect-adapters-iiot/**/*"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-extensions/streampipes-connect-adapters/**/*"
+              - "streampipes-extensions/streampipes-connect-adapters-iiot/**/*"
 
 
 dependencies:
-  - "**/pom.xml"
-  - "streampipes-client-python/poetry.lock"
-  - "ui/**/package.json"
-  - "ui/**/package-lock.json"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/pom.xml"
+              - "streampipes-client-python/poetry.lock"
+              - "ui/**/package.json"
+              - "ui/**/package-lock.json"
 
 documentation:
-  - "**/*.md"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.md"
 
 gh-actions:
-  - ".github/**/*"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - ".github/**/*"
 
 helm:
-  - "installer/k8s/**/*.yaml"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "installer/k8s/**/*.yaml"
 
 installer:
-  - "installer/**/*"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "installer/**/*"
 
 java:
-  - "**/*.java"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.java"
 
 javascript:
-  - "**/*.js"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.js"
 
 'pipeline elements':
-  - "streampipes-exensions/streampipes-extensions-*/**/*"
-  - "streampipes-extensions/streampipes-pipeline-*/**/*"
-  - "streampipes-extensions/streampipes-processors-*/**/*"
-  - "streampipes-extensions/streampipes-sinks-*/**/*"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-exensions/streampipes-extensions-*/**/*"
+              - "streampipes-extensions/streampipes-pipeline-*/**/*"
+              - "streampipes-extensions/streampipes-processors-*/**/*"
+              - "streampipes-extensions/streampipes-sinks-*/**/*"
 
 python:
-  - "**/*.py"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.py"
 
 testing:
-  - "streampipes-integration-tests/**/*"
-  - "streampipes-client-python/tests/**/*"
-  - "streampipes-*/**/test/**/*"
-  - "ui/cypress/**/*"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-integration-tests/**/*"
+              - "streampipes-client-python/tests/**/*"
+              - "streampipes-*/**/test/**/*"
+              - "ui/cypress/**/*"
 
 ui:
-  - "ui/**/*"
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "ui/**/*"

@@ -20,64 +20,54 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.mail.MailTester;
 import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.model.configuration.EmailTemplateConfig;
+import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.simplejavamail.MailException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@Path("/v2/admin/mail-config")
-@Component
+@RestController
+@RequestMapping("/api/v2/admin/mail-config")
 public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response getMailConfiguration() {
+  public ResponseEntity<EmailConfig> getMailConfiguration() {
     return ok(getSpCoreConfigurationStorage().get().getEmailConfig());
   }
 
-  @GET
-  @Path("templates")
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(path = "templates", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response getMailTemplates() {
+  public ResponseEntity<EmailTemplateConfig> getMailTemplates() {
     return ok(getSpCoreConfigurationStorage().get().getEmailTemplateConfig());
   }
 
-  @PUT
-  @Path("templates")
-  @JacksonSerialized
-  @Consumes(MediaType.APPLICATION_JSON)
+  @PutMapping(path = "templates", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response updateMailTemplate(EmailTemplateConfig templateConfig) {
+  public ResponseEntity<Void> updateMailTemplate(@RequestBody EmailTemplateConfig templateConfig) {
     var config = getSpCoreConfigurationStorage().get();
     config.setEmailTemplateConfig(templateConfig);
     getSpCoreConfigurationStorage().updateElement(config);
     return ok();
   }
 
-  @PUT
-  @JacksonSerialized
-  @Consumes(MediaType.APPLICATION_JSON)
+  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response updateMailConfiguration(EmailConfig config) {
+  public ResponseEntity<Void> updateMailConfiguration(@RequestBody EmailConfig config) {
     config.setEmailConfigured(true);
     if (!config.isProxyPassEncrypted() && config.isUsesProxyAuthentication()) {
       config.setProxyPassword(SecretEncryptionManager.encrypt(config.getProxyPassword()));
@@ -96,16 +86,14 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
     return ok();
   }
 
-  @POST
-  @Path("/test")
-  @Consumes(MediaType.APPLICATION_JSON)
+  @PostMapping(path = "/test", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response sendTestMail(EmailConfig config) {
+  public ResponseEntity<Void> sendTestMail(@RequestBody EmailConfig config) {
     try {
       new MailTester().sendTestMail(config);
       return ok();
     } catch (MailException | IllegalArgumentException | IOException e) {
-      return badRequest(e);
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
     }
   }
 }

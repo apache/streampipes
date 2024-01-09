@@ -21,23 +21,21 @@ package org.apache.streampipes.service.base.rest;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 
 import org.apache.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Response;
 
-
-@Path("")
+@RestController
 public class ServiceHealthResource {
 
-  @GET()
-  @Path("svchealth/{serviceId}")
-  public Response healthy(@PathParam("serviceId") String serviceId) {
+  @GetMapping(path = "/svchealth/{serviceId}")
+  public ResponseEntity<Void> healthy(@PathVariable("serviceId") String serviceId) {
     if (serviceId.equals(StreamPipesServiceBase.AUTO_GENERATED_SERVICE_ID)) {
-      return Response.ok().build();
+      return ResponseEntity.ok().build();
     } else {
-      return Response.status(HttpStatus.SC_NOT_FOUND).build();
+      return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).build();
     }
   }
 }

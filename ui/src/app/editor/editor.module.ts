@@ -39,7 +39,6 @@ import { CompatibleElementsComponent } from './dialog/compatible-elements/compat
 import { MatListModule } from '@angular/material/list';
 import { HelpComponent } from './dialog/help/help.component';
 import { PipelineElementDocumentationComponent } from './components/pipeline-element-documentation/pipeline-element-documentation.component';
-import { ShowdownModule } from 'ngx-showdown';
 import { SafeCss } from './utils/style-sanitizer';
 import { MatchingErrorComponent } from './dialog/matching-error/matching-error.component';
 import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
@@ -56,6 +55,7 @@ import { PipelineElementIconStandRowComponent } from './components/pipeline-elem
 import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
 import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
 import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
     imports: [
@@ -66,14 +66,13 @@ import { PipelineElementGroupFilterPipe } from './services/pipeline-element-grou
         MatListModule,
         FlexLayoutModule,
         GridsterModule,
-        CommonModule,
         FlexLayoutModule,
         CustomMaterialModule,
         FormsModule,
         MatProgressSpinnerModule,
-        ShowdownModule,
         ReactiveFormsModule,
         PlatformServicesModule,
+        MarkdownModule.forRoot(),
     ],
     declarations: [
         CompatibleElementsComponent,

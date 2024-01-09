@@ -33,7 +33,6 @@ describe('Test edit dashboard', () => {
         DashboardUtils.addAndEditDashboard(dashboardName);
         DashboardUtils.addWidget('Persist_simulator', 'raw');
         cy.dataCy('save-data-explorer-go-back-to-overview').click();
-        cy.dataCy('confirm-delete').click();
 
         // Change dashboard name
         cy.dataCy('change-dashboard-settings-button').click();
@@ -48,7 +47,7 @@ describe('Test edit dashboard', () => {
         cy.contains('testDashboardNew').should('exist');
 
         // Edit dashboard and change widget to line chart
-        cy.dataCy('edit-dashboard-testDashboardNew').click().wait(1000);
+        cy.dataCy('edit-dashboard-testDashboardNew').click().wait(2000);
         cy.dataCy('widget-settings-button').click();
         cy.dataCy('edit-widget-back-btn').click();
         cy.dataCy('dashboard-select-widget-line').click();
@@ -65,7 +64,6 @@ describe('Test edit dashboard', () => {
 
         // Go back and check if two newly added charts are displayed correctly in standalone dashboard
         cy.dataCy('save-data-explorer-go-back-to-overview').click();
-        cy.dataCy('confirm-delete').click();
         cy.dataCy('show-dashboard-testDashboardNew').click();
         cy.get('g').should('have.class', 'line-chart chart');
         cy.get('div').should('have.class', 'circleNumber');

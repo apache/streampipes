@@ -35,7 +35,7 @@ public class UnauthorizedRequestEntryPoint implements AuthenticationEntryPoint {
   @Override
   public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                        AuthenticationException e) throws IOException {
-    LOG.error("Unauthorized request to {}", httpServletRequest.getPathInfo());
+    LOG.error("Unauthorized request to {}", httpServletRequest.getServletPath());
 
     httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getLocalizedMessage());
   }

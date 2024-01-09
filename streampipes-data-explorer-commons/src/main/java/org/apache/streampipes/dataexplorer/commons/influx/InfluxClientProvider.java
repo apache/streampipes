@@ -137,8 +137,10 @@ public class InfluxClientProvider {
     return false;
   }
 
+
   private static Environment getEnvironment() {
     return Environments.getEnvironment();
   }
+
 
 }

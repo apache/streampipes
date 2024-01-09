@@ -21,13 +21,13 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.core.Response;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 
 public abstract class AbstractMonitoringResource extends AbstractAuthGuardedRestResource {
 
-  @GET
-  public Response triggerMonitoringUpdate() {
+  @GetMapping
+  public ResponseEntity<Void> triggerMonitoringUpdate() {
     new ExtensionsServiceLogExecutor().triggerUpdate();
     return ok();
   }

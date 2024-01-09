@@ -17,7 +17,6 @@
 
 .PHONY: check
 check: mypy lint unit-tests
-	poetry run interrogate -c pyproject.toml
 
 .PHONY: doc
 doc:

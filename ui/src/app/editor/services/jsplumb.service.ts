@@ -169,19 +169,17 @@ export class JsplumbService {
         targetElementId,
         previewConfig: boolean,
     ) {
-        let options;
         const sourceElement = sourceElementSelector.get()[0];
         const jsplumbBridge = this.getBridge(previewConfig);
         const jsplumbConfig =
             this.jsplumbEndpointService.getJsplumbConfig(true);
-        options = sourceElementSelector.hasClass('stream')
+        const options = sourceElementSelector.hasClass('stream')
             ? jsplumbConfig.streamEndpointOptions
             : jsplumbConfig.sepaEndpointOptions;
-        let sourceEndPoint;
         const selectedEndpoints = jsplumbBridge.selectEndpoints({
             source: sourceElement,
         });
-        sourceEndPoint =
+        const sourceEndPoint =
             selectedEndpoints.length > 0
                 ? !selectedEndpoints.get(0).isFull()
                     ? jsplumbBridge
@@ -312,7 +310,6 @@ export class JsplumbService {
         newElementId: string,
     ) {
         pipelineElement.elementId = newElementId;
-        pipelineElement.uri = newElementId;
     }
 
     makeId(count: number) {

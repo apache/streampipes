@@ -45,14 +45,14 @@
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
-        <checker-qual.version>3.39.0</checker-qual.version>
-        <commons-codec.version>1.15</commons-codec.version>
+        <checker-qual.version>3.42.0</checker-qual.version>
+        <commons-codec.version>1.16.0</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-compress.version>1.25.0</commons-compress.version>
-        <commons-io.version>2.11.0</commons-io.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
-        <commons-pool2.version>2.11.1</commons-pool2.version>
-        <commons-text.version>1.10.0</commons-text.version>
+        <commons-io.version>2.15.1</commons-io.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-pool2.version>2.12.0</commons-pool2.version>
+        <commons-text.version>1.11.0</commons-text.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <eclipse.milo.version>0.6.9</eclipse.milo.version>
         <file-management.version>3.1.0</file-management.version>
@@ -63,10 +63,10 @@
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>23.0.0</graalvm.js.version>
         <gson.version>2.10</gson.version>
-        <guava.version>32.1.2-jre</guava.version>
+        <guava.version>33.0.0-jre</guava.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
-        <influxdb.version>2.23</influxdb.version>
+        <influxdb.version>2.24</influxdb.version>
         <inlong.version>1.9.0</inlong.version>
         <jackson.version>2.16.0</jackson.version>
         <jackson.databind.version>2.16.0</jackson.databind.version>
@@ -81,8 +81,7 @@
         <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
-        <jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
-        <javassist.version>3.29.2-GA</javassist.version>
+        <javassist.version>3.30.1-GA</javassist.version>
         <jboss-logging.version>3.5.2.Final</jboss-logging.version>
         <jedis.version>4.4.3</jedis.version>
         <jersey.version>3.1.3</jersey.version>
@@ -94,40 +93,42 @@
         <lightcouch.version>0.2.0</lightcouch.version>
         <maven-plugin-annotations.version>3.7.1</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
-        <micrometer-prometheus.version>1.11.5</micrometer-prometheus.version>
-        <micrometer-observation.version>1.11.5</micrometer-observation.version>
+        <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
+        <micrometer-observation.version>1.12.0</micrometer-observation.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <nats.version>2.17.0</nats.version>
         <netty.version>4.1.72.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
-        <opennlp.version>2.1.0</opennlp.version>
+        <opennlp.version>2.3.1</opennlp.version>
         <plc4x.version>0.10.0</plc4x.version>
         <plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
-        <plexus-utils.version>3.5.0</plexus-utils.version>
+        <plexus-utils.version>4.0.0</plexus-utils.version>
         <postgresql.version>42.7.0</postgresql.version>
         <protobuf.version>3.25.0</protobuf.version>
-        <pulsar.version>2.10.1</pulsar.version>
+        <pulsar.version>3.1.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
         <siddhi.version>5.1.27</siddhi.version>
-        <simple-java-mail.version>8.3.1</simple-java-mail.version>
+        <simple-java-mail.version>8.5.1</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <spring-boot.version>3.1.5</spring-boot.version>
-        <spring-security.version>6.1.5</spring-security.version>
-        <swagger.version>2.2.7</swagger.version>
+        <springdoc.version>2.3.0</springdoc.version>
+        <spring.version>6.1.1</spring.version>
+        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-security.version>6.2.0</spring-security.version>
+        <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <hawtbuf.version>1.11</hawtbuf.version>
 
         <!-- Test dependencies -->
         <junit.version>4.13.2</junit.version>
-        <mockito.version>5.7.0</mockito.version>
+        <mockito.version>5.8.0</mockito.version>
         <powermock.version>2.0.9</powermock.version>
         <rest-assured.version>2.9.0</rest-assured.version>
         <wiremock.version>2.27.2</wiremock.version>
@@ -140,9 +141,9 @@
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven.dependency.check.plugin.version>8.4.0</maven.dependency.check.plugin.version>
-        <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
 
@@ -154,6 +155,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
@@ -340,11 +348,6 @@
                 <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.ws.rs</groupId>
-                <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${jakarta.ws.rs.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
                 <version>${activemq-client.version}</version>
@@ -508,6 +511,11 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
                 <version>${spring-security.version}</version>
             </dependency>
             <dependency>
@@ -744,6 +752,11 @@
                 <version>${quartz.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
@@ -975,6 +988,7 @@
                     <configuration>
                         <release>17</release>
                         <encoding>UTF-8</encoding>
+                        <parameters>true</parameters>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -1264,6 +1278,7 @@
                 <configuration>
                     <release>17</release>
                     <encoding>UTF-8</encoding>
+                    <parameters>true</parameters>
                 </configuration>
             </plugin>
             <plugin>

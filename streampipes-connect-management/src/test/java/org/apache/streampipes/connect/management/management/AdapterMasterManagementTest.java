@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
@@ -40,7 +41,12 @@ public class AdapterMasterManagementTest {
     when(adapterStorage.getAllAdapters()).thenReturn(null);
 
     AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(adapterStorage, resourceManager, null);
+        new AdapterMasterManagement(
+            adapterStorage,
+            resourceManager,
+            null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        );
 
     adapterMasterManagement.getAdapter("id2");
   }
@@ -53,7 +59,12 @@ public class AdapterMasterManagementTest {
     when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(adapterStorage, resourceManager, null);
+        new AdapterMasterManagement(
+            adapterStorage,
+            resourceManager,
+            null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        );
 
     adapterMasterManagement.getAdapter("id2");
   }
@@ -66,7 +77,12 @@ public class AdapterMasterManagementTest {
     when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(adapterStorage, resourceManager, null);
+        new AdapterMasterManagement(
+            adapterStorage,
+            resourceManager,
+            null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        );
 
     List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();
 
@@ -80,7 +96,12 @@ public class AdapterMasterManagementTest {
     when(adapterStorage.getAllAdapters()).thenReturn(null);
 
     AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(adapterStorage, resourceManager, null);
+        new AdapterMasterManagement(
+            adapterStorage,
+            resourceManager,
+            null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        );
 
     adapterMasterManagement.getAllAdapterInstances();
 

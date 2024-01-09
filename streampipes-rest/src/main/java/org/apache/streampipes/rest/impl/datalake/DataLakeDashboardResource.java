@@ -23,12 +23,11 @@ import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
 import org.apache.streampipes.rest.impl.dashboard.AbstractDashboardResource;
 
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.ws.rs.Path;
-
-@Path("/v3/datalake/dashboard")
-@Component
+@RestController
+@RequestMapping("/api/v3/datalake/dashboard")
 public class DataLakeDashboardResource extends AbstractDashboardResource {
 
   @Override
