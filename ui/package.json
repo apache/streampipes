@@ -54,7 +54,7 @@
     "@ngx-loading-bar/http-client": "6.0.2",
     "@panzoom/panzoom": "^4.5.1",
     "@swimlane/ngx-charts": "^20.4.1",
-    "angular-datatables": "^16.0.1",
+    "angular-datatables": "^17.0.0",
     "angular-gridster2": "^16.0.0",
     "angular-plotly.js": "^5.0.0",
     "angular2-uuid": "1.1.1",
