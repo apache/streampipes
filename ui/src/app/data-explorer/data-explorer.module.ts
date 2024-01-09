@@ -104,6 +104,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { ImageViewerComponent } from './components/widgets/image/image-viewer/image-viewer.component';
 import { ImageBarComponent } from './components/widgets/image/image-bar/image-bar.component';
 import { ImageBarPreviewComponent } from './components/widgets/image/image-bar/image-bar-preview/image-bar-preview.component';
+import { DateInputComponent } from './components/date-input/date-input.component';
 
 export const MY_NATIVE_FORMATS = {
     fullPickerInput: {
@@ -227,6 +228,7 @@ export const MY_NATIVE_FORMATS = {
         DataExplorerVisualisationSettingsComponent,
         WidgetDirective,
         TooMuchDataComponent,
+        DateInputComponent,
     ],
     providers: [
         DatalakeRestService,

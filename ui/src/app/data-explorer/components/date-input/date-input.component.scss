@@ -16,42 +16,7 @@
  *
  */
 
-@import '../../../../scss/variables';
-
-.start-date-margin {
-    margin-right: 5px;
-}
-
-.button-margin {
-    border-radius: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin: 0;
-    border-right: 1px solid #cccccc !important;
-}
-
-.button-margin:last-of-type {
-    border-right: 0 !important;
-}
-
-.time-range-wrapper {
-    border: 1px solid var(--color-accent);
-    //background: var(--color-accent);
-}
-
-.time-wrapper {
-    border: 1px solid var(--color-accent);
-    background: var(--color-bg-0);
-}
-
-.mr--15 {
-    margin-right: -15px;
-}
-
-.ml--5 {
-    margin-left: -5px;
-}
-
-.mr--5 {
-    margin-right: -5px;
+.sp-date-input {
+    font-family: Roboto-Regular;
+    font-size: small;
 }

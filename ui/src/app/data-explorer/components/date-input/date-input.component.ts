@@ -16,42 +16,32 @@
  *
  */
 
-@import '../../../../scss/variables';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { format } from 'date-fns';
 
-.start-date-margin {
-    margin-right: 5px;
-}
+@Component({
+    selector: 'sp-date-input',
+    templateUrl: './date-input.component.html',
+    styleUrls: ['./date-input.component.scss'],
+})
+export class DateInputComponent {
+    @Input()
+    date: Date;
 
-.button-margin {
-    border-radius: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin: 0;
-    border-right: 1px solid #cccccc !important;
-}
+    @Output()
+    dateChange: EventEmitter<Date> = new EventEmitter<Date>();
 
-.button-margin:last-of-type {
-    border-right: 0 !important;
-}
+    @Output()
+    dateChanged = new EventEmitter<void>();
 
-.time-range-wrapper {
-    border: 1px solid var(--color-accent);
-    //background: var(--color-accent);
-}
+    get formattedDate(): string {
+        return this.date ? format(this.date, "yyyy-MM-dd'T'HH:mm") : '';
+    }
 
-.time-wrapper {
-    border: 1px solid var(--color-accent);
-    background: var(--color-bg-0);
-}
-
-.mr--15 {
-    margin-right: -15px;
-}
-
-.ml--5 {
-    margin-left: -5px;
-}
-
-.mr--5 {
-    margin-right: -5px;
+    onDateChange(value: string): void {
+        const updatedDate = new Date(value);
+        this.date = updatedDate;
+        this.dateChange.emit(updatedDate);
+        this.dateChanged.emit();
+    }
 }
