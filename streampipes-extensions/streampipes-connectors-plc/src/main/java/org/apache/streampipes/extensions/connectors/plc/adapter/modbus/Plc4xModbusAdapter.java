@@ -76,14 +76,14 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   /**
    * Keys of user configuration parameters
    */
-  private static final String PLC_IP = "plc_ip";
+  public static final String PLC_IP = "plc_ip";
   public static final String PLC_PORT = "plc_port";
 
-  private static final String PLC_NODES = "plc_nodes";
-  private static final String PLC_NODE_ID = "plc_node_id";
-  private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
-  private static final String PLC_NODE_ADDRESS = "plc_node_address";
-  private static final String PLC_NODE_TYPE = "plc_node_type";
+  public static final String PLC_NODES = "plc_nodes";
+  public static final String PLC_NODE_ID = "plc_node_id";
+  public static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
+  public static final String PLC_NODE_ADDRESS = "plc_node_address";
+  public static final String PLC_NODE_TYPE = "plc_node_type";
   private static final String CONFIGURE = "configure";
 
   /**

@@ -48,10 +48,12 @@ public class Plc4xModbusAdapterMigrationV1 implements IAdapterMigrator {
     var newConfigs = element.getConfig().stream().map(config->{
       if (isPortConfig(config)){
         var label = Labels.withId(PLC_PORT);
-        return new FreeTextStaticProperty(label.getInternalId(),
-          label.getLabel(),
-          label.getDescription(),
-          XSD.INTEGER);
+        var staticProperty = new FreeTextStaticProperty(label.getInternalId(),
+            label.getLabel(),
+            label.getDescription(),
+            XSD.INTEGER);
+        staticProperty.setIndex(config.getIndex());
+        return staticProperty;
       } else {
         return config;
       }
