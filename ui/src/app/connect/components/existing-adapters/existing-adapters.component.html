@@ -66,11 +66,13 @@
             >
                 <button
                     mat-icon-button
+                    color="accent"
                     id="startAdapterTutorial3"
                     (click)="startAdapterTutorial()"
                     matTooltip="Tutorial: Generic Adapter"
+                    [disabled]="tutorialActive"
                 >
-                    <mat-icon color="accent">school</mat-icon>
+                    <mat-icon>school</mat-icon>
                 </button>
             </div>
             <button

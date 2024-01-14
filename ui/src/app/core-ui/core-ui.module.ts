@@ -70,10 +70,6 @@ import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
 import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
-import {
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-} from '@danielmoncada/angular-datetime-picker';
 import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
 import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
 import { DownloadComponent } from './data-download-dialog/components/download/download.component';
@@ -104,8 +100,6 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         MatSlideToggleModule,
         MatChipsModule,
         MatTreeModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
         PlatformServicesModule,
         PortalModule,
         SharedUiModule,
