@@ -19,37 +19,37 @@
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
-    CorrelationChartVisConfig,
-    CorrelationChartWidgetModel,
-} from '../model/correlation-chart-widget.model';
+    ValueHeatmapChartVisConfig,
+    ValueHeatmapChartWidgetModel,
+} from '../model/value-heatmap-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-correlation-chart-widget-config',
-    templateUrl: './correlation-chart-widget-config.component.html',
+    selector: 'sp-value-heatmap-widget-config',
+    templateUrl: './value-heatmap-chart-widget-config.component.html',
 })
-export class CorrelationWidgetConfigComponent extends BaseWidgetConfig<
-    CorrelationChartWidgetModel,
-    CorrelationChartVisConfig
+export class SpValueHeatmapWidgetConfigComponent extends BaseWidgetConfig<
+    ValueHeatmapChartWidgetModel,
+    ValueHeatmapChartVisConfig
 > {
-    updateFirstField(selectedField: DataExplorerField) {
-        this.currentlyConfiguredWidget.visualizationConfig.firstField =
-            selectedField;
-        this.triggerDataRefresh();
+    setSelectedProperty(field: DataExplorerField) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
+            field;
+        this.triggerViewRefresh();
     }
 
-    updateSecondField(selectedField: DataExplorerField) {
-        this.currentlyConfiguredWidget.visualizationConfig.secondField =
-            selectedField;
-        this.triggerDataRefresh();
+    onResolutionChange(resolution: number): void {
+        this.currentlyConfiguredWidget.visualizationConfig.resolution =
+            resolution;
+        this.triggerViewRefresh();
     }
 
-    protected applyWidgetConfig(config: CorrelationChartVisConfig): void {
-        config.firstField = this.fieldService.getSelectedField(
-            config.firstField,
+    protected applyWidgetConfig(config: ValueHeatmapChartVisConfig): void {
+        config.selectedProperty = this.fieldService.getSelectedField(
+            config.selectedProperty,
             this.fieldProvider.numericFields,
             () => this.fieldProvider.numericFields[0],
         );
-        config.secondField = this.fieldProvider.numericFields[1];
+        config.resolution ??= 1;
     }
 }

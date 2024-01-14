@@ -33,13 +33,17 @@ export interface TagValue {
     values: any[];
 }
 
-export interface GeneratedDataset {
-    dataset: DatasetOption[];
-    tagValues: TagValue[][];
+export interface Indices {
     rawDataStartIndices: number[];
     rawDataEndIndices: number[];
     preparedDataStartIndices: number[];
     preparedDataEndIndices: number[];
+}
+
+export interface GeneratedDataset {
+    dataset: DatasetOption[];
+    tagValues: TagValue[][];
+    indices: Indices;
     initialTransformsCount: number;
 }
 

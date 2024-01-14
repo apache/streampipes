@@ -16,13 +16,12 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     ImageWidgetModel,
     ImageWidgetVisConfig,
 } from '../model/image-widget.model';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
@@ -37,20 +36,17 @@ export class ImageWidgetConfigComponent extends BaseWidgetConfig<
     imageSemanticType = 'https://image.com';
     imageFields: DataExplorerField[];
 
-    protected getWidgetType(): WidgetType {
-        return WidgetType.Image;
-    }
-
-    protected initWidgetConfig(): ImageWidgetVisConfig {
+    protected applyWidgetConfig(config: ImageWidgetVisConfig): void {
         this.imageFields = this.fieldProvider.allFields.filter(field =>
             field.fieldCharacteristics.semanticTypes.find(
                 st => st === this.imageSemanticType,
             ),
         );
-        return {
-            forType: this.getWidgetType(),
-            selectedField: this.imageFields[0],
-        };
+        config.selectedField = this.fieldService.getSelectedField(
+            config.selectedField,
+            this.imageFields,
+            () => this.imageFields[0],
+        );
     }
 
     setSelectedImageProperty(field: DataExplorerField) {

@@ -16,13 +16,15 @@
  *
  */
 
-import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
-    DataExplorerField,
+    Directive,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from '@angular/core';
+import {
     DataExplorerWidgetModel,
-    EventPropertyPrimitive,
-    EventPropertyUnion,
-    EventSchema,
     SourceConfig,
 } from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
@@ -31,13 +33,13 @@ import {
     FieldProvider,
 } from '../../../models/dataview-dashboard.model';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
-import { WidgetType } from '../../../registry/data-explorer-widgets';
 
 @Directive()
 export abstract class BaseWidgetConfig<
-    T extends DataExplorerWidgetModel,
-    V extends DataExplorerVisConfig,
-> implements OnChanges
+        T extends DataExplorerWidgetModel,
+        V extends DataExplorerVisConfig,
+    >
+    implements OnInit, OnChanges
 {
     @Input() currentlyConfiguredWidget: T;
 
@@ -48,7 +50,7 @@ export abstract class BaseWidgetConfig<
         protected fieldService: DataExplorerFieldProviderService,
     ) {}
 
-    onInit() {
+    ngOnInit(): void {
         this.makeFields();
         this.checkAndInitialize();
     }
@@ -61,16 +63,12 @@ export abstract class BaseWidgetConfig<
     }
 
     checkAndInitialize() {
-        if (
-            !this.currentlyConfiguredWidget.visualizationConfig ||
-            !(
-                this.currentlyConfiguredWidget.visualizationConfig.forType ===
-                this.getWidgetType()
-            )
-        ) {
-            this.currentlyConfiguredWidget.visualizationConfig =
-                this.initWidgetConfig();
+        if (!this.currentlyConfiguredWidget.visualizationConfig) {
+            this.currentlyConfiguredWidget.visualizationConfig = {};
         }
+        this.applyWidgetConfig(
+            this.currentlyConfiguredWidget.visualizationConfig as V,
+        );
     }
 
     makeFields() {
@@ -96,90 +94,5 @@ export abstract class BaseWidgetConfig<
         });
     }
 
-    getValuePropertyKeys(eventSchema: EventSchema) {
-        const propertyKeys: EventPropertyUnion[] = [];
-
-        eventSchema.eventProperties.forEach(p => {
-            if (
-                !p.domainProperties.some(
-                    dp => dp === 'http://schema.org/DateTime',
-                )
-            ) {
-                propertyKeys.push(p);
-            }
-        });
-
-        return propertyKeys;
-    }
-
-    getDimensionProperties(eventSchema: EventSchema) {
-        const result: EventPropertyUnion[] = [];
-        eventSchema.eventProperties.forEach(property => {
-            if (this.fieldService.isDimensionProperty(property)) {
-                result.push(property);
-            }
-        });
-
-        return result;
-    }
-
-    getNonNumericProperties(eventSchema: EventSchema): EventPropertyUnion[] {
-        const result: EventPropertyUnion[] = [];
-        const b = new EventPropertyPrimitive();
-        b['@class'] =
-            'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-        b.runtimeType = 'http://www.w3.org/2001/XMLSchema#string';
-        b.runtimeName = '';
-
-        result.push(b);
-
-        eventSchema.eventProperties.forEach(p => {
-            if (
-                !p.domainProperties.some(
-                    dp => dp === 'http://schema.org/DateTime',
-                ) &&
-                !this.fieldService.isNumber(p)
-            ) {
-                result.push(p);
-            }
-        });
-
-        return result;
-    }
-
-    getRuntimeNames(properties: DataExplorerField[]): string[] {
-        const result = [];
-        properties.forEach(p => {
-            result.push(p.runtimeName);
-        });
-
-        return result;
-    }
-
-    getNumericProperty(eventSchema: EventSchema) {
-        const propertyKeys: EventPropertyUnion[] = [];
-
-        eventSchema.eventProperties.forEach(p => {
-            if (
-                !p.domainProperties.some(
-                    dp => dp === 'http://schema.org/DateTime',
-                ) &&
-                this.fieldService.isNumber(p)
-            ) {
-                propertyKeys.push(p);
-            }
-        });
-
-        return propertyKeys;
-    }
-
-    getTimestampProperty(eventSchema: EventSchema) {
-        return eventSchema.eventProperties.find(p =>
-            this.fieldService.isTimestamp(p),
-        );
-    }
-
-    protected abstract getWidgetType(): WidgetType;
-
-    protected abstract initWidgetConfig(): V;
+    protected abstract applyWidgetConfig(config: V): void;
 }

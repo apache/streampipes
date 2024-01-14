@@ -17,14 +17,32 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { GridsterInfo } from '../../dashboard/models/gridster-info.model';
+import { TagValue } from '../models/dataset.model';
+import { EChartsOption } from 'echarts';
+import { GridOption } from 'echarts/types/dist/shared';
 
 @Injectable({ providedIn: 'root' })
-export class ResizeService {
-    public resizeSubject: Subject<GridsterInfo> = new Subject<GridsterInfo>();
+export class EchartsUtilsService {
+    makeSeriesName(tag: TagValue): string {
+        return tag.tagKeys.toString() + ' ' + tag.values.toString();
+    }
 
-    public notify(info: GridsterInfo): void {
-        this.resizeSubject.next(info);
+    addSeriesTitles(
+        options: EChartsOption,
+        series: any[],
+        gridOptions: GridOption[],
+    ): void {
+        options.title = series.map((s, index) => {
+            const grid = gridOptions[index];
+            return {
+                text: s.name,
+                textStyle: {
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                },
+                left: grid.left,
+                top: (grid.top as number) - 20,
+            };
+        });
     }
 }

@@ -24,7 +24,7 @@ describe('Test Distribution View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Distribution');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Histogram');
 
         // Change field for histogram
         DataLakeUtils.selectVisualizationConfig();
@@ -32,9 +32,7 @@ describe('Test Distribution View in Data Explorer', () => {
         cy.get('div').contains('randomnumber (prepared_data #1)').click();
 
         // Check if distribution chart is displayed
-        cy.get('sp-data-explorer-distribution-chart-widget').should(
-            'be.visible',
-        );
+        cy.dataCy('histogram-chart').should('be.visible');
 
         // Change from histogram to heatmap
         DataLakeUtils.selectVisualizationConfig();
@@ -42,8 +40,6 @@ describe('Test Distribution View in Data Explorer', () => {
         cy.get('div').contains('Value Heatmap').click();
 
         // Check if distribution chart is displayed
-        cy.get('sp-data-explorer-distribution-chart-widget').should(
-            'be.visible',
-        );
+        cy.dataCy('value-heatmap-chart').should('be.visible');
     });
 });

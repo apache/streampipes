@@ -16,30 +16,19 @@
  *
  */
 
-import { EventEmitter } from '@angular/core';
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import {
-    DashboardItem,
+    DataExplorerDataConfig,
+    DataExplorerField,
     DataExplorerWidgetModel,
-    SpLogMessage,
-    TimeSettings,
 } from '@streampipes/platform-services';
+import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
-    removeWidgetCallback: EventEmitter<boolean>;
-    timerCallback: EventEmitter<boolean>;
-    errorCallback: EventEmitter<SpLogMessage>;
+export interface ValueHeatmapChartVisConfig extends DataExplorerVisConfig {
+    selectedProperty: DataExplorerField;
+    resolution: number;
+}
 
-    gridsterItem: GridsterItem;
-    gridsterItemComponent: GridsterItemComponent;
-    editMode: boolean;
-
-    timeSettings: TimeSettings;
-
-    dataViewDashboardItem: DashboardItem;
-    dataExplorerWidget: T;
-    previewMode: boolean;
-    gridMode: boolean;
-
-    cleanupSubscriptions();
+export interface ValueHeatmapChartWidgetModel extends DataExplorerWidgetModel {
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: ValueHeatmapChartVisConfig;
 }

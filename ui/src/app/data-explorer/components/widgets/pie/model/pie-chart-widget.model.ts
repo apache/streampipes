@@ -16,12 +16,19 @@
  *
  */
 
-export interface IMultiSeries {
-    name?: string;
-    series?: IMultiSeriesEntry[];
+import {
+    DataExplorerDataConfig,
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
+import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+
+export interface PieChartVisConfig extends DataExplorerVisConfig {
+    selectedProperty: DataExplorerField;
+    roundingValue: number;
 }
 
-export interface IMultiSeriesEntry {
-    name: string;
-    value: any;
+export interface PieChartWidgetModel extends DataExplorerWidgetModel {
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: PieChartVisConfig;
 }

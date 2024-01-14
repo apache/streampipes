@@ -16,21 +16,21 @@
  *
  */
 
-import { DistributionChartWidgetModel } from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
 import { EChartsOption, PieSeriesOption } from 'echarts';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
-import { SpBaseSingleFieldEchartsRenderer } from './sp-base-single-field-echarts-renderer';
+import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
+import { Injectable } from '@angular/core';
+import { FieldProvider } from '../../../models/dataview-dashboard.model';
+import { DataExplorerField } from '@streampipes/platform-services';
+import { PieChartWidgetModel } from './model/pie-chart-widget.model';
 
-export class SpPieRenderer extends SpBaseSingleFieldEchartsRenderer<
-    DistributionChartWidgetModel,
+@Injectable({ providedIn: 'root' })
+export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
+    PieChartWidgetModel,
     PieSeriesOption
 > {
-    getType(): string {
-        return 'pie';
-    }
-
     addDatasetTransform(
-        widgetConfig: DistributionChartWidgetModel,
+        widgetConfig: PieChartWidgetModel,
     ): DataTransformOption {
         const field =
             widgetConfig.visualizationConfig.selectedProperty.fullDbName;
@@ -53,7 +53,7 @@ export class SpPieRenderer extends SpBaseSingleFieldEchartsRenderer<
     addSeriesItem(
         name: string,
         datasetIndex: number,
-        widgetConfig: DistributionChartWidgetModel,
+        widgetConfig: PieChartWidgetModel,
     ): PieSeriesOption {
         return {
             name,
@@ -75,7 +75,7 @@ export class SpPieRenderer extends SpBaseSingleFieldEchartsRenderer<
     }
 
     initialTransforms(
-        widgetConfig: DistributionChartWidgetModel,
+        widgetConfig: PieChartWidgetModel,
         sourceIndex: number,
     ): DataTransformOption[] {
         const fieldSource = widgetConfig.visualizationConfig.selectedProperty;
@@ -96,7 +96,7 @@ export class SpPieRenderer extends SpBaseSingleFieldEchartsRenderer<
             : [];
     }
 
-    getAffectedField(widgetConfig: DistributionChartWidgetModel) {
+    getSelectedField(widgetConfig: PieChartWidgetModel) {
         return widgetConfig.visualizationConfig.selectedProperty;
     }
 
@@ -108,7 +108,23 @@ export class SpPieRenderer extends SpBaseSingleFieldEchartsRenderer<
         return true;
     }
 
-    getDefaultSeriesName(widgetConfig: DistributionChartWidgetModel): string {
+    getDefaultSeriesName(widgetConfig: PieChartWidgetModel): string {
         return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
+    }
+
+    performFieldUpdate(
+        widgetConfig: PieChartWidgetModel,
+        fieldProvider: FieldProvider,
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ): void {
+        widgetConfig.visualizationConfig.selectedProperty =
+            this.fieldUpdateService.updateSingleField(
+                widgetConfig.visualizationConfig.selectedProperty,
+                fieldProvider.numericFields,
+                addedFields,
+                removedFields,
+                () => true,
+            );
     }
 }

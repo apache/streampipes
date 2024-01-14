@@ -16,25 +16,25 @@
  *
  */
 
-import { DistributionChartWidgetModel } from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
 import { BarSeriesOption, EChartsOption } from 'echarts';
-import { SpBaseSingleFieldEchartsRenderer } from './sp-base-single-field-echarts-renderer';
+import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import { Injectable } from '@angular/core';
+import { FieldProvider } from '../../../models/dataview-dashboard.model';
+import { DataExplorerField } from '@streampipes/platform-services';
+import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
 
-export class SpHistogramRenderer extends SpBaseSingleFieldEchartsRenderer<
-    DistributionChartWidgetModel,
+@Injectable({ providedIn: 'root' })
+export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer<
+    HistogramChartWidgetModel,
     BarSeriesOption
 > {
-    getType(): string {
-        return 'histogram';
-    }
-
     addAdditionalConfigs(option: EChartsOption) {
         //do nothing
     }
 
     addDatasetTransform(
-        widgetConfig: DistributionChartWidgetModel,
+        widgetConfig: HistogramChartWidgetModel,
     ): DataTransformOption {
         return {
             type: 'sp:histogram',
@@ -53,7 +53,7 @@ export class SpHistogramRenderer extends SpBaseSingleFieldEchartsRenderer<
     addSeriesItem(
         name: string,
         datasetIndex: number,
-        widgetConfig: DistributionChartWidgetModel,
+        widgetConfig: HistogramChartWidgetModel,
         index: number,
     ): BarSeriesOption {
         return {
@@ -68,7 +68,9 @@ export class SpHistogramRenderer extends SpBaseSingleFieldEchartsRenderer<
         };
     }
 
-    getAffectedField(widgetConfig: DistributionChartWidgetModel) {
+    getSelectedField(
+        widgetConfig: HistogramChartWidgetModel,
+    ): DataExplorerField {
         return widgetConfig.visualizationConfig.selectedProperty;
     }
 
@@ -76,7 +78,23 @@ export class SpHistogramRenderer extends SpBaseSingleFieldEchartsRenderer<
         return 'value';
     }
 
-    getDefaultSeriesName(widgetConfig: DistributionChartWidgetModel): string {
+    getDefaultSeriesName(widgetConfig: HistogramChartWidgetModel): string {
         return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
+    }
+
+    performFieldUpdate(
+        widgetConfig: HistogramChartWidgetModel,
+        fieldProvider: FieldProvider,
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ): void {
+        widgetConfig.visualizationConfig.selectedProperty =
+            this.fieldUpdateService.updateSingleField(
+                widgetConfig.visualizationConfig.selectedProperty,
+                fieldProvider.numericFields,
+                addedFields,
+                removedFields,
+                field => field.fieldCharacteristics.numeric,
+            );
     }
 }

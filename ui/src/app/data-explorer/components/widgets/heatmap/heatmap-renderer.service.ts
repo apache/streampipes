@@ -16,21 +16,21 @@
  *
  */
 
-import { SpBaseEchartsRenderer } from './sp-base-echarts-renderer';
-import { HeatmapWidgetModel } from '../components/widgets/heatmap/model/heatmap-widget.model';
-import { GeneratedDataset, TagValue } from '../models/dataset.model';
+import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
+import { HeatmapWidgetModel } from './model/heatmap-widget.model';
+import { GeneratedDataset, TagValue } from '../../../models/dataset.model';
 import { EChartsOption } from 'echarts';
 import {
     DimensionDefinitionLoose,
     OptionDataValue,
     OptionSourceDataArrayRows,
 } from 'echarts/types/src/util/types';
+import { Injectable } from '@angular/core';
+import { DataExplorerField } from '@streampipes/platform-services';
+import { FieldProvider } from '../../../models/dataview-dashboard.model';
 
-export class SpHeatmapRenderer extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
-    getType(): string {
-        return 'heatmap';
-    }
-
+@Injectable({ providedIn: 'root' })
+export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
     applyOptions(
         datasets: GeneratedDataset,
         options: EChartsOption,
@@ -127,5 +127,21 @@ export class SpHeatmapRenderer extends SpBaseEchartsRenderer<HeatmapWidgetModel>
             });
             return rowValues.toString();
         }
+    }
+
+    performFieldUpdate(
+        widgetConfig: HeatmapWidgetModel,
+        fieldProvider: FieldProvider,
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ): void {
+        widgetConfig.visualizationConfig.selectedHeatProperty =
+            this.fieldUpdateService.updateSingleField(
+                widgetConfig.visualizationConfig.selectedHeatProperty,
+                fieldProvider.numericFields,
+                addedFields,
+                removedFields,
+                field => field.fieldCharacteristics.numeric,
+            );
     }
 }

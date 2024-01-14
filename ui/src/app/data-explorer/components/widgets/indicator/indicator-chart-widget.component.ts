@@ -155,7 +155,7 @@ export class IndicatorChartWidgetComponent
         addedFields: DataExplorerField[],
         removedFields: DataExplorerField[],
     ): DataExplorerField {
-        return this.updateSingleField(
+        return this.fieldUpdateService.updateSingleField(
             selected,
             this.fieldProvider.numericFields,
             addedFields,

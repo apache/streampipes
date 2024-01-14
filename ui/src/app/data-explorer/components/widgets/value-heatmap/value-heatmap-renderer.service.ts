@@ -16,21 +16,21 @@
  *
  */
 
-import { DistributionChartWidgetModel } from '../components/widgets/distribution-chart/model/distribution-chart-widget.model';
 import { EChartsOption, HeatmapSeriesOption } from 'echarts';
-import { SpBaseSingleFieldEchartsRenderer } from './sp-base-single-field-echarts-renderer';
+import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import { Injectable } from '@angular/core';
+import { FieldProvider } from '../../../models/dataview-dashboard.model';
+import { DataExplorerField } from '@streampipes/platform-services';
+import { ValueHeatmapChartWidgetModel } from './model/value-heatmap-chart-widget.model';
 
-export class SpValueHeatmapRenderer extends SpBaseSingleFieldEchartsRenderer<
-    DistributionChartWidgetModel,
+@Injectable({ providedIn: 'root' })
+export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRenderer<
+    ValueHeatmapChartWidgetModel,
     HeatmapSeriesOption
 > {
-    getType(): string {
-        return 'heatmap';
-    }
-
     addDatasetTransform(
-        widgetConfig: DistributionChartWidgetModel,
+        widgetConfig: ValueHeatmapChartWidgetModel,
     ): DataTransformOption {
         const field =
             widgetConfig.visualizationConfig.selectedProperty.fullDbName;
@@ -74,7 +74,7 @@ export class SpValueHeatmapRenderer extends SpBaseSingleFieldEchartsRenderer<
     addSeriesItem(
         name: string,
         datasetIndex: number,
-        widgetConfig: DistributionChartWidgetModel,
+        widgetConfig: ValueHeatmapChartWidgetModel,
         index: number,
     ): HeatmapSeriesOption {
         return {
@@ -104,7 +104,23 @@ export class SpValueHeatmapRenderer extends SpBaseSingleFieldEchartsRenderer<
         };
     }
 
-    getAffectedField(widgetConfig: DistributionChartWidgetModel) {
+    getSelectedField(widgetConfig: ValueHeatmapChartWidgetModel) {
         return widgetConfig.visualizationConfig.selectedProperty;
+    }
+
+    performFieldUpdate(
+        widgetConfig: ValueHeatmapChartWidgetModel,
+        fieldProvider: FieldProvider,
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ): void {
+        widgetConfig.visualizationConfig.selectedProperty =
+            this.fieldUpdateService.updateSingleField(
+                widgetConfig.visualizationConfig.selectedProperty,
+                fieldProvider.numericFields,
+                addedFields,
+                removedFields,
+                field => field.fieldCharacteristics.numeric,
+            );
     }
 }

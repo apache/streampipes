@@ -126,10 +126,7 @@ export class CorrelationChartWidgetComponent
             let sizeVal;
             let opacityVal;
 
-            if (
-                this.dataExplorerWidget.visualizationConfig.displayType ===
-                'Density'
-            ) {
+            if (this.dataExplorerWidget.widgetType === 'density-chart') {
                 sizeVal = 2;
                 opacityVal = 0.4;
             } else {
@@ -161,10 +158,7 @@ export class CorrelationChartWidgetComponent
 
             this.data.push(component);
 
-            if (
-                this.dataExplorerWidget.visualizationConfig.displayType ===
-                'Density'
-            ) {
+            if (this.dataExplorerWidget.widgetType === 'density-chart') {
                 const component2 = {
                     x: this.transform(group.rows, xIndex),
                     y: this.transform(group.rows, yIndex),
@@ -257,7 +251,7 @@ export class CorrelationChartWidgetComponent
         addedFields: DataExplorerField[],
         removedFields: DataExplorerField[],
     ): DataExplorerField {
-        return this.updateSingleField(
+        return this.fieldUpdateService.updateSingleField(
             selected,
             this.fieldProvider.numericFields,
             addedFields,

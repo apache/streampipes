@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     DataExplorerField,
     DataExplorerWidgetModel,
@@ -29,10 +29,12 @@ import { EChartsOption } from 'echarts';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-@Directive()
-export abstract class BaseDataExplorerEchartsWidgetDirective<
-        T extends DataExplorerWidgetModel,
-    >
+@Component({
+    selector: 'sp-data-explorer-echarts-widget',
+    templateUrl: './echarts-widget.component.html',
+    styleUrls: ['./echarts-widget.component.scss'],
+})
+export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     extends BaseDataExplorerWidgetDirective<T>
     implements OnInit
 {
@@ -47,10 +49,11 @@ export abstract class BaseDataExplorerEchartsWidgetDirective<
 
     renderSubject = new Subject<void>();
     renderSubjectSubscription: Subscription;
+    renderer: SpEchartsRenderer<T>;
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.initOptions();
+        this.renderer = this.getRenderer();
         this.renderSubjectSubscription = this.renderSubject
             .pipe(debounceTime(300))
             .subscribe(() => {
@@ -79,7 +82,6 @@ export abstract class BaseDataExplorerEchartsWidgetDirective<
     onChartInit(ec: ECharts) {
         this.eChartsInstance = ec;
         this.applySize(this.currentWidth, this.currentHeight);
-        this.initOptions();
     }
 
     applySize(width: number, height: number) {
@@ -90,38 +92,38 @@ export abstract class BaseDataExplorerEchartsWidgetDirective<
 
     renderChartOptions(spQueryResult: SpQueryResult[]): void {
         this.option = {
-            ...this.getRenderer().render(
-                spQueryResult,
-                this.dataExplorerWidget,
-                { width: this.currentWidth, height: this.currentHeight },
-            ),
+            ...this.renderer.render(spQueryResult, this.dataExplorerWidget, {
+                width: this.currentWidth,
+                height: this.currentHeight,
+            }),
         };
-    }
-
-    triggerFieldUpdate(
-        selected: DataExplorerField,
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ): DataExplorerField {
-        return this.updateSingleField(
-            selected,
-            this.fieldProvider.numericFields,
-            addedFields,
-            removedFields,
-            field => field.fieldCharacteristics.numeric,
-        );
     }
 
     refreshView() {
         this.renderSubject.next();
     }
 
-    abstract getRenderer(): SpEchartsRenderer<T>;
-
-    initOptions() {}
-
     public cleanupSubscriptions(): void {
         super.cleanupSubscriptions();
         this.renderSubjectSubscription.unsubscribe();
+    }
+
+    getRenderer(): SpEchartsRenderer<T> {
+        const widgetType = this.widgetRegistryService.getWidgetTemplate(
+            this.dataExplorerWidget.widgetType,
+        );
+        return widgetType.chartRenderer;
+    }
+
+    handleUpdatedFields(
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ) {
+        this.renderer.performFieldUpdate(
+            this.dataExplorerWidget,
+            this.fieldProvider,
+            addedFields,
+            removedFields,
+        );
     }
 }

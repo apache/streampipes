@@ -16,27 +16,22 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     IndicatorChartVisConfig,
     IndicatorChartWidgetModel,
 } from '../model/indicator-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
     templateUrl: './indicator-chart-widget-config.component.html',
 })
-export class IndicatorWidgetConfigComponent
-    extends BaseWidgetConfig<IndicatorChartWidgetModel, IndicatorChartVisConfig>
-    implements OnInit
-{
-    ngOnInit(): void {
-        super.onInit();
-    }
-
+export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
+    IndicatorChartWidgetModel,
+    IndicatorChartVisConfig
+> {
     updateValue(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.valueField = field;
         this.triggerDataRefresh();
@@ -47,18 +42,16 @@ export class IndicatorWidgetConfigComponent
         this.triggerDataRefresh();
     }
 
-    protected getWidgetType(): WidgetType {
-        return WidgetType.IndicatorChart;
-    }
-
-    protected initWidgetConfig(): IndicatorChartVisConfig {
-        return {
-            forType: this.getWidgetType(),
-            valueField:
-                this.fieldProvider.numericFields.length > 0
+    protected applyWidgetConfig(config: IndicatorChartVisConfig): void {
+        config.valueField = this.fieldService.getSelectedField(
+            config.valueField,
+            this.fieldProvider.numericFields,
+            () => {
+                return this.fieldProvider.numericFields.length > 0
                     ? this.fieldProvider.numericFields[0]
-                    : undefined,
-            showDelta: false,
-        };
+                    : undefined;
+            },
+        );
+        config.showDelta ??= false;
     }
 }

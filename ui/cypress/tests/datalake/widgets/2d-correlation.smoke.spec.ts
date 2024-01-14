@@ -24,7 +24,7 @@ describe('Test 2d Correlation View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', '2D Correlation');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Scatter');
 
         // Check if scatter plot is displayed
         cy.get('g').should('have.class', 'scatterlayer mlayer');

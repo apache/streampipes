@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import {
@@ -25,25 +25,20 @@ import {
 } from '../model/heatmap-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
     selector: 'sp-data-explorer-heatmap-widget-config',
     templateUrl: './heatmap-widget-config.component.html',
 })
-export class HeatmapWidgetConfigComponent
-    extends BaseWidgetConfig<HeatmapWidgetModel, HeatmapVisConfig>
-    implements OnInit
-{
+export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<
+    HeatmapWidgetModel,
+    HeatmapVisConfig
+> {
     constructor(
         widgetConfigurationService: WidgetConfigurationService,
         fieldService: DataExplorerFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
-    }
-
-    ngOnInit(): void {
-        super.onInit();
     }
 
     setShowLabelsProperty(field: DataExplorerField) {
@@ -58,15 +53,12 @@ export class HeatmapWidgetConfigComponent
         this.triggerDataRefresh();
     }
 
-    protected getWidgetType(): WidgetType {
-        return WidgetType.Heatmap;
-    }
-
-    protected initWidgetConfig(): HeatmapVisConfig {
-        return {
-            forType: this.getWidgetType(),
-            selectedHeatProperty: this.fieldProvider.numericFields[1],
-            showLabelsProperty: false,
-        };
+    protected applyWidgetConfig(config: HeatmapVisConfig): void {
+        config.selectedHeatProperty = this.fieldService.getSelectedField(
+            config.selectedHeatProperty,
+            this.fieldProvider.numericFields,
+            () => this.fieldProvider.numericFields[0],
+        );
+        config.showLabelsProperty ??= false;
     }
 }

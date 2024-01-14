@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     TimeSeriesChartVisConfig,
@@ -28,19 +28,15 @@ import {
     EventPropertyUnion,
 } from '@streampipes/platform-services';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
     selector: 'sp-data-explorer-time-series-chart-widget-config',
     templateUrl: './time-series-chart-widget-config.component.html',
 })
-export class TimeSeriesChartWidgetConfigComponent
-    extends BaseWidgetConfig<
-        TimeSeriesChartWidgetModel,
-        TimeSeriesChartVisConfig
-    >
-    implements OnInit
-{
+export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
+    TimeSeriesChartWidgetModel,
+    TimeSeriesChartVisConfig
+> {
     constructor(
         widgetConfigurationService: WidgetConfigurationService,
         fieldService: DataExplorerFieldProviderService,
@@ -66,10 +62,6 @@ export class TimeSeriesChartWidgetConfigComponent
         '#D466A1',
     ];
 
-    ngOnInit(): void {
-        super.onInit();
-    }
-
     setSelectedProperties(selectedColumns: DataExplorerField[]) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties =
             selectedColumns;
@@ -93,13 +85,6 @@ export class TimeSeriesChartWidgetConfigComponent
         numericPlusBooleanFields.map((field, index) => {
             const name = field.fullDbName + field.sourceIndex;
             if (!(name in currentColors)) {
-                console.log(
-                    'choosing color ' +
-                        lenBefore +
-                        index +
-                        '   ' +
-                        this.presetColors[lenBefore + index],
-                );
                 currentColors[name] = this.presetColors[lenBefore + index];
                 currentNames[name] = field.fullDbName;
                 currentTypes[name] = 'lines';
@@ -143,15 +128,7 @@ export class TimeSeriesChartWidgetConfigComponent
         this.triggerDataRefresh();
     }
 
-    toggleLabelingMode() {
-        // this.triggerViewRefresh();
-    }
-
-    protected getWidgetType(): WidgetType {
-        return WidgetType.LineChart;
-    }
-
-    protected initWidgetConfig(): TimeSeriesChartVisConfig {
+    protected applyWidgetConfig(config: TimeSeriesChartVisConfig): void {
         const numericPlusBooleanFields =
             this.fieldProvider.numericFields.concat(
                 this.fieldProvider.booleanFields,
@@ -163,7 +140,6 @@ export class TimeSeriesChartWidgetConfigComponent
         const axes = {};
 
         numericPlusBooleanFields.map((field, index) => {
-            console.log('field full db name ' + field.fullDbName);
             colors[field.fullDbName + field.sourceIndex] =
                 this.presetColors[index];
             names[field.fullDbName + field.sourceIndex] = field.fullDbName;
@@ -171,18 +147,22 @@ export class TimeSeriesChartWidgetConfigComponent
             axes[field.fullDbName + field.sourceIndex] = 'left';
         });
 
-        return {
-            forType: this.getWidgetType(),
-            yKeys: [],
-            selectedTimeSeriesChartProperties:
-                numericPlusBooleanFields.length > 6
-                    ? numericPlusBooleanFields.slice(0, 5)
-                    : numericPlusBooleanFields,
-            chosenColor: colors,
-            displayName: names,
-            displayType: dTypes,
-            chosenAxis: axes,
-            showSpike: true,
-        };
+        config.yKeys = [];
+        config.selectedTimeSeriesChartProperties =
+            this.fieldService.getSelectedFields(
+                config.selectedTimeSeriesChartProperties,
+                numericPlusBooleanFields,
+                () => {
+                    return numericPlusBooleanFields.length > 6
+                        ? numericPlusBooleanFields.slice(0, 5)
+                        : numericPlusBooleanFields;
+                },
+            );
+
+        config.chosenColor = colors;
+        config.displayName = names;
+        config.displayType = dTypes;
+        config.chosenAxis = axes;
+        config.showSpike = true;
     }
 }

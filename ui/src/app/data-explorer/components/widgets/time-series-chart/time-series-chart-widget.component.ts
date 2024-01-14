@@ -535,7 +535,7 @@ export class TimeSeriesChartWidgetComponent
         removedFields: DataExplorerField[],
     ) {
         this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties =
-            this.updateFieldSelection(
+            this.fieldUpdateService.updateFieldSelection(
                 this.dataExplorerWidget.visualizationConfig
                     .selectedTimeSeriesChartProperties,
                 addedFields,

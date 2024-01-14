@@ -134,11 +134,11 @@ export class TableWidgetComponent
         removedFields: DataExplorerField[],
     ) {
         this.dataExplorerWidget.visualizationConfig.selectedColumns =
-            this.updateFieldSelection(
+            this.fieldUpdateService.updateFieldSelection(
                 this.dataExplorerWidget.visualizationConfig.selectedColumns,
                 addedFields,
                 removedFields,
-                field => true,
+                () => true,
             );
         this.columnNames = ['time'].concat(
             this.dataExplorerWidget.visualizationConfig.selectedColumns.map(

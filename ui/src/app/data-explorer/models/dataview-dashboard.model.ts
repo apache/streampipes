@@ -16,21 +16,52 @@
  *
  */
 
-import { GridsterConfig } from 'angular-gridster2';
-import { WidgetType } from '../registry/data-explorer-widgets';
 import {
+    GridsterConfig,
+    GridsterItem,
+    GridsterItemComponent,
+} from 'angular-gridster2';
+import {
+    DashboardItem,
     DataExplorerField,
     DataExplorerWidgetModel,
+    SpLogMessage,
     SpQueryResult,
+    TimeSettings,
 } from '@streampipes/platform-services';
 import { EChartsOption } from 'echarts';
 import { WidgetSize } from './dataset.model';
+import { EventEmitter } from '@angular/core';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDataViewDashboardConfig extends GridsterConfig {}
 
+export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
+    removeWidgetCallback: EventEmitter<boolean>;
+    timerCallback: EventEmitter<boolean>;
+    errorCallback: EventEmitter<SpLogMessage>;
+
+    gridsterItem: GridsterItem;
+    gridsterItemComponent: GridsterItemComponent;
+    editMode: boolean;
+
+    timeSettings: TimeSettings;
+
+    dataViewDashboardItem: DashboardItem;
+    dataExplorerWidget: T;
+    previewMode: boolean;
+    gridMode: boolean;
+
+    cleanupSubscriptions(): void;
+}
+
 export interface SpEchartsRenderer<T extends DataExplorerWidgetModel> {
-    getType(): string;
+    performFieldUpdate(
+        widgetConfig: T,
+        fieldProvider: FieldProvider,
+        addedFields: DataExplorerField[],
+        removedFields: DataExplorerField[],
+    ): void;
     render(
         queryResult: SpQueryResult[],
         widgetConfig: T,
@@ -41,8 +72,9 @@ export interface SpEchartsRenderer<T extends DataExplorerWidgetModel> {
 export interface IWidget<T extends DataExplorerWidgetModel> {
     id: string;
     label: string;
-    componentClass: any;
-    renderers?: SpEchartsRenderer<T>[];
+    widgetComponent: any;
+    widgetConfigurationComponent?: any;
+    chartRenderer?: SpEchartsRenderer<T>;
 }
 
 export interface WidgetBaseAppearanceConfig {
@@ -72,5 +104,5 @@ export interface FieldProvider {
 }
 
 export interface DataExplorerVisConfig {
-    forType: WidgetType;
+    forType?: number | string;
 }

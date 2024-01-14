@@ -23,11 +23,8 @@ import {
 } from '@streampipes/platform-services';
 import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-export interface DistributionChartVisConfig extends DataExplorerVisConfig {
+export interface HistogramChartVisConfig extends DataExplorerVisConfig {
     selectedProperty: DataExplorerField;
-    displayType: string;
-    roundingValue: number;
-    resolution: number;
     autoBin: boolean;
     numberOfBins: number;
     autoDomain: boolean;
@@ -35,7 +32,7 @@ export interface DistributionChartVisConfig extends DataExplorerVisConfig {
     domainMax: number;
 }
 
-export interface DistributionChartWidgetModel extends DataExplorerWidgetModel {
+export interface HistogramChartWidgetModel extends DataExplorerWidgetModel {
     dataConfig: DataExplorerDataConfig;
-    visualizationConfig: DistributionChartVisConfig;
+    visualizationConfig: HistogramChartVisConfig;
 }
