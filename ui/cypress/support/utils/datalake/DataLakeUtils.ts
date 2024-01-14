@@ -316,30 +316,15 @@ export class DataLakeUtils {
 
     public static selectTimeRange(from: Date, to: Date) {
         DataLakeUtils.setTimeInput('time-range-from', from);
-        DataLakeUtils.clickCancelTime();
         DataLakeUtils.setTimeInput('time-range-to', to);
-        DataLakeUtils.clickCancelTime();
     }
 
     public static setTimeInput(field: string, date: Date) {
-        cy.dataCy(field)
-            .clear({ force: true })
-            .type(DataLakeUtils.makeTimeString(date), { force: true });
-    }
-
-    public static clickCancelTime() {
-        cy.get('.owl-dt-container-buttons > button:nth-child(1)').click();
-        cy.wait(1000);
+        cy.dataCy(field).type(DataLakeUtils.makeTimeString(date));
     }
 
     public static makeTimeString(date: Date) {
-        return date.toLocaleString('en-US', {
-            month: 'numeric',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-        });
+        return date.toISOString().slice(0, 16);
     }
 
     public static getFutureDate() {

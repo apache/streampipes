@@ -31,11 +31,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
-import {
-    OWL_DATE_TIME_FORMATS,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-} from '@danielmoncada/angular-datetime-picker';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
@@ -89,36 +84,11 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { ImageViewerComponent } from './components/widgets/image/image-viewer/image-viewer.component';
 import { ImageBarComponent } from './components/widgets/image/image-bar/image-bar.component';
 import { ImageBarPreviewComponent } from './components/widgets/image/image-bar/image-bar-preview/image-bar-preview.component';
+import { DateInputComponent } from './components/date-input/date-input.component';
 import { SpEchartsWidgetComponent } from './components/widgets/base/echarts-widget.component';
 import { SpValueHeatmapWidgetConfigComponent } from './components/widgets/value-heatmap/config/value-heatmap-chart-widget-config.component';
 import { SpHistogramChartWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
 import { SpPieChartWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
-
-export const MY_NATIVE_FORMATS = {
-    fullPickerInput: {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hourCycle: 'h23',
-    },
-    datePickerInput: {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour12: false,
-    },
-    timePickerInput: { hour: 'numeric', minute: 'numeric', hour12: false },
-    monthYearLabel: { year: 'numeric', month: 'short', hour12: false },
-    dateA11yLabel: {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour12: false,
-    },
-    monthYearA11yLabel: { year: 'numeric', month: 'long', hour12: false },
-};
 
 @NgModule({
     imports: [
@@ -138,8 +108,6 @@ export const MY_NATIVE_FORMATS = {
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         CoreUiModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
         PlotlyViaWindowModule,
         MatDatepickerModule,
         MatNativeDateModule,
@@ -213,18 +181,13 @@ export const MY_NATIVE_FORMATS = {
         DataExplorerVisualisationSettingsComponent,
         WidgetDirective,
         TooMuchDataComponent,
+        DateInputComponent,
         SpEchartsWidgetComponent,
         SpValueHeatmapWidgetConfigComponent,
         SpHistogramChartWidgetConfigComponent,
         SpPieChartWidgetConfigComponent,
     ],
-    providers: [
-        SemanticTypeUtilsService,
-        {
-            provide: OWL_DATE_TIME_FORMATS,
-            useValue: MY_NATIVE_FORMATS,
-        },
-    ],
+    providers: [SemanticTypeUtilsService],
     exports: [],
 })
 export class DataExplorerModule {
