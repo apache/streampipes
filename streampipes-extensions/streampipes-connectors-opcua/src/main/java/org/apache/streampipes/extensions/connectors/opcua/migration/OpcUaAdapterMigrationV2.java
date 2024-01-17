@@ -55,7 +55,9 @@ public class OpcUaAdapterMigrationV2 implements IAdapterMigrator {
                                                      IStaticPropertyExtractor extractor) throws RuntimeException {
     var newConfigs = element.getConfig().stream().map(config->{
       if (isHostOrUrlConfig(config)){
-        return modifiedAlternatives();
+        var alternatives = modifiedAlternatives();
+        alternatives.setIndex(config.getIndex());
+        return alternatives;
       } else {
         return config;
       }

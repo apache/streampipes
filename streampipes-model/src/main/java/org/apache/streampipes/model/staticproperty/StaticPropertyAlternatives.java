@@ -54,4 +54,36 @@ public class StaticPropertyAlternatives extends StaticProperty {
   public void accept(StaticPropertyVisitor visitor) {
     visitor.visit(this);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof StaticPropertyAlternatives that)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    if (!(this.alternatives.size() == that.alternatives.size())) {
+      return false;
+    }
+
+    for (var i = 0; i < alternatives.size(); i++){
+      if (!alternatives.get(i).equals(that.alternatives.get(i))){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (alternatives != null ? alternatives.hashCode() : 0);
+    return result;
+  }
 }
