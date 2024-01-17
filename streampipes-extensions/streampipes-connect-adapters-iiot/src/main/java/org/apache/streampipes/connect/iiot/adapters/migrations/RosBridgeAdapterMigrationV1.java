@@ -26,7 +26,6 @@ import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.XSD;
 
@@ -48,11 +47,13 @@ public class RosBridgeAdapterMigrationV1 implements IAdapterMigrator {
                                                      IStaticPropertyExtractor extractor) throws RuntimeException {
     var newConfigs = element.getConfig().stream().map(config->{
       if (isPortConfig(config)){
-        Label label = Labels.withId(ROS_PORT_KEY);
-        return new FreeTextStaticProperty(label.getInternalId(),
-          label.getLabel(),
-          label.getDescription(),
-          XSD.INTEGER);
+        var label = Labels.withId(ROS_PORT_KEY);
+        var staticProperty = new FreeTextStaticProperty(label.getInternalId(),
+            label.getLabel(),
+            label.getDescription(),
+            XSD.INTEGER);
+        staticProperty.setIndex(config.getIndex());
+        return staticProperty;
       } else {
         return config;
       }

@@ -60,9 +60,9 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.ros";
 
-  private static final String ROS_HOST_KEY = "ROS_HOST_KEY";
+  public static final String ROS_HOST_KEY = "ROS_HOST_KEY";
   public static final String ROS_PORT_KEY = "ROS_PORT_KEY";
-  private static final String TOPIC_KEY = "TOPIC_KEY";
+  public static final String TOPIC_KEY = "TOPIC_KEY";
 
   private String topic;
   private String host;
