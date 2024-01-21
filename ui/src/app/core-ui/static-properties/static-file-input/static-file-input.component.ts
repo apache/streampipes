@@ -95,6 +95,7 @@ export class StaticFileInputComponent
             .subscribe(fm => {
                 this.fileMetadata = fm;
                 if (filenameToSelect) {
+                    // console.log("here1");
                     this.selectedFile = this.fileMetadata.find(
                         fmi => fmi.filename === filenameToSelect,
                     );
@@ -152,12 +153,11 @@ export class StaticFileInputComponent
                                         (100 * event.loaded) / event.total,
                                     );
                                 } else if (event instanceof HttpResponse) {
-                                    const internalFilename =
-                                        event.body.internalFilename;
+                                    const filename = event.body.filename;
                                     this.parentForm.controls[
                                         this.fieldName
-                                    ].setValue(internalFilename);
-                                    this.fetchFileMetadata(internalFilename);
+                                    ].setValue(filename);
+                                    this.fetchFileMetadata(filename);
                                 }
                             },
                             error => {},
@@ -185,7 +185,7 @@ export class StaticFileInputComponent
     onStatusChange(status: any) {}
 
     onValueChange(value: any) {
-        this.staticProperty.locationPath = value.internalFilename;
+        this.staticProperty.locationPath = value.filename;
         this.parentForm.updateValueAndValidity();
     }
 
