@@ -1815,9 +1815,8 @@ export class FileMetadata {
     createdByUser: string;
     fileId: string;
     filetype: string;
-    internalFilename: string;
+    filename: string;
     lastModified: number;
-    originalFilename: string;
     rev: string;
 
     static fromData(data: FileMetadata, target?: FileMetadata): FileMetadata {
@@ -1829,9 +1828,8 @@ export class FileMetadata {
         instance.createdByUser = data.createdByUser;
         instance.fileId = data.fileId;
         instance.filetype = data.filetype;
-        instance.internalFilename = data.internalFilename;
+        instance.filename = data.filename;
         instance.lastModified = data.lastModified;
-        instance.originalFilename = data.originalFilename;
         instance.rev = data.rev;
         return instance;
     }

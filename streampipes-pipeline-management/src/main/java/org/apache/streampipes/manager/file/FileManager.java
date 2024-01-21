@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FileManager {
@@ -48,13 +47,13 @@ public class FileManager {
 
     var file = allFiles
             .stream()
-            .filter(fileMetadata -> fileMetadata.getOriginalFilename().equals(originalName))
+            .filter(fileMetadata -> fileMetadata.getFilename().equals(originalName))
             .findFirst();
 
     if (file.isEmpty()){
       throw new IOException("No file with original name '%s' found".formatted(originalName));
     }
-    return new FileHandler().getFile(file.get().getInternalFilename());
+    return new FileHandler().getFile(file.get().getFilename());
   }
 
   /**
@@ -74,16 +73,15 @@ public class FileManager {
 
     fileInputStream = cleanFile(fileInputStream, filetype);
 
-    String internalFilename = makeInternalFilename(filetype);
-    FileMetadata fileMetadata = makeFileMetadata(user, filename, internalFilename, filetype);
-    new FileHandler().storeFile(internalFilename, fileInputStream);
+    FileMetadata fileMetadata = makeFileMetadata(user, filename, filetype);
+    new FileHandler().storeFile(filename, fileInputStream);
     storeFileMetadata(fileMetadata);
     return fileMetadata;
   }
 
   public static void deleteFile(String id) {
     FileMetadata fileMetadata = getFileMetadataStorage().getMetadataById(id);
-    new FileHandler().deleteFile(fileMetadata.getInternalFilename());
+    new FileHandler().deleteFile(fileMetadata.getFilename());
     getFileMetadataStorage().deleteFileMetadata(id);
   }
 
@@ -118,22 +116,16 @@ public class FileManager {
   }
 
   private static FileMetadata makeFileMetadata(String user,
-                                               String originalFilename,
-                                               String internalFilename,
+                                               String filename,
                                                String filetype) {
 
     FileMetadata fileMetadata = new FileMetadata();
     fileMetadata.setCreatedAt(System.currentTimeMillis());
     fileMetadata.setCreatedByUser(user);
     fileMetadata.setFiletype(filetype);
-    fileMetadata.setInternalFilename(internalFilename);
-    fileMetadata.setOriginalFilename(originalFilename);
+    fileMetadata.setFilename(filename);
 
     return fileMetadata;
-  }
-
-  private static String makeInternalFilename(String filetype) {
-    return UUID.randomUUID() + "." + filetype;
   }
 
   private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {

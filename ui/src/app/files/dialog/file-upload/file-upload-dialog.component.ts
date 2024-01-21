@@ -58,7 +58,7 @@ export class FileUploadDialogComponent {
     }
 
     store() {
-        this.filesService.getAllOriginalFilenames().subscribe(data => {
+        this.filesService.getAllFilenames().subscribe(data => {
             const allFileNames = new Set(data);
             this.duplicateFileNames = this.fileNames.filter(fileName =>
                 allFileNames.has(fileName.toLowerCase()),

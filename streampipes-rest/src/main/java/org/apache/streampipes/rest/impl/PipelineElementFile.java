@@ -135,7 +135,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   public ResponseEntity<List<String>> getAllOriginalFilenames() {
     return ok(FileManager.getAllFiles()
                          .stream()
-                         .map(fileMetadata -> fileMetadata.getOriginalFilename()
+                         .map(fileMetadata -> fileMetadata.getFilename()
                                                           .toLowerCase())
                          .toList());
   }

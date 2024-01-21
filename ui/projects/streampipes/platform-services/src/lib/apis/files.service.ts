@@ -91,7 +91,7 @@ export class FilesService {
         );
     }
 
-    getAllOriginalFilenames(): Observable<string[]> {
+    getAllFilenames(): Observable<string[]> {
         return this.http.get<string[]>(
             this.platformServicesCommons.apiBasePath + '/files/allFilenames',
         );

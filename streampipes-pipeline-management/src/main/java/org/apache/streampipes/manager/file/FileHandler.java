@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.file;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -37,6 +38,16 @@ public class FileHandler {
 
   public File getFile(String filename) {
     return FileUtils.getFile(makeFile(filename));
+  }
+
+  public void renameFile(String oldFilename, String newFilename) {
+    try {
+      var fileInputStream = new FileInputStream(getFile(oldFilename));
+      deleteFile(oldFilename);
+      storeFile(newFilename, fileInputStream);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   private File makeFile(String filename) {

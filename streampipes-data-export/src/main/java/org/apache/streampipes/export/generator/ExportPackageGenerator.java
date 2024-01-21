@@ -121,7 +121,7 @@ public class ExportPackageGenerator {
 
       config.getFiles().forEach(item -> {
         var fileResolver = new FileResolver();
-        String filename = fileResolver.findDocument(item.getResourceId()).getInternalFilename();
+        String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
         addDoc(builder, item, new FileResolver(), manifest::addFile);
         try {
           builder.addBinary(filename, Files.readAllBytes(FileManager.getFile(filename).toPath()));
