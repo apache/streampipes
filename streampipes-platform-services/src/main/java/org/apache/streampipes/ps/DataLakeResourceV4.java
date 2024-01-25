@@ -149,7 +149,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
   }
 
-  @GetMapping(path = "/measurements/", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
