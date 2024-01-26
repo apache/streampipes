@@ -52,4 +52,8 @@ export class SpValueHeatmapWidgetConfigComponent extends BaseWidgetConfig<
         );
         config.resolution ??= 1;
     }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 0;
+    }
 }

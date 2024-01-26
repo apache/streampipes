@@ -98,4 +98,8 @@ export class MapWidgetConfigComponent extends BaseWidgetConfig<
             () => this.fieldProvider.numericFields[index],
         );
     }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 1;
+    }
 }

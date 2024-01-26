@@ -105,8 +105,7 @@ export class TableWidgetComponent
     }
 
     public refreshView() {
-        this.dataSource.filter =
-            this.dataExplorerWidget.visualizationConfig.searchValue;
+        this.refreshColumns();
     }
 
     onResize(width: number, height: number) {}
@@ -140,6 +139,12 @@ export class TableWidgetComponent
                 removedFields,
                 () => true,
             );
+        this.refreshColumns();
+    }
+
+    refreshColumns(): void {
+        this.dataSource.filter =
+            this.dataExplorerWidget.visualizationConfig.searchValue;
         this.columnNames = ['time'].concat(
             this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
                 c => c.fullDbName,

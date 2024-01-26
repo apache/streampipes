@@ -89,6 +89,9 @@ import { SpEchartsWidgetComponent } from './components/widgets/base/echarts-widg
 import { SpValueHeatmapWidgetConfigComponent } from './components/widgets/value-heatmap/config/value-heatmap-chart-widget-config.component';
 import { SpHistogramChartWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
 import { SpPieChartWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
+import { SpInvalidConfigurationComponent } from './components/widgets/utils/invalid-configuration/invalid-configuration.component';
+import { SpConfigurationBoxComponent } from './components/widgets/utils/layout/configuration-box.component';
+import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/visualization-config-outer/visualization-config-outer.component';
 
 @NgModule({
     imports: [
@@ -186,6 +189,9 @@ import { SpPieChartWidgetConfigComponent } from './components/widgets/pie/config
         SpValueHeatmapWidgetConfigComponent,
         SpHistogramChartWidgetConfigComponent,
         SpPieChartWidgetConfigComponent,
+        SpInvalidConfigurationComponent,
+        SpConfigurationBoxComponent,
+        SpVisualizationConfigOuterComponent,
     ],
     providers: [SemanticTypeUtilsService],
     exports: [],

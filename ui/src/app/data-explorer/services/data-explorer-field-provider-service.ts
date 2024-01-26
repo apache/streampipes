@@ -237,18 +237,10 @@ export class DataExplorerFieldProviderService {
         availableFields: DataExplorerField[],
         getDefaultFields: () => DataExplorerField[],
     ): DataExplorerField[] {
-        if (
-            currentlySelectedFields !== undefined &&
-            currentlySelectedFields.length > 0
-        ) {
-            const matchingFields = currentlySelectedFields.filter(field =>
+        if (currentlySelectedFields !== undefined) {
+            return currentlySelectedFields.filter(field =>
                 availableFields.find(f => f.fullDbName === field.fullDbName),
             );
-            if (matchingFields.length > 0) {
-                return matchingFields;
-            } else {
-                return getDefaultFields();
-            }
         } else {
             return getDefaultFields();
         }

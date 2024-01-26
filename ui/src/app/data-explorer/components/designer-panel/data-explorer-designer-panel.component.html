@@ -48,10 +48,18 @@
             color="accent"
             class="small"
         >
-            <mat-tab
-                data-cy="designer-panel-data-config"
-                label="Data"
-            ></mat-tab>
+            <mat-tab data-cy="designer-panel-data-config" label="Data">
+                <sp-data-explorer-widget-data-settings
+                    class="no-overflow"
+                    #dataSettingsPanel
+                    [(dataLakeMeasure)]="dataLakeMeasure"
+                    [dataConfig]="currentlyConfiguredWidget.dataConfig"
+                    [newWidgetMode]="newWidgetMode"
+                    [widgetId]="currentlyConfiguredWidget._id"
+                    (createWidgetEmitter)="createNewWidget()"
+                >
+                </sp-data-explorer-widget-data-settings>
+            </mat-tab>
             <mat-tab
                 data-cy="designer-panel-visualization-config"
                 label="Visualization"
@@ -60,44 +68,31 @@
                     currentlyConfiguredWidget.dataConfig.sourceConfigs
                         .length === 0
                 "
-            ></mat-tab>
+            >
+                <sp-explorer-visualisation-settings
+                    fxFlex="100"
+                    class="no-overflow"
+                    fxLayout="column"
+                    [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                >
+                </sp-explorer-visualisation-settings>
+            </mat-tab>
             <mat-tab
                 data-cy="designer-panel-appearance-config"
                 label="Appearance"
-            ></mat-tab>
+            >
+                <sp-data-explorer-widget-appearance-settings
+                    class="no-overflow"
+                    [widgetId]="currentlyConfiguredWidget._id"
+                    [baseAppearanceConfig]="
+                        currentlyConfiguredWidget.baseAppearanceConfig
+                    "
+                >
+                </sp-data-explorer-widget-appearance-settings>
+            </mat-tab>
         </mat-tab-group>
 
         <div fxFlex="100" fxLayout="column">
-            <div fxFlex fxLayout="column" class="designer-panel-config">
-                <div *ngIf="selectedIndex === 0">
-                    <sp-data-explorer-widget-data-settings
-                        #dataSettingsPanel
-                        [(dataLakeMeasure)]="dataLakeMeasure"
-                        [dataConfig]="currentlyConfiguredWidget.dataConfig"
-                        [newWidgetMode]="newWidgetMode"
-                        [widgetId]="currentlyConfiguredWidget._id"
-                        (createWidgetEmitter)="createNewWidget()"
-                    >
-                    </sp-data-explorer-widget-data-settings>
-                </div>
-
-                <div *ngIf="selectedIndex === 1" class="p-5">
-                    <sp-explorer-visualisation-settings
-                        [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-                    >
-                    </sp-explorer-visualisation-settings>
-                </div>
-
-                <div *ngIf="selectedIndex === 2" class="p-5">
-                    <sp-data-explorer-widget-appearance-settings
-                        [widgetId]="currentlyConfiguredWidget._id"
-                        [baseAppearanceConfig]="
-                            currentlyConfiguredWidget.baseAppearanceConfig
-                        "
-                    >
-                    </sp-data-explorer-widget-appearance-settings>
-                </div>
-            </div>
             <mat-divider *ngIf="newWidgetMode"></mat-divider>
             <div
                 fxLayout="row"

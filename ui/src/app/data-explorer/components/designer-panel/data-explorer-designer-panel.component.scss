@@ -21,6 +21,7 @@
 .designer-panel-content {
     padding: 0;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .designer-panel-config {
@@ -33,4 +34,9 @@
 
 .designer-panel-header {
     border-bottom: 1px solid var(--color-tab-border);
+}
+
+.no-overflow {
+    overflow-x: hidden;
+    overflow-y: hidden;
 }

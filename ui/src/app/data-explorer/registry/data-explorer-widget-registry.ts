@@ -135,4 +135,8 @@ export class DataExplorerWidgetRegistry {
     getWidgetTemplate(widgetId: string) {
         return this.widgetTypes.find(widget => widget.id === widgetId);
     }
+
+    getDefaultWidget(): IWidget<any> {
+        return this.widgetTypes.find(widget => widget.id === 'table');
+    }
 }

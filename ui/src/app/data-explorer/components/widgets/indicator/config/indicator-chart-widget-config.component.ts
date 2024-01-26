@@ -23,6 +23,7 @@ import {
     IndicatorChartWidgetModel,
 } from '../model/indicator-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { config } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
@@ -53,5 +54,9 @@ export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
             },
         );
         config.showDelta ??= false;
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 0;
     }
 }

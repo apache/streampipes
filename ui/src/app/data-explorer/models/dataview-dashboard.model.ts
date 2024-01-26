@@ -105,4 +105,5 @@ export interface FieldProvider {
 
 export interface DataExplorerVisConfig {
     forType?: number | string;
+    configurationValid: boolean;
 }

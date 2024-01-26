@@ -20,6 +20,7 @@ import {
     Directive,
     Input,
     OnChanges,
+    OnDestroy,
     OnInit,
     SimpleChanges,
 } from '@angular/core';
@@ -33,17 +34,20 @@ import {
     FieldProvider,
 } from '../../../models/dataview-dashboard.model';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { Subscription } from 'rxjs';
 
 @Directive()
 export abstract class BaseWidgetConfig<
         T extends DataExplorerWidgetModel,
         V extends DataExplorerVisConfig,
     >
-    implements OnInit, OnChanges
+    implements OnInit, OnChanges, OnDestroy
 {
     @Input() currentlyConfiguredWidget: T;
 
     fieldProvider: FieldProvider;
+
+    configChangedSubject: Subscription;
 
     constructor(
         protected widgetConfigurationService: WidgetConfigurationService,
@@ -53,6 +57,15 @@ export abstract class BaseWidgetConfig<
     ngOnInit(): void {
         this.makeFields();
         this.checkAndInitialize();
+        this.configChangedSubject =
+            this.widgetConfigurationService.configurationChangedSubject.subscribe(
+                res => {
+                    if (res.widgetId === this.currentlyConfiguredWidget._id) {
+                        this.makeFields();
+                        this.checkAndInitialize();
+                    }
+                },
+            );
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -66,9 +79,18 @@ export abstract class BaseWidgetConfig<
         if (!this.currentlyConfiguredWidget.visualizationConfig) {
             this.currentlyConfiguredWidget.visualizationConfig = {};
         }
-        this.applyWidgetConfig(
-            this.currentlyConfiguredWidget.visualizationConfig as V,
-        );
+        if (this.checkConfigurationValid()) {
+            this.applyWidgetConfig(
+                this.currentlyConfiguredWidget.visualizationConfig as V,
+            );
+        }
+    }
+
+    checkConfigurationValid() {
+        this.currentlyConfiguredWidget.visualizationConfig.configurationValid =
+            this.requiredFieldsForChartPresent();
+        return this.currentlyConfiguredWidget.visualizationConfig
+            .configurationValid;
     }
 
     makeFields() {
@@ -95,4 +117,10 @@ export abstract class BaseWidgetConfig<
     }
 
     protected abstract applyWidgetConfig(config: V): void;
+
+    protected abstract requiredFieldsForChartPresent(): boolean;
+
+    ngOnDestroy(): void {
+        this.configChangedSubject?.unsubscribe();
+    }
 }

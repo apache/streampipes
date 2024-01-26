@@ -18,18 +18,20 @@
 
 <div
     fxLayout="column"
-    fxLayoutAlign="center center"
     fxFlex="100"
-    fxLayoutGap="10px"
+    class="data-explorer-options-panel"
+    [ngStyle]="{ background: background, border: border }"
 >
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <i class="material-icons warning-icon">warning</i>
+    <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        [ngStyle]="{ 'margin-top': marginTop }"
+    >
+        <span class="data-explorer-header">{{ title }} </span>
+        <ng-content select="[header]"> </ng-content>
     </div>
-    <div fxLayout="column" fxLayoutAlign="center center">
-        <div class="default-text">Found no data in selected time range</div>
-        <div class="default-text date-range-text">
-            {{ viewDateRange.startTime | date: 'MM/dd/yyyy HH:mm' }} -
-            {{ viewDateRange.endTime | date: 'MM/dd/yyyy HH:mm' }}
-        </div>
+
+    <div>
+        <ng-content></ng-content>
     </div>
 </div>

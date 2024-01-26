@@ -26,10 +26,12 @@
         <i class="material-icons warning-icon">warning</i>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
-        <div class="default-text">Found no data in selected time range</div>
+        <div class="default-text">
+            Invalid configuration for {{ widgetTypeLabel }}
+        </div>
         <div class="default-text date-range-text">
-            {{ viewDateRange.startTime | date: 'MM/dd/yyyy HH:mm' }} -
-            {{ viewDateRange.endTime | date: 'MM/dd/yyyy HH:mm' }}
+            This chart is missing required fields - choose another chart type or
+            add additional fields.
         </div>
     </div>
 </div>

@@ -23,6 +23,7 @@ import {
     CorrelationChartWidgetModel,
 } from '../model/correlation-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { config } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-correlation-chart-widget-config',
@@ -50,6 +51,16 @@ export class CorrelationWidgetConfigComponent extends BaseWidgetConfig<
             this.fieldProvider.numericFields,
             () => this.fieldProvider.numericFields[0],
         );
-        config.secondField = this.fieldProvider.numericFields[1];
+        const secondFieldIndex =
+            this.fieldProvider.numericFields.length > 1 ? 1 : 0;
+        config.secondField = this.fieldService.getSelectedField(
+            config.secondField,
+            this.fieldProvider.numericFields,
+            () => this.fieldProvider.numericFields[secondFieldIndex],
+        );
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 0;
     }
 }

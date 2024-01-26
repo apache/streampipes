@@ -36,8 +36,6 @@ export class FieldSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;
     @Input() widgetId: string;
 
-    fieldsForSelection: FieldConfig[];
-
     expandFields = false;
 
     constructor(
@@ -47,10 +45,6 @@ export class FieldSelectionPanelComponent implements OnInit {
 
     ngOnInit() {
         this.applyDefaultFields();
-    }
-
-    getFieldsForSelection(): FieldConfig[] {
-        return this.sourceConfig.queryConfig.fields;
     }
 
     applyDefaultFields() {

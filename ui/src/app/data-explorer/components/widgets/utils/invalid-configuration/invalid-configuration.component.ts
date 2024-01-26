@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,18 +16,14 @@
  *
  */
 
-.data-explorer-header {
-    margin-right: 10px;
-    padding: 5px;
-    font-weight: bold;
-}
+import { Component, Input } from '@angular/core';
 
-.data-explorer-options-panel {
-    margin-top: 4px;
-    margin-bottom: 10px;
-    border: 1px solid var(--color-bg-3);
-    background: var(--color-bg-1);
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-bottom: 10px;
+@Component({
+    selector: 'sp-invalid-configuration',
+    templateUrl: './invalid-configuration.component.html',
+    styleUrls: ['../no-data/no-data-in-date-range.component.css'],
+})
+export class SpInvalidConfigurationComponent {
+    @Input()
+    widgetTypeLabel: string;
 }

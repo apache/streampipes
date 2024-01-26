@@ -23,6 +23,7 @@ import {
     HistogramChartWidgetModel,
 } from '../model/histogram-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { config } from 'rxjs';
 
 @Component({
     selector: 'sp-histogram-widget-config',
@@ -65,5 +66,9 @@ export class SpHistogramChartWidgetConfigComponent extends BaseWidgetConfig<
         config.domainMin ??= 0;
         config.domainMax ??= 100;
         config.autoDomain ??= true;
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.allFields.length > 0;
     }
 }

@@ -16,33 +16,29 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <span class="data-explorer-header">Fields </span>
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                style="margin-right: 10px"
-                (click)="selectAllFields()"
-            >
-                Select all
-            </button>
-            <button
-                mat-button
-                mat-raised-button
-                class="small-button mat-basic"
-                style="margin-right: 10px"
-                (click)="deselectAllFields()"
-            >
-                Deselect all
-            </button>
-        </div>
+<sp-configuration-box title="Fields" marginTop="5px">
+    <div header>
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            style="margin-right: 10px"
+            (click)="selectAllFields()"
+        >
+            Select all
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="small-button mat-basic"
+            style="margin-right: 10px"
+            (click)="deselectAllFields()"
+        >
+            Deselect all
+        </button>
     </div>
     <div
-        style="margin-left: 1px; margin-right: 1px"
         *ngFor="let field of availableProperties"
         fxLayout="column"
         class="field-scroll-panel"
@@ -85,7 +81,7 @@
                 appearance="outline"
                 class="marginColorField"
                 color="accent"
-                fxFlex="60"
+                fxFlex="55"
             >
                 <input
                     [(ngModel)]="
@@ -102,7 +98,7 @@
                 appearance="outline"
                 class="marginColorField"
                 color="accent"
-                fxFlex="35"
+                fxFlex="30"
             >
                 <mat-select
                     [(value)]="
@@ -124,7 +120,8 @@
             </mat-form-field>
         </div>
     </div>
-    <span class="data-explorer-header">Axis Selection </span>
+</sp-configuration-box>
+<sp-configuration-box title="Axis" marginTop="5px">
     <div
         style="margin-left: 1px; margin-right: 1px"
         *ngFor="let field of availableProperties"
@@ -132,18 +129,18 @@
         class="field-scroll-panel mb-10"
     >
         <div fxFlex fxLayoutAlign="start center" *ngIf="isSelected(field)">
-            <b>{{
+            <small>{{
                 field.runtimeName +
                     ' (' +
                     (field.aggregation ? field.aggregation + ', ' : '') +
                     field.measure +
                     ')'
-            }}</b>
+            }}</small>
             <span fxFlex></span>
             <mat-form-field
                 appearance="outline"
                 color="accent"
-                fxFlex="60"
+                fxFlex="30"
                 class="marginColorFieldMore"
             >
                 <mat-select
@@ -161,4 +158,4 @@
             </mat-form-field>
         </div>
     </div>
-</div>
+</sp-configuration-box>

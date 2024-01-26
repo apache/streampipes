@@ -91,6 +91,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     public showData: boolean;
     public showIsLoadingData: boolean;
     public showTooMuchData: boolean;
+    public showInvalidConfiguration = false;
     public amountOfTooMuchEvents: number;
 
     fieldProvider: FieldProvider;
@@ -181,7 +182,6 @@ export abstract class BaseDataExplorerWidgetDirective<
                             );
                             this.updateData();
                         }
-
                         if (refreshMessage.refreshView) {
                             this.refreshView();
                         }

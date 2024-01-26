@@ -51,6 +51,8 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     renderSubjectSubscription: Subscription;
     renderer: SpEchartsRenderer<T>;
 
+    widgetTypeLabel: string;
+
     ngOnInit(): void {
         super.ngOnInit();
         this.renderer = this.getRenderer();
@@ -59,6 +61,9 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
             .subscribe(() => {
                 this.renderChartOptions(this.latestData);
             });
+        this.widgetTypeLabel = this.widgetRegistryService.getWidgetTemplate(
+            this.dataExplorerWidget.widgetType,
+        ).label;
     }
 
     beforeDataFetched() {}
@@ -91,12 +96,21 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     }
 
     renderChartOptions(spQueryResult: SpQueryResult[]): void {
-        this.option = {
-            ...this.renderer.render(spQueryResult, this.dataExplorerWidget, {
-                width: this.currentWidth,
-                height: this.currentHeight,
-            }),
-        };
+        if (this.dataExplorerWidget.visualizationConfig.configurationValid) {
+            this.showInvalidConfiguration = false;
+            this.option = {
+                ...this.renderer.render(
+                    spQueryResult,
+                    this.dataExplorerWidget,
+                    {
+                        width: this.currentWidth,
+                        height: this.currentHeight,
+                    },
+                ),
+            };
+        } else {
+            this.showInvalidConfiguration = true;
+        }
     }
 
     refreshView() {

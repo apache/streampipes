@@ -16,17 +16,23 @@
  *
  */
 
-.default-text {
-    padding: 10px;
-    font-size: 16pt;
-    text-align: center;
-}
+import { Component, Input } from '@angular/core';
 
-.warning-icon {
-    color: var(--color-warn);
-    font-size: 24pt;
-}
+@Component({
+    selector: 'sp-configuration-box',
+    templateUrl: './configuration-box.component.html',
+    styleUrls: ['./configuration-box.component.scss'],
+})
+export class SpConfigurationBoxComponent {
+    @Input()
+    title: string;
 
-.date-range-text {
-    font-size: 12pt;
+    @Input()
+    marginTop = '0';
+
+    @Input()
+    border = '1px solid var(--color-bg-3)';
+
+    @Input()
+    background = 'var(--color-bg-1)';
 }

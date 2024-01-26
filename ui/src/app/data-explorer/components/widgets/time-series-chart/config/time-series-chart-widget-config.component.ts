@@ -165,4 +165,8 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         config.chosenAxis = axes;
         config.showSpike = true;
     }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 0;
+    }
 }

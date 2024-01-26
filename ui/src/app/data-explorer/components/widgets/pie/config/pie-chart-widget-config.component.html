@@ -16,46 +16,55 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <h5>Field</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.allFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig.selectedProperty
-        "
-        (changeSelectedProperty)="setSelectedProperty($event)"
-    >
-    </sp-select-property>
-
-    <h5
-        *ngIf="
-            currentlyConfiguredWidget.visualizationConfig.selectedProperty
-                ?.fieldCharacteristics.numeric
-        "
-    >
-        Rounding
-    </h5>
-    <mat-form-field
-        appearance="outline"
-        class="marginColorField"
-        color="accent"
-        fxFlex="35"
-        *ngIf="
-            currentlyConfiguredWidget.visualizationConfig.selectedProperty
-                ?.fieldCharacteristics.numeric
-        "
-    >
-        <mat-select
-            [(value)]="
-                currentlyConfiguredWidget.visualizationConfig.roundingValue
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box title="Field">
+        <sp-select-property
+            [availableProperties]="fieldProvider.allFields"
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig.selectedProperty
             "
-            (selectionChange)="updateRoundingValue($event.value)"
+            (changeSelectedProperty)="setSelectedProperty($event)"
         >
-            <mat-option [value]="100">100</mat-option>
-            <mat-option [value]="10">10</mat-option>
-            <mat-option [value]="1">1</mat-option>
-            <mat-option [value]="0.1">0.1</mat-option>
-            <mat-option [value]="0.01">0.01</mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
+        </sp-select-property>
+    </sp-configuration-box>
+    <sp-configuration-box
+        title="Settings"
+        *ngIf="
+            currentlyConfiguredWidget.visualizationConfig.selectedProperty
+                ?.fieldCharacteristics.numeric
+        "
+    >
+        <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            fxLayoutGap="10px"
+        >
+            <small>Rounding</small>
+            <mat-form-field
+                appearance="outline"
+                class="marginColorField"
+                color="accent"
+                fxFlex
+            >
+                <mat-select
+                    [(value)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .roundingValue
+                    "
+                    (selectionChange)="updateRoundingValue($event.value)"
+                >
+                    <mat-option [value]="100">100</mat-option>
+                    <mat-option [value]="10">10</mat-option>
+                    <mat-option [value]="1">1</mat-option>
+                    <mat-option [value]="0.1">0.1</mat-option>
+                    <mat-option [value]="0.01">0.01</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

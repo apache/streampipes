@@ -43,13 +43,12 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         this.currentlyConfiguredWidget.visualizationConfig.searchValue =
             searchValue.trim().toLowerCase();
         this.triggerViewRefresh();
-        // this.dataSource.filter = searchValue.trim().toLowerCase();
     }
 
     setSelectedColumn(selectedColumns: DataExplorerField[]) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
             selectedColumns;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     protected applyWidgetConfig(config: TableVisConfig): void {
@@ -63,5 +62,9 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
             },
         );
         config.searchValue ??= '';
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return true;
     }
 }

@@ -52,4 +52,8 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
             selectedType;
         this.triggerViewRefresh();
     }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.allFields.length > 0;
+    }
 }

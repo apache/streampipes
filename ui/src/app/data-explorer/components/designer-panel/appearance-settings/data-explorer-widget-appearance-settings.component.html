@@ -16,22 +16,17 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
-        <span class="data-explorer-header mb-10">Widget Title</span>
-        <div fxFlex="100" fxLayout="row">
-            <mat-form-field appearance="outline" color="accent" fxFlex="100">
-                <mat-label>Widget Title</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="baseAppearanceConfig.widgetTitle"
-                />
-            </mat-form-field>
-        </div>
+<sp-configuration-box title="Widget Title" marginTop="5px">
+    <div fxFlex="100" fxLayout="row" class="mt-10 form-field-small">
+        <mat-form-field appearance="outline" color="accent" fxFlex="100">
+            <mat-label>Widget Title</mat-label>
+            <input matInput [(ngModel)]="baseAppearanceConfig.widgetTitle" />
+        </mat-form-field>
     </div>
+</sp-configuration-box>
 
-    <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
-        <span class="data-explorer-header mb-10">Color</span>
+<sp-configuration-box title="Color">
+    <div fxLayout="column" class="mt-10">
         <div fxFlex="100" fxLayout="row" class="mb-10">
             <span>Background</span>
             <span fxFlex></span>
@@ -60,4 +55,4 @@
             />
         </div>
     </div>
-</div>
+</sp-configuration-box>

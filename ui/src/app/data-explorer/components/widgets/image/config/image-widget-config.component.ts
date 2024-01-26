@@ -23,6 +23,7 @@ import {
     ImageWidgetVisConfig,
 } from '../model/image-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { config } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-image-widget-config',
@@ -37,11 +38,7 @@ export class ImageWidgetConfigComponent extends BaseWidgetConfig<
     imageFields: DataExplorerField[];
 
     protected applyWidgetConfig(config: ImageWidgetVisConfig): void {
-        this.imageFields = this.fieldProvider.allFields.filter(field =>
-            field.fieldCharacteristics.semanticTypes.find(
-                st => st === this.imageSemanticType,
-            ),
-        );
+        this.imageFields = this.getImageFields();
         config.selectedField = this.fieldService.getSelectedField(
             config.selectedField,
             this.imageFields,
@@ -49,9 +46,21 @@ export class ImageWidgetConfigComponent extends BaseWidgetConfig<
         );
     }
 
+    private getImageFields(): DataExplorerField[] {
+        return this.fieldProvider.allFields.filter(field =>
+            field.fieldCharacteristics.semanticTypes.find(
+                st => st === this.imageSemanticType,
+            ),
+        );
+    }
+
     setSelectedImageProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedField =
             field;
         this.triggerDataRefresh();
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.getImageFields().length > 0;
     }
 }

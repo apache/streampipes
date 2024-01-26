@@ -16,20 +16,11 @@
   ~
   -->
 
-<div
-    fxLayout="column"
-    fxLayoutAlign="center center"
-    fxFlex="100"
-    fxLayoutGap="10px"
->
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <i class="material-icons warning-icon">warning</i>
+<div fxFlex="100" class="h-100 form-field-small" fxLayout="column">
+    <div *ngIf="!configurationValid" fxLayoutAlign="center center">
+        <h5>The current data selection can't be displayed by this chart.</h5>
     </div>
-    <div fxLayout="column" fxLayoutAlign="center center">
-        <div class="default-text">Found no data in selected time range</div>
-        <div class="default-text date-range-text">
-            {{ viewDateRange.startTime | date: 'MM/dd/yyyy HH:mm' }} -
-            {{ viewDateRange.endTime | date: 'MM/dd/yyyy HH:mm' }}
-        </div>
+    <div fxFlex="100" *ngIf="configurationValid">
+        <ng-content></ng-content>
     </div>
 </div>

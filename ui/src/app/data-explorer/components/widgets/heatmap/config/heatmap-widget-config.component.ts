@@ -25,6 +25,7 @@ import {
 } from '../model/heatmap-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { config } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-heatmap-widget-config',
@@ -60,5 +61,9 @@ export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<
             () => this.fieldProvider.numericFields[0],
         );
         config.showLabelsProperty ??= false;
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 0;
     }
 }

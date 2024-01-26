@@ -16,17 +16,14 @@
  *
  */
 
-.default-text {
-    padding: 10px;
-    font-size: 16pt;
-    text-align: center;
-}
+import { Component, Input } from '@angular/core';
 
-.warning-icon {
-    color: var(--color-warn);
-    font-size: 24pt;
-}
-
-.date-range-text {
-    font-size: 12pt;
+@Component({
+    selector: 'sp-visualization-config-outer',
+    templateUrl: './visualization-config-outer.component.html',
+    styleUrls: ['./visualization-config-outer.component.scss'],
+})
+export class SpVisualizationConfigOuterComponent {
+    @Input()
+    configurationValid: boolean;
 }

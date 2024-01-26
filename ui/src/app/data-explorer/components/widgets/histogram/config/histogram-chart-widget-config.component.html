@@ -16,76 +16,89 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <h5>Field</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.allFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig.selectedProperty
-        "
-        (changeSelectedProperty)="setSelectedProperty($event)"
-    >
-    </sp-select-property>
-
-    <div fxLayoutGap="10px" fxLayout="column">
-        <mat-checkbox
-            [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.autoBin"
-            (change)="triggerDataRefresh()"
-        >
-            Auto-compute number of bins
-        </mat-checkbox>
-        <mat-form-field
-            fxFlex="100"
-            color="accent"
-            appearance="outline"
-            *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoBin"
-        >
-            <mat-label><span>Number of bins</span></mat-label>
-            <input
-                [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig.numberOfBins
-                "
-                matInput
-                (input)="onNumBinChange($event.target.value)"
-            />
-        </mat-form-field>
-        <mat-checkbox
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.autoDomain
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box title="Field">
+        <sp-select-property
+            [availableProperties]="fieldProvider.allFields"
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig.selectedProperty
             "
-            (change)="triggerViewRefresh()"
+            (changeSelectedProperty)="setSelectedProperty($event)"
         >
-            All values
-        </mat-checkbox>
-        <mat-form-field
-            fxFlex="100"
-            color="accent"
-            appearance="outline"
-            *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoDomain"
-        >
-            <mat-label><span>Minimum value</span></mat-label>
-            <input
+        </sp-select-property>
+    </sp-configuration-box>
+    <sp-configuration-box title="Settings">
+        <div fxLayoutGap="10px" fxLayout="column">
+            <mat-checkbox
                 [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig.domainMin
+                    currentlyConfiguredWidget.visualizationConfig.autoBin
                 "
-                matInput
-                (input)="onDomainMinChange($event.target.value)"
-            />
-        </mat-form-field>
-        <mat-form-field
-            fxFlex="100"
-            color="accent"
-            appearance="outline"
-            *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoDomain"
-        >
-            <mat-label><span>Maximum value</span></mat-label>
-            <input
+                (change)="triggerDataRefresh()"
+            >
+                Auto-compute number of bins
+            </mat-checkbox>
+            <mat-form-field
+                fxFlex="100"
+                color="accent"
+                appearance="outline"
+                *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoBin"
+            >
+                <mat-label><span>Number of bins</span></mat-label>
+                <input
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .numberOfBins
+                    "
+                    matInput
+                    (input)="onNumBinChange($event.target.value)"
+                />
+            </mat-form-field>
+            <mat-checkbox
                 [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig.domainMax
+                    currentlyConfiguredWidget.visualizationConfig.autoDomain
                 "
-                matInput
-                (input)="onDomainMaxChange($event.target.value)"
-            />
-        </mat-form-field>
-    </div>
-</div>
+                (change)="triggerViewRefresh()"
+            >
+                All values
+            </mat-checkbox>
+            <mat-form-field
+                fxFlex="100"
+                color="accent"
+                appearance="outline"
+                *ngIf="
+                    !currentlyConfiguredWidget.visualizationConfig.autoDomain
+                "
+            >
+                <mat-label><span>Minimum value</span></mat-label>
+                <input
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig.domainMin
+                    "
+                    matInput
+                    (input)="onDomainMinChange($event.target.value)"
+                />
+            </mat-form-field>
+            <mat-form-field
+                fxFlex="100"
+                color="accent"
+                appearance="outline"
+                *ngIf="
+                    !currentlyConfiguredWidget.visualizationConfig.autoDomain
+                "
+            >
+                <mat-label><span>Maximum value</span></mat-label>
+                <input
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig.domainMax
+                    "
+                    matInput
+                    (input)="onDomainMaxChange($event.target.value)"
+                />
+            </mat-form-field>
+        </div>
+    </sp-configuration-box>
+</sp-visualization-config-outer>
