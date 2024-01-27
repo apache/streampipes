@@ -66,7 +66,6 @@ import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
 import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
-import { CorrelationChartWidgetComponent } from './components/widgets/correlation-chart/correlation-chart-widget.component';
 import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
 import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';
 import { FilterSelectionPanelComponent } from './components/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
@@ -153,7 +152,6 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         DataExplorerEditDataViewDialogComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
-        CorrelationChartWidgetComponent,
         CorrelationWidgetConfigComponent,
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
