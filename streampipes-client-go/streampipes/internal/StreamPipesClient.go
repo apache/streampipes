@@ -29,7 +29,6 @@ type StreamPipesClient struct {
 	Config config.StreamPipesClientConnectionConfig
 }
 
-// 暂时不支持https
 func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*StreamPipesClient, error) {
 	if !config.HttpsDisabled || config.StreamPipesPort == "443" {
 		return &StreamPipesClient{}, errors.New(
