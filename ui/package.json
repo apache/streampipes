@@ -60,6 +60,7 @@
     "codemirror": "^5.65.11",
     "console-browserify": "^1.2.0",
     "d3-array": "^3.2.4",
+    "d3-contour": "^4.0.2",
     "dagre": "0.8.5",
     "datatables.net": "^1.13.1",
     "datatables.net-dt": "^1.13.1",

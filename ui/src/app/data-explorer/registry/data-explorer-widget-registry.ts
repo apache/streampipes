@@ -30,7 +30,6 @@ import { ImageWidgetComponent } from '../components/widgets/image/image-widget.c
 import { IndicatorWidgetConfigComponent } from '../components/widgets/indicator/config/indicator-chart-widget-config.component';
 import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
 import { CorrelationWidgetConfigComponent } from '../components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
-import { CorrelationChartWidgetComponent } from '../components/widgets/correlation-chart/correlation-chart-widget.component';
 import { SpEchartsWidgetComponent } from '../components/widgets/base/echarts-widget.component';
 import { HeatmapWidgetModel } from '../components/widgets/heatmap/model/heatmap-widget.model';
 import { SpValueHeatmapWidgetConfigComponent } from '../components/widgets/value-heatmap/config/value-heatmap-chart-widget-config.component';
@@ -43,6 +42,9 @@ import { SpHistogramRendererService } from '../components/widgets/histogram/hist
 import { SpHeatmapRendererService } from '../components/widgets/heatmap/heatmap-renderer.service';
 import { SpPieRendererService } from '../components/widgets/pie/pie-renderer.service';
 import { SpValueHeatmapRendererService } from '../components/widgets/value-heatmap/value-heatmap-renderer.service';
+import { CorrelationChartWidgetModel } from '../components/widgets/correlation-chart/model/correlation-chart-widget.model';
+import { SpScatterRendererService } from '../components/widgets/scatter/scatter-renderer.service';
+import { SpDensityRendererService } from '../components/widgets/density/density-renderer.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
@@ -61,14 +63,14 @@ export class DataExplorerWidgetRegistry {
         },
         {
             id: 'heatmap',
-            label: 'Heatmap',
+            label: 'Time-Series Heatmap',
             widgetConfigurationComponent: HeatmapWidgetConfigComponent,
             widgetComponent: SpEchartsWidgetComponent<HeatmapWidgetModel>,
             chartRenderer: this.heatmapRenderer,
         },
         {
             id: 'time-series-chart',
-            label: 'Time Series',
+            label: 'Time Series Chart',
             widgetConfigurationComponent: TimeSeriesChartWidgetConfigComponent,
             widgetComponent: TimeSeriesChartWidgetComponent,
         },
@@ -88,7 +90,9 @@ export class DataExplorerWidgetRegistry {
             id: 'scatter-chart',
             label: 'Scatter',
             widgetConfigurationComponent: CorrelationWidgetConfigComponent,
-            widgetComponent: CorrelationChartWidgetComponent,
+            widgetComponent:
+                SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
+            chartRenderer: this.scatterRenderer,
         },
         {
             id: 'histogram-chart',
@@ -107,7 +111,7 @@ export class DataExplorerWidgetRegistry {
         },
         {
             id: 'value-heatmap-chart',
-            label: 'Value Heatmap',
+            label: 'Value Distribution Heatmap',
             widgetConfigurationComponent: SpValueHeatmapWidgetConfigComponent,
             widgetComponent:
                 SpEchartsWidgetComponent<ValueHeatmapChartWidgetModel>,
@@ -115,9 +119,11 @@ export class DataExplorerWidgetRegistry {
         },
         {
             id: 'density-chart',
-            label: 'Density',
+            label: '2D Density Contour',
             widgetConfigurationComponent: CorrelationWidgetConfigComponent,
-            widgetComponent: CorrelationChartWidgetComponent,
+            widgetComponent:
+                SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
+            chartRenderer: this.densityRenderer,
         },
     ];
 
@@ -126,6 +132,8 @@ export class DataExplorerWidgetRegistry {
         private histogramRenderer: SpHistogramRendererService,
         private pieRenderer: SpPieRendererService,
         private valueHeatmapRenderer: SpValueHeatmapRendererService,
+        private scatterRenderer: SpScatterRendererService,
+        private densityRenderer: SpDensityRendererService,
     ) {}
 
     getAvailableWidgetTemplates(): IWidget<any>[] {
