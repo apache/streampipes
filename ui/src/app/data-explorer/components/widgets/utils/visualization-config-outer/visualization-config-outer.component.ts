@@ -21,7 +21,6 @@ import { Component, Input } from '@angular/core';
 @Component({
     selector: 'sp-visualization-config-outer',
     templateUrl: './visualization-config-outer.component.html',
-    styleUrls: ['./visualization-config-outer.component.scss'],
 })
 export class SpVisualizationConfigOuterComponent {
     @Input()
