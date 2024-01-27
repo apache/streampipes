@@ -33,12 +33,7 @@ func RandomLetters(length int) string {
 	return string(result)
 }
 
-type BaseElement struct {
-	ElementID string `json:"element_id,omitempty"` //When containing the omitempty attribute, converting JSON substrings through encoding/JSON will ignore null values
-}
-
 type ValueSpecification struct {
-	BaseElement
 	ClassName string  `json:"@class,omitempty"`
 	ElementID string  `json:"elementId,omitempty"`
 	MinValue  int     `json:"minValue,omitempty"`
@@ -47,23 +42,41 @@ type ValueSpecification struct {
 }
 
 type EventProperty struct {
-	//ClassName          string              `alias:"@class" default:"org.apache.streampipes.model.schema.EventPropertyPrimitive"` //ClassName          string             `json:"@class,omitempty"`
-	ElementID          string              `json:"elementId"`
-	Label              string              `json:"label,omitempty"`
-	Description        string              `json:"description,omitempty"`
-	RuntimeName        string              `json:"runtimeName,omitempty"`
-	Required           bool                `json:"required,omitempty"`
-	DomainProperties   []string            `json:"domainProperties,omitempty"`
-	PropertyScope      string              `json:"propertyScope,omitempty"`
-	Index              int                 `json:"index"`
-	RuntimeID          string              `json:"runtimeId,omitempty"`
-	RuntimeType        string              `json:"runtimeType"`
-	MeasurementUnit    string              `json:"measurementUnit,omitempty"`
-	ValueSpecification *ValueSpecification `json:"valueSpecification,omitempty"`
+	ClassName          string             `alias:"@class" default:"org.apache.streampipes.model.schema.EventPropertyPrimitive"`
+	ElementID          string             `json:"elementId"`
+	Label              string             `json:"label,omitempty"`
+	Description        string             `json:"description,omitempty"`
+	RuntimeName        string             `json:"runtimeName,omitempty"`
+	Required           bool               `json:"required,omitempty"`
+	DomainProperties   []string           `json:"domainProperties,omitempty"`
+	PropertyScope      string             `json:"propertyScope,omitempty"`
+	Index              int                `json:"index"`
+	RuntimeID          string             `json:"runtimeId,omitempty"`
+	RuntimeType        string             `json:"runtimeType"`
+	MeasurementUnit    string             `json:"measurementUnit,omitempty"`
+	ValueSpecification ValueSpecification `json:"valueSpecification,omitempty"`
+}
+
+type EventProperties struct {
+	Class              string            `json:"@class"`
+	ElementID          string            `json:"elementId"`
+	Label              string            `json:"label"`
+	Description        string            `json:"description"`
+	RuntimeName        string            `json:"runtimeName"`
+	Required           bool              `json:"required"`
+	DomainProperties   []string          `json:"domainProperties"`
+	PropertyScope      string            `json:"propertyScope"`
+	Index              int               `json:"index"`
+	RuntimeID          string            `json:"runtimeId"`
+	RuntimeType        string            `json:"runtimeType,omitempty"`
+	MeasurementUnit    string            `json:"measurementUnit,omitempty"`
+	ValueSpecification string            `json:"valueSpecification,omitempty"`
+	InEventProperties  []EventProperties `json:"eventProperties,omitempty"`
+	InEventProperty    EventProperty     `json:"eventProperty,omitempty"`
 }
 
 type EventSchema struct {
-	EventProperties []EventProperty `json:"eventProperties"`
+	EventProperties []EventProperties `json:"eventProperties"`
 }
 
 type ApplicationLink struct {
@@ -78,44 +91,44 @@ type ApplicationLink struct {
 
 type TopicDefinition struct {
 	ClassName       string `json:"@class,omitempty"`
-	ActualTopicName string `json:"actual_topic_name"`
+	ActualTopicName string `json:"actualTopicName"`
 }
 
 type TransportProtocol struct {
 	ClassName       string          `json:"@class"`
-	ElementId       string          `json:"element_id"`
-	BrokerHostname  string          `json:"broker_hostname"`
-	TopicDefinition TopicDefinition `json:"topic_definition"`
+	ElementId       string          `json:"elementId"`
+	BrokerHostname  string          `json:"brokerHostname"`
+	TopicDefinition TopicDefinition `json:"topicDefinition"`
 	Port            int             `json:"kafkaPort"`
 }
 
 type TransportFormat struct {
-	RdfType []string `json:"rdf_type"`
+	RdfType []string `json:"rdfType"`
 }
 
 type EventGrounding struct {
-	TransportProtocols []TransportProtocol `json:"transport_protocols"`
-	TransportFormats   []TransportFormat   `json:"transport_formats"`
+	TransportProtocols []TransportProtocol `json:"transportProtocols"`
+	TransportFormats   []TransportFormat   `json:"transportFormats"`
 }
 
 type MeasurementCapability struct {
 	Capability string `json:"capability,omitempty"`
-	ElementId  string `json:"element_id,omitempty"`
+	ElementId  string `json:"elementId,omitempty"`
 }
 
 type MeasurementObject struct {
-	ElementId      string `json:"element_id,omitempty"`
-	MeasuresObject string `json:"measures_object,omitempty"`
+	ElementId      string `json:"elementId,omitempty"`
+	MeasuresObject string `json:"measuresObject,omitempty"`
 }
 
-func (e *EventSchema) GetEventProperties() []EventProperty {
+func (e *EventSchema) GetEventProperties() []EventProperties {
 	return e.EventProperties
 }
 
-func (e *EventSchema) SetEventProperties(eventProperties []EventProperty) {
+func (e *EventSchema) SetEventProperties(eventProperties []EventProperties) {
 	e.EventProperties = eventProperties
 }
 
-func (e *EventSchema) AddEventProperty(eventProperty []EventProperty) {
+func (e *EventSchema) AddEventProperty(eventProperty []EventProperties) {
 	e.EventProperties = append(e.EventProperties, eventProperty...)
 }

@@ -17,9 +17,7 @@
 
 package resource
 
-import (
-	"streampipes-client-go/streampipes/model"
-)
+import "streampipes-client-go/streampipes/model"
 
 type DataLakeMeasure struct {
 	ClassName         string            `alias:"@class" default:"org.apache.streampipes.model.datalake.DataLakeMeasure"`
@@ -30,7 +28,7 @@ type DataLakeMeasure struct {
 	PipelineName      string            `json:"pipelineName,omitempty"`
 	PipelineIsRunning bool              `json:"pipelineIsRunning"`
 	SchemaVersion     string            `json:"schemaVersion,omitempty"`
-	//SchemaUpdateStrategy string
+	//SchemaUpdateStrategy  DataLakeMeasureSchemaUpdateStrategy `json:"schemaUpdateStrategy"`
 	ElementId string `json:"elementId"`
 	Rev       string `json:"_rev"`
 }
