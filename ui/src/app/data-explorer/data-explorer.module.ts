@@ -64,7 +64,6 @@ import { DataExplorerWidgetAppearanceSettingsComponent } from './components/desi
 import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
 import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
-import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
 import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
 import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';
@@ -161,7 +160,6 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         ImageBarComponent,
         ImageBarPreviewComponent,
         ImageWidgetConfigComponent,
-        IndicatorChartWidgetComponent,
         IndicatorWidgetConfigComponent,
         TimeSeriesChartWidgetComponent,
         TimeSeriesChartWidgetConfigComponent,

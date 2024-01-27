@@ -23,7 +23,7 @@ import {
     IndicatorChartWidgetModel,
 } from '../model/indicator-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { config } from 'rxjs';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
@@ -38,9 +38,8 @@ export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerDataRefresh();
     }
 
-    updateDelta(field: DataExplorerField) {
-        this.currentlyConfiguredWidget.visualizationConfig.deltaField = field;
-        this.triggerDataRefresh();
+    updateDelta(event: MatCheckboxChange) {
+        this.triggerViewRefresh();
     }
 
     protected applyWidgetConfig(config: IndicatorChartVisConfig): void {

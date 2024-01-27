@@ -33,22 +33,11 @@
     </sp-configuration-box>
     <sp-configuration-box title="Settings">
         <mat-checkbox
+            (change)="updateDelta($event)"
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showDelta
             "
             >Show delta indicator
         </mat-checkbox>
-        <div *ngIf="currentlyConfiguredWidget.visualizationConfig.showDelta">
-            <h5>Delta Field</h5>
-            <sp-select-property
-                [availableProperties]="fieldProvider.numericFields"
-                [selectedProperty]="
-                    currentlyConfiguredWidget.visualizationConfig.deltaField
-                "
-                (changeSelectedProperty)="updateDelta($event)"
-                data-cy="data-explorer-select-delta-field"
-            >
-            </sp-select-property>
-        </div>
     </sp-configuration-box>
 </sp-visualization-config-outer>

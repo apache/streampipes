@@ -28,7 +28,6 @@ import { TimeSeriesChartWidgetComponent } from '../components/widgets/time-serie
 import { ImageWidgetConfigComponent } from '../components/widgets/image/config/image-widget-config.component';
 import { ImageWidgetComponent } from '../components/widgets/image/image-widget.component';
 import { IndicatorWidgetConfigComponent } from '../components/widgets/indicator/config/indicator-chart-widget-config.component';
-import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
 import { CorrelationWidgetConfigComponent } from '../components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
 import { SpEchartsWidgetComponent } from '../components/widgets/base/echarts-widget.component';
 import { HeatmapWidgetModel } from '../components/widgets/heatmap/model/heatmap-widget.model';
@@ -45,6 +44,8 @@ import { SpValueHeatmapRendererService } from '../components/widgets/value-heatm
 import { CorrelationChartWidgetModel } from '../components/widgets/correlation-chart/model/correlation-chart-widget.model';
 import { SpScatterRendererService } from '../components/widgets/scatter/scatter-renderer.service';
 import { SpDensityRendererService } from '../components/widgets/density/density-renderer.service';
+import { IndicatorChartWidgetModel } from '../components/widgets/indicator/model/indicator-chart-widget.model';
+import { SpIndicatorRendererService } from '../components/widgets/indicator/indicator-renderer.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
@@ -84,7 +85,9 @@ export class DataExplorerWidgetRegistry {
             id: 'indicator-chart',
             label: 'Indicator',
             widgetConfigurationComponent: IndicatorWidgetConfigComponent,
-            widgetComponent: IndicatorChartWidgetComponent,
+            widgetComponent:
+                SpEchartsWidgetComponent<IndicatorChartWidgetModel>,
+            chartRenderer: this.indicatorRenderer,
         },
         {
             id: 'scatter-chart',
@@ -134,6 +137,7 @@ export class DataExplorerWidgetRegistry {
         private valueHeatmapRenderer: SpValueHeatmapRendererService,
         private scatterRenderer: SpScatterRendererService,
         private densityRenderer: SpDensityRendererService,
+        private indicatorRenderer: SpIndicatorRendererService,
     ) {}
 
     getAvailableWidgetTemplates(): IWidget<any>[] {
