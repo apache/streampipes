@@ -121,6 +121,13 @@ type MeasurementObject struct {
 	MeasuresObject string `json:"measuresObject,omitempty"`
 }
 
+type DataSerie struct {
+	Total   int             `json:"total"`
+	Rows    [][]interface{} `json:"rows"`
+	Headers []string        `json:"headers"`
+	Tags    string          `json:"tags"`
+}
+
 func (e *EventSchema) GetEventProperties() []EventProperties {
 	return e.EventProperties
 }

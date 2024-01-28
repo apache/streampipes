@@ -23,11 +23,10 @@ import (
 	"streampipes-client-go/streampipes/internal/StatuCode"
 	"streampipes-client-go/streampipes/internal/StreamPipesHttp/headers"
 	"streampipes-client-go/streampipes/internal/config"
-	Path "streampipes-client-go/streampipes/internal/streamPipesApiPath"
-	"streampipes-client-go/streampipes/model/resource"
+	Path "streampipes-client-go/streampipes/internal/util"
 )
 
-type AfterRequestFunc func(dataLakeMeasure *[]resource.DataLakeMeasure)
+type AfterRequestFunc func(Type interface{})
 
 type HttpRequest struct {
 	ClientConnectionConfig config.StreamPipesClientConnectionConfig
@@ -40,7 +39,7 @@ type HttpRequest struct {
 }
 
 func NewHttpRequest(clientConfig config.StreamPipesClientConnectionConfig) *HttpRequest {
-	afterRequest := func(dataLakeMeasure *[]resource.DataLakeMeasure) {}
+	afterRequest := func(Type interface{}) {}
 	return &HttpRequest{
 		ClientConnectionConfig: clientConfig,
 		Header:                 new(headers.Headers),
@@ -59,7 +58,7 @@ func (r *HttpRequest) MakeUrl(resourcePath []string) {
 }
 
 // Complete request process
-func (r *HttpRequest) ExecuteRequest(method string, dataLakeMeasure *[]resource.DataLakeMeasure) {
+func (r *HttpRequest) ExecuteRequest(method string, Type interface{}) {
 	//Initial Request
 	r.makeRequest(method)
 
@@ -68,7 +67,7 @@ func (r *HttpRequest) ExecuteRequest(method string, dataLakeMeasure *[]resource.
 	//	r.AfterRequest(dataLakeMeasure)
 	//} else {
 	if r.Response.StatusCode == 200 {
-		r.AfterRequest(dataLakeMeasure) // Process Response
+		r.AfterRequest(Type) // Process Response
 	} else {
 		switch r.Response.StatusCode {
 		case StatuCode.Unauthorized.Code():

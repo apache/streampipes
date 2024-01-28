@@ -22,38 +22,42 @@ import (
 	"streampipes-client-go/streampipes/internal/StreamPipesHttp"
 	"streampipes-client-go/streampipes/internal/config"
 	"streampipes-client-go/streampipes/internal/serializer"
-	"streampipes-client-go/streampipes/model/resource"
+	"streampipes-client-go/streampipes/model/DataLake"
 )
 
 type DataLakeMeasureApi struct {
 	config     config.StreamPipesClientConnectionConfig
 	getRequest *StreamPipesHttp.GetRequest
-	serializer *serializer.UnBaseSerializer
+	//serializer *serializer.UnBaseSerializer
 }
 
 func NewDataLakeMeasureApi(clientConfig config.StreamPipesClientConnectionConfig) *DataLakeMeasureApi {
-	Serializer := &serializer.UnBaseSerializer{
-		UnSerializerDataLakeMeasure: nil,
-	}
-	return &DataLakeMeasureApi{config: clientConfig, getRequest: StreamPipesHttp.NewGetRequest(clientConfig, Serializer), serializer: Serializer}
+
+	return &DataLakeMeasureApi{config: clientConfig, getRequest: StreamPipesHttp.NewGetRequest(clientConfig, nil)}
 }
 
-func (api *DataLakeMeasureApi) All() []resource.DataLakeMeasure {
-	api.ResourcePath()
-	api.getRequest.ExecuteGetRequest(api.serializer.UnSerializerDataLakeMeasure)
-	return *api.serializer.UnSerializerDataLakeMeasure
+func (api *DataLakeMeasureApi) All() []DataLake.DataLakeMeasure {
+	Serializer := serializer.NewBaseUnSerializer(serializer.WithUnSerializerDataLakeMeasures(new([]DataLake.DataLakeMeasure)))
+	api.getRequest.Serializer = Serializer
+	api.ResourcePath(nil)
+	api.getRequest.ExecuteGetRequest(api.getRequest.Serializer.UnSerializerDataLakeMeasures)
+	return *api.getRequest.Serializer.UnSerializerDataLakeMeasures
 }
 
-//func (api *DataLakeMeasureApi) Len() int {
-//	k := api.Get()
-//	return len(k)
-//}
+func (api *DataLakeMeasureApi) Len() int {
+	measures := api.All()
+	return len(measures[0].EventSchema.EventProperties)
+}
 
-//func (api *DataLakeMeasureApi) Get(id string) ([]resource.DataLakeMeasure, error) {
-//
-//}
+func (api *DataLakeMeasureApi) GetSingle(id string) DataLake.DataSeries {
+	Serializer := serializer.NewBaseUnSerializer(serializer.WithUnSerializerDataSeries(new(DataLake.DataSeries)))
+	api.getRequest.Serializer = Serializer
+	api.ResourcePath([]string{id})
+	api.getRequest.ExecuteGetRequest(api.getRequest.Serializer.UnSerializerDataLakeSeries)
+	return *api.getRequest.Serializer.UnSerializerDataLakeSeries
+}
 
-func (api *DataLakeMeasureApi) Create(element resource.DataLakeMeasure) error {
+func (api *DataLakeMeasureApi) Create(element DataLake.DataLakeMeasure) error {
 
 	return fmt.Errorf("Not yet implemented")
 }
@@ -63,13 +67,14 @@ func (api *DataLakeMeasureApi) Delete(elementId string) error {
 	return fmt.Errorf("Not yet implemented")
 }
 
-func (api *DataLakeMeasureApi) Update(measure resource.DataLakeMeasure) error {
+func (api *DataLakeMeasureApi) Update(measure DataLake.DataLakeMeasure) error {
 	return fmt.Errorf("Not yet implemented") //
 
 }
 
-func (d *DataLakeMeasureApi) ResourcePath() {
+func (d *DataLakeMeasureApi) ResourcePath(parameter []string) {
 
 	slice := []string{"api", "v4", "datalake", "measurements"}
+	slice = append(slice, parameter...)
 	d.getRequest.HttpRequest.MakeUrl(slice)
 }

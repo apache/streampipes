@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-package resource
+package DataStream
 
 import "streampipes-client-go/streampipes/model"
 

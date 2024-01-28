@@ -19,7 +19,7 @@ package config
 
 import (
 	"streampipes-client-go/streampipes/internal/credential"
-	Path "streampipes-client-go/streampipes/internal/streamPipesApiPath"
+	Path "streampipes-client-go/streampipes/internal/util"
 )
 
 type ClientConnectionConfigResolver interface {

@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-package resource
+package DataLake
 
 import "streampipes-client-go/streampipes/model"
 
@@ -28,7 +28,7 @@ type DataLakeMeasure struct {
 	PipelineName      string            `json:"pipelineName,omitempty"`
 	PipelineIsRunning bool              `json:"pipelineIsRunning"`
 	SchemaVersion     string            `json:"schemaVersion,omitempty"`
-	//SchemaUpdateStrategy  DataLakeMeasureSchemaUpdateStrategy `json:"schemaUpdateStrategy"`
+	//SchemaUpdateStrategy DataLakeMeasureSchemaUpdateStrategy `json:"schemaUpdateStrategy,omitempty"`
 	ElementId string `json:"elementId"`
 	Rev       string `json:"_rev"`
 }

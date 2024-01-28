@@ -22,7 +22,6 @@ import (
 	"log"
 	"streampipes-client-go/streampipes/internal/config"
 	"streampipes-client-go/streampipes/internal/serializer"
-	"streampipes-client-go/streampipes/model/resource"
 )
 
 type GetRequest struct {
@@ -37,23 +36,23 @@ func NewGetRequest(clientConfig config.StreamPipesClientConnectionConfig, Serial
 	}
 }
 
-func (g *GetRequest) ExecuteGetRequest(dataLakeMeasure *[]resource.DataLakeMeasure) {
+func (g *GetRequest) ExecuteGetRequest(Type interface{}) {
 	//Process complete GET requests
-	g.HttpRequest.ExecuteRequest("GET", dataLakeMeasure)
-	g.HttpRequest.AfterRequest = func(dataLakeMeasure *[]resource.DataLakeMeasure) {
-		g.afterRequest(dataLakeMeasure)
+	g.HttpRequest.ExecuteRequest("GET", Type)
+	g.HttpRequest.AfterRequest = func(Type interface{}) {
+		g.afterRequest(Type)
 	}
-	g.HttpRequest.AfterRequest(dataLakeMeasure)
+	g.HttpRequest.AfterRequest(Type)
 }
 
-func (g *GetRequest) afterRequest(dataLakeMeasure *[]resource.DataLakeMeasure) {
+func (g *GetRequest) afterRequest(Type interface{}) {
 	////Process complete GET requests
 	defer g.HttpRequest.Response.Body.Close()
 	body, err := ioutil.ReadAll(g.HttpRequest.Response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = g.Serializer.GetUnmarshal(body, dataLakeMeasure)
+	err = g.Serializer.GetUnmarshal(body, Type)
 	if err != nil {
 		log.Fatal("Serialization failed")
 	}

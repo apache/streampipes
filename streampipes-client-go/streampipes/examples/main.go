@@ -30,7 +30,7 @@ func main() {
 			Username: "admin@streampipes.apache.org",
 			ApiKey:   "LNrsh8YrgEyQTzSKSGmaAXb1",
 		},
-		StreamPipesPort: "8088",
+		StreamPipesPort: "8030",
 		StreamPipesHost: "localhost",
 		HttpsDisabled:   true,
 	}
