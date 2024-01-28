@@ -21,7 +21,6 @@ import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-re
 import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
 import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
 import { EChartsOption, GraphicComponentOption } from 'echarts';
-import { FieldProvider } from '../../../models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpIndicatorRendererService extends SpBaseEchartsRenderer<IndicatorChartWidgetModel> {
@@ -106,11 +105,4 @@ export class SpIndicatorRendererService extends SpBaseEchartsRenderer<IndicatorC
             return value;
         }
     }
-
-    performFieldUpdate(
-        widgetConfig: IndicatorChartWidgetModel,
-        fieldProvider: FieldProvider,
-        addedFields: [],
-        removedFields: [],
-    ): void {}
 }

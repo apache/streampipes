@@ -56,12 +56,6 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
 }
 
 export interface SpEchartsRenderer<T extends DataExplorerWidgetModel> {
-    performFieldUpdate(
-        widgetConfig: T,
-        fieldProvider: FieldProvider,
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ): void;
     render(
         queryResult: SpQueryResult[],
         widgetConfig: T,

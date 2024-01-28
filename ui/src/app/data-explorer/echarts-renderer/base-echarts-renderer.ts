@@ -16,12 +16,8 @@
  *
  */
 
+import { SpEchartsRenderer } from '../models/dataview-dashboard.model';
 import {
-    FieldProvider,
-    SpEchartsRenderer,
-} from '../models/dataview-dashboard.model';
-import {
-    DataExplorerField,
     DataExplorerWidgetModel,
     SpQueryResult,
 } from '@streampipes/platform-services';
@@ -82,11 +78,4 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     ): DataTransformOption[] {
         return [];
     }
-
-    abstract performFieldUpdate(
-        widgetConfig: T,
-        fieldProvider: FieldProvider,
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ): void;
 }

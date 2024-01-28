@@ -20,8 +20,6 @@ import { EChartsOption, HeatmapSeriesOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { Injectable } from '@angular/core';
-import { FieldProvider } from '../../../models/dataview-dashboard.model';
-import { DataExplorerField } from '@streampipes/platform-services';
 import { ValueHeatmapChartWidgetModel } from './model/value-heatmap-chart-widget.model';
 
 @Injectable({ providedIn: 'root' })
@@ -106,21 +104,5 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
 
     getSelectedField(widgetConfig: ValueHeatmapChartWidgetModel) {
         return widgetConfig.visualizationConfig.selectedProperty;
-    }
-
-    performFieldUpdate(
-        widgetConfig: ValueHeatmapChartWidgetModel,
-        fieldProvider: FieldProvider,
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ): void {
-        widgetConfig.visualizationConfig.selectedProperty =
-            this.fieldUpdateService.updateSingleField(
-                widgetConfig.visualizationConfig.selectedProperty,
-                fieldProvider.numericFields,
-                addedFields,
-                removedFields,
-                field => field.fieldCharacteristics.numeric,
-            );
     }
 }

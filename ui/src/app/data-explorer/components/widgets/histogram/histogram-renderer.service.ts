@@ -20,7 +20,6 @@ import { BarSeriesOption, EChartsOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { Injectable } from '@angular/core';
-import { FieldProvider } from '../../../models/dataview-dashboard.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
 
@@ -80,21 +79,5 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
 
     getDefaultSeriesName(widgetConfig: HistogramChartWidgetModel): string {
         return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
-    }
-
-    performFieldUpdate(
-        widgetConfig: HistogramChartWidgetModel,
-        fieldProvider: FieldProvider,
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ): void {
-        widgetConfig.visualizationConfig.selectedProperty =
-            this.fieldUpdateService.updateSingleField(
-                widgetConfig.visualizationConfig.selectedProperty,
-                fieldProvider.numericFields,
-                addedFields,
-                removedFields,
-                field => field.fieldCharacteristics.numeric,
-            );
     }
 }

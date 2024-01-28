@@ -38,26 +38,4 @@ export class SpFieldUpdateService {
         });
         return fields;
     }
-
-    updateSingleField(
-        fieldSelection: DataExplorerField,
-        availableFields: DataExplorerField[],
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-        filterFunction: (field: DataExplorerField) => boolean,
-    ): DataExplorerField {
-        let result = fieldSelection;
-        if (
-            removedFields.find(
-                rf => rf.fullDbName === fieldSelection.fullDbName,
-            )
-        ) {
-            const existingFields = availableFields.concat(addedFields);
-            if (existingFields.length > 0) {
-                result = existingFields.find(field => filterFunction(field));
-            }
-        }
-
-        return result;
-    }
 }

@@ -21,7 +21,6 @@ import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-re
 import { CorrelationChartWidgetModel } from '../correlation-chart/model/correlation-chart-widget.model';
 import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
 import { EChartsOption } from 'echarts';
-import { FieldProvider } from '../../../models/dataview-dashboard.model';
 import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3';
 import { contourDensity } from 'd3-contour';
@@ -221,13 +220,6 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
     getIndex(field: DataExplorerField, datasets: GeneratedDataset) {
         return datasets.dataset[0].dimensions.indexOf(field.fullDbName);
     }
-
-    performFieldUpdate(
-        widgetConfig: CorrelationChartWidgetModel,
-        fieldProvider: FieldProvider,
-        addedFields: [],
-        removedFields: [],
-    ): void {}
 
     getXField(widgetConfig: CorrelationChartWidgetModel) {
         return widgetConfig.visualizationConfig.firstField;

@@ -26,8 +26,6 @@ import {
     OptionSourceDataArrayRows,
 } from 'echarts/types/src/util/types';
 import { Injectable } from '@angular/core';
-import { DataExplorerField } from '@streampipes/platform-services';
-import { FieldProvider } from '../../../models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
@@ -127,21 +125,5 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
             });
             return rowValues.toString();
         }
-    }
-
-    performFieldUpdate(
-        widgetConfig: HeatmapWidgetModel,
-        fieldProvider: FieldProvider,
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-    ): void {
-        widgetConfig.visualizationConfig.selectedHeatProperty =
-            this.fieldUpdateService.updateSingleField(
-                widgetConfig.visualizationConfig.selectedHeatProperty,
-                fieldProvider.numericFields,
-                addedFields,
-                removedFields,
-                field => field.fieldCharacteristics.numeric,
-            );
     }
 }
