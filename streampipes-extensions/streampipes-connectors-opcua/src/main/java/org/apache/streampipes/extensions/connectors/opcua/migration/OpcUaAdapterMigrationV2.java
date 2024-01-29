@@ -20,6 +20,9 @@ package org.apache.streampipes.extensions.connectors.opcua.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -67,20 +70,29 @@ public class OpcUaAdapterMigrationV2 implements IAdapterMigrator {
     return MigrationResult.success(element);
   }
 
-  private StaticProperty modifiedAlternatives() {
+  private StaticProperty modifiedAlternatives(IStaticPropertyExtractor extractor) {
+
+    var serverAddressValue =
+        extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
+    var hostValue = OpcUaUtil.formatServerAddress(
+        extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class)
+    );
+    var portValue = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
+
     return StaticProperties.alternatives(Labels.withId(OPC_HOST_OR_URL),
       Alternatives.from(
         Labels.withId(OPC_URL),
         StaticProperties.stringFreeTextProperty(
-          Labels.withId(OPC_SERVER_URL), "opc.tcp://localhost:4840"))
+          Labels.withId(OPC_SERVER_URL),
+          serverAddressValue))
       ,
       Alternatives.from(Labels.withId(OPC_HOST),
         StaticProperties.group(
           Labels.withId(HOST_PORT),
           StaticProperties.stringFreeTextProperty(
-            Labels.withId(OPC_SERVER_HOST)),
+            Labels.withId(OPC_SERVER_HOST), hostValue),
           StaticProperties.integerFreeTextProperty(
-            Labels.withId(OPC_SERVER_PORT))
+            Labels.withId(OPC_SERVER_PORT), portValue)
         )));
   }
 
