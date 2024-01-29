@@ -28,7 +28,6 @@ import (
 type DataLakeMeasureApi struct {
 	config     config.StreamPipesClientConnectionConfig
 	getRequest *StreamPipesHttp.GetRequest
-	//serializer *serializer.UnBaseSerializer
 }
 
 func NewDataLakeMeasureApi(clientConfig config.StreamPipesClientConnectionConfig) *DataLakeMeasureApi {

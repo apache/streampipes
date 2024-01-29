@@ -23,6 +23,7 @@ import (
 
 // PathItems stores URL fragments
 // QueryParameters stores query parameters
+
 type StreamPipesApiPath struct {
 	PathItems       []string
 	QueryParameters map[string]string

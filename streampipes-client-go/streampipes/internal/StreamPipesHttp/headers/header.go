@@ -26,11 +26,11 @@ type Headers struct {
 	Header http.Header
 }
 
-//func (h *Headers) AuthorizationBearer(bearerToken string) StreamPipesHttp.Header {
-//	h.Header = h.Req.Header // h.Header = StreamPipesHttp.Header{}
-//	h.Header.Set("Authorization", "Bearer "+bearerToken)
-//	return h.Header
-//}
+func (h *Headers) AuthorizationBearer(bearerToken string) http.Header {
+	h.Header = h.Req.Header
+	h.Header.Set("Authorization", "Bearer "+bearerToken)
+	return h.Header
+}
 
 func (h *Headers) XApiKey(apiKey string) http.Header {
 	h.Header = h.Req.Header
@@ -55,7 +55,3 @@ func (h *Headers) ContentTypeJson() http.Header {
 	h.Header.Set("Content-type", "application/json")
 	return h.Header
 }
-
-//func MakeHeader(name, value string) StreamPipesHttp.Header {
-//	//Used to add request header messages
-//}
