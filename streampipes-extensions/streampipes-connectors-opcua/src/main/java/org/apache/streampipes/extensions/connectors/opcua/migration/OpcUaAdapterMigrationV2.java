@@ -20,8 +20,6 @@ package org.apache.streampipes.extensions.connectors.opcua.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
-import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
-import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -58,7 +56,7 @@ public class OpcUaAdapterMigrationV2 implements IAdapterMigrator {
                                                      IStaticPropertyExtractor extractor) throws RuntimeException {
     var newConfigs = element.getConfig().stream().map(config->{
       if (isHostOrUrlConfig(config)){
-        var alternatives = modifiedAlternatives();
+        var alternatives = modifiedAlternatives(extractor);
         alternatives.setIndex(config.getIndex());
         return alternatives;
       } else {
