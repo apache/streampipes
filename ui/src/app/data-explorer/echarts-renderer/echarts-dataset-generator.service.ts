@@ -21,9 +21,23 @@ import {
     DataExplorerWidgetModel,
     SpQueryResult,
 } from '@streampipes/platform-services';
-import { GeneratedDataset, Indices, TagValue } from '../models/dataset.model';
-import { DatasetOption } from 'echarts/types/dist/shared';
+import {
+    GeneratedDataset,
+    PreparedDataset,
+    TagValue,
+} from '../models/dataset.model';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+
+/**
+ * The dataset generator generates Echarts datasets as follows:
+ * From the Query API, we get one query result per configured data source.
+ * First, we add one dataset for each query result to the datasets array, which are the raw datasets.
+ * Then, we apply the initial transforms, which can round values or narrow the available columns.
+ * If the result is a grouped result (tags are present), we add one dataset per group.
+ * In the end, the final datasets (prior to transforms added by the charts itself) are called preparedDataset
+ * Meta information about start and end indices are present in the meta object.
+ *
+ */
 
 @Injectable({ providedIn: 'root' })
 export class EchartsDatasetGeneratorService<T extends DataExplorerWidgetModel> {
@@ -35,86 +49,89 @@ export class EchartsDatasetGeneratorService<T extends DataExplorerWidgetModel> {
             index: number,
         ) => DataTransformOption[],
     ): GeneratedDataset {
-        const datasets: DatasetOption[] = [];
-        let initialTransformsCount = 0;
-
-        const indices: Indices = {
-            rawDataStartIndices: [],
-            rawDataEndIndices: [],
-            preparedDataStartIndices: [],
-            preparedDataEndIndices: [],
+        const datasetInfo: GeneratedDataset = {
+            preparedDatasets: [],
         };
 
-        queryResults.forEach((queryResult, index) => {
-            this.processQueryResult(
+        let currentDatasetIndexPointer = 0;
+
+        queryResults.forEach((queryResult, sourceIndex) => {
+            const prepared = this.processQueryResult(
                 queryResult,
-                index,
-                datasets,
-                indices,
+                sourceIndex,
+                currentDatasetIndexPointer,
                 widgetConfig,
                 getInitialTransforms,
             );
+            datasetInfo.preparedDatasets.push(prepared);
+            currentDatasetIndexPointer = this.increaseDatasetIndex(
+                prepared,
+                currentDatasetIndexPointer,
+            );
         });
-
-        initialTransformsCount = datasets.filter(
-            dataset => 'transform' in dataset,
-        ).length;
-
-        return {
-            dataset: datasets,
-            tagValues: this.calculateTagValues(queryResults),
-            indices,
-            initialTransformsCount,
-        };
+        return datasetInfo;
     }
 
     private processQueryResult(
         queryResult: SpQueryResult,
         index: number,
-        datasets: DatasetOption[],
-        indices: Indices,
+        currentDatasetIndexPointer: number,
         widgetConfig: T,
         getInitialTransforms: (
             widgetConfig: T,
             index: number,
         ) => DataTransformOption[],
-    ) {
-        const initialTransforms = getInitialTransforms(widgetConfig, index);
-        const currentDatasetSize = datasets.length;
-
+    ): PreparedDataset {
         const data = [
             queryResult.headers,
             ...queryResult.allDataSeries.flatMap(series => series.rows),
         ];
-        datasets.push({ source: data, dimensions: queryResult.headers });
-
-        const transformsStartIndex = datasets.length;
-        if (initialTransforms.length > 0) {
-            datasets.push(
-                ...initialTransforms.map(transform => ({
-                    fromDatasetIndex: currentDatasetSize,
-                    transform,
-                })),
-            );
-        }
+        const initialTransforms = getInitialTransforms(widgetConfig, index).map(
+            transform => ({
+                fromDatasetIndex: currentDatasetIndexPointer,
+                transform,
+            }),
+        );
 
         const tags = this.extractTags(queryResult);
-        datasets.push(
-            ...tags.map(tag => ({
-                fromDatasetIndex: currentDatasetSize + initialTransforms.length,
-                transform: this.createTagFilterTransform(tag),
-            })),
-        );
+        const groupTransforms = tags.map(tag => ({
+            fromDatasetIndex:
+                currentDatasetIndexPointer + initialTransforms.length,
+            transform: this.createTagFilterTransform(tag),
+        }));
 
-        const transformsEndIndex = datasets.length;
-        this.updateIndices(
-            indices,
-            currentDatasetSize,
-            initialTransforms.length,
-            tags.length,
-            transformsStartIndex,
-            transformsEndIndex,
-        );
+        const preparedDataStartIndex =
+            currentDatasetIndexPointer +
+            initialTransforms.length +
+            (groupTransforms.length > 0 ? 1 : 0);
+
+        const preparedDataLength =
+            groupTransforms.length > 0 ? groupTransforms.length : 1;
+
+        return {
+            sourceIndex: index,
+            tagValues: tags,
+            groupedDatasets: groupTransforms,
+            rawDataset: { source: data, dimensions: queryResult.headers },
+            initialTransformDatasets: initialTransforms,
+            meta: {
+                preparedDataStartIndex,
+                preparedDataLength,
+            },
+        };
+    }
+
+    increaseDatasetIndex(
+        preparedDataset: PreparedDataset,
+        currentDatasetIndex: number,
+    ): number {
+        return (
+            currentDatasetIndex +
+            1 + // raw dataset for each query result
+            preparedDataset.initialTransformDatasets.length +
+            preparedDataset.groupedDatasets.length +
+            1
+        ); // next index
     }
 
     private extractTags(queryResult: SpQueryResult): TagValue[] {
@@ -136,27 +153,5 @@ export class EchartsDatasetGeneratorService<T extends DataExplorerWidgetModel> {
                 })),
             },
         };
-    }
-
-    private updateIndices(
-        indices: Indices,
-        currentDatasetSize: number,
-        initialTransformsLength: number,
-        tagsLength: number,
-        transformsStartIndex: number,
-        transformsEndIndex: number,
-    ) {
-        indices.rawDataStartIndices.push(
-            currentDatasetSize + initialTransformsLength,
-        );
-        indices.rawDataEndIndices.push(
-            currentDatasetSize + initialTransformsLength + tagsLength,
-        );
-        indices.preparedDataStartIndices.push(transformsStartIndex);
-        indices.preparedDataEndIndices.push(transformsEndIndex);
-    }
-
-    private calculateTagValues(queryResults: SpQueryResult[]): TagValue[][] {
-        return queryResults.map(queryResult => this.extractTags(queryResult));
     }
 }

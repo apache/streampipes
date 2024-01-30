@@ -46,6 +46,8 @@ import { SpScatterRendererService } from '../components/widgets/scatter/scatter-
 import { SpDensityRendererService } from '../components/widgets/density/density-renderer.service';
 import { IndicatorChartWidgetModel } from '../components/widgets/indicator/model/indicator-chart-widget.model';
 import { SpIndicatorRendererService } from '../components/widgets/indicator/indicator-renderer.service';
+import { TimeSeriesChartWidgetModel } from '../components/widgets/time-series-chart/model/time-series-chart-widget.model';
+import { SpTimeseriesRendererService } from '../components/widgets/time-series-chart/sp-timeseries-renderer.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
@@ -74,6 +76,14 @@ export class DataExplorerWidgetRegistry {
             label: 'Time Series Chart',
             widgetConfigurationComponent: TimeSeriesChartWidgetConfigComponent,
             widgetComponent: TimeSeriesChartWidgetComponent,
+        },
+        {
+            id: 'time-series-chart-new',
+            label: 'Time Series Chart New',
+            widgetConfigurationComponent: TimeSeriesChartWidgetConfigComponent,
+            widgetComponent:
+                SpEchartsWidgetComponent<TimeSeriesChartWidgetModel>,
+            chartRenderer: this.timeseriesRenderer,
         },
         {
             id: 'image',
@@ -138,6 +148,7 @@ export class DataExplorerWidgetRegistry {
         private scatterRenderer: SpScatterRendererService,
         private densityRenderer: SpDensityRendererService,
         private indicatorRenderer: SpIndicatorRendererService,
+        private timeseriesRenderer: SpTimeseriesRendererService,
     ) {}
 
     getAvailableWidgetTemplates(): IWidget<any>[] {

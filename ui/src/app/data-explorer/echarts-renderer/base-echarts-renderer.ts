@@ -25,18 +25,19 @@ import { EChartsOption } from 'echarts';
 import { GeneratedDataset, WidgetSize } from '../models/dataset.model';
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { inject } from '@angular/core';
-import { SpFieldUpdateService } from '../services/field-update.service';
 import { DataExplorerFieldProviderService } from '../services/data-explorer-field-provider-service';
 import { EchartsAxisGeneratorService } from './echarts-axis-generator.service';
 import { EchartsBasicOptionsGeneratorService } from './echarts-basic-options-generator.service';
 import { EchartsDatasetGeneratorService } from './echarts-dataset-generator.service';
 import { EchartsGridGeneratorService } from './echarts-grid-generator.service';
 import { EchartsUtilsService } from './echarts-utils.service';
+import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
+import { EchartsDatasetUtilsService } from './echarts-dataset-utils.service';
+import { DataExplorerColorizationService } from '../services/data-explorer-colorization.service';
 
 export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     implements SpEchartsRenderer<T>
 {
-    protected fieldUpdateService = inject(SpFieldUpdateService);
     protected fieldProvider = inject(DataExplorerFieldProviderService);
 
     protected basicOptionsGeneratorService = inject(
@@ -46,15 +47,19 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     protected datasetGeneratorService = inject(
         EchartsDatasetGeneratorService<T>,
     );
+    protected datasetUtilsService = inject(EchartsDatasetUtilsService);
     protected gridGeneratorService = inject(EchartsGridGeneratorService);
     protected echartsUtilsService = inject(EchartsUtilsService);
+    protected colorizationService = inject(DataExplorerColorizationService);
 
     render(
         spQueryResult: SpQueryResult[],
         widgetConfig: T,
         widgetSize: WidgetSize,
     ): EChartsOption {
-        const options = this.basicOptionsGeneratorService.makeBaseConfig();
+        const options = this.basicOptionsGeneratorService.makeBaseConfig(
+            this.getAdditionalToolboxItems(),
+        );
         const datasets = this.datasetGeneratorService.toDataset(
             spQueryResult,
             widgetConfig,
@@ -73,9 +78,13 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     ): void;
 
     initialTransforms(
-        widgetConfig: T,
-        sourceIndex: number,
+        _widgetConfig: T,
+        _sourceIndex: number,
     ): DataTransformOption[] {
         return [];
+    }
+
+    getAdditionalToolboxItems(): Record<string, ToolboxFeatureOption> {
+        return {};
     }
 }

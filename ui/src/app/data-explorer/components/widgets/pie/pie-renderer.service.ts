@@ -51,7 +51,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
     addSeriesItem(
         name: string,
         datasetIndex: number,
-        widgetConfig: PieChartWidgetModel,
+        _widgetConfig: PieChartWidgetModel,
     ): PieSeriesOption {
         return {
             name,

@@ -42,37 +42,41 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
     }
 
     addAdditionalConfigs(options: EChartsOption) {
-        options.legend = { show: false };
-        options.visualMap = {
-            min: 0,
-            max: 1,
-            calculable: true,
-            realtime: false,
-            top: '0px',
-            right: '50px',
-            orient: 'horizontal',
-            inRange: {
-                color: [
-                    '#313695',
-                    '#4575b4',
-                    '#74add1',
-                    '#abd9e9',
-                    '#e0f3f8',
-                    '#ffffbf',
-                    '#fee090',
-                    '#fdae61',
-                    '#f46d43',
-                    '#d73027',
-                    '#a50026',
-                ],
+        Object.assign(options, {
+            legend: {
+                show: false,
             },
-        };
+            visualMap: {
+                min: 0,
+                max: 1,
+                calculable: true,
+                realtime: false,
+                top: '0px',
+                right: '50px',
+                orient: 'horizontal',
+                inRange: {
+                    color: [
+                        '#313695',
+                        '#4575b4',
+                        '#74add1',
+                        '#abd9e9',
+                        '#e0f3f8',
+                        '#ffffbf',
+                        '#fee090',
+                        '#fdae61',
+                        '#f46d43',
+                        '#d73027',
+                        '#a50026',
+                    ],
+                },
+            },
+        });
     }
 
     addSeriesItem(
         name: string,
         datasetIndex: number,
-        widgetConfig: ValueHeatmapChartWidgetModel,
+        _widgetConfig: ValueHeatmapChartWidgetModel,
         index: number,
     ): HeatmapSeriesOption {
         return {

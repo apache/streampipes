@@ -49,12 +49,9 @@
                             mat-icon-button
                             color="accent"
                             matTooltip="Delete Data Source"
+                            (click)="removeSourceConfig(i)"
                         >
-                            <i
-                                class="material-icons align-btn"
-                                (click)="removeSourceConfig(i)"
-                                >delete</i
-                            >
+                            <i class="material-icons align-btn">delete</i>
                         </button>
                     </div>
                 </div>

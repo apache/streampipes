@@ -25,21 +25,29 @@ import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
 @Injectable({ providedIn: 'root' })
 export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationChartWidgetModel> {
     applyOptions(
-        datasets: GeneratedDataset,
+        generatedDataset: GeneratedDataset,
         options: EChartsOption,
         widgetConfig: CorrelationChartWidgetModel,
-        widgetSize: WidgetSize,
+        _widgetSize: WidgetSize,
     ): void {
         const xField = this.getXField(widgetConfig);
         const yField = this.getYField(widgetConfig);
+        const dataset = this.datasetUtilsService.findPreparedDataset(
+            generatedDataset,
+            xField.sourceIndex,
+        );
         const series = [];
         for (
-            let i = datasets.indices.rawDataStartIndices[0];
-            i <= datasets.indices.rawDataEndIndices[0];
+            let i = 0;
+            i <
+            dataset.meta.preparedDataStartIndex +
+                dataset.meta.preparedDataLength;
             i++
         ) {
             series.push({
-                name: datasets.tagValues[0],
+                name: dataset.tagValues[
+                    i - dataset.meta.preparedDataStartIndex
+                ],
                 symbolSize: 5,
                 datasetIndex: i,
                 encode: {
@@ -51,7 +59,8 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
             });
         }
         Object.assign(options, {
-            dataset: datasets.dataset[0],
+            dataset:
+                this.datasetUtilsService.toEChartsDataset(generatedDataset),
             xAxis: {
                 type: 'value',
                 min: 'dataMin',

@@ -31,21 +31,30 @@ import {
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { WidgetBaseAppearanceConfig } from '../models/dataview-dashboard.model';
 import { BoxLayoutOptionMixin } from 'echarts/types/src/util/types';
+import { DatasetOption } from 'echarts/types/dist/shared';
 
 export abstract class SpBaseSingleFieldEchartsRenderer<
     T extends DataExplorerWidgetModel,
     S extends SeriesOption,
 > extends SpBaseEchartsRenderer<T> {
     applyOptions(
-        datasets: GeneratedDataset,
+        generatedDataset: GeneratedDataset,
         options: EChartsOption,
         widgetConfig: T,
         widgetSize: WidgetSize,
     ) {
         const selectedField = this.getSelectedField(widgetConfig);
-        const tags = this.getTags(datasets, selectedField.sourceIndex);
+        const tags = this.datasetUtilsService.getTags(
+            generatedDataset,
+            selectedField.sourceIndex,
+        );
         const numberOfCharts = this.getNumberOfCharts(tags);
-        const seriesStartIndex = this.getSeriesStartIndex(datasets);
+        const seriesStartIndex = this.getSeriesStartIndex(
+            generatedDataset,
+            selectedField.sourceIndex,
+        );
+        const datasets =
+            this.datasetUtilsService.toEChartsDataset(generatedDataset);
 
         const gridOptions = this.gridGeneratorService.makeGrid(
             numberOfCharts,
@@ -67,19 +76,12 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         this.finalizeOptions(options, datasets, series, gridOptions);
     }
 
-    private getTags(
-        datasets: GeneratedDataset,
-        sourceIndex: number,
-    ): TagValue[] {
-        return datasets.tagValues[sourceIndex];
-    }
-
     private getNumberOfCharts(tags: TagValue[]): number {
         return tags.length === 0 ? 1 : tags.length;
     }
 
     private buildSeries(
-        datasets: GeneratedDataset,
+        datasets: DatasetOption[],
         numberOfCharts: number,
         tags: TagValue[],
         widgetConfig: T,
@@ -87,12 +89,16 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
     ): S[] {
         const series: S[] = [];
         for (let i = 0; i < numberOfCharts; i++) {
-            this.addDatasetToDatasets(datasets, i, widgetConfig);
+            this.addDatasetToDatasets(
+                datasets,
+                seriesStartIndex + i,
+                widgetConfig,
+            );
             const seriesName = this.getSeriesName(tags, widgetConfig, i);
             series.push(
                 this.addSeriesItem(
                     seriesName,
-                    seriesStartIndex + i,
+                    seriesStartIndex + i + numberOfCharts,
                     widgetConfig,
                     i,
                 ),
@@ -102,25 +108,14 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
     }
 
     private addDatasetToDatasets(
-        datasets: GeneratedDataset,
-        index: number,
+        datasets: DatasetOption[],
+        fromDatasetIndex: number,
         widgetConfig: T,
     ) {
-        const rawDatasetStartIndex = this.getRawDatasetStartIndex(
-            datasets,
-            index,
-        );
-        datasets.dataset.push({
-            fromDatasetIndex: rawDatasetStartIndex,
+        datasets.push({
+            fromDatasetIndex: fromDatasetIndex,
             transform: this.addDatasetTransform(widgetConfig),
         });
-    }
-
-    private getRawDatasetStartIndex(
-        datasets: GeneratedDataset,
-        index: number,
-    ): number {
-        return datasets.indices.rawDataStartIndices[index];
     }
 
     private getSeriesName(
@@ -128,9 +123,10 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         widgetConfig: T,
         index: number,
     ): string {
+        const fieldName = this.getSelectedField(widgetConfig).fullDbName;
         return tags.length === 0
             ? this.getDefaultSeriesName(widgetConfig)
-            : this.echartsUtilsService.makeSeriesName(tags[index]);
+            : this.echartsUtilsService.toTagString(tags[index], fieldName);
     }
 
     private configureGrid(
@@ -164,7 +160,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
 
     private finalizeOptions(
         options: EChartsOption,
-        datasets: GeneratedDataset,
+        dataset: DatasetOption[],
         series: S[],
         gridOptions: GridOptions,
     ) {
@@ -175,7 +171,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
                 gridOptions.grid,
             );
         }
-        options.dataset = datasets.dataset;
+        options.dataset = dataset;
         options.series = series;
         this.addAdditionalConfigs(options);
     }
@@ -197,12 +193,15 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
 
     abstract getSelectedField(widgetConfig: T): DataExplorerField;
 
-    private getSeriesStartIndex(datasets: GeneratedDataset): number {
-        return (
-            datasets.indices.rawDataEndIndices[
-                datasets.indices.rawDataEndIndices.length - 1
-            ] + 1
+    private getSeriesStartIndex(
+        datasets: GeneratedDataset,
+        sourceIndex: number,
+    ): number {
+        const dataset = this.datasetUtilsService.findPreparedDataset(
+            datasets,
+            sourceIndex,
         );
+        return dataset.meta.preparedDataStartIndex;
     }
 
     shouldApplySeriesPosition(): boolean {

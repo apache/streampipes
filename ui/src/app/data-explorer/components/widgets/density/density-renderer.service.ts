@@ -19,7 +19,11 @@
 import { Injectable } from '@angular/core';
 import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
 import { CorrelationChartWidgetModel } from '../correlation-chart/model/correlation-chart-widget.model';
-import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
+import {
+    GeneratedDataset,
+    PreparedDataset,
+    WidgetSize,
+} from '../../../models/dataset.model';
 import { EChartsOption } from 'echarts';
 import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3';
@@ -36,8 +40,12 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
     ): void {
         const xField = this.getXField(widgetConfig);
         const yField = this.getYField(widgetConfig);
+        const dataset = this.datasetUtilsService.findPreparedDataset(
+            datasets,
+            xField.sourceIndex,
+        );
 
-        const data = this.prepareDataset(datasets, xField, yField);
+        const data = this.prepareDataset(dataset, xField, yField);
         const stats = this.calculateStats(data);
         const xScale = this.getXScale(data, widgetSize);
         const yScale = this.getYScale(data, widgetSize);
@@ -62,7 +70,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 min: Math.floor(stats.minY - 1),
                 max: Math.ceil(stats.maxY + 1),
             },
-            dataset: datasets.dataset[0],
+            dataset: dataset.rawDataset,
             visualMap: {
                 show: true,
                 right: 'right',
@@ -77,7 +85,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
             },
             series: [
                 {
-                    name: datasets.tagValues[0],
+                    name: dataset.rawDataset,
                     symbolSize: 5,
                     datasetIndex: 0,
                     encode: {
@@ -129,13 +137,13 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
     }
 
     prepareDataset(
-        datasets: GeneratedDataset,
+        dataset: PreparedDataset,
         xField: DataExplorerField,
         yField: DataExplorerField,
     ): any[] {
-        const xIndex = this.getIndex(xField, datasets);
-        const yIndex = this.getIndex(yField, datasets);
-        const data = (datasets.dataset[0].source as any).map(row => {
+        const xIndex = this.getIndex(xField, dataset);
+        const yIndex = this.getIndex(yField, dataset);
+        const data = (dataset.rawDataset.source as any).map(row => {
             return {
                 x: row[xIndex],
                 y: row[yIndex],
@@ -217,8 +225,8 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
             .rangeRound([widgetSize.height, 0]);
     }
 
-    getIndex(field: DataExplorerField, datasets: GeneratedDataset) {
-        return datasets.dataset[0].dimensions.indexOf(field.fullDbName);
+    getIndex(field: DataExplorerField, dataset: PreparedDataset) {
+        return dataset.rawDataset.dimensions.indexOf(field.fullDbName);
     }
 
     getXField(widgetConfig: CorrelationChartWidgetModel) {

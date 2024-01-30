@@ -41,10 +41,25 @@ export interface Indices {
 }
 
 export interface GeneratedDataset {
-    dataset: DatasetOption[];
-    tagValues: TagValue[][];
-    indices: Indices;
-    initialTransformsCount: number;
+    //dataset: DatasetOption[];
+    //tagValues: TagValue[][];
+    indices?: Indices;
+    preparedDatasets: PreparedDataset[];
+    //initialTransformsCount: number;
+}
+
+export interface PreparedDatasetMeta {
+    preparedDataStartIndex: number;
+    preparedDataLength: number;
+}
+
+export interface PreparedDataset {
+    sourceIndex: number;
+    rawDataset: DatasetOption;
+    initialTransformDatasets: DatasetOption[];
+    groupedDatasets: DatasetOption[];
+    tagValues: TagValue[];
+    meta: PreparedDatasetMeta;
 }
 
 export interface GridOptions {

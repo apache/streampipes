@@ -27,6 +27,14 @@ export class EchartsUtilsService {
         return tag.tagKeys.toString() + ' ' + tag.values.toString();
     }
 
+    toTagString(tagValue: TagValue, fieldName: string): string {
+        const result: string[] = [];
+        for (let i = 0; i < tagValue.tagKeys.length; i++) {
+            result.push(fieldName + ' (' + tagValue.values[i] + ')');
+        }
+        return result.join(', ');
+    }
+
     addSeriesTitles(
         options: EChartsOption,
         series: any[],

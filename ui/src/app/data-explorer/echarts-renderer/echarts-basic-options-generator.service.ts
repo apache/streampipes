@@ -19,14 +19,18 @@
 import { Injectable } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { SpEchartsToolboxService } from '@streampipes/shared-ui';
+import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
 
 @Injectable({ providedIn: 'root' })
 export class EchartsBasicOptionsGeneratorService {
     constructor(private echartsToolboxService: SpEchartsToolboxService) {}
 
-    makeBaseConfig(): EChartsOption {
+    makeBaseConfig(
+        additionalToolboxItems: Record<string, ToolboxFeatureOption> = {},
+    ): EChartsOption {
         return {
             legend: {
+                type: 'scroll',
                 orient: 'horizontal',
                 top: 30,
             },
@@ -38,6 +42,7 @@ export class EchartsBasicOptionsGeneratorService {
                 show: true,
                 feature: {
                     ...this.echartsToolboxService.getAllToolboxItems(),
+                    ...additionalToolboxItems,
                 },
             },
         };

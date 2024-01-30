@@ -30,7 +30,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
     applyOptions(
-        datasets: GeneratedDataset,
+        generatedDataset: GeneratedDataset,
         options: EChartsOption,
         widgetConfig: HeatmapWidgetModel,
     ): void {
@@ -39,11 +39,16 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         const field = widgetConfig.visualizationConfig.selectedHeatProperty;
         const sourceIndex = field.sourceIndex;
 
-        const rawDataset = datasets.dataset[sourceIndex];
-        const rawDatasetSource: OptionSourceDataArrayRows =
-            rawDataset.source as OptionSourceDataArrayRows;
-        const tags = datasets.tagValues[sourceIndex];
-        const heatIndex = rawDataset.dimensions.indexOf(field.fullDbName);
+        const rawDataset = this.datasetUtilsService.findPreparedDataset(
+            generatedDataset,
+            sourceIndex,
+        );
+        const rawDatasetSource: OptionSourceDataArrayRows = rawDataset
+            .rawDataset.source as OptionSourceDataArrayRows;
+        const tags = rawDataset.tagValues;
+        const heatIndex = rawDataset.rawDataset.dimensions.indexOf(
+            field.fullDbName,
+        );
         rawDatasetSource.shift();
         rawDatasetSource.sort((a, b) => {
             const dateA = new Date(a[0]);
@@ -51,11 +56,11 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
             return dateA.getTime() - dateB.getTime();
         });
         const transformedDataset = (
-            rawDataset.source as OptionSourceDataArrayRows
+            rawDataset.rawDataset.source as OptionSourceDataArrayRows
         ).map((row, index) => {
             return [
                 index,
-                this.makeTag(rawDataset.dimensions, tags, row),
+                this.makeTag(rawDataset.rawDataset.dimensions, tags, row),
                 row[heatIndex],
             ];
         });

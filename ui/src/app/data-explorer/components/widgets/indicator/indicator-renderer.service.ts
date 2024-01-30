@@ -25,13 +25,16 @@ import { EChartsOption, GraphicComponentOption } from 'echarts';
 @Injectable({ providedIn: 'root' })
 export class SpIndicatorRendererService extends SpBaseEchartsRenderer<IndicatorChartWidgetModel> {
     applyOptions(
-        datasets: GeneratedDataset,
+        generatedDataset: GeneratedDataset,
         options: EChartsOption,
         widgetConfig: IndicatorChartWidgetModel,
         widgetSize: WidgetSize,
     ): void {
         const field = widgetConfig.visualizationConfig.valueField;
-        const datasetOption = datasets.dataset[field.sourceIndex];
+        const datasetOption = this.datasetUtilsService.findPreparedDataset(
+            generatedDataset,
+            field.sourceIndex,
+        ).rawDataset;
         const fieldIndex = datasetOption.dimensions.indexOf(field.fullDbName);
         const datasetSize = datasetOption.source.length as number;
         const value = (datasetOption.source as any)[datasetSize - 1][
