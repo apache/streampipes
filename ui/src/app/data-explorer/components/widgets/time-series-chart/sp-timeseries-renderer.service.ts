@@ -95,7 +95,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             dataset:
                 this.datasetUtilsService.toEChartsDataset(generatedDataset),
             axisPointer: {
-                show: true,
+                show: widgetConfig.visualizationConfig.showSpike,
             },
             tooltip: {
                 trigger: 'axis',

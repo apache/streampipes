@@ -24,7 +24,6 @@ import { MapWidgetConfigComponent } from '../components/widgets/map/config/map-w
 import { MapWidgetComponent } from '../components/widgets/map/map-widget.component';
 import { HeatmapWidgetConfigComponent } from '../components/widgets/heatmap/config/heatmap-widget-config.component';
 import { TimeSeriesChartWidgetConfigComponent } from '../components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
-import { TimeSeriesChartWidgetComponent } from '../components/widgets/time-series-chart/time-series-chart-widget.component';
 import { ImageWidgetConfigComponent } from '../components/widgets/image/config/image-widget-config.component';
 import { ImageWidgetComponent } from '../components/widgets/image/image-widget.component';
 import { IndicatorWidgetConfigComponent } from '../components/widgets/indicator/config/indicator-chart-widget-config.component';
@@ -74,12 +73,6 @@ export class DataExplorerWidgetRegistry {
         {
             id: 'time-series-chart',
             label: 'Time Series Chart',
-            widgetConfigurationComponent: TimeSeriesChartWidgetConfigComponent,
-            widgetComponent: TimeSeriesChartWidgetComponent,
-        },
-        {
-            id: 'time-series-chart-new',
-            label: 'Time Series Chart New',
             widgetConfigurationComponent: TimeSeriesChartWidgetConfigComponent,
             widgetComponent:
                 SpEchartsWidgetComponent<TimeSeriesChartWidgetModel>,
