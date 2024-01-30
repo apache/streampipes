@@ -23,13 +23,15 @@ import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.mod
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
 import {
+    AxisOptions,
     GeneratedDataset,
-    TagValue,
     WidgetSize,
 } from '../../../models/dataset.model';
 import { WidgetBaseAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
 import { ToolboxDataZoomFeatureOption } from 'echarts/types/src/component/toolbox/feature/DataZoom';
+import { YAXisOption } from 'echarts/types/dist/shared';
+import { CartesianAxisPosition } from 'echarts/types/src/coord/cartesian/AxisModel';
 
 @Injectable({ providedIn: 'root' })
 export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSeriesChartWidgetModel> {
@@ -39,12 +41,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         widgetConfig: TimeSeriesChartWidgetModel,
         _widgetSize: WidgetSize,
     ): void {
-        const axisOptions = this.axisGeneratorService.makeAxisOptions(
-            widgetConfig.baseAppearanceConfig as WidgetBaseAppearanceConfig,
-            'time',
-            'value',
-            1,
-        );
+        this.addAxisOptions(widgetConfig, options);
 
         const finalSeries: SeriesOption[] = [];
 
@@ -97,8 +94,6 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             series: finalSeries,
             dataset:
                 this.datasetUtilsService.toEChartsDataset(generatedDataset),
-            xAxis: axisOptions.xAxisOptions,
-            yAxis: axisOptions.yAxisOptions,
             axisPointer: {
                 show: true,
             },
@@ -128,8 +123,13 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             field,
             groupIndex,
         );
+
         const series = {
             type: seriesType,
+            yAxisIndex: this.getYAxisIndex(
+                field,
+                widgetConfig.visualizationConfig.chosenAxis,
+            ),
             large: true,
             animation: false,
             silent: true,
@@ -198,5 +198,46 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 show: true,
             },
         };
+    }
+
+    getYAxisIndex(
+        field: DataExplorerField,
+        axisSettings: Record<string, string>,
+    ): number {
+        const identifier = field.fullDbName + field.sourceIndex;
+        const selectedAxis = axisSettings[identifier];
+        if (selectedAxis) {
+            return selectedAxis === 'left' ? 0 : 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private addAxisOptions(
+        config: TimeSeriesChartWidgetModel,
+        options: EChartsOption,
+    ): void {
+        const xAxisOption = this.axisGeneratorService.makeAxis(
+            'time',
+            0,
+            config.baseAppearanceConfig as WidgetBaseAppearanceConfig,
+        );
+        const yAxisOptions: YAXisOption[] = [];
+
+        const uniqueAxes = new Set(
+            Object.values(config.visualizationConfig.chosenAxis),
+        );
+
+        uniqueAxes.forEach(axis => {
+            yAxisOptions.push({
+                type: 'value',
+                position: axis as CartesianAxisPosition,
+            });
+        });
+
+        Object.assign(options, {
+            xAxis: xAxisOption,
+            yAxis: yAxisOptions,
+        });
     }
 }
