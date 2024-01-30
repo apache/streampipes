@@ -29,7 +29,6 @@
             ],
             "styles": ["src/scss/main.scss"],
             "scripts": [
-              "node_modules/plotly.js/dist/plotly.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",

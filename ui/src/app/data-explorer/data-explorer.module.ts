@@ -33,7 +33,6 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
@@ -108,7 +107,6 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         CoreUiModule,
-        PlotlyViaWindowModule,
         MatDatepickerModule,
         MatNativeDateModule,
         MatSliderModule,

@@ -30,7 +30,6 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { PortalModule } from '@angular/cdk/portal';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { StaticAnyInputComponent } from './static-properties/static-any-input/static-any-input.component';
@@ -95,7 +94,6 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         MatDatepickerModule,
         MatNativeDateModule,
         NgxChartsModule,
-        PlotlyViaWindowModule,
         MatSliderModule,
         MatSlideToggleModule,
         MatChipsModule,
