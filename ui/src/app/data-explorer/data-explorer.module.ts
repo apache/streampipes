@@ -45,7 +45,6 @@ import { DataExplorerDashboardPanelComponent } from './components/panel/data-exp
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
-import { TimeSeriesChartWidgetComponent } from './components/widgets/time-series-chart/time-series-chart-widget.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
@@ -161,7 +160,6 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         ImageBarPreviewComponent,
         ImageWidgetConfigComponent,
         IndicatorWidgetConfigComponent,
-        TimeSeriesChartWidgetComponent,
         TimeSeriesChartWidgetConfigComponent,
         LoadDataSpinnerComponent,
         NoDataInDateRangeComponent,

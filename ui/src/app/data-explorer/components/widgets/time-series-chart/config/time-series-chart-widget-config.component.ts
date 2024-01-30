@@ -101,7 +101,6 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         this.currentlyConfiguredWidget.visualizationConfig.chosenAxis =
             currentAxis;
 
-        // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
         this.triggerDataRefresh();
     }
 
