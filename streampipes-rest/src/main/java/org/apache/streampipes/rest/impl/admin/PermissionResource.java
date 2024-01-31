@@ -21,6 +21,8 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,8 @@ import java.util.List;
 @RequestMapping("/api/v2/admin/permissions")
 public class PermissionResource extends AbstractAuthGuardedRestResource {
 
+  private static final Logger log = LoggerFactory.getLogger(PermissionResource.class);
+
   @GetMapping(path = "objects/{objectInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public List<Permission> getPermissionForObject(@PathVariable("objectInstanceId") String objectInstanceId) {
@@ -48,6 +52,8 @@ public class PermissionResource extends AbstractAuthGuardedRestResource {
                                @RequestBody Permission permission) {
     if (permissionId.equals(permission.getPermissionId())) {
       getSpResourceManager().managePermissions().update(permission);
+    } else {
+      log.warn("Permission ID in path and body do not match");
     }
   }
 

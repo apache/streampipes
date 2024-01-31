@@ -21,6 +21,7 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
+import org.apache.streampipes.resource.management.RBACManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
@@ -67,8 +68,12 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
   }
 
   private boolean hasPermission(Authentication auth, String objectInstanceId) {
+//    return isPublicElement(objectInstanceId)
+//        || getUserDetails(auth).getAllObjectPermissions().contains(objectInstanceId);
     return isPublicElement(objectInstanceId)
-        || getUserDetails(auth).getAllObjectPermissions().contains(objectInstanceId);
+        ||
+        RBACManager.INSTANCE.hasPermissionForUser(getUserDetails(auth).getDetails().getPrincipalId(), objectInstanceId,
+            RBACManager.ALL_PERMISSION);
   }
 
   private PrincipalUserDetails<?> getUserDetails(Authentication authentication) {

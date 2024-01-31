@@ -38,6 +38,7 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.RBACManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -100,6 +101,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Get the pipeline status of a given pipeline", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   public List<PipelineStatusMessage> getPipelineStatus(@PathVariable("pipelineId") String pipelineId) {
+    checkUserPermission(pipelineId, RBACManager.READ_PERMISSION);
     return PipelineStatusManager.getPipelineStatus(pipelineId, 5);
   }
 
@@ -109,6 +111,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Delete a pipeline with a given id", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_PRIVILEGE)
   public Message removeOwn(@PathVariable("pipelineId") String pipelineId) {
+    checkUserPermission(pipelineId, RBACManager.DELETE_PERMISSION);
     PipelineManager.deletePipeline(pipelineId);
     return Notifications.success("Pipeline deleted");
   }
@@ -117,6 +120,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Get a specific pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   public ResponseEntity<Pipeline> getElement(@PathVariable("pipelineId") String pipelineId) {
+    checkUserPermission(pipelineId, RBACManager.READ_PERMISSION);
     Pipeline foundPipeline = PipelineManager.getPipeline(pipelineId);
 
     if (foundPipeline == null) {
@@ -130,6 +134,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Start the pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public ResponseEntity<?> start(@PathVariable("pipelineId") String pipelineId) {
+    checkUserPermission(pipelineId, RBACManager.WRITE_PERMISSION);
     try {
       PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
 
@@ -145,6 +150,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public ResponseEntity<?> stop(@PathVariable("pipelineId") String pipelineId,
                                 @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
+    checkUserPermission(pipelineId, RBACManager.WRITE_PERMISSION);
     try {
       PipelineOperationStatus status = PipelineManager.stopPipeline(pipelineId, forceStop);
       return ok(status);
@@ -177,6 +183,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PostAuthorize("hasPermission(returnObject, 'READ')")
   public PipelineElementRecommendationMessage recommend(@RequestBody Pipeline pipeline,
                                                         @PathVariable("recId") String baseRecElement) {
+    checkUserPermission(baseRecElement, RBACManager.READ_PERMISSION);
     try {
       return Operations.findRecommendedElements(pipeline, baseRecElement);
     } catch (JsonSyntaxException e) {
@@ -206,6 +213,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Hidden
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
+    checkUserPermission(pipeline.getPipelineId(), RBACManager.WRITE_PERMISSION);
     try {
       return ok(Operations.validatePipeline(pipeline));
     } catch (JsonSyntaxException e) {
@@ -234,6 +242,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public ResponseEntity<SuccessMessage> overwritePipeline(@PathVariable("pipelineId") String pipelineId,
                                                           @RequestBody Pipeline pipeline) {
+    checkUserPermission(pipelineId, RBACManager.WRITE_PERMISSION);
     Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());

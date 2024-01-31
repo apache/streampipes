@@ -26,6 +26,7 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.NotificationsResourceManager;
+import org.apache.streampipes.resource.management.RBACManager;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -73,8 +74,10 @@ public class PipelineManager {
     preparePipelineBasics(principalSid, pipeline, pipelineId);
     Operations.storePipeline(pipeline);
 
-    Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
-    getPermissionStorage().addPermission(permission);
+//    Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
+//    getPermissionStorage().addPermission(permission);
+
+    getRBACManager().addPermissionForUser(principalSid, pipelineId, RBACManager.ALL_PERMISSION);
 
     return pipelineId;
   }
@@ -115,6 +118,7 @@ public class PipelineManager {
     var pipeline = getPipeline(pipelineId);
     if (Objects.nonNull(pipeline)) {
       getPipelineStorage().deletePipeline(pipelineId);
+      RBACManager.INSTANCE.deleteObject(pipelineId);
       new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
     }
   }
@@ -161,5 +165,9 @@ public class PipelineManager {
 
   private static IPermissionStorage getPermissionStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
+  }
+
+  private static RBACManager getRBACManager() {
+    return RBACManager.INSTANCE;
   }
 }

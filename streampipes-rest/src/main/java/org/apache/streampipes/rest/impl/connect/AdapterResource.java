@@ -18,6 +18,11 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
@@ -30,6 +35,7 @@ import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -41,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -214,14 +221,16 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Get all adapters of the current user", tags = {"Adapter"}, responses = {
+          @ApiResponse(content = {
+                  @Content(
+                          mediaType = "application/json",
+                          array = @ArraySchema(schema = @Schema(implementation = AdapterDescription.class))
+                  )})})
   @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
-  public ResponseEntity<?> getAllAdapters() {
-    try {
-      return ok(managementService.getAllAdapterInstances());
-    } catch (AdapterException e) {
-      LOG.error("Error while getting all adapters", e);
-      return ResponseEntity.status(500).build();
-    }
+  @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
+  public List<AdapterDescription> getAllAdapters() throws AdapterException {
+      return managementService.getAllAdapterInstances();
   }
 
   private AdapterDescription getAdapterDescription(String adapterId) throws AdapterException {

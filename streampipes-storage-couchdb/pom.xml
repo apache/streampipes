@@ -66,6 +66,16 @@
             <groupId>org.lightcouch</groupId>
             <artifactId>lightcouch</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.java-casbin</groupId>
+            <artifactId>casbin-couchdb-adapter</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.casbin</groupId>
+            <artifactId>jcasbin</artifactId>
+            <version>1.43.0</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
