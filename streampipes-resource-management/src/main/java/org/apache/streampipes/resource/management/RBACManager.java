@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class RBACManager {
   private static final Logger log = LoggerFactory.getLogger(RBACManager.class);
@@ -40,6 +41,7 @@ public class RBACManager {
   public static final String READ_PERMISSION = "READ";
   public static final String WRITE_PERMISSION = "WRITE";
   public static final String DELETE_PERMISSION = "DELETE";
+  public static final String OWNER_PERMISSION = "OWNER";
   public static final String PUBLIC_USER = "public";
   private static final int INDEX_OF_USER = 0;
   private static final int INDEX_OF_OBJECT = 2;
@@ -57,7 +59,7 @@ public class RBACManager {
       e = some(where (p.eft == allow))
 
       [matchers]
-      m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && r.obj == p.obj && (r.act == p.act || p.act == "*")""";
+      m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && r.obj == p.obj && (r.act == p.act || p.act == "*" || p.act == "OWNER")""";
   private final Enforcer enforcer;
 
   public RBACManager() {
@@ -88,9 +90,9 @@ public class RBACManager {
   public void deletePermission(String userId, String objectInstanceId, String permission) {
     log.info("Deleting permission for user {} on object {} with permission {}", userId, objectInstanceId, permission);
     if (Objects.equals(permission, ALL_PERMISSION)) {
-      enforcer.removeFilteredPolicy(INDEX_OF_USER, DEFAULT_DOMAIN, getUserId(userId), getObjectId(objectInstanceId));
+      enforcer.removeFilteredPolicy(INDEX_OF_USER, getUserId(userId), DEFAULT_DOMAIN, getObjectId(objectInstanceId));
     } else {
-      enforcer.removeFilteredPolicy(INDEX_OF_USER, DEFAULT_DOMAIN, getUserId(userId), getObjectId(objectInstanceId),
+      enforcer.removeFilteredPolicy(INDEX_OF_USER, getUserId(userId), DEFAULT_DOMAIN, getObjectId(objectInstanceId),
           permission);
     }
   }
@@ -105,13 +107,30 @@ public class RBACManager {
     return result;
   }
 
+  public void setOwner(String userId, String objectInstanceId) {
+    enforcer.removeFilteredPolicy(INDEX_OF_USER, "", DEFAULT_DOMAIN, getObjectId(objectInstanceId), OWNER_PERMISSION);
+    enforcer.addPermissionForUser(getUserId(userId), DEFAULT_DOMAIN, getObjectId(objectInstanceId), OWNER_PERMISSION);
+  }
+
+  public String getOwner(String objectInstanceId) {
+    List<List<String>> p =
+        enforcer.getFilteredPolicy(INDEX_OF_USER, "", DEFAULT_DOMAIN, getObjectId(objectInstanceId), OWNER_PERMISSION);
+    if (p.isEmpty()) {
+      return null;
+    }
+    if (p.size() > 1) {
+      throw new IllegalStateException("More than one owner for object " + objectInstanceId);
+    }
+    return p.get(0).get(0).replaceFirst(USER_PREFIX, "");
+  }
+
   private static String getUserId(String sid) {
-//    return USER_PREFIX + sid;
-    return sid;
+    return USER_PREFIX + sid;
+//    return sid;
   }
 
   private static String getObjectId(String oid) {
-//    return OBJECT_PREFIX + oid;
-    return oid;
+    return OBJECT_PREFIX + oid;
+//    return oid;
   }
 }

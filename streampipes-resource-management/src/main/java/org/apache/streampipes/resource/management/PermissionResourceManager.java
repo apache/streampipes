@@ -19,6 +19,8 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
+import org.apache.streampipes.model.client.user.PermissionEntry;
+import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -27,6 +29,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class PermissionResourceManager extends AbstractResourceManager<IPermissionStorage> {
 
@@ -35,40 +38,42 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
   }
 
   public List<Permission> findAll() {
-//    return db.getAllPermissions();
     throw new NotImplementedException("Not implemented yet");
   }
 
   public List<Permission> findForObjectId(String objectInstanceId) {
     List<List<String>> permissionList = RBACManager.INSTANCE.getPermissionForObject(objectInstanceId);
-    List<Permission> result = new ArrayList<>();
+    String ownerId = RBACManager.INSTANCE.getOwner(objectInstanceId);
+    Permission permission = PermissionBuilder.create(objectInstanceId, Permission.class, ownerId)
+        .publicElement(RBACManager.INSTANCE.hasPermissionForUser(RBACManager.PUBLIC_USER, objectInstanceId,
+            RBACManager.ALL_PERMISSION))
+        .build();
+    permission.setPermissionId(objectInstanceId);
     for (List<String> l : permissionList) {
-      Permission permission = PermissionBuilder.create(objectInstanceId, Permission.class, l.get(0))
-          .publicElement(RBACManager.INSTANCE.hasPermissionForUser(RBACManager.PUBLIC_USER, objectInstanceId,
-              RBACManager.ALL_PERMISSION))
-          .build();
-      permission.setPermissionId(objectInstanceId + "-" + l.get(0));
-      result.add(permission);
+      String uid = l.get(0);
+      if (Objects.equals(uid, ownerId)) {
+        continue;
+      }
+      PermissionEntry entry = new PermissionEntry();
+      entry.setSid(l.get(0));
+      entry.setPrincipalType(PrincipalType.USER_ACCOUNT);
+      permission.addPermissionEntry(entry);
     }
-    if (result.isEmpty()) {
-      Permission permission = PermissionBuilder.create(objectInstanceId, Permission.class, "public")
-          .publicElement(false)
-          .build();
-      permission.setPermissionId(objectInstanceId + "-" + "public");
-      return Collections.singletonList(permission);
-    }
-//    return db.getUserPermissionsForObject(objectInstanceId);
-    return result;
+    return Collections.singletonList(permission);
   }
 
   public void create(Permission permission) {
-//    db.addPermission(permission);
     if (permission.isPublicElement()) {
       RBACManager.INSTANCE.addPermissionForUser(RBACManager.PUBLIC_USER, permission.getObjectInstanceId(),
           RBACManager.ALL_PERMISSION);
     }
-    RBACManager.INSTANCE.addPermissionForUser(permission.getOwnerSid(), permission.getObjectInstanceId(),
-        RBACManager.ALL_PERMISSION);
+    if (permission.getOwnerSid() != null) {
+      RBACManager.INSTANCE.setOwner(permission.getOwnerSid(), permission.getObjectInstanceId());
+    }
+    for (PermissionEntry e : permission.getGrantedAuthorities()) {
+      RBACManager.INSTANCE.addPermissionForUser(e.getSid(), permission.getObjectInstanceId(),
+          RBACManager.ALL_PERMISSION);
+    }
   }
 
   public void createDefault(String objectInstanceId,
@@ -84,16 +89,11 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
   }
 
   public void update(Permission permission) {
-//    db.updatePermission(permission);
     delete(permission);
     create(permission);
   }
 
   public void delete(Permission permission) {
-//    db.deletePermission(permission.getPermissionId());
-    RBACManager.INSTANCE.deletePermission(RBACManager.PUBLIC_USER, permission.getObjectInstanceId(),
-        RBACManager.ALL_PERMISSION);
-    RBACManager.INSTANCE.deletePermission(permission.getOwnerSid(), permission.getObjectInstanceId(),
-        RBACManager.ALL_PERMISSION);
+    RBACManager.INSTANCE.deleteObject(permission.getObjectInstanceId());
   }
 }
