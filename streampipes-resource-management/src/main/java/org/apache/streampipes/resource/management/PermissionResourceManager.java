@@ -26,7 +26,6 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +41,7 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
   }
 
   public List<Permission> findForObjectId(String objectInstanceId) {
-    List<List<String>> permissionList = RBACManager.INSTANCE.getPermissionForObject(objectInstanceId);
+    List<List<String>> permissionList = RBACManager.INSTANCE.getRawPoliciesForObject(objectInstanceId);
     String ownerId = RBACManager.INSTANCE.getOwner(objectInstanceId);
     Permission permission = PermissionBuilder.create(objectInstanceId, Permission.class, ownerId)
         .publicElement(RBACManager.INSTANCE.hasPermissionForUser(RBACManager.PUBLIC_USER, objectInstanceId,
@@ -50,13 +49,20 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
         .build();
     permission.setPermissionId(objectInstanceId);
     for (List<String> l : permissionList) {
-      String uid = l.get(0);
-      if (Objects.equals(uid, ownerId)) {
+      PermissionEntry entry = new PermissionEntry();
+      if (l.get(0).startsWith(RBACManager.USER_PREFIX)) {
+        entry.setPrincipalType(PrincipalType.USER_ACCOUNT);
+        entry.setSid(l.get(0).replaceFirst(RBACManager.USER_PREFIX, ""));
+      } else if (l.get(0).startsWith(RBACManager.GROUP_PREFIX)) {
+        entry.setPrincipalType(PrincipalType.GROUP);
+        entry.setSid(l.get(0).replaceFirst(RBACManager.GROUP_PREFIX, ""));
+      } else if (l.get(0).startsWith(RBACManager.SERVICE_COUNT_PREFIX)) {
+        entry.setPrincipalType(PrincipalType.SERVICE_ACCOUNT);
+        entry.setSid(l.get(0).replaceFirst(RBACManager.SERVICE_COUNT_PREFIX, ""));
+      }
+      if (Objects.equals(entry.getSid(), ownerId)) {
         continue;
       }
-      PermissionEntry entry = new PermissionEntry();
-      entry.setSid(l.get(0));
-      entry.setPrincipalType(PrincipalType.USER_ACCOUNT);
       permission.addPermissionEntry(entry);
     }
     return Collections.singletonList(permission);
@@ -71,8 +77,20 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
       RBACManager.INSTANCE.setOwner(permission.getOwnerSid(), permission.getObjectInstanceId());
     }
     for (PermissionEntry e : permission.getGrantedAuthorities()) {
-      RBACManager.INSTANCE.addPermissionForUser(e.getSid(), permission.getObjectInstanceId(),
-          RBACManager.ALL_PERMISSION);
+      switch (e.getPrincipalType()){
+        case USER_ACCOUNT:
+          RBACManager.INSTANCE.addPermissionForUser(e.getSid(), permission.getObjectInstanceId(),
+              RBACManager.ALL_PERMISSION);
+          break;
+        case GROUP:
+          RBACManager.INSTANCE.addPermissionForUserGroup(e.getSid(), permission.getObjectInstanceId(),
+              RBACManager.ALL_PERMISSION);
+          break;
+        case SERVICE_ACCOUNT:
+          RBACManager.INSTANCE.addPermissionForServiceAccount(e.getSid(), permission.getObjectInstanceId(),
+              RBACManager.ALL_PERMISSION);
+          break;
+      }
     }
   }
 

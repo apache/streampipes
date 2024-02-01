@@ -17,9 +17,7 @@
  */
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
 import io.github.java_casbin.couchdb.CouchDBAdapter;
 import org.casbin.jcasbin.main.Enforcer;
@@ -29,14 +27,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class RBACManager {
   private static final Logger log = LoggerFactory.getLogger(RBACManager.class);
   public static RBACManager INSTANCE = new RBACManager();
   private static final String DEFAULT_DOMAIN = "default";
-  private static final String USER_PREFIX = "user";
-  private static final String OBJECT_PREFIX = "obj";
+  public static final String USER_PREFIX = "user_";
+  public static final String GROUP_PREFIX = "group_";
+  public static final String SERVICE_COUNT_PREFIX = "service-account_";
+  private static final String OBJECT_PREFIX = "obj_";
   public static final String ALL_PERMISSION = "*";
   public static final String READ_PERMISSION = "READ";
   public static final String WRITE_PERMISSION = "WRITE";
@@ -74,6 +73,32 @@ public class RBACManager {
         getObjectId(objectInstanceId), permission);
   }
 
+  public void addPermissionForUserGroup(String groupId, String objectInstanceId, String permission) {
+    log.info("Adding permission for group {} on object {} with permission {}", groupId, objectInstanceId, permission);
+    enforcer.addPermissionForUser(getUserGroupID(groupId), DEFAULT_DOMAIN,
+        getObjectId(objectInstanceId), permission);
+  }
+
+  public void addPermissionForServiceAccount(String saID, String objectInstanceId, String permission) {
+    log.info("Adding permission for service account {} on object {} with permission {}", saID, objectInstanceId, permission);
+    enforcer.addPermissionForUser(getServiceAccountID(saID), DEFAULT_DOMAIN,
+        getObjectId(objectInstanceId), permission);
+  }
+
+  public void addUserToUserGroup(String userID, String groupID) {
+    log.info("Adding user {} to group {}", userID, groupID);
+    enforcer.addRoleForUserInDomain(getUserId(userID), getUserGroupID(groupID), DEFAULT_DOMAIN);
+  }
+
+  public void removeUserFromAllUserGroup(String userID) {
+    log.info("Removing user {} from all groups", userID);
+    enforcer.getRolesForUserInDomain(userID, DEFAULT_DOMAIN).forEach(g -> {
+      if (g.startsWith(GROUP_PREFIX)) {
+        enforcer.deleteRoleForUserInDomain(userID, g, DEFAULT_DOMAIN);
+      }
+    });
+  }
+
   public boolean hasPermissionForUser(String userId, String objectInstanceId, String permission) {
     boolean result = enforcer.enforce(getUserId(userId), DEFAULT_DOMAIN, getObjectId(objectInstanceId), permission) ||
         enforcer.enforce(getUserId(PUBLIC_USER), DEFAULT_DOMAIN, getObjectId(objectInstanceId), permission);
@@ -87,24 +112,14 @@ public class RBACManager {
     enforcer.removeFilteredPolicy(INDEX_OF_OBJECT, getObjectId(objectInstanceId));
   }
 
-  public void deletePermission(String userId, String objectInstanceId, String permission) {
-    log.info("Deleting permission for user {} on object {} with permission {}", userId, objectInstanceId, permission);
-    if (Objects.equals(permission, ALL_PERMISSION)) {
-      enforcer.removeFilteredPolicy(INDEX_OF_USER, getUserId(userId), DEFAULT_DOMAIN, getObjectId(objectInstanceId));
-    } else {
-      enforcer.removeFilteredPolicy(INDEX_OF_USER, getUserId(userId), DEFAULT_DOMAIN, getObjectId(objectInstanceId),
-          permission);
-    }
-  }
-
-  public List<List<String>> getPermissionForObject(String objectInstanceId) {
+  /**
+   * Due to the bug in jcasbin, we shouldn't modify the content in the result
+   * @param objectInstanceId
+   * @return
+   */
+  public List<List<String>> getRawPoliciesForObject(String objectInstanceId) {
     log.info("Getting permissions for object {}", objectInstanceId);
-    List<List<String>> result = enforcer.getFilteredPolicy(0, "", DEFAULT_DOMAIN, getObjectId(objectInstanceId));
-    for (List<String> l : result) {
-      l.set(0, l.get(0).replaceFirst(USER_PREFIX, ""));
-      l.set(2, l.get(2).replaceFirst(OBJECT_PREFIX, ""));
-    }
-    return result;
+    return enforcer.getFilteredPolicy(0, "", DEFAULT_DOMAIN, getObjectId(objectInstanceId));
   }
 
   public void setOwner(String userId, String objectInstanceId) {
@@ -126,11 +141,17 @@ public class RBACManager {
 
   private static String getUserId(String sid) {
     return USER_PREFIX + sid;
-//    return sid;
+  }
+
+  private static String getUserGroupID(String sid) {
+    return GROUP_PREFIX + sid;
+  }
+
+  private static String getServiceAccountID(String sid) {
+    return SERVICE_COUNT_PREFIX + sid;
   }
 
   private static String getObjectId(String oid) {
     return OBJECT_PREFIX + oid;
-//    return oid;
   }
 }

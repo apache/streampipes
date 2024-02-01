@@ -27,6 +27,7 @@ import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.resource.management.RBACManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
@@ -189,6 +190,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
       user.setRev(existingUser.getRev());
       getUserStorage().updateUser(user);
+      RBACManager.INSTANCE.removeUserFromAllUserGroup(user.getPrincipalId());
+      user.getGroups().forEach(g-> RBACManager.INSTANCE.addUserToUserGroup(user.getPrincipalId(), g));
       return ok(Notifications.success("User updated"));
     } else {
       return statusMessage(Notifications.error("User not found"));
