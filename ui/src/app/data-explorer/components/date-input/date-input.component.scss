@@ -16,18 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    canDeactivate(
-        component: DataExplorerDashboardPanelComponent,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
-    }
+.sp-date-input {
+    font-family: Roboto-Regular;
+    font-size: small;
 }

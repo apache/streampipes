@@ -44,7 +44,7 @@ import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { TreeModule } from '@circlon/angular-tree-component';
+import { TreeModule } from '@ali-hm/angular-tree-component';
 import { XsService } from '../NS/xs.service';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
@@ -88,6 +88,7 @@ import { SpAdapterStartedLoadingComponent } from './dialog/adapter-started/adapt
 import { SpAdapterStartedSuccessComponent } from './dialog/adapter-started/adapter-started-success/adapter-started-success.component';
 import { SpAdapterStartedUpdateMigrationComponent } from './dialog/adapter-started/adapter-started-update-migration/adapter-started-update-migration.component';
 import { SpAdapterStartedPreviewComponent } from './dialog/adapter-started/adapter-started-preview/adapter-started-preview.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
     imports: [
@@ -97,6 +98,7 @@ import { SpAdapterStartedPreviewComponent } from './dialog/adapter-started/adapt
         CommonModule,
         FlexLayoutModule,
         MatGridListModule,
+        MatDividerModule,
         CustomMaterialModule,
         MatProgressSpinnerModule,
         MatChipsModule,

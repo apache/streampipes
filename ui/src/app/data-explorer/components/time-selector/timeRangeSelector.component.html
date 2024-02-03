@@ -38,38 +38,21 @@
         >
             <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
         </button>
-        <mat-form-field
-            fxLayoutAlign="center center"
-            class="start-date form-field-margin smaller-font-size form-field-smaller"
-            color="accent"
-            appearance="outline"
+        <sp-date-input
+            class="start-date-margin"
+            [(date)]="startDate"
+            (dateChanged)="changeCustomDateRange()"
+            data-cy="time-range-from"
         >
-            <input
-                matInput
-                data-cy="time-range-from"
-                [owlDateTime]="dt1"
-                [owlDateTimeTrigger]="dt1"
-                [(ngModel)]="startDate"
-                (dateTimeChange)="changeCustomDateRange()"
-            />
-            <owl-date-time #dt1></owl-date-time>
-        </mat-form-field>
-        <mat-form-field
-            fxLayoutAlign="center center"
-            class="end-date form-field-margin form-field-smaller"
-            color="accent"
-            appearance="outline"
+        </sp-date-input>
+
+        <sp-date-input
+            [(date)]="endDate"
+            (dateChanged)="changeCustomDateRange()"
+            data-cy="time-range-to"
         >
-            <input
-                matInput
-                data-cy="time-range-to"
-                [owlDateTime]="dt2"
-                [owlDateTimeTrigger]="dt2"
-                [(ngModel)]="endDate"
-                (dateTimeChange)="changeCustomDateRange()"
-            />
-            <owl-date-time #dt2></owl-date-time>
-        </mat-form-field>
+        </sp-date-input>
+
         <button
             mat-button
             class="button-icon icon-button-font-size ml--5 mr--5"

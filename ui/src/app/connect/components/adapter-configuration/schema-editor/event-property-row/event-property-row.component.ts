@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UUID } from 'angular2-uuid';
-import { TreeNode } from '@circlon/angular-tree-component';
+import { TreeNode } from '@ali-hm/angular-tree-component';
 import {
     EventProperty,
     EventPropertyList,

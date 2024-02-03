@@ -16,18 +16,32 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { format } from 'date-fns';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    canDeactivate(
-        component: DataExplorerDashboardPanelComponent,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
+@Component({
+    selector: 'sp-date-input',
+    templateUrl: './date-input.component.html',
+    styleUrls: ['./date-input.component.scss'],
+})
+export class DateInputComponent {
+    @Input()
+    date: Date;
+
+    @Output()
+    dateChange: EventEmitter<Date> = new EventEmitter<Date>();
+
+    @Output()
+    dateChanged = new EventEmitter<void>();
+
+    get formattedDate(): string {
+        return this.date ? format(this.date, "yyyy-MM-dd'T'HH:mm") : '';
+    }
+
+    onDateChange(value: string): void {
+        const updatedDate = new Date(value);
+        this.date = updatedDate;
+        this.dateChange.emit(updatedDate);
+        this.dateChanged.emit();
     }
 }

@@ -21,6 +21,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourProviderService } from './tour-provider.service';
 import Step from 'shepherd.js/src/types/step';
+import { BehaviorSubject } from 'rxjs';
 import StepOptions = Step.StepOptions;
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +29,9 @@ export class ShepherdService {
     currentTour: Shepherd.Tour;
     currentTourSettings: any;
     timeWaitMillis: number;
+    tutorialActive = false;
+
+    public tutorialActive$ = new BehaviorSubject(false);
 
     constructor(
         private router: Router,
@@ -38,12 +42,22 @@ export class ShepherdService {
 
     makeTour(currentTourSettings) {
         const tour = new Shepherd.Tour({
-            confirmCancel: true,
-            confirmCancelMessage: 'Do you really want to cancel the tour?',
+            confirmCancel: () => {
+                return new Promise(resolve => {
+                    const exit = window.confirm(
+                        'Do you really want to cancel the tour?',
+                    );
+                    if (exit) {
+                        resolve(true);
+                        this.changeTutorialStatus(false);
+                    } else {
+                        resolve(false);
+                    }
+                });
+            },
             defaultStepOptions: {
                 classes: 'shadow-md bg-purple-dark',
                 scrollTo: true,
-                // showCancelLink: true
             },
         });
 
@@ -101,6 +115,7 @@ export class ShepherdService {
         this.currentTourSettings = tourSettings;
         this.currentTour = this.makeTour(this.currentTourSettings);
         this.currentTour.start();
+        this.changeTutorialStatus(true);
     }
 
     makeCancelButton(tour) {
@@ -197,5 +212,10 @@ export class ShepherdService {
 
     getTimeWaitMillis() {
         return this.tourProviderService.getTime();
+    }
+
+    changeTutorialStatus(tutorialActive: boolean): void {
+        this.tutorialActive = tutorialActive;
+        this.tutorialActive$.next(tutorialActive);
     }
 }

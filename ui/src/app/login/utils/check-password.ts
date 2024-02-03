@@ -18,7 +18,7 @@
 
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export let checkPasswords: ValidatorFn = (
+export const checkPasswords: ValidatorFn = (
     group: AbstractControl,
 ): ValidationErrors | null => {
     const pass = group.get('password');

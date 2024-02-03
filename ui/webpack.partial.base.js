@@ -149,11 +149,13 @@ module.exports = {
                 '@streampipes/shared-ui': {
                     singleton: true,
                     strictVersion: true,
+                    version: '0.0.1',
                     eager: true,
                 },
                 '@streampipes/platform-services': {
                     singleton: true,
                     strictVersion: true,
+                    version: '0.0.1',
                     eager: true,
                 },
                 'ngx-echarts': {

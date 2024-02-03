@@ -15,12 +15,10 @@
   ~ limitations under the License.
   ~
   -->
-
-<markdown
-    [data]="documentationMarkdown"
-    *ngIf="documentationMarkdown && !error"
-    [ngClass]="useStyling ? 'note' : ''"
-></markdown>
-<p *ngIf="error" [ngClass]="useStyling ? 'note' : ''">
-    (no documentation available)
-</p>
+<input
+    class="sp-date-input"
+    type="datetime-local"
+    [value]="formattedDate"
+    (blur)="onDateChange($event.target.value)"
+    step="1"
+/>

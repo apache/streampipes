@@ -18,7 +18,6 @@
 
 import {
     ActivatedRouteSnapshot,
-    CanActivate,
     Router,
     RouterStateSnapshot,
     UrlTree,
@@ -26,7 +25,7 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-export abstract class BaseConfiguredCanActivateGuard implements CanActivate {
+export abstract class BaseConfiguredCanActivateGuard {
     constructor(
         protected router: Router,
         protected authService: AuthService,
