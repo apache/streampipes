@@ -16,3 +16,21 @@
 //
 
 package api
+
+import (
+	"streampipes-client-go/streampipes/config"
+	"streampipes-client-go/streampipes/internal/StreamPipesHttp"
+)
+
+type DataStreamApi struct {
+	config      config.StreamPipesClientConnectionConfig
+	httpRequest StreamPipesHttp.HttpRequest
+}
+
+func NewDataStreamApi(clientConfig config.StreamPipesClientConnectionConfig) *DataStreamApi {
+
+	return &DataStreamApi{
+		config:      clientConfig,
+		httpRequest: nil,
+	}
+}

@@ -66,7 +66,6 @@ func (s *StreamPipesApiPath) ToString() string {
 		return s.PathItems[0]
 	}
 	path := strings.Join(s.PathItems, "/")
-	//todo
 	s.PathItems = []string{path}
 	return path
 }
