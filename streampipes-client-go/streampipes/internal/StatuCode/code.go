@@ -18,10 +18,10 @@
 package StatuCode
 
 var (
-	Unauthorized = Add(401, "The StreamPipes Backend returned an unauthorized error.\nPlease check your user name and/or password to be correct.")
-	AccessDenied = Add(403, "There seems to be an issue with the access rights of the given user and the DataLake you queried.\n"+
+	BadRequest   = NewErrorCode(400, "Measurement series with given id not found")
+	Unauthorized = NewErrorCode(401, "The StreamPipes Backend returned an unauthorized error.\nPlease check your user name and/or password to be correct.")
+	AccessDenied = NewErrorCode(403, "There seems to be an issue with the access rights of the given user and the DataLake you queried.\n"+
 		"Apparently, this user is not allowed to query the DataLake.\n"+
 		"Please check the user's permissions or contact your StreamPipes admin.")
-	NotFound         = Add(404, "There seems to be an issue with the Python Client calling the API inappropriately.")
-	MethodNotAllowed = Add(405, "There seems to be an issue with the Python Client calling the API inappropriately.")
+	MethodNotAllowed = NewErrorCode(405, "There seems to be an issue with the Go Client calling the API inappropriately.")
 )

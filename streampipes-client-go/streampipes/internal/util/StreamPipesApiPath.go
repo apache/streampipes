@@ -43,12 +43,6 @@ func (s *StreamPipesApiPath) FromStreamPipesBasePath() *StreamPipesApiPath {
 	return s
 }
 
-func (s *StreamPipesApiPath) FromBaseApiPath() *StreamPipesApiPath {
-	initialPaths := []string{"streampipes-backend", "api", "v2"}
-	s.PathItems = append(s.PathItems, initialPaths...)
-	return s
-}
-
 func (s *StreamPipesApiPath) FromStreamPipesBasePathWithSubPaths(allSubPaths []string) *StreamPipesApiPath {
 	return s.FromStreamPipesBasePath().AddToPath(allSubPaths)
 }
@@ -76,22 +70,3 @@ func (s *StreamPipesApiPath) ToString() string {
 	s.PathItems = []string{path}
 	return path
 }
-
-// Splicing query parameters into a URL : ? or &
-//func (s *StreamPipesApiPath) AppendQueryParameters() string {
-//	if len(s.QueryParameters) == 0 {
-//		return s.PathItems[0]
-//	}
-//	var queryParams []string
-//	for key, value := range s.QueryParameters {
-//		queryParams = append(queryParams, fmt.Sprintf("%s=%s", applyEncoding(key), applyEncoding(value)))
-//	}
-//
-//	queryString := strings.Join(queryParams, "&")
-//	return fmt.Sprintf("%s?%s", s.PathItems[0], queryString)
-//}
-
-// Escaping query parameters, which can be safely used in URL query parameters.
-//func applyEncoding(value string) string {
-//	return url.QueryEscape(value)
-//}

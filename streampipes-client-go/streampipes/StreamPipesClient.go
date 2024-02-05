@@ -15,12 +15,12 @@
 // limitations under the License.
 //
 
-package internal
+package streampipes
 
 import (
 	"errors"
-	"streampipes-client-go/streampipes/internal/api"
-	"streampipes-client-go/streampipes/internal/config"
+	"streampipes-client-go/streampipes/api"
+	"streampipes-client-go/streampipes/config"
 )
 
 // Client is a base client that is used to make StreamPipesHttp httpRequest to the ServiceURL

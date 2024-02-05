@@ -18,127 +18,32 @@
 package StreamPipesHttp
 
 import (
-	"log"
 	"net/http"
-	"streampipes-client-go/streampipes/internal/StatuCode"
+	"streampipes-client-go/streampipes/config"
 	"streampipes-client-go/streampipes/internal/StreamPipesHttp/headers"
-	"streampipes-client-go/streampipes/internal/config"
 	Path "streampipes-client-go/streampipes/internal/util"
 )
 
-type AfterRequestFunc func(Type interface{})
+type HttpRequest interface {
+	ExecuteRequest(serializerStruct interface{}) interface{}
+	MakeUrl(resourcePath []string)
+}
 
-type HttpRequest struct {
+type httpRequest struct {
 	ClientConnectionConfig config.StreamPipesClientConnectionConfig
 	ApiPath                *Path.StreamPipesApiPath
 	Header                 *headers.Headers
 	Client                 *http.Client
 	Response               *http.Response
-	AfterRequest           AfterRequestFunc
 	Url                    string
 }
 
-func NewHttpRequest(clientConfig config.StreamPipesClientConnectionConfig) *HttpRequest {
-	afterRequest := func(Type interface{}) {}
-	return &HttpRequest{
+func NewHttpRequest(clientConfig config.StreamPipesClientConnectionConfig) *httpRequest {
+	return &httpRequest{
 		ClientConnectionConfig: clientConfig,
 		Header:                 new(headers.Headers),
 		Client:                 new(http.Client),
 		Response:               new(http.Response),
-		AfterRequest:           afterRequest,
 		Url:                    "",
 	}
 }
-
-// Build a complete URL
-func (r *HttpRequest) MakeUrl(resourcePath []string) {
-
-	r.Url = r.ClientConnectionConfig.GetBaseUrl().AddToPath(resourcePath).ToString()
-
-}
-
-// Complete request process
-func (r *HttpRequest) ExecuteRequest(method string, Type interface{}) {
-	//Initial Request
-	r.makeRequest(method)
-
-	//str := strconv.Itoa(r.Response.StatusCode)
-	//if str[:2] == "20" {
-	//	r.AfterRequest(dataLakeMeasure)
-	//} else {
-	if r.Response.StatusCode == 200 {
-		r.AfterRequest(Type) // Process Response
-	} else {
-		switch r.Response.StatusCode {
-		case StatuCode.Unauthorized.Code():
-			log.Fatal(StatuCode.Unauthorized.Code(), StatuCode.Unauthorized.Message())
-		case StatuCode.AccessDenied.Code():
-			log.Fatal(StatuCode.AccessDenied.Code(), StatuCode.AccessDenied.Message())
-		case StatuCode.NotFound.Code():
-			log.Fatal(StatuCode.NotFound.Code(), StatuCode.NotFound.Message())
-		case StatuCode.MethodNotAllowed.Code():
-			log.Fatal(StatuCode.MethodNotAllowed.Code(), StatuCode.MethodNotAllowed.Message())
-		default:
-			log.Fatal(r.Response.StatusCode)
-		}
-
-	}
-}
-
-// Initial Request
-func (r *HttpRequest) makeRequest(method string) {
-	var err error
-	r.Header.Req, _ = http.NewRequest(method, r.Url, nil)
-	r.Header.XApiKey(r.ClientConnectionConfig.Credential.ApiKey)
-	r.Header.XApiUser(r.ClientConnectionConfig.Credential.Username)
-	r.Header.AcceptJson()
-	r.Response, err = r.Client.Do(r.Header.Req)
-	//todo
-
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-//func (r *HttpRequest) StandardJsonHeaders() []StreamPipesHttp.Header {
-//	//r.Header.XApiKey(r.ClientConnectionConfig.Credential.ApiKey)
-//	//r.Header.XApiUser(r.ClientConnectionConfig.Credential.Username)
-//	//r.Header.AcceptJson()
-//	headers := r.ClientConnectionConfig.GetCredentials().MakeHeaders()
-//}
-//
-//func (r *HttpRequest) StandardHeaders() []*Header {
-//	headers := make([]*Header, 0)
-//	credentialsHeaders := r.ConnectionConfig.GetCredentials().MakeHeaders()
-//	headers = append(headers, credentialsHeaders...)
-//	return headers
-//}
-
-//func (r *HttpRequest) StandardPostHeaders() []*Header {
-//	headers := make([]*Header, 0)
-//	jsonHeaders := r.StandardJsonHeaders()
-//	headers = append(headers, jsonHeaders...)
-//	headers = append(headers, &Header{Name: "Content-Type", Value: "application/json"})
-//	return headers
-//}
-
-//func (r *HttpRequest) WriteToFile(fileLocation string) {
-//	urlString, _ := r.MakeUrl()
-//	url, _ := URL.Parse(urlString)
-//
-//	connection, _ := url.OpenConnection()
-//	credentialsHeader := r.ConnectionConfig.GetCredentials().MakeHeaders()[0]
-//	connection.SetRequestProperty("Authorization", credentialsHeader.Elements[0].Name)
-//
-//	readableByteChannel := connection.GetInputStream()
-//	fileOutputStream, _ := FileOutputStream(fileLocation)
-//	fileOutputStream.GetChannel().TransferFrom(readableByteChannel, 0, int64(^uint(0)>>1))
-//}
-//
-//func (r *HttpRequest) EntityAsString(entity HttpEntity) string {
-//	return EntityUtils.ToString(entity)
-//}
-//
-//func (r *HttpRequest) EntityAsByteArray(entity HttpEntity) []byte {
-//	return EntityUtils.ToByteArray(entity)
-//}

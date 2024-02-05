@@ -17,19 +17,61 @@
 
 package StreamPipesHttp
 
-import "streampipes-client-go/streampipes/internal/config"
+import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"streampipes-client-go/streampipes/internal/StatuCode"
+	"streampipes-client-go/streampipes/internal/serializer"
+)
 
 type DeleteRequest struct {
-	HttpRequest *HttpRequest
+	HttpRequest  *httpRequest
+	UnSerializer *serializer.UnBaseSerializer
 }
 
-func NewDeleteRequest(clientConfig config.StreamPipesClientConnectionConfig) *DeleteRequest {
-	httpRequest := NewHttpRequest(clientConfig)
-	return &DeleteRequest{
-		HttpRequest: httpRequest,
+var _ HttpRequest = (*DeleteRequest)(nil)
+
+func (d *DeleteRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
+	//Initial Request
+	d.makeRequest()
+	if d.HttpRequest.Response.StatusCode == 200 {
+		return "OK"
+	} else {
+		switch d.HttpRequest.Response.StatusCode {
+		case StatuCode.BadRequest.Code():
+			log.Fatal(StatuCode.BadRequest.Code(), StatuCode.BadRequest.Message())
+		case StatuCode.Unauthorized.Code():
+			log.Fatal(StatuCode.Unauthorized.Code(), StatuCode.Unauthorized.Message())
+		case StatuCode.AccessDenied.Code():
+			log.Fatal(StatuCode.AccessDenied.Code(), StatuCode.AccessDenied.Message())
+		case StatuCode.MethodNotAllowed.Code():
+			log.Fatal(StatuCode.MethodNotAllowed.Code(), StatuCode.MethodNotAllowed.Message())
+		default:
+			defer d.HttpRequest.Response.Body.Close()
+			body, _ := ioutil.ReadAll(d.HttpRequest.Response.Body)
+			log.Fatal(d.HttpRequest.Response.Status, string(body))
+		}
+
+	}
+	return nil
+}
+
+func (d *DeleteRequest) makeRequest() {
+	var err error
+	d.HttpRequest.Header.Req, _ = http.NewRequest("DELETE", d.HttpRequest.Url, nil)
+	d.HttpRequest.Header.XApiKey(d.HttpRequest.ClientConnectionConfig.Credential.ApiKey)
+	d.HttpRequest.Header.XApiUser(d.HttpRequest.ClientConnectionConfig.Credential.Username)
+	d.HttpRequest.Header.AcceptJson()
+	d.HttpRequest.Response, err = d.HttpRequest.Client.Do(d.HttpRequest.Header.Req)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
-func (d *DeleteRequest) ExecuteDeleteRequest() {
-	//d.HttpRequest.ExecuteRequest("Delete")
+func (d *DeleteRequest) MakeUrl(resourcePath []string) {
+
+	d.HttpRequest.Url = d.HttpRequest.ClientConnectionConfig.GetBaseUrl().AddToPath(resourcePath).ToString()
+	fmt.Println(d.HttpRequest.Url)
 }

@@ -22,9 +22,27 @@ import (
 )
 
 type BaseSerializer struct {
-	SerializerDataLakeMeasure DataLake.DataLakeMeasure
+	SerializerDataLakeMeasure *DataLake.DataLakeMeasure
 }
 
-func (b *BaseSerializer) GetMarshal(Interface interface{}) {
+type BaseSerializerOption func(opts *BaseSerializer)
 
+func NewBaseSerializer(opts ...BaseSerializerOption) *BaseSerializer {
+	baseSerializer := BaseSerializer{}
+	for _, opt := range opts {
+		opt(&baseSerializer)
+	}
+	return &baseSerializer
+}
+
+func WithSerializerDataLakeMeasures() BaseSerializerOption {
+	return func(opts *BaseSerializer) {
+		opts.SerializerDataLakeMeasure = new(DataLake.DataLakeMeasure)
+	}
+}
+
+func (b *BaseSerializer) GetMarshal() []byte {
+	//Obtain interface type through reflect
+	//unrealized
+	return nil
 }

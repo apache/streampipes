@@ -20,40 +20,67 @@ package StreamPipesHttp
 import (
 	"io/ioutil"
 	"log"
-	"streampipes-client-go/streampipes/internal/config"
+	"net/http"
+	"streampipes-client-go/streampipes/internal/StatuCode"
 	"streampipes-client-go/streampipes/internal/serializer"
 )
 
 type GetRequest struct {
-	HttpRequest *HttpRequest
-	Serializer  *serializer.UnBaseSerializer
+	HttpRequest  *httpRequest
+	UnSerializer *serializer.UnBaseSerializer
 }
 
-func NewGetRequest(clientConfig config.StreamPipesClientConnectionConfig, Serializer *serializer.UnBaseSerializer) *GetRequest {
-	return &GetRequest{
-		HttpRequest: NewHttpRequest(clientConfig),
-		Serializer:  Serializer,
+var _ HttpRequest = (*GetRequest)(nil)
+
+func (g *GetRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
+	//Initial Request
+	g.makeRequest()
+	if g.HttpRequest.Response.StatusCode == 200 {
+		g.afterRequest() // Process Response
+	} else {
+		switch g.HttpRequest.Response.StatusCode {
+		case StatuCode.Unauthorized.Code():
+			log.Fatal(StatuCode.Unauthorized.Code(), StatuCode.Unauthorized.Message())
+		case StatuCode.AccessDenied.Code():
+			log.Fatal(StatuCode.AccessDenied.Code(), StatuCode.AccessDenied.Message())
+		case StatuCode.MethodNotAllowed.Code():
+			log.Fatal(StatuCode.MethodNotAllowed.Code(), StatuCode.MethodNotAllowed.Message())
+		default:
+			defer g.HttpRequest.Response.Body.Close()
+			body, _ := ioutil.ReadAll(g.HttpRequest.Response.Body)
+			log.Fatal(g.HttpRequest.Response.Status, string(body))
+		}
+
 	}
+	return g.UnSerializer
 }
 
-func (g *GetRequest) ExecuteGetRequest(Type interface{}) {
+func (g *GetRequest) afterRequest() {
 	//Process complete GET requests
-	g.HttpRequest.ExecuteRequest("GET", Type)
-	g.HttpRequest.AfterRequest = func(Type interface{}) {
-		g.afterRequest(Type)
-	}
-	g.HttpRequest.AfterRequest(Type)
-}
-
-func (g *GetRequest) afterRequest(Type interface{}) {
-	////Process complete GET requests
 	defer g.HttpRequest.Response.Body.Close()
 	body, err := ioutil.ReadAll(g.HttpRequest.Response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = g.Serializer.GetUnmarshal(body, Type)
+	err = g.UnSerializer.GetUnmarshal(body)
 	if err != nil {
 		log.Fatal("Serialization failed")
 	}
+}
+
+func (g *GetRequest) makeRequest() {
+	var err error
+	g.HttpRequest.Header.Req, _ = http.NewRequest("GET", g.HttpRequest.Url, nil)
+	g.HttpRequest.Header.XApiKey(g.HttpRequest.ClientConnectionConfig.Credential.ApiKey)
+	g.HttpRequest.Header.XApiUser(g.HttpRequest.ClientConnectionConfig.Credential.Username)
+	g.HttpRequest.Header.AcceptJson()
+	g.HttpRequest.Response, err = g.HttpRequest.Client.Do(g.HttpRequest.Header.Req)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (g *GetRequest) MakeUrl(resourcePath []string) {
+
+	g.HttpRequest.Url = g.HttpRequest.ClientConnectionConfig.GetBaseUrl().AddToPath(resourcePath).ToString()
 }

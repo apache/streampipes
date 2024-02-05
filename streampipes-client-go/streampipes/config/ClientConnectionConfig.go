@@ -18,6 +18,8 @@
 package config
 
 import (
+	"log"
+	"net/url"
 	"streampipes-client-go/streampipes/internal/credential"
 	Path "streampipes-client-go/streampipes/internal/util"
 )
@@ -35,6 +37,19 @@ type StreamPipesClientConnectionConfig struct {
 	StreamPipesHost string
 	StreamPipesPort string
 	HttpsDisabled   bool
+}
+
+func StreamPipesClientConnectionUrl(Url string) StreamPipesClientConnectionConfig {
+	URL, err := url.Parse(Url)
+	if err != nil {
+		log.Fatal("Please enter the correct URL")
+	}
+	return StreamPipesClientConnectionConfig{
+		Credential:      credential.StreamPipesApiKeyCredentials{},
+		StreamPipesHost: URL.Scheme,
+		StreamPipesPort: URL.Opaque,
+		HttpsDisabled:   true,
+	}
 }
 
 func (s *StreamPipesClientConnectionConfig) GetCredentials() credential.StreamPipesApiKeyCredentials {

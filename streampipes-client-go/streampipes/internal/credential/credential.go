@@ -22,10 +22,6 @@ import (
 	"streampipes-client-go/streampipes/internal/StreamPipesHttp/headers"
 )
 
-//type CredentialsProvider interface {
-//	MakeHeaders() []StreamPipesHttp.Header
-//}
-
 type StreamPipesApiKeyCredentials struct {
 	Username string
 	ApiKey   string

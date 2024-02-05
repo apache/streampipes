@@ -19,8 +19,8 @@ package main
 
 import (
 	"fmt"
-	"streampipes-client-go/streampipes/internal"
-	"streampipes-client-go/streampipes/internal/config"
+	"streampipes-client-go/streampipes"
+	"streampipes-client-go/streampipes/config"
 	"streampipes-client-go/streampipes/internal/credential"
 )
 
@@ -34,15 +34,15 @@ func main() {
 		StreamPipesHost: "localhost",
 		HttpsDisabled:   true,
 	}
-	StreamPipesClient, err := internal.NewStreamPipesClient(Config)
+	//Config := config.StreamPipesClientConnectionUrl("localhost:8030")
+	//Config.Credential.Username = "admin@streampipes.apache.org"
+	//Config.Credential.ApiKey = "LNrsh8YrgEyQTzSKSGmaAXb1"
+
+	StreamPipesClient, err := streampipes.NewStreamPipesClient(Config)
 	if err != nil {
 		fmt.Println(err)
 	}
 	measure := StreamPipesClient.DataLakeMeasureApi().All()
-
-	for k := range measure {
-		fmt.Println(measure[k])
-		fmt.Println(measure[k].GetEventSchema())
-	}
+	fmt.Println(measure)
 
 }

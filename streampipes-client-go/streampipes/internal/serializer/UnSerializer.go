@@ -28,9 +28,9 @@ type UnBaseSerializer struct {
 	UnSerializerDataLakeSeries   *DataLake.DataSeries
 }
 
-type Option func(opts *UnBaseSerializer)
+type UnBaseSerializerOption func(opts *UnBaseSerializer)
 
-func NewBaseUnSerializer(opts ...Option) *UnBaseSerializer {
+func NewBaseUnSerializer(opts ...UnBaseSerializerOption) *UnBaseSerializer {
 	unBaseSerializer := UnBaseSerializer{}
 	for _, opt := range opts {
 		opt(&unBaseSerializer)
@@ -38,26 +38,25 @@ func NewBaseUnSerializer(opts ...Option) *UnBaseSerializer {
 	return &unBaseSerializer
 }
 
-func WithUnSerializerDataLakeMeasures(DataLakeMeasures *[]DataLake.DataLakeMeasure) Option {
+func WithUnSerializerDataLakeMeasures() UnBaseSerializerOption {
 	return func(opts *UnBaseSerializer) {
-		opts.UnSerializerDataLakeMeasures = DataLakeMeasures
+		opts.UnSerializerDataLakeMeasures = new([]DataLake.DataLakeMeasure)
 	}
 }
 
-func WithUnSerializerDataSeries(DataSeries *DataLake.DataSeries) Option {
+func WithUnSerializerDataSeries() UnBaseSerializerOption {
 	return func(opts *UnBaseSerializer) {
-		opts.UnSerializerDataLakeSeries = DataSeries
+		opts.UnSerializerDataLakeSeries = new(DataLake.DataSeries)
 	}
 }
 
-func (u *UnBaseSerializer) GetUnmarshal(body []byte, Interface interface{}) error {
+func (u *UnBaseSerializer) GetUnmarshal(body []byte) error {
 	//Obtain interface type through reflect
-	Type := reflect.TypeOf(Interface)
-	Value := reflect.ValueOf(u).Elem()
-	for i := 0; i < Value.NumField(); i++ {
-		field := Value.Field(i)
-		if field.Type() == Type {
-			err := json.Unmarshal(body, field.Interface())
+	v := reflect.ValueOf(u).Elem()
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		if !field.IsZero() {
+			err := json.Unmarshal(body, field.Addr().Interface())
 			if err != nil {
 				return err
 			}
