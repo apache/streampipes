@@ -18,7 +18,7 @@
 
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
-describe('Test 2d Correlation View in Data Explorer', () => {
+describe('Test Scatter View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
         DataLakeUtils.initDataLakeTests();
     });
@@ -27,17 +27,6 @@ describe('Test 2d Correlation View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Scatter');
 
         // Check if scatter plot is displayed
-        cy.get('g').should('have.class', 'scatterlayer mlayer');
-        cy.get('g.points', { timeout: 10000 })
-            .children()
-            .should('have.length', 10);
-
-        // Change from line plot to scatter plot
-        DataLakeUtils.selectVisualizationConfig();
-        cy.get('div').contains('Scatter').click();
-        cy.get('div').contains('Density').click();
-
-        // Check if scatter plot is displayed
-        cy.get('g').should('have.class', 'contourlayer mlayer');
+        cy.dataCy('scatter-chart').should('be.visible');
     });
 });

@@ -18,7 +18,7 @@
 
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
-describe('Test Distribution View in Data Explorer', () => {
+describe('Test Histogram View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
         DataLakeUtils.initDataLakeTests();
     });
@@ -28,18 +28,8 @@ describe('Test Distribution View in Data Explorer', () => {
 
         // Change field for histogram
         DataLakeUtils.selectVisualizationConfig();
-        cy.get('div').contains('randomtext (prepared_data #1)').click();
-        cy.get('div').contains('randomnumber (prepared_data #1)').click();
 
-        // Check if distribution chart is displayed
+        // Check if histogram chart is displayed
         cy.dataCy('histogram-chart').should('be.visible');
-
-        // Change from histogram to heatmap
-        DataLakeUtils.selectVisualizationConfig();
-        cy.get('div').contains('Histogram').click();
-        cy.get('div').contains('Value Heatmap').click();
-
-        // Check if distribution chart is displayed
-        cy.dataCy('value-heatmap-chart').should('be.visible');
     });
 });

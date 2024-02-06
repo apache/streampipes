@@ -33,6 +33,7 @@
     </sp-configuration-box>
     <sp-configuration-box title="Settings">
         <mat-checkbox
+            data-cy="data-explorer-select-delta-checkbox"
             (change)="updateDelta($event)"
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showDelta

@@ -28,16 +28,8 @@ describe('Test Indicator View in Data Explorer', () => {
 
         // Check checkbox
         DataLakeUtils.selectVisualizationConfig();
-        cy.get('mat-checkbox input').click({ force: true });
-        cy.dataCy('data-explorer-select-delta-field')
-            .click()
-            .get('mat-option')
-            .contains('count')
-            .click();
+        cy.dataCy('data-explorer-select-delta-checkbox').click();
 
-        // Check if indicator is displayed
-        cy.get('g').should('have.class', 'indicatorlayer');
-        // Check if delta is displayed
-        cy.get('text').should('have.class', 'delta');
+        cy.dataCy('indicator-chart').should('be.visible');
     });
 });

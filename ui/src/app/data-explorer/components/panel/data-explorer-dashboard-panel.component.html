@@ -16,7 +16,11 @@
   ~
   -->
 
-<sp-basic-view [backLinkTarget]="['dataexplorer']" [showBackLink]="true">
+<sp-basic-view
+    [backLinkTarget]="['dataexplorer']"
+    [showBackLink]="true"
+    *ngIf="dashboardLoaded"
+>
     <div nav fxFlex="100">
         <div
             class="data-explorer-options-item"
@@ -141,7 +145,7 @@
         </div>
     </div>
 
-    <div fxFlex="100" fxLayout="column" *ngIf="dashboardLoaded">
+    <div fxFlex="100" fxLayout="column">
         <mat-drawer-container
             class="designer-panel-container h-100 dashboard-grid"
         >
