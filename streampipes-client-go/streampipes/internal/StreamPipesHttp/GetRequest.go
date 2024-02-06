@@ -18,7 +18,7 @@
 package StreamPipesHttp
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"streampipes-client-go/streampipes/internal/StatuCode"
@@ -47,7 +47,7 @@ func (g *GetRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
 			log.Fatal(StatuCode.MethodNotAllowed.Code(), StatuCode.MethodNotAllowed.Message())
 		default:
 			defer g.HttpRequest.Response.Body.Close()
-			body, _ := ioutil.ReadAll(g.HttpRequest.Response.Body)
+			body, _ := io.ReadAll(g.HttpRequest.Response.Body)
 			log.Fatal(g.HttpRequest.Response.Status, string(body))
 		}
 
@@ -58,7 +58,7 @@ func (g *GetRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
 func (g *GetRequest) afterRequest() {
 	//Process complete GET requests
 	defer g.HttpRequest.Response.Body.Close()
-	body, err := ioutil.ReadAll(g.HttpRequest.Response.Body)
+	body, err := io.ReadAll(g.HttpRequest.Response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}

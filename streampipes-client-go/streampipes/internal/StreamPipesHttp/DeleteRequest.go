@@ -19,7 +19,7 @@ package StreamPipesHttp
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"streampipes-client-go/streampipes/internal/StatuCode"
@@ -50,7 +50,7 @@ func (d *DeleteRequest) ExecuteRequest(serializerStruct interface{}) interface{}
 			log.Fatal(StatuCode.MethodNotAllowed.Code(), StatuCode.MethodNotAllowed.Message())
 		default:
 			defer d.HttpRequest.Response.Body.Close()
-			body, _ := ioutil.ReadAll(d.HttpRequest.Response.Body)
+			body, _ := io.ReadAll(d.HttpRequest.Response.Body)
 			log.Fatal(d.HttpRequest.Response.Status, string(body))
 		}
 

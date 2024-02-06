@@ -24,7 +24,7 @@ import (
 
 // Generate random letters
 func RandomLetters(length int) string {
-	rand.Seed(time.Now().UnixNano())
+	rand.NewSource(time.Now().UnixNano())
 	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") //Define the alphabet
 	result := make([]rune, length)
 	for i := range result {
