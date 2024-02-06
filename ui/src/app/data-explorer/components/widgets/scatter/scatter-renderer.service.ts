@@ -21,6 +21,7 @@ import { EChartsOption } from 'echarts';
 import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
 import { CorrelationChartWidgetModel } from '../correlation-chart/model/correlation-chart-widget.model';
 import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationChartWidgetModel> {
@@ -73,6 +74,20 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
             },
             series,
         });
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: CorrelationChartWidgetModel,
+    ): void {
+        this.fieldUpdateService.updateNumericField(
+            widgetConfig.visualizationConfig.firstField,
+            fieldUpdateInfo,
+        );
+        this.fieldUpdateService.updateNumericField(
+            widgetConfig.visualizationConfig.secondField,
+            fieldUpdateInfo,
+        );
     }
 
     getXField(widgetConfig: CorrelationChartWidgetModel) {

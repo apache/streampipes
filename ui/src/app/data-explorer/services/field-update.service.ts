@@ -18,24 +18,73 @@
 
 import { Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { FieldUpdateInfo } from '../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpFieldUpdateService {
-    updateFieldSelection(
+    public updateFieldSelection(
         fieldSelection: DataExplorerField[],
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
+        fieldUpdateInfo: FieldUpdateInfo,
         filterFunction: (field: DataExplorerField) => boolean,
     ): DataExplorerField[] {
         const fields = fieldSelection.filter(
             field =>
-                !removedFields.find(rm => rm.fullDbName === field.fullDbName),
+                !fieldUpdateInfo.removedFields.find(
+                    rm => rm.fullDbName === field.fullDbName,
+                ),
         );
-        addedFields.forEach(field => {
+        fieldUpdateInfo.addedFields.forEach(field => {
             if (filterFunction(field)) {
                 fields.push(field);
             }
         });
         return fields;
+    }
+
+    public updateSingleField(
+        fieldSelection: DataExplorerField,
+        availableFields: DataExplorerField[],
+        fieldUpdateInfo: FieldUpdateInfo,
+        filterFunction: (field: DataExplorerField) => boolean,
+    ): DataExplorerField {
+        let result = fieldSelection;
+        if (
+            fieldUpdateInfo.removedFields.find(
+                rf => rf.fullDbName === fieldSelection.fullDbName,
+            )
+        ) {
+            const existingFields = availableFields.concat(
+                fieldUpdateInfo.addedFields,
+            );
+            if (existingFields.length > 0) {
+                result = existingFields.find(field => filterFunction(field));
+            }
+        }
+
+        return result;
+    }
+
+    updateNumericField(
+        field: DataExplorerField,
+        fieldUpdateInfo: FieldUpdateInfo,
+    ): DataExplorerField {
+        return this.updateSingleField(
+            field,
+            fieldUpdateInfo.fieldProvider.numericFields,
+            fieldUpdateInfo,
+            field => field.fieldCharacteristics.numeric,
+        );
+    }
+
+    updateAnyField(
+        field: DataExplorerField,
+        fieldUpdateInfo: FieldUpdateInfo,
+    ): DataExplorerField {
+        return this.updateSingleField(
+            field,
+            fieldUpdateInfo.fieldProvider.allFields,
+            fieldUpdateInfo,
+            field => true,
+        );
     }
 }

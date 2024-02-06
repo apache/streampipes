@@ -26,6 +26,7 @@ import {
     OptionSourceDataArrayRows,
 } from 'echarts/types/src/util/types';
 import { Injectable } from '@angular/core';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
@@ -89,6 +90,16 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
                 },
             },
         ];
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: HeatmapWidgetModel,
+    ): void {
+        this.fieldUpdateService.updateNumericField(
+            widgetConfig.visualizationConfig.selectedHeatProperty,
+            fieldUpdateInfo,
+        );
     }
 
     basicOptions(options: EChartsOption): void {

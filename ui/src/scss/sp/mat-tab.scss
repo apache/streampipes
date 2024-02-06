@@ -23,7 +23,11 @@
     letter-spacing: normal;
 }
 
-.small .mdc-tab__text-label {
+.mat-mdc-tab-group.small-tab-headers .mdc-tab__text-label {
     height: 32px;
     font-size: 10pt;
+}
+
+.mat-mdc-tab-group.mat-tab-fill-height .mat-mdc-tab-body-wrapper {
+    flex: 1 1 100%;
 }

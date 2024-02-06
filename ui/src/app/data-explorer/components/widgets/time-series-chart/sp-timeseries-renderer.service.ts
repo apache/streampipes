@@ -22,16 +22,13 @@ import { Injectable } from '@angular/core';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
-import {
-    AxisOptions,
-    GeneratedDataset,
-    WidgetSize,
-} from '../../../models/dataset.model';
+import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
 import { WidgetBaseAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
 import { ToolboxDataZoomFeatureOption } from 'echarts/types/src/component/toolbox/feature/DataZoom';
 import { YAXisOption } from 'echarts/types/dist/shared';
 import { CartesianAxisPosition } from 'echarts/types/src/coord/cartesian/AxisModel';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSeriesChartWidgetModel> {
@@ -104,6 +101,19 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 },
             },
         });
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: TimeSeriesChartWidgetModel,
+    ): void {
+        widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties =
+            this.fieldUpdateService.updateFieldSelection(
+                widgetConfig.visualizationConfig
+                    .selectedTimeSeriesChartProperties,
+                fieldUpdateInfo,
+                field => field.fieldCharacteristics.numeric,
+            );
     }
 
     makeSeries(

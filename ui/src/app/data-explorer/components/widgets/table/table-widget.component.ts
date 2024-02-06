@@ -135,8 +135,11 @@ export class TableWidgetComponent
         this.dataExplorerWidget.visualizationConfig.selectedColumns =
             this.fieldUpdateService.updateFieldSelection(
                 this.dataExplorerWidget.visualizationConfig.selectedColumns,
-                addedFields,
-                removedFields,
+                {
+                    addedFields,
+                    removedFields,
+                    fieldProvider: this.fieldProvider,
+                },
                 () => true,
             );
         this.refreshColumns();

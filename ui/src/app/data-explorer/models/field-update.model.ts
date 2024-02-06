@@ -16,18 +16,11 @@
  *
  */
 
-.marginColorFieldMore {
-    margin-left: 10px;
-    margin-right: 1px;
-}
+import { DataExplorerField } from '@streampipes/platform-services';
+import { FieldProvider } from './dataview-dashboard.model';
 
-.color-field {
-    width: 20px;
-    height: 20px;
-}
-
-.field-selection-box {
-    border: 1px solid var(--color-bg-3);
-    padding: 5px;
-    margin: 5px;
+export interface FieldUpdateInfo {
+    fieldProvider: FieldProvider;
+    addedFields: DataExplorerField[];
+    removedFields: DataExplorerField[];
 }

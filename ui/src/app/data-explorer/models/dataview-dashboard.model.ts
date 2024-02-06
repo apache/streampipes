@@ -32,6 +32,7 @@ import {
 import { EChartsOption } from 'echarts';
 import { WidgetSize } from './dataset.model';
 import { EventEmitter } from '@angular/core';
+import { FieldUpdateInfo } from './field-update.model';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDataViewDashboardConfig extends GridsterConfig {}
@@ -61,6 +62,11 @@ export interface SpEchartsRenderer<T extends DataExplorerWidgetModel> {
         widgetConfig: T,
         widgetSize: WidgetSize,
     ): EChartsOption;
+
+    handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: T,
+    ): void;
 }
 
 export interface IWidget<T extends DataExplorerWidgetModel> {

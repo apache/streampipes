@@ -104,7 +104,7 @@ export abstract class BaseWidgetConfig<
         this.widgetConfigurationService.notify({
             widgetId: this.currentlyConfiguredWidget._id,
             refreshData: true,
-            refreshView: false,
+            refreshView: true,
         });
     }
 

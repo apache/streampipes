@@ -29,6 +29,7 @@ import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3';
 import { contourDensity } from 'd3-contour';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationChartWidgetModel> {
@@ -134,6 +135,20 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 },
             ],
         });
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: CorrelationChartWidgetModel,
+    ): void {
+        this.fieldUpdateService.updateNumericField(
+            widgetConfig.visualizationConfig.firstField,
+            fieldUpdateInfo,
+        );
+        this.fieldUpdateService.updateNumericField(
+            widgetConfig.visualizationConfig.secondField,
+            fieldUpdateInfo,
+        );
     }
 
     prepareDataset(

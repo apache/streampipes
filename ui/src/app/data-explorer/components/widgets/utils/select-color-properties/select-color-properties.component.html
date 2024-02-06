@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-box title="Fields" marginTop="5px">
+<sp-configuration-box title="Fields" marginTop="5px" class="mr-10">
     <div header>
         <button
             mat-button
@@ -41,7 +41,7 @@
     <div
         *ngFor="let field of availableProperties"
         fxLayout="column"
-        class="field-scroll-panel"
+        class="field-selection-box"
     >
         <mat-checkbox
             color="accent"
@@ -58,66 +58,82 @@
                     ')'
             }}
         </mat-checkbox>
-        <div fxFlex fxLayoutAlign="end center" *ngIf="isSelected(field)">
-            <input
-                class="color-field"
-                [(colorPicker)]="
-                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
-                        field.fullDbName + field.sourceIndex.toString()
-                    ]
-                "
-                [style.background]="
-                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
-                        field.fullDbName + field.sourceIndex.toString()
-                    ]
-                "
-                required
-                [cpPosition]="'bottom'"
-                [cpPresetColors]="presetColors"
-                (colorPickerSelect)="triggerDataRefresh()"
-                autocomplete="off"
-            />
-            <mat-form-field
-                appearance="outline"
-                class="marginColorField"
-                color="accent"
-                fxFlex="55"
-            >
+        <div
+            fxLayout="row"
+            fxFlex="90"
+            fxLayoutAlign="start center"
+            *ngIf="isSelected(field)"
+            fxLayoutGap="5px"
+        >
+            <div fxFlex="30px" fxLayoutAlign="start center">
                 <input
-                    [(ngModel)]="
+                    class="color-field"
+                    [(colorPicker)]="
                         currentlyConfiguredWidget.visualizationConfig
-                            .displayName[
+                            .chosenColor[
                             field.fullDbName + field.sourceIndex.toString()
                         ]
                     "
-                    matInput
-                    (input)="onFilterChange($event.target.value, field)"
+                    [style.background]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .chosenColor[
+                            field.fullDbName + field.sourceIndex.toString()
+                        ]
+                    "
+                    required
+                    [cpPosition]="'bottom'"
+                    [cpPresetColors]="presetColors"
+                    (colorPickerSelect)="triggerViewRefresh()"
+                    autocomplete="off"
                 />
-            </mat-form-field>
-            <mat-form-field
-                appearance="outline"
-                class="marginColorField"
-                color="accent"
-                fxFlex="30"
-            >
-                <mat-select
-                    [(value)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .displayType[
-                            field.fullDbName + field.sourceIndex.toString()
-                        ]
-                    "
-                    (selectionChange)="triggerDataRefresh()"
+            </div>
+            <div fxFlex="190px">
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="w-100"
                 >
-                    <mat-option [value]="'lines'">Line</mat-option>
-                    <mat-option [value]="'normal_markers'">Scatter</mat-option>
-                    <mat-option [value]="'lines+markers'"
-                        >Scattered Line</mat-option
+                    <input
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayName[
+                                field.fullDbName + field.sourceIndex.toString()
+                            ]
+                        "
+                        matInput
+                        (input)="onFilterChange($event.target.value, field)"
+                    />
+                </mat-form-field>
+            </div>
+            <div fxFlex="30" fxLayoutAlign="end center">
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="w-100"
+                >
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayType[
+                                field.fullDbName + field.sourceIndex.toString()
+                            ]
+                        "
+                        (selectionChange)="triggerViewRefresh()"
                     >
-                    <mat-option [value]="'bar'">Bar</mat-option>
-                    <mat-option [value]="'symbol_markers'">Symbol</mat-option>
-                </mat-select>
-            </mat-form-field>
+                        <mat-option [value]="'lines'">Line</mat-option>
+                        <mat-option [value]="'normal_markers'"
+                            >Scatter</mat-option
+                        >
+                        <mat-option [value]="'lines+markers'"
+                            >Scattered Line
+                        </mat-option>
+                        <mat-option [value]="'bar'">Bar</mat-option>
+                        <mat-option [value]="'symbol_markers'"
+                            >Symbol</mat-option
+                        >
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
     </div>
 </sp-configuration-box>
@@ -150,7 +166,7 @@
                             field.fullDbName + field.sourceIndex.toString()
                         ]
                     "
-                    (selectionChange)="triggerDataRefresh()"
+                    (selectionChange)="triggerViewRefresh()"
                 >
                     <mat-option [value]="'left'">Left</mat-option>
                     <mat-option [value]="'right'">Right</mat-option>

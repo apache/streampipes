@@ -35,7 +35,7 @@ export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
 > {
     updateValue(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.valueField = field;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     updateDelta(event: MatCheckboxChange) {
@@ -45,10 +45,10 @@ export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
     protected applyWidgetConfig(config: IndicatorChartVisConfig): void {
         config.valueField = this.fieldService.getSelectedField(
             config.valueField,
-            this.fieldProvider.numericFields,
+            this.fieldProvider.allFields,
             () => {
-                return this.fieldProvider.numericFields.length > 0
-                    ? this.fieldProvider.numericFields[0]
+                return this.fieldProvider.allFields.length > 0
+                    ? this.fieldProvider.allFields[0]
                     : undefined;
             },
         );
@@ -56,6 +56,6 @@ export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
     }
 
     protected requiredFieldsForChartPresent(): boolean {
-        return this.fieldProvider.numericFields.length > 0;
+        return this.fieldProvider.allFields.length > 0;
     }
 }

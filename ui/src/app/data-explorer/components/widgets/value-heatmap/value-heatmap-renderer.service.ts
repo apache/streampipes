@@ -21,6 +21,7 @@ import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base
 import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { Injectable } from '@angular/core';
 import { ValueHeatmapChartWidgetModel } from './model/value-heatmap-chart-widget.model';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRenderer<
@@ -39,6 +40,16 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
                 resolution: widgetConfig.visualizationConfig.resolution,
             },
         };
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: ValueHeatmapChartWidgetModel,
+    ): void {
+        this.fieldUpdateService.updateNumericField(
+            widgetConfig.visualizationConfig.selectedProperty,
+            fieldUpdateInfo,
+        );
     }
 
     addAdditionalConfigs(options: EChartsOption) {

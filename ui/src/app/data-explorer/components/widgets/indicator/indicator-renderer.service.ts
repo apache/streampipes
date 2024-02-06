@@ -21,6 +21,7 @@ import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-re
 import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
 import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
 import { EChartsOption, GraphicComponentOption } from 'echarts';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpIndicatorRendererService extends SpBaseEchartsRenderer<IndicatorChartWidgetModel> {
@@ -57,6 +58,19 @@ export class SpIndicatorRendererService extends SpBaseEchartsRenderer<IndicatorC
                 elements: graphicElements,
             },
         });
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: IndicatorChartWidgetModel,
+    ): void {
+        widgetConfig.visualizationConfig.valueField =
+            this.fieldUpdateService.updateSingleField(
+                widgetConfig.visualizationConfig.valueField,
+                fieldUpdateInfo.fieldProvider.allFields,
+                fieldUpdateInfo,
+                field => true,
+            );
     }
 
     makeCurrentValue(

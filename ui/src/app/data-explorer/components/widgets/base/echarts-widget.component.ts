@@ -132,5 +132,14 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     handleUpdatedFields(
         addedFields: DataExplorerField[],
         removedFields: DataExplorerField[],
-    ) {}
+    ) {
+        this.renderer.handleUpdatedFields(
+            {
+                addedFields,
+                removedFields,
+                fieldProvider: this.fieldProvider,
+            },
+            this.dataExplorerWidget,
+        );
+    }
 }

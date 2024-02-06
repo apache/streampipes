@@ -22,6 +22,7 @@ import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer<
@@ -30,6 +31,16 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
 > {
     addAdditionalConfigs(option: EChartsOption) {
         //do nothing
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: HistogramChartWidgetModel,
+    ): void {
+        this.fieldUpdateService.updateAnyField(
+            widgetConfig.visualizationConfig.selectedProperty,
+            fieldUpdateInfo,
+        );
     }
 
     addDatasetTransform(

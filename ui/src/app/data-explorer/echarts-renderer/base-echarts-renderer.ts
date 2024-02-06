@@ -34,6 +34,8 @@ import { EchartsUtilsService } from './echarts-utils.service';
 import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
 import { EchartsDatasetUtilsService } from './echarts-dataset-utils.service';
 import { DataExplorerColorizationService } from '../services/data-explorer-colorization.service';
+import { SpFieldUpdateService } from '../services/field-update.service';
+import { FieldUpdateInfo } from '../models/field-update.model';
 
 export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     implements SpEchartsRenderer<T>
@@ -51,8 +53,9 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
     protected gridGeneratorService = inject(EchartsGridGeneratorService);
     protected echartsUtilsService = inject(EchartsUtilsService);
     protected colorizationService = inject(DataExplorerColorizationService);
+    protected fieldUpdateService = inject(SpFieldUpdateService);
 
-    render(
+    public render(
         spQueryResult: SpQueryResult[],
         widgetConfig: T,
         widgetSize: WidgetSize,
@@ -70,21 +73,29 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
         return options;
     }
 
-    abstract applyOptions(
+    public abstract handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: T,
+    ): void;
+
+    protected abstract applyOptions(
         datasets: GeneratedDataset,
         options: EChartsOption,
         widgetConfig: T,
         widgetSize: WidgetSize,
     ): void;
 
-    initialTransforms(
+    protected initialTransforms(
         _widgetConfig: T,
         _sourceIndex: number,
     ): DataTransformOption[] {
         return [];
     }
 
-    getAdditionalToolboxItems(): Record<string, ToolboxFeatureOption> {
+    protected getAdditionalToolboxItems(): Record<
+        string,
+        ToolboxFeatureOption
+    > {
         return {};
     }
 }

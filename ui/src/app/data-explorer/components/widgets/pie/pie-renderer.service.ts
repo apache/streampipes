@@ -21,6 +21,7 @@ import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import { Injectable } from '@angular/core';
 import { PieChartWidgetModel } from './model/pie-chart-widget.model';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
@@ -42,6 +43,16 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                 groupBy: field,
             },
         };
+    }
+
+    public handleUpdatedFields(
+        fieldUpdateInfo: FieldUpdateInfo,
+        widgetConfig: PieChartWidgetModel,
+    ): void {
+        this.fieldUpdateService.updateAnyField(
+            widgetConfig.visualizationConfig.selectedProperty,
+            fieldUpdateInfo,
+        );
     }
 
     addAdditionalConfigs(option: EChartsOption) {

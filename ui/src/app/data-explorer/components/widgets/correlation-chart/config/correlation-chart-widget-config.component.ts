@@ -23,7 +23,6 @@ import {
     CorrelationChartWidgetModel,
 } from '../model/correlation-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { config } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-correlation-chart-widget-config',
@@ -36,13 +35,13 @@ export class CorrelationWidgetConfigComponent extends BaseWidgetConfig<
     updateFirstField(selectedField: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.firstField =
             selectedField;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     updateSecondField(selectedField: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.secondField =
             selectedField;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     protected applyWidgetConfig(config: CorrelationChartVisConfig): void {

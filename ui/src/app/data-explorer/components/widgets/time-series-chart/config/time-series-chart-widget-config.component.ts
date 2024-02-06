@@ -23,10 +23,7 @@ import {
     TimeSeriesChartWidgetModel,
 } from '../model/time-series-chart-widget.model';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import {
-    DataExplorerField,
-    EventPropertyUnion,
-} from '@streampipes/platform-services';
+import { DataExplorerField } from '@streampipes/platform-services';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 
 @Component({
@@ -101,13 +98,13 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         this.currentlyConfiguredWidget.visualizationConfig.chosenAxis =
             currentAxis;
 
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     setShowSpikeProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.showSpike =
             field['checked'];
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     protected applyWidgetConfig(config: TimeSeriesChartVisConfig): void {
