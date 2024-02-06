@@ -23,13 +23,21 @@ import (
 	"streampipes-client-go/streampipes/config"
 )
 
-// Client is a base client that is used to make StreamPipesHttp httpRequest to the ServiceURL
+/*
+ This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
+ The client provides so-called "API", each of which refers to the endpoint of the StreamPipes API.
+ e.g. `DataLakeMeasureApi` provides the actual methods to interact with StreamPipes API.
+*/
 
 type StreamPipesClient struct {
 	Config config.StreamPipesClientConnectionConfig
 }
 
 func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*StreamPipesClient, error) {
+
+	//NewStreamPipesClient returns an instance of * StreamPipesClient
+	//Temporarily does not support HTTPS connections, nor does it support connecting to port 443
+
 	if !config.HttpsDisabled || config.StreamPipesPort == "443" {
 		return &StreamPipesClient{}, errors.New(
 			"Invalid configuration passed! The given client configuration has " +
@@ -41,8 +49,11 @@ func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*Str
 	return &StreamPipesClient{
 		config,
 	}, nil
+
 }
 
 func (s *StreamPipesClient) DataLakeMeasureApi() *api.DataLakeMeasureApi {
+
 	return api.NewDataLakeMeasureApi(s.Config)
+
 }

@@ -25,12 +25,19 @@ import (
 	"streampipes-client-go/streampipes/model/DataLake"
 )
 
+/*
+DataLakeMeasureApi connects to the DataLakeMeasure endpoint of Streampipes.
+DataLakeMeasureApi supports GET, POST, Delete, and PUT methods for obtaining, deleting, submitting, and updating resources.
+The specific interaction behavior is provided by the method bound to the DataLakeMeasureApi struct.
+Currently, only some GET and Delete methods have been implemented.
+*/
 type DataLakeMeasureApi struct {
 	config      config.StreamPipesClientConnectionConfig
 	httpRequest StreamPipesHttp.HttpRequest
 }
 
 func NewDataLakeMeasureApi(clientConfig config.StreamPipesClientConnectionConfig) *DataLakeMeasureApi {
+	//NewDataLakeMeasureApi is used to return an instance of * DataLakeMeasureApi,
 
 	return &DataLakeMeasureApi{
 		config:      clientConfig,
@@ -40,6 +47,8 @@ func NewDataLakeMeasureApi(clientConfig config.StreamPipesClientConnectionConfig
 
 func (api *DataLakeMeasureApi) All() []DataLake.DataLakeMeasure {
 	//Get a list of all measurement series
+	//Deserializes the data into the corresponding DataLakeMeasure data model.
+
 	UnSerializer := serializer.NewBaseUnSerializer(serializer.WithUnSerializerDataLakeMeasures())
 	api.httpRequest = &StreamPipesHttp.GetRequest{
 		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
@@ -52,7 +61,9 @@ func (api *DataLakeMeasureApi) All() []DataLake.DataLakeMeasure {
 }
 
 func (api *DataLakeMeasureApi) GetSingle(id string) DataLake.DataSeries {
+
 	//Get data from a single measurement series by a given id
+
 	UnSerializer := serializer.NewBaseUnSerializer(serializer.WithUnSerializerDataSeries())
 	api.httpRequest = &StreamPipesHttp.GetRequest{
 		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
@@ -66,6 +77,7 @@ func (api *DataLakeMeasureApi) GetSingle(id string) DataLake.DataSeries {
 
 func (api *DataLakeMeasureApi) DeleteMeasurementInternalData(elementId string) string {
 	//Remove data from a single measurement series with given id
+
 	api.httpRequest = &StreamPipesHttp.DeleteRequest{
 		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
 		UnSerializer: nil,
@@ -77,6 +89,7 @@ func (api *DataLakeMeasureApi) DeleteMeasurementInternalData(elementId string) s
 
 func (api *DataLakeMeasureApi) DeleteMeasurementSeries(elementId string) string {
 	//Drop a single measurement series with given id from Data Lake and remove related event property
+
 	api.httpRequest = &StreamPipesHttp.DeleteRequest{
 		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
 		UnSerializer: nil,
@@ -92,13 +105,17 @@ func (api *DataLakeMeasureApi) Create(element DataLake.DataLakeMeasure) error {
 }
 
 func (api *DataLakeMeasureApi) Update(measure DataLake.DataLakeMeasure) error {
-	return fmt.Errorf("Not yet implemented") //
+	return fmt.Errorf("Not yet implemented")
 
 }
 
 func (d *DataLakeMeasureApi) ResourcePath(parameter []string) {
 
-	slice := []string{"api", "v4", "datalake", "measurements"}
-	slice = append(slice, parameter...)
-	d.httpRequest.MakeUrl(slice)
+	//ResourcePath is the path to obtain resources for the StreamPipes API endpoint
+	//Parameter is a path parameter, for example: add  /measurementId  after baseResourcePath (API/v4/datalake/measures)
+	//so it is API/v4/datalake/measures/measurmentId
+
+	baseResourcePath := []string{"api", "v4", "datalake", "measurements"}
+	baseResourcePath = append(baseResourcePath, parameter...)
+	d.httpRequest.MakeUrl(baseResourcePath)
 }

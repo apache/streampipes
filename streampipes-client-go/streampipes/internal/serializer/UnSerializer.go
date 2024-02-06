@@ -23,6 +23,15 @@ import (
 	"streampipes-client-go/streampipes/model/DataLake"
 )
 
+/*
+UnBaseSerializer is used to deserialize the JSON format resource data obtained from the Streampipes API by Go-Client-API
+The UnBaseSerializer contains all data models, and in Go Client API,
+when using the DataLakeMeasureApi method, the corresponding data models in the UnBaseSerializer should be passed in.
+For example, in  "All" method of DataLakeMeasureApi,  "All" method requires obtaining all measurement series,
+corresponding to the [] DataLakeMeasure data model, by initializing UnSerializerDataLakeMeasures.
+*/
+//It is not allowed to initialize the remaining data models.
+
 type UnBaseSerializer struct {
 	UnSerializerDataLakeMeasures *[]DataLake.DataLakeMeasure
 	UnSerializerDataLakeSeries   *DataLake.DataSeries
@@ -39,6 +48,7 @@ func NewBaseUnSerializer(opts ...UnBaseSerializerOption) *UnBaseSerializer {
 }
 
 func WithUnSerializerDataLakeMeasures() UnBaseSerializerOption {
+
 	return func(opts *UnBaseSerializer) {
 		opts.UnSerializerDataLakeMeasures = new([]DataLake.DataLakeMeasure)
 	}
@@ -51,7 +61,8 @@ func WithUnSerializerDataSeries() UnBaseSerializerOption {
 }
 
 func (u *UnBaseSerializer) GetUnmarshal(body []byte) error {
-	//Obtain interface type through reflect
+	//By using the Go reflection method, dynamically obtain the instantiated fields with in UnBaseSerializer for deserialization
+
 	v := reflect.ValueOf(u).Elem()
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Field(i)

@@ -32,6 +32,8 @@ type ClientConnectionConfigResolver interface {
 	GetCredentials() credential.StreamPipesApiKeyCredentials
 }
 
+// StreamPipesClientConnectionConfig
+
 type StreamPipesClientConnectionConfig struct {
 	Credential      credential.StreamPipesApiKeyCredentials //credential.StreamPipesApiKeyCredentials
 	StreamPipesHost string
