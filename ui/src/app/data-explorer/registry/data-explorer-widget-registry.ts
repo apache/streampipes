@@ -99,6 +99,7 @@ export class DataExplorerWidgetRegistry {
             widgetComponent:
                 SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
             chartRenderer: this.scatterRenderer,
+            alias: 'correlation-chart',
         },
         {
             id: 'histogram-chart',
@@ -107,6 +108,7 @@ export class DataExplorerWidgetRegistry {
             widgetComponent:
                 SpEchartsWidgetComponent<HistogramChartWidgetModel>,
             chartRenderer: this.histogramRenderer,
+            alias: 'distribution-chart',
         },
         {
             id: 'pie-chart',
@@ -149,10 +151,19 @@ export class DataExplorerWidgetRegistry {
     }
 
     getWidgetTemplate(widgetId: string) {
-        return this.widgetTypes.find(widget => widget.id === widgetId);
+        const widget = this.widgetTypes.find(widget => widget.id === widgetId);
+        return widget !== undefined
+            ? widget
+            : this.findBackwardsCompatibleWidget(widgetId);
     }
 
     getDefaultWidget(): IWidget<any> {
         return this.widgetTypes.find(widget => widget.id === 'table');
+    }
+
+    private findBackwardsCompatibleWidget(widgetId: string): IWidget<any> {
+        return this.widgetTypes.find(
+            widget => widget.alias !== undefined && widget.alias === widgetId,
+        );
     }
 }

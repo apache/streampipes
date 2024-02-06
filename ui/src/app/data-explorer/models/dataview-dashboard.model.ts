@@ -75,6 +75,7 @@ export interface IWidget<T extends DataExplorerWidgetModel> {
     widgetComponent: any;
     widgetConfigurationComponent?: any;
     chartRenderer?: SpEchartsRenderer<T>;
+    alias?: string;
 }
 
 export interface WidgetBaseAppearanceConfig {
