@@ -16,23 +16,22 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
     selector: 'sp-data-explorer-table-widget-config',
     templateUrl: './table-widget-config.component.html',
     styleUrls: ['./table-widget-config.component.scss'],
 })
-export class TableWidgetConfigComponent
-    extends BaseWidgetConfig<TableWidgetModel, TableVisConfig>
-    implements OnInit
-{
+export class TableWidgetConfigComponent extends BaseWidgetConfig<
+    TableWidgetModel,
+    TableVisConfig
+> {
     constructor(
         widgetConfigurationService: WidgetConfigurationService,
         fieldService: DataExplorerFieldProviderService,
@@ -40,37 +39,32 @@ export class TableWidgetConfigComponent
         super(widgetConfigurationService, fieldService);
     }
 
-    ngOnInit(): void {
-        super.onInit();
-    }
-
     onFilterChange(searchValue: string): void {
         this.currentlyConfiguredWidget.visualizationConfig.searchValue =
             searchValue.trim().toLowerCase();
         this.triggerViewRefresh();
-        // this.dataSource.filter = searchValue.trim().toLowerCase();
     }
 
     setSelectedColumn(selectedColumns: DataExplorerField[]) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
             selectedColumns;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
-    protected updateWidgetConfigOptions() {}
-
-    protected getWidgetType(): WidgetType {
-        return WidgetType.Table;
-    }
-
-    protected initWidgetConfig(): TableVisConfig {
-        return {
-            forType: this.getWidgetType(),
-            selectedColumns:
-                this.fieldProvider.allFields.length > 6
+    protected applyWidgetConfig(config: TableVisConfig): void {
+        config.selectedColumns = this.fieldService.getSelectedFields(
+            config.selectedColumns,
+            this.fieldProvider.allFields,
+            () => {
+                return this.fieldProvider.allFields.length > 6
                     ? this.fieldProvider.allFields.slice(0, 5)
-                    : this.fieldProvider.allFields,
-            searchValue: '',
-        };
+                    : this.fieldProvider.allFields;
+            },
+        );
+        config.searchValue ??= '';
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return true;
     }
 }

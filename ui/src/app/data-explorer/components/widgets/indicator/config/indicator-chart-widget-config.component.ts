@@ -16,49 +16,46 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     IndicatorChartVisConfig,
     IndicatorChartWidgetModel,
 } from '../model/indicator-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
     templateUrl: './indicator-chart-widget-config.component.html',
 })
-export class IndicatorWidgetConfigComponent
-    extends BaseWidgetConfig<IndicatorChartWidgetModel, IndicatorChartVisConfig>
-    implements OnInit
-{
-    ngOnInit(): void {
-        super.onInit();
-    }
-
+export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
+    IndicatorChartWidgetModel,
+    IndicatorChartVisConfig
+> {
     updateValue(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.valueField = field;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
-    updateDelta(field: DataExplorerField) {
-        this.currentlyConfiguredWidget.visualizationConfig.deltaField = field;
-        this.triggerDataRefresh();
+    updateDelta(event: MatCheckboxChange) {
+        this.triggerViewRefresh();
     }
 
-    protected getWidgetType(): WidgetType {
-        return WidgetType.IndicatorChart;
+    protected applyWidgetConfig(config: IndicatorChartVisConfig): void {
+        config.valueField = this.fieldService.getSelectedField(
+            config.valueField,
+            this.fieldProvider.allFields,
+            () => {
+                return this.fieldProvider.allFields.length > 0
+                    ? this.fieldProvider.allFields[0]
+                    : undefined;
+            },
+        );
+        config.showDelta ??= false;
     }
 
-    protected initWidgetConfig(): IndicatorChartVisConfig {
-        return {
-            forType: this.getWidgetType(),
-            valueField:
-                this.fieldProvider.numericFields.length > 0
-                    ? this.fieldProvider.numericFields[0]
-                    : undefined,
-            showDelta: false,
-        };
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.allFields.length > 0;
     }
 }

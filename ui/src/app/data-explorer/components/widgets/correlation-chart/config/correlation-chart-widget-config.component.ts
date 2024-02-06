@@ -16,58 +16,50 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     CorrelationChartVisConfig,
     CorrelationChartWidgetModel,
 } from '../model/correlation-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
     selector: 'sp-data-explorer-correlation-chart-widget-config',
     templateUrl: './correlation-chart-widget-config.component.html',
 })
-export class CorrelationWidgetConfigComponent
-    extends BaseWidgetConfig<
-        CorrelationChartWidgetModel,
-        CorrelationChartVisConfig
-    >
-    implements OnInit
-{
-    ngOnInit(): void {
-        super.onInit();
-    }
-
+export class CorrelationWidgetConfigComponent extends BaseWidgetConfig<
+    CorrelationChartWidgetModel,
+    CorrelationChartVisConfig
+> {
     updateFirstField(selectedField: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.firstField =
             selectedField;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     updateSecondField(selectedField: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.secondField =
             selectedField;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
-    updateDisplayType(selectedType: string) {
-        this.currentlyConfiguredWidget.visualizationConfig.displayType =
-            selectedType;
-        this.triggerDataRefresh();
+    protected applyWidgetConfig(config: CorrelationChartVisConfig): void {
+        config.firstField = this.fieldService.getSelectedField(
+            config.firstField,
+            this.fieldProvider.numericFields,
+            () => this.fieldProvider.numericFields[0],
+        );
+        const secondFieldIndex =
+            this.fieldProvider.numericFields.length > 1 ? 1 : 0;
+        config.secondField = this.fieldService.getSelectedField(
+            config.secondField,
+            this.fieldProvider.numericFields,
+            () => this.fieldProvider.numericFields[secondFieldIndex],
+        );
     }
 
-    protected getWidgetType(): WidgetType {
-        return WidgetType.CorrelationChart;
-    }
-
-    protected initWidgetConfig(): CorrelationChartVisConfig {
-        return {
-            forType: this.getWidgetType(),
-            firstField: this.fieldProvider.numericFields[0],
-            secondField: this.fieldProvider.numericFields[1],
-            displayType: 'Scatter',
-        };
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 0;
     }
 }

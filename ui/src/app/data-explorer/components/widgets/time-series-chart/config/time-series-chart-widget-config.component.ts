@@ -16,31 +16,24 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     TimeSeriesChartVisConfig,
     TimeSeriesChartWidgetModel,
 } from '../model/time-series-chart-widget.model';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import {
-    DataExplorerField,
-    EventPropertyUnion,
-} from '@streampipes/platform-services';
+import { DataExplorerField } from '@streampipes/platform-services';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
     selector: 'sp-data-explorer-time-series-chart-widget-config',
     templateUrl: './time-series-chart-widget-config.component.html',
 })
-export class TimeSeriesChartWidgetConfigComponent
-    extends BaseWidgetConfig<
-        TimeSeriesChartWidgetModel,
-        TimeSeriesChartVisConfig
-    >
-    implements OnInit
-{
+export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
+    TimeSeriesChartWidgetModel,
+    TimeSeriesChartVisConfig
+> {
     constructor(
         widgetConfigurationService: WidgetConfigurationService,
         fieldService: DataExplorerFieldProviderService,
@@ -66,10 +59,6 @@ export class TimeSeriesChartWidgetConfigComponent
         '#D466A1',
     ];
 
-    ngOnInit(): void {
-        super.onInit();
-    }
-
     setSelectedProperties(selectedColumns: DataExplorerField[]) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties =
             selectedColumns;
@@ -93,13 +82,6 @@ export class TimeSeriesChartWidgetConfigComponent
         numericPlusBooleanFields.map((field, index) => {
             const name = field.fullDbName + field.sourceIndex;
             if (!(name in currentColors)) {
-                console.log(
-                    'choosing color ' +
-                        lenBefore +
-                        index +
-                        '   ' +
-                        this.presetColors[lenBefore + index],
-                );
                 currentColors[name] = this.presetColors[lenBefore + index];
                 currentNames[name] = field.fullDbName;
                 currentTypes[name] = 'lines';
@@ -116,73 +98,83 @@ export class TimeSeriesChartWidgetConfigComponent
         this.currentlyConfiguredWidget.visualizationConfig.chosenAxis =
             currentAxis;
 
-        // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     setShowSpikeProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.showSpike =
             field['checked'];
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
-    setSelectedBackgroundColorProperty(
-        selectedBackgroundColorProperty: EventPropertyUnion,
-    ) {
-        if (selectedBackgroundColorProperty.runtimeName === '') {
-            this.currentlyConfiguredWidget.visualizationConfig.selectedBackgroundColorProperty =
-                undefined;
-            this.currentlyConfiguredWidget.visualizationConfig.backgroundColorPropertyKey =
-                undefined;
-        } else {
-            this.currentlyConfiguredWidget.visualizationConfig.selectedBackgroundColorProperty =
-                selectedBackgroundColorProperty;
-            this.currentlyConfiguredWidget.visualizationConfig.backgroundColorPropertyKey =
-                selectedBackgroundColorProperty.runtimeName;
-        }
-        this.triggerDataRefresh();
-    }
-
-    toggleLabelingMode() {
-        // this.triggerViewRefresh();
-    }
-
-    protected getWidgetType(): WidgetType {
-        return WidgetType.LineChart;
-    }
-
-    protected initWidgetConfig(): TimeSeriesChartVisConfig {
+    protected applyWidgetConfig(config: TimeSeriesChartVisConfig): void {
         const numericPlusBooleanFields =
             this.fieldProvider.numericFields.concat(
                 this.fieldProvider.booleanFields,
             );
 
-        const colors = {};
-        const names = {};
-        const dTypes = {};
-        const axes = {};
+        config.chosenColor = this.getConfigOrDefault(
+            config.chosenColor,
+            numericPlusBooleanFields,
+            (field, index) => this.presetColors[index],
+        );
+        config.displayName = this.getConfigOrDefault(
+            config.displayName,
+            numericPlusBooleanFields,
+            field => field.fullDbName,
+        );
+        config.displayType = this.getConfigOrDefault(
+            config.displayType,
+            numericPlusBooleanFields,
+            () => 'lines',
+        );
+        config.chosenAxis = this.getConfigOrDefault(
+            config.chosenAxis,
+            numericPlusBooleanFields,
+            () => 'left',
+        );
 
-        numericPlusBooleanFields.map((field, index) => {
-            console.log('field full db name ' + field.fullDbName);
-            colors[field.fullDbName + field.sourceIndex] =
-                this.presetColors[index];
-            names[field.fullDbName + field.sourceIndex] = field.fullDbName;
-            dTypes[field.fullDbName + field.sourceIndex] = 'lines';
-            axes[field.fullDbName + field.sourceIndex] = 'left';
+        config.yKeys = [];
+        config.selectedTimeSeriesChartProperties =
+            this.fieldService.getSelectedFields(
+                config.selectedTimeSeriesChartProperties,
+                numericPlusBooleanFields,
+                () => {
+                    return numericPlusBooleanFields.length > 6
+                        ? numericPlusBooleanFields.slice(0, 5)
+                        : numericPlusBooleanFields;
+                },
+            );
+        config.showSpike ??= true;
+    }
+
+    private getConfigOrDefault(
+        config: Record<string, any>,
+        availableFields: DataExplorerField[],
+        getDefaultValue: (field: DataExplorerField, index: number) => string,
+    ) {
+        const fieldKeys = availableFields.map(
+            f => f.fullDbName + f.sourceIndex,
+        );
+        if (!config) {
+            config = {};
+        } else {
+            Object.keys(config).forEach(key => {
+                if (!fieldKeys.includes(key)) {
+                    delete config[key];
+                }
+            });
+        }
+        availableFields.forEach((field, index) => {
+            const fieldName = field.fullDbName + field.sourceIndex;
+            if (!config[fieldName]) {
+                config[fieldName] = getDefaultValue(field, index);
+            }
         });
+        return config;
+    }
 
-        return {
-            forType: this.getWidgetType(),
-            yKeys: [],
-            selectedTimeSeriesChartProperties:
-                numericPlusBooleanFields.length > 6
-                    ? numericPlusBooleanFields.slice(0, 5)
-                    : numericPlusBooleanFields,
-            chosenColor: colors,
-            displayName: names,
-            displayType: dTypes,
-            chosenAxis: axes,
-            showSpike: true,
-        };
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 0;
     }
 }

@@ -16,23 +16,29 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <h5>Heat Value</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.numericFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig.selectedHeatProperty
-        "
-        (changeSelectedProperty)="setSelectedHeatProperty($event)"
-    >
-    </sp-select-property>
-
-    <h5>Show labels</h5>
-    <mat-checkbox
-        [(ngModel)]="
-            currentlyConfiguredWidget.visualizationConfig.showLabelsProperty
-        "
-        (change)="setShowLabelsProperty($event)"
-        >show selected values
-    </mat-checkbox>
-</div>
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box title="Field">
+        <sp-select-property
+            [availableProperties]="fieldProvider.numericFields"
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig
+                    .selectedHeatProperty
+            "
+            (changeSelectedProperty)="setSelectedHeatProperty($event)"
+        >
+        </sp-select-property>
+    </sp-configuration-box>
+    <sp-configuration-box title="Settings">
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.showLabelsProperty
+            "
+            (change)="setShowLabelsProperty($event)"
+            >Show values as labels
+        </mat-checkbox>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

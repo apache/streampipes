@@ -105,8 +105,7 @@ export class TableWidgetComponent
     }
 
     public refreshView() {
-        this.dataSource.filter =
-            this.dataExplorerWidget.visualizationConfig.searchValue;
+        this.refreshColumns();
     }
 
     onResize(width: number, height: number) {}
@@ -134,12 +133,21 @@ export class TableWidgetComponent
         removedFields: DataExplorerField[],
     ) {
         this.dataExplorerWidget.visualizationConfig.selectedColumns =
-            this.updateFieldSelection(
+            this.fieldUpdateService.updateFieldSelection(
                 this.dataExplorerWidget.visualizationConfig.selectedColumns,
-                addedFields,
-                removedFields,
-                field => true,
+                {
+                    addedFields,
+                    removedFields,
+                    fieldProvider: this.fieldProvider,
+                },
+                () => true,
             );
+        this.refreshColumns();
+    }
+
+    refreshColumns(): void {
+        this.dataSource.filter =
+            this.dataExplorerWidget.visualizationConfig.searchValue;
         this.columnNames = ['time'].concat(
             this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
                 c => c.fullDbName,

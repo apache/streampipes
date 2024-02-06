@@ -16,18 +16,11 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <mat-form-field appearance="outline" fxFlex="100" color="accent">
-        <mat-label>Search</mat-label>
-        <input
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.searchValue
-            "
-            matInput
-            (input)="onFilterChange($event.target.value)"
-        />
-    </mat-form-field>
-
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
     <sp-select-properties
         label="Select Fields"
         multiple="true"
@@ -38,4 +31,16 @@
         "
     >
     </sp-select-properties>
-</div>
+    <sp-configuration-box title="Search" marginTop="5px">
+        <mat-form-field appearance="outline" fxFlex="100" color="accent">
+            <mat-label>Filter</mat-label>
+            <input
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig.searchValue
+                "
+                matInput
+                (input)="onFilterChange($event.target.value)"
+            />
+        </mat-form-field>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

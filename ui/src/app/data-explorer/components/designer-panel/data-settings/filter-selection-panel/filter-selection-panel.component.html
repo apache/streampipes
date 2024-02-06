@@ -16,9 +16,8 @@
   ~
   -->
 
-<div fxLayout="column">
-    <span class="data-explorer-header">Filter</span>
-    <div>
+<sp-configuration-box title="Filter" marginTop="5px">
+    <div header fxLayoutAlign="start center" fxFlex="100">
         <button
             mat-button
             mat-raised-button
@@ -26,7 +25,7 @@
             class="small-button"
             data-cy="design-panel-data-settings-add-filter"
             (click)="addFilter()"
-            style="margin-right: 10px; margin-bottom: 15px"
+            style="margin-right: 10px"
         >
             Add Filter
         </button>
@@ -159,4 +158,4 @@
             </div>
         </div>
     </div>
-</div>
+</sp-configuration-box>

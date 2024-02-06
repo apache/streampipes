@@ -16,121 +16,161 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <h5>Latitude</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.numericFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig
-                .selectedLatitudeProperty
-        "
-        (changeSelectedProperty)="setSelectedLatitudeProperty($event)"
-        data-cy="data-view-map-select-latitude"
-    >
-    </sp-select-property>
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <div fxLayout="column">
+        <sp-configuration-box title="Fields">
+            <div fxLayout="column" fxLayoutGap="10px">
+                <div
+                    fxLayout="row"
+                    fxFlex="100"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center"
+                >
+                    <small fxFlex="30">Latitude</small>
+                    <sp-select-property
+                        fxFlex
+                        [availableProperties]="fieldProvider.numericFields"
+                        [selectedProperty]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .selectedLatitudeProperty
+                        "
+                        (changeSelectedProperty)="
+                            setSelectedLatitudeProperty($event)
+                        "
+                        data-cy="data-view-map-select-latitude"
+                    >
+                    </sp-select-property>
+                </div>
+                <div
+                    fxLayout="row"
+                    fxFlex="100"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center"
+                >
+                    <small fxFlex="30">Longitude</small>
+                    <sp-select-property
+                        fxFlex
+                        [availableProperties]="fieldProvider.numericFields"
+                        [selectedProperty]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .selectedLongitudeProperty
+                        "
+                        (changeSelectedProperty)="
+                            setSelectedLongitudeProperty($event)
+                        "
+                        data-cy="data-view-map-select-longitude"
+                    >
+                    </sp-select-property>
+                </div>
+            </div>
+        </sp-configuration-box>
+        <sp-configuration-box title="Settings">
+            <div fxLayout="column" fxLayoutGap="10px">
+                <div
+                    fxLayout="row"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center"
+                    fxFlex="100"
+                >
+                    <small fxFlex="30">Map Zoom</small>
+                    <mat-form-field color="accent" appearance="outline" fxFlex>
+                        <mat-label> <span>enter zoom value</span></mat-label>
+                        <input
+                            [(ngModel)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .selectedZoomValue
+                            "
+                            matInput
+                            (input)="setZoomValue($event.target.value)"
+                        />
+                    </mat-form-field>
+                </div>
 
-    <h5>Longitude</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.numericFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig
-                .selectedLongitudeProperty
-        "
-        (changeSelectedProperty)="setSelectedLongitudeProperty($event)"
-        data-cy="data-view-map-select-longitude"
-    >
-    </sp-select-property>
+                <div
+                    fxLayout="row"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center"
+                    fxFlex="100"
+                >
+                    <mat-checkbox
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .useLastEventCoordinates
+                        "
+                        (change)="setUseLastEventCoordinations($event)"
+                        >Focus map on last event
+                    </mat-checkbox>
+                </div>
 
-    <h5>Map Zoom</h5>
-    <mat-form-field fxFlex="100" color="accent" appearance="outline">
-        <mat-label>
-            <!-- <mat-icon>Zoom</mat-icon> -->
-            <span>enter zoom value</span></mat-label
-        >
-        <input
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.selectedZoomValue
-            "
-            matInput
-            (input)="setZoomValue($event.target.value)"
-        />
-    </mat-form-field>
+                <div
+                    fxLayout="row"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center"
+                    fxFlex="100"
+                >
+                    <small fxFlex="30">Marker or Trace</small>
+                    <mat-form-field color="accent" appearance="outline" fxFlex>
+                        <!-- <mat-label>Marker or Trace</mat-label> -->
+                        <mat-select
+                            [(value)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .selectedMarkerOrTrace
+                            "
+                            (selectionChange)="triggerViewRefresh()"
+                            data-cy="data-view-map-select-marker-or-trace"
+                        >
+                            <mat-option [value]="'marker'">Marker</mat-option>
+                            <mat-option [value]="'trace'">Trace</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
 
-    <h5>Map Focus</h5>
-    <mat-checkbox
-        [(ngModel)]="
-            currentlyConfiguredWidget.visualizationConfig
-                .useLastEventCoordinates
-        "
-        (change)="setUseLastEventCoordinations($event)"
-        >focus on last event
-    </mat-checkbox>
+                <div
+                    fxLayout="row"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center"
+                    fxFlex="100"
+                    *ngIf="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .selectedMarkerOrTrace === 'marker'
+                    "
+                >
+                    <small fxFlex="30">Marker Type</small>
+                    <mat-form-field fxFlex color="accent" appearance="outline">
+                        <mat-select
+                            [(value)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .selectedMarkerType
+                            "
+                            (selectionChange)="triggerViewRefresh()"
+                        >
+                            <mat-option [value]="'pin'">Pin</mat-option>
+                            <mat-option [value]="'car'">Car</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </sp-configuration-box>
 
-    <h5>Marker or Trace</h5>
-    <mat-form-field color="accent" fxFlex="100" appearance="outline">
-        <!-- <mat-label>Marker or Trace</mat-label> -->
-        <mat-select
-            [(value)]="
+        <sp-select-properties
+            title="Tooltip"
+            label="Tooltip Content"
+            multiple="true"
+            (changeSelectedProperties)="setSelectedToolTipContent($event)"
+            [availableProperties]="fieldProvider.allFields"
+            [selectedProperties]="
                 currentlyConfiguredWidget.visualizationConfig
-                    .selectedMarkerOrTrace
+                    .selectedToolTipContent
             "
-            (selectionChange)="triggerViewRefresh()"
-            data-cy="data-view-map-select-marker-or-trace"
-        >
-            <mat-option [value]="'marker'">Marker</mat-option>
-            <mat-option [value]="'trace'">Trace</mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <h5
-        *ngIf="
-            currentlyConfiguredWidget.visualizationConfig
-                .selectedMarkerOrTrace === 'marker'
-        "
-    >
-        Tooltip Content
-    </h5>
-    <sp-select-properties
-        label="Tooltip Content"
-        multiple="true"
-        (changeSelectedProperties)="setSelectedToolTipContent($event)"
-        [availableProperties]="fieldProvider.allFields"
-        [selectedProperties]="
-            currentlyConfiguredWidget.visualizationConfig.selectedToolTipContent
-        "
-        *ngIf="
-            currentlyConfiguredWidget.visualizationConfig
-                .selectedMarkerOrTrace === 'marker'
-        "
-    >
-    </sp-select-properties>
-
-    <h5
-        *ngIf="
-            currentlyConfiguredWidget.visualizationConfig
-                .selectedMarkerOrTrace === 'marker'
-        "
-    >
-        Marker Type
-    </h5>
-    <mat-form-field
-        color="accent"
-        appearance="outline"
-        fxFlex="100"
-        *ngIf="
-            currentlyConfiguredWidget.visualizationConfig
-                .selectedMarkerOrTrace === 'marker'
-        "
-    >
-        <!-- <mat-label>Marker Type</mat-label> -->
-        <mat-select
-            [(value)]="
-                currentlyConfiguredWidget.visualizationConfig.selectedMarkerType
+            *ngIf="
+                currentlyConfiguredWidget.visualizationConfig
+                    .selectedMarkerOrTrace === 'marker'
             "
-            (selectionChange)="triggerViewRefresh()"
         >
-            <mat-option [value]="'pin'">Pin</mat-option>
-            <mat-option [value]="'car'">Car</mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
+        </sp-select-properties>
+    </div>
+</sp-visualization-config-outer>

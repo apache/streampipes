@@ -161,6 +161,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
         if (this.groupSelectionPanel) {
             this.groupSelectionPanel.applyDefaultFields();
         }
+        this.triggerDataRefresh();
     }
 
     findMeasure(measureName: string) {

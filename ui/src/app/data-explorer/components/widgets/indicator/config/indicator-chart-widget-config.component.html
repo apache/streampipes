@@ -16,31 +16,29 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <h5>Indicator Field</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.numericFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig.valueField
-        "
-        (changeSelectedProperty)="updateValue($event)"
-    >
-    </sp-select-property>
-
-    <mat-checkbox
-        [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.showDelta"
-        >Show delta indicator
-    </mat-checkbox>
-    <div *ngIf="currentlyConfiguredWidget.visualizationConfig.showDelta">
-        <h5>Delta Field</h5>
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box title="Field">
         <sp-select-property
-            [availableProperties]="fieldProvider.numericFields"
+            [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.deltaField
+                currentlyConfiguredWidget.visualizationConfig.valueField
             "
-            (changeSelectedProperty)="updateDelta($event)"
-            data-cy="data-explorer-select-delta-field"
+            (changeSelectedProperty)="updateValue($event)"
         >
         </sp-select-property>
-    </div>
-</div>
+    </sp-configuration-box>
+    <sp-configuration-box title="Settings">
+        <mat-checkbox
+            data-cy="data-explorer-select-delta-checkbox"
+            (change)="updateDelta($event)"
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.showDelta
+            "
+            >Show delta indicator
+        </mat-checkbox>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

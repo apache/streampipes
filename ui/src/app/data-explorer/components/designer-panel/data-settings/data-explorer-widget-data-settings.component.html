@@ -49,24 +49,16 @@
                             mat-icon-button
                             color="accent"
                             matTooltip="Delete Data Source"
+                            (click)="removeSourceConfig(i)"
                         >
-                            <i
-                                class="material-icons align-btn"
-                                (click)="removeSourceConfig(i)"
-                                >delete</i
-                            >
+                            <i class="material-icons align-btn">delete</i>
                         </button>
                     </div>
                 </div>
             </mat-expansion-panel-header>
-            <div fxFlex="100" fxLayout="column" class="mt-10 pl-5 pr-5">
-                <div
-                    fxLayout="column"
-                    fxFlex="100"
-                    class="data-explorer-options-panel"
-                >
-                    <div fxLayout="row" fxLayoutAlign="start center">
-                        <span class="data-explorer-header">From </span>
+            <div fxFlex="100" fxLayout="column" class="mt-10">
+                <sp-configuration-box title="From">
+                    <div header>
                         <mat-radio-group
                             class="selection-radio-group"
                             [(ngModel)]="sourceConfig.sourceType"
@@ -136,15 +128,12 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                </div>
-                <div
-                    fxLayout="column"
-                    fxFlex="100"
-                    class="data-explorer-options-panel"
+                </sp-configuration-box>
+                <sp-configuration-box
+                    title="Query"
                     *ngIf="sourceConfig.measureName"
                 >
-                    <div fxLayout="row" fxLayoutAlign="start center">
-                        <span class="data-explorer-header">Query </span>
+                    <div header>
                         <mat-radio-group
                             class="selection-radio-group"
                             [(ngModel)]="sourceConfig.queryType"
@@ -229,36 +218,22 @@
                         >
                         </sp-aggregate-configuration>
                     </div>
-                </div>
+                </sp-configuration-box>
                 <div
-                    fxLayout="column"
-                    fxFlex="100"
-                    class="data-explorer-options-panel"
                     *ngIf="sourceConfig.queryType && sourceConfig.measure"
+                    fxLayout="column"
                 >
                     <sp-field-selection-panel
                         #fieldSelectionPanel
                         [sourceConfig]="sourceConfig"
                         [widgetId]="widgetId"
                     ></sp-field-selection-panel>
-                </div>
-                <div
-                    fxLayout="column"
-                    fxFlex="100"
-                    class="data-explorer-options-panel"
-                    *ngIf="sourceConfig.queryType && sourceConfig.measure"
-                >
+
                     <sp-filter-selection-panel
                         [sourceConfig]="sourceConfig"
                         [widgetId]="widgetId"
                     ></sp-filter-selection-panel>
-                </div>
-                <div
-                    fxLayout="column"
-                    fxFlex="100"
-                    class="data-explorer-options-panel"
-                    *ngIf="sourceConfig.queryType && sourceConfig.measure"
-                >
+
                     <sp-group-selection-panel
                         #groupSelectionPanel
                         [sourceConfig]="sourceConfig"
