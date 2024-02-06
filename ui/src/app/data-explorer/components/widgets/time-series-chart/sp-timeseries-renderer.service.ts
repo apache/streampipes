@@ -235,7 +235,9 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         const yAxisOptions: YAXisOption[] = [];
 
         const uniqueAxes = new Set(
-            Object.values(config.visualizationConfig.chosenAxis),
+            Object.values(config.visualizationConfig.chosenAxis).sort((a, b) =>
+                a.localeCompare(b),
+            ),
         );
 
         uniqueAxes.forEach(axis => {
