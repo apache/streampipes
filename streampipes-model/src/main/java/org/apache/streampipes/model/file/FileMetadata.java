@@ -36,8 +36,6 @@ public class FileMetadata {
 
   private String createdByUser;
 
-  public String test;
-
   public String getFileId() {
     return fileId;
   }

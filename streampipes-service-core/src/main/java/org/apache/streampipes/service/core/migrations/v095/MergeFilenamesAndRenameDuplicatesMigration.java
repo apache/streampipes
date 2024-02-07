@@ -36,17 +36,31 @@ import java.util.Map;
 
 public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
 
-  private static final String ORIGINAL_FILENAME = "originalFilename";
-  private static final String INTERNAL_FILENAME = "internalFilename";
-  private static final String ID = "_id";
+  protected static final String ORIGINAL_FILENAME = "originalFilename";
+  protected static final String INTERNAL_FILENAME = "internalFilename";
+  protected static final String ID = "_id";
+  protected static final String FILETYPE = "filetype";
 
-  private CouchDbClient couchDbClient = Utils.getCouchDbFileMetadataClient();
+  private CouchDbClient couchDbClient;
+
   private ObjectMapper mapper = new ObjectMapper();
+
   private IFileMetadataStorage fileMetadataStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();
+
   private FileHandler fileHandler = new FileHandler();
-  // This map contains all fileMetadata grouped by originalFilename
-  private Map<String, List<FileMetadata>> duplicateFilenamesFileMetadataMap = new HashMap<>();
+
+  protected Map<String, List<FileMetadata>> fileMetadataGroupedByOriginalName = new HashMap<>();
+
+  private boolean isTesting = false;
+
+  public MergeFilenamesAndRenameDuplicatesMigration(boolean testing) {
+    isTesting = testing;
+  }
+
+  public MergeFilenamesAndRenameDuplicatesMigration() {
+    couchDbClient = Utils.getCouchDbFileMetadataClient();
+  }
 
   // Starting from v0.95, StreamPipes will use a single file name as the unique identifier of files instead of an
   // internal filename and an original filename. This migration merges them and renames all the files that have
@@ -59,9 +73,18 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   @Override
   public void executeMigration() {
     var couchDbRawFileMetadata = getCouchDbRawFileMetadata(getAllFileIds(fileMetadataStorage));
-    couchDbRawFileMetadata.forEach(rawFileMetadata -> checkDuplicateOriginalFilename(rawFileMetadata));
-    duplicateFilenamesFileMetadataMap.forEach(
+    getFileMetadataToUpdate(couchDbRawFileMetadata);
+    fileMetadataGroupedByOriginalName.forEach(
         (originalFilename, fileMetadataList) -> update(originalFilename, fileMetadataList));
+  }
+
+  /**
+   * Gets all fileMetadata that need to be updated grouped by originalFilename
+   * key is (possibly) duplicated originalFilename and value is that file's FileMetadata list (if duplicated)
+   */
+  protected void getFileMetadataToUpdate(List<Map<String, Object>> couchDbRawFileMetadata) {
+    couchDbRawFileMetadata.forEach(
+        rawFileMetadata -> checkDuplicateOriginalFilename(rawFileMetadata));
   }
 
   /**
@@ -93,45 +116,58 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   }
 
   /**
-   * Takes raw data stored in CouchDB and constructs duplicateFilenamesFileMetadataMap,
-   * key is (possibly) duplicated originalFilename and value is that file's FileMetadata
+   * Takes raw data stored in CouchDB and constructs fileMetadataGroupedByOriginalName,
+   * key is (possibly) duplicated originalFilename and value is that file's FileMetadata list (if duplicated)
    */
   private void checkDuplicateOriginalFilename(Map<String, Object> rawFileMetadata) {
     // If this file was already migrated or there was an error when converting InputStream to Map, skip it
     if (rawFileMetadata.containsKey(ORIGINAL_FILENAME)) {
       var originalFilename = rawFileMetadata.get(ORIGINAL_FILENAME).toString().toLowerCase();
-      if (!duplicateFilenamesFileMetadataMap.containsKey(originalFilename)) {
-        duplicateFilenamesFileMetadataMap.put(originalFilename, new ArrayList<>());
+      if (!fileMetadataGroupedByOriginalName.containsKey(originalFilename)) {
+        fileMetadataGroupedByOriginalName.put(originalFilename, new ArrayList<>());
       }
-      var fileMetadata = fileMetadataStorage.getMetadataById(rawFileMetadata.get(ID).toString());
-      duplicateFilenamesFileMetadataMap.get(originalFilename).add(fileMetadata);
+      FileMetadata fileMetadata;
+      if (isTesting) {
+        fileMetadata = new FileMetadata();
+        fileMetadata.setFileId(rawFileMetadata.get(ID).toString());
+        fileMetadata.setFiletype(rawFileMetadata.get(FILETYPE).toString());
+      } else {
+        fileMetadata = fileMetadataStorage.getMetadataById(rawFileMetadata.get(ID).toString());
+      }
+      fileMetadataGroupedByOriginalName.get(originalFilename).add(fileMetadata);
     }
   }
 
   /**
    * For each of the file, calls updateFileMetadata() and updateLocalFile()
    */
-  private void update(String originalFilename, List<FileMetadata> fileMetadataList) {
+  protected void update(String originalFilename, List<FileMetadata> fileMetadataList) {
     var fileMetadata = fileMetadataList.get(0);
-    var internalFilename = getInternalFilenameFromFileMetadata(fileMetadata);
     // just name the 1st one to its originalFilename
-    updateFileMetadata(fileMetadata, originalFilename);
-    updateLocalFile(internalFilename, originalFilename);
+    if (!isTesting) {
+      var internalFilename = getInternalFilenameFromFileMetadata(fileMetadata);
+      updateLocalFile(internalFilename, originalFilename);
+    }
+    updateFileMetadata(fileMetadata, originalFilename, isTesting);
     for (int i = 1; i < fileMetadataList.size(); ++i) {
       fileMetadata = fileMetadataList.get(i);
-      internalFilename = getInternalFilenameFromFileMetadata(fileMetadataList.get(i));
       var newFilename = createNewFileName(i, removeFileType(originalFilename), fileMetadata.getFiletype());
-      updateFileMetadata(fileMetadata, newFilename);
-      updateLocalFile(internalFilename, newFilename);
+      if (!isTesting) {
+        var internalFilename = getInternalFilenameFromFileMetadata(fileMetadata);
+        updateLocalFile(internalFilename, newFilename);
+      }
+      updateFileMetadata(fileMetadata, newFilename, isTesting);
     }
   }
 
   /**
    * Updates FileMetadata: sets new merged filename to the given filename
    */
-  private void updateFileMetadata(FileMetadata fileMetadata, String filename) {
+  private void updateFileMetadata(FileMetadata fileMetadata, String filename, boolean isTesting) {
     fileMetadata.setFilename(filename);
-    fileMetadataStorage.updateFileMetadata(fileMetadata);
+    if (!isTesting) {
+      fileMetadataStorage.updateFileMetadata(fileMetadata);
+    }
   }
 
   /**
@@ -145,7 +181,7 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   /**
    * Gets the old internalFilename after merging
    */
-  private String getInternalFilenameFromFileMetadata (FileMetadata fileMetadata) {
+  private String getInternalFilenameFromFileMetadata(FileMetadata fileMetadata) {
     return convertInputStreamToMap(couchDbClient.find(fileMetadata.getFileId())).get(INTERNAL_FILENAME).toString();
   }
 
