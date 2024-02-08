@@ -37,7 +37,7 @@ type DataLakeMeasureApi struct {
 }
 
 func NewDataLakeMeasureApi(clientConfig config.StreamPipesClientConnectionConfig) *DataLakeMeasureApi {
-	//NewDataLakeMeasureApi is used to return an instance of * DataLakeMeasureApi,
+	//NewDataLakeMeasureApi is used to return an instance of *DataLakeMeasureApi,
 
 	return &DataLakeMeasureApi{
 		config:      clientConfig,

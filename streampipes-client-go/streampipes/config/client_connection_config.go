@@ -18,66 +18,27 @@
 package config
 
 import (
-	"log"
-	"net/url"
 	"streampipes-client-go/streampipes/internal/credential"
 	Path "streampipes-client-go/streampipes/internal/util"
 )
 
 type ClientConnectionConfigResolver interface {
-	GetStreamPipesHost() string
-	GetStreamPipesPort() string
-	IsHttpsDisabled() bool
-	GetBaseUrl() string
-	GetCredentials() credential.StreamPipesApiKeyCredentials
+	getBaseUrl() *Path.StreamPipesApiPath
+	GetConfig() StreamPipesClientConnectionConfig
 }
-
-// StreamPipesClientConnectionConfig
 
 type StreamPipesClientConnectionConfig struct {
-	Credential      credential.StreamPipesApiKeyCredentials //credential.StreamPipesApiKeyCredentials
-	StreamPipesHost string
-	StreamPipesPort string
-	HttpsDisabled   bool
-}
-
-func StreamPipesClientConnectionUrl(Url string) StreamPipesClientConnectionConfig {
-	URL, err := url.Parse(Url)
-	if err != nil {
-		log.Fatal("Please enter the correct URL")
-	}
-	return StreamPipesClientConnectionConfig{
-		Credential:      credential.StreamPipesApiKeyCredentials{},
-		StreamPipesHost: URL.Scheme,
-		StreamPipesPort: URL.Opaque,
-		HttpsDisabled:   true,
-	}
+	Url        string
+	Credential credential.StreamPipesApiKeyCredentials
 }
 
 func (s *StreamPipesClientConnectionConfig) GetCredentials() credential.StreamPipesApiKeyCredentials {
 	return s.Credential
 }
 
-func (s *StreamPipesClientConnectionConfig) GetStreamPipesHost() string {
-	return s.StreamPipesHost
-}
-
-func (s *StreamPipesClientConnectionConfig) GetStreamPipesPort() string {
-	return s.StreamPipesPort
-}
-
-func (s *StreamPipesClientConnectionConfig) IsHttpsDisabled() bool {
-	return s.HttpsDisabled
-}
-
 func (s *StreamPipesClientConnectionConfig) GetBaseUrl() *Path.StreamPipesApiPath {
-	protocol := "https://"
-	if s.IsHttpsDisabled() {
-		protocol = "http://"
-	}
 
-	protocol = protocol + s.StreamPipesHost + ":" + s.StreamPipesPort
-	ApiPath := Path.NewStreamPipesApiPath([]string{protocol}).FromStreamPipesBasePath()
+	ApiPath := Path.NewStreamPipesApiPath([]string{s.Url}).FromStreamPipesBasePath()
 	ApiPath.ToString()
 
 	return ApiPath

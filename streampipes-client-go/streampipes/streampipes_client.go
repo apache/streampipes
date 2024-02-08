@@ -19,8 +19,13 @@ package streampipes
 
 import (
 	"errors"
+	"log"
+	"net/url"
+	"regexp"
 	"streampipes-client-go/streampipes/api"
 	"streampipes-client-go/streampipes/config"
+	"streampipes-client-go/streampipes/internal/credential"
+	"strings"
 )
 
 /*
@@ -38,7 +43,23 @@ func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*Str
 	//NewStreamPipesClient returns an instance of * StreamPipesClient
 	//Temporarily does not support HTTPS connections, nor does it support connecting to port 443
 
-	if !config.HttpsDisabled || config.StreamPipesPort == "443" {
+	if config.Credential == (credential.StreamPipesApiKeyCredentials{}) {
+		log.Fatal("No credential entered")
+	}
+
+	re := regexp.MustCompile(`(?i)^(http|https):\/\/[^\s\/:]+:\d+$`)
+	ok := re.MatchString(config.Url)
+	if !ok {
+		log.Fatal("Please check if the URL is correct,Must be in the form of A://B:C," +
+			"where A is either HTTP or HTTPS, not case sensitive.B must be the host and C must be the port.")
+	}
+
+	Url, err := url.Parse(config.Url)
+	if err != nil {
+		log.Fatal("Please enter the correct URL", err)
+	}
+
+	if strings.EqualFold(Url.Scheme, "https") || Url.Port() == "443" {
 		return &StreamPipesClient{}, errors.New(
 			"Invalid configuration passed! The given client configuration has " +
 				"`https_disabled` set to `True` and `port` set to `443`.\n " +

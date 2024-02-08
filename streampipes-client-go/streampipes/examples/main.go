@@ -24,20 +24,19 @@ import (
 	"streampipes-client-go/streampipes/internal/credential"
 )
 
+/*
+	Here are some examples of using go client, including outputting the data returned by streams.
+	Only supports outputting model data
+*/
+
 func main() {
 	Config := config.StreamPipesClientConnectionConfig{
+		Url: "http://localhost:8030",
 		Credential: credential.StreamPipesApiKeyCredentials{
 			Username: "admin@streampipes.apache.org",
 			ApiKey:   "LNrsh8YrgEyQTzSKSGmaAXb1",
 		},
-		StreamPipesPort: "8030",
-		StreamPipesHost: "localhost",
-		HttpsDisabled:   true,
 	}
-	//Config := config.StreamPipesClientConnectionUrl("localhost:8030")
-	//Config.Credential.Username = "admin@streampipes.apache.org"
-	//Config.Credential.ApiKey = "LNrsh8YrgEyQTzSKSGmaAXb1"
-
 	StreamPipesClient, err := streampipes.NewStreamPipesClient(Config)
 	if err != nil {
 		fmt.Println(err)
