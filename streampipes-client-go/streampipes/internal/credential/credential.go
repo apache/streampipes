@@ -23,24 +23,24 @@ import (
 )
 
 type StreamPipesApiKeyCredentials struct {
-	Username string
+	UserName string
 	ApiKey   string
 }
 
 func (s *StreamPipesApiKeyCredentials) ApiKeyCredential(username, apikey string) {
-	s.Username = username
+	s.UserName = username
 	s.ApiKey = apikey
 }
 
 func (s *StreamPipesApiKeyCredentials) GetUsername() string {
-	return s.Username
+	return s.UserName
 }
 func (s *StreamPipesApiKeyCredentials) GetApiKey() string {
 	return s.ApiKey
 }
 
 func (s *StreamPipesApiKeyCredentials) MakeHeaders(header *headers.Headers) (Rheader []http.Header) {
-	XApiUser := header.XApiUser(s.Username)
+	XApiUser := header.XApiUser(s.UserName)
 	XApiKey := header.XApiKey(s.ApiKey)
 	Rheader = append(append(Rheader, XApiUser), XApiKey)
 	return Rheader

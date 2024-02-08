@@ -62,7 +62,7 @@ func (d *DeleteRequest) makeRequest() {
 	var err error
 	d.HttpRequest.Header.Req, _ = http.NewRequest("DELETE", d.HttpRequest.Url, nil)
 	d.HttpRequest.Header.XApiKey(d.HttpRequest.ClientConnectionConfig.Credential.ApiKey)
-	d.HttpRequest.Header.XApiUser(d.HttpRequest.ClientConnectionConfig.Credential.Username)
+	d.HttpRequest.Header.XApiUser(d.HttpRequest.ClientConnectionConfig.Credential.UserName)
 	d.HttpRequest.Header.AcceptJson()
 	d.HttpRequest.Response, err = d.HttpRequest.Client.Do(d.HttpRequest.Header.Req)
 	if err != nil {

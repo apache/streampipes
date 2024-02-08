@@ -72,7 +72,7 @@ func (g *GetRequest) makeRequest() {
 	var err error
 	g.HttpRequest.Header.Req, _ = http.NewRequest("GET", g.HttpRequest.Url, nil)
 	g.HttpRequest.Header.XApiKey(g.HttpRequest.ClientConnectionConfig.Credential.ApiKey)
-	g.HttpRequest.Header.XApiUser(g.HttpRequest.ClientConnectionConfig.Credential.Username)
+	g.HttpRequest.Header.XApiUser(g.HttpRequest.ClientConnectionConfig.Credential.UserName)
 	g.HttpRequest.Header.AcceptJson()
 	g.HttpRequest.Response, err = g.HttpRequest.Client.Do(g.HttpRequest.Header.Req)
 	if err != nil {

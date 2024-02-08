@@ -33,8 +33,8 @@ func main() {
 	Config := config.StreamPipesClientConnectionConfig{
 		Url: "http://localhost:8030",
 		Credential: credential.StreamPipesApiKeyCredentials{
-			Username: "admin@streampipes.apache.org",
-			ApiKey:   "LNrsh8YrgEyQTzSKSGmaAXb1",
+			UserName: "<Your-User-Name>",
+			ApiKey:   "<Your-API-Key>",
 		},
 	}
 	StreamPipesClient, err := streampipes.NewStreamPipesClient(Config)
