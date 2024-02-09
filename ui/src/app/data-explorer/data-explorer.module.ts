@@ -80,7 +80,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { ImageViewerComponent } from './components/widgets/image/image-viewer/image-viewer.component';
 import { ImageBarComponent } from './components/widgets/image/image-bar/image-bar.component';
 import { ImageBarPreviewComponent } from './components/widgets/image/image-bar/image-bar-preview/image-bar-preview.component';
-import { DateInputComponent } from './components/date-input/date-input.component';
 import { SpEchartsWidgetComponent } from './components/widgets/base/echarts-widget.component';
 import { SpValueHeatmapWidgetConfigComponent } from './components/widgets/value-heatmap/config/value-heatmap-chart-widget-config.component';
 import { SpHistogramChartWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
@@ -176,7 +175,6 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         DataExplorerVisualisationSettingsComponent,
         WidgetDirective,
         TooMuchDataComponent,
-        DateInputComponent,
         SpEchartsWidgetComponent,
         SpValueHeatmapWidgetConfigComponent,
         SpHistogramChartWidgetConfigComponent,

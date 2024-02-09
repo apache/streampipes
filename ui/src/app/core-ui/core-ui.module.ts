@@ -77,6 +77,7 @@ import { SelectDataMissingValuesComponent } from './data-download-dialog/compone
 import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
+import { DateInputComponent } from './date-input/date-input.component';
 
 @NgModule({
     imports: [
@@ -108,6 +109,7 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
     declarations: [
         ConfigureLabelsComponent,
         DataDownloadDialogComponent,
+        DateInputComponent,
         DisplayRecommendedPipe,
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
@@ -150,6 +152,7 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
     exports: [
         ConfigureLabelsComponent,
         DataDownloadDialogComponent,
+        DateInputComponent,
         PipelineElementTemplateConfigComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
