@@ -218,17 +218,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         this.showEditingHelpInfo = false;
     }
 
-    prepareWidgetUpdates(): Observable<any>[] {
-        const promises: Observable<any>[] = [];
-        this.widgetsToUpdate.forEach((widget, _) => {
-            promises.push(
-                this.dataViewDataExplorerService.updateWidget(widget),
-            );
-        });
-
-        return promises;
-    }
-
     removeAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
         const index = this.dashboard.widgets.findIndex(
             item => item.id === widget._id,
@@ -248,10 +237,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         return this.widgetIdsToRemove.map(widgetId => {
             return this.dataViewDataExplorerService.deleteWidget(widgetId);
         });
-    }
-
-    toggleGrid() {
-        this.dashboardGrid.toggleGrid();
     }
 
     updateDateRange(timeSettings: TimeSettings) {
