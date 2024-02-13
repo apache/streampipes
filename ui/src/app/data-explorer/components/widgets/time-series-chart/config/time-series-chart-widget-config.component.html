@@ -34,13 +34,13 @@
     >
     </sp-select-color-properties>
 
-    <sp-configuration-box title="Spike Mode">
+    <sp-configuration-box title="Tooltip">
         <mat-checkbox
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showSpike
             "
             (change)="setShowSpikeProperty($event)"
-            >Vertical axis
+            >Enable
         </mat-checkbox>
     </sp-configuration-box>
 </sp-visualization-config-outer>

@@ -91,12 +91,6 @@ export class DataExplorerDashboardGridComponent
         }
     }
 
-    toggleGrid() {
-        this.options.displayGrid =
-            this.options.displayGrid === 'none' ? 'always' : 'none';
-        this.options.api.optionsChanged();
-    }
-
     onOptionsChanged() {
         this.options.api.optionsChanged();
     }
