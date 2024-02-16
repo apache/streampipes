@@ -15,15 +15,15 @@
 // limitations under the License.
 //
 
-package StreamPipesHttp
+package streampipes_http
 
 import (
 	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"streampipes-client-go/streampipes/internal/StatuCode"
 	"streampipes-client-go/streampipes/internal/serializer"
+	"streampipes-client-go/streampipes/internal/statu_code"
 )
 
 type DeleteRequest struct {
@@ -40,14 +40,14 @@ func (d *DeleteRequest) ExecuteRequest(serializerStruct interface{}) interface{}
 		return "OK"
 	} else {
 		switch d.HttpRequest.Response.StatusCode {
-		case StatuCode.BadRequest.Code():
-			log.Fatal(StatuCode.BadRequest.Code(), StatuCode.BadRequest.Message())
-		case StatuCode.Unauthorized.Code():
-			log.Fatal(StatuCode.Unauthorized.Code(), StatuCode.Unauthorized.Message())
-		case StatuCode.AccessDenied.Code():
-			log.Fatal(StatuCode.AccessDenied.Code(), StatuCode.AccessDenied.Message())
-		case StatuCode.MethodNotAllowed.Code():
-			log.Fatal(StatuCode.MethodNotAllowed.Code(), StatuCode.MethodNotAllowed.Message())
+		case statu_code.BadRequest.Code():
+			log.Fatal(statu_code.BadRequest.Code(), statu_code.BadRequest.Message())
+		case statu_code.Unauthorized.Code():
+			log.Fatal(statu_code.Unauthorized.Code(), statu_code.Unauthorized.Message())
+		case statu_code.AccessDenied.Code():
+			log.Fatal(statu_code.AccessDenied.Code(), statu_code.AccessDenied.Message())
+		case statu_code.MethodNotAllowed.Code():
+			log.Fatal(statu_code.MethodNotAllowed.Code(), statu_code.MethodNotAllowed.Message())
 		default:
 			defer d.HttpRequest.Response.Body.Close()
 			body, _ := io.ReadAll(d.HttpRequest.Response.Body)

@@ -15,14 +15,14 @@
 // limitations under the License.
 //
 
-package StreamPipesHttp
+package streampipes_http
 
 import (
 	"io"
 	"log"
 	"net/http"
-	"streampipes-client-go/streampipes/internal/StatuCode"
 	"streampipes-client-go/streampipes/internal/serializer"
+	"streampipes-client-go/streampipes/internal/statu_code"
 )
 
 type GetRequest struct {
@@ -39,12 +39,12 @@ func (g *GetRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
 		g.afterRequest() // Process Response
 	} else {
 		switch g.HttpRequest.Response.StatusCode {
-		case StatuCode.Unauthorized.Code():
-			log.Fatal(StatuCode.Unauthorized.Code(), StatuCode.Unauthorized.Message())
-		case StatuCode.AccessDenied.Code():
-			log.Fatal(StatuCode.AccessDenied.Code(), StatuCode.AccessDenied.Message())
-		case StatuCode.MethodNotAllowed.Code():
-			log.Fatal(StatuCode.MethodNotAllowed.Code(), StatuCode.MethodNotAllowed.Message())
+		case statu_code.Unauthorized.Code():
+			log.Fatal(statu_code.Unauthorized.Code(), statu_code.Unauthorized.Message())
+		case statu_code.AccessDenied.Code():
+			log.Fatal(statu_code.AccessDenied.Code(), statu_code.AccessDenied.Message())
+		case statu_code.MethodNotAllowed.Code():
+			log.Fatal(statu_code.MethodNotAllowed.Code(), statu_code.MethodNotAllowed.Message())
 		default:
 			defer g.HttpRequest.Response.Body.Close()
 			body, _ := io.ReadAll(g.HttpRequest.Response.Body)

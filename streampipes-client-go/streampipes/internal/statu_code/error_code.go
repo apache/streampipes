@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-package StatuCode
+package statu_code
 
 type ErrorCode interface {
 	Code() int

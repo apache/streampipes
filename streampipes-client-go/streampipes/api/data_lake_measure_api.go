@@ -20,9 +20,9 @@ package api
 import (
 	"fmt"
 	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/StreamPipesHttp"
 	"streampipes-client-go/streampipes/internal/serializer"
-	"streampipes-client-go/streampipes/model/DataLake"
+	"streampipes-client-go/streampipes/internal/streampipes_http"
+	"streampipes-client-go/streampipes/model/data_lake"
 )
 
 /*
@@ -33,7 +33,7 @@ Currently, only some GET and Delete methods have been implemented.
 */
 type DataLakeMeasureApi struct {
 	config      config.StreamPipesClientConnectionConfig
-	httpRequest StreamPipesHttp.HttpRequest
+	httpRequest streampipes_http.HttpRequest
 }
 
 func NewDataLakeMeasureApi(clientConfig config.StreamPipesClientConnectionConfig) *DataLakeMeasureApi {
@@ -45,66 +45,66 @@ func NewDataLakeMeasureApi(clientConfig config.StreamPipesClientConnectionConfig
 	}
 }
 
-func (api *DataLakeMeasureApi) All() []DataLake.DataLakeMeasure {
+func (d *DataLakeMeasureApi) All() []data_lake.DataLakeMeasure {
 	//Get a list of all measurement series
 	//Deserializes the data into the corresponding DataLakeMeasure data model.
 
 	UnSerializer := serializer.NewBaseUnSerializer(serializer.WithUnSerializerDataLakeMeasures())
-	api.httpRequest = &StreamPipesHttp.GetRequest{
-		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
+	d.httpRequest = &streampipes_http.GetRequest{
+		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
 		UnSerializer: UnSerializer,
 	}
-	api.ResourcePath(nil)
-	interfaces := api.httpRequest.ExecuteRequest(nil)
+	d.ResourcePath(nil)
+	interfaces := d.httpRequest.ExecuteRequest(nil)
 	UnBaseSerializer := interfaces.(*serializer.UnBaseSerializer)
 	return *UnBaseSerializer.UnSerializerDataLakeMeasures
 }
 
-func (api *DataLakeMeasureApi) GetSingle(id string) DataLake.DataSeries {
+func (d *DataLakeMeasureApi) GetSingle(id string) data_lake.DataSeries {
 
 	//Get data from a single measurement series by a given id
 
 	UnSerializer := serializer.NewBaseUnSerializer(serializer.WithUnSerializerDataSeries())
-	api.httpRequest = &StreamPipesHttp.GetRequest{
-		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
+	d.httpRequest = &streampipes_http.GetRequest{
+		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
 		UnSerializer: UnSerializer,
 	}
-	api.ResourcePath([]string{id})
-	interfaces := api.httpRequest.ExecuteRequest(nil)
+	d.ResourcePath([]string{id})
+	interfaces := d.httpRequest.ExecuteRequest(nil)
 	UnBaseSerializer := interfaces.(*serializer.UnBaseSerializer)
 	return *UnBaseSerializer.UnSerializerDataLakeSeries
 }
 
-func (api *DataLakeMeasureApi) DeleteMeasurementInternalData(elementId string) string {
+func (d *DataLakeMeasureApi) DeleteMeasurementInternalData(elementId string) string {
 	//Remove data from a single measurement series with given id
 
-	api.httpRequest = &StreamPipesHttp.DeleteRequest{
-		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
+	d.httpRequest = &streampipes_http.DeleteRequest{
+		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
 		UnSerializer: nil,
 	}
-	api.ResourcePath([]string{elementId})
-	interfaces := api.httpRequest.ExecuteRequest(nil)
+	d.ResourcePath([]string{elementId})
+	interfaces := d.httpRequest.ExecuteRequest(nil)
 	return interfaces.(string)
 }
 
-func (api *DataLakeMeasureApi) DeleteMeasurementSeries(elementId string) string {
+func (d *DataLakeMeasureApi) DeleteMeasurementSeries(elementId string) string {
 	//Drop a single measurement series with given id from Data Lake and remove related event property
 
-	api.httpRequest = &StreamPipesHttp.DeleteRequest{
-		HttpRequest:  StreamPipesHttp.NewHttpRequest(api.config),
+	d.httpRequest = &streampipes_http.DeleteRequest{
+		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
 		UnSerializer: nil,
 	}
-	api.ResourcePath([]string{elementId, "drop"})
-	interfaces := api.httpRequest.ExecuteRequest(nil)
+	d.ResourcePath([]string{elementId, "drop"})
+	interfaces := d.httpRequest.ExecuteRequest(nil)
 	return interfaces.(string)
 }
 
-func (api *DataLakeMeasureApi) Create(element DataLake.DataLakeMeasure) error {
+func (d *DataLakeMeasureApi) Create(element data_lake.DataLakeMeasure) error {
 
 	return fmt.Errorf("Not yet implemented")
 }
 
-func (api *DataLakeMeasureApi) Update(measure DataLake.DataLakeMeasure) error {
+func (d *DataLakeMeasureApi) Update(measure data_lake.DataLakeMeasure) error {
 	return fmt.Errorf("Not yet implemented")
 
 }

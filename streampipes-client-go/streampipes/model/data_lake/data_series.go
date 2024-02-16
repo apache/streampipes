@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-package DataLake
+package data_lake
 
 import "streampipes-client-go/streampipes/model"
 

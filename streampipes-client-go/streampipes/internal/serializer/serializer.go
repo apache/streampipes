@@ -18,11 +18,11 @@
 package serializer
 
 import (
-	"streampipes-client-go/streampipes/model/DataLake"
+	"streampipes-client-go/streampipes/model/data_lake"
 )
 
 type BaseSerializer struct {
-	SerializerDataLakeMeasure *DataLake.DataLakeMeasure
+	SerializerDataLakeMeasure *data_lake.DataLakeMeasure
 }
 
 type BaseSerializerOption func(opts *BaseSerializer)
@@ -37,7 +37,7 @@ func NewBaseSerializer(opts ...BaseSerializerOption) *BaseSerializer {
 
 func WithSerializerDataLakeMeasures() BaseSerializerOption {
 	return func(opts *BaseSerializer) {
-		opts.SerializerDataLakeMeasure = new(DataLake.DataLakeMeasure)
+		opts.SerializerDataLakeMeasure = new(data_lake.DataLakeMeasure)
 	}
 }
 

@@ -19,12 +19,12 @@ package api
 
 import (
 	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/StreamPipesHttp"
+	"streampipes-client-go/streampipes/internal/streampipes_http"
 )
 
 type DataStreamApi struct {
 	config      config.StreamPipesClientConnectionConfig
-	httpRequest StreamPipesHttp.HttpRequest
+	httpRequest streampipes_http.HttpRequest
 }
 
 func NewDataStreamApi(clientConfig config.StreamPipesClientConnectionConfig) *DataStreamApi {

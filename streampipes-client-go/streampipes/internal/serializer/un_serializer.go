@@ -20,7 +20,7 @@ package serializer
 import (
 	"encoding/json"
 	"reflect"
-	"streampipes-client-go/streampipes/model/DataLake"
+	"streampipes-client-go/streampipes/model/data_lake"
 )
 
 /*
@@ -33,8 +33,8 @@ corresponding to the [] DataLakeMeasure data model, by initializing UnSerializer
 //It is not allowed to initialize the remaining data models.
 
 type UnBaseSerializer struct {
-	UnSerializerDataLakeMeasures *[]DataLake.DataLakeMeasure
-	UnSerializerDataLakeSeries   *DataLake.DataSeries
+	UnSerializerDataLakeMeasures *[]data_lake.DataLakeMeasure
+	UnSerializerDataLakeSeries   *data_lake.DataSeries
 }
 
 type UnBaseSerializerOption func(opts *UnBaseSerializer)
@@ -50,13 +50,13 @@ func NewBaseUnSerializer(opts ...UnBaseSerializerOption) *UnBaseSerializer {
 func WithUnSerializerDataLakeMeasures() UnBaseSerializerOption {
 
 	return func(opts *UnBaseSerializer) {
-		opts.UnSerializerDataLakeMeasures = new([]DataLake.DataLakeMeasure)
+		opts.UnSerializerDataLakeMeasures = new([]data_lake.DataLakeMeasure)
 	}
 }
 
 func WithUnSerializerDataSeries() UnBaseSerializerOption {
 	return func(opts *UnBaseSerializer) {
-		opts.UnSerializerDataLakeSeries = new(DataLake.DataSeries)
+		opts.UnSerializerDataLakeSeries = new(data_lake.DataSeries)
 	}
 }
 

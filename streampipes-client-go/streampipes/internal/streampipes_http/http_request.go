@@ -15,12 +15,12 @@
 // limitations under the License.
 //
 
-package StreamPipesHttp
+package streampipes_http
 
 import (
 	"net/http"
 	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/StreamPipesHttp/headers"
+	"streampipes-client-go/streampipes/internal/streampipes_http/headers"
 	Path "streampipes-client-go/streampipes/internal/util"
 )
 

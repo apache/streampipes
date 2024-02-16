@@ -20,7 +20,7 @@ package serializer
 import (
 	"reflect"
 	"streampipes-client-go/streampipes/model"
-	"streampipes-client-go/streampipes/model/DataLake"
+	"streampipes-client-go/streampipes/model/data_lake"
 	"testing"
 )
 
@@ -51,7 +51,7 @@ func TestGetUnmarshal(t *testing.T) {
 `)
 	Testdata := [][]byte{Testdata1, Testdata2}
 
-	expectedMeasure := []DataLake.DataLakeMeasure{
+	expectedMeasure := []data_lake.DataLakeMeasure{
 		{
 			ClassName:         "classname1",
 			MeasureName:       "measurename1",
@@ -65,7 +65,7 @@ func TestGetUnmarshal(t *testing.T) {
 			Rev:               "rev1",
 		},
 	}
-	expectedSeries := DataLake.DataSeries{
+	expectedSeries := data_lake.DataSeries{
 		Total:         0,
 		Headers:       []string{},
 		AllDataSeries: []model.DataSerie{},
@@ -74,12 +74,12 @@ func TestGetUnmarshal(t *testing.T) {
 	}
 
 	serializerA := &UnBaseSerializer{
-		UnSerializerDataLakeMeasures: new([]DataLake.DataLakeMeasure),
+		UnSerializerDataLakeMeasures: new([]data_lake.DataLakeMeasure),
 		UnSerializerDataLakeSeries:   nil,
 	}
 	serializerB := &UnBaseSerializer{
 		UnSerializerDataLakeMeasures: nil,
-		UnSerializerDataLakeSeries:   new(DataLake.DataSeries),
+		UnSerializerDataLakeSeries:   new(data_lake.DataSeries),
 	}
 
 	for k, v := range Testdata {

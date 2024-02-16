@@ -15,13 +15,13 @@
 // limitations under the License.
 //
 
-package StatuCode
+package statu_code
 
 var (
 	BadRequest   = NewErrorCode(400, "Measurement series with given id not found")
 	Unauthorized = NewErrorCode(401, "The StreamPipes Backend returned an unauthorized error.\nPlease check your user name and/or password to be correct.")
-	AccessDenied = NewErrorCode(403, "There seems to be an issue with the access rights of the given user and the DataLake you queried.\n"+
-		"Apparently, this user is not allowed to query the DataLake.\n"+
+	AccessDenied = NewErrorCode(403, "There seems to be an issue with the access rights of the given user and the data_lake you queried.\n"+
+		"Apparently, this user is not allowed to query the data_lake.\n"+
 		"Please check the user's permissions or contact your StreamPipes admin.")
 	MethodNotAllowed = NewErrorCode(405, "There seems to be an issue with the Go Client calling the API inappropriately.")
 )
