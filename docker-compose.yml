@@ -60,6 +60,8 @@ services:
     depends_on:
       - couchdb
       - backend
+    volumes:
+      - nginx:/etc/nginx/
     logging: *default-logging
     networks:
       spnet:
@@ -141,6 +143,7 @@ volumes:
   influxdb:
   influxdb2:
   backend:
+  nginx:
 
 networks:
   spnet:
