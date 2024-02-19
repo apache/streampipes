@@ -20,3 +20,5 @@ couchdb
 influxdb
 mosquitto
 extensions-all-jvm
+zookeeper
+kafka
