@@ -49,6 +49,11 @@
         [options]="option"
         [ngStyle]="{ width: currentWidth, height: '100%' }"
         (chartInit)="onChartInit($event)"
-        *ngIf="option && !showInvalidConfiguration"
+        *ngIf="
+            option &&
+            !showInvalidConfiguration &&
+            !showNoDataInDateRange &&
+            !showTooMuchData
+        "
     ></div>
 </div>
