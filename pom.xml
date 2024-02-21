@@ -105,7 +105,7 @@
         <plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
-        <postgresql.version>42.7.0</postgresql.version>
+        <postgresql.version>42.7.2</postgresql.version>
         <protobuf.version>3.25.0</protobuf.version>
         <pulsar.version>3.1.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
