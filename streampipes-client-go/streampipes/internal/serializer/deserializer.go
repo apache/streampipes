@@ -23,14 +23,6 @@ import (
 	"log"
 )
 
-/*
-UnBaseSerializer is used to deserialize the JSON format resource data obtained from the Streampipes API by Go-Client-API
-The UnBaseSerializer contains all data models, and in Go Client API,
-when using the DataLakeMeasureApi method, the corresponding data models in the UnBaseSerializer should be passed in.
-For example, in  "All" method of DataLakeMeasureApi,  "All" method requires obtaining all measurement series,
-corresponding to the [] DataLakeMeasure data model, by initializing UnSerializerDataLakeMeasures.
-*/
-
 type Deserializer interface {
 	GetUnmarshal(body []byte) interface{}
 }

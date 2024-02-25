@@ -27,7 +27,7 @@ import (
 
 /*
 DataLakeMeasure connects to the DataLakeMeasure endpoint of Streampipes.
-DataLakeMeasure supports (GET, DELETE) for resources  (obtaining, deleting).
+DataLakeMeasure supports GET and DELETE to delete or obtain resources
 The specific interaction behavior is provided by the method bound to the DataLakeMeasure struct.
 */
 
@@ -46,7 +46,7 @@ func NewDataLakeMeasures(clientConfig config.StreamPipesClientConnectionConfig) 
 }
 
 func (d *DataLakeMeasure) AllDataLakeMeasure() []data_lake.DataLakeMeasure {
-	//Get a list of all measurement
+	//Get a list of all measure
 
 	d.httpRequest = &streampipes_http.GetRequest{
 		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
@@ -58,7 +58,7 @@ func (d *DataLakeMeasure) AllDataLakeMeasure() []data_lake.DataLakeMeasure {
 }
 
 func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) data_lake.DataLakeMeasure {
-	//Get a list of a measure
+	//Get a measure
 
 	d.httpRequest = &streampipes_http.GetRequest{
 		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
