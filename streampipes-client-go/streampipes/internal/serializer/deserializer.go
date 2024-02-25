@@ -19,7 +19,7 @@ package serializer
 
 import (
 	"encoding/json"
-	"reflect"
+	"log"
 	"streampipes-client-go/streampipes/model/data_lake"
 )
 
@@ -30,48 +30,50 @@ when using the DataLakeMeasureApi method, the corresponding data models in the U
 For example, in  "All" method of DataLakeMeasureApi,  "All" method requires obtaining all measurement series,
 corresponding to the [] DataLakeMeasure data model, by initializing UnSerializerDataLakeMeasures.
 */
-//It is not allowed to initialize the remaining data models.
 
-type UnBaseSerializer struct {
-	UnSerializerDataLakeMeasures *[]data_lake.DataLakeMeasure
-	UnSerializerDataLakeSeries   *data_lake.DataSeries
+type Deserializer interface {
+	GetUnmarshal(body []byte) interface{}
 }
 
-type UnBaseSerializerOption func(opts *UnBaseSerializer)
+var _ Deserializer = (*UnmarshalDataLakeMeasures)(nil)
+var _ Deserializer = (*UnmarshalDataSeries)(nil)
+var _ Deserializer = (*UnmarshalDataLakeMeasure)(nil)
 
-func NewBaseUnSerializer(opts ...UnBaseSerializerOption) *UnBaseSerializer {
-	unBaseSerializer := UnBaseSerializer{}
-	for _, opt := range opts {
-		opt(&unBaseSerializer)
-	}
-	return &unBaseSerializer
+type UnmarshalDataLakeMeasures struct {
+	DeSerializerDataLakeMeasures *[]data_lake.DataLakeMeasure
 }
 
-func WithUnSerializerDataLakeMeasures() UnBaseSerializerOption {
-
-	return func(opts *UnBaseSerializer) {
-		opts.UnSerializerDataLakeMeasures = new([]data_lake.DataLakeMeasure)
-	}
+type UnmarshalDataLakeMeasure struct {
+	DeSerializerDataLakeMeasure *data_lake.DataLakeMeasure
 }
 
-func WithUnSerializerDataSeries() UnBaseSerializerOption {
-	return func(opts *UnBaseSerializer) {
-		opts.UnSerializerDataLakeSeries = new(data_lake.DataSeries)
-	}
+type UnmarshalDataSeries struct {
+	DeSerializerDataLakeSeries *data_lake.DataSeries
 }
 
-func (u *UnBaseSerializer) GetUnmarshal(body []byte) error {
-	//By using the Go reflection method, dynamically obtain the instantiated fields with in UnBaseSerializer for deserialization
+func (d *UnmarshalDataLakeMeasures) GetUnmarshal(data []byte) interface{} {
 
-	v := reflect.ValueOf(u).Elem()
-	for i := 0; i < v.NumField(); i++ {
-		field := v.Field(i)
-		if !field.IsZero() {
-			err := json.Unmarshal(body, field.Addr().Interface())
-			if err != nil {
-				return err
-			}
-		}
+	err := json.Unmarshal(data, &d.DeSerializerDataLakeMeasures)
+	if err != nil {
+		log.Fatalf("Serialization failed,because :%v", err)
 	}
-	return nil
+	return *d.DeSerializerDataLakeMeasures
+}
+
+func (d *UnmarshalDataLakeMeasure) GetUnmarshal(data []byte) interface{} {
+
+	err := json.Unmarshal(data, &d.DeSerializerDataLakeMeasure)
+	if err != nil {
+		log.Fatalf("Serialization failed,because :%v", err)
+	}
+	return *d.DeSerializerDataLakeMeasure
+}
+
+func (d *UnmarshalDataSeries) GetUnmarshal(data []byte) interface{} {
+	err := json.Unmarshal(data, &d.DeSerializerDataLakeSeries)
+
+	if err != nil {
+		log.Fatalf("Serialization failed,because :%v", err)
+	}
+	return *d.DeSerializerDataLakeSeries
 }

@@ -21,17 +21,16 @@ import (
 	"errors"
 	"log"
 	"net/url"
-	"regexp"
-	"streampipes-client-go/streampipes/api"
 	"streampipes-client-go/streampipes/config"
 	"streampipes-client-go/streampipes/internal/credential"
+	"streampipes-client-go/streampipes/utils"
 	"strings"
 )
 
 /*
  This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
  The client provides so-called "API", each of which refers to the endpoint of the StreamPipes API.
- e.g. `DataLakeMeasureApi` provides the actual methods to interact with StreamPipes API.
+ e.g. `DataLakeMeasure` provides the actual methods to interact with StreamPipes API.
 */
 
 type StreamPipesClient struct {
@@ -47,9 +46,7 @@ func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*Str
 		log.Fatal("No credential entered")
 	}
 
-	re := regexp.MustCompile(`(?i)^(http|https):\/\/[^\s\/:]+:\d+$`)
-	ok := re.MatchString(config.Url)
-	if !ok {
+	if !utils.CheckUrl(config.Url) {
 		log.Fatal("Please check if the URL is correct,Must be in the form of A://B:C," +
 			"where A is either HTTP or HTTPS, not case sensitive.B must be the host and C must be the port.")
 	}
@@ -73,8 +70,8 @@ func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*Str
 
 }
 
-func (s *StreamPipesClient) DataLakeMeasureApi() *api.DataLakeMeasureApi {
+func (s *StreamPipesClient) DataLakeMeasures() *DataLakeMeasure {
 
-	return api.NewDataLakeMeasureApi(s.Config)
+	return NewDataLakeMeasures(s.Config)
 
 }

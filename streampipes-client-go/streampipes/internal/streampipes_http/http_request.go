@@ -21,17 +21,17 @@ import (
 	"net/http"
 	"streampipes-client-go/streampipes/config"
 	"streampipes-client-go/streampipes/internal/streampipes_http/headers"
-	Path "streampipes-client-go/streampipes/internal/util"
+	"streampipes-client-go/streampipes/internal/util"
 )
 
 type HttpRequest interface {
-	ExecuteRequest(serializerStruct interface{}) interface{}
-	MakeUrl(resourcePath []string)
+	ExecuteRequest(model interface{}) interface{}
+	SetUrl(resourcePath []string)
 }
 
 type httpRequest struct {
 	ClientConnectionConfig config.StreamPipesClientConnectionConfig
-	ApiPath                *Path.StreamPipesApiPath
+	ApiPath                util.StreamPipesApiPath
 	Header                 *headers.Headers
 	Client                 *http.Client
 	Response               *http.Response

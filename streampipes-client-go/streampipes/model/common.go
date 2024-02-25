@@ -17,24 +17,7 @@
 
 package model
 
-import (
-	"math/rand"
-	"time"
-)
-
-// Generate random letters
-func RandomLetters(length int) string {
-	rand.NewSource(time.Now().UnixNano())
-	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") //Define the alphabet
-	result := make([]rune, length)
-	for i := range result {
-		result[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(result)
-}
-
 type ValueSpecification struct {
-	ClassName string  `json:"@class,omitempty"`
 	ElementID string  `json:"elementId,omitempty"`
 	MinValue  int     `json:"minValue,omitempty"`
 	MaxValue  int     `json:"maxValue,omitempty"`
@@ -42,7 +25,6 @@ type ValueSpecification struct {
 }
 
 type EventProperty struct {
-	ClassName          string             `alias:"@class" default:"org.apache.streampipes.model.schema.EventPropertyPrimitive"`
 	ElementID          string             `json:"elementId"`
 	Label              string             `json:"label,omitempty"`
 	Description        string             `json:"description,omitempty"`
@@ -58,7 +40,6 @@ type EventProperty struct {
 }
 
 type EventProperties struct {
-	Class              string            `json:"@class"`
 	ElementID          string            `json:"elementId"`
 	Label              string            `json:"label"`
 	Description        string            `json:"description"`
@@ -79,63 +60,9 @@ type EventSchema struct {
 	EventProperties []EventProperties `json:"eventProperties"`
 }
 
-type ApplicationLink struct {
-	ClassName              string `json:"@class,omitempty"`
-	ElementID              string `json:"elementId,omitempty"`
-	ApplicationName        string `json:"applicationName,omitempty"`
-	ApplicationDescription string `json:"applicationDescription,omitempty"`
-	ApplicationURL         string `json:"applicationUrl,omitempty"`
-	ApplicationIconUrl     string `json:"applicationIcon_url,omitempty"`
-	ApplicationLinkType    string `json:"applicationLinkType,omitempty"`
-}
-
-type TopicDefinition struct {
-	ClassName       string `json:"@class,omitempty"`
-	ActualTopicName string `json:"actualTopicName"`
-}
-
-type TransportProtocol struct {
-	ClassName       string          `json:"@class"`
-	ElementId       string          `json:"elementId"`
-	BrokerHostname  string          `json:"brokerHostname"`
-	TopicDefinition TopicDefinition `json:"topicDefinition"`
-	Port            int             `json:"kafkaPort"`
-}
-
-type TransportFormat struct {
-	RdfType []string `json:"rdfType"`
-}
-
-type EventGrounding struct {
-	TransportProtocols []TransportProtocol `json:"transportProtocols"`
-	TransportFormats   []TransportFormat   `json:"transportFormats"`
-}
-
-type MeasurementCapability struct {
-	Capability string `json:"capability,omitempty"`
-	ElementId  string `json:"elementId,omitempty"`
-}
-
-type MeasurementObject struct {
-	ElementId      string `json:"elementId,omitempty"`
-	MeasuresObject string `json:"measuresObject,omitempty"`
-}
-
-type DataSerie struct {
-	Total   int             `json:"total"`
-	Rows    [][]interface{} `json:"rows"`
-	Headers []string        `json:"headers"`
-	Tags    string          `json:"tags"`
-}
-
-func (e *EventSchema) GetEventProperties() []EventProperties {
-	return e.EventProperties
-}
-
-func (e *EventSchema) SetEventProperties(eventProperties []EventProperties) {
-	e.EventProperties = eventProperties
-}
-
-func (e *EventSchema) AddEventProperty(eventProperty []EventProperties) {
-	e.EventProperties = append(e.EventProperties, eventProperty...)
+type DataSeries struct {
+	Total   int               `json:"total"`
+	Rows    [][]string        `json:"rows"`
+	Headers []string          `json:"headers"`
+	Tags    map[string]string `json:"tags"`
 }

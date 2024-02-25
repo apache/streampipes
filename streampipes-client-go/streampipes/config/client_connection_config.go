@@ -19,27 +19,9 @@ package config
 
 import (
 	"streampipes-client-go/streampipes/internal/credential"
-	Path "streampipes-client-go/streampipes/internal/util"
 )
-
-type ClientConnectionConfigResolver interface {
-	getBaseUrl() *Path.StreamPipesApiPath
-	GetConfig() StreamPipesClientConnectionConfig
-}
 
 type StreamPipesClientConnectionConfig struct {
 	Url        string
 	Credential credential.StreamPipesApiKeyCredentials
-}
-
-func (s *StreamPipesClientConnectionConfig) GetCredentials() credential.StreamPipesApiKeyCredentials {
-	return s.Credential
-}
-
-func (s *StreamPipesClientConnectionConfig) GetBaseUrl() *Path.StreamPipesApiPath {
-
-	ApiPath := Path.NewStreamPipesApiPath([]string{s.Url}).FromStreamPipesBasePath()
-	ApiPath.ToString()
-
-	return ApiPath
 }

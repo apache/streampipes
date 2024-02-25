@@ -17,12 +17,36 @@
 
 package data_lake
 
-import "streampipes-client-go/streampipes/model"
+import (
+	"fmt"
+	"log"
+	"streampipes-client-go/streampipes/model"
+	"strings"
+)
 
 type DataSeries struct {
-	Total         int               `json:"total"`
-	Headers       []string          `json:"headers"`
-	AllDataSeries []model.DataSerie `json:"allDataSeries"`
-	SPQueryStatus string            `alias:"spQueryStatus" default:"OK"`
-	ForId         string            `json:"forId"`
+	Total         int                `json:"total"`
+	Headers       []string           `json:"headers"`
+	AllDataSeries []model.DataSeries `json:"allDataSeries"`
+	SPQueryStatus string             `alias:"spQueryStatus" default:"OK"`
+	ForId         interface{}        `json:"forId"`
+}
+
+func (d DataSeries) Conversion() {
+	if d.Total == 0 {
+		log.Println("This DataSeries has no data")
+		return
+	}
+	fmt.Printf("There are %d pieces of DataSerie in the Dataseries\n", d.Total)
+	for i := 0; i < d.Total; i++ {
+		fmt.Printf("The %d DataSeries\n", i+1)
+		headers := strings.Join(d.Headers, "                   ")
+		fmt.Printf("%s\n", headers)
+		for j := 0; j < d.AllDataSeries[i].Total; j++ {
+			singleLine := strings.Join(d.AllDataSeries[i].Rows[j], "   ")
+			fmt.Printf("%s\n",
+				singleLine,
+			)
+		}
+	}
 }

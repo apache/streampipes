@@ -20,15 +20,13 @@ package data_lake
 import "streampipes-client-go/streampipes/model"
 
 type DataLakeMeasure struct {
-	ClassName         string            `alias:"@class" default:"org.apache.streampipes.model.datalake.DataLakeMeasure"`
-	MeasureName       string            `json:"measureName"`
-	TimestampField    string            `json:"timestampField"`
-	EventSchema       model.EventSchema `json:"eventSchema,omitempty"`
-	PipelineId        string            `json:"pipelineId,omitempty"`
-	PipelineName      string            `json:"pipelineName,omitempty"`
-	PipelineIsRunning bool              `json:"pipelineIsRunning"`
-	SchemaVersion     string            `json:"schemaVersion,omitempty"`
-	//SchemaUpdateStrategy DataLakeMeasureSchemaUpdateStrategy `json:"schemaUpdateStrategy,omitempty"`
-	ElementId string `json:"elementId"`
-	Rev       string `json:"_rev"`
+	MeasureName          string            `json:"measureName"`
+	TimestampField       string            `json:"timestampField"`
+	EventSchema          model.EventSchema `json:"eventSchema,omitempty"`
+	PipelineId           string            `json:"pipelineId,omitempty"`
+	PipelineName         string            `json:"pipelineName,omitempty"`
+	PipelineIsRunning    bool              `json:"pipelineIsRunning"`
+	SchemaVersion        string            `json:"schemaVersion,omitempty"`
+	SchemaUpdateStrategy string            `json:"schemaUpdateStrategy,omitempty"`
+	ElementId            string            `json:"elementId"`
 }

@@ -15,22 +15,14 @@
 // limitations under the License.
 //
 
-package api
+package streampipes
 
 import (
-	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/streampipes_http"
+	"streampipes-client-go/streampipes/internal/credential"
 )
 
-type DataStreamApi struct {
-	config      config.StreamPipesClientConnectionConfig
-	httpRequest streampipes_http.HttpRequest
-}
-
-func NewDataStreamApi(clientConfig config.StreamPipesClientConnectionConfig) *DataStreamApi {
-
-	return &DataStreamApi{
-		config:      clientConfig,
-		httpRequest: nil,
-	}
+func NewStreamPipesApiKeyCredentials(username, apiKey string) credential.StreamPipesApiKeyCredentials {
+	Credentials := credential.StreamPipesApiKeyCredentials{}
+	Credentials.ApiKeyCredential(username, apiKey)
+	return Credentials
 }

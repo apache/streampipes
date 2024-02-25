@@ -18,26 +18,23 @@
 package streampipes_http
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"streampipes-client-go/streampipes/internal/serializer"
 	"streampipes-client-go/streampipes/internal/statu_code"
 )
 
 type DeleteRequest struct {
-	HttpRequest  *httpRequest
-	UnSerializer *serializer.UnBaseSerializer
+	HttpRequest *httpRequest
 }
 
 var _ HttpRequest = (*DeleteRequest)(nil)
 
-func (d *DeleteRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
-	//Initial Request
+func (d *DeleteRequest) ExecuteRequest(model interface{}) interface{} {
 	d.makeRequest()
+
 	if d.HttpRequest.Response.StatusCode == 200 {
-		return "OK"
+		return nil
 	} else {
 		switch d.HttpRequest.Response.StatusCode {
 		case statu_code.BadRequest.Code():
@@ -70,8 +67,6 @@ func (d *DeleteRequest) makeRequest() {
 	}
 }
 
-func (d *DeleteRequest) MakeUrl(resourcePath []string) {
-
-	d.HttpRequest.Url = d.HttpRequest.ClientConnectionConfig.GetBaseUrl().AddToPath(resourcePath).ToString()
-	fmt.Println(d.HttpRequest.Url)
+func (d *DeleteRequest) SetUrl(resourcePath []string) {
+	d.HttpRequest.Url = d.HttpRequest.ApiPath.GetBaseUrl(d.HttpRequest.ClientConnectionConfig.Url).AddToPath(resourcePath).ToString()
 }

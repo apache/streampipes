@@ -15,17 +15,11 @@
 // limitations under the License.
 //
 
-package internal
+package utils
 
-import "streampipes-client-go/streampipes/internal/credential"
+import "regexp"
 
-type StreamPipesApiKeyCredentials struct {
-	Username string
-	ApiKey   string
-}
-
-func (s *StreamPipesApiKeyCredentials) NewStreamPipesApiKeyCredentials(username, apiKey string) credential.StreamPipesApiKeyCredentials {
-	Credentials := credential.StreamPipesApiKeyCredentials{}
-	Credentials.ApiKeyCredential(username, apiKey)
-	return Credentials
+func CheckUrl(url string) bool {
+	re := regexp.MustCompile(`(?i)^(http|https):\/\/[^\s\/:]+:\d+$`)
+	return re.MatchString(url)
 }

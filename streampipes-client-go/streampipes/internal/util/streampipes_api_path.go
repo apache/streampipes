@@ -21,19 +21,14 @@ import (
 	"strings"
 )
 
-// PathItems stores URL fragments
-// QueryParameters stores query parameters
-
 type StreamPipesApiPath struct {
-	PathItems       []string
-	QueryParameters map[string]string
+	PathItems []string // PathItems stores URL fragments
 }
 
 func NewStreamPipesApiPath(initialPathItems []string) *StreamPipesApiPath {
 
 	return &StreamPipesApiPath{
-		PathItems:       initialPathItems,
-		QueryParameters: make(map[string]string),
+		PathItems: initialPathItems,
 	}
 }
 
@@ -52,20 +47,20 @@ func (s *StreamPipesApiPath) AddToPath(pathItem []string) *StreamPipesApiPath {
 	return s
 }
 
-func (s *StreamPipesApiPath) WithQueryParameters(queryParameters map[string]string) *StreamPipesApiPath {
-	for key, value := range queryParameters {
-		s.QueryParameters[key] = value
-	}
-	return s
-}
-
 func (s *StreamPipesApiPath) ToString() string {
 	//Splicing URLs
-	//Query parameter concatenation is still being implemented
 	if len(s.PathItems) == 1 {
 		return s.PathItems[0]
 	}
 	path := strings.Join(s.PathItems, "/")
 	s.PathItems = []string{path}
 	return path
+}
+
+func (s *StreamPipesApiPath) GetBaseUrl(Url string) *StreamPipesApiPath {
+
+	ApiPath := NewStreamPipesApiPath([]string{Url}).FromStreamPipesBasePath()
+	ApiPath.ToString()
+
+	return ApiPath
 }

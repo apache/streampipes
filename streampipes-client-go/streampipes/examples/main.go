@@ -41,7 +41,23 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	measure := StreamPipesClient.DataLakeMeasureApi().All()
-	fmt.Println(measure)
+	StreamPipesClient.DataLakeMeasures().GetSingleDataSeries("test_02").Conversion()
+
+	/*
+			output format:
+
+			There are 2 pieces of DataSerie in the Dataseries
+			The 1 DataSeries
+			time                   msg                   test
+			2024-02-23T13:37:09.052Z   go-client_test   2f4556
+			2024-02-23T13:37:26.044Z   go-client_test   2f4556
+			2024-02-23T13:37:29.007Z   go-client_test   2f4556
+			The 2 DataSeries
+		    time                   msg                   test
+			2024-02-23T13:37:09.052Z   go-client_test   2f4556
+			2024-02-23T13:37:26.044Z   go-client_test   2f4556
+			2024-02-23T13:37:29.007Z   go-client_test   2f4556
+
+	*/
 
 }

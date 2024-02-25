@@ -27,16 +27,17 @@ import (
 
 type GetRequest struct {
 	HttpRequest  *httpRequest
-	UnSerializer *serializer.UnBaseSerializer
+	Deserializer serializer.Deserializer
 }
 
 var _ HttpRequest = (*GetRequest)(nil)
 
-func (g *GetRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
+func (g *GetRequest) ExecuteRequest(model interface{}) interface{} {
 	//Initial Request
+	var UnmarshalData interface{}
 	g.makeRequest()
 	if g.HttpRequest.Response.StatusCode == 200 {
-		g.afterRequest() // Process Response
+		UnmarshalData = g.afterRequest() // Process Response
 	} else {
 		switch g.HttpRequest.Response.StatusCode {
 		case statu_code.Unauthorized.Code():
@@ -52,23 +53,11 @@ func (g *GetRequest) ExecuteRequest(serializerStruct interface{}) interface{} {
 		}
 
 	}
-	return g.UnSerializer
-}
-
-func (g *GetRequest) afterRequest() {
-	//Process complete GET requests
-	defer g.HttpRequest.Response.Body.Close()
-	body, err := io.ReadAll(g.HttpRequest.Response.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = g.UnSerializer.GetUnmarshal(body)
-	if err != nil {
-		log.Fatal("Serialization failed")
-	}
+	return UnmarshalData
 }
 
 func (g *GetRequest) makeRequest() {
+
 	var err error
 	g.HttpRequest.Header.Req, _ = http.NewRequest("GET", g.HttpRequest.Url, nil)
 	g.HttpRequest.Header.XApiKey(g.HttpRequest.ClientConnectionConfig.Credential.ApiKey)
@@ -80,7 +69,19 @@ func (g *GetRequest) makeRequest() {
 	}
 }
 
-func (g *GetRequest) MakeUrl(resourcePath []string) {
+func (g *GetRequest) afterRequest() interface{} {
 
-	g.HttpRequest.Url = g.HttpRequest.ClientConnectionConfig.GetBaseUrl().AddToPath(resourcePath).ToString()
+	defer g.HttpRequest.Response.Body.Close()
+	body, err := io.ReadAll(g.HttpRequest.Response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	UnmarshalData := g.Deserializer.GetUnmarshal(body)
+	return UnmarshalData
+}
+
+func (g *GetRequest) SetUrl(resourcePath []string) {
+	g.HttpRequest.Url = g.HttpRequest.ApiPath.GetBaseUrl(g.HttpRequest.ClientConnectionConfig.Url).AddToPath(resourcePath).ToString()
+	log.Print(g.HttpRequest.Url)
 }
