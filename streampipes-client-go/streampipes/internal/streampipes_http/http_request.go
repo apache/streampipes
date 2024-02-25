@@ -18,10 +18,10 @@
 package streampipes_http
 
 import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/streampipes_http/headers"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/util"
 	"net/http"
-	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/streampipes_http/headers"
-	"streampipes-client-go/streampipes/internal/util"
 )
 
 type HttpRequest interface {

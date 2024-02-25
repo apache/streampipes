@@ -17,7 +17,7 @@
 
 package data_lake
 
-import "streampipes-client-go/streampipes/model"
+import "github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 
 type DataLakeMeasure struct {
 	MeasureName          string            `json:"measureName"`

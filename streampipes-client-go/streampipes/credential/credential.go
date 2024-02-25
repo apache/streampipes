@@ -18,8 +18,8 @@
 package credential
 
 import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/streampipes_http/headers"
 	"net/http"
-	"streampipes-client-go/streampipes/internal/streampipes_http/headers"
 )
 
 type StreamPipesApiKeyCredentials struct {

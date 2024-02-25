@@ -19,9 +19,9 @@ package main
 
 import (
 	"fmt"
-	"streampipes-client-go/streampipes"
-	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/credential"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/credential"
 )
 
 /*
@@ -41,7 +41,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	StreamPipesClient.DataLakeMeasures().GetSingleDataSeries("test_02").Conversion()
+	StreamPipesClient.DataLakeMeasures().GetSingleDataSeries("measureId").Conversion()
 
 	/*
 			output format:

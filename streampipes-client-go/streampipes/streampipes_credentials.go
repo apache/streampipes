@@ -17,9 +17,7 @@
 
 package streampipes
 
-import (
-	"streampipes-client-go/streampipes/internal/credential"
-)
+import "github.com/apache/streampipes/streampipes-client-go/streampipes/credential"
 
 func NewStreamPipesApiKeyCredentials(username, apiKey string) credential.StreamPipesApiKeyCredentials {
 	Credentials := credential.StreamPipesApiKeyCredentials{}

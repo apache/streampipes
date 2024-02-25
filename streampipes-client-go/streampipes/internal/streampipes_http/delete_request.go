@@ -18,10 +18,10 @@
 package streampipes_http
 
 import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/statu_code"
 	"io"
 	"log"
 	"net/http"
-	"streampipes-client-go/streampipes/internal/statu_code"
 )
 
 type DeleteRequest struct {

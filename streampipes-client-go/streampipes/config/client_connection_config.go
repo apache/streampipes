@@ -18,7 +18,7 @@
 package config
 
 import (
-	"streampipes-client-go/streampipes/internal/credential"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/credential"
 )
 
 type StreamPipesClientConnectionConfig struct {

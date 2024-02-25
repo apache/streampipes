@@ -19,8 +19,8 @@ package serializer
 
 import (
 	"encoding/json"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
 	"log"
-	"streampipes-client-go/streampipes/model/data_lake"
 )
 
 /*

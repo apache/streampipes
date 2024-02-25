@@ -19,11 +19,11 @@ package streampipes
 
 import (
 	"errors"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/credential"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/utils"
 	"log"
 	"net/url"
-	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/credential"
-	"streampipes-client-go/streampipes/utils"
 	"strings"
 )
 

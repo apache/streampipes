@@ -18,11 +18,11 @@
 package streampipes_http
 
 import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/serializer"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/statu_code"
 	"io"
 	"log"
 	"net/http"
-	"streampipes-client-go/streampipes/internal/serializer"
-	"streampipes-client-go/streampipes/internal/statu_code"
 )
 
 type GetRequest struct {

@@ -18,11 +18,11 @@
 package streampipes
 
 import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/serializer"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/streampipes_http"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
 	"log"
-	"streampipes-client-go/streampipes/config"
-	"streampipes-client-go/streampipes/internal/serializer"
-	"streampipes-client-go/streampipes/internal/streampipes_http"
-	"streampipes-client-go/streampipes/model/data_lake"
 )
 
 /*

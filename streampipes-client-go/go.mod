@@ -15,6 +15,6 @@
 // limitations under the License.
 //
 
-module streampipes-client-go
+module github.com/apache/streampipes/streampipes-client-go
 
 go 1.21
