@@ -17,7 +17,11 @@
   -->
 
 <div style="padding: 15px">
-    <form [formGroup]="configurationGroup" fxFlex="100">
+    <form
+        [formGroup]="configurationGroup"
+        (keydown.enter)="$event.preventDefault()"
+        fxFlex="100"
+    >
         <div fxFlex="100">
             <sp-app-static-property
                 *ngFor="let config of configuration"
