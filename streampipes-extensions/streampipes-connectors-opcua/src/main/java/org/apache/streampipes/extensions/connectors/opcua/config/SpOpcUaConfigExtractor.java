@@ -84,9 +84,9 @@ public class SpOpcUaConfigExtractor {
     if (useURL) {
       String serverAddress =
           extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
-      config.setOpcServerURL(OpcUaUtil.formatServerAddress(serverAddress));
+      config.setOpcServerURL(OpcUaUtil.addOpcPrefixIfNotExists(serverAddress));
     } else {
-      String serverAddress = OpcUaUtil.formatServerAddress(
+      String serverAddress = OpcUaUtil.addOpcPrefixIfNotExists(
           extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class)
       );
       int port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);

@@ -37,12 +37,9 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputSta
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
-import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.net.URI;
@@ -60,18 +57,15 @@ import java.util.stream.Collectors;
  */
 public class OpcUaUtil {
 
+  private static final String OPC_TCP_PREFIX = "opc.tcp://";
+
   /***
    * Ensures server address starts with {@code opc.tcp://}
    * @param serverAddress server address as given by user
    * @return correctly formated server address
    */
-  public static String formatServerAddress(String serverAddress) {
-
-    if (!serverAddress.startsWith("opc.tcp://")) {
-      serverAddress = "opc.tcp://" + serverAddress;
-    }
-
-    return serverAddress;
+  public static String addOpcPrefixIfNotExists(String serverAddress) {
+    return serverAddress.startsWith(OPC_TCP_PREFIX) ? serverAddress : OPC_TCP_PREFIX + serverAddress;
   }
 
   /***
@@ -103,21 +97,24 @@ public class OpcUaUtil {
         for (OpcNode opcNode : selectedNodes) {
           if (opcNode.hasUnitId()) {
             allProperties.add(PrimitivePropertyBuilder
-                .create(opcNode.getType(), opcNode.getLabel())
-                .label(opcNode.getLabel())
-                .measurementUnit(new URI(opcNode.getQudtURI()))
-                .build());
+                                  .create(opcNode.getType(), opcNode.getLabel())
+                                  .label(opcNode.getLabel())
+                                  .measurementUnit(new URI(opcNode.getQudtURI()))
+                                  .build());
           } else {
             allProperties.add(PrimitivePropertyBuilder
-                .create(opcNode.getType(), opcNode.getLabel())
-                .label(opcNode.getLabel())
-                .build());
+                                  .create(opcNode.getType(), opcNode.getLabel())
+                                  .label(opcNode.getLabel())
+                                  .build());
           }
         }
       }
 
-      var nodeIds = selectedNodes.stream().map(OpcNode::getNodeId).collect(Collectors.toList());
-      var response = spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, nodeIds);
+      var nodeIds = selectedNodes.stream()
+                                 .map(OpcNode::getNodeId)
+                                 .collect(Collectors.toList());
+      var response = spOpcUaClient.getClient()
+                                  .readValues(0, TimestampsToReturn.Both, nodeIds);
 
       var returnValues = response.get();
 
@@ -138,20 +135,25 @@ public class OpcUaUtil {
     return builder.build();
   }
 
-  private static void makeEventPreview(List<OpcNode> selectedNodes,
-                                       Map<String, Object> eventPreview,
-                                       Map<String, FieldStatusInfo> fieldStatusInfos,
-                                       List<DataValue> dataValues) {
+  private static void makeEventPreview(
+      List<OpcNode> selectedNodes,
+      Map<String, Object> eventPreview,
+      Map<String, FieldStatusInfo> fieldStatusInfos,
+      List<DataValue> dataValues
+  ) {
 
     for (int i = 0; i < dataValues.size(); i++) {
       var dv = dataValues.get(i);
-      String label = selectedNodes.get(i).getLabel();
+      String label = selectedNodes.get(i)
+                                  .getLabel();
       if (StatusCode.GOOD.equals(dv.getStatusCode())) {
-        var value = dv.getValue().getValue();
+        var value = dv.getValue()
+                      .getValue();
         eventPreview.put(label, value);
         fieldStatusInfos.put(label, FieldStatusInfo.good());
       } else {
-        String additionalInfo = dv.getStatusCode() != null ? dv.getStatusCode().toString() : "Status code is null";
+        String additionalInfo = dv.getStatusCode() != null ? dv.getStatusCode()
+                                                               .toString() : "Status code is null";
         fieldStatusInfos.put(label, FieldStatusInfo.bad(additionalInfo, false));
       }
     }
@@ -165,9 +167,10 @@ public class OpcUaUtil {
    * @param parameterExtractor to extract parameters from the OPC UA config
    * @return {@code List<Option>} with available node names for the given OPC UA configuration
    */
-  public static RuntimeResolvableTreeInputStaticProperty
-      resolveConfiguration(String internalName,
-                           IStaticPropertyExtractor parameterExtractor)
+  public static RuntimeResolvableTreeInputStaticProperty resolveConfiguration(
+      String internalName,
+      IStaticPropertyExtractor parameterExtractor
+  )
       throws SpConfigurationException {
 
     RuntimeResolvableTreeInputStaticProperty config = parameterExtractor
@@ -208,39 +211,5 @@ public class OpcUaUtil {
       }
     }
   }
-
-  public static String getRuntimeNameOfNode(NodeId nodeId) {
-    String[] keys = nodeId.getIdentifier().toString().split("\\.");
-    String key;
-
-    if (keys.length > 0) {
-      key = keys[keys.length - 1];
-    } else {
-      key = nodeId.getIdentifier().toString();
-    }
-
-    return key;
-  }
-
-  /**
-   * connects to each node individually and updates the data type in accordance to the data from the server.
-   *
-   * @param opcNodes List of opcNodes where the data type is not determined appropriately
-   */
-  public static void retrieveDataTypesFromServer(OpcUaClient client, List<OpcNode> opcNodes) throws AdapterException {
-
-    for (OpcNode opcNode : opcNodes) {
-      try {
-        UInteger dataTypeId =
-            (UInteger) client.getAddressSpace().getVariableNode(opcNode.getNodeId()).getDataType()
-                .getIdentifier();
-        OpcUaTypes.getType(dataTypeId);
-        opcNode.setType(OpcUaTypes.getType(dataTypeId));
-      } catch (UaException e) {
-        throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
-      }
-    }
-  }
-
 
 }
