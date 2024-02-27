@@ -26,15 +26,14 @@ import {
     Validators,
 } from '@angular/forms';
 import {
-    PermissionsService,
     Group,
     Permission,
     PermissionEntry,
+    PermissionsService,
     ServiceAccount,
     UserAccount,
-    UserService,
-    UserGroupService,
     UserAdminService,
+    UserGroupService,
 } from '@streampipes/platform-services';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, zip } from 'rxjs';
@@ -80,7 +79,6 @@ export class ObjectPermissionDialogComponent implements OnInit {
         private fb: UntypedFormBuilder,
         private dialogRef: DialogRef<ObjectPermissionDialogComponent>,
         private permissionsService: PermissionsService,
-        private userService: UserService,
         private userAdminService: UserAdminService,
         private groupService: UserGroupService,
     ) {
@@ -198,6 +196,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
             u => u.principalId === user.principalId,
         );
         this.grantedUserAuthorities.splice(currentIndex, 1);
+        this.userCtrl.setValue(null);
     }
 
     removeGroup(group: Group) {
@@ -205,6 +204,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
             u => u.groupId === group.groupId,
         );
         this.grantedGroupAuthorities.splice(currentIndex, 1);
+        this.groupCtrl.setValue(null);
     }
 
     addUser(event: MatChipInputEvent) {

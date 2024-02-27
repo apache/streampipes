@@ -37,8 +37,11 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputSta
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
@@ -167,10 +170,8 @@ public class OpcUaUtil {
    * @param parameterExtractor to extract parameters from the OPC UA config
    * @return {@code List<Option>} with available node names for the given OPC UA configuration
    */
-  public static RuntimeResolvableTreeInputStaticProperty resolveConfiguration(
-      String internalName,
-      IStaticPropertyExtractor parameterExtractor
-  )
+  public static RuntimeResolvableTreeInputStaticProperty resolveConfig(String internalName,
+                                                                       IStaticPropertyExtractor parameterExtractor)
       throws SpConfigurationException {
 
     RuntimeResolvableTreeInputStaticProperty config = parameterExtractor
@@ -199,6 +200,12 @@ public class OpcUaUtil {
         config.setLatestFetchedNodes(nodes);
       }
 
+      if (!config.getSelectedNodesInternalNames().isEmpty()) {
+        config.setSelectedNodesInternalNames(
+            filterMissingNodes(spOpcUaClient.getClient(), config.getSelectedNodesInternalNames())
+        );
+      }
+
 
       return config;
     } catch (UaException e) {
@@ -212,4 +219,17 @@ public class OpcUaUtil {
     }
   }
 
+  public static List<String> filterMissingNodes(OpcUaClient opcUaClient,
+                                                List<String> selectedNodes) {
+    return selectedNodes.stream().filter(selectedNode -> {
+      try {
+        var node = opcUaClient.getAddressSpace().getNode(NodeId.parse(selectedNode));
+        var value = node.readAttribute(AttributeId.Value);
+        var statusCode = value.getStatusCode();
+        return statusCode != null && statusCode.isGood();
+      } catch (UaException e) {
+        return false;
+      }
+    }).toList();
+  }
 }
