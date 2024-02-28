@@ -74,11 +74,9 @@ public class MailTemplateBuilder {
 
     for (String key : placeholders.keySet()) {
       String placeholder = makeKey(key);
-      if (placeholders.containsKey(placeholder)) {
-        var value = placeholders.get(key);
-        if (Objects.nonNull(value)) {
-          fullTemplate = fullTemplate.replaceAll(placeholder, value);
-        }
+      var value = placeholders.get(key);
+      if (Objects.nonNull(value)) {
+        fullTemplate = fullTemplate.replaceAll(placeholder, value);
       }
     }
 
@@ -90,6 +88,7 @@ public class MailTemplateBuilder {
   }
 
   private String applyInnerTemplate(String content) {
+    innerPart = innerPart.replace("\\", "\\\\").replace("$", "\\$");
     return content.replaceAll(makeKey(DefaultPlaceholders.INNER.key()), innerPart);
   }
 
