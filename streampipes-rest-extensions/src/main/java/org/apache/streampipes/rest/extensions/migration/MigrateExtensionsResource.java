@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
@@ -154,7 +155,8 @@ public abstract class MigrateExtensionsResource<
   private static <T extends VersionedNamedStreamPipesEntity> T updateLabels(T migratedElement) {
     if (migratedElement.isIncludesLocales()) {
       try {
-        migratedElement = new LabelGenerator<>(migratedElement).generateLabels();
+        boolean replaceTitles = !(migratedElement instanceof AdapterDescription);
+        migratedElement = new LabelGenerator<>(migratedElement, replaceTitles).generateLabels();
       } catch (IOException e) {
         LOG.error("Failed to generate labels for migrated element: %s".formatted(migratedElement.getAppId()), e);
       }
