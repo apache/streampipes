@@ -32,6 +32,7 @@ export class SelectPropertiesComponent implements OnInit {
     @Input() selectedProperties: DataExplorerField[];
     @Input() label: string;
     @Input() multiple: boolean;
+    @Input() title = 'Fields';
 
     constructor() {}
 

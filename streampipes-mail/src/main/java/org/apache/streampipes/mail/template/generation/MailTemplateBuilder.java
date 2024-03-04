@@ -22,6 +22,7 @@ import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MailTemplateBuilder {
 
@@ -73,7 +74,10 @@ public class MailTemplateBuilder {
 
     for (String key : placeholders.keySet()) {
       String placeholder = makeKey(key);
-      fullTemplate = fullTemplate.replaceAll(placeholder, placeholders.get(key));
+      var value = placeholders.get(key);
+      if (Objects.nonNull(value)) {
+        fullTemplate = fullTemplate.replaceAll(placeholder, value);
+      }
     }
 
     return fullTemplate;
@@ -84,6 +88,7 @@ public class MailTemplateBuilder {
   }
 
   private String applyInnerTemplate(String content) {
+    innerPart = innerPart.replace("\\", "\\\\").replace("$", "\\$");
     return content.replaceAll(makeKey(DefaultPlaceholders.INNER.key()), innerPart);
   }
 

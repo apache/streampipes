@@ -16,9 +16,8 @@
   ~
   -->
 
-<div fxLayout="column">
-    <span class="data-explorer-header">Filter</span>
-    <div>
+<sp-configuration-box title="Filter" marginTop="5px">
+    <div header fxLayoutAlign="start center" fxFlex="100">
         <button
             mat-button
             mat-raised-button
@@ -26,137 +25,140 @@
             class="small-button"
             data-cy="design-panel-data-settings-add-filter"
             (click)="addFilter()"
-            style="margin-right: 10px; margin-bottom: 15px"
+            style="margin-right: 10px"
         >
             Add Filter
         </button>
     </div>
-    <div
-        *ngFor="
-            let filter of sourceConfig.queryConfig.selectedFilters;
-            let i = index
-        "
-        fxFlex="100"
-        fxLayout="column"
-    >
-        <div fxFlex="100" fxLayout="column" class="form-field-small">
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                <mat-form-field
-                    color="accent"
-                    class="w-140-px mr-5"
-                    appearance="outline"
-                >
-                    <mat-label>Field</mat-label>
-                    <mat-select
-                        [(value)]="filter.field"
-                        (selectionChange)="updateWidget()"
-                        [compareWith]="compare"
-                        panelClass="form-field-small min-w-200"
-                        data-cy="design-panel-data-settings-filter-field"
+    <div fxLayout="column">
+        <div
+            *ngFor="
+                let filter of sourceConfig.queryConfig.selectedFilters;
+                let i = index
+            "
+            fxFlex="100"
+            fxLayout="column"
+        >
+            <div fxFlex="100" fxLayout="column" class="form-field-small">
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-form-field
+                        color="accent"
+                        class="w-140-px mr-5"
+                        appearance="outline"
                     >
-                        <mat-option
-                            *ngFor="
-                                let field of sourceConfig.queryConfig.fields
-                            "
-                            [value]="field"
-                            >{{ field.runtimeName }}</mat-option
+                        <mat-label>Field</mat-label>
+                        <mat-select
+                            [(value)]="filter.field"
+                            (selectionChange)="updateWidget()"
+                            [compareWith]="compare"
+                            panelClass="form-field-small min-w-200"
+                            data-cy="design-panel-data-settings-filter-field"
                         >
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field
-                    color="accent"
-                    class="w-80-px mr-5"
-                    appearance="outline"
-                >
-                    <mat-select
-                        [(value)]="filter.operator"
-                        panelClass="form-field-small min-w-100"
-                        (selectionChange)="updateWidget()"
-                        data-cy="design-panel-data-settings-filter-operator"
+                            <mat-option
+                                *ngFor="
+                                    let field of sourceConfig.queryConfig.fields
+                                "
+                                [value]="field"
+                                >{{ field.runtimeName }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field
+                        color="accent"
+                        class="w-80-px mr-5"
+                        appearance="outline"
                     >
-                        <mat-option [value]="'='">
-                            <span class="pipeline-name">=</span>
-                        </mat-option>
-                        <mat-option [value]="'<'">
-                            <span class="pipeline-name"><</span>
-                        </mat-option>
-                        <mat-option [value]="'<='">
-                            <span class="pipeline-name"><=</span>
-                        </mat-option>
-                        <mat-option [value]="'>='">
-                            <span class="pipeline-name">>=</span>
-                        </mat-option>
-                        <mat-option [value]="'>'">
-                            <span class="pipeline-name">></span>
-                        </mat-option>
-                        <mat-option [value]="'!='">
-                            <span class="pipeline-name">!=</span>
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field
-                    color="accent"
-                    appearance="outline"
-                    class="w-140-px mr-5"
-                    *ngIf="
-                        !filter.field ||
-                        !tagValues.has(filter.field.runtimeName)
-                    "
-                >
-                    <mat-label>Value</mat-label>
-                    <input
-                        type="text"
-                        placeholder="Value"
-                        aria-label="Number"
-                        matInput
-                        [(ngModel)]="filter.value"
-                        (change)="updateWidget()"
-                        data-cy="design-panel-data-settings-filter-value"
-                    />
-                </mat-form-field>
-                <mat-form-field
-                    color="accent"
-                    appearance="outline"
-                    class="w-140-px mr-5"
-                    *ngIf="
-                        filter.field && tagValues.has(filter.field.runtimeName)
-                    "
-                >
-                    <input
-                        type="text"
-                        placeholder="Value"
-                        aria-label="Number"
-                        matInput
-                        [(ngModel)]="filter.value"
-                        (change)="updateWidget()"
-                        data-cy="design-panel-data-settings-filter-value"
-                        [matAutocomplete]="auto"
-                    />
-                    <mat-autocomplete
-                        #auto="matAutocomplete"
-                        (optionSelected)="updateWidget()"
-                    >
-                        <mat-option
-                            *ngFor="
-                                let value of tagValues.get(
-                                    filter.field.runtimeName
-                                )
-                            "
-                            [value]="value"
+                        <mat-select
+                            [(value)]="filter.operator"
+                            panelClass="form-field-small min-w-100"
+                            (selectionChange)="updateWidget()"
+                            data-cy="design-panel-data-settings-filter-operator"
                         >
-                            {{ value }}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-                <button
-                    mat-icon-button
-                    color="accent"
-                    (click)="remove(sourceConfig, i)"
-                    data-cy="design-panel-data-settings-remove-filter"
-                >
-                    <i class="material-icons">remove</i>
-                </button>
+                            <mat-option [value]="'='">
+                                <span class="pipeline-name">=</span>
+                            </mat-option>
+                            <mat-option [value]="'<'">
+                                <span class="pipeline-name"><</span>
+                            </mat-option>
+                            <mat-option [value]="'<='">
+                                <span class="pipeline-name"><=</span>
+                            </mat-option>
+                            <mat-option [value]="'>='">
+                                <span class="pipeline-name">>=</span>
+                            </mat-option>
+                            <mat-option [value]="'>'">
+                                <span class="pipeline-name">></span>
+                            </mat-option>
+                            <mat-option [value]="'!='">
+                                <span class="pipeline-name">!=</span>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field
+                        color="accent"
+                        appearance="outline"
+                        class="w-140-px mr-5"
+                        *ngIf="
+                            !filter.field ||
+                            !tagValues.has(filter.field.runtimeName)
+                        "
+                    >
+                        <mat-label>Value</mat-label>
+                        <input
+                            type="text"
+                            placeholder="Value"
+                            aria-label="Number"
+                            matInput
+                            [(ngModel)]="filter.value"
+                            (change)="updateWidget()"
+                            data-cy="design-panel-data-settings-filter-value"
+                        />
+                    </mat-form-field>
+                    <mat-form-field
+                        color="accent"
+                        appearance="outline"
+                        class="w-140-px mr-5"
+                        *ngIf="
+                            filter.field &&
+                            tagValues.has(filter.field.runtimeName)
+                        "
+                    >
+                        <input
+                            type="text"
+                            placeholder="Value"
+                            aria-label="Number"
+                            matInput
+                            [(ngModel)]="filter.value"
+                            (change)="updateWidget()"
+                            data-cy="design-panel-data-settings-filter-value"
+                            [matAutocomplete]="auto"
+                        />
+                        <mat-autocomplete
+                            #auto="matAutocomplete"
+                            (optionSelected)="updateWidget()"
+                        >
+                            <mat-option
+                                *ngFor="
+                                    let value of tagValues.get(
+                                        filter.field.runtimeName
+                                    )
+                                "
+                                [value]="value"
+                            >
+                                {{ value }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        (click)="remove(sourceConfig, i)"
+                        data-cy="design-panel-data-settings-remove-filter"
+                    >
+                        <i class="material-icons">remove</i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</sp-configuration-box>

@@ -96,10 +96,10 @@ export class SelectColorPropertiesComponent implements OnInit {
         this.triggerSelectedProperties();
     }
 
-    triggerDataRefresh() {
+    triggerViewRefresh() {
         this.widgetConfigurationService.notify({
             widgetId: this.currentlyConfiguredWidget._id,
-            refreshData: true,
+            refreshData: false,
             refreshView: true,
         });
     }
@@ -108,6 +108,6 @@ export class SelectColorPropertiesComponent implements OnInit {
         this.currentlyConfiguredWidget.visualizationConfig.displayName[
             field.fullDbName + field.sourceIndex.toString()
         ] = searchValue;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 }

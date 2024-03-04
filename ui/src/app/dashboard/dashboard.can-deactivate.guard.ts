@@ -17,18 +17,12 @@
  */
 
 import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    CanDeactivate,
-    RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
 
 @Injectable({ providedIn: 'root' })
-export class DashboardPanelCanDeactivateGuard
-    implements CanDeactivate<DashboardPanelComponent>
-{
+export class DashboardPanelCanDeactivateGuard {
     canDeactivate(
         component: DashboardPanelComponent,
         route: ActivatedRouteSnapshot,

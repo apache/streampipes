@@ -15,9 +15,8 @@
   ~ limitations under the License.
   ~
   -->
-<div fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <span class="data-explorer-header">Fields </span>
+<sp-configuration-box title="Fields">
+    <div header fxLayoutAlign="start center" fxFlex="100">
         <button
             mat-button
             mat-raised-button
@@ -36,6 +35,7 @@
         >
             Deselect all
         </button>
+        <span fxFlex></span>
         <button
             mat-icon-button
             class="pull-btn-right"
@@ -68,4 +68,4 @@
             </sp-field-selection>
         </div>
     </div>
-</div>
+</sp-configuration-box>

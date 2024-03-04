@@ -44,7 +44,6 @@ export class DataExplorerDashboardSlideViewComponent
     selectedWidgetIndex = 0;
 
     gridsterItemComponent: any = { width: 100, height: 100 };
-    previewGridsterItemComponent: any = { width: 200, height: 100 };
 
     currentWidget: DataExplorerWidgetModel;
     currentMeasure: DataLakeMeasure;

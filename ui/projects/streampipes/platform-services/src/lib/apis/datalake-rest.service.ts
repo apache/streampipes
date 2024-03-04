@@ -56,7 +56,7 @@ export class DatalakeRestService {
     }
 
     getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
-        const url = this.dataLakeUrl + '/measurements/';
+        const url = this.dataLakeUrl + '/measurements';
         return this.http.get(url).pipe(
             map(response => {
                 return (response as any[]).map(p =>
@@ -224,8 +224,7 @@ export class DatalakeRestService {
         aggregationFunction?: string,
         timeInterval?: string,
     ): DatalakeQueryParameters {
-        const queryParams: DatalakeQueryParameters =
-            new DatalakeQueryParameters();
+        const queryParams: DatalakeQueryParameters = {};
 
         if (columns) {
             queryParams.columns = columns;

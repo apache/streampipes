@@ -41,9 +41,9 @@
         <maven-install-plugin.version>3.1.1</maven-install-plugin.version>
         <maven-invoker-plugin.version>3.6.0</maven-invoker-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-        <maven-plugin-plugin.version>3.10.2</maven-plugin-plugin.version>
+        <maven-plugin-plugin.version>3.11.0</maven-plugin-plugin.version>
         <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
-        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
     </properties>
 
     <dependencyManagement>

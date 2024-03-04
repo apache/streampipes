@@ -40,3 +40,4 @@ export * from './lib/models/sp-navigation.model';
 export * from './lib/services/breadcrumb.service';
 export * from './lib/services/jwt-token-storage.service';
 export * from './lib/services/current-user.service';
+export * from './lib/services/echarts-toolbox.service';

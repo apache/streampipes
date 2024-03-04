@@ -17,7 +17,7 @@
  */
 
 import * as FileSaver from 'file-saver';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     FunctionId,
     FunctionsService,
@@ -41,13 +41,14 @@ import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { SpPipelineRoutes } from './pipelines.routes';
 import { UserRole } from '../_enums/user-role.enum';
 import { ShepherdService } from '../services/tour/shepherd.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-pipelines',
     templateUrl: './pipelines.component.html',
     styleUrls: ['./pipelines.component.scss'],
 })
-export class PipelinesComponent implements OnInit {
+export class PipelinesComponent implements OnInit, OnDestroy {
     pipeline: Pipeline;
     pipelines: Pipeline[] = [];
     systemPipelines: Pipeline[] = [];
@@ -66,6 +67,12 @@ export class PipelinesComponent implements OnInit {
     functions: FunctionId[] = [];
     functionsReady = false;
     isAdminRole = false;
+
+    tutorialActive = false;
+
+    activatedRouteSubscription: Subscription;
+    tutorialActiveSubscription: Subscription;
+    userSubscription: Subscription;
 
     constructor(
         private pipelineService: PipelineService,
@@ -87,23 +94,32 @@ export class PipelinesComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpPipelineRoutes.BASE),
         );
-        this.currentUserService.user$.subscribe(user => {
-            this.hasPipelineWritePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
-            );
-            this.isAdminRole = this.authService.hasRole(UserRole.ROLE_ADMIN);
-        });
-        this.activatedRoute.queryParams.subscribe(params => {
-            if (params['pipeline']) {
-                this.pipelineIdToStart = params['pipeline'];
-            }
-            if (params.startTutorial) {
-                this.startPipelineTour();
-            }
-            this.getPipelineCategories();
-            this.getPipelines();
-            this.getFunctions();
-        });
+        this.userSubscription = this.currentUserService.user$.subscribe(
+            user => {
+                this.hasPipelineWritePrivileges = this.authService.hasRole(
+                    UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
+                );
+                this.isAdminRole = this.authService.hasRole(
+                    UserRole.ROLE_ADMIN,
+                );
+            },
+        );
+        this.activatedRouteSubscription =
+            this.activatedRoute.queryParams.subscribe(params => {
+                if (params['pipeline']) {
+                    this.pipelineIdToStart = params['pipeline'];
+                }
+                if (params.startTutorial) {
+                    this.startPipelineTour();
+                }
+                this.getPipelineCategories();
+                this.getPipelines();
+                this.getFunctions();
+            });
+        this.tutorialActiveSubscription =
+            this.shepherdService.tutorialActive$.subscribe(tutorialActive => {
+                this.tutorialActive = tutorialActive;
+            });
     }
 
     setSelectedTab(index) {
@@ -242,5 +258,11 @@ export class PipelinesComponent implements OnInit {
             .then(() =>
                 this.shepherdService.trigger('pipeline-new-button-clicked'),
             );
+    }
+
+    ngOnDestroy() {
+        this.activatedRouteSubscription?.unsubscribe();
+        this.userSubscription?.unsubscribe();
+        this.tutorialActiveSubscription?.unsubscribe();
     }
 }

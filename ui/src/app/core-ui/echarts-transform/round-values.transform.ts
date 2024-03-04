@@ -56,10 +56,10 @@ export const RoundValuesTransform: ExternalDataTransform<RoundValuesConfig> = {
             } else {
                 return row.map((value, index) => {
                     if (roundColumnIndices.indexOf(index) > -1) {
-                        return (
+                        return +(
                             Math.round((value as number) / roundingValue) *
                             roundingValue
-                        );
+                        ).toFixed(3);
                     } else {
                         return value;
                     }

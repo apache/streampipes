@@ -32,11 +32,28 @@
     >
     </sp-too-much-data>
 
+    <sp-invalid-configuration
+        [widgetTypeLabel]="widgetTypeLabel"
+        *ngIf="
+            showInvalidConfiguration &&
+            !showNoDataInDateRange &&
+            !showTooMuchData
+        "
+        class="h-100"
+    >
+    </sp-invalid-configuration>
+
     <div
+        [attr.data-cy]="dataExplorerWidget.widgetType"
         echarts
         [options]="option"
         [ngStyle]="{ width: currentWidth, height: '100%' }"
         (chartInit)="onChartInit($event)"
-        *ngIf="option"
+        *ngIf="
+            option &&
+            !showInvalidConfiguration &&
+            !showNoDataInDateRange &&
+            !showTooMuchData
+        "
     ></div>
 </div>

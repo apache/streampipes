@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
@@ -36,12 +37,15 @@ import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.IDashboardStorage;
 import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class ResetManagement {
   // This class should be moved into another package. I moved it here because I got a cyclic maven
@@ -52,28 +56,56 @@ public class ResetManagement {
 
   /**
    * Remove all configurations for this user. This includes:
-   * [pipeline assembly cache, pipelines, adapters, files]
+   * [pipeline assembly cache, pipelines, adapters, files, assets]
    *
-   * @param username
+   * @param username of the user to delte the resources
    */
   public static void reset(String username) {
     logger.info("Start resetting the system");
 
-    // Set hide tutorial to false for user
-    UserResourceManager.setHideTutorial(username, true);
+    setHideTutorialToFalse(username);
 
-    // Clear pipeline assembly Cache
+    clearPipelineAssemblyCache(username);
+
+    stopAndDeleteAllPipelines();
+
+    stopAndDeleteAllAdapters();
+
+    deleteAllFiles();
+
+    removeAllDataInDataLake();
+
+    removeAllDataViewWidgets();
+
+    removeAllDataViews();
+
+    removeAllDashboardWidgets();
+
+    removeAllDashboards();
+
+    removeAllAssets(username);
+
+    logger.info("Resetting the system was completed");
+  }
+
+  private static void setHideTutorialToFalse(String username) {
+    UserResourceManager.setHideTutorial(username, true);
+  }
+
+  private static void clearPipelineAssemblyCache(String username) {
     PipelineCacheManager.removeCachedPipeline(username);
     PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(username);
+  }
 
-    // Stop and delete all pipelines
+  private static void stopAndDeleteAllPipelines() {
     List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
     allPipelines.forEach(pipeline -> {
       PipelineManager.stopPipeline(pipeline.getPipelineId(), true);
       PipelineManager.deletePipeline(pipeline.getPipelineId());
     });
+  }
 
-    // Stop and delete all adapters
+  private static void stopAndDeleteAllAdapters() {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
@@ -94,14 +126,14 @@ public class ResetManagement {
     } catch (AdapterException e) {
       logger.error("Failed to load all adapter descriptions", e);
     }
+  }
 
-    // Stop and delete all files
+  private static void deleteAllFiles() {
     List<FileMetadata> allFiles = FileManager.getAllFiles();
-    allFiles.forEach(fileMetadata -> {
-      FileManager.deleteFile(fileMetadata.getFileId());
-    });
+    allFiles.forEach(fileMetadata -> FileManager.deleteFile(fileMetadata.getFileId()));
+  }
 
-    // Remove all data in data lake
+  private static void removeAllDataInDataLake() {
     var dataLakeStorage = StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getDataLakeStorage();
@@ -116,34 +148,48 @@ public class ResetManagement {
         dataLakeMeasureManagement.deleteMeasurementByName(measurement.getMeasureName());
       }
     });
+  }
 
-    // Remove all data views widgets
+  private static void removeAllDataViewWidgets() {
     IDataExplorerWidgetStorage widgetStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerWidgetStorage();
-    widgetStorage.getAllDataExplorerWidgets().forEach(widget -> {
-      widgetStorage.deleteDataExplorerWidget(widget.getId());
-    });
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getDataExplorerWidgetStorage();
+    widgetStorage.getAllDataExplorerWidgets()
+                 .forEach(widget -> widgetStorage.deleteDataExplorerWidget(widget.getId()));
+  }
 
-    // Remove all data views
+  private static void removeAllDataViews() {
     IDashboardStorage dataLakeDashboardStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
-    dataLakeDashboardStorage.getAllDashboards().forEach(dashboard -> {
-      dataLakeDashboardStorage.deleteDashboard(dashboard.getCouchDbId());
-    });
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getDataExplorerDashboardStorage();
+    dataLakeDashboardStorage.getAllDashboards()
+                            .forEach(dashboard -> dataLakeDashboardStorage.deleteDashboard(dashboard.getCouchDbId()));
+  }
 
-    // Remove all dashboard widgets
+  private static void removeAllDashboardWidgets() {
     IDashboardWidgetStorage dashobardWidgetStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getDashboardWidgetStorage();
-    dashobardWidgetStorage.getAllDashboardWidgets().forEach(widget -> {
-      dashobardWidgetStorage.deleteDashboardWidget(widget.getId());
-    });
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getDashboardWidgetStorage();
+    dashobardWidgetStorage.getAllDashboardWidgets()
+                          .forEach(widget -> dashobardWidgetStorage.deleteDashboardWidget(widget.getId()));
+  }
 
-    // Remove all dashboards
-    IDashboardStorage dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDashboardStorage();
-    dashboardStorage.getAllDashboards().forEach(dashboard -> {
-      dashboardStorage.deleteDashboard(dashboard.getCouchDbId());
-    });
+  private static void removeAllDashboards() {
+    IDashboardStorage dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+                                                                   .getDashboardStorage();
+    dashboardStorage.getAllDashboards()
+                    .forEach(dashboard -> dashboardStorage.deleteDashboard(dashboard.getCouchDbId()));
+  }
 
-    logger.info("Resetting the system was completed");
+  private static void removeAllAssets(String username) {
+    IGenericStorage genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+                                                               .getGenericStorage();
+    try {
+      for (Map<String, Object> asset : genericStorage.findAll("asset-management")) {
+        genericStorage.delete((String) asset.get("_id"), (String) asset.get("_rev"));
+      }
+    } catch (IOException e) {
+      throw new SpRuntimeException("Could not delete assets of user %s".formatted(username));
+    }
   }
 }

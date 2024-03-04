@@ -102,12 +102,12 @@ export class FileUploadDialogComponent {
         const dataTransfer = new DataTransfer();
         for (let i = 0; i < this.fileNames.length; i++) {
             let fileName = this.fileNames[i];
-            let index = this.duplicateFileNames.indexOf(fileName);
+            const index = this.duplicateFileNames.indexOf(fileName);
             if (index !== -1) {
                 this.fileNames[i] = this.renamedFileNames[index];
                 fileName = this.renamedFileNames[index];
             }
-            let selectedUploadFile = this.selectedUploadFiles[i];
+            const selectedUploadFile = this.selectedUploadFiles[i];
             const renamedFile = new File([selectedUploadFile], fileName, {
                 type: selectedUploadFile.type,
                 lastModified: selectedUploadFile.lastModified,

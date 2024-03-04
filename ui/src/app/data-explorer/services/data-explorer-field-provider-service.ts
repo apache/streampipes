@@ -27,7 +27,7 @@ import {
     SourceConfig,
 } from '@streampipes/platform-services';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {
     public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
         const provider: FieldProvider = {
@@ -215,5 +215,49 @@ export class DataExplorerFieldProviderService {
     ): string {
         const prefix = aggregation ? aggregation.toLowerCase() + '_' : '';
         return prefix + fieldConfig.runtimeName;
+    }
+
+    getSelectedField(
+        currentlySelectedField: DataExplorerField,
+        availableFields: DataExplorerField[],
+        getDefaultField: () => DataExplorerField,
+    ): DataExplorerField {
+        if (
+            currentlySelectedField !== undefined &&
+            this.existsField(currentlySelectedField, availableFields)
+        ) {
+            return currentlySelectedField;
+        } else {
+            return getDefaultField();
+        }
+    }
+
+    getSelectedFields(
+        currentlySelectedFields: DataExplorerField[],
+        availableFields: DataExplorerField[],
+        getDefaultFields: () => DataExplorerField[],
+    ): DataExplorerField[] {
+        if (currentlySelectedFields !== undefined) {
+            return currentlySelectedFields.filter(field =>
+                availableFields.find(f => f.fullDbName === field.fullDbName),
+            );
+        } else {
+            return getDefaultFields();
+        }
+    }
+
+    existsField(
+        currentlySelectedField: DataExplorerField,
+        fieldsToSearch: DataExplorerField[],
+    ): boolean {
+        return (
+            fieldsToSearch.find(field => {
+                return this.isEqualField(currentlySelectedField, field);
+            }) !== undefined
+        );
+    }
+
+    isEqualField(field1: DataExplorerField, field2: DataExplorerField) {
+        return field1.fullDbName === field2.fullDbName;
     }
 }

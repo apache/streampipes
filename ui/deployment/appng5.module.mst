@@ -57,14 +57,17 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ValueDistributionTransform } from './core-ui/echarts-transform/value-distribution.transform';
 import { HistogramTransform } from './core-ui/echarts-transform/histogram.transform';
 import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
+import { MapTransform } from './core-ui/echarts-transform/map.transform';
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';
+import 'echarts-gl';
 
 echarts.registerTransform(transform.aggregate);
 echarts.registerTransform(ValueDistributionTransform);
 echarts.registerTransform(HistogramTransform);
 echarts.registerTransform(RoundValuesTransform);
+echarts.registerTransform(MapTransform);
 
 
 import * as $ from 'jquery';

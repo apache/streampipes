@@ -30,6 +30,7 @@ import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
+import org.apache.streampipes.model.function.FunctionId;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.Event;
@@ -67,7 +68,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   public void invokeRuntime(String serviceGroup) {
     var functionId = this.getFunctionConfig().getFunctionId();
 
-    this.initializeProducers();
+    this.initializeProducers(functionId);
 
     var context = new FunctionContextGenerator(
         functionId.getId(),
@@ -88,7 +89,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
           index.getAndIncrement();
         });
 
-    this.inputCollectors = getInputCollectors(context.getStreams());
+    this.inputCollectors = getInputCollectors(functionId, context.getStreams());
 
     LOG.info("Invoking function {}:{}", functionId.getId(), functionId.getVersion());
 
@@ -139,35 +140,43 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
         SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e)));
   }
 
-  private void initializeProducers() {
-    this.outputCollectors = this.getOutputCollectors();
+  private void initializeProducers(FunctionId functionId) {
+    this.outputCollectors = this.getOutputCollectors(functionId);
     this.outputCollectors.forEach((key, value) -> value.connect());
   }
 
-  private Map<String, SpOutputCollector> getOutputCollectors() {
+  private Map<String, SpOutputCollector> getOutputCollectors(FunctionId functionId) {
     this.getFunctionConfig().getOutputDataStreams().forEach((key, value) -> {
+      var uniqueStreamId = getUniqueStreamId(functionId, value);
       this.outputCollectors.put(
-          key,
+          uniqueStreamId,
           ProtocolManager.makeOutputCollector(
               value.getEventGrounding().getTransportProtocol(),
               value.getEventGrounding().getTransportFormats().get(0),
-              key));
+              uniqueStreamId));
     });
 
     return this.outputCollectors;
   }
 
-  private Map<String, SpInputCollector> getInputCollectors(Collection<SpDataStream> streams) throws SpRuntimeException {
+  private Map<String, SpInputCollector> getInputCollectors(FunctionId functionId,
+                                                           Collection<SpDataStream> streams) throws SpRuntimeException {
     Map<String, SpInputCollector> inputCollectors = new HashMap<>();
     var env = getEnvironment();
     for (SpDataStream is : streams) {
+      var uniqueStreamId = getUniqueStreamId(functionId, is);
       if (env.getSpDebug().getValueOrDefault()) {
         GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
       }
-      inputCollectors.put(is.getElementId(), ProtocolManager.findInputCollector(is.getEventGrounding()
+      inputCollectors.put(uniqueStreamId, ProtocolManager.findInputCollector(is.getEventGrounding()
           .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0), false));
     }
     return inputCollectors;
+  }
+
+  private String getUniqueStreamId(FunctionId functionId,
+                                   SpDataStream dataStream) {
+    return String.join("-", functionId.getId(), dataStream.getElementId());
   }
 
   private void registerConsumers() {

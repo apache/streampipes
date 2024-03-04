@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.apache</groupId>
         <artifactId>apache</artifactId>
-        <version>30</version>
+        <version>31</version>
     </parent>
 
     <groupId>org.apache.streampipes</groupId>
@@ -45,10 +45,10 @@
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
-        <checker-qual.version>3.41.0</checker-qual.version>
+        <checker-qual.version>3.42.0</checker-qual.version>
         <commons-codec.version>1.16.0</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <commons-compress.version>1.25.0</commons-compress.version>
+        <commons-compress.version>1.26.0</commons-compress.version>
         <commons-io.version>2.15.1</commons-io.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
@@ -67,7 +67,7 @@
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.24</influxdb.version>
-        <inlong.version>1.9.0</inlong.version>
+        <inlong.version>1.10.0</inlong.version>
         <jackson.version>2.16.0</jackson.version>
         <jackson.databind.version>2.16.0</jackson.databind.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
@@ -104,8 +104,8 @@
         <plc4x.version>0.10.0</plc4x.version>
         <plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
-        <plexus-utils.version>3.5.0</plexus-utils.version>
-        <postgresql.version>42.7.0</postgresql.version>
+        <plexus-utils.version>4.0.0</plexus-utils.version>
+        <postgresql.version>42.7.2</postgresql.version>
         <protobuf.version>3.25.0</protobuf.version>
         <pulsar.version>3.1.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
@@ -128,7 +128,7 @@
 
         <!-- Test dependencies -->
         <junit.version>4.13.2</junit.version>
-        <mockito.version>5.8.0</mockito.version>
+        <mockito.version>5.10.0</mockito.version>
         <powermock.version>2.0.9</powermock.version>
         <rest-assured.version>2.9.0</rest-assured.version>
         <wiremock.version>2.27.2</wiremock.version>
@@ -142,7 +142,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <maven.dependency.check.plugin.version>8.4.0</maven.dependency.check.plugin.version>
+        <maven.dependency.check.plugin.version>9.0.9</maven.dependency.check.plugin.version>
         <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>

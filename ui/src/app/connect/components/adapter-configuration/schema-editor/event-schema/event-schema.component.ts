@@ -26,7 +26,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { RestService } from '../../../../services/rest.service';
-import { ITreeOptions, TreeComponent } from '@circlon/angular-tree-component';
+import { ITreeOptions, TreeComponent } from '@ali-hm/angular-tree-component';
 import { UUID } from 'angular2-uuid';
 import { DataTypesService } from '../../../../services/data-type.service';
 import {

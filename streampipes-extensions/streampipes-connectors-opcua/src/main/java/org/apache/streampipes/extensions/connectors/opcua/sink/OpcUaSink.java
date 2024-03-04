@@ -106,6 +106,6 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfiguration(staticPropertyInternalName, extractor);
+    return OpcUaUtil.resolveConfig(staticPropertyInternalName, extractor);
   }
 }

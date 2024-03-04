@@ -36,7 +36,7 @@
  * BROWSER POLYFILLS
  */
 
-let __zone_symbol__BLACK_LISTED_EVENTS = [
+const __zone_symbol__BLACK_LISTED_EVENTS = [
     'scroll',
     'mouseenter',
     'mouseleave',
@@ -48,7 +48,7 @@ let __zone_symbol__BLACK_LISTED_EVENTS = [
     'keypress',
     'keyup',
 ];
-let __Zone_disable_PromiseRejectionEvent = true;
+const __Zone_disable_PromiseRejectionEvent = true;
 
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.

@@ -16,12 +16,11 @@
  *
  */
 
-@import '~@circlon/angular-tree-component/css/angular-tree-component.css';
+@import '~@ali-hm/angular-tree-component/css/angular-tree-component.css';
 @import '~datatables.net-dt/css/jquery.dataTables.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 @import '~@jsplumb/browser-ui/css/jsplumbtoolkit.css';
 @import '~shepherd.js/dist/css/shepherd.css';
-@import '~@danielmoncada/angular-datetime-picker/assets/style/picker.min.css';
 @import '~leaflet/dist/leaflet.css';
 @import '~material-icons/iconfont/material-icons.css';
 @import '~quill/dist/quill.snow.css';
@@ -34,7 +33,6 @@
 @import './sp/sp-theme';
 
 @import './sp/main';
-@import './sp/data-explorer';
 @import './sp/buttons';
 @import './sp/buttons.ng1';
 @import './sp/spinner';

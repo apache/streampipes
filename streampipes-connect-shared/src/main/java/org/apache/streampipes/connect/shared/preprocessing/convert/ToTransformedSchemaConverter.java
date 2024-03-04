@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.convert;
 
+import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
@@ -48,6 +49,9 @@ import static org.apache.streampipes.connect.shared.preprocessing.utils.Conversi
 import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findPropertyHierarchy;
 
 public class ToTransformedSchemaConverter implements ITransformationRuleVisitor, ProvidesConversionResult {
+
+  private static final String TIMESTAMP_ID_PREFIX = "http://eventProperty.de/timestamp/";
+  private static final String STATIC_VALUE_ID_PREFIX = "http://eventProperty.de/staticValue/";
 
   private final List<EventProperty> properties;
 
@@ -102,13 +106,15 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
 
   @Override
   public void visit(AddTimestampRuleDescription rule) {
-    this.properties.add(EpProperties.timestampProperty(rule.getRuntimeKey()));
+    var timestampProperty = EpProperties.timestampProperty(rule.getRuntimeKey());
+    timestampProperty.setElementId(TIMESTAMP_ID_PREFIX + UUIDGenerator.generateUuid());
+    this.properties.add(timestampProperty);
   }
 
   @Override
   public void visit(AddValueTransformationRuleDescription rule) {
     var property = new EventPropertyPrimitive();
-    property.setElementId("http://eventProperty.de/staticValue/" + rule.getStaticValue());
+    property.setElementId(STATIC_VALUE_ID_PREFIX + rule.getStaticValue());
     property.setRuntimeName(rule.getRuntimeKey());
     property.setRuntimeType(rule.getDatatype());
     property.setLabel(rule.getLabel());

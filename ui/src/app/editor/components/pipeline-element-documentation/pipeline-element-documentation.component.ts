@@ -18,6 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { PipelineElementService } from '@streampipes/platform-services';
+import { Lexer, Parser } from 'marked';
 
 @Component({
     selector: 'sp-pipeline-element-documentation',
@@ -40,11 +41,15 @@ export class PipelineElementDocumentationComponent implements OnInit {
         this.pipelineElementService.getDocumentation(this.appId).subscribe(
             msg => {
                 this.error = false;
-                this.documentationMarkdown = msg;
+                this.documentationMarkdown = this.compileMarkdown(msg);
             },
             error => {
                 this.error = true;
             },
         );
+    }
+
+    compileMarkdown(value: string): string {
+        return new Parser().parse(new Lexer().lex(value));
     }
 }

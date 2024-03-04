@@ -16,22 +16,21 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
     selector: 'sp-data-explorer-map-widget-config',
     templateUrl: './map-widget-config.component.html',
 })
-export class MapWidgetConfigComponent
-    extends BaseWidgetConfig<MapWidgetModel, MapVisConfig>
-    implements OnInit
-{
+export class MapWidgetConfigComponent extends BaseWidgetConfig<
+    MapWidgetModel,
+    MapVisConfig
+> {
     markerOrTrace: string[];
     markerType: string[];
 
@@ -40,10 +39,6 @@ export class MapWidgetConfigComponent
         fieldService: DataExplorerFieldProviderService,
     ) {
         super(widgetConfigurationService, fieldService);
-    }
-
-    ngOnInit(): void {
-        super.onInit();
     }
 
     setSelectedLongitudeProperty(field: DataExplorerField) {
@@ -77,23 +72,34 @@ export class MapWidgetConfigComponent
         this.triggerDataRefresh();
     }
 
-    protected getWidgetType(): WidgetType {
-        return WidgetType.Map;
-    }
-
-    protected initWidgetConfig(): MapVisConfig {
+    protected applyWidgetConfig(config: MapVisConfig): void {
         this.markerOrTrace = ['marker', 'trace'];
         this.markerType = ['pin', 'car'];
 
-        return {
-            forType: this.getWidgetType(),
-            selectedLatitudeProperty: this.fieldProvider.numericFields[0],
-            selectedLongitudeProperty: this.fieldProvider.numericFields[1],
-            selectedToolTipContent: this.fieldProvider.allFields,
-            selectedMarkerOrTrace: this.markerOrTrace[0],
-            selectedMarkerType: this.markerType[0],
-            selectedZoomValue: 1,
-            useLastEventCoordinates: true,
-        };
+        config.selectedLatitudeProperty = this.selectField(
+            config.selectedLatitudeProperty,
+            0,
+        );
+        config.selectedLongitudeProperty = this.selectField(
+            config.selectedLongitudeProperty,
+            1,
+        );
+        config.selectedToolTipContent = this.fieldProvider.allFields;
+        config.selectedMarkerOrTrace ??= this.markerOrTrace[0];
+        config.selectedMarkerType ??= this.markerType[0];
+        config.selectedZoomValue ??= 1;
+        config.useLastEventCoordinates ??= true;
+    }
+
+    selectField(field: DataExplorerField, index: number): DataExplorerField {
+        return this.fieldService.getSelectedField(
+            field,
+            this.fieldProvider.numericFields,
+            () => this.fieldProvider.numericFields[index],
+        );
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.fieldProvider.numericFields.length > 1;
     }
 }

@@ -16,40 +16,48 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <h5>Correlation Plot Type</h5>
-    <mat-form-field
-        appearance="outline"
-        class="marginColorField"
-        color="accent"
-        fxFlex="35"
-    >
-        <mat-select
-            [(value)]="
-                currentlyConfiguredWidget.visualizationConfig.displayType
-            "
-            (selectionChange)="updateDisplayType($event.value)"
-        >
-            <mat-option [value]="'Scatter'">Scatter</mat-option>
-            <mat-option [value]="'Density'">Density</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <h5>First Field</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.numericFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig.firstField
-        "
-        (changeSelectedProperty)="updateFirstField($event)"
-    >
-    </sp-select-property>
-    <h5>Second Field</h5>
-    <sp-select-property
-        [availableProperties]="fieldProvider.numericFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig.secondField
-        "
-        (changeSelectedProperty)="updateSecondField($event)"
-    >
-    </sp-select-property>
-</div>
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box title="Fields">
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div
+                fxLayout="row"
+                fxFlex="100"
+                fxLayoutGap="10px"
+                fxLayoutAlign="start center"
+            >
+                <small>X</small>
+                <sp-select-property
+                    fxFlex
+                    [availableProperties]="fieldProvider.numericFields"
+                    [selectedProperty]="
+                        currentlyConfiguredWidget.visualizationConfig.firstField
+                    "
+                    (changeSelectedProperty)="updateFirstField($event)"
+                >
+                </sp-select-property>
+            </div>
+            <div
+                fxLayout="row"
+                fxFlex="100"
+                fxLayoutGap="10px"
+                fxLayoutAlign="start center"
+            >
+                <small>Y</small>
+                <sp-select-property
+                    fxFlex
+                    [availableProperties]="fieldProvider.numericFields"
+                    [selectedProperty]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .secondField
+                    "
+                    (changeSelectedProperty)="updateSecondField($event)"
+                >
+                </sp-select-property>
+            </div>
+        </div>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

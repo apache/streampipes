@@ -16,23 +16,18 @@
  *
  */
 
-.marginColorField {
-    margin-left: 1px;
-    margin-right: 1px;
-}
-
-.marginColorFieldRight {
-    margin-left: 1px;
-    margin-right: 5px;
-}
-
 .marginColorFieldMore {
     margin-left: 10px;
     margin-right: 1px;
 }
 
 .color-field {
-    margin-right: 5px;
     width: 20px;
     height: 20px;
+}
+
+.field-selection-box {
+    border: 1px solid var(--color-bg-3);
+    padding: 5px;
+    margin: 5px;
 }
