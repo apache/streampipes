@@ -37,7 +37,7 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class OpcUaAdapterMigrationTest {
+public class OpcUaAdapterMigrationV2Test {
 
   private OpcUaAdapterMigrationV2 migrationV2;
 

@@ -72,7 +72,7 @@ public class OpcUaAdapterMigrationV2 implements IAdapterMigrator {
 
     var serverAddressValue =
         extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
-    var hostValue = OpcUaUtil.formatServerAddress(
+    var hostValue = OpcUaUtil.addOpcPrefixIfNotExists(
         extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class)
     );
     var portValue = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
