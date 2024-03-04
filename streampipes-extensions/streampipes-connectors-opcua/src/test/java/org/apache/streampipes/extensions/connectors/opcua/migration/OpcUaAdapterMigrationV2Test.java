@@ -66,8 +66,7 @@ public class OpcUaAdapterMigrationV2Test {
     var adapterDescriptionV2 = migrationV2.migrate(adapterDescriptionV1, extractor)
                                           .element();
 
-    var typeOfPortProperty = getTypeOfPortProperty(adapterDescriptionV2);
-    assertEquals(XSD.INTEGER, typeOfPortProperty);
+    assertEquals(XSD.INTEGER, getTypeOfPortProperty(adapterDescriptionV2));
   }
 
   private URI getTypeOfPortProperty(AdapterDescription adapterDescriptionV2) {

@@ -68,7 +68,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 
   public FreeTextStaticProperty(String internalName, String label, String description, URI type) {
     super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
-    this.requiredDomainProperty = type;
+    this.requiredDatatype = type;
   }
 
   public FreeTextStaticProperty(String internalName, String label, String description, URI type, String mapsTo) {

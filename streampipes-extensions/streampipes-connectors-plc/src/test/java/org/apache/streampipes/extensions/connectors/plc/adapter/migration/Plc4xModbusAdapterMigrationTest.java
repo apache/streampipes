@@ -18,15 +18,18 @@
 
 package org.apache.streampipes.extensions.connectors.plc.adapter.migration;
 
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.config.Plc4xModbusAdapterVersionedConfig;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 public class Plc4xModbusAdapterMigrationTest {
 
@@ -38,19 +41,20 @@ public class Plc4xModbusAdapterMigrationTest {
   }
 
   @Test
-  public void testMigrationV1(){
-    var v0 = Plc4xModbusAdapterVersionedConfig.getPlc4xModbusAdapterDescriptionV0();
-    var v1 = Plc4xModbusAdapterVersionedConfig.getPlc4xModbusAdapterDescriptionV1();
+  public void testMigrationV1() {
+    var modbusAdapterDescriptionV0 = Plc4xModbusAdapterVersionedConfig.getPlc4xModbusAdapterDescriptionV0();
+    var extractor = mock(IStaticPropertyExtractor.class);
 
-    var migrationResult = migrationV1.migrate(v0, null);
+    var modbusAdapterDescriptionV1 = migrationV1.migrate(modbusAdapterDescriptionV0, extractor);
 
-    assertTrue(migrationResult.success());
-    assertCollectionsEqual(v1.getConfig(), migrationResult.element().getConfig());
+    var typeOfPortProperty = getTypeOfPortProperty(modbusAdapterDescriptionV1.element());
+    assertEquals(XSD.INTEGER, typeOfPortProperty);
   }
 
-  private <T> void assertCollectionsEqual(List<T> list1, List<T> list2) {
-    assertEquals(list1.size(), list2.size());
-    assertTrue(list1.containsAll(list2));
-    assertTrue(list2.containsAll(list1));
+  private URI getTypeOfPortProperty(AdapterDescription adapterDescription) {
+    return migrationV1
+        .extractPortProperty(adapterDescription)
+        .getRequiredDatatype();
   }
+
 }

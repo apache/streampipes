@@ -39,31 +39,25 @@ import static org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Pl
 
 public class Plc4xModbusAdapterVersionedConfig {
 
-  public static AdapterDescription getPlc4xModbusAdapterDescriptionV0(){
+  public static AdapterDescription getPlc4xModbusAdapterDescriptionV0() {
     return AdapterConfigurationBuilder.create(ID, 0, Plc4xModbusAdapter::new)
-      .withLocales(Locales.EN)
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-      .withCategory(AdapterType.Manufacturing)
-      .requiredTextParameter(Labels.withId(PLC_IP)).requiredTextParameter(Labels.withId(PLC_PORT))
-      .requiredTextParameter(Labels.withId(PLC_NODE_ID)).requiredCollection(Labels.withId(PLC_NODES),
-        StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-        StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
-        StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-          Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")))
-      .buildConfiguration().getAdapterDescription();
+                                      .withLocales(Locales.EN)
+                                      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                                      .withCategory(AdapterType.Manufacturing)
+                                      .requiredTextParameter(Labels.withId(PLC_IP))
+                                      .requiredTextParameter(Labels.withId(PLC_PORT))
+                                      .requiredTextParameter(Labels.withId(PLC_NODE_ID))
+                                      .requiredCollection(
+                                          Labels.withId(PLC_NODES),
+                                          StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
+                                          StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
+                                          StaticProperties.singleValueSelection(
+                                              Labels.withId(PLC_NODE_TYPE),
+                                              Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")
+                                          )
+                                      )
+                                      .buildConfiguration()
+                                      .getAdapterDescription();
   }
 
-  public static AdapterDescription getPlc4xModbusAdapterDescriptionV1(){
-    return AdapterConfigurationBuilder.create(ID, 1, Plc4xModbusAdapter::new)
-      .withLocales(Locales.EN)
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-      .withCategory(AdapterType.Manufacturing)
-      .requiredTextParameter(Labels.withId(PLC_IP)).requiredIntegerParameter(Labels.withId(PLC_PORT))
-      .requiredTextParameter(Labels.withId(PLC_NODE_ID)).requiredCollection(Labels.withId(PLC_NODES),
-        StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-        StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
-        StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-          Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")))
-      .buildConfiguration().getAdapterDescription();
-  }
 }
