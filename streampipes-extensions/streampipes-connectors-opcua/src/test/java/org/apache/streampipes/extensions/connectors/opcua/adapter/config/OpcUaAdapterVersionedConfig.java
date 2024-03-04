@@ -135,9 +135,9 @@ public class OpcUaAdapterVersionedConfig {
           StaticProperties.group(
             Labels.withId(HOST_PORT),
             StaticProperties.stringFreeTextProperty(
-              Labels.withId(OPC_SERVER_HOST)),
+              Labels.withId(OPC_SERVER_HOST), "opc.tcp://"),
             StaticProperties.integerFreeTextProperty(
-              Labels.withId(OPC_SERVER_PORT))
+              Labels.withId(OPC_SERVER_PORT), 80)
           ))
       )
         .requiredRuntimeResolvableTreeInput(
