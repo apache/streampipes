@@ -29,10 +29,13 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.Message;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
 public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implements IDataStreamApi {
+
+  private static final String STREAMS_PATH = "streams";
 
   public DataStreamApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, SpDataStream.class);
@@ -41,7 +44,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   @Override
   public Optional<SpDataStream> get(String streamId) {
     return getSingle(StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("streams").addToPath(streamId));
+        .addToPath(STREAMS_PATH).addToPath(streamId));
   }
 
   /**
@@ -61,7 +64,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
    */
   @Override
   public void create(SpDataStream stream) {
-    post(StreamPipesApiPath.fromBaseApiPath().addToPath("streams"), stream);
+    post(StreamPipesApiPath.fromBaseApiPath().addToPath(STREAMS_PATH), stream);
   }
 
   /**
@@ -71,7 +74,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
    */
   @Override
   public void delete(String streamId) {
-    delete(getBaseResourcePath().addToPath(URLEncoder.encode(streamId)), Message.class);
+    delete(getBaseResourcePath().addToPath(URLEncoder.encode(streamId, StandardCharsets.UTF_8)), Message.class);
   }
 
   @Override
@@ -113,6 +116,6 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("streams");
+        .addToPath(STREAMS_PATH);
   }
 }

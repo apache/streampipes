@@ -49,7 +49,7 @@ public class SpReprojectionBuilder {
   public static Geometry reprojectSpGeometry(Geometry geom, Integer targetEPSG)
       throws SpNotSupportedGeometryException {
 
-    Geometry output = null;
+    Geometry output;
 
     CoordinateReferenceSystem sourcerCRS = getCRS(geom.getSRID());
     CoordinateReferenceSystem targetrCRS = getCRS(targetEPSG);

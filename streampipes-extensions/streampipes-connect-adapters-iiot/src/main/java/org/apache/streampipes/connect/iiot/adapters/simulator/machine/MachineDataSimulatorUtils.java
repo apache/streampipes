@@ -58,13 +58,13 @@ public class MachineDataSimulatorUtils {
         .property(timestampProperty(TIMESTAMP))
         .sample(TIMESTAMP, System.currentTimeMillis())
         .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, "sensorId")
+            .create(Datatypes.String, SENSOR_ID)
             .label("Sensor ID")
             .description("The ID of the sensor")
             .domainProperty(HAS_SENSOR_ID)
             .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
-        .sample("sensorId", "sensor01")
+        .sample(SENSOR_ID, "sensor01")
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Float, "level")
             .label("Water Level")
@@ -89,13 +89,13 @@ public class MachineDataSimulatorUtils {
         .property(timestampProperty(TIMESTAMP))
         .sample(TIMESTAMP, System.currentTimeMillis())
         .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, "sensorId")
+            .create(Datatypes.String, SENSOR_ID)
             .label("Sensor ID")
             .description("The ID of the sensor")
             .domainProperty(HAS_SENSOR_ID)
             .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
-        .sample("sensorId", "sensor01")
+        .sample(SENSOR_ID, "sensor01")
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Float, "pressure")
             .label("Pressure")
@@ -119,7 +119,7 @@ public class MachineDataSimulatorUtils {
             .domainProperty(HAS_SENSOR_ID)
             .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
-        .sample("sensorId", "sensor01")
+        .sample(SENSOR_ID, "sensor01")
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Float, MASS_FLOW)
             .label("Mass Flow")
