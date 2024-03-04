@@ -70,12 +70,9 @@ public class OpcUaAdapterMigrationV2 implements IAdapterMigrator {
 
   private StaticProperty modifiedAlternatives(IStaticPropertyExtractor extractor) {
 
-    var serverAddressValue =
-        extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
-    var hostValue = OpcUaUtil.addOpcPrefixIfNotExists(
-        extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class)
-    );
-    var portValue = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
+    var serverAddressValue = getUrlOrDefault(extractor);
+    var hostValue = getHostNameOrDefault(extractor);
+    var portValue = getPortOrDefault(extractor);
 
     return StaticProperties.alternatives(Labels.withId(OPC_HOST_OR_URL),
       Alternatives.from(
@@ -97,4 +94,30 @@ public class OpcUaAdapterMigrationV2 implements IAdapterMigrator {
   private boolean isHostOrUrlConfig(StaticProperty config){
     return config.getInternalName().equals(OPC_HOST_OR_URL.name());
   }
+
+  private String getHostNameOrDefault(IStaticPropertyExtractor extractor) {
+    try {
+      return OpcUaUtil.addOpcPrefixIfNotExists(
+          extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class)
+      );
+    } catch (NullPointerException e) {
+      return "localhost";
+    }
+  }
+
+  private int getPortOrDefault(IStaticPropertyExtractor extractor) {
+    try {
+      return extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);
+    } catch (NullPointerException e) {
+      return 4840;
+    }
+  }
+
+  private String getUrlOrDefault(IStaticPropertyExtractor extractor) {
+    try {
+        return extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
+    } catch (NullPointerException e) {
+        return "opc.tcp://localhost:4840";
+    }
+}
 }
