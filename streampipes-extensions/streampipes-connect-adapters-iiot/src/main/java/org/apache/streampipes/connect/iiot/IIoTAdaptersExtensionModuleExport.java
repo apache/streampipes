@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.iiot;
 
+import org.apache.streampipes.connect.iiot.adapters.iolink.HilscherMqttAdapter;
 import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulatorAdapter;
@@ -38,6 +39,7 @@ public class IIoTAdaptersExtensionModuleExport implements IExtensionModuleExport
     return List.of(
         new MachineDataSimulatorAdapter(),
         new FileReplayAdapter(),
+        new HilscherMqttAdapter(),
         new IfmAlMqttAdapter(),
         new RosBridgeAdapter(),
         new HttpStreamProtocol(),
