@@ -43,9 +43,9 @@ public class Plc4xModbusAdapterMigrationTest {
   @Test
   public void testMigrationV1() {
     var modbusAdapterDescriptionV0 = Plc4xModbusAdapterVersionedConfig.getPlc4xModbusAdapterDescriptionV0();
-    var extractor = mock(IStaticPropertyExtractor.class);
+    var extractorMock = mock(IStaticPropertyExtractor.class);
 
-    var modbusAdapterDescriptionV1 = migrationV1.migrate(modbusAdapterDescriptionV0, extractor);
+    var modbusAdapterDescriptionV1 = migrationV1.migrate(modbusAdapterDescriptionV0, extractorMock);
 
     var typeOfPortProperty = getTypeOfPortProperty(modbusAdapterDescriptionV1.element());
     assertEquals(XSD.INTEGER, typeOfPortProperty);

@@ -26,7 +26,6 @@ import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.XSD;
 
 import static org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter.ROS_PORT_KEY;
@@ -45,22 +44,18 @@ public class RosBridgeAdapterMigrationV1 implements IAdapterMigrator {
   @Override
   public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
                                                      IStaticPropertyExtractor extractor) throws RuntimeException {
-    var newConfigs = element.getConfig().stream().map(config->{
-      if (isPortConfig(config)){
-        var label = Labels.withId(ROS_PORT_KEY);
-        var staticProperty = new FreeTextStaticProperty(label.getInternalId(),
-            label.getLabel(),
-            label.getDescription(),
-            XSD.INTEGER);
-        staticProperty.setIndex(config.getIndex());
-        return staticProperty;
-      } else {
-        return config;
-      }
-    }).toList();
-    element.setConfig(newConfigs);
+
+    var portProperty = extractPortProperty(element);
+    portProperty.setRequiredDatatype(XSD.INTEGER);
 
     return MigrationResult.success(element);
+  }
+
+  protected FreeTextStaticProperty extractPortProperty(AdapterDescription adapterDescription) {
+    return (FreeTextStaticProperty) adapterDescription.getConfig().stream()
+                                                      .filter(this::isPortConfig)
+                                                      .findFirst()
+                                                      .orElseThrow();
   }
 
   private boolean isPortConfig(StaticProperty config) {

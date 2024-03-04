@@ -19,14 +19,17 @@
 package org.apache.streampipes.connect.iiot.adapters.migrations;
 
 import org.apache.streampipes.connect.iiot.adapters.migrations.config.RosBridgeAdapterVersionedConfig;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 
 public class RosBridgeAdapterMigrationV1Test {
@@ -40,19 +43,19 @@ public class RosBridgeAdapterMigrationV1Test {
 
   @Test
   public void testMigrationV1(){
+    var rosBridgeAdapterDescriptionV0 = RosBridgeAdapterVersionedConfig.getRosBridgeAdapterDescriptionV0();
+    var extractorMock = mock(IStaticPropertyExtractor.class);
 
-    var v0 = RosBridgeAdapterVersionedConfig.getRosBridgeAdapterDescriptionV0();
-    var v1 = RosBridgeAdapterVersionedConfig.getRosBridgeAdapterDescriptionV1();
+    var rosBridgeAdapterDescriptionV1 = migrationV1.migrate(rosBridgeAdapterDescriptionV0 , extractorMock);
 
-    var migrationResult = migrationV1.migrate(v0, null);
-
-    assertTrue(migrationResult.success());
-    assertCollectionsEqual(v1.getConfig(), migrationResult.element().getConfig());
+    var typeOfPortProperty = getTypeOfPortProperty(rosBridgeAdapterDescriptionV1.element());
+    assertEquals(XSD.INTEGER, typeOfPortProperty);
   }
 
-  private <T> void assertCollectionsEqual(List<T> list1, List<T> list2) {
-    assertEquals(list1.size(), list2.size());
-    assertTrue(list1.containsAll(list2));
-    assertTrue(list2.containsAll(list1));
+  private URI getTypeOfPortProperty(AdapterDescription adapterDescription) {
+    return migrationV1
+        .extractPortProperty(adapterDescription)
+        .getRequiredDatatype();
   }
+
 }

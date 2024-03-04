@@ -61,9 +61,9 @@ public class OpcUaAdapterMigrationV2Test {
   @Test
   public void testOPCUAAdapterMigrationV2() {
     var adapterDescriptionV1 = OpcUaAdapterVersionedConfig.getOpcUaAdapterDescriptionV1();
-    var extractor = mock(IStaticPropertyExtractor.class);
+    var extractorMock = mock(IStaticPropertyExtractor.class);
 
-    var adapterDescriptionV2 = migrationV2.migrate(adapterDescriptionV1, extractor)
+    var adapterDescriptionV2 = migrationV2.migrate(adapterDescriptionV1, extractorMock)
                                           .element();
 
     assertEquals(XSD.INTEGER, getTypeOfPortProperty(adapterDescriptionV2));
