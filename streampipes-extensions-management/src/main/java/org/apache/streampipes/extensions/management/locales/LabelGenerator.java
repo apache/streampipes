@@ -58,7 +58,7 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
   }
 
   public LabelGenerator(T desc) {
-    this(desc, false);
+    this(desc, true);
   }
 
   public T generateLabels() throws IOException {
