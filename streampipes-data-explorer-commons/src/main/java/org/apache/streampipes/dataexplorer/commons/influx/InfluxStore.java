@@ -108,7 +108,7 @@ public class InfluxStore {
   private void logNullFields(Event event) {
     List<String> nullFields = allEventProperties
         .stream()
-        .filter(ep -> ep instanceof EventPropertyPrimitive)
+        .filter(EventPropertyPrimitive.class::isInstance)
         .filter(ep -> {
           var runtimeName = ep.getRuntimeName();
           var field = event.getOptionalFieldByRuntimeName(runtimeName);

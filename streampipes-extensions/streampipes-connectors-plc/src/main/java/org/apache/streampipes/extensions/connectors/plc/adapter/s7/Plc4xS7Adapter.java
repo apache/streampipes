@@ -77,6 +77,8 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
 
   private static final Logger LOG = LoggerFactory.getLogger(Plc4xS7Adapter.class);
 
+  private static final String S7_URL = "s7://";
+
   /**
    * Keys of user configuration parameters
    */
@@ -127,7 +129,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
     getConfigurations(extractor);
 
     this.driverManager = new PooledPlcDriverManager();
-    try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
+    try (PlcConnection plcConnection = this.driverManager.getConnection(S7_URL + this.ip)) {
       if (!plcConnection.getMetadata().canRead()) {
         LOG.error("The S7 on IP: " + this.ip + " does not support reading data");
       }
@@ -145,7 +147,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   @Override
   public void pullData() {
     // Create PLC read request
-    try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
+    try (PlcConnection plcConnection = this.driverManager.getConnection(S7_URL + this.ip)) {
       readPlcData(plcConnection, this);
     } catch (Exception e) {
       LOG.error("Error while reading from PLC with IP {} ", this.ip, e);
@@ -171,7 +173,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   }
 
   private Map<String, Object> readPlcDataSynchronized() throws Exception {
-    try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
+    try (PlcConnection plcConnection = this.driverManager.getConnection(S7_URL + this.ip)) {
       var readRequest = makeReadRequest(plcConnection);
       // Execute the request
       var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);

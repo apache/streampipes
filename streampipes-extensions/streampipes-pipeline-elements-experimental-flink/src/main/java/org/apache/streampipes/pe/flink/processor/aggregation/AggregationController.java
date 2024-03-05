@@ -104,7 +104,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
   public FlinkDataProcessorProgram<AggregationParameters> getProgram(DataProcessorInvocation graph,
                                                                      ProcessingElementParameterExtractor extractor) {
 
-    List<String> groupBy = extractor.mappingPropertyValues("groupBy");
+    List<String> groupBy = extractor.mappingPropertyValues(GROUP_BY_KEY);
 
     List<String> aggregateKeyList = extractor.mappingPropertyValues(AGGREGATE_KEY_LIST);
     String aggregateOperation = extractor.selectedSingleValueInternalName(OPERATION_KEY, String.class);

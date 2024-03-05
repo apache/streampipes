@@ -65,34 +65,19 @@ public class ZipFileGenerator {
 
   public void makeZip(OutputStream outputStream) {
     byte[] buffer = new byte[1024];
-    ZipOutputStream zos = null;
-    try {
-      zos = new ZipOutputStream(outputStream);
-
-      FileInputStream in = null;
-
+    try (ZipOutputStream zos = new ZipOutputStream(outputStream)) {
       for (String file : this.fileList) {
         ZipEntry ze = new ZipEntry(file);
         zos.putNextEntry(ze);
-        try {
-          in = new FileInputStream(inputDirectory + File.separator + file);
+        try (FileInputStream in = new FileInputStream(inputDirectory + File.separator + file)) {
           int len;
           while ((len = in.read(buffer)) > 0) {
             zos.write(buffer, 0, len);
           }
-        } finally {
-          in.close();
         }
       }
-      zos.closeEntry();
     } catch (IOException ex) {
       ex.printStackTrace();
-    } finally {
-      try {
-        zos.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
     }
   }
 
