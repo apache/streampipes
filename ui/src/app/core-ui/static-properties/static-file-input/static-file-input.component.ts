@@ -95,7 +95,6 @@ export class StaticFileInputComponent
             .subscribe(fm => {
                 this.fileMetadata = fm;
                 if (filenameToSelect) {
-                    // console.log("here1");
                     this.selectedFile = this.fileMetadata.find(
                         fmi => fmi.filename === filenameToSelect,
                     );
