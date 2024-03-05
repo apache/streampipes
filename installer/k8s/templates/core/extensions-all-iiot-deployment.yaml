@@ -48,6 +48,8 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.streampipes.auth.secretName }}"
                   key: sp-initial-client-secret
+            - name: SP_COUCHDB_USER
+              value: "{{ .Values.external.couchdb.user }}"
             - name: SP_COUCHDB_PASSWORD
               valueFrom:
                 secretKeyRef:
