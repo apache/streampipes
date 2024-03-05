@@ -27,12 +27,15 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lightcouch.CouchDbClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
 
@@ -49,6 +52,8 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
       StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();
 
   private FileHandler fileHandler = new FileHandler();
+
+  Logger logger = LoggerFactory.getLogger(MergeFilenamesAndRenameDuplicatesMigration.class);
 
   protected Map<String, List<FileMetadata>> fileMetadataGroupedByOriginalName = new HashMap<>();
 
@@ -111,6 +116,12 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
     try {
       return mapper.readValue(inputStream, Map.class);
     } catch (Exception e) {
+      Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
+      String inputStreamString = scanner.hasNext() ? scanner.next() : "";
+      logger.error(
+          "Failed to construct a Map from InputStream stored in CouchDB, the data for this file is likely corrupted, "
+              + "skipping it for migration.\nThe original debug message is: " + e.getMessage()
+              + "\nThe original InputStream is: " + inputStreamString);
       return new HashMap<>();
     }
   }
