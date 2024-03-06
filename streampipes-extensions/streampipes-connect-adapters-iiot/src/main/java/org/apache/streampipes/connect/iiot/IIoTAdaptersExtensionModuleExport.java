@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.connect.iiot;
 
-import org.apache.streampipes.connect.iiot.adapters.oi4.Oi4Adapter;
 import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
+import org.apache.streampipes.connect.iiot.adapters.oi4.Oi4Adapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulatorAdapter;
 import org.apache.streampipes.connect.iiot.protocol.stream.FileReplayAdapter;

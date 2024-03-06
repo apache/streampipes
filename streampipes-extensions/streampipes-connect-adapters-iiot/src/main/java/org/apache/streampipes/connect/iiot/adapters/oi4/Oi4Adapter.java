@@ -64,7 +64,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Adapter to connect to an Open Industry 4.0 (OI4) compatible device.
  *
- * @see <a href="https://openindustry4.com/fileadmin/Dateien/Downloads/OEC_Development_Guideline_V1.1.1.pdf">Open Industry 4.0 Development Guide</a>
+ * @see <a href="https://openindustry4.com/fileadmin/Dateien/Downloads/OEC_Development_Guideline_V1.1.1.pdf"
+ * >Open Industry 4.0 Development Guide</a>
  */
 public class Oi4Adapter implements StreamPipesAdapter {
 
@@ -159,8 +160,12 @@ public class Oi4Adapter implements StreamPipesAdapter {
   }
 
   private void applyConfiguration(IStaticPropertyExtractor extractor) throws AdapterException {
-    String selectedAlternativeSensorDescription = extractor.selectedAlternativeInternalId(OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION);
-    String selectedAlternativeSelectedSensors = extractor.selectedAlternativeInternalId(OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES);
+    String selectedAlternativeSensorDescription = extractor.selectedAlternativeInternalId(
+        OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION
+    );
+    String selectedAlternativeSelectedSensors = extractor.selectedAlternativeInternalId(
+        OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES
+    );
 
     if (selectedAlternativeSelectedSensors.equals(OI4AdapterLabels.LABEL_KEY_SENSORS_ALL_ALTERNATIVE)) {
       // An empty list is used to indicated that messages from all sensors should be collected
