@@ -53,8 +53,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
-import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
@@ -107,7 +105,6 @@ import { DateInputComponent } from './date-input/date-input.component';
         MatTreeModule,
     ],
     declarations: [
-        ConfigureLabelsComponent,
         DataDownloadDialogComponent,
         DateInputComponent,
         DisplayRecommendedPipe,
@@ -131,7 +128,6 @@ import { DateInputComponent } from './date-input/date-input.component';
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
         StaticSlideToggleComponent,
-        LabelListItemComponent,
         ErrorHintComponent,
         AddToCollectionComponent,
         PipelineStartedStatusComponent,
@@ -150,7 +146,6 @@ import { DateInputComponent } from './date-input/date-input.component';
         RuntimeResolvableService,
     ],
     exports: [
-        ConfigureLabelsComponent,
         DataDownloadDialogComponent,
         DateInputComponent,
         PipelineElementTemplateConfigComponent,
