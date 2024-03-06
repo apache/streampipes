@@ -16,17 +16,15 @@
  *
  */
 
-package org.apache.streampipes.sensor;
-
-import org.apache.streampipes.connect.iiot.adapters.iolink.sensor.SensorVVB001Ifm;
+package org.apache.streampipes.connect.iiot.adapters.iolink.sensor;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class SensorVVB001IfmTest {
+public class SensorVVB001Test {
 
-  private SensorVVB001Ifm sensor = new SensorVVB001Ifm();
+  private SensorVVB001 sensor = new SensorVVB001();
 
   private String sampleInput = "0017FC000042FF000012FF00015CFF000025FF03";
 
@@ -40,13 +38,13 @@ public class SensorVVB001IfmTest {
   public void parseEvent() {
     var result = sensor.parseEvent(sampleInput);
 
-    assertEquals(0.0023, (double) result.get(SensorVVB001Ifm.V_RMS_NAME), 0.001);
-    assertEquals(6.600, (double) result.get(SensorVVB001Ifm.A_PEAK_NAME), 0.001);
-    assertEquals(1.8, (double) result.get(SensorVVB001Ifm.A_RMS_NAME), 0.001);
-    assertEquals(34.8, (double) result.get(SensorVVB001Ifm.TEMPERATURE_NAME), 0.001);
-    assertEquals(3.7, (double) result.get(SensorVVB001Ifm.CREST_NAME), 0.001);
-    assertEquals(0, result.get(SensorVVB001Ifm.STATUS_NAME));
-    assertEquals(true, result.get(SensorVVB001Ifm.OUT_1_NAME));
-    assertEquals(true, result.get(SensorVVB001Ifm.OUT_2_NAME));
+    assertEquals(0.0023, (double) result.get(SensorVVB001.V_RMS_NAME), 0.001);
+    assertEquals(6.600, (double) result.get(SensorVVB001.A_PEAK_NAME), 0.001);
+    assertEquals(1.8, (double) result.get(SensorVVB001.A_RMS_NAME), 0.001);
+    assertEquals(34.8, (double) result.get(SensorVVB001.TEMPERATURE_NAME), 0.001);
+    assertEquals(3.7, (double) result.get(SensorVVB001.CREST_NAME), 0.001);
+    assertEquals(0, result.get(SensorVVB001.STATUS_NAME));
+    assertEquals(true, result.get(SensorVVB001.OUT_1_NAME));
+    assertEquals(true, result.get(SensorVVB001.OUT_2_NAME));
   }
 }

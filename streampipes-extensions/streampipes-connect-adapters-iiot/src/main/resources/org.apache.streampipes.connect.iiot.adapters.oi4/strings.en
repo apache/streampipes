@@ -16,8 +16,8 @@
 #
 
 
-org.apache.streampipes.connect.iiot.adapters.hilscher.title=Hilscher IOLink
-org.apache.streampipes.connect.iiot.adapters.hilscher.description=Consumes MQTT data produced by an IOLink master of Hilscher
+org.apache.streampipes.connect.iiot.adapters.oi4.title=OI4
+org.apache.streampipes.connect.iiot.adapters.oi4.description=Connects to an Open Industry 4.0 (OI4)-compatible device via MQTT
 
 access-mode.title=Access Mode
 access-mode.description=Provide user credentials for the MQTT broker
@@ -43,5 +43,29 @@ broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. P
 topic.title=Topic
 topic.description=Example: test/topic
 
-sensor_type.title=Sensor Type
-sensor_type.description=Select the sensor type that you want to connect
+sensor-description.title=Sensor Description
+sensor-description.description=What kind of sensor do you want to connect to?
+
+sensor-type-alternative.title=By Type
+sensor-type-alternative.description=
+
+sensor-iodd-alternative.title=By IODD File -- NOT YET AVAILABLE
+sensor-iodd-alternative.description=
+
+sensor-iodd-input.title=By IODD File
+sensor-iodd-input.description=NOT YET AVAILABLE -- Please upload the IODD description of the respective sensor.
+
+sensor-type-input.title=By Type
+sensor-type-input.description=Provide the type of sensor you want to connect to, e.g., 'VVB001'.
+
+sensor-selection.title=Selected sensors
+sensor-selection.description=Please configure to which sensors of the master device you want to connect to.
+
+sensors-all.title=All
+sensors-all.description=
+
+sensors-list.title=Custom Selection
+sensors-list.description=
+
+sensors-list-input.title=Custom Selection
+sensors-list-input.description=Please provide a comma-separated list of all sensor Ids, e.g., '000008740649,000008740672'.

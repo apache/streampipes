@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.iiot.adapters.iolink;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.connect.iiot.adapters.iolink.sensor.SensorVVB001Ifm;
+import org.apache.streampipes.connect.iiot.adapters.iolink.sensor.SensorVVB001;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IParser;
@@ -96,7 +96,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    var sensor = new SensorVVB001Ifm();
+    var sensor = new SensorVVB001();
 
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.mqttConsumer = new MqttConsumer(
@@ -129,7 +129,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
                       var parsedEvent = sensor.parseEvent(eventData);
                       parsedEvent.put("timestamp", System.currentTimeMillis() + i);
                       parsedEvent.put("port", "port" + ports.get(i));
-                      parsedEvent.put(SensorVVB001Ifm.IO_LINK_MASTER_SN, serialnumber);
+                      parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
 
                       collector.collect(parsedEvent);
                     } else {
@@ -185,7 +185,7 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
-    return new SensorVVB001Ifm().getEventSchema();
+    return new SensorVVB001().getEventSchema();
   }
 
 
