@@ -40,6 +40,7 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import java.io.IOException;
 
 public class SlackNotificationSink extends StreamPipesNotificationSink {
+  public static final String SLACK_NOTIFICATION_SINK_ID = "org.apache.streampipes.sinks.notifications.jvm.slack";
 
   private static final String CHANNEL_TYPE = "channel-type";
   private static final String RECEIVER = "receiver";
@@ -57,7 +58,7 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.notifications.jvm.slack", 1)
+        .create(SLACK_NOTIFICATION_SINK_ID, 1)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)

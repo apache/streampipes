@@ -21,14 +21,16 @@ package org.apache.streampipes.sinks.notifications.jvm.migrations;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
+import static org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalSink.ONE_SIGNAL_NOTIFICATION_SINK_ID;
+
 public class OneSignalSinkMigrationV1 implements INotificationDataSinkMigrator {
   @Override
   public ModelMigratorConfig config() {
     return new ModelMigratorConfig(
-        "org.apache.streampipes.sinks.notifications.jvm.onesignal",
-        SpServiceTagPrefix.DATA_SINK,
-        0,
-        1
+      ONE_SIGNAL_NOTIFICATION_SINK_ID,
+      SpServiceTagPrefix.DATA_SINK,
+      0,
+      1
     );
   }
 }

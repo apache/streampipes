@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class OneSignalSink extends StreamPipesNotificationSink {
+  public static final String ONE_SIGNAL_NOTIFICATION_SINK_ID =
+      "org.apache.streampipes.sinks.notifications.jvm.onesignal";
 
   private static final String CONTENT_KEY = "content";
   private static final String APP_ID = "app_id";
@@ -55,7 +57,7 @@ public class OneSignalSink extends StreamPipesNotificationSink {
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.notifications.jvm.onesignal", 1)
+        .create(ONE_SIGNAL_NOTIFICATION_SINK_ID, 1)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)

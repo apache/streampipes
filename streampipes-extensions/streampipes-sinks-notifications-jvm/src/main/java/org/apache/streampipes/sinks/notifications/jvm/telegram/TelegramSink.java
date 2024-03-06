@@ -42,6 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class TelegramSink extends StreamPipesNotificationSink {
+  public static final String TELEGRAM_NOTIFICATION_SINK_ID = "org.apache.streampipes.sinks.notifications.jvm.telegram";
   private static final String CHANNEL_NAME_OR_CHAT_ID = "channel-chat-name";
   private static final String MESSAGE_TEXT = "message-text";
   private static final String BOT_API_KEY = "api-key";
@@ -58,7 +59,7 @@ public class TelegramSink extends StreamPipesNotificationSink {
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.notifications.jvm.telegram", 1)
+        .create(TELEGRAM_NOTIFICATION_SINK_ID, 1)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
