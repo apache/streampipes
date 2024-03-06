@@ -37,6 +37,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.json.
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -59,7 +60,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 /**
  * Adapter to connect to an Open Industry 4.0 (OI4) compatible device.
@@ -143,7 +147,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
             var payload = extractPayload(networkMessage);
             collector.collect(payload);
           } catch (ParseException e) {
-            LOG.error("Error during parsing of JSON message body: {}", mqttEvent);
+            LOG.debug("Message parsing failed - this might be caused by messages from a different sensor type");
           } catch (IOException e) {
             LOG.error("Error during reading the MQTT Event: {}", e.getMessage());
           }
@@ -152,7 +156,6 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
     Thread thread = new Thread(this.mqttConsumer);
     thread.start();
-
   }
 
   private InputStream convertByte(byte[] event) {
@@ -199,35 +202,105 @@ public class Oi4Adapter implements StreamPipesAdapter {
   ) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
-    List<byte[]> elements = new ArrayList<>();
-    InternalEventProcessor<byte[]> eventProcessor = elements::add;
+    var sampleMessage = getSampleMessage();
+    var guessSchema = guessSchemaFromSampleMessage(sampleMessage);
+    updateTimestampPropertyIfExists(guessSchema);
 
-    MqttConsumer guessConsumer = new MqttConsumer(this.mqttConfig, eventProcessor);
+    return guessSchema;
+  }
 
-    Thread thread = new Thread(guessConsumer);
-    thread.start();
+  /**
+   * Updates the timestamp property in the given GuessSchema if it exists as it is not correctly guessed.
+   * If the timestamp property exists, it is replaced with a proper timestamp property.
+   *
+   * @param guessSchema The GuessSchema to update.
+   */
+  private void updateTimestampPropertyIfExists(GuessSchema guessSchema) {
+    var eventProperties = guessSchema.getEventSchema()
+                                     .getEventProperties();
 
-    while (guessConsumer.getMessageCount() < 1) {
-      try {
-        TimeUnit.MILLISECONDS.sleep(100);
-      } catch (InterruptedException e) {
-        LOG.error("Schema guessing failed during waiting for an incoming event: {}", e.getMessage());
-      }
-    }
+    var timestampPropertyOpt = eventProperties.stream()
+                                              .filter(eventProperty -> eventProperty.getRuntimeName()
+                                                                                    .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP))
+                                              .findFirst();
 
+    var newTimestampProperty = timestampProperty(OI4AdapterLabels.EVENT_KEY_TIMESTAMP);
+
+    // If the timestamp property exists, replace it with the new timestamp property
+    timestampPropertyOpt.ifPresent(prop -> {
+      eventProperties.removeIf(eventProperty -> eventProperty.getRuntimeName()
+                                                             .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP));
+      eventProperties.add(newTimestampProperty);
+    });
+
+    guessSchema.setEventSchema(new EventSchema(eventProperties));
+  }
+
+  private GuessSchema guessSchemaFromSampleMessage(byte[] sampleMessage) {
     try {
-      var networkMessage = mapper.readValue(elements.get(0), NetworkMessage.class);
+      var networkMessage = mapper.readValue(sampleMessage, NetworkMessage.class);
       var payload = extractPayload(networkMessage);
 
       String plainPayload = mapper.writeValueAsString(payload);
       return new JsonParsers(new JsonObjectParser())
           .getGuessSchema(convertByte(plainPayload.getBytes(StandardCharsets.UTF_8)));
     } catch (IOException e) {
+      LOG.error("Error while reading sample message: {}", sampleMessage);
       throw new RuntimeException(e);
     }
   }
 
-  private Map<String, Object> extractPayload(NetworkMessage message) {
+  private byte[] getSampleMessage() {
+    List<byte[]> sampleMessages = new ArrayList<>();
+    MqttConsumer guessConsumer = getGuessMqttConsumer(sampleMessages);
+
+    var executor = Executors.newSingleThreadExecutor();
+    executor.submit(guessConsumer);
+
+    while (sampleMessages.isEmpty()) {
+      try {
+        TimeUnit.MILLISECONDS.sleep(100);
+      } catch (InterruptedException e) {
+        LOG.error("Schema guessing failed during waiting for an incoming event: {}", e.getMessage());
+      }
+    }
+    executor.shutdown();
+    return sampleMessages.get(0);
+  }
+
+  /**
+   * Obtain a specialized MQTT consumer designed to infer the event schema based on provided sampleMessages.
+   *
+   * @param sampleMessages A list of byte arrays representing MQTT message payloads.
+   * @return A customized MqttConsumer instance.
+   */
+  private MqttConsumer getGuessMqttConsumer(List<byte[]> sampleMessages) {
+    // Define a specialized event processor that adds an event to the sampleMessages array
+    // only if it meets certain expectations, as verified by extractPayload.
+    InternalEventProcessor<byte[]> eventProcessor = event -> {
+      InputStream in = convertByte(event);
+      NetworkMessage networkMessage;
+      try {
+        networkMessage = mapper.readValue(in, NetworkMessage.class);
+      } catch (IOException e) {
+        LOG.error("Error during parsing of incoming MQTT event.");
+        throw new RuntimeException(e);
+      }
+      try {
+        // Attempt to extract payload from the NetworkMessage
+        extractPayload(networkMessage);
+        // If successful, add the event to the sampleMessages array
+        sampleMessages.add(event);
+      } catch (ParseException e) {
+        LOG.debug("Collected sample could not be parsed successfully - "
+                      + "this could be a message from a different sensor type.");
+      }
+    };
+    return new MqttConsumer(this.mqttConfig, eventProcessor);
+  }
+
+
+  private Map<String, Object> extractPayload(NetworkMessage message) throws ParseException {
 
     var dataMessageOpt = findProcessDataInputMessage(message);
 
@@ -250,7 +323,6 @@ public class Oi4Adapter implements StreamPipesAdapter {
       }
     }
     throw new ParseException("No process data message");
-
   }
 
   private Optional<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
