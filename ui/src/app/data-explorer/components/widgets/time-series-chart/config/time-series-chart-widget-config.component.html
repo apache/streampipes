@@ -16,7 +16,11 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="ml-0 mr-0">
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
     <sp-select-color-properties
         (changeSelectedProperties)="setSelectedProperties($event)"
         [availableProperties]="
@@ -30,10 +34,13 @@
     >
     </sp-select-color-properties>
 
-    <h5>Spike mode</h5>
-    <mat-checkbox
-        [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.showSpike"
-        (change)="setShowSpikeProperty($event)"
-        >Vertical axis
-    </mat-checkbox>
-</div>
+    <sp-configuration-box title="Tooltip">
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.showSpike
+            "
+            (change)="setShowSpikeProperty($event)"
+            >Enable
+        </mat-checkbox>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

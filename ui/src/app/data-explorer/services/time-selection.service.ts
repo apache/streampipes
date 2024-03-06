@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TimeSettings } from '@streampipes/platform-services';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TimeSelectionService {
     public timeSelectionChangeSubject: Subject<TimeSettings> =
         new Subject<TimeSettings>();

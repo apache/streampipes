@@ -16,18 +16,16 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
     PipelineElementService,
-    PipelineService,
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConnectService } from '../../services/connect.service';
 import {
     CurrentUserService,
     DialogRef,
@@ -47,7 +45,7 @@ import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
-import { zip } from 'rxjs';
+import { Subscription, zip } from 'rxjs';
 import { RestApi } from '../../../services/rest-api.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 
@@ -56,7 +54,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
     templateUrl: './existing-adapters.component.html',
     styleUrls: ['./existing-adapters.component.scss'],
 })
-export class ExistingAdaptersComponent implements OnInit {
+export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterDescription[] = [];
     filteredAdapters: AdapterDescription[] = [];
 
@@ -82,13 +80,16 @@ export class ExistingAdaptersComponent implements OnInit {
     isAdmin = false;
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
+    tutorialActive = false;
+
+    userSubscription: Subscription;
+    tutorialActiveSubscription: Subscription;
 
     constructor(
         private adapterService: AdapterService,
         private dialogService: DialogService,
         private currentUserService: CurrentUserService,
         private pipelineElementService: PipelineElementService,
-        private pipelineService: PipelineService,
         private router: Router,
         private restApi: RestApi,
         private adapterFilter: AdapterFilterPipe,
@@ -101,10 +102,16 @@ export class ExistingAdaptersComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );
-        this.currentUserService.user$.subscribe(user => {
-            this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-            this.getAdaptersRunning();
-        });
+        this.userSubscription = this.currentUserService.user$.subscribe(
+            user => {
+                this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+                this.getAdaptersRunning();
+            },
+        );
+        this.tutorialActiveSubscription =
+            this.shepherdService.tutorialActive$.subscribe(tutorialActive => {
+                this.tutorialActive = tutorialActive;
+            });
     }
 
     startAdapter(adapter: AdapterDescription) {
@@ -225,28 +232,11 @@ export class ExistingAdaptersComponent implements OnInit {
     }
 
     /**
-     * Start edit mode when adapter is not used within a pipeline, otherwise shows warning dialog
+     * Start edit mode
      * @param adapter
      */
     editAdapter(adapter: AdapterDescription) {
-        this.pipelineService
-            .getPipelinesContainingElementId(
-                adapter.correspondingDataStreamElementId,
-            )
-            .subscribe(effectedPipelines => {
-                // if (effectedPipelines.length > 0) {
-                //     this.dialogService.open(CanNotEditAdapterDialog, {
-                //         panelType: PanelType.STANDARD_PANEL,
-                //         title: 'No edit possible',
-                //         width: '50vw',
-                //         data: {
-                //             pipelines: effectedPipelines,
-                //         },
-                //     });
-                // } else {
-                this.router.navigate(['connect', 'edit', adapter.elementId]);
-                //}
-            });
+        this.router.navigate(['connect', 'edit', adapter.elementId]);
     }
 
     deleteAdapter(adapter: AdapterDescription): void {
@@ -330,5 +320,10 @@ export class ExistingAdaptersComponent implements OnInit {
             adapter.elementId,
             'metrics',
         ]);
+    }
+
+    ngOnDestroy() {
+        this.userSubscription?.unsubscribe();
+        this.tutorialActiveSubscription?.unsubscribe();
     }
 }

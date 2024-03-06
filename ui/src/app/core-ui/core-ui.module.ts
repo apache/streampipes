@@ -30,7 +30,6 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { PortalModule } from '@angular/cdk/portal';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { StaticAnyInputComponent } from './static-properties/static-any-input/static-any-input.component';
@@ -54,8 +53,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
-import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
@@ -70,10 +67,6 @@ import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
 import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
-import {
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-} from '@danielmoncada/angular-datetime-picker';
 import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
 import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
 import { DownloadComponent } from './data-download-dialog/components/download/download.component';
@@ -82,6 +75,7 @@ import { SelectDataMissingValuesComponent } from './data-download-dialog/compone
 import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
+import { DateInputComponent } from './date-input/date-input.component';
 
 @NgModule({
     imports: [
@@ -99,13 +93,10 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         MatDatepickerModule,
         MatNativeDateModule,
         NgxChartsModule,
-        PlotlyViaWindowModule,
         MatSliderModule,
         MatSlideToggleModule,
         MatChipsModule,
         MatTreeModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
         PlatformServicesModule,
         PortalModule,
         SharedUiModule,
@@ -114,8 +105,8 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         MatTreeModule,
     ],
     declarations: [
-        ConfigureLabelsComponent,
         DataDownloadDialogComponent,
+        DateInputComponent,
         DisplayRecommendedPipe,
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
@@ -137,7 +128,6 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
         StaticSlideToggleComponent,
-        LabelListItemComponent,
         ErrorHintComponent,
         AddToCollectionComponent,
         PipelineStartedStatusComponent,
@@ -156,8 +146,8 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         RuntimeResolvableService,
     ],
     exports: [
-        ConfigureLabelsComponent,
         DataDownloadDialogComponent,
+        DateInputComponent,
         PipelineElementTemplateConfigComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,

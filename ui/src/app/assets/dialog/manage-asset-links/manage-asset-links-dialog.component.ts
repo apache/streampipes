@@ -53,7 +53,7 @@ export class SpManageAssetLinksDialogComponent
     elementIdFunction = el => el.elementId;
     fileIdFunction = el => el.fileId;
     nameFunction = el => el.name;
-    filenameFunction = el => el.originalFilename;
+    filenameFunction = el => el.filename;
     measureNameFunction = el => el.measureName;
 
     constructor(

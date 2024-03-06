@@ -18,9 +18,6 @@ ui
 backend
 extensions-all-jvm
 couchdb
-jobmanager
-taskmanager
 zookeeper
 kafka
 influxdb
-pipeline-elements-all-flink

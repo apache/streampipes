@@ -16,14 +16,14 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     ImageWidgetModel,
     ImageWidgetVisConfig,
 } from '../model/image-widget.model';
-import { WidgetType } from '../../../../registry/data-explorer-widgets';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { config } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-image-widget-config',
@@ -37,25 +37,30 @@ export class ImageWidgetConfigComponent extends BaseWidgetConfig<
     imageSemanticType = 'https://image.com';
     imageFields: DataExplorerField[];
 
-    protected getWidgetType(): WidgetType {
-        return WidgetType.Image;
+    protected applyWidgetConfig(config: ImageWidgetVisConfig): void {
+        this.imageFields = this.getImageFields();
+        config.selectedField = this.fieldService.getSelectedField(
+            config.selectedField,
+            this.imageFields,
+            () => this.imageFields[0],
+        );
     }
 
-    protected initWidgetConfig(): ImageWidgetVisConfig {
-        this.imageFields = this.fieldProvider.allFields.filter(field =>
+    private getImageFields(): DataExplorerField[] {
+        return this.fieldProvider.allFields.filter(field =>
             field.fieldCharacteristics.semanticTypes.find(
                 st => st === this.imageSemanticType,
             ),
         );
-        return {
-            forType: this.getWidgetType(),
-            selectedField: this.imageFields[0],
-        };
     }
 
     setSelectedImageProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedField =
             field;
         this.triggerDataRefresh();
+    }
+
+    protected requiredFieldsForChartPresent(): boolean {
+        return this.getImageFields().length > 0;
     }
 }

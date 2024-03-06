@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div fxFlex="100">
     <div
         fxFlex="100"
         fxLayout="column"
@@ -25,12 +25,12 @@
     >
         <div fxLayout="row" class="sp-tab-bg designer-panel-header">
             <div fxLayoutAlign="start center" class="designer-panel-title">
-                <h4>
+                <span>
                     {{
                         currentlyConfiguredWidget.baseAppearanceConfig
                             .widgetTitle
                     }}
-                </h4>
+                </span>
             </div>
             <div fxFlex fxLayoutAlign="end end">
                 <button
@@ -42,108 +42,110 @@
                 </button>
             </div>
         </div>
-        <mat-tab-group
-            [selectedIndex]="selectedIndex"
-            (selectedIndexChange)="selectOptionsPanel($event)"
-            color="accent"
-            class="small"
-        >
-            <mat-tab
-                data-cy="designer-panel-data-config"
-                label="Data"
-            ></mat-tab>
-            <mat-tab
-                data-cy="designer-panel-visualization-config"
-                label="Visualization"
-                [disabled]="
-                    !currentlyConfiguredWidget.dataConfig.sourceConfigs ||
-                    currentlyConfiguredWidget.dataConfig.sourceConfigs
-                        .length === 0
-                "
-            ></mat-tab>
-            <mat-tab
-                data-cy="designer-panel-appearance-config"
-                label="Appearance"
-            ></mat-tab>
-        </mat-tab-group>
-
-        <div fxFlex="100" fxLayout="column">
-            <div fxFlex fxLayout="column" class="designer-panel-config">
-                <div *ngIf="selectedIndex === 0">
-                    <sp-data-explorer-widget-data-settings
-                        #dataSettingsPanel
-                        [(dataLakeMeasure)]="dataLakeMeasure"
-                        [dataConfig]="currentlyConfiguredWidget.dataConfig"
-                        [newWidgetMode]="newWidgetMode"
-                        [widgetId]="currentlyConfiguredWidget._id"
-                        (createWidgetEmitter)="createNewWidget()"
-                    >
-                    </sp-data-explorer-widget-data-settings>
-                </div>
-
-                <div *ngIf="selectedIndex === 1" class="p-5">
-                    <sp-explorer-visualisation-settings
-                        [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-                    >
-                    </sp-explorer-visualisation-settings>
-                </div>
-
-                <div *ngIf="selectedIndex === 2" class="p-5">
-                    <sp-data-explorer-widget-appearance-settings
-                        [widgetId]="currentlyConfiguredWidget._id"
-                        [baseAppearanceConfig]="
-                            currentlyConfiguredWidget.baseAppearanceConfig
-                        "
-                    >
-                    </sp-data-explorer-widget-appearance-settings>
-                </div>
-            </div>
-            <mat-divider *ngIf="newWidgetMode"></mat-divider>
-            <div
-                fxLayout="row"
-                fxLayoutAlign="center end"
-                class="mt-10 actions-align-right p-15"
-                *ngIf="newWidgetMode"
+        <div fxFlex="100" fxLayout="column" class="no-overflow">
+            <mat-tab-group
+                [selectedIndex]="selectedIndex"
+                (selectedIndexChange)="selectOptionsPanel($event)"
+                color="accent"
+                fxFlexFill
+                class="small-tab-headers mat-tab-fill-height"
             >
-                <button
-                    mat-button
-                    mat-raised-button
-                    color="accent"
-                    data-cy="data-explorer-select-data-set-next-btn"
+                <mat-tab data-cy="designer-panel-data-config" label="Data">
+                    <div class="scroll-tab-content">
+                        <sp-data-explorer-widget-data-settings
+                            #dataSettingsPanel
+                            [(dataLakeMeasure)]="dataLakeMeasure"
+                            [dataConfig]="currentlyConfiguredWidget.dataConfig"
+                            [newWidgetMode]="newWidgetMode"
+                            [widgetId]="currentlyConfiguredWidget._id"
+                            (createWidgetEmitter)="createNewWidget()"
+                        >
+                        </sp-data-explorer-widget-data-settings>
+                    </div>
+                </mat-tab>
+                <mat-tab
+                    data-cy="designer-panel-visualization-config"
+                    label="Visualization"
                     [disabled]="
-                        selectedIndex === 0 &&
-                        (!currentlyConfiguredWidget.dataConfig.sourceConfigs ||
-                            currentlyConfiguredWidget.dataConfig.sourceConfigs
-                                .length === 0 ||
-                            currentlyConfiguredWidget.dataConfig
-                                .sourceConfigs[0].measureName === '')
+                        !currentlyConfiguredWidget.dataConfig.sourceConfigs ||
+                        currentlyConfiguredWidget.dataConfig.sourceConfigs
+                            .length === 0
                     "
-                    *ngIf="newWidgetMode && selectedIndex === 0"
-                    (click)="selectedIndex = 1"
                 >
-                    Next
-                </button>
-                <button
-                    *ngIf="newWidgetMode && selectedIndex === 1"
-                    mat-button
-                    mat-raised-button
-                    class="mat-basic mr-10"
-                    (click)="selectedIndex = 0"
-                    style="margin-right: 10px"
+                    <div class="scroll-tab-content">
+                        <sp-explorer-visualisation-settings
+                            fxFlex="100"
+                            fxLayout="column"
+                            [currentlyConfiguredWidget]="
+                                currentlyConfiguredWidget
+                            "
+                        >
+                        </sp-explorer-visualisation-settings>
+                    </div>
+                </mat-tab>
+                <mat-tab
+                    data-cy="designer-panel-appearance-config"
+                    label="Appearance"
                 >
-                    Back
-                </button>
-                <button
-                    mat-button
-                    mat-raised-button
-                    color="accent"
-                    data-cy="data-explorer-select-data-set-create-btn"
-                    *ngIf="newWidgetMode && selectedIndex === 1"
-                    (click)="createNewWidget()"
-                >
-                    Create
-                </button>
-            </div>
+                    <div class="scroll-tab-content">
+                        <sp-data-explorer-widget-appearance-settings
+                            fxFlex="100"
+                            fxLayout="column"
+                            [widgetId]="currentlyConfiguredWidget._id"
+                            [baseAppearanceConfig]="
+                                currentlyConfiguredWidget.baseAppearanceConfig
+                            "
+                        >
+                        </sp-data-explorer-widget-appearance-settings>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+        <div
+            fxFlex="50px"
+            fxLayoutAlign="end center"
+            fxLayout="row"
+            *ngIf="newWidgetMode"
+            class="new-widget-section"
+        >
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                data-cy="data-explorer-select-data-set-next-btn"
+                [disabled]="
+                    selectedIndex === 0 &&
+                    (!currentlyConfiguredWidget.dataConfig.sourceConfigs ||
+                        currentlyConfiguredWidget.dataConfig.sourceConfigs
+                            .length === 0 ||
+                        currentlyConfiguredWidget.dataConfig.sourceConfigs[0]
+                            .measureName === '')
+                "
+                *ngIf="newWidgetMode && selectedIndex === 0"
+                (click)="selectedIndex = 1"
+            >
+                Next
+            </button>
+            <button
+                *ngIf="newWidgetMode && selectedIndex === 1"
+                mat-button
+                mat-raised-button
+                class="mat-basic mr-10"
+                (click)="selectedIndex = 0"
+                style="margin-right: 10px"
+            >
+                Back
+            </button>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                data-cy="data-explorer-select-data-set-create-btn"
+                *ngIf="newWidgetMode && selectedIndex === 1"
+                (click)="createNewWidget()"
+            >
+                Create
+            </button>
         </div>
     </div>
 </div>

@@ -16,15 +16,16 @@
   ~
   -->
 
-<div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+<div
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxFlex="100"
+    fxLayoutGap="10px"
+>
     <div fxLayout="row" fxLayoutAlign="center center">
-        <!-- TODO Icon -->
+        <i class="material-icons warning-icon">warning</i>
     </div>
-    <div
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        style="margin-top: 10px"
-    >
+    <div fxLayout="column" fxLayoutAlign="center center">
         <div class="default-text">Found no data in selected time range</div>
         <div class="default-text date-range-text">
             {{ viewDateRange.startTime | date: 'MM/dd/yyyy HH:mm' }} -

@@ -16,14 +16,19 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <h5>Image Field</h5>
-    <sp-select-property
-        [availableProperties]="imageFields"
-        [selectedProperty]="
-            currentlyConfiguredWidget.visualizationConfig.selectedField
-        "
-        (changeSelectedProperty)="setSelectedImageProperty($event)"
-    >
-    </sp-select-property>
-</div>
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box title="Field">
+        <sp-select-property
+            [availableProperties]="imageFields"
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig.selectedField
+            "
+            (changeSelectedProperty)="setSelectedImageProperty($event)"
+        >
+        </sp-select-property>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

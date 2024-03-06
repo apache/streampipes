@@ -18,12 +18,18 @@
 package org.apache.streampipes.manager.file;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class FileHandler {
+
+  Logger logger = LoggerFactory.getLogger(FileHandler.class);
 
   public void storeFile(String filename, InputStream fileInputStream) throws IOException {
     File targetFile = makeFile(filename);
@@ -37,6 +43,20 @@ public class FileHandler {
 
   public File getFile(String filename) {
     return FileUtils.getFile(makeFile(filename));
+  }
+
+  public void renameFile(String oldFilename, String newFilename) {
+    try {
+      var fileInputStream = new FileInputStream(getFile(oldFilename));
+      deleteFile(oldFilename);
+      storeFile(newFilename, fileInputStream);
+    } catch (FileNotFoundException e) {
+      logger.error(
+          "Failed to find the old file locally with internalFilename as the identifier, this is most likely a mismatch "
+              + "between local file and FileMetadata stored in CouchDB. Raw exception message: " + e.getMessage());
+    } catch (IOException e) {
+      logger.error("Failed to save renamed file locally: " + e.getMessage());
+    }
   }
 
   private File makeFile(String filename) {

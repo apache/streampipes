@@ -84,11 +84,9 @@ export class FileOverviewComponent implements OnInit {
     }
 
     downloadFile(fileMetadata: FileMetadata) {
-        this.filesService
-            .getFile(fileMetadata.internalFilename)
-            .subscribe(response => {
-                saveAs(response, fileMetadata.originalFilename);
-            });
+        this.filesService.getFile(fileMetadata.filename).subscribe(response => {
+            saveAs(response, fileMetadata.filename);
+        });
     }
 
     getFileColor(fileType: string) {

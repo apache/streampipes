@@ -19,6 +19,7 @@
 package org.apache.streampipes.model.staticproperty;
 
 import java.net.URI;
+import java.util.Objects;
 
 public class FreeTextStaticProperty extends StaticProperty {
 
@@ -67,7 +68,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 
   public FreeTextStaticProperty(String internalName, String label, String description, URI type) {
     super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
-    this.requiredDomainProperty = type;
+    this.requiredDatatype = type;
   }
 
   public FreeTextStaticProperty(String internalName, String label, String description, URI type, String mapsTo) {
@@ -162,5 +163,59 @@ public class FreeTextStaticProperty extends StaticProperty {
   @Override
   public void accept(StaticPropertyVisitor visitor) {
     visitor.visit(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof FreeTextStaticProperty that)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    if (multiLine != that.multiLine) {
+      return false;
+    }
+    if (htmlAllowed != that.htmlAllowed) {
+      return false;
+    }
+    if (htmlFontFormat != that.htmlFontFormat) {
+      return false;
+    }
+    if (placeholdersSupported != that.placeholdersSupported) {
+      return false;
+    }
+    if (!Objects.equals(value, that.value)) {
+      return false;
+    }
+    if (!Objects.equals(requiredDatatype, that.requiredDatatype)) {
+      return false;
+    }
+    if (!Objects.equals(requiredDomainProperty, that.requiredDomainProperty)) {
+      return false;
+    }
+    if (!Objects.equals(mapsTo, that.mapsTo)) {
+      return false;
+    }
+    return Objects.equals(valueSpecification, that.valueSpecification);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (value != null ? value.hashCode() : 0);
+    result = 31 * result + (requiredDatatype != null ? requiredDatatype.hashCode() : 0);
+    result = 31 * result + (requiredDomainProperty != null ? requiredDomainProperty.hashCode() : 0);
+    result = 31 * result + (mapsTo != null ? mapsTo.hashCode() : 0);
+    result = 31 * result + (multiLine ? 1 : 0);
+    result = 31 * result + (htmlAllowed ? 1 : 0);
+    result = 31 * result + (htmlFontFormat ? 1 : 0);
+    result = 31 * result + (placeholdersSupported ? 1 : 0);
+    result = 31 * result + (valueSpecification != null ? valueSpecification.hashCode() : 0);
+    return result;
   }
 }

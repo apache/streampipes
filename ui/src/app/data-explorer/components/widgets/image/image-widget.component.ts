@@ -23,16 +23,10 @@ import {
     DataExplorerField,
     DatalakeQueryParameterBuilder,
     DatalakeQueryParameters,
-    DatalakeRestService,
-    DataViewQueryGeneratorService,
     EventPropertyUnion,
     SpQueryResult,
 } from '@streampipes/platform-services';
 import { ImageWidgetModel } from './model/image-widget.model';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { ResizeService } from '../../../services/resize.service';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
-import { TimeSelectionService } from '../../../services/time-selection.service';
 import { SecurePipe } from '../../../../services/secure.pipe';
 
 @Component({
@@ -56,23 +50,8 @@ export class ImageWidgetComponent
     canvasWidth;
     imagePreviewHeight;
 
-    constructor(
-        dataLakeRestService: DatalakeRestService,
-        widgetConfigurationService: WidgetConfigurationService,
-        resizeService: ResizeService,
-        dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-        fieldService: DataExplorerFieldProviderService,
-        timeSelectionService: TimeSelectionService,
-        private securePipe: SecurePipe,
-    ) {
-        super(
-            dataLakeRestService,
-            widgetConfigurationService,
-            resizeService,
-            dataViewQueryGeneratorService,
-            fieldService,
-            timeSelectionService,
-        );
+    constructor(private securePipe: SecurePipe) {
+        super();
     }
 
     ngOnInit(): void {

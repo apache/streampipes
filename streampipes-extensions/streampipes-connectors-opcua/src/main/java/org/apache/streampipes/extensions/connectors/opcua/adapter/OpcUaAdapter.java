@@ -226,12 +226,12 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfiguration(staticPropertyInternalName, extractor);
+    return OpcUaUtil.resolveConfig(staticPropertyInternalName, extractor);
   }
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID, 1, OpcUaAdapter::new)
+    var builder = AdapterConfigurationBuilder.create(ID, 2, OpcUaAdapter::new)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)

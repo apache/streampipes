@@ -28,8 +28,7 @@ public class FileMetadata {
 
   private @SerializedName("_rev") String rev;
 
-  private String internalFilename;
-  private String originalFilename;
+  private String filename;
   private String filetype;
 
   private long createdAt;
@@ -53,20 +52,12 @@ public class FileMetadata {
     this.rev = rev;
   }
 
-  public String getInternalFilename() {
-    return internalFilename;
+  public String getFilename() {
+    return filename;
   }
 
-  public void setInternalFilename(String internalFilename) {
-    this.internalFilename = internalFilename;
-  }
-
-  public String getOriginalFilename() {
-    return originalFilename;
-  }
-
-  public void setOriginalFilename(String originalFilename) {
-    this.originalFilename = originalFilename;
+  public void setFilename(String filename) {
+    this.filename = filename;
   }
 
   public long getCreatedAt() {

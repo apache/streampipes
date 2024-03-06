@@ -98,7 +98,7 @@ export abstract class BaseAssetLinksDirective {
                     a.measureName.localeCompare(b.measureName),
                 );
                 this.files = files.sort((a, b) =>
-                    a.originalFilename.localeCompare(b.originalFilename),
+                    a.filename.localeCompare(b.filename),
                 );
                 this.adapters = adapters.sort((a, b) =>
                     a.name.localeCompare(b.name),

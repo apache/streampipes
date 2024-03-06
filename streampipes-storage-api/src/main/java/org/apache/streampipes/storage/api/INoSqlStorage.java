@@ -28,13 +28,9 @@ public interface INoSqlStorage {
 
   IAdapterStorage getAdapterDescriptionStorage();
 
-  ICategoryStorage getCategoryStorageAPI();
-
   IImageStorage getImageStorage();
 
   IUserGroupStorage getUserGroupStorage();
-
-  ILabelStorage getLabelStorageAPI();
 
   IPipelineStorage getPipelineStorageAPI();
 

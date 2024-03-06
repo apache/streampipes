@@ -52,7 +52,7 @@ public class MoveTransformationRule implements TransformationRule {
       event.put(key, movedObject.get(key));
       return event;
     } else if (keys.size() == 1) {
-      if (event.get(keys.get(0)) != null && event.get(keys.get(0)) instanceof HashMap) {
+      if (event.get(keys.get(0)) instanceof HashMap) {
         String movedObjectKey = movedObject.keySet().iterator().next();
         ((Map<String, Object>) event.get(keys.get(0))).put(movedObjectKey, movedObject.get(movedObjectKey));
       } else {

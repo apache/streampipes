@@ -28,6 +28,8 @@ public interface IGenericStorage {
 
   List<Map<String, Object>> findAll(String type) throws IOException;
 
+  List<Map<String, Object>> find(String appDocType, Map<String, Object> query) throws IOException;
+
   Map<String, Object> findOne(String id) throws IOException;
 
   Map<String, Object> create(String payload) throws IOException;

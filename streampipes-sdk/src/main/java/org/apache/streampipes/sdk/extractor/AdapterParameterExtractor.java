@@ -21,6 +21,7 @@ package org.apache.streampipes.sdk.extractor;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
@@ -32,12 +33,13 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
 
   private List<IParser> parsers;
 
-  private final StaticPropertyExtractor staticPropertyExtractor;
+  private final IStaticPropertyExtractor staticPropertyExtractor;
 
   private final AdapterDescription adapterDescription;
 
-  public AdapterParameterExtractor(StaticPropertyExtractor extractor,
-                                   AdapterDescription adapterDescription) {
+  public AdapterParameterExtractor(
+      IStaticPropertyExtractor extractor,
+      AdapterDescription adapterDescription) {
     super();
     this.staticPropertyExtractor = extractor;
     this.adapterDescription = adapterDescription;
@@ -79,7 +81,7 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
   }
 
   @Override
-  public StaticPropertyExtractor getStaticPropertyExtractor() {
+  public IStaticPropertyExtractor getStaticPropertyExtractor() {
     return staticPropertyExtractor;
   }
 

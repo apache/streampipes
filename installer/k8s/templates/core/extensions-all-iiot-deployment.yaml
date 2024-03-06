@@ -34,7 +34,7 @@ spec:
           command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{.Values.streampipes.core.service.name}} {{ .Values.streampipes.core.service.port }} && exit 0 || sleep 3; done; exit 1"]
       containers:
         - name: extensions-all-iiot
-          image: {{ .Values.streampipes.registry }}/extensions-all-iiot:{{ .Values.streampipes.version }}
+          image: {{ .Values.streampipes.registry }}/{{ .Values.extensions.iiot.imageName }}:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: {{ .Values.extensions.iiot.port }}
@@ -48,6 +48,8 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.streampipes.auth.secretName }}"
                   key: sp-initial-client-secret
+            - name: SP_COUCHDB_USER
+              value: "{{ .Values.external.couchdb.user }}"
             - name: SP_COUCHDB_PASSWORD
               valueFrom:
                 secretKeyRef:

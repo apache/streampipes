@@ -19,7 +19,6 @@
 import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivate,
     Router,
     RouterStateSnapshot,
     UrlTree,
@@ -29,7 +28,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class RegistrationAllowedCanActivateGuard implements CanActivate {
+export class RegistrationAllowedCanActivateGuard {
     constructor(
         private router: Router,
         private loginService: LoginService,

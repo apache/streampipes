@@ -16,36 +16,32 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <span class="data-explorer-header">Fields </span>
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                style="margin-right: 10px"
-                (click)="selectAllFields()"
-            >
-                Select all
-            </button>
-            <button
-                mat-button
-                mat-raised-button
-                class="small-button mat-basic"
-                style="margin-right: 10px"
-                (click)="deselectAllFields()"
-            >
-                Deselect all
-            </button>
-        </div>
+<sp-configuration-box title="Fields" marginTop="5px" class="mr-10">
+    <div header>
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            style="margin-right: 10px"
+            (click)="selectAllFields()"
+        >
+            Select all
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="small-button mat-basic"
+            style="margin-right: 10px"
+            (click)="deselectAllFields()"
+        >
+            Deselect all
+        </button>
     </div>
     <div
-        style="margin-left: 1px; margin-right: 1px"
         *ngFor="let field of availableProperties"
         fxLayout="column"
-        class="field-scroll-panel"
+        class="field-selection-box"
     >
         <mat-checkbox
             color="accent"
@@ -62,69 +58,86 @@
                     ')'
             }}
         </mat-checkbox>
-        <div fxFlex fxLayoutAlign="end center" *ngIf="isSelected(field)">
-            <input
-                class="color-field"
-                [(colorPicker)]="
-                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
-                        field.fullDbName + field.sourceIndex.toString()
-                    ]
-                "
-                [style.background]="
-                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
-                        field.fullDbName + field.sourceIndex.toString()
-                    ]
-                "
-                required
-                [cpPosition]="'bottom'"
-                [cpPresetColors]="presetColors"
-                (colorPickerSelect)="triggerDataRefresh()"
-                autocomplete="off"
-            />
-            <mat-form-field
-                appearance="outline"
-                class="marginColorField"
-                color="accent"
-                fxFlex="60"
-            >
+        <div
+            fxLayout="row"
+            fxFlex="90"
+            fxLayoutAlign="start center"
+            *ngIf="isSelected(field)"
+            fxLayoutGap="5px"
+        >
+            <div fxFlex="30px" fxLayoutAlign="start center">
                 <input
-                    [(ngModel)]="
+                    class="color-field"
+                    [(colorPicker)]="
                         currentlyConfiguredWidget.visualizationConfig
-                            .displayName[
+                            .chosenColor[
                             field.fullDbName + field.sourceIndex.toString()
                         ]
                     "
-                    matInput
-                    (input)="onFilterChange($event.target.value, field)"
+                    [style.background]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .chosenColor[
+                            field.fullDbName + field.sourceIndex.toString()
+                        ]
+                    "
+                    required
+                    [cpPosition]="'bottom'"
+                    [cpPresetColors]="presetColors"
+                    (colorPickerSelect)="triggerViewRefresh()"
+                    autocomplete="off"
                 />
-            </mat-form-field>
-            <mat-form-field
-                appearance="outline"
-                class="marginColorField"
-                color="accent"
-                fxFlex="35"
-            >
-                <mat-select
-                    [(value)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .displayType[
-                            field.fullDbName + field.sourceIndex.toString()
-                        ]
-                    "
-                    (selectionChange)="triggerDataRefresh()"
+            </div>
+            <div fxFlex="190px">
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="w-100"
                 >
-                    <mat-option [value]="'lines'">Line</mat-option>
-                    <mat-option [value]="'normal_markers'">Scatter</mat-option>
-                    <mat-option [value]="'lines+markers'"
-                        >Scattered Line</mat-option
+                    <input
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayName[
+                                field.fullDbName + field.sourceIndex.toString()
+                            ]
+                        "
+                        matInput
+                        (input)="onFilterChange($event.target.value, field)"
+                    />
+                </mat-form-field>
+            </div>
+            <div fxFlex="30" fxLayoutAlign="end center">
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="w-100"
+                >
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayType[
+                                field.fullDbName + field.sourceIndex.toString()
+                            ]
+                        "
+                        (selectionChange)="triggerViewRefresh()"
                     >
-                    <mat-option [value]="'bar'">Bar</mat-option>
-                    <mat-option [value]="'symbol_markers'">Symbol</mat-option>
-                </mat-select>
-            </mat-form-field>
+                        <mat-option [value]="'lines'">Line</mat-option>
+                        <mat-option [value]="'normal_markers'"
+                            >Scatter</mat-option
+                        >
+                        <mat-option [value]="'lines+markers'"
+                            >Scattered Line
+                        </mat-option>
+                        <mat-option [value]="'bar'">Bar</mat-option>
+                        <mat-option [value]="'symbol_markers'"
+                            >Symbol</mat-option
+                        >
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
     </div>
-    <span class="data-explorer-header">Axis Selection </span>
+</sp-configuration-box>
+<sp-configuration-box title="Axis" marginTop="5px">
     <div
         style="margin-left: 1px; margin-right: 1px"
         *ngFor="let field of availableProperties"
@@ -132,18 +145,18 @@
         class="field-scroll-panel mb-10"
     >
         <div fxFlex fxLayoutAlign="start center" *ngIf="isSelected(field)">
-            <b>{{
+            <small>{{
                 field.runtimeName +
                     ' (' +
                     (field.aggregation ? field.aggregation + ', ' : '') +
                     field.measure +
                     ')'
-            }}</b>
+            }}</small>
             <span fxFlex></span>
             <mat-form-field
                 appearance="outline"
                 color="accent"
-                fxFlex="60"
+                fxFlex="30"
                 class="marginColorFieldMore"
             >
                 <mat-select
@@ -153,7 +166,7 @@
                             field.fullDbName + field.sourceIndex.toString()
                         ]
                     "
-                    (selectionChange)="triggerDataRefresh()"
+                    (selectionChange)="triggerViewRefresh()"
                 >
                     <mat-option [value]="'left'">Left</mat-option>
                     <mat-option [value]="'right'">Right</mat-option>
@@ -161,4 +174,4 @@
             </mat-form-field>
         </div>
     </div>
-</div>
+</sp-configuration-box>

@@ -22,6 +22,11 @@
     text-align: center;
 }
 
+.warning-icon {
+    color: var(--color-warn);
+    font-size: 24pt;
+}
+
 .date-range-text {
     font-size: 12pt;
 }

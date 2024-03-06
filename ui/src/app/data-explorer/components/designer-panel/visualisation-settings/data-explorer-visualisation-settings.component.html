@@ -17,106 +17,37 @@
   -->
 
 <div fxFlex="100" fxLayout="column" class="form-field-small">
-    <div
-        fxFlex="100"
-        fxLayout="column"
-        class="data-explorer-options-panel pr-5"
+    <sp-configuration-box
+        title="Chart Type"
+        marginTop="5px"
+        background="var(--color-bg-2)"
     >
-        <span class="data-explorer-header mb-10">Visualization Type</span>
-        <mat-form-field appearance="outline" color="accent" fxFlex="100">
-            <mat-select
-                [(value)]="currentlyConfiguredWidget.widgetType"
-                (selectionChange)="triggerWidgetTypeChange($event)"
-                data-cy="data-explorer-select-visualization-type"
-            >
-                <mat-option
-                    [value]="widget.id"
-                    *ngFor="let widget of availableWidgets"
+        <div class="mt-10">
+            <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                <mat-select
+                    [(value)]="currentlyConfiguredWidget.widgetType"
+                    (selectionChange)="triggerWidgetTypeChange($event)"
+                    data-cy="data-explorer-select-visualization-type"
                 >
-                    <span class="pipeline-name">{{ widget.label }}</span>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div
-        fxFlex="100"
-        fxLayout="column"
-        class="data-explorer-options-panel pr-5"
-    >
-        <span class="data-explorer-header">Configuration</span>
-        <div
-            *ngIf="currentlyConfiguredWidget.widgetType === 'table'"
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-table-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-table-widget-config>
+                    <mat-option
+                        [value]="widget.id"
+                        *ngFor="let widget of availableWidgets"
+                    >
+                        <span class="pipeline-name">{{ widget.label }}</span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
-        <div
-            *ngIf="currentlyConfiguredWidget.widgetType === 'map'"
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-map-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-map-widget-config>
-        </div>
-        <div
-            *ngIf="currentlyConfiguredWidget.widgetType === 'heatmap'"
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-heatmap-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-heatmap-widget-config>
-        </div>
-        <div
-            *ngIf="currentlyConfiguredWidget.widgetType === 'time-series-chart'"
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-time-series-chart-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-time-series-chart-widget-config>
-        </div>
-        <div
-            *ngIf="currentlyConfiguredWidget.widgetType === 'indicator-chart'"
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-indicator-chart-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-indicator-chart-widget-config>
-        </div>
-        <div
-            *ngIf="currentlyConfiguredWidget.widgetType === 'correlation-chart'"
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-correlation-chart-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-correlation-chart-widget-config>
-        </div>
-        <div
-            *ngIf="
-                currentlyConfiguredWidget.widgetType === 'distribution-chart'
+    </sp-configuration-box>
+
+    <div *ngIf="activeWidgetType">
+        <ng-container
+            *ngComponentOutlet="
+                activeWidgetType.widgetConfigurationComponent;
+                inputs: {
+                    currentlyConfiguredWidget: currentlyConfiguredWidget
+                }
             "
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-distribution-chart-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-distribution-chart-widget-config>
-        </div>
-        <div
-            *ngIf="currentlyConfiguredWidget.widgetType === 'image'"
-            class="h-100 p-0"
-        >
-            <sp-data-explorer-image-widget-config
-                [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-            >
-            </sp-data-explorer-image-widget-config>
-        </div>
+        />
     </div>
 </div>

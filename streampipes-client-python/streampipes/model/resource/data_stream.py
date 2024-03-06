@@ -68,9 +68,9 @@ class DataStream(Resource):
                 }
             ),
             "num_transport_protocols": len(self.event_grounding.transport_protocols),
-            "num_measurement_capability": len(self.measurement_capability)
-            if self.measurement_capability is not None
-            else 0,
+            "num_measurement_capability": (
+                len(self.measurement_capability) if self.measurement_capability is not None else 0
+            ),
             "num_application_links": len(self.application_links) if self.application_links is not None else 0,
             "num_included_assets": len(self.included_assets) if self.included_assets is not None else 0,
             "num_connected_to": len(self.connected_to) if self.connected_to is not None else 0,

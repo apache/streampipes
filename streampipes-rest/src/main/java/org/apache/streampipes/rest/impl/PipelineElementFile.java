@@ -61,7 +61,8 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
           FileManager.storeFile(
               getAuthenticatedUsername(),
               fileDetail.getOriginalFilename(),
-              fileDetail.getInputStream());
+              fileDetail.getInputStream()
+          );
       return ok(metadata);
     } catch (Exception e) {
       return fail();
@@ -78,7 +79,8 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public ResponseEntity<List<FileMetadata>> getFileInfo(
-      @RequestParam(value = "filetypes", required = false) String filetypes) {
+      @RequestParam(value = "filetypes", required = false) String filetypes
+  ) {
     return ok(FileManager.getAllFiles(filetypes));
   }
 
@@ -119,11 +121,22 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
     } catch (IOException e) {
       throw new SpMessageException(
           org.springframework.http.HttpStatus.NOT_FOUND,
-          Notifications.error("File not found"));
+          Notifications.error("File not found")
+      );
     }
   }
 
   private byte[] getFileContents(File file) throws IOException {
     return Files.readAllBytes(file.toPath());
+  }
+
+  @GetMapping(path = "/allFilenames", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
+  public ResponseEntity<List<String>> getAllOriginalFilenames() {
+    return ok(FileManager.getAllFiles()
+                         .stream()
+                         .map(fileMetadata -> fileMetadata.getFilename()
+                                                          .toLowerCase())
+                         .toList());
   }
 }
