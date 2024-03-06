@@ -220,8 +220,10 @@ public class Oi4Adapter implements StreamPipesAdapter {
                                      .getEventProperties();
 
     var timestampPropertyOpt = eventProperties.stream()
-                                              .filter(eventProperty -> eventProperty.getRuntimeName()
-                                                                                    .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP))
+                                              .filter(eventProperty ->
+                                                          eventProperty.getRuntimeName()
+                                                                       .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP)
+                                              )
                                               .findFirst();
 
     var newTimestampProperty = timestampProperty(OI4AdapterLabels.EVENT_KEY_TIMESTAMP);
