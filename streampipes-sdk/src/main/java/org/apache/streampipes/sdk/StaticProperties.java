@@ -114,6 +114,13 @@ public class StaticProperties {
     return freeTextProperty(label, Datatypes.Integer);
   }
 
+  public static FreeTextStaticProperty integerFreeTextProperty(Label label, int defaultValue) {
+    var property = freeTextProperty(label, Datatypes.Integer);
+    property.setValue(String.valueOf(defaultValue));
+    return property;
+  }
+
+
   public static FreeTextStaticProperty doubleFreeTextProperty(Label label) {
     return freeTextProperty(label, Datatypes.Double);
   }

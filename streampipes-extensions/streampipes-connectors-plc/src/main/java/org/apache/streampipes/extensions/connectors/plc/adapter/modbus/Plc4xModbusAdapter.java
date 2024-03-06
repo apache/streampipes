@@ -76,14 +76,14 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   /**
    * Keys of user configuration parameters
    */
-  private static final String PLC_IP = "plc_ip";
-  private static final String PLC_PORT = "plc_port";
+  public static final String PLC_IP = "plc_ip";
+  public static final String PLC_PORT = "plc_port";
 
-  private static final String PLC_NODES = "plc_nodes";
-  private static final String PLC_NODE_ID = "plc_node_id";
-  private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
-  private static final String PLC_NODE_ADDRESS = "plc_node_address";
-  private static final String PLC_NODE_TYPE = "plc_node_type";
+  public static final String PLC_NODES = "plc_nodes";
+  public static final String PLC_NODE_ID = "plc_node_id";
+  public static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
+  public static final String PLC_NODE_ADDRESS = "plc_node_address";
+  public static final String PLC_NODE_TYPE = "plc_node_type";
   private static final String CONFIGURE = "configure";
 
   /**
@@ -273,11 +273,11 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, Plc4xModbusAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, Plc4xModbusAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)
-        .requiredTextParameter(Labels.withId(PLC_IP)).requiredTextParameter(Labels.withId(PLC_PORT))
+        .requiredTextParameter(Labels.withId(PLC_IP)).requiredIntegerParameter(Labels.withId(PLC_PORT))
         .requiredTextParameter(Labels.withId(PLC_NODE_ID)).requiredCollection(Labels.withId(PLC_NODES),
             StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
             StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
