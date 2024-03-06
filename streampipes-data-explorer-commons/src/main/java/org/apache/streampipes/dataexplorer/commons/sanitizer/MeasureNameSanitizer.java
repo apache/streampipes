@@ -26,7 +26,8 @@ public class MeasureNameSanitizer {
       "/",
       "?",
       "=",
-      "\""
+      "\"",
+      "-"
   );
 
   private final String replacement = "_";
