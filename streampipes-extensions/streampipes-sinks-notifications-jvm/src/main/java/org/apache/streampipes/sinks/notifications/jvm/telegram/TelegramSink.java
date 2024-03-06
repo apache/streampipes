@@ -82,9 +82,9 @@ public class TelegramSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onNotificationEvent(Event inputEvent) {
+  public void onNotificationEvent(Event event) {
     try {
-      String content = replacePlaceholders(inputEvent, this.message);
+      String content = replacePlaceholders(event, this.message);
       content = trimHTML(content);
       content = URLEncoder.encode(content, StandardCharsets.UTF_8);
       String url = String.format(ENDPOINT, this.apiKey, this.channelOrChatId, content, HTML);

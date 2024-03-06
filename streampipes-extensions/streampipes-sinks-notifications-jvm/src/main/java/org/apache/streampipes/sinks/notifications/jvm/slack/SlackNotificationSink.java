@@ -111,8 +111,8 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onNotificationEvent(Event inputEvent) {
-    String message = replacePlaceholders(inputEvent, originalMessage);
+  public void onNotificationEvent(Event event) {
+    String message = replacePlaceholders(event, originalMessage);
     if (this.sendToUser) {
       this.session.sendMessageToUser(userChannel,
                                      message, null);

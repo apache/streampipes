@@ -79,7 +79,7 @@ public class OneSignalSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onNotificationEvent(Event inputEvent) throws SpRuntimeException{
+  public void onNotificationEvent(Event event) throws SpRuntimeException{
     String jsondata =
         "{\"app_id\": \"" + appId + "\",\"contents\": {\"en\": \"" + content + "\"}, \"included_segments\":[\"All\"]}";
 
