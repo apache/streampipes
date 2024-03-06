@@ -23,6 +23,7 @@ from unittest.mock import MagicMock, call, patch
 
 from pydantic import ValidationError
 from requests import HTTPError
+
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
@@ -115,7 +116,7 @@ class TestStreamPipesEndpoints(TestCase):
                             "topicDefinition": {
                                 "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
                                 "actualTopicName": "org.apache.streampipes.connect."
-                                                   "fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                                "fc22b8f6-698a-4127-aa71-e11854dc57c5",
                             },
                             "port": 4222,
                         }
@@ -170,7 +171,7 @@ class TestStreamPipesEndpoints(TestCase):
                 "measurementObject": None,
                 "index": 0,
                 "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect."
-                                          "iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
+                "iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
                 "category": None,
                 "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "dom": None,
@@ -209,7 +210,7 @@ class TestStreamPipesEndpoints(TestCase):
             calls=[
                 call().get(
                     url="https://localhost:80/streampipes-backend/api/v2/streams/urn:streampipes."
-                        "apache.org:eventstream:uPDKLI"
+                    "apache.org:eventstream:uPDKLI"
                 )
             ],
             any_order=True,
@@ -448,7 +449,6 @@ class TestMessagingEndpoint(TestCase):
             )
         )
 
-
         demo_endpoint = MessagingEndpoint(parent_client=client)
 
         demo_endpoint.configure(broker=NatsConsumer())
@@ -456,7 +456,7 @@ class TestMessagingEndpoint(TestCase):
         self.assertTrue(isinstance(demo_endpoint.broker, NatsConsumer))
 
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
-    def test_messaging_endpoint_missing_configure(self, _:MagicMock):
+    def test_messaging_endpoint_missing_configure(self, _: MagicMock):
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
