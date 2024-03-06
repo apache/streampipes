@@ -16,8 +16,7 @@
 #
 import json
 from unittest import TestCase
-from unittest.mock import patch, MagicMock, call
-
+from unittest.mock import MagicMock, call, patch
 
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
@@ -124,9 +123,7 @@ class TestStreamPipesClient(TestCase):
                     )
                 )
             if "versions" in kwargs["url"]:
-                return MockResponse(
-                    json.dumps({"backendVersion": "SP-dev"})
-                )
+                return MockResponse(json.dumps({"backendVersion": "SP-dev"}))
 
         make_request.side_effect = simulate_response
         StreamPipesClient.create(

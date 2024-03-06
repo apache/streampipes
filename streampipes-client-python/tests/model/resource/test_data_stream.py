@@ -35,14 +35,11 @@ class TestDataStreamWorkaround(TestCase):
                     {
                         "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
                         "brokerHostname": "broker-host-name",
-                        "topicDefinition": {
-                            "@class": "some-class-name",
-                            "actualTopicName": "actual-topic-name"
-                        },
-                        "port": 50
+                        "topicDefinition": {"@class": "some-class-name", "actualTopicName": "actual-topic-name"},
+                        "port": 50,
                     }
                 ]
-            }
+            },
         }
 
         data_stream = DataStream.parse_obj(data_stream_def)
@@ -58,14 +55,11 @@ class TestDataStreamWorkaround(TestCase):
                     {
                         "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
                         "brokerHostname": "broker-host-name",
-                        "topicDefinition": {
-                            "@class": "some-class-name",
-                            "actualTopicName": "actual-topic-name"
-                        },
-                        "kafkaPort": 50
+                        "topicDefinition": {"@class": "some-class-name", "actualTopicName": "actual-topic-name"},
+                        "kafkaPort": 50,
                     }
                 ]
-            }
+            },
         }
 
         data_stream = DataStream.parse_obj(data_stream_def)

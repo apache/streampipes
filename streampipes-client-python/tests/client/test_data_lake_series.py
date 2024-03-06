@@ -102,9 +102,7 @@ class TestDataLakeSeries(TestCase):
             "total": 1,
             "headers": self.headers,
             "spQueryStatus": "OK",
-            "allDataSeries": [
-                self.data_series
-            ],
+            "allDataSeries": [self.data_series],
         }
 
         result_pd = self.get_result_as_panda(http_session, query_result)
@@ -126,10 +124,7 @@ class TestDataLakeSeries(TestCase):
             "total": 2,
             "headers": self.headers,
             "spQueryStatus": "OK",
-            "allDataSeries": [
-                self.data_series,
-                self.data_series
-            ],
+            "allDataSeries": [self.data_series, self.data_series],
         }
 
         result_pd = self.get_result_as_panda(http_session, query_result)
@@ -149,11 +144,9 @@ class TestDataLakeSeries(TestCase):
 
         query_result = {
             "total": 1,
-            "headers": ['one'],
+            "headers": ["one"],
             "spQueryStatus": "OK",
-            "allDataSeries": [
-                self.data_series
-            ],
+            "allDataSeries": [self.data_series],
         }
 
         with self.assertRaises(StreamPipesUnsupportedDataSeries):

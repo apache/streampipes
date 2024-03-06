@@ -16,7 +16,7 @@
 #
 
 from unittest import TestCase
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import MagicMock, call, patch
 
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
@@ -34,15 +34,14 @@ class TestVersions(TestCase):
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
-                host_address="localhost"
+                host_address="localhost",
             )
         )
 
         result = client.versionApi.get("")
 
         http_session.assert_has_calls(
-            [call().get(url="https://localhost:80/streampipes-backend/api/v2/info/versions")],
-            any_order=True
+            [call().get(url="https://localhost:80/streampipes-backend/api/v2/info/versions")], any_order=True
         )
 
         self.assertEqual("development", result.backend_version)

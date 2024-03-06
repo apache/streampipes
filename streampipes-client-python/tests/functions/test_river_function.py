@@ -90,7 +90,7 @@ class TestRiverFunction(TestCase):
         http_session_mock.get.return_value.json.return_value = self.data_stream
         http_session.return_value = http_session_mock
 
-        server_version.return_value = {"backendVersion": '0.x.y'}
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         output_events = []
 
@@ -159,7 +159,7 @@ class TestRiverFunction(TestCase):
         http_session_mock.get.return_value.json.return_value = self.data_stream
         http_session.return_value = http_session_mock
 
-        server_version.return_value = {"backendVersion": '0.x.y'}
+        server_version.return_value = {"backendVersion": "0.x.y"}
 
         output_events = []
 
