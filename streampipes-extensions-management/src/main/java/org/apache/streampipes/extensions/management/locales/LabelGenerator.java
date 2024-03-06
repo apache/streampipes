@@ -50,15 +50,25 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
 
   private T desc;
 
-  public LabelGenerator(T desc) {
+  private boolean replaceTitles;
+
+  public LabelGenerator(T desc, boolean replaceTitles) {
     this.desc = desc;
+    this.replaceTitles = replaceTitles;
+  }
+
+  public LabelGenerator(T desc) {
+    this(desc, true);
   }
 
   public T generateLabels() throws IOException {
     if (existsLocalesFile()) {
       Properties props = laodResourceAndMakeProperties();
-      desc.setName(getTitle(props, desc.getAppId()));
-      desc.setDescription(getDescription(props, desc.getAppId()));
+
+      if (replaceTitles) {
+        desc.setName(getTitle(props, desc.getAppId()));
+        desc.setDescription(getDescription(props, desc.getAppId()));
+      }
 
       if (isAdapter()) {
         ((AdapterDescription) desc).getConfig()

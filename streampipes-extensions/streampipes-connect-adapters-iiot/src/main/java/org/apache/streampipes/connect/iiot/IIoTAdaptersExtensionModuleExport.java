@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.iiot;
 
 import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
+import org.apache.streampipes.connect.iiot.adapters.migrations.RosBridgeAdapterMigrationV1;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulatorAdapter;
 import org.apache.streampipes.connect.iiot.protocol.stream.FileReplayAdapter;
@@ -52,6 +53,8 @@ public class IIoTAdaptersExtensionModuleExport implements IExtensionModuleExport
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return Collections.emptyList();
+    return List.of(
+            new RosBridgeAdapterMigrationV1()
+    );
   }
 }

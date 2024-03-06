@@ -20,6 +20,8 @@ package org.apache.streampipes.model.staticproperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 
+import java.util.Objects;
+
 public class StaticPropertyAlternative extends StaticProperty {
 
   private String elementId;
@@ -75,5 +77,38 @@ public class StaticPropertyAlternative extends StaticProperty {
   @Override
   public void accept(StaticPropertyVisitor visitor) {
     visitor.visit(this);
+  }
+
+  /**
+   * equals() excludes elementId
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof StaticPropertyAlternative that)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    if (selected != that.selected) {
+      return false;
+    }
+
+    return Objects.equals(staticProperty, that.staticProperty);
+  }
+
+  /**
+   * hashCode() excludes elementId
+   */
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (selected ? 1 : 0);
+    result = 31 * result + (staticProperty != null ? staticProperty.hashCode() : 0);
+    return result;
   }
 }
