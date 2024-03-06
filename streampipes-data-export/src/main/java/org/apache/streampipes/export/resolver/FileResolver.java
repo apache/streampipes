@@ -44,7 +44,7 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public ExportItem convert(FileMetadata document) {
-    return new ExportItem(document.getFileId(), document.getOriginalFilename(), true);
+    return new ExportItem(document.getFileId(), document.getFilename(), true);
   }
 
   @Override

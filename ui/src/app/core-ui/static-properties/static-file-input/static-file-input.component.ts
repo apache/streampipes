@@ -89,15 +89,14 @@ export class StaticFileInputComponent
         return validators;
     }
 
-    fetchFileMetadata(internalFilenameToSelect?: any) {
+    fetchFileMetadata(filenameToSelect?: any) {
         this.filesService
             .getFileMetadata(this.staticProperty.requiredFiletypes)
             .subscribe(fm => {
                 this.fileMetadata = fm;
-                if (internalFilenameToSelect) {
+                if (filenameToSelect) {
                     this.selectedFile = this.fileMetadata.find(
-                        fmi =>
-                            fmi.internalFilename === internalFilenameToSelect,
+                        fmi => fmi.filename === filenameToSelect,
                     );
                     this.selectOption(this.selectedFile);
                     this.emitUpdate(true);
@@ -109,8 +108,7 @@ export class StaticFileInputComponent
                 } else if (this.staticProperty.locationPath) {
                     this.selectedFile = this.fileMetadata.find(
                         fmi =>
-                            fmi.internalFilename ===
-                            this.staticProperty.locationPath,
+                            fmi.filename === this.staticProperty.locationPath,
                     );
                 } else {
                     if (this.fileMetadata.length > 0) {
@@ -136,64 +134,57 @@ export class StaticFileInputComponent
 
     upload() {
         if (this.selectedUploadFile !== undefined) {
-            this.filesService
-                .getAllOriginalFilenames()
-                .subscribe(allFileNames => {
-                    if (
-                        !allFileNames.includes(
-                            this.selectedUploadFile.name.toLowerCase(),
-                        )
-                    ) {
-                        this.uploadStatus = 0;
-                        this.filesService
-                            .uploadFile(this.selectedUploadFile)
-                            .subscribe(
-                                event => {
-                                    if (
-                                        event.type ===
-                                        HttpEventType.UploadProgress
-                                    ) {
-                                        this.uploadStatus = Math.round(
-                                            (100 * event.loaded) / event.total,
-                                        );
-                                    } else if (event instanceof HttpResponse) {
-                                        const internalFilename =
-                                            event.body.internalFilename;
-                                        this.parentForm.controls[
-                                            this.fieldName
-                                        ].setValue(internalFilename);
-                                        this.fetchFileMetadata(
-                                            internalFilename,
-                                        );
-                                    }
-                                },
-                                error => {},
-                            );
-                    } else {
-                        this.openRenameDialog();
-                    }
-                });
+            this.filesService.getAllFilenames().subscribe(allFileNames => {
+                if (
+                    !allFileNames.includes(
+                        this.selectedUploadFile.name.toLowerCase(),
+                    )
+                ) {
+                    this.uploadStatus = 0;
+                    this.filesService
+                        .uploadFile(this.selectedUploadFile)
+                        .subscribe(
+                            event => {
+                                if (
+                                    event.type === HttpEventType.UploadProgress
+                                ) {
+                                    this.uploadStatus = Math.round(
+                                        (100 * event.loaded) / event.total,
+                                    );
+                                } else if (event instanceof HttpResponse) {
+                                    const filename = event.body.filename;
+                                    this.parentForm.controls[
+                                        this.fieldName
+                                    ].setValue(filename);
+                                    this.fetchFileMetadata(filename);
+                                }
+                            },
+                            error => {},
+                        );
+                } else {
+                    this.openRenameDialog();
+                }
+            });
         }
     }
 
     selectOption(fileMetadata: FileMetadata) {
-        this.staticProperty.locationPath = fileMetadata.internalFilename;
+        this.staticProperty.locationPath = fileMetadata.filename;
         const valid: boolean =
-            fileMetadata.internalFilename !== '' ||
-            fileMetadata.internalFilename !== undefined;
+            fileMetadata.filename !== '' || fileMetadata.filename !== undefined;
         this.updateEmitter.emit(
             new ConfigurationInfo(this.staticProperty.internalName, valid),
         );
     }
 
     displayFn(fileMetadata: FileMetadata) {
-        return fileMetadata ? fileMetadata.originalFilename : '';
+        return fileMetadata ? fileMetadata.filename : '';
     }
 
     onStatusChange(status: any) {}
 
     onValueChange(value: any) {
-        this.staticProperty.locationPath = value.internalFilename;
+        this.staticProperty.locationPath = value.filename;
         this.parentForm.updateValueAndValidity();
     }
 
