@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.commons.resources;
 
-import org.junit.*;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
