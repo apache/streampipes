@@ -42,7 +42,6 @@ import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.IPipelineMonitoringDataStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
@@ -68,7 +67,6 @@ import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ImageStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.MonitoringDataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.NotificationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PasswordRecoveryTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.PermissionStorageImpl;
@@ -124,11 +122,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IUserStorage getUserStorageAPI() {
     return new UserStorage();
-  }
-
-  @Override
-  public IPipelineMonitoringDataStorage getMonitoringDataStorageApi() {
-    return new MonitoringDataStorageImpl();
   }
 
   @Override
