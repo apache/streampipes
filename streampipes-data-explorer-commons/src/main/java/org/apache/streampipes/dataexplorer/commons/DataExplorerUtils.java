@@ -68,15 +68,18 @@ public class DataExplorerUtils {
     // Sanitize the data lake measure name
     measure.setMeasureName(new MeasureNameSanitizer().sanitize(measure.getMeasureName()));
 
-    // Removes all spaces with _ and validates that no special terms are used as runtime names
+    // Replace all reserved characters and validates that no special terms are used as runtime names
     measure.getEventSchema()
         .getEventProperties()
-        .forEach(ep -> ep.setRuntimeName(InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
+        .forEach(ep -> {
+          ep.setRuntimeName(InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName()));
+          ep.setRuntimeName(InfluxNameSanitizer.replaceReservedCharacters(ep.getRuntimeName()));
+        });
 
   }
 
   private static void removeTimestampsFromEventSchema(DataLakeMeasure measure) {
-    List<EventProperty> eventPropertiesWithoutTimestamp = measure.getEventSchema().getEventProperties()
+     List<EventProperty> eventPropertiesWithoutTimestamp = measure.getEventSchema().getEventProperties()
         .stream()
         .filter(eventProperty -> !measure.getTimestampField().endsWith(eventProperty.getRuntimeName()))
         .collect(Collectors.toList());

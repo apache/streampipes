@@ -99,4 +99,9 @@ public class InfluxDbReservedKeywords {
       "WITH",
       "WRITE"
   );
+
+  public static final List<String> CHARACTER_LIST = List.of(
+      " ",
+      "-"
+  );
 }

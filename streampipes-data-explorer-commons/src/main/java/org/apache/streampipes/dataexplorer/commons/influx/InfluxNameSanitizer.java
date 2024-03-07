@@ -21,11 +21,21 @@ package org.apache.streampipes.dataexplorer.commons.influx;
 public class InfluxNameSanitizer {
 
   public static String renameReservedKeywords(String runtimeName) {
-    if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(runtimeName))) {
+    if (InfluxDbReservedKeywords.KEYWORD_LIST.stream()
+                                             .anyMatch(k -> k.equalsIgnoreCase(runtimeName))) {
       return runtimeName + "_";
     } else {
       return runtimeName;
     }
+  }
+
+  public static String replaceReservedCharacters(String runtimeName) {
+    return InfluxDbReservedKeywords.CHARACTER_LIST.stream()
+                                                  .reduce(
+                                                      runtimeName,
+                                                      (name, k) -> name.replace(k, "_"),
+                                                      (s1, s2) -> s2
+                                                  );
   }
 
 }
