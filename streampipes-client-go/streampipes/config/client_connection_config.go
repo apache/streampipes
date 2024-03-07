@@ -17,11 +17,26 @@
 
 package config
 
-import (
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/credential"
-)
-
-type StreamPipesClientConnectionConfig struct {
+type StreamPipesClientConnectConfig struct {
 	Url        string
-	Credential credential.StreamPipesApiKeyCredentials
+	Credential StreamPipesApiKeyCredentials
+}
+
+type StreamPipesApiKeyCredentials struct {
+	UserName string
+	ApiKey   string
+}
+
+func NewStreamPipesClientConnectConfig(url string, credentials StreamPipesApiKeyCredentials) StreamPipesClientConnectConfig {
+	return StreamPipesClientConnectConfig{
+		Url:        url,
+		Credential: credentials,
+	}
+}
+
+func NewStreamPipesApiKeyCredentials(userName string, apiKey string) StreamPipesApiKeyCredentials {
+	return StreamPipesApiKeyCredentials{
+		UserName: userName,
+		ApiKey:   apiKey,
+	}
 }

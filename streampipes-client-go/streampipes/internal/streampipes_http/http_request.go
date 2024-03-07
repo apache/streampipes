@@ -30,20 +30,20 @@ type HttpRequest interface {
 }
 
 type httpRequest struct {
-	ClientConnectionConfig config.StreamPipesClientConnectionConfig
-	ApiPath                util.StreamPipesApiPath
-	Header                 *headers.Headers
-	Client                 *http.Client
-	Response               *http.Response
-	Url                    string
+	ClientConnectConfig config.StreamPipesClientConnectConfig
+	ApiPath             util.StreamPipesApiPath
+	Header              *headers.Headers
+	Client              *http.Client
+	Response            *http.Response
+	Url                 string
 }
 
-func NewHttpRequest(clientConfig config.StreamPipesClientConnectionConfig) *httpRequest {
+func NewHttpRequest(clientConfig config.StreamPipesClientConnectConfig) *httpRequest {
 	return &httpRequest{
-		ClientConnectionConfig: clientConfig,
-		Header:                 new(headers.Headers),
-		Client:                 new(http.Client),
-		Response:               new(http.Response),
-		Url:                    "",
+		ClientConnectConfig: clientConfig,
+		Header:              new(headers.Headers),
+		Client:              new(http.Client),
+		Response:            new(http.Response),
+		Url:                 "",
 	}
 }

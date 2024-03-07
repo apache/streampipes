@@ -32,41 +32,33 @@ The specific interaction behavior is provided by the method bound to the DataLak
 */
 
 type DataLakeMeasure struct {
-	config      config.StreamPipesClientConnectionConfig
-	httpRequest streampipes_http.HttpRequest
+	config config.StreamPipesClientConnectConfig
 }
 
-func NewDataLakeMeasures(clientConfig config.StreamPipesClientConnectionConfig) *DataLakeMeasure {
+func NewDataLakeMeasures(clientConfig config.StreamPipesClientConnectConfig) *DataLakeMeasure {
 	//NewDataLakeMeasure is used to return an instance of *DataLakeMeasure,
 
 	return &DataLakeMeasure{
-		config:      clientConfig,
-		httpRequest: nil,
+		config: clientConfig,
 	}
 }
 
 func (d *DataLakeMeasure) AllDataLakeMeasure() []data_lake.DataLakeMeasure {
 	//Get a list of all measure
 
-	d.httpRequest = &streampipes_http.GetRequest{
-		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
-		Deserializer: &serializer.UnmarshalDataLakeMeasure{},
-	}
-	d.resourcePath([]string{"measurements"})
-	UnmarshalData := d.httpRequest.ExecuteRequest(nil)
-	return UnmarshalData.([]data_lake.DataLakeMeasure)
+	getRequest := streampipes_http.NewGetRequest(&serializer.UnmarshalDataLakeMeasures{}, d.config)
+	getRequest.SetUrl([]string{"api", "v4", "datalake", "measurements"})
+	unmarshalData := getRequest.ExecuteRequest(nil)
+	return unmarshalData.([]data_lake.DataLakeMeasure)
 }
 
 func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) data_lake.DataLakeMeasure {
 	//Get a measure
 
-	d.httpRequest = &streampipes_http.GetRequest{
-		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
-		Deserializer: &serializer.UnmarshalDataLakeMeasure{},
-	}
-	d.resourcePath([]string{"measure", elementId})
-	UnmarshalData := d.httpRequest.ExecuteRequest(nil)
-	return UnmarshalData.(data_lake.DataLakeMeasure)
+	getRequest := streampipes_http.NewGetRequest(&serializer.UnmarshalDataLakeMeasure{}, d.config)
+	getRequest.SetUrl([]string{"api", "v4", "datalake", "measure", elementId})
+	unmarshalData := getRequest.ExecuteRequest(nil)
+	return unmarshalData.(data_lake.DataLakeMeasure)
 }
 
 func (d *DataLakeMeasure) GetSingleDataSeries(measureName string) data_lake.DataSeries {
@@ -74,44 +66,26 @@ func (d *DataLakeMeasure) GetSingleDataSeries(measureName string) data_lake.Data
 	//Get data from a single measurement series by a given id
 	//Currently not supporting parameter queries
 
-	d.httpRequest = &streampipes_http.GetRequest{
-		HttpRequest:  streampipes_http.NewHttpRequest(d.config),
-		Deserializer: &serializer.UnmarshalDataSeries{},
-	}
-	d.resourcePath([]string{"measurements", measureName})
-	UnmarshalData := d.httpRequest.ExecuteRequest(nil)
-	return UnmarshalData.(data_lake.DataSeries)
+	getRequest := streampipes_http.NewGetRequest(&serializer.UnmarshalDataSeries{}, d.config)
+	getRequest.SetUrl([]string{"api", "v4", "datalake", "measurements", measureName})
+	unmarshalData := getRequest.ExecuteRequest(nil)
+	return unmarshalData.(data_lake.DataSeries)
 }
 
 func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureName string) {
 	//Remove data from a single measurement series with given id
 
-	d.httpRequest = &streampipes_http.DeleteRequest{
-		HttpRequest: streampipes_http.NewHttpRequest(d.config),
-	}
-	d.resourcePath([]string{"measurements", measureName})
-	d.httpRequest.ExecuteRequest(nil)
+	deleteRequest := streampipes_http.NewDeleteRequest(d.config)
+	deleteRequest.SetUrl([]string{"api", "v4", "datalake", "measurements", measureName})
+	deleteRequest.ExecuteRequest(nil)
 	log.Printf("Successfully deleted data from a single measurement sequence of %s", measureName)
 }
 
 func (d *DataLakeMeasure) DeleteDataLakeMeasure(measureName string) {
 	//Drop a single measurement series with given id from Data Lake and remove related event property
 
-	d.httpRequest = &streampipes_http.DeleteRequest{
-		HttpRequest: streampipes_http.NewHttpRequest(d.config),
-	}
-	d.resourcePath([]string{"measurements", measureName, "drop"})
-	d.httpRequest.ExecuteRequest(nil)
+	deleteRequest := streampipes_http.NewDeleteRequest(d.config)
+	deleteRequest.SetUrl([]string{"api", "v4", "datalake", "measurements", measureName, "drop"})
+	deleteRequest.ExecuteRequest(nil)
 	log.Printf("Successfully dropped a single measurement series for %s from  DataLake and remove related event property", measureName)
-}
-
-func (d *DataLakeMeasure) resourcePath(parameter []string) {
-
-	//ResourcePath is the path to obtain resources for the StreamPipes API endpoint
-	//Parameter is a path parameter, for example: add  /measurementId  after baseResourcePath (API/v4/datalake/measures)
-	//so it is API/v4/datalake/measures/measurmentId
-
-	baseResourcePath := []string{"api", "v4", "datalake"}
-	baseResourcePath = append(baseResourcePath, parameter...)
-	d.httpRequest.SetUrl(baseResourcePath)
 }

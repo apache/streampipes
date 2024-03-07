@@ -20,7 +20,6 @@ package streampipes
 import (
 	"errors"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/credential"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/utils"
 	"log"
 	"net/url"
@@ -34,24 +33,24 @@ import (
 */
 
 type StreamPipesClient struct {
-	Config config.StreamPipesClientConnectionConfig
+	Config config.StreamPipesClientConnectConfig
 }
 
-func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*StreamPipesClient, error) {
+func NewStreamPipesClient(Config config.StreamPipesClientConnectConfig) (*StreamPipesClient, error) {
 
 	//NewStreamPipesClient returns an instance of * StreamPipesClient
 	//Temporarily does not support HTTPS connections, nor does it support connecting to port 443
 
-	if config.Credential == (credential.StreamPipesApiKeyCredentials{}) {
+	if Config.Credential == (config.StreamPipesApiKeyCredentials{}) {
 		log.Fatal("No credential entered")
 	}
 
-	if !utils.CheckUrl(config.Url) {
+	if !utils.CheckUrl(Config.Url) {
 		log.Fatal("Please check if the URL is correct,Must be in the form of A://B:C," +
 			"where A is either HTTP or HTTPS, not case sensitive.B must be the host and C must be the port.")
 	}
 
-	Url, err := url.Parse(config.Url)
+	Url, err := url.Parse(Config.Url)
 	if err != nil {
 		log.Fatal("Please enter the correct URL", err)
 	}
@@ -59,13 +58,11 @@ func NewStreamPipesClient(config config.StreamPipesClientConnectionConfig) (*Str
 	if strings.EqualFold(Url.Scheme, "https") || Url.Port() == "443" {
 		return &StreamPipesClient{}, errors.New(
 			"Invalid configuration passed! The given client configuration has " +
-				"`https_disabled` set to `True` and `port` set to `443`.\n " +
-				"If you want to connect to port 443, use `https_disabled=False` or " +
-				"alternatively connect to port .")
+				"`https` and `port` set to `443`.\n ")
 	}
 
 	return &StreamPipesClient{
-		config,
+		Config,
 	}, nil
 
 }

@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/credential"
+	"os"
 )
 
 /*
@@ -30,19 +30,25 @@ import (
 */
 
 func main() {
-	Config := config.StreamPipesClientConnectionConfig{
+	/*
+		"StreamPipesClientConnectConfig" can be configured through a variety of ways, including the function configuration, and use the struct configuration.
+		For example, using function configuration:
+		config.NewStreamPipesClientConnectConfig("http://localhost:8030",config.NewStreamPipesApiKeyCredentials("<Your-User-Name>","<Your-API-Key>"))
+	*/
+	Config := config.StreamPipesClientConnectConfig{
 		Url: "http://localhost:8030",
-		Credential: credential.StreamPipesApiKeyCredentials{
+		Credential: config.StreamPipesApiKeyCredentials{
 			UserName: "<Your-User-Name>",
 			ApiKey:   "<Your-API-Key>",
 		},
 	}
+
 	StreamPipesClient, err := streampipes.NewStreamPipesClient(Config)
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
 	}
-	StreamPipesClient.DataLakeMeasures().GetSingleDataSeries("measureId").Conversion()
-
+	StreamPipesClient.DataLakeMeasures().GetSingleDataSeries("test_02").Conversion()
 	/*
 			output format:
 
@@ -54,9 +60,9 @@ func main() {
 			2024-02-23T13:37:29.007Z   go-client_test   2f4556
 			The 2 DataSeries
 		    time                   msg                   test
-			2024-02-23T13:37:09.052Z   go-client_test   2f4556
-			2024-02-23T13:37:26.044Z   go-client_test   2f4556
-			2024-02-23T13:37:29.007Z   go-client_test   2f4556
+			2024-02-23T13:38:06.052Z   go-client_test   2f4556
+			2024-02-23T13:38:35.044Z   go-client_test   2f4556
+			2024-02-23T13:38:38.007Z   go-client_test   2f4556
 
 	*/
 

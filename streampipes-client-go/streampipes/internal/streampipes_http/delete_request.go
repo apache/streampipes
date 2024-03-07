@@ -18,6 +18,7 @@
 package streampipes_http
 
 import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/statu_code"
 	"io"
 	"log"
@@ -29,6 +30,12 @@ type DeleteRequest struct {
 }
 
 var _ HttpRequest = (*DeleteRequest)(nil)
+
+func NewDeleteRequest(config config.StreamPipesClientConnectConfig) *DeleteRequest {
+	return &DeleteRequest{
+		HttpRequest: NewHttpRequest(config),
+	}
+}
 
 func (d *DeleteRequest) ExecuteRequest(model interface{}) interface{} {
 	d.makeRequest()
@@ -58,8 +65,8 @@ func (d *DeleteRequest) ExecuteRequest(model interface{}) interface{} {
 func (d *DeleteRequest) makeRequest() {
 	var err error
 	d.HttpRequest.Header.Req, _ = http.NewRequest("DELETE", d.HttpRequest.Url, nil)
-	d.HttpRequest.Header.XApiKey(d.HttpRequest.ClientConnectionConfig.Credential.ApiKey)
-	d.HttpRequest.Header.XApiUser(d.HttpRequest.ClientConnectionConfig.Credential.UserName)
+	d.HttpRequest.Header.XApiKey(d.HttpRequest.ClientConnectConfig.Credential.ApiKey)
+	d.HttpRequest.Header.XApiUser(d.HttpRequest.ClientConnectConfig.Credential.UserName)
 	d.HttpRequest.Header.AcceptJson()
 	d.HttpRequest.Response, err = d.HttpRequest.Client.Do(d.HttpRequest.Header.Req)
 	if err != nil {
@@ -68,5 +75,5 @@ func (d *DeleteRequest) makeRequest() {
 }
 
 func (d *DeleteRequest) SetUrl(resourcePath []string) {
-	d.HttpRequest.Url = d.HttpRequest.ApiPath.GetBaseUrl(d.HttpRequest.ClientConnectionConfig.Url).AddToPath(resourcePath).ToString()
+	d.HttpRequest.Url = d.HttpRequest.ApiPath.GetBaseUrl(d.HttpRequest.ClientConnectConfig.Url).AddToPath(resourcePath).ToString()
 }

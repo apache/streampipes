@@ -26,12 +26,6 @@ type Headers struct {
 	Header http.Header
 }
 
-func (h *Headers) AuthorizationBearer(bearerToken string) http.Header {
-	h.Header = h.Req.Header
-	h.Header.Set("Authorization", "Bearer "+bearerToken)
-	return h.Header
-}
-
 func (h *Headers) XApiKey(apiKey string) http.Header {
 	h.Header = h.Req.Header
 	h.Header.Set("X-API-KEY", apiKey)

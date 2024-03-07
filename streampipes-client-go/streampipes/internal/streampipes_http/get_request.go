@@ -18,6 +18,7 @@
 package streampipes_http
 
 import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/serializer"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/statu_code"
 	"io"
@@ -31,6 +32,13 @@ type GetRequest struct {
 }
 
 var _ HttpRequest = (*GetRequest)(nil)
+
+func NewGetRequest(s serializer.Deserializer, config config.StreamPipesClientConnectConfig) *GetRequest {
+	return &GetRequest{
+		HttpRequest:  NewHttpRequest(config),
+		Deserializer: s,
+	}
+}
 
 func (g *GetRequest) ExecuteRequest(model interface{}) interface{} {
 	//Initial Request
@@ -60,8 +68,8 @@ func (g *GetRequest) makeRequest() {
 
 	var err error
 	g.HttpRequest.Header.Req, _ = http.NewRequest("GET", g.HttpRequest.Url, nil)
-	g.HttpRequest.Header.XApiKey(g.HttpRequest.ClientConnectionConfig.Credential.ApiKey)
-	g.HttpRequest.Header.XApiUser(g.HttpRequest.ClientConnectionConfig.Credential.UserName)
+	g.HttpRequest.Header.XApiKey(g.HttpRequest.ClientConnectConfig.Credential.ApiKey)
+	g.HttpRequest.Header.XApiUser(g.HttpRequest.ClientConnectConfig.Credential.UserName)
 	g.HttpRequest.Header.AcceptJson()
 	g.HttpRequest.Response, err = g.HttpRequest.Client.Do(g.HttpRequest.Header.Req)
 	if err != nil {
@@ -82,6 +90,6 @@ func (g *GetRequest) afterRequest() interface{} {
 }
 
 func (g *GetRequest) SetUrl(resourcePath []string) {
-	g.HttpRequest.Url = g.HttpRequest.ApiPath.GetBaseUrl(g.HttpRequest.ClientConnectionConfig.Url).AddToPath(resourcePath).ToString()
+	g.HttpRequest.Url = g.HttpRequest.ApiPath.GetBaseUrl(g.HttpRequest.ClientConnectConfig.Url).AddToPath(resourcePath).ToString()
 	log.Print(g.HttpRequest.Url)
 }
