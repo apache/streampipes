@@ -35,8 +35,9 @@
             mat-button
             class="button-icon icon-button-font-size mr--15"
             color="accent"
+            (click)="decreaseTime()"
         >
-            <mat-icon (click)="decreaseTime()">navigate_before</mat-icon>
+            <mat-icon>navigate_before</mat-icon>
         </button>
         <sp-date-input
             class="start-date-margin"
@@ -57,8 +58,9 @@
             mat-button
             class="button-icon icon-button-font-size ml--5 mr--5"
             color="accent"
+            (click)="increaseTime()"
         >
-            <mat-icon (click)="increaseTime()">navigate_next</mat-icon>
+            <mat-icon>navigate_next</mat-icon>
         </button>
     </div>
     <div class="time-range-wrapper" fxFlex fxLayoutAlign="center center">
