@@ -22,11 +22,14 @@ import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.input.BOMInputStream;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,6 +105,17 @@ public class FileManager {
     }
 
     return fileInputStream;
+  }
+
+  public static boolean checkFileContentChanged(String filename, String hash) throws IOException {
+    var fileHash = getFileHash(filename);
+    return !fileHash.equals(hash);
+  }
+
+  private static String getFileHash(String filename) throws IOException {
+    try (InputStream is = Files.newInputStream(Paths.get(getFile(filename).toURI()))) {
+      return DigestUtils.md5Hex(is);
+    }
   }
 
   private static void storeFileMetadata(FileMetadata fileMetadata) {

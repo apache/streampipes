@@ -139,4 +139,24 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
                                                           .toLowerCase())
                          .toList());
   }
+
+  @GetMapping(
+      path = "/{filename}/checkFileContentChanged/{hash}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
+  public ResponseEntity<Boolean> checkFileContentChanged(
+      @PathVariable(value = "filename") String filename,
+      @PathVariable(value = "hash") String hash
+  ) {
+    try {
+      return ok(FileManager.checkFileContentChanged(filename, hash));
+    } catch (IOException e) {
+      throw new SpMessageException(
+          org.springframework.http.HttpStatus.NOT_FOUND,
+          Notifications.error("File not found")
+      );
+    }
+  }
+
+
 }

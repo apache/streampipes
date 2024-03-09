@@ -22,18 +22,26 @@ import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FileProtocolUtils {
+  private static final Logger LOG = LoggerFactory.getLogger(FileProtocolUtils.class);
 
   public static InputStream getFileInputStream(String selectedFilename) throws FileNotFoundException {
-    if (!isFilePresent(selectedFilename)) {
+    if (!isFilePresent(selectedFilename) || checkIfFileChanged(selectedFilename)) {
       try {
         storeFileLocally(selectedFilename);
+        LOG.info("Cache file locally: %s".formatted(selectedFilename));
       } catch (IOException e) {
         throw new ParseException("Could not receive file");
       }
@@ -42,9 +50,36 @@ public class FileProtocolUtils {
     return new FileInputStream(makeFileLoc(selectedFilename));
   }
 
+  /**
+   * Checks if the file has changed in the backend since the last time it was read
+   * This prevents that the cached file is invalid, or was updated by the user
+   * @param selectedFilename name of the file
+   * @return whether the content of the file has changed or not
+   */
+  private static boolean checkIfFileChanged(String selectedFilename) {
+    try {
+      var hash = getFileHash(selectedFilename);
+      StreamPipesClient client = getStreamPipesClientInstance();
+      return client.fileApi()
+                   .checkFileContentChanged(selectedFilename, hash);
+    } catch (IOException e) {
+      throw new ParseException("Could not read file with filename: %s".formatted(selectedFilename));
+    }
+  }
+
+  private static String getFileHash(String selectedFilename) throws IOException {
+    try (InputStream is = Files.newInputStream(Paths.get(getFile(selectedFilename).toURI()))) {
+      return DigestUtils.md5Hex(is);
+    }
+  }
+
   private static boolean isFilePresent(String selectedFilename) {
-    File file = new File(makeFileLoc(selectedFilename));
+    var file = getFile(selectedFilename);
     return file.exists();
+  }
+
+  private static File getFile(String selectedFilename) {
+    return new File(makeFileLoc(selectedFilename));
   }
 
   private static void storeFileLocally(String selectedFilename) throws IOException {
@@ -52,9 +87,10 @@ public class FileProtocolUtils {
     if (!storageDir.exists()) {
       storageDir.mkdirs();
     }
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    StreamPipesClient client = getStreamPipesClientInstance();
 
-    client.fileApi().writeToFile(selectedFilename, makeFileLoc(selectedFilename));
+    client.fileApi()
+          .writeToFile(selectedFilename, makeFileLoc(selectedFilename));
   }
 
   private static String makeServiceStorageDir() {
@@ -67,6 +103,10 @@ public class FileProtocolUtils {
 
   private static String makeFileLoc(String filename) {
     return makeServiceStorageDir() + File.separator + filename;
+  }
+
+  private static StreamPipesClient getStreamPipesClientInstance() {
+    return new StreamPipesClientResolver().makeStreamPipesClientInstance();
   }
 
 }
