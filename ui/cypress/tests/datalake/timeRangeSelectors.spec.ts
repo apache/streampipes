@@ -50,12 +50,11 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                     cy.dataCy(timeRangeFrom)
                         .invoke('attr', dateAttribute)
                         .then(initialStartDateString => {
-                            const initialStartDate = new Date(
-                                Date.parse(initialStartDateString),
+                            const initialStartDate = parseDate(
+                                initialStartDateString,
                             );
-                            const initialEndDate = new Date(
-                                Date.parse(initialEndDateString),
-                            );
+                            const initialEndDate =
+                                parseDate(initialEndDateString);
 
                             cy.wrap(initialStartDate).should(
                                 'deep.eq',
@@ -74,16 +73,11 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                                     cy.dataCy(timeRangeFrom)
                                         .invoke('attr', dateAttribute)
                                         .then(updatedStartDateString => {
-                                            const updatedStartDate = new Date(
-                                                Date.parse(
-                                                    updatedStartDateString,
-                                                ),
+                                            const updatedStartDate = parseDate(
+                                                updatedStartDateString,
                                             );
-                                            const updatedEndDate = new Date(
-                                                Date.parse(
-                                                    updatedEndDateString,
-                                                ),
-                                            );
+                                            const updatedEndDate =
+                                                parseDate(updatedEndDateString);
 
                                             cy.wrap(updatedStartDate).should(
                                                 'deep.eq',
@@ -124,4 +118,8 @@ function getExpectedStartDate(endDate: Date, offset: number): Date {
 
 function getTimezoneDifference(endDate: Date, startDate: Date): number {
     return endDate.getTimezoneOffset() - startDate.getTimezoneOffset();
+}
+
+function parseDate(dateString: string): Date {
+    return new Date(Date.parse(dateString));
 }
