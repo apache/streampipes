@@ -37,8 +37,8 @@ import org.apache.streampipes.vocabulary.XSD;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.net.URI;
@@ -48,8 +48,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -66,7 +66,7 @@ public class InfluxStoreTest {
   private static final String TIMESTAMP = "timestamp";
   private static final long SAMPLE_TIMESTAMP = 1701270890000L;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     influxDBMock = mock(InfluxDB.class);
     serializer = new RawFieldSerializer();
@@ -308,8 +308,7 @@ public class InfluxStoreTest {
 
     verify(influxDBMock).write(pointArgumentCaptor.capture());
 
-    var actualPoint = pointArgumentCaptor.getValue();
-    return actualPoint;
+    return pointArgumentCaptor.getValue();
   }
 
   /**
