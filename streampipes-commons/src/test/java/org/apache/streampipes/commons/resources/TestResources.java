@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.commons.resources;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
-import static junit.framework.TestCase.assertEquals;
 
 public class TestResources {
 
@@ -31,6 +30,6 @@ public class TestResources {
   public void testResourceLoader() throws IOException {
     String filename = "test.txt";
     String content = Resources.asString(filename, StandardCharsets.UTF_8);
-    assertEquals("HelloWorld", content.replaceAll("\\s+", ""));
+    Assertions.assertEquals("HelloWorld", content.replaceAll("\\s+", ""));
   }
 }

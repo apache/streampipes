@@ -18,14 +18,13 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("unchecked")
 public class CreateNestedTransformationRuleTest {
@@ -41,8 +40,10 @@ public class CreateNestedTransformationRuleTest {
 
     Map<String, Object> result = createNested.apply(event);
 
-    assertEquals(1, result.keySet().size());
-    assertEquals(0, ((Map<String, Object>) result.get("key")).keySet().size());
+    Assertions.assertEquals(1,
+                            result.keySet().size());
+    Assertions.assertEquals(0,
+                            ((Map<String, Object>) result.get("key")).keySet().size());
   }
 
 
@@ -60,9 +61,11 @@ public class CreateNestedTransformationRuleTest {
 
     Map<String, Object> result = createNested.apply(event);
 
-    assertEquals(1, result.keySet().size());
-    assertEquals(1, ((Map<String, Object>) result.get("parent")).keySet().size());
-    assertEquals(0,
-        (((Map<String, Object>) ((Map<String, Object>) result.get("parent")).get("child")).keySet().size()));
+    Assertions.assertEquals(1,
+                            result.keySet().size());
+    Assertions.assertEquals(1,
+                            ((Map<String, Object>) result.get("parent")).keySet().size());
+    Assertions.assertEquals(0,
+                            (((Map<String, Object>) ((Map<String, Object>) result.get("parent")).get("child")).keySet().size()));
   }
 }
