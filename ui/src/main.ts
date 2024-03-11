@@ -16,6 +16,13 @@
  *
  */
 
+// import { initFederation } from '@angular-architects/native-federation';
+//
+// initFederation('/assets/federation.manifest.json')
+//   .catch(err => console.error(err))
+//   .then(_ => import('./bootstrap'))
+//   .catch(err => console.error(err));
+
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { environment } from './environments/environment';
 import { AppModule } from './app/appng5.module';

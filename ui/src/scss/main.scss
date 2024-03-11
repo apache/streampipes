@@ -16,21 +16,21 @@
  *
  */
 
-@import '~@ali-hm/angular-tree-component/css/angular-tree-component.css';
-@import '~datatables.net-dt/css/jquery.dataTables.css';
-@import '~@fortawesome/fontawesome-free/css/all.css';
-@import '~@jsplumb/browser-ui/css/jsplumbtoolkit.css';
-@import '~shepherd.js/dist/css/shepherd.css';
-@import '~leaflet/dist/leaflet.css';
-@import '~material-icons/iconfont/material-icons.css';
-@import '~quill/dist/quill.snow.css';
-@import '~swagger-ui/dist/swagger-ui.css';
+@use './sp/sp-theme';
 
-@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+@import '@ali-hm/angular-tree-component/css/angular-tree-component.css';
+@import 'datatables.net-dt/css/jquery.dataTables.css';
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import '@jsplumb/browser-ui/css/jsplumbtoolkit.css';
+@import 'shepherd.js/dist/css/shepherd.css';
+@import 'leaflet/dist/leaflet.css';
+@import 'material-icons/iconfont/material-icons.css';
+@import 'quill/dist/quill.snow.css';
+@import 'swagger-ui/dist/swagger-ui.css';
+
+@import 'roboto-fontface/css/roboto/roboto-fontface.css';
 
 @import './sp/shepherd-new';
-
-@import './sp/sp-theme';
 
 @import './sp/main';
 @import './sp/buttons';
@@ -48,6 +48,7 @@
 @import './sp/widgets.scss';
 @import './sp/progress-bar.scss';
 @import './sp/jsplumb';
+@import './sp/sp-dialog';
 
 @import './sp/layout';
 
@@ -56,8 +57,8 @@
 
 @import './sp/colors.scss';
 
-@import '~codemirror/lib/codemirror.css';
-@import '~codemirror/theme/darcula.css';
-@import '~codemirror/theme/dracula.css';
-@import '~codemirror/addon/hint/show-hint.css';
-@import '~codemirror/addon/lint/lint.css';
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/darcula.css';
+@import 'codemirror/theme/dracula.css';
+@import 'codemirror/addon/hint/show-hint.css';
+@import 'codemirror/addon/lint/lint.css';

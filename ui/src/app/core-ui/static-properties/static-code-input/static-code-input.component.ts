@@ -29,8 +29,8 @@ import 'codemirror/addon/lint/javascript-lint';
 import 'codemirror/addon/lint/lint';
 import { JSHINT } from 'jshint';
 import * as CodeMirror from 'codemirror';
-
-(window as any).JSHINT = JSHINT;
+// /*jshint browserify: true */
+// (window as any).JSHINT = JSHINT;
 
 @Component({
     selector: 'sp-static-code-input',

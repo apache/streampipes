@@ -16,16 +16,15 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { environment } from './environments/environment';
+import { AppModule } from './app/appng5.module';
+import { enableProdMode } from '@angular/core';
 
-.link-configuration {
-    padding: 10px;
-    width: 100%;
-    margin: 5px;
-    background: var(--color-bg-1);
-    border: 1px solid var(--color-bg-3);
+if (environment.production) {
+    enableProdMode();
 }
 
-.mb-0 {
-    margin-bottom: 0;
-}
+platformBrowserDynamic()
+    .bootstrapModule(AppModule)
+    .catch(err => console.error(err));
