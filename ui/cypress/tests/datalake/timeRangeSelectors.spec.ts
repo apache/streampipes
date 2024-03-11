@@ -20,12 +20,12 @@ import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Time Range Selectors in Data Explorer', () => {
     const periods = [
-        '15_min',
-        '1_hour',
-        '1_day',
-        '1_week',
-        '1_month',
-        '1_year',
+        { selector: '15_min', offset: 15 },
+        { selector: '1_hour', offset: 60 },
+        { selector: '1_day', offset: 1440 },
+        { selector: '1_week', offset: 10080 },
+        { selector: '1_month', offset: 43200 },
+        { selector: '1_year', offset: 525600 },
     ];
 
     const dateAttribute = 'ng-reflect-date';
@@ -41,8 +41,9 @@ describe('Test Time Range Selectors in Data Explorer', () => {
 
     it('Perform Test', () => {
         periods.forEach(period => {
-            cy.log('Testing period: ' + period);
-            cy.dataCy(period).click();
+            cy.log('Testing period: ' + period.selector);
+            // Choosing time period and saving initial start and end dates
+            cy.dataCy(period.selector).click();
             cy.dataCy(timeRangeTo)
                 .invoke('attr', dateAttribute)
                 .then(initialEndDateString => {
@@ -58,9 +59,12 @@ describe('Test Time Range Selectors in Data Explorer', () => {
 
                             cy.wrap(initialStartDate).should(
                                 'deep.eq',
-                                getExpectedStartDate(initialEndDate, period),
+                                getExpectedStartDate(
+                                    initialEndDate,
+                                    period.offset,
+                                ),
                             );
-
+                            // Updating time range to previous one and checking start and end dates
                             cy.dataCy('decrease-time-button').click({
                                 force: true,
                             });
@@ -85,7 +89,7 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                                                 'deep.eq',
                                                 getExpectedStartDate(
                                                     updatedEndDate,
-                                                    period,
+                                                    period.offset,
                                                 ),
                                             );
                                             cy.wrap(updatedEndDate).should(
@@ -94,7 +98,7 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                                             );
                                         });
                                 });
-
+                            // Updating time range to the next one and comparing start and end dates with initial values
                             cy.dataCy('increase-time-button').click({
                                 force: true,
                             });
@@ -110,28 +114,14 @@ describe('Test Time Range Selectors in Data Explorer', () => {
     });
 });
 
-function getExpectedStartDate(endDate: Date, period: string): Date {
-    let startDate = new Date(endDate);
-
-    switch (period) {
-        case '15_min':
-            startDate.setMinutes(startDate.getMinutes() - 15);
-            break;
-        case '1_hour':
-            startDate.setHours(startDate.getHours() - 1);
-            break;
-        case '1_day':
-            startDate.setDate(startDate.getDate() - 1);
-            break;
-        case '1_week':
-            startDate.setDate(startDate.getDate() - 7);
-            break;
-        case '1_month':
-            startDate.setDate(startDate.getDate() - 30);
-            break;
-        case '1_year':
-            startDate.setDate(startDate.getDate() - 365);
-            break;
-    }
+function getExpectedStartDate(endDate: Date, offset: number): Date {
+    const startDate = new Date(endDate.getTime() - offset * 60000);
+    startDate.setMinutes(
+        startDate.getMinutes() + getTimezoneDifference(endDate, startDate),
+    );
     return startDate;
+}
+
+function getTimezoneDifference(endDate: Date, startDate: Date): number {
+    return endDate.getTimezoneOffset() - startDate.getTimezoneOffset();
 }
