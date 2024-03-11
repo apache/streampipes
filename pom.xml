@@ -127,7 +127,7 @@
         <hawtbuf.version>1.11</hawtbuf.version>
 
         <!-- Test dependencies -->
-        <junit.version>4.13.2</junit.version>
+        <junit.version>5.10.1</junit.version>
         <mockito.version>5.10.0</mockito.version>
         <powermock.version>2.0.9</powermock.version>
         <rest-assured.version>2.9.0</rest-assured.version>
@@ -538,9 +538,27 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+<!--            <dependency>-->
+<!--                <groupId>junit</groupId>-->
+<!--                <artifactId>junit</artifactId>-->
+<!--                <version>${junit.version}</version>-->
+<!--                <scope>test</scope>-->
+<!--            </dependency>-->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
