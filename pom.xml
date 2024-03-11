@@ -129,7 +129,6 @@
         <!-- Test dependencies -->
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.10.0</mockito.version>
-        <rest-assured.version>2.9.0</rest-assured.version>
         <wiremock.version>2.27.2</wiremock.version>
 
         <!-- Maven settings & dependencies -->
@@ -561,13 +560,6 @@
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>com.jayway.restassured</groupId>
-                <artifactId>rest-assured</artifactId>
-                <version>${rest-assured.version}</version>
-                <scope>test</scope>
-            </dependency>
-
 
             <!-- required by streampipes-maven-plugin -->
             <dependency>
