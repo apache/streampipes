@@ -17,11 +17,10 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestListField {
 
@@ -32,10 +31,10 @@ public class TestListField {
     List<Integer> integerList = event.getFieldByRuntimeName("list").getAsList().parseAsSimpleType
         (Integer.class);
 
-    assertEquals(3, integerList.size());
-    assertEquals(Integer.valueOf(1), integerList.get(0));
-    assertEquals(Integer.valueOf(2), integerList.get(1));
-    assertEquals(Integer.valueOf(3), integerList.get(2));
+    Assertions.assertEquals(3, integerList.size());
+    Assertions.assertEquals(Integer.valueOf(1), integerList.get(0));
+    Assertions.assertEquals(Integer.valueOf(2), integerList.get(1));
+    Assertions.assertEquals(Integer.valueOf(3), integerList.get(2));
   }
 
 }

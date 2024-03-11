@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.service.core.migrations.v095;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,6 @@ import static org.apache.streampipes.service.core.migrations.v095.MergeFilenames
 import static org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration.ID;
 import static org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration.INTERNAL_FILENAME;
 import static org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration.ORIGINAL_FILENAME;
-import static org.junit.Assert.assertEquals;
 
 public class MergeFilenamesAndRenameDuplicatesMigrationTest {
 
@@ -74,7 +74,7 @@ public class MergeFilenamesAndRenameDuplicatesMigrationTest {
 
   private MergeFilenamesAndRenameDuplicatesMigration migration;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     migration = new MergeFilenamesAndRenameDuplicatesMigration(true);
     couchDbRawFileMetadata = new ArrayList<>() {
@@ -91,16 +91,22 @@ public class MergeFilenamesAndRenameDuplicatesMigrationTest {
   public void testMigration() {
     // Test that the migration successfully groups FileMetadata by originalFilename
     migration.getFileMetadataToUpdate(couchDbRawFileMetadata);
-    assertEquals(2, migration.fileMetadataGroupedByOriginalName.size());
-    assertEquals(3, migration.fileMetadataGroupedByOriginalName.get("file.txt").size());
-    assertEquals(1, migration.fileMetadataGroupedByOriginalName.get("file.csv").size());
+    Assertions.assertEquals(2, migration.fileMetadataGroupedByOriginalName.size());
+    Assertions.assertEquals(3,
+                            migration.fileMetadataGroupedByOriginalName.get("file.txt").size());
+    Assertions.assertEquals(1,
+                            migration.fileMetadataGroupedByOriginalName.get("file.csv").size());
 
     // Test that the migration successfully renames duplicate files
     migration.fileMetadataGroupedByOriginalName.forEach(
         (originalFilename, fileMetadataList) -> migration.update(originalFilename, fileMetadataList));
-    assertEquals("file.txt", migration.fileMetadataGroupedByOriginalName.get("file.txt").get(0).getFilename());
-    assertEquals("file(2).TXT", migration.fileMetadataGroupedByOriginalName.get("file.txt").get(1).getFilename());
-    assertEquals("file(3).TxT", migration.fileMetadataGroupedByOriginalName.get("file.txt").get(2).getFilename());
-    assertEquals("file.csv", migration.fileMetadataGroupedByOriginalName.get("file.csv").get(0).getFilename());
+    Assertions.assertEquals("file.txt",
+                            migration.fileMetadataGroupedByOriginalName.get("file.txt").get(0).getFilename());
+    Assertions.assertEquals("file(2).TXT",
+                            migration.fileMetadataGroupedByOriginalName.get("file.txt").get(1).getFilename());
+    Assertions.assertEquals("file(3).TxT",
+                            migration.fileMetadataGroupedByOriginalName.get("file.txt").get(2).getFilename());
+    Assertions.assertEquals("file.csv",
+                            migration.fileMetadataGroupedByOriginalName.get("file.csv").get(0).getFilename());
   }
 }

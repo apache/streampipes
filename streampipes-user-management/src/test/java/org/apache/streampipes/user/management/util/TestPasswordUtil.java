@@ -18,12 +18,10 @@
 package org.apache.streampipes.user.management.util;
 
 import com.google.common.base.CharMatcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.streampipes.user.management.util.PasswordUtil.generateRandomPassword;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class TestPasswordUtil {
 
@@ -32,9 +30,9 @@ public class TestPasswordUtil {
 
     String randomPassword = generateRandomPassword();
 
-    assertNotNull(randomPassword);
-    assertEquals(10, randomPassword.length());
-    assertTrue(CharMatcher.ascii().matchesAllOf(randomPassword));
+    Assertions.assertNotNull(randomPassword);
+    Assertions.assertEquals(10, randomPassword.length());
+    Assertions.assertTrue(CharMatcher.ascii().matchesAllOf(randomPassword));
   }
 
 }
