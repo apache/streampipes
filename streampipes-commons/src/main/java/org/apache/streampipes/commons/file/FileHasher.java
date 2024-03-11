@@ -16,15 +16,21 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+package org.apache.streampipes.commons.file;
 
-public interface IFileApi {
-  byte[] getFileContent(String filename);
+import org.apache.commons.codec.digest.DigestUtils;
 
-  String getFileContentAsString(String filename);
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-  void writeToFile(String file, String fileLocation);
+public class FileHasher {
 
-  boolean checkFileContentChanged(String filename, String hash);
-
+  public static String hash(File file) throws IOException {
+    try (InputStream is = Files.newInputStream(Paths.get(file.toURI()))) {
+      return DigestUtils.md5Hex(is);
+    }
+  }
 }
