@@ -80,13 +80,14 @@ public class Oi4Adapter implements StreamPipesAdapter {
   private static final Logger LOG = LoggerFactory.getLogger(Oi4Adapter.class);
 
   // Information about the topic structure can be found at page 57 of the above-mentioned development guide
-  private static final String TOPIC_TEMPLATE = "Oi4/OTConnector/hilscher.com/netFIELD,20App,20OPC,20UA,20IO-Link,"
-      + "20Adapter/1917.011/netfield-app-opc-ua-io-link-adapter/Pub/Data";
+  // The app id (missing here) needs to be provided by the user
+  private static final String TOPIC_TEMPLATE = "Oi4/OTConnector/%s/Pub/Data";
   private MqttConsumer mqttConsumer;
   private MqttConfig mqttConfig;
 
   private List<String> selectedSensors;
   private String givenSensorType;
+  private String appId;
   protected final ObjectMapper mapper;
 
 
@@ -129,6 +130,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
             )
 
         )
+        .requiredTextParameter(Labels.withId(OI4AdapterLabels.LABEL_KEY_APP_ID))
         .buildConfiguration();
   }
 
@@ -172,6 +174,8 @@ public class Oi4Adapter implements StreamPipesAdapter {
         OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES
     );
 
+    appId = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_APP_ID);
+
     if (selectedAlternativeSelectedSensors.equals(OI4AdapterLabels.LABEL_KEY_SENSORS_ALL_ALTERNATIVE)) {
       // An empty list is used to indicated that messages from all sensors should be collected
       selectedSensors = List.of();
@@ -183,7 +187,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
     if (selectedAlternativeSensorDescription.equals(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_ALTERNATIVE)) {
       givenSensorType = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_INPUT);
-      mqttConfig = MqttConnectUtils.getMqttConfig(extractor, TOPIC_TEMPLATE);
+      mqttConfig = MqttConnectUtils.getMqttConfig(extractor, TOPIC_TEMPLATE.formatted(appId));
     } else {
       throw new AdapterException("Erroneous configuration provided - Configuration ia IODD is not yet available.");
     }

@@ -69,3 +69,6 @@ sensors-list.description=
 
 sensors-list-input.title=Custom Selection
 sensors-list-input.description=Please provide a comma-separated list of all sensor Ids, e.g., '000008740649,000008740672'.
+
+app-id.title=App ID
+app-id.description=Please provide the app id (Oi4Identifier) of the sensor to connect to, e.g., 'hilscher.com/netFIELD,20App,20OPC,20UA,20IO-Link,20Adapter/1917.011/netfield-app-opc-ua-io-link-adapter'.

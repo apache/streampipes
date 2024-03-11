@@ -30,5 +30,6 @@ public class OI4AdapterLabels {
   public static final String LABEL_KEY_SENSORS_ALL_ALTERNATIVE = "sensors-all";
   public static final String LABEL_KEY_SENSORS_LIST_ALTERNATIVE = "sensors-list";
   public static final String LABEL_KEY_SENSORS_LIST_INPUT = "sensors-list-input";
+  public static final String LABEL_KEY_APP_ID = "app-id";
   public static final String MESSAGE_VALUE_FILTER = "processDataInput";
 }
