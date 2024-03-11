@@ -54,7 +54,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +63,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
@@ -76,7 +78,6 @@ public class Oi4Adapter implements StreamPipesAdapter {
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.oi4";
 
   private static final Logger LOG = LoggerFactory.getLogger(Oi4Adapter.class);
-  public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
   // Information about the topic structure can be found at page 57 of the above-mentioned development guide
   private static final String TOPIC_TEMPLATE = "Oi4/OTConnector/hilscher.com/netFIELD,20App,20OPC,20UA,20IO-Link,"
@@ -87,6 +88,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
   private List<String> selectedSensors;
   private String givenSensorType;
   protected final ObjectMapper mapper;
+
 
   public Oi4Adapter() {
     mapper = new ObjectMapper();
@@ -102,7 +104,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-                              MqttConnectUtils.getAlternativesTwo()
+            MqttConnectUtils.getAlternativesTwo()
         )
         .requiredAlternatives(
             Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION),
@@ -176,7 +178,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
     } else {
       var selectedSensorsText = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_SENSORS_LIST_INPUT);
       selectedSensors = Arrays.stream(selectedSensorsText.split(","))
-                              .toList();
+          .toList();
     }
 
     if (selectedAlternativeSensorDescription.equals(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_ALTERNATIVE)) {
@@ -217,21 +219,21 @@ public class Oi4Adapter implements StreamPipesAdapter {
    */
   private void updateTimestampPropertyIfExists(GuessSchema guessSchema) {
     var eventProperties = guessSchema.getEventSchema()
-                                     .getEventProperties();
+        .getEventProperties();
 
     var timestampPropertyOpt = eventProperties.stream()
-                                              .filter(eventProperty ->
-                                                          eventProperty.getRuntimeName()
-                                                                       .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP)
-                                              )
-                                              .findFirst();
+        .filter(eventProperty ->
+            eventProperty.getRuntimeName()
+                .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP)
+        )
+        .findFirst();
 
     var newTimestampProperty = timestampProperty(OI4AdapterLabels.EVENT_KEY_TIMESTAMP);
 
     // If the timestamp property exists, replace it with the new timestamp property
     timestampPropertyOpt.ifPresent(prop -> {
       eventProperties.removeIf(eventProperty -> eventProperty.getRuntimeName()
-                                                             .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP));
+          .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP));
       eventProperties.add(newTimestampProperty);
     });
 
@@ -266,6 +268,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         LOG.error("Schema guessing failed during waiting for an incoming event: {}", e.getMessage());
       }
     }
+    guessConsumer.close();
     executor.shutdown();
     return sampleMessages.get(0);
   }
@@ -295,7 +298,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         sampleMessages.add(event);
       } catch (ParseException e) {
         LOG.debug("Collected sample could not be parsed successfully - "
-                      + "this could be a message from a different sensor type.");
+            + "this could be a message from a different sensor type.");
       }
     };
     return new MqttConsumer(this.mqttConfig, eventProcessor);
@@ -315,7 +318,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
       // Verify that the message corresponds to the designated sensor type.
       // This validation relies on the assumption that the source information includes the sensor type.
       if (dataMessage.source()
-                     .contains(givenSensorType)) {
+          .contains(givenSensorType)) {
 
         // an empty list of selected sensors means that we want to collect data from all sensors available
         if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
@@ -329,10 +332,10 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
   private Optional<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
     return message.messages()
-                  .stream()
-                  .filter(msg -> msg.filter()
-                                    .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
-                  .findFirst();
+        .stream()
+        .filter(msg -> msg.filter()
+            .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
+        .findFirst();
   }
 
   private Map<String, Object> extractAndEnrichMessagePayload(DataSetMessage dataSetMessage, String sensorId) {
@@ -341,10 +344,9 @@ public class Oi4Adapter implements StreamPipesAdapter {
     try {
       payload.put(
           OI4AdapterLabels.EVENT_KEY_TIMESTAMP,
-          new SimpleDateFormat(DATE_FORMAT).parse(dataSetMessage.timestamp())
-                                           .getTime()
+          parseDate(dataSetMessage.timestamp())
       );
-    } catch (java.text.ParseException e) {
+    } catch (DateTimeParseException e) {
       throw new RuntimeException(e);
     }
     payload.put(
@@ -352,7 +354,21 @@ public class Oi4Adapter implements StreamPipesAdapter {
         sensorId
     );
 
-    return payload;
+    return replaceSpecialChars(payload);
+  }
+
+  private static Map<String, Object> replaceSpecialChars(Map<String, Object> originalMap) {
+    return originalMap.entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().replace("-", ""),
+            Map.Entry::getValue,
+            (oldValue, newValue) -> oldValue)
+        );
+  }
+
+  public long parseDate(String timestamp) throws DateTimeParseException {
+    return Instant.parse(timestamp).toEpochMilli();
   }
 
   /**
