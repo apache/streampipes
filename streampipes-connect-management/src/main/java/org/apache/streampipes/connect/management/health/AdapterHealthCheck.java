@@ -222,7 +222,8 @@ public class AdapterHealthCheck implements Runnable {
                                                    adapterDescription.getElementId()));
                                      } catch (AdapterException e) {
                                        LOG.info(
-                                           "Could not recover adapter at endpoint {} due to {}",
+                                           "Could not recover adapter at endpoint {}  - "
+                                               + "marking it as requested to recover (reason: {})",
                                            adapterEndpointUrl,
                                            e.getMessage()
                                        );
