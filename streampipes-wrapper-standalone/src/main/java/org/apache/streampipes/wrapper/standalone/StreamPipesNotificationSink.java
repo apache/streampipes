@@ -41,12 +41,12 @@ public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
   /**
    * Default waiting time in minutes between two consecutive notifications.
    */
-  private static final int DEFAULT_WAITING_TIME_MINUTES = 10;
+  public static final int DEFAULT_WAITING_TIME_MINUTES = 10;
 
   /**
    * Key for the silent period parameter.
    */
-  private static final String KEY_SILENT_PERIOD = "silentPeriod";
+  public static final String KEY_SILENT_PERIOD = "silentPeriod";
 
   /**
    * The epoch second of the last message sent.
