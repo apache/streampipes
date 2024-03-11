@@ -129,7 +129,6 @@
         <!-- Test dependencies -->
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.10.0</mockito.version>
-        <wiremock.version>2.27.2</wiremock.version>
 
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
@@ -524,18 +523,6 @@
 
 
             <!-- test dependencies -->
-            <dependency>
-                <groupId>com.github.tomakehurst</groupId>
-                <artifactId>wiremock</artifactId>
-                <version>${wiremock.version}</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
