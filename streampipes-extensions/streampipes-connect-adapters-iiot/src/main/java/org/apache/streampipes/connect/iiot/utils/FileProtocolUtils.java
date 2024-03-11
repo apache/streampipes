@@ -20,9 +20,9 @@ package org.apache.streampipes.connect.iiot.utils;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +31,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class FileProtocolUtils {
   private static final Logger LOG = LoggerFactory.getLogger(FileProtocolUtils.class);
@@ -58,18 +56,12 @@ public class FileProtocolUtils {
    */
   private static boolean checkIfFileChanged(String selectedFilename) {
     try {
-      var hash = getFileHash(selectedFilename);
+      var hash = FileHasher.hash(getFile(selectedFilename));
       StreamPipesClient client = getStreamPipesClientInstance();
       return client.fileApi()
                    .checkFileContentChanged(selectedFilename, hash);
     } catch (IOException e) {
       throw new ParseException("Could not read file with filename: %s".formatted(selectedFilename));
-    }
-  }
-
-  private static String getFileHash(String selectedFilename) throws IOException {
-    try (InputStream is = Files.newInputStream(Paths.get(getFile(selectedFilename).toURI()))) {
-      return DigestUtils.md5Hex(is);
     }
   }
 
