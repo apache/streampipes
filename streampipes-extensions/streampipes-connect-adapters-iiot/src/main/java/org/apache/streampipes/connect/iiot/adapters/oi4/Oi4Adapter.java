@@ -371,7 +371,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         );
   }
 
-  public long parseDate(String timestamp) throws DateTimeParseException {
+  private long parseDate(String timestamp) throws DateTimeParseException {
     return Instant.parse(timestamp).toEpochMilli();
   }
 
