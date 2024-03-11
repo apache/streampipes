@@ -357,7 +357,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
     return replaceSpecialChars(payload);
   }
 
-  private static Map<String, Object> replaceSpecialChars(Map<String, Object> originalMap) {
+  private Map<String, Object> replaceSpecialChars(Map<String, Object> originalMap) {
     return originalMap.entrySet()
         .stream()
         .collect(Collectors.toMap(
