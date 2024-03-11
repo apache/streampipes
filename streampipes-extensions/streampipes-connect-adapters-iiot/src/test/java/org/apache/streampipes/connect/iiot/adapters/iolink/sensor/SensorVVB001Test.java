@@ -16,9 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sensor;
-
-import org.apache.streampipes.connect.iiot.adapters.iolink.sensor.SensorVVB001;
+package org.apache.streampipes.connect.iiot.adapters.iolink.sensor;
 
 import org.junit.Test;
 

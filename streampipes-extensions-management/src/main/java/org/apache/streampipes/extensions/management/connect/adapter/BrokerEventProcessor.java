@@ -27,17 +27,19 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public record BrokerEventProcessor(IParser parser,
-                                   IEventCollector collector) implements InternalEventProcessor<byte[]> {
+import java.nio.charset.StandardCharsets;
+
+public record BrokerEventProcessor(
+    IParser parser,
+    IEventCollector collector
+) implements InternalEventProcessor<byte[]> {
 
   private static final Logger LOG = LoggerFactory.getLogger(BrokerEventProcessor.class);
 
   @Override
   public void onEvent(byte[] payload) {
     try {
-      parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), (event) -> {
-        collector.collect(event);
-      });
+      parser.parse(IOUtils.toInputStream(new String(payload), StandardCharsets.UTF_8), collector::collect);
     } catch (ParseException e) {
       LOG.error("Error while parsing: " + e.getMessage());
     }
