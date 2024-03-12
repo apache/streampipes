@@ -18,107 +18,106 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.booleanfilter;
 
-//@RunWith(Parameterized.class)
+import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.EventFactory;
+import org.apache.streampipes.model.runtime.SchemaInfo;
+import org.apache.streampipes.model.runtime.SourceInfo;
+import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.test.extensions.api.StoreEventCollector;
+import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class TestBooleanFilterProcessor {
-//
-//  private static final Logger LOG = LoggerFactory.getLogger(TestBooleanFilterProcessor.class);
-//
-//  @org.junit.runners.Parameterized.Parameters
-//  public static Iterable<Object[]> data() {
-//    List<Boolean> allTrue = Arrays.asList(true, true, true);
-//    List<Boolean> allFalse = Arrays.asList(false, false, false);
-//    List<Boolean> someTrueSomeFalse = Arrays.asList(true, false, true, false, true, false, true, false, true);
-//    List<Boolean> empty = Arrays.asList();
-//    return Arrays.asList(new Object[][]{
-//        {"True", "Test", someTrueSomeFalse, 5},
-//        {"True", "Test", allTrue, 3},
-//        {"True", "Test", allFalse, 0},
-//        {"True", "Test", empty, 0},
-//        {"False", "Test", someTrueSomeFalse, 4},
-//        {"False", "Test", allTrue, 0},
-//        {"False", "Test", allFalse, 3},
-//        {"False", "Test", empty, 0},
-//    });
-//  }
-//
-//  @org.junit.runners.Parameterized.Parameter
-//  public String boolToKeep;
-//
-//  @org.junit.runners.Parameterized.Parameter(1)
-//  public String fieldName;
-//
-//  @org.junit.runners.Parameterized.Parameter(2)
-//  public List<Boolean> eventBooleans;
-//
-//  @org.junit.runners.Parameterized.Parameter(3)
-//  public int expectedFilteredBooleanCount;
-//
-//  @Test
-//  public void testBoolenFilter() {
-//    BooleanFilterProcessor bfp = new BooleanFilterProcessor();
-//    DataProcessorDescription originalGraph = bfp.declareModel();
-//    originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
-//
-//    DataProcessorInvocation graph =
-//        InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
-//
-//    graph.setInputStreams(Collections
-//        .singletonList(EventStreamGenerator
-//            .makeStreamWithProperties(Collections.singletonList(fieldName))));
-//
-//    graph.setOutputStream(EventStreamGenerator.makeStreamWithProperties(Collections.singletonList(fieldName)));
-//
-//    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
-//        .setActualTopicName("output-topic");
-//
-//    graph.getStaticProperties().stream()
-//        .filter(p -> p instanceof MappingPropertyUnary)
-//        .map((p -> (MappingPropertyUnary) p))
-//        // Must hardcode since BOOLEAN_MAPPING is private
-//        .filter(p -> p.getInternalName().equals("boolean-mapping"))
-//        .findFirst().get().setSelectedProperty("s0::" + fieldName);
-//    ProcessorParams params = new ProcessorParams(graph);
-//    params.extractor().getStaticPropertyByName(BooleanFilterProcessor.VALUE, OneOfStaticProperty.class).getOptions()
-//        .stream().filter(ot -> ot.getName().equals(boolToKeep)).findFirst()
-//        .get().setSelected(true);
-//    StoreEventCollector collector = new StoreEventCollector();
-//
-//    bfp.onInvocation(params, collector, null);
-//
-//    int result = sendEvents(bfp, collector);
-//
-//    LOG.info("Expected filtered boolean count is {}", expectedFilteredBooleanCount);
-//    LOG.info("Actual filtered boolean count is {}", result);
-//    assertEquals(expectedFilteredBooleanCount, result);
-//  }
-//
-//  private int sendEvents(BooleanFilterProcessor processor, StoreEventCollector collector) {
-//    List<Event> events = makeEvents();
-//    for (Event event : events) {
-//      LOG.info("Sending event with value "
-//          + event.getFieldBySelector("s0::" + fieldName).getAsPrimitive().getAsBoolean());
-//      processor.onEvent(event, collector);
-//      try {
-//        Thread.sleep(100);
-//      } catch (InterruptedException e) {
-//        e.printStackTrace();
-//      }
-//    }
-//    return collector.getEvents().size();
-//  }
-//
-//  private List<Event> makeEvents() {
-//    List<Event> events = new ArrayList<>();
-//    for (Boolean eventSetting : eventBooleans) {
-//      events.add(makeEvent(eventSetting));
-//    }
-//    return events;
-//  }
-//
-//  private Event makeEvent(Boolean value) {
-//    Map<String, Object> map = new HashMap<>();
-//    map.put(fieldName, value);
-//    return EventFactory.fromMap(map, new SourceInfo("test" + "-topic", "s0"),
-//        new SchemaInfo(null, new ArrayList<>()));
-//  }
+  private static final String STREAM_PREFIX = "s0::";
+
+  private static final Logger LOG = LoggerFactory.getLogger(TestBooleanFilterProcessor.class);
+
+  static Stream<Arguments> data() {
+    return Stream.of(
+        Arguments.of("True", Arrays.asList(true, true, false, true, false, true, false, true), 5),
+        Arguments.of("True", Arrays.asList(true, true, true), 3),
+        Arguments.of("True", Arrays.asList(false, false, false), 0),
+        Arguments.of("True", Collections.emptyList(), 0),
+        Arguments.of("False", Arrays.asList(true, false, true, false, true, false, true, false, true), 4),
+        Arguments.of("False", Arrays.asList(true, true, true), 0),
+        Arguments.of("False", Arrays.asList(false, false, false), 3),
+        Arguments.of("False", Collections.emptyList(), 0)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("data")
+  public void testBoolenFilter(
+      String boolToKeep,
+      List<Boolean> eventBooleans,
+      int expectedFilteredBooleanCount
+  ) {
+
+    var fieldName = "Test";
+    var processorParams = mock(ProcessorParams.class);
+    var eventProcessorRuntimeContext = mock(EventProcessorRuntimeContext.class);
+
+    var processor = new BooleanFilterProcessor();
+    var extractor = mock(ProcessingElementParameterExtractor.class);
+    when(processorParams.extractor()).thenReturn(extractor);
+    when(extractor.mappingPropertyValue(BooleanFilterProcessor.BOOLEAN_MAPPING)).thenReturn(STREAM_PREFIX + fieldName);
+    when(extractor.selectedSingleValue(BooleanFilterProcessor.VALUE, String.class)).thenReturn(boolToKeep);
+
+    var collector = new StoreEventCollector();
+    processor.onInvocation(processorParams, collector, eventProcessorRuntimeContext);
+
+    sendEvents(processor, collector, eventBooleans, fieldName);
+
+    assertEquals(expectedFilteredBooleanCount, collector.getEvents().size());
+  }
+
+  private void sendEvents(
+      BooleanFilterProcessor processor,
+      StoreEventCollector collector,
+      List<Boolean> eventBooleans,
+      String fieldName) {
+    List<Event> events = makeEvents(eventBooleans, fieldName);
+    for (Event event : events) {
+      LOG.info("Sending event with value "
+                   + event.getFieldBySelector(STREAM_PREFIX + fieldName)
+                          .getAsPrimitive()
+                          .getAsBoolean());
+      processor.onEvent(event, collector);
+
+    }
+  }
+
+  private List<Event> makeEvents(List<Boolean> eventBooleans, String fieldName) {
+    List<Event> events = new ArrayList<>();
+    for (Boolean eventSetting : eventBooleans) {
+      events.add(makeEvent(eventSetting, fieldName));
+    }
+    return events;
+  }
+
+  private Event makeEvent(Boolean value, String fieldName) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(fieldName, value);
+    return EventFactory.fromMap(map, new SourceInfo("test" + "-topic", "s0"),
+                                new SchemaInfo(null, new ArrayList<>())
+    );
+  }
 }
