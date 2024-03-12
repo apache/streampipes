@@ -29,8 +29,8 @@ import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.ProducerBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
@@ -40,6 +40,8 @@ import java.util.Map;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_HOST_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.TOPIC_KEY;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestPulsarPublisherSink {
   @Test
@@ -53,29 +55,29 @@ public class TestPulsarPublisherSink {
     rawMap.put("key1", "value1");
     rawMap.put("key2", "value2");
 
-    var params = Mockito.mock(IDataSinkParameters.class);
-    DataSinkParameterExtractor extractor = Mockito.mock(DataSinkParameterExtractor.class);
-    Mockito.when(params.extractor()).thenReturn(extractor);
-    Mockito.when(extractor.singleValueParameter(PULSAR_HOST_KEY, String.class)).thenReturn(pulsarHost);
-    Mockito.when(extractor.singleValueParameter(PULSAR_PORT_KEY, Integer.class)).thenReturn(pulsarPort);
-    Mockito.when(extractor.singleValueParameter(TOPIC_KEY, String.class)).thenReturn(topic);
+    var params = mock(IDataSinkParameters.class);
+    DataSinkParameterExtractor extractor = mock(DataSinkParameterExtractor.class);
+    when(params.extractor()).thenReturn(extractor);
+    when(extractor.singleValueParameter(PULSAR_HOST_KEY, String.class)).thenReturn(pulsarHost);
+    when(extractor.singleValueParameter(PULSAR_PORT_KEY, Integer.class)).thenReturn(pulsarPort);
+    when(extractor.singleValueParameter(TOPIC_KEY, String.class)).thenReturn(topic);
 
-    ClientBuilder clientBuilder = Mockito.mock(ClientBuilder.class);
-    PulsarClient pulsarClient = Mockito.mock(PulsarClient.class);
-    ProducerBuilder<byte[]> producerBuilder = Mockito.mock(ProducerBuilder.class);
-    Producer<byte[]> producer = Mockito.mock(Producer.class);
-    Mockito.when(clientBuilder.serviceUrl(ArgumentMatchers.anyString())).thenReturn(clientBuilder);
-    Mockito.when(clientBuilder.build()).thenReturn(pulsarClient);
-    Mockito.when(pulsarClient.newProducer()).thenReturn(producerBuilder);
-    Mockito.when(producerBuilder.topic(topic)).thenReturn(producerBuilder);
-    Mockito.when(producerBuilder.create()).thenReturn(producer);
-    Mockito.when(producer.send(Mockito.any(byte[].class))).thenAnswer(data -> {
+    ClientBuilder clientBuilder = mock(ClientBuilder.class);
+    PulsarClient pulsarClient = mock(PulsarClient.class);
+    ProducerBuilder<byte[]> producerBuilder = mock(ProducerBuilder.class);
+    Producer<byte[]> producer = mock(Producer.class);
+    when(clientBuilder.serviceUrl(ArgumentMatchers.anyString())).thenReturn(clientBuilder);
+    when(clientBuilder.build()).thenReturn(pulsarClient);
+    when(pulsarClient.newProducer()).thenReturn(producerBuilder);
+    when(producerBuilder.topic(topic)).thenReturn(producerBuilder);
+    when(producerBuilder.create()).thenReturn(producer);
+    when(producer.send(Mockito.any(byte[].class))).thenAnswer(data -> {
       HashMap<String, String> map;
       ObjectMapper mapper = new ObjectMapper();
       String json = new String((byte[]) data.getArgument(0));
       map = mapper.readValue(json, new TypeReference<>() {
       });
-      Assert.assertEquals(map, rawMap);
+      Assertions.assertEquals(map, rawMap);
       return null;
     });
 
@@ -87,8 +89,8 @@ public class TestPulsarPublisherSink {
     Mockito.verify(clientBuilder).serviceUrl(String.format("pulsar://%s:%d", pulsarHost, pulsarPort));
 
     // Test publish event
-    Event event = Mockito.mock(Event.class);
-    Mockito.when(event.getRaw()).thenReturn(rawMap);
+    Event event = mock(Event.class);
+    when(event.getRaw()).thenReturn(rawMap);
 
     pulsarPublisherSink.onEvent(event);
 

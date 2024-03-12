@@ -23,12 +23,12 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 
@@ -36,7 +36,7 @@ public class RosBridgeAdapterMigrationV1Test {
 
   private RosBridgeAdapterMigrationV1 migrationV1;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     migrationV1 = new RosBridgeAdapterMigrationV1();
   }
@@ -49,7 +49,7 @@ public class RosBridgeAdapterMigrationV1Test {
     var rosBridgeAdapterDescriptionV1 = migrationV1.migrate(rosBridgeAdapterDescriptionV0 , extractorMock);
 
     var typeOfPortProperty = getTypeOfPortProperty(rosBridgeAdapterDescriptionV1.element());
-    assertEquals(XSD.INTEGER, typeOfPortProperty);
+    Assertions.assertEquals(XSD.INTEGER, typeOfPortProperty);
   }
 
   private URI getTypeOfPortProperty(AdapterDescription adapterDescription) {
