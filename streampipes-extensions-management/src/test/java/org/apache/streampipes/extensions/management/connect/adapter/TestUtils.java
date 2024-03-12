@@ -40,15 +40,6 @@ public class TestUtils {
     return jsonObject;
   }
 
-  public static String makeNestedJsonObject() {
-    return "{\"device\": "
-        + "{"
-        + "\"uuid\": \"uuid\", "
-        + "\"name\": null, "
-        + "\"version\": \"1.2.3\"} "
-        + "}";
-  }
-
   public static JsonArray makeJsonArray(JsonObject... jsonObjects) {
     JsonArray jsonArray = new JsonArray();
     Arrays.stream(jsonObjects).forEach(jsonArray::add);

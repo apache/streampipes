@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.utils;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class OpcUaUtilTest {
 
@@ -29,12 +28,12 @@ public class OpcUaUtilTest {
   @Test
   public void testAddOpcPrefixIfNotExistsWithPrefix() {
     var result = OpcUaUtil.addOpcPrefixIfNotExists(SERVER_ADDRESS_WITH_OPC_PREFIX);
-    assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
+    Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
   }
 
   @Test
   public void testAddOpcPrefixIfNotExistsNoPrefix() {
     var result = OpcUaUtil.addOpcPrefixIfNotExists("example.com");
-    assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
+    Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
   }
 }
