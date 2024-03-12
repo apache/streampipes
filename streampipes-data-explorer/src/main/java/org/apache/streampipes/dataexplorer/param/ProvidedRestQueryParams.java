@@ -46,7 +46,7 @@ public class ProvidedRestQueryParams {
   }
 
   public Integer getAsInt(String key) {
-    return has(key) ? Integer.parseInt(providedParams.get(key)) : null;
+    return has(key) ? Integer.parseInt(String.valueOf(providedParams.get(key))) : null;
   }
 
   public String getAsString(String key) {
