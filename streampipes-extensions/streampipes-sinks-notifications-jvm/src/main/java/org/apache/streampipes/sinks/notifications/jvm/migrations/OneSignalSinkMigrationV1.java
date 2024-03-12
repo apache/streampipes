@@ -16,15 +16,21 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+package org.apache.streampipes.sinks.notifications.jvm.migrations;
 
-public interface IFileApi {
-  byte[] getFileContent(String filename);
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-  String getFileContentAsString(String filename);
+import static org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalSink.ONE_SIGNAL_NOTIFICATION_SINK_ID;
 
-  void writeToFile(String file, String fileLocation);
-
-  boolean checkFileContentChanged(String filename, String hash);
-
+public class OneSignalSinkMigrationV1 implements INotificationDataSinkMigrator {
+  @Override
+  public ModelMigratorConfig config() {
+    return new ModelMigratorConfig(
+      ONE_SIGNAL_NOTIFICATION_SINK_ID,
+      SpServiceTagPrefix.DATA_SINK,
+      0,
+      1
+    );
+  }
 }

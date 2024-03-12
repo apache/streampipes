@@ -33,9 +33,10 @@ public class FileApi extends AbstractClientApi implements IFileApi {
 
   public byte[] getFileContent(String filename, boolean isOriginalFileName) {
     return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename)
-            .withQueryParameters(Map.of("isOriginalFilename", String.valueOf(isOriginalFileName))), null)
-            .executeRequest();
+        .withQueryParameters(Map.of("isOriginalFilename", String.valueOf(isOriginalFileName))), null)
+        .executeRequest();
   }
+
   @Override
   public byte[] getFileContent(String fileId) {
     return getFileContent(fileId, false);
@@ -56,9 +57,19 @@ public class FileApi extends AbstractClientApi implements IFileApi {
         .writeToFile(fileLocation);
   }
 
+  @Override
+  public boolean checkFileContentChanged(String filename, String hash) {
+    return getSingle(
+        getBaseResourcePath(filename)
+            .addToPath("checkFileContentChanged")
+            .addToPath(hash),
+        Boolean.class
+    );
+  }
+
   protected StreamPipesApiPath getBaseResourcePath(String fileName) {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("files")
-        .addToPath(fileName);
+                             .addToPath("files")
+                             .addToPath(fileName);
   }
 }

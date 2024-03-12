@@ -21,7 +21,6 @@ package org.apache.streampipes.sinks.notifications.jvm.slack;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -31,7 +30,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
+import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
@@ -40,7 +39,8 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 
 import java.io.IOException;
 
-public class SlackNotificationSink extends StreamPipesDataSink {
+public class SlackNotificationSink extends StreamPipesNotificationSink {
+  public static final String SLACK_NOTIFICATION_SINK_ID = "org.apache.streampipes.sinks.notifications.jvm.slack";
 
   private static final String CHANNEL_TYPE = "channel-type";
   private static final String RECEIVER = "receiver";
@@ -56,10 +56,9 @@ public class SlackNotificationSink extends StreamPipesDataSink {
   private String originalMessage;
 
   @Override
-  public DataSinkDescription declareModel() {
-
+  public DataSinkBuilder declareModelWithoutSilentPeriod() {
     return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.notifications.jvm.slack", 0)
+        .create(SLACK_NOTIFICATION_SINK_ID, 1)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .category(DataSinkType.NOTIFICATION)
@@ -71,13 +70,13 @@ public class SlackNotificationSink extends StreamPipesDataSink {
         .requiredTextParameter(Labels.withId(CONTENT), false, true)
         .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
                                       Options.from("User", "Channel"))
-        .requiredSecret(Labels.withId(AUTH_TOKEN))
-        .build();
+        .requiredSecret(Labels.withId(AUTH_TOKEN));
   }
 
   @Override
   public void onInvocation(SinkParams parameters,
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    super.onInvocation(parameters, runtimeContext);
     var extractor = parameters.extractor();
 
     userChannel = extractor.singleValueParameter(RECEIVER, String.class);
@@ -110,11 +109,10 @@ public class SlackNotificationSink extends StreamPipesDataSink {
                                          + "the bot has no rights to access it");
       }
     }
-
   }
 
   @Override
-  public void onEvent(Event event) throws SpRuntimeException {
+  public void onNotificationEvent(Event event) {
     String message = replacePlaceholders(event, originalMessage);
     if (this.sendToUser) {
       this.session.sendMessageToUser(userChannel,

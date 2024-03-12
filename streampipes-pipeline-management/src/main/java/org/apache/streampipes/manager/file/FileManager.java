@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
@@ -102,6 +103,11 @@ public class FileManager {
     }
 
     return fileInputStream;
+  }
+
+  public static boolean checkFileContentChanged(String filename, String hash) throws IOException {
+    var fileHash = FileHasher.hash(getFile(filename));
+    return !fileHash.equals(hash);
   }
 
   private static void storeFileMetadata(FileMetadata fileMetadata) {

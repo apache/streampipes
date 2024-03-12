@@ -23,6 +23,9 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.notifications.jvm.email.EmailSink;
+import org.apache.streampipes.sinks.notifications.jvm.migrations.OneSignalSinkMigrationV1;
+import org.apache.streampipes.sinks.notifications.jvm.migrations.SlackNotificationSinkMigrationV1;
+import org.apache.streampipes.sinks.notifications.jvm.migrations.TelegramSinkMigrationV1;
 import org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink;
 import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalSink;
 import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationSink;
@@ -50,6 +53,10 @@ public class NotificationsExtensionModuleExport implements IExtensionModuleExpor
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return Collections.emptyList();
+    return List.of(
+            new OneSignalSinkMigrationV1(),
+            new SlackNotificationSinkMigrationV1(),
+            new TelegramSinkMigrationV1()
+    );
   }
 }

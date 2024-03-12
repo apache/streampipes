@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @RestController
 @RequestMapping("/api/v2/files")
 public class PipelineElementFile extends AbstractAuthGuardedRestResource {
@@ -120,7 +122,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
       }
     } catch (IOException e) {
       throw new SpMessageException(
-          org.springframework.http.HttpStatus.NOT_FOUND,
+          NOT_FOUND,
           Notifications.error("File not found")
       );
     }
@@ -139,4 +141,24 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
                                                           .toLowerCase())
                          .toList());
   }
+
+  @GetMapping(
+      path = "/{filename}/checkFileContentChanged/{hash}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
+  public ResponseEntity<Boolean> checkFileContentChanged(
+      @PathVariable(value = "filename") String filename,
+      @PathVariable(value = "hash") String hash
+  ) {
+    try {
+      return ok(FileManager.checkFileContentChanged(filename, hash));
+    } catch (IOException e) {
+      throw new SpMessageException(
+          NOT_FOUND,
+          Notifications.error("File not found")
+      );
+    }
+  }
+
+
 }
