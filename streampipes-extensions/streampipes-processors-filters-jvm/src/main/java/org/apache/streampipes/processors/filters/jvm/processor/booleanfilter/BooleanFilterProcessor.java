@@ -38,7 +38,7 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class BooleanFilterProcessor extends StreamPipesDataProcessor {
 
-  private static final String BOOLEAN_MAPPING = "boolean-mapping";
+  public static final String BOOLEAN_MAPPING = "boolean-mapping";
   public static final String VALUE = "value";
 
   private static final String OPTION_FALSE = "False";
@@ -66,10 +66,12 @@ public class BooleanFilterProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+  public void onInvocation(ProcessorParams processorParams,
+                           SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-    String selectedSingleValue = processorParams.extractor().selectedSingleValue(VALUE, String.class);
     this.mappingField = processorParams.extractor().mappingPropertyValue(BOOLEAN_MAPPING);
+
+    String selectedSingleValue = processorParams.extractor().selectedSingleValue(VALUE, String.class);
     this.valueToFilter = selectedSingleValue.equals(OPTION_TRUE);
   }
 
