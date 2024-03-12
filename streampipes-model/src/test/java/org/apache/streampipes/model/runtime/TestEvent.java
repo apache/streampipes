@@ -19,11 +19,10 @@ package org.apache.streampipes.model.runtime;
 
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestEvent {
 
@@ -32,8 +31,9 @@ public class TestEvent {
     Map<String, Object> runtimeMap = RuntimeTestUtils.simpleMap();
     Event event = RuntimeTestUtils.makeSimpleEvent(runtimeMap, RuntimeTestUtils.getSourceInfo());
 
-    assertEquals(Integer.valueOf(1), event.getFieldBySelector("s0::timestamp").getAsPrimitive()
-        .getAsInt());
+    Assertions.assertEquals(Integer.valueOf(1),
+                            event.getFieldBySelector("s0::timestamp").getAsPrimitive()
+                                                         .getAsInt());
   }
 
   @Test
@@ -41,9 +41,9 @@ public class TestEvent {
     Map<String, Object> runtimeMap = RuntimeTestUtils.nestedMap();
     Event event = RuntimeTestUtils.makeSimpleEvent(runtimeMap, RuntimeTestUtils.getSourceInfo());
 
-    assertEquals(Integer.valueOf(2), event.getFieldBySelector("s0::nested::timestamp2")
-        .getAsPrimitive()
-        .getAsInt());
+    Assertions.assertEquals(Integer.valueOf(2), event.getFieldBySelector("s0::nested::timestamp2")
+                                                     .getAsPrimitive()
+                                                     .getAsInt());
   }
 
   @Test
@@ -53,15 +53,15 @@ public class TestEvent {
 
     PrimitiveField field = event.getFieldBySelector("s0::timestamp").getAsPrimitive();
 
-    assertEquals(Integer.valueOf(1), field.getAsInt());
+    Assertions.assertEquals(Integer.valueOf(1), field.getAsInt());
 
     field.setValue(2);
 
     event.updateFieldBySelector("s0::timestamp", field);
 
-    assertEquals(Integer.valueOf(2), event.getFieldBySelector("s0::timestamp")
-        .getAsPrimitive()
-        .getAsInt());
+    Assertions.assertEquals(Integer.valueOf(2), event.getFieldBySelector("s0::timestamp")
+                                                     .getAsPrimitive()
+                                                     .getAsInt());
   }
 
   @Test
@@ -71,13 +71,13 @@ public class TestEvent {
 
     PrimitiveField field = event.getFieldBySelector("s0::nested::timestamp2").getAsPrimitive();
 
-    assertEquals(Integer.valueOf(2), field.getAsInt());
+    Assertions.assertEquals(Integer.valueOf(2), field.getAsInt());
 
     field.setValue(3);
 
-    assertEquals(Integer.valueOf(3), event.getFieldBySelector("s0::nested::timestamp2")
-        .getAsPrimitive()
-        .getAsInt());
+    Assertions.assertEquals(Integer.valueOf(3), event.getFieldBySelector("s0::nested::timestamp2")
+                                                     .getAsPrimitive()
+                                                     .getAsInt());
   }
 
   @Test
@@ -87,15 +87,15 @@ public class TestEvent {
 
     PrimitiveField field = event.getFieldBySelector("s0::timestamp").getAsPrimitive();
 
-    assertEquals(Integer.valueOf(1), field.getAsInt());
+    Assertions.assertEquals(Integer.valueOf(1), field.getAsInt());
 
     PrimitiveField field2 = new PrimitiveField("timestamp", "timestamp", 5);
 
     event.updateFieldBySelector("s0::timestamp", field2);
 
-    assertEquals(Integer.valueOf(5), event.getFieldBySelector("s0::timestamp")
-        .getAsPrimitive()
-        .getAsInt());
+    Assertions.assertEquals(Integer.valueOf(5), event.getFieldBySelector("s0::timestamp")
+                                                     .getAsPrimitive()
+                                                     .getAsInt());
   }
 
   @Test
@@ -105,14 +105,14 @@ public class TestEvent {
 
     PrimitiveField field = event.getFieldBySelector("s0::nested::timestamp2").getAsPrimitive();
 
-    assertEquals(Integer.valueOf(2), field.getAsInt());
+    Assertions.assertEquals(Integer.valueOf(2), field.getAsInt());
 
     PrimitiveField field2 = new PrimitiveField("timestamp2", "timestamp2", 6);
 
     event.updateFieldBySelector("s0::nested::timestamp2", field2);
 
-    assertEquals(Integer.valueOf(6), event.getFieldBySelector("s0::nested::timestamp2")
-        .getAsPrimitive()
-        .getAsInt());
+    Assertions.assertEquals(Integer.valueOf(6), event.getFieldBySelector("s0::nested::timestamp2")
+                                                     .getAsPrimitive()
+                                                     .getAsInt());
   }
 }

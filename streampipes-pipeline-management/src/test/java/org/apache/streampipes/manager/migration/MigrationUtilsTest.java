@@ -23,12 +23,10 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MigrationUtilsTest {
 
@@ -58,20 +56,12 @@ public class MigrationUtilsTest {
     pipelineElement4.setAppId("other-app-id");
     pipelineElement4.setVersion(0);
 
-    assertEquals(
-            migrationConfigs.get(0),
-            MigrationUtils.getApplicableMigration(pipelineElement1, migrationConfigs).get()
-    );
-    assertEquals(
-            migrationConfigs.get(1),
-            MigrationUtils.getApplicableMigration(pipelineElement2, migrationConfigs).get()
-    );
-    assertEquals(
-            migrationConfigs.get(2),
-            MigrationUtils.getApplicableMigration(pipelineElement3, migrationConfigs).get()
-    );
-    assertTrue(
-            MigrationUtils.getApplicableMigration(pipelineElement4, migrationConfigs).isEmpty()
-    );
+    Assertions.assertEquals(migrationConfigs.get(0),
+                            MigrationUtils.getApplicableMigration(pipelineElement1, migrationConfigs).get());
+    Assertions.assertEquals(migrationConfigs.get(1),
+                            MigrationUtils.getApplicableMigration(pipelineElement2, migrationConfigs).get());
+    Assertions.assertEquals(migrationConfigs.get(2),
+                            MigrationUtils.getApplicableMigration(pipelineElement3, migrationConfigs).get());
+    Assertions.assertTrue(MigrationUtils.getApplicableMigration(pipelineElement4, migrationConfigs).isEmpty());
   }
 }

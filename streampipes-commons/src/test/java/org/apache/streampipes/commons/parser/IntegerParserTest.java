@@ -18,23 +18,23 @@
 
 package org.apache.streampipes.commons.parser;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegerParserTest {
   private IntegerParser parser;
 
-  @Before
+  @BeforeEach
   public void setup() {
     parser = new IntegerParser();
   }
 
   @Test
   public void parseValidInteger() {
-    assertEquals(1, (int) parser.parse("1"));
+    Assertions.assertEquals(1, (int) parser.parse("1"));
   }
 
   @Test

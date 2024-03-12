@@ -23,19 +23,18 @@ import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class AdapterDescriptionTest {
 
   AdapterDescription adapterDescription;
 
-  @Before
+  @BeforeEach
   public void init() {
     adapterDescription = new AdapterDescription() {
     };
@@ -56,16 +55,19 @@ public class AdapterDescriptionTest {
 
   @Test
   public void getValueRules() {
-    assertEquals(2, adapterDescription.getValueRules().size());
+    Assertions.assertEquals(2,
+                            adapterDescription.getValueRules().size());
   }
 
   @Test
   public void getStreamRules() {
-    assertEquals(0, adapterDescription.getStreamRules().size());
+    Assertions.assertEquals(0,
+                            adapterDescription.getStreamRules().size());
   }
 
   @Test
   public void getSchemaRules() {
-    assertEquals(7, adapterDescription.getSchemaRules().size());
+    Assertions.assertEquals(7,
+                            adapterDescription.getSchemaRules().size());
   }
 }

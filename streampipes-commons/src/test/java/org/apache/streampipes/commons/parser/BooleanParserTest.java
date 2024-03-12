@@ -19,34 +19,32 @@
 package org.apache.streampipes.commons.parser;
 
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BooleanParserTest {
 
   private BooleanParser parser;
 
-  @Before
+  @BeforeEach
   public void setup() {
     parser = new BooleanParser();
   }
 
   @Test
   public void parseTrue() {
-    assertTrue(parser.parse("true"));
+    Assertions.assertTrue(parser.parse("true"));
   }
 
   @Test
   public void parseFalse() {
-    assertFalse(parser.parse("false"));
+    Assertions.assertFalse(parser.parse("false"));
   }
 
   @Test
   public void parseNotABoolean() {
-    assertFalse(parser.parse("not a boolean"));
+    Assertions.assertFalse(parser.parse("not a boolean"));
   }
 
 

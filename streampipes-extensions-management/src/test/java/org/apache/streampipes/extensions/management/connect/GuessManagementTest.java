@@ -22,19 +22,20 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 public class GuessManagementTest {
 
-  @Test(expected = AdapterException.class)
-  public void getAdapterGuessInfoAdapterNotFound() throws AdapterException {
+  @Test
+  public void getAdapterGuessInfoAdapterNotFound() {
     var mockDeclarersSingleton = Mockito.mock(IDeclarersSingleton.class);
     var guessManagement = Mockito.spy(GuessManagement.class);
 
@@ -44,6 +45,7 @@ public class GuessManagementTest {
     when(mockDeclarersSingleton.getAdapter(any()))
         .thenReturn(Optional.empty());
 
-    guessManagement.guessSchema(new AdapterDescription());
+    assertThrows(AdapterException.class, () -> guessManagement.guessSchema(new AdapterDescription()));
+
   }
 }

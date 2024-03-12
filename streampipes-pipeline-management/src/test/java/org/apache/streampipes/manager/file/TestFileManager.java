@@ -18,13 +18,12 @@
 package org.apache.streampipes.manager.file;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestFileManager {
 
@@ -35,7 +34,7 @@ public class TestFileManager {
     InputStream resultStream = FileManager.cleanFile(inputStream, "CSV");
     String resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
-    assertEquals(expected, resultString);
+    Assertions.assertEquals(expected, resultString);
   }
 
   @Test
@@ -47,7 +46,7 @@ public class TestFileManager {
     InputStream resultStream = FileManager.cleanFile(inputStream, "CSV");
     String resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
-    assertEquals(expected, resultString);
+    Assertions.assertEquals(expected, resultString);
   }
 
   @Test
@@ -59,6 +58,6 @@ public class TestFileManager {
     InputStream resultStream = FileManager.cleanFile(inputStream, "CSV");
     String resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
-    assertEquals(expected, resultString);
+    Assertions.assertEquals(expected, resultString);
   }
 }

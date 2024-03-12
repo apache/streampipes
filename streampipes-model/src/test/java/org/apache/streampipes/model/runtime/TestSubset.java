@@ -17,13 +17,12 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestSubset {
 
@@ -36,9 +35,12 @@ public class TestSubset {
 
     Event subset = event.getSubset(selectors);
 
-    assertEquals(2, subset.getFields().size());
-    assertEquals("timestamp", subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
-    assertEquals("sensor1", subset.getFieldBySelector("s0::sensor1").getFieldNameIn());
+    Assertions.assertEquals(2,
+                            subset.getFields().size());
+    Assertions.assertEquals("timestamp",
+                            subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
+    Assertions.assertEquals("sensor1",
+                            subset.getFieldBySelector("s0::sensor1").getFieldNameIn());
 
   }
 
@@ -51,11 +53,15 @@ public class TestSubset {
 
     Event subset = event.getSubset(selectors);
 
-    assertEquals(2, subset.getFields().size());
-    assertEquals("timestamp", subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
-    assertEquals("timestamp2", subset.getFieldBySelector("s0::nested::timestamp2").getFieldNameIn
-        ());
-    assertEquals(1, subset.getFieldBySelector("s0::nested").getAsComposite().getRawValue().size());
+    Assertions.assertEquals(2,
+                            subset.getFields().size());
+    Assertions.assertEquals("timestamp",
+                            subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
+    Assertions.assertEquals("timestamp2",
+                            subset.getFieldBySelector("s0::nested::timestamp2").getFieldNameIn
+                                ());
+    Assertions.assertEquals(1,
+                            subset.getFieldBySelector("s0::nested").getAsComposite().getRawValue().size());
 
   }
 }

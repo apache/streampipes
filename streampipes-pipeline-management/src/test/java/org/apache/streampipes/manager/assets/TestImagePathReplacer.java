@@ -17,9 +17,8 @@
  */
 package org.apache.streampipes.manager.assets;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 public class TestImagePathReplacer {
@@ -47,7 +46,7 @@ public class TestImagePathReplacer {
 
         Lorem ipsu""";
     String newContent = new ImagePathReplacer(testContent, appId).replaceContent();
-    assertEquals(testContentReplaced, newContent);
+    Assertions.assertEquals(testContentReplaced, newContent);
 
   }
 }

@@ -19,12 +19,11 @@
 package org.apache.streampipes.model.datalake;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class DataSeriesBuilderTest {
 
@@ -37,8 +36,9 @@ public class DataSeriesBuilderTest {
         .withHeaders(headers)
         .build();
 
-    assertEquals(2, result.getHeaders().size());
-    assertEquals(headers, result.getHeaders());
+    Assertions.assertEquals(2,
+                            result.getHeaders().size());
+    Assertions.assertEquals(headers, result.getHeaders());
   }
 
 
@@ -49,9 +49,10 @@ public class DataSeriesBuilderTest {
         .withRow(rowOne)
         .build();
 
-    assertEquals(1, result.getRows().size());
-    assertEquals(1, result.getTotal());
-    assertEquals(List.of(rowOne), result.getRows());
+    Assertions.assertEquals(1,
+                            result.getRows().size());
+    Assertions.assertEquals(1, result.getTotal());
+    Assertions.assertEquals(List.of(rowOne), result.getRows());
   }
 
   @Test
@@ -61,9 +62,10 @@ public class DataSeriesBuilderTest {
         .withRow(rowTwo)
         .build();
 
-    assertEquals(2, result.getRows().size());
-    assertEquals(2, result.getTotal());
-    assertEquals(List.of(rowOne, rowTwo), result.getRows());
+    Assertions.assertEquals(2,
+                            result.getRows().size());
+    Assertions.assertEquals(2, result.getTotal());
+    Assertions.assertEquals(List.of(rowOne, rowTwo), result.getRows());
   }
 
   @Test
@@ -72,9 +74,10 @@ public class DataSeriesBuilderTest {
         .withRows(List.of(rowOne, rowTwo))
         .build();
 
-    assertEquals(2, result.getRows().size());
-    assertEquals(2, result.getTotal());
-    assertEquals(List.of(rowOne, rowTwo), result.getRows());
+    Assertions.assertEquals(2,
+                            result.getRows().size());
+    Assertions.assertEquals(2, result.getTotal());
+    Assertions.assertEquals(List.of(rowOne, rowTwo), result.getRows());
   }
 
   @Test
@@ -85,6 +88,6 @@ public class DataSeriesBuilderTest {
         .withTags(tags)
         .build();
 
-    assertEquals(tags, result.getTags());
+    Assertions.assertEquals(tags, result.getTags());
   }
 }

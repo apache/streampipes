@@ -24,18 +24,19 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AdapterMasterManagementTest {
 
-  @Test(expected = AdapterException.class)
-  public void getAdapterFailNull() throws AdapterException {
+  @Test
+  public void getAdapterFailNull() {
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.getAllAdapters()).thenReturn(null);
@@ -48,11 +49,11 @@ public class AdapterMasterManagementTest {
             AdapterMetricsManager.INSTANCE.getAdapterMetrics()
         );
 
-    adapterMasterManagement.getAdapter("id2");
+    assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
   }
 
-  @Test(expected = AdapterException.class)
-  public void getAdapterFail() throws AdapterException {
+  @Test
+  public void getAdapterFail() {
     List<AdapterDescription> adapterDescriptions = List.of(new AdapterDescription());
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
@@ -66,7 +67,7 @@ public class AdapterMasterManagementTest {
             AdapterMetricsManager.INSTANCE.getAdapterMetrics()
         );
 
-    adapterMasterManagement.getAdapter("id2");
+    assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
   }
 
   @Test
@@ -86,11 +87,11 @@ public class AdapterMasterManagementTest {
 
     List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();
 
-    assertEquals(1, result.size());
+    Assertions.assertEquals(1, result.size());
   }
 
-  @Test(expected = AdapterException.class)
-  public void getAllAdaptersFail() throws AdapterException {
+  @Test
+  public void getAllAdaptersFail() {
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.getAllAdapters()).thenReturn(null);
@@ -103,7 +104,7 @@ public class AdapterMasterManagementTest {
             AdapterMetricsManager.INSTANCE.getAdapterMetrics()
         );
 
-    adapterMasterManagement.getAllAdapterInstances();
+    assertThrows(AdapterException.class, adapterMasterManagement::getAllAdapterInstances);
 
   }
 }

@@ -23,19 +23,19 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.migration.config
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class Plc4xModbusAdapterMigrationTest {
 
   private Plc4xModbusAdapterMigrationV1 migrationV1;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     migrationV1 = new Plc4xModbusAdapterMigrationV1();
   }

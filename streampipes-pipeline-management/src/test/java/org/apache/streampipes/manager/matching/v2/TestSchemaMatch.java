@@ -27,14 +27,12 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.Geo;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class TestSchemaMatch {
 
@@ -53,7 +51,7 @@ public class TestSchemaMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-    assertTrue(matches);
+    Assertions.assertTrue(matches);
   }
 
   @Test
@@ -71,7 +69,7 @@ public class TestSchemaMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 
   @Test
@@ -89,7 +87,7 @@ public class TestSchemaMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 
   @Test
@@ -107,6 +105,6 @@ public class TestSchemaMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-    assertTrue(matches);
+    Assertions.assertTrue(matches);
   }
 }

@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AdaptersTest {
 

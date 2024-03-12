@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.connect.iiot.adapters.iolink.sensor;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SensorVVB001Test {
 
@@ -31,20 +30,21 @@ public class SensorVVB001Test {
   @Test
   public void checkEventSize() {
     var result = sensor.parseEvent(sampleInput);
-    assertEquals(8, result.keySet().size());
+    Assertions.assertEquals(8,
+                            result.keySet().size());
   }
 
   @Test
   public void parseEvent() {
     var result = sensor.parseEvent(sampleInput);
 
-    assertEquals(0.0023, (double) result.get(SensorVVB001.V_RMS_NAME), 0.001);
-    assertEquals(6.600, (double) result.get(SensorVVB001.A_PEAK_NAME), 0.001);
-    assertEquals(1.8, (double) result.get(SensorVVB001.A_RMS_NAME), 0.001);
-    assertEquals(34.8, (double) result.get(SensorVVB001.TEMPERATURE_NAME), 0.001);
-    assertEquals(3.7, (double) result.get(SensorVVB001.CREST_NAME), 0.001);
-    assertEquals(0, result.get(SensorVVB001.STATUS_NAME));
-    assertEquals(true, result.get(SensorVVB001.OUT_1_NAME));
-    assertEquals(true, result.get(SensorVVB001.OUT_2_NAME));
+    Assertions.assertEquals(0.0023, (double) result.get(SensorVVB001.V_RMS_NAME), 0.001);
+    Assertions.assertEquals(6.600, (double) result.get(SensorVVB001.A_PEAK_NAME), 0.001);
+    Assertions.assertEquals(1.8, (double) result.get(SensorVVB001.A_RMS_NAME), 0.001);
+    Assertions.assertEquals(34.8, (double) result.get(SensorVVB001.TEMPERATURE_NAME), 0.001);
+    Assertions.assertEquals(3.7, (double) result.get(SensorVVB001.CREST_NAME), 0.001);
+    Assertions.assertEquals(0, result.get(SensorVVB001.STATUS_NAME));
+    Assertions.assertEquals(true, result.get(SensorVVB001.OUT_1_NAME));
+    Assertions.assertEquals(true, result.get(SensorVVB001.OUT_2_NAME));
   }
 }

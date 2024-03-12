@@ -32,13 +32,12 @@ import org.apache.streampipes.test.extensions.api.StoreEventCollector;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestChangedValueDetectionProcessor {
 
@@ -47,7 +46,7 @@ public class TestChangedValueDetectionProcessor {
     var processor = new ChangedValueDetectionProcessor();
     var event = this.createTestEvent();
 
-    assertEquals("l1sensor01", processor.getDimensionKey(event));
+    Assertions.assertEquals("l1sensor01", processor.getDimensionKey(event));
   }
 
   @Test
@@ -61,7 +60,7 @@ public class TestChangedValueDetectionProcessor {
         .getEventProperties().get(0)
         .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
 
-    assertEquals("l1", processor.getDimensionKey(event));
+    Assertions.assertEquals("l1", processor.getDimensionKey(event));
   }
 
   @Test
@@ -73,7 +72,7 @@ public class TestChangedValueDetectionProcessor {
     event.removeFieldBySelector("location");
     event.getSchemaInfo().getEventSchema().getEventProperties().remove(1);
 
-    assertEquals("sensor01", processor.getDimensionKey(event));
+    Assertions.assertEquals("sensor01", processor.getDimensionKey(event));
   }
 
   @Test
@@ -103,7 +102,8 @@ public class TestChangedValueDetectionProcessor {
     processor.onEvent(event, collector);
     processor.onEvent(event, collector);
 
-    assertEquals(3, collector.getEvents().size());
+    Assertions.assertEquals(3,
+                            collector.getEvents().size());
   }
 
   @Test
@@ -132,7 +132,8 @@ public class TestChangedValueDetectionProcessor {
     processor.onEvent(this.createTestEvent(1, "loc_1"), collector);
     processor.onEvent(this.createTestEvent(1, "loc_2"), collector);
 
-    assertEquals(4, collector.getEvents().size());
+    Assertions.assertEquals(4,
+                            collector.getEvents().size());
   }
 
   private Event createTestEvent() {
