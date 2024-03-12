@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LabelsTest {
   private enum TestEnum {
@@ -30,12 +29,12 @@ public class LabelsTest {
   @Test
   public void withEnumId() {
     var result = Labels.withId(TestEnum.TEST);
-    assertEquals(TestEnum.TEST.name(), result.getInternalId());
+    Assertions.assertEquals(TestEnum.TEST.name(), result.getInternalId());
   }
 
   @Test
   public void withStringId() {
     var result = Labels.withId("test");
-    assertEquals("test", result.getInternalId());
+    Assertions.assertEquals("test", result.getInternalId());
   }
 }

@@ -21,12 +21,11 @@ package org.apache.streampipes.extensions.management.init;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
@@ -48,8 +47,8 @@ public class DeclarersSingletonTest {
 
     var result = DeclarersSingleton.getInstance().getAdapter(id);
 
-    assertTrue(result.isPresent());
-    assertEquals(testAdapter, result.get());
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals(testAdapter, result.get());
   }
 
 }

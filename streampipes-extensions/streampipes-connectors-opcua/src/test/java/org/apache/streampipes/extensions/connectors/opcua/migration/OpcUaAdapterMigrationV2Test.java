@@ -41,19 +41,19 @@ import org.apache.streampipes.extensions.connectors.opcua.migration.config.OpcUa
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class OpcUaAdapterMigrationV2Test {
 
   private OpcUaAdapterMigrationV2 migrationV2;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     migrationV2 = new OpcUaAdapterMigrationV2();
   }
@@ -66,7 +66,7 @@ public class OpcUaAdapterMigrationV2Test {
     var adapterDescriptionV2 = migrationV2.migrate(adapterDescriptionV1, extractorMock)
                                           .element();
 
-    assertEquals(XSD.INTEGER, getTypeOfPortProperty(adapterDescriptionV2));
+    Assertions.assertEquals(XSD.INTEGER, getTypeOfPortProperty(adapterDescriptionV2));
   }
 
   private URI getTypeOfPortProperty(AdapterDescription adapterDescriptionV2) {

@@ -19,11 +19,10 @@
 package org.apache.streampipes.model.datalake;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class SpQueryResultBuilderTest {
 
@@ -33,8 +32,9 @@ public class SpQueryResultBuilderTest {
     var result = SpQueryResultBuilder.create(headers)
         .build();
 
-    assertEquals(2, result.getHeaders().size());
-    assertEquals(headers, result.getHeaders());
+    Assertions.assertEquals(2,
+                            result.getHeaders().size());
+    Assertions.assertEquals(headers, result.getHeaders());
   }
 
   @Test
@@ -44,7 +44,7 @@ public class SpQueryResultBuilderTest {
         .withSourceIndex(sourceIndex)
         .build();
 
-    assertEquals(sourceIndex, result.getSourceIndex());
+    Assertions.assertEquals(sourceIndex, result.getSourceIndex());
   }
 
   @Test
@@ -52,7 +52,7 @@ public class SpQueryResultBuilderTest {
     var result = SpQueryResultBuilder.create(headers)
         .build();
 
-    assertEquals(SpQueryStatus.OK, result.getSpQueryStatus());
+    Assertions.assertEquals(SpQueryStatus.OK, result.getSpQueryStatus());
   }
 
   @Test
@@ -61,7 +61,7 @@ public class SpQueryResultBuilderTest {
         .withSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA)
         .build();
 
-    assertEquals(SpQueryStatus.TOO_MUCH_DATA, result.getSpQueryStatus());
+    Assertions.assertEquals(SpQueryStatus.TOO_MUCH_DATA, result.getSpQueryStatus());
   }
 
   @Test
@@ -71,7 +71,7 @@ public class SpQueryResultBuilderTest {
         .withForId(forId)
         .build();
 
-    assertEquals(forId, result.getForId());
+    Assertions.assertEquals(forId, result.getForId());
   }
 
   @Test
@@ -86,9 +86,13 @@ public class SpQueryResultBuilderTest {
         )
         .build();
 
-    assertEquals(1, result.getAllDataSeries().size());
-    assertEquals(1, result.getAllDataSeries().get(0).getRows().size());
-    assertEquals(row, result.getAllDataSeries().get(0).getRows().get(0));
+    Assertions.assertEquals(1,
+                            result.getAllDataSeries().size());
+    Assertions.assertEquals(1,
+                            result.getAllDataSeries().get(0).getRows().size());
+    Assertions.assertEquals(row,
+                            result.getAllDataSeries().get(0).getRows().get(0)
+    );
   }
 
   @Test
@@ -108,9 +112,14 @@ public class SpQueryResultBuilderTest {
         )
         .build();
 
-    assertEquals(1, spQueryResult.getTotal());
-    assertEquals(headers, spQueryResult.getAllDataSeries().get(0).getHeaders());
-    assertEquals(2, spQueryResult.getAllDataSeries().get(0).getRows().size());
-    assertEquals(rows, spQueryResult.getAllDataSeries().get(0).getRows());
+    Assertions.assertEquals(1, spQueryResult.getTotal());
+    Assertions.assertEquals(headers,
+                            spQueryResult.getAllDataSeries().get(0).getHeaders()
+    );
+    Assertions.assertEquals(2,
+                            spQueryResult.getAllDataSeries().get(0).getRows().size());
+    Assertions.assertEquals(rows,
+                            spQueryResult.getAllDataSeries().get(0).getRows()
+    );
   }
 }

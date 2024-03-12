@@ -23,15 +23,13 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SourcesManagementTest {
 
-  @Before
+  @BeforeEach
   public void before() {
   }
 
@@ -49,8 +47,8 @@ public class SourcesManagementTest {
 
     SpDataStream result = SourcesManagement.updateDataStream(adapterDescription, new SpDataStream());
 
-    assertNotNull(result);
-    assertEquals(newAdapterName, result.getName());
-    assertEquals(newEventSchema, result.getEventSchema());
+    Assertions.assertNotNull(result);
+    Assertions.assertEquals(newAdapterName, result.getName());
+    Assertions.assertEquals(newEventSchema, result.getEventSchema());
   }
 }

@@ -18,11 +18,8 @@
 
 package org.apache.streampipes.model.assets;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AssetLinkBuilderTest {
 
@@ -36,11 +33,11 @@ public class AssetLinkBuilderTest {
             .withEditingDisabled(false)
             .build();
 
-    assertEquals("123", assetLink.getResourceId());
-    assertEquals("type", assetLink.getLinkType());
-    assertEquals("label", assetLink.getLinkLabel());
-    assertEquals("hint", assetLink.getQueryHint());
-    assertFalse(assetLink.isEditingDisabled());
+    Assertions.assertEquals("123", assetLink.getResourceId());
+    Assertions.assertEquals("type", assetLink.getLinkType());
+    Assertions.assertEquals("label", assetLink.getLinkLabel());
+    Assertions.assertEquals("hint", assetLink.getQueryHint());
+    Assertions.assertFalse(assetLink.isEditingDisabled());
   }
 
   @Test
@@ -53,10 +50,10 @@ public class AssetLinkBuilderTest {
             .withEditingDisabled(true)
             .build();
 
-    assertEquals("456", assetLink.getResourceId());
-    assertEquals("anotherType", assetLink.getLinkType());
-    assertEquals("anotherLabel", assetLink.getLinkLabel());
-    assertEquals("anotherHint", assetLink.getQueryHint());
-    assertTrue(assetLink.isEditingDisabled());
+    Assertions.assertEquals("456", assetLink.getResourceId());
+    Assertions.assertEquals("anotherType", assetLink.getLinkType());
+    Assertions.assertEquals("anotherLabel", assetLink.getLinkLabel());
+    Assertions.assertEquals("anotherHint", assetLink.getQueryHint());
+    Assertions.assertTrue(assetLink.isEditingDisabled());
   }
 }
