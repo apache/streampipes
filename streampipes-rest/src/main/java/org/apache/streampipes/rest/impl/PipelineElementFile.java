@@ -106,20 +106,10 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
           description = "The name of the file to be retrieved",
           required = true
       )
-      @PathVariable("filename") String filename,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "Determines if the provided file name is the original file name "
-              + "as per upload."
-      )
-      @RequestParam(value = "isOriginalFilename", defaultValue = "false") boolean isOriginalFilename
+      @PathVariable("filename") String filename
   ) {
     try {
-      if (isOriginalFilename) {
-        return ok(getFileContents(FileManager.getFileByOriginalName(filename)));
-      } else {
-        return ok(getFileContents(FileManager.getFile(filename)));
-      }
+      return ok(getFileContents(FileManager.getFile(filename)));
     } catch (IOException e) {
       throw new SpMessageException(
           NOT_FOUND,
