@@ -22,7 +22,7 @@ __all__ = [
 from typing import Dict, List
 from uuid import uuid4
 
-from pydantic import Field, StrictInt, StrictStr
+from pydantic.v1 import Field, StrictInt, StrictStr
 
 from streampipes.model.common import BasicModel
 from streampipes.model.resource.data_stream import DataStream

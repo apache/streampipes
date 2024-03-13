@@ -24,7 +24,7 @@ import string
 from typing import List, Optional
 from uuid import uuid4
 
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
+from pydantic.v1 import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
 __all__ = [
     "BaseElement",

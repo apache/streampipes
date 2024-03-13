@@ -21,7 +21,7 @@ from typing import Dict, List
 from unittest import TestCase
 from unittest.mock import MagicMock, call, patch
 
-from pydantic import ValidationError
+from pydantic.v1 import ValidationError
 from requests import HTTPError
 
 from streampipes.client import StreamPipesClient
