@@ -21,22 +21,22 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.test.generator.template.PipelineElementTemplateHelpers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestJacksonSerializer {
 
   public static void assertions(PipelineElementTemplate template) {
-    Assert.assertEquals("name", template.getTemplateName());
-    Assert.assertEquals("description", template.getTemplateDescription());
-    Assert.assertEquals(2, template.getTemplateConfigs().size());
-    Assert.assertEquals("test-string", template.getTemplateConfigs().get("test-key").getValue());
-    Assert.assertTrue(template.getTemplateConfigs().get("test-key").isEditable());
-    Assert.assertTrue(template.getTemplateConfigs().get("test-key").isDisplayed());
-    Assert.assertTrue(template.getTemplateConfigs().get("test-key-2").isEditable());
-    Assert.assertFalse(template.getTemplateConfigs().get("test-key-2").isDisplayed());
+    Assertions.assertEquals("name", template.getTemplateName());
+    Assertions.assertEquals("description", template.getTemplateDescription());
+    Assertions.assertEquals(2,
+                            template.getTemplateConfigs().size());
+    Assertions.assertEquals("test-string",
+                            template.getTemplateConfigs().get("test-key").getValue());
+    Assertions.assertTrue(template.getTemplateConfigs().get("test-key").isEditable());
+    Assertions.assertTrue(template.getTemplateConfigs().get("test-key").isDisplayed());
+    Assertions.assertTrue(template.getTemplateConfigs().get("test-key-2").isEditable());
+    Assertions.assertFalse(template.getTemplateConfigs().get("test-key-2").isDisplayed());
   }
 
   @Test
@@ -48,7 +48,8 @@ public class TestJacksonSerializer {
       PipelineElementTemplate template2 =
           JacksonSerializer.getObjectMapper().readValue(json, PipelineElementTemplate.class);
       assertions(template2);
-      assertEquals(2, template2.getTemplateConfigs().get("test-key-2").getValue());
+      Assertions.assertEquals(2,
+                              template2.getTemplateConfigs().get("test-key-2").getValue());
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }

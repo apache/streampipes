@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.commons.sanitizer;
 
-import org.junit.Test;
-
-import static junit.framework.TestCase.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MeasureNameSanitizerTest {
 
@@ -30,7 +29,7 @@ public class MeasureNameSanitizerTest {
     String expected = "test_001";
     String sanitizedMeasureName = new MeasureNameSanitizer().sanitize(originalMeasureName);
 
-    assertEquals(expected, sanitizedMeasureName);
+    Assertions.assertEquals(expected, sanitizedMeasureName);
   }
 
   @Test
@@ -39,7 +38,7 @@ public class MeasureNameSanitizerTest {
     String expected = "test_001";
     String sanitizedMeasureName = new MeasureNameSanitizer().sanitize(originalMeasureName);
 
-    assertEquals(expected, sanitizedMeasureName);
+    Assertions.assertEquals(expected, sanitizedMeasureName);
   }
 
   @Test
@@ -48,6 +47,6 @@ public class MeasureNameSanitizerTest {
     String expected = "t__est_001_";
     String sanitizedMeasureName = new MeasureNameSanitizer().sanitize(originalMeasureName);
 
-    assertEquals(expected, sanitizedMeasureName);
+    Assertions.assertEquals(expected, sanitizedMeasureName);
   }
 }

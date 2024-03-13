@@ -25,13 +25,11 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.Geo;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class TestPrimitivePropertyMatch {
 
@@ -44,7 +42,7 @@ public class TestPrimitivePropertyMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
-    assertTrue(matches);
+    Assertions.assertTrue(matches);
   }
 
   @Test
@@ -56,7 +54,7 @@ public class TestPrimitivePropertyMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 
   @Test
@@ -68,6 +66,6 @@ public class TestPrimitivePropertyMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 }

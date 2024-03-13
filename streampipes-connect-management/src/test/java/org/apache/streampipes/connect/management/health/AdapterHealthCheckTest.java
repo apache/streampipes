@@ -24,13 +24,12 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +37,7 @@ public class AdapterHealthCheckTest {
 
   private IAdapterStorage adapterInstanceStorageMock;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     adapterInstanceStorageMock = mock(IAdapterStorage.class);
   }
@@ -58,7 +57,7 @@ public class AdapterHealthCheckTest {
     );
     var result = healthCheck.getAllAdaptersSupposedToRun();
 
-    assertTrue(result.isEmpty());
+    Assertions.assertTrue(result.isEmpty());
   }
 
   @Test
@@ -88,9 +87,9 @@ public class AdapterHealthCheckTest {
     );
     var result = healthCheck.getAllAdaptersSupposedToRun();
 
-    assertEquals(1, result.size());
-    assertTrue(result.containsKey(nameRunningAdapter));
-    assertEquals(runningAdapter, result.get(nameRunningAdapter));
+    Assertions.assertEquals(1, result.size());
+    Assertions.assertTrue(result.containsKey(nameRunningAdapter));
+    Assertions.assertEquals(runningAdapter, result.get(nameRunningAdapter));
 
   }
 

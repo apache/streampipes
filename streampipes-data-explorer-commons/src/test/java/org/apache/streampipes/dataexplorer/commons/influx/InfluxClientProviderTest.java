@@ -23,15 +23,16 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -45,7 +46,7 @@ public class InfluxClientProviderTest {
 
   private static final String DATABASE_NAME = "testDB";
 
-  @Before
+  @BeforeEach
   public void setUp() {
     influxDBMock = mock(InfluxDB.class);
     influxClientProvider = new InfluxClientProvider();
@@ -64,9 +65,9 @@ public class InfluxClientProviderTest {
     assertEquals(actualQuery.getDatabase(), expectedQuery.getDatabase());
   }
 
-  @Test(expected = SpRuntimeException.class)
+  @Test
   public void createDatabaseIlligalName() {
-    influxClientProvider.createDatabase(influxDBMock, "test%^$");
+    assertThrows(SpRuntimeException.class, () -> influxClientProvider.createDatabase(influxDBMock, "test%^$"));
   }
 
   @Test

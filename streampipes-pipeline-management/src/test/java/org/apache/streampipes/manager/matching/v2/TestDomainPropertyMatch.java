@@ -21,14 +21,12 @@ package org.apache.streampipes.manager.matching.v2;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.vocabulary.Geo;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class TestDomainPropertyMatch {
 
@@ -41,7 +39,7 @@ public class TestDomainPropertyMatch {
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 
     boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
-    assertTrue(matches);
+    Assertions.assertTrue(matches);
   }
 
   @Test
@@ -53,7 +51,7 @@ public class TestDomainPropertyMatch {
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 
     boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 
   private List<URI> buildDomainProperties(String name) {

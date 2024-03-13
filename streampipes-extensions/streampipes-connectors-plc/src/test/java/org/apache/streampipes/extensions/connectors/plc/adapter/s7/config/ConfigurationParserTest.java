@@ -21,13 +21,12 @@ package org.apache.streampipes.extensions.connectors.plc.adapter.s7.config;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConfigurationParserTest {
 
@@ -94,13 +93,13 @@ public class ConfigurationParserTest {
   @Test
   public void testIsPLCArray() {
     var result = new ConfigurationParser().isPLCArray("%DB3.DB0:BOOL[100]");
-    assertTrue(result);
+    Assertions.assertTrue(result);
   }
 
 
   @Test
   public void testIsNoPLCArray() {
     var result = new ConfigurationParser().isPLCArray("%DB3.DB0:BOOL");
-    assertFalse(result);
+    Assertions.assertFalse(result);
   }
 }

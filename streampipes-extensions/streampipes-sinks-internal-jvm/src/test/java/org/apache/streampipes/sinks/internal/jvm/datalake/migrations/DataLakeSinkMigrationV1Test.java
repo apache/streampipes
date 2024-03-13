@@ -24,12 +24,11 @@ import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class DataLakeSinkMigrationV1Test {
@@ -44,14 +43,14 @@ public class DataLakeSinkMigrationV1Test {
 
     var actual = dataLakeSinkMigrationV1.migrate(invocation, extractor);
 
-    assertTrue(actual.success());
-    assertEquals(actual.element()
-                       .getStaticProperties()
-                       .size(), 1);
+    Assertions.assertTrue(actual.success());
+    Assertions.assertEquals(actual.element()
+                                  .getStaticProperties()
+                                  .size(), 1);
     var schemaUpdateStaticProperty = getOneOfStaticProperty(actual);
-    assertEquals(schemaUpdateStaticProperty.getInternalName(), DataLakeSink.SCHEMA_UPDATE_KEY);
-    assertEquals(schemaUpdateStaticProperty.getOptions().get(0).isSelected(), true);
-    assertEquals(schemaUpdateStaticProperty.getOptions().get(1).isSelected(), false);
+    Assertions.assertEquals(schemaUpdateStaticProperty.getInternalName(), DataLakeSink.SCHEMA_UPDATE_KEY);
+    Assertions.assertEquals(schemaUpdateStaticProperty.getOptions().get(0).isSelected(), true);
+    Assertions.assertEquals(schemaUpdateStaticProperty.getOptions().get(1).isSelected(), false);
   }
 
   private static OneOfStaticProperty getOneOfStaticProperty(MigrationResult<DataSinkInvocation> actual) {
