@@ -11,7 +11,7 @@
     "build-libs": "ng build @streampipes/platform-services && ng build @streampipes/shared-ui",
     "install-libs": "npm install @streampipes/platform-services@file:./dist/streampipes/platform-services @streampipes/shared-ui@file:./dist/streampipes/shared-ui --no-save",
     "build-libraries": "npm run build-libs && npm run install-libs",
-    "start": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=8192 && npm run build-libraries && ng serve",
+    "start": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=8192 && ng serve",
     "test": "node ./deployment/prebuild.js && npm run build-libraries && ng test",
     "start-plain": "npm run build-libraries && ng serve",
     "build-plain": "set NODE_OPTIONS=--max-old-space-size=8192 && npm run build-libraries && ng build --configuration production",
@@ -136,17 +136,5 @@
     "resize-observer-polyfill": "^1.5.1",
     "to-string-loader": "^1.2.0",
     "typescript": "5.3.3"
-  },
-  "peerDependencies": {
-    "@streampipes/platform-services": "0.0.1",
-    "@streampipes/shared-ui": "0.0.1"
-  },
-  "peerDependenciesMeta": {
-    "@streampipes/platform-services": {
-      "optional": true
-    },
-    "@streampipes/shared-ui": {
-      "optional": true
-    }
   }
 }

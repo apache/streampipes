@@ -16,22 +16,9 @@
  *
  */
 
-// import { initFederation } from '@angular-architects/native-federation';
-//
-// initFederation('/assets/federation.manifest.json')
-//   .catch(err => console.error(err))
-//   .then(_ => import('./bootstrap'))
-//   .catch(err => console.error(err));
+import { initFederation } from '@angular-architects/native-federation';
 
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { environment } from './environments/environment';
-import { AppModule } from './app/appng5.module';
-import { enableProdMode } from '@angular/core';
-
-if (environment.production) {
-    enableProdMode();
-}
-
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
+initFederation('/assets/federation.manifest.json')
+    .catch(err => console.error(err))
+    .then(_ => import('./bootstrap'))
     .catch(err => console.error(err));

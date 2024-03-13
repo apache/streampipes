@@ -24,11 +24,7 @@ import {
     SpAsset,
 } from '@streampipes/platform-services';
 import { AssetConstants } from '../../../constants/asset.constants';
-import { AssetUploadDialogComponent } from '../../../dialog/asset-upload/asset-upload-dialog.component';
-import {
-    DialogService,
-    PanelType,
-} from '../../../../../../dist/streampipes/shared-ui';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { SpManageAssetLinksDialogComponent } from '../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
 

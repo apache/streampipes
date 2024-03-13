@@ -2,8 +2,12 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@streampipes/platform-services": ["dist/streampipes/platform-services"],
-      "@streampipes/shared-ui": ["dist/streampipes/shared-ui"]
+      "@streampipes/platform-services": [
+        "projects/streampipes/platform-services/src/public-api.ts"
+      ],
+      "@streampipes/shared-ui": [
+        "projects/streampipes/shared-ui/src/public-api.ts"
+      ]
     },
     "downlevelIteration": true,
     "importHelpers": true,

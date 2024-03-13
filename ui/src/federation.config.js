@@ -29,6 +29,12 @@ module.exports = withNativeFederation({
         //   requiredVersion: 'auto',
         //   eager: true,
         // },
+        // '@angular/core/primitives/signals': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   eager: true,
+        // },
         // '@angular/common': {
         //   singleton: true,
         //   strictVersion: true,
@@ -53,99 +59,119 @@ module.exports = withNativeFederation({
         //   requiredVersion: 'auto',
         //   eager: true,
         // },
+        // '@ngbracket/ngx-layout': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@ngbracket/ngx-layout/core': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@ngbracket/ngx-layout/extended': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@ngbracket/ngx-layout/_private-utils': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@ngbracket/ngx-layout/flex': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@ngbracket/ngx-layout/grid': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@angular/material': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@angular/material/core': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   includeSecondaries: true
+        // },
+        // '@angular/material/button': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   eager: true,
+        // },
+        // '@angular/material/progress-bar': {
+        //   singleton: true,
+        //   strictVersion: true,
+        //   requiredVersion: 'auto',
+        //   eager: true,
+        // },
         // '@angular/cdk': {
         //   singleton: true,
         //   strictVersion: true,
         //   requiredVersion: 'auto',
         //   eager: true,
         // },
-        // '@angular/cdk/overlay': {
-        //   singleton: true,
-        //   strictVersion: false,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/cdk/portal': {
-        //   singleton: true,
-        //   strictVersion: false,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/material': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/material/core': {
-        //   singleton: true,
-        //   strictVersion: false,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/material/menu': {
-        //   singleton: true,
-        //   strictVersion: false,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/material/tooltip': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/material/dialog': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/material/select': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/material/form-field': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@streampipes/shared-ui': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   version: '0.0.1',
-        //   eager: true,
-        // },
-        // '@streampipes/platform-services': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   version: '0.0.1',
-        //   eager: true,
-        // },
-        // 'ngx-echarts': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   eager: true,
-        // },
-        // 'echarts': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   eager: true,
-        // }
-        //...shareAll({singleton: true, strictVersion: true, requiredVersion: 'auto'}),
+        ...shareAll({
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+        }),
     },
 
     skip: [
+        'material-icons',
         'rxjs/ajax',
         'rxjs/fetch',
         'rxjs/testing',
         'rxjs/webSocket',
+        'jquery',
         'jquery-ui-dist',
-        'd3-array',
+        'd3-array/umd',
+        'd3-array/default',
+        'd3-contour/umd',
+        'd3-contour/default',
         'd3-contour',
+        'konva',
+        pkg => pkg.startsWith('marked'),
+        pkg => pkg.startsWith('swagger-ui'),
+        pkg => pkg.startsWith('date-fns'),
+        'roboto-fontface',
+        // '@angular/platform-server',
+        // 'ngx-markdown',
+        // 'date-fns',
+        // '@ngbracket/ngx-layout/server',
+        // (pkg) => pkg.startsWith('echarts'),
+        // 'echarts-gl',
+        // 'echarts-wordcloud',
+        // 'file-saver',
+        // 'ngx-quill',
+        // 'ngx-markdown',
+        // 'quill',
+        // 'shepherd.js',
+        // 'stream-browserify',
+        // 'tslib',
+        pkg => {
+            return (
+                (!pkg.startsWith('@angular') &&
+                    !pkg.startsWith('@ngbracket')) ||
+                pkg.startsWith('@angular/platform-server') ||
+                pkg.startsWith('@ngbracket/ngx-layout/server')
+            );
+        },
         // Add further packages you don't need at runtime
     ],
 });
