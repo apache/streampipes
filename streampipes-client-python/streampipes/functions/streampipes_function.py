@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import datetime
 from abc import ABC, abstractmethod
 from time import time
 from typing import Any, Dict, List, Optional
@@ -63,7 +64,8 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        event["timestamp"] = int(1000 * time())
+        if "timestamp" not in event.keys():
+            event["timestamp"] = int(1000 * time())
         self.output_collectors[stream_id].collect(event)
 
     def getFunctionId(self) -> FunctionId:
