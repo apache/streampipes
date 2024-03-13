@@ -21,16 +21,15 @@ package org.apache.streampipes.units.test;
 import org.apache.streampipes.units.UnitProvider;
 
 import com.github.jqudt.Unit;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestUnitProvider {
 
   @Test
   public void testUnitProvider() {
     Unit unit = UnitProvider.INSTANCE.getUnit("http://qudt.org/vocab/unit#KilometerPerHour");
-    assertEquals("Kilometer per Hour", unit.getLabel());
-    assertEquals("km/hr", unit.getAbbreviation());
+    Assertions.assertEquals("Kilometer per Hour", unit.getLabel());
+    Assertions.assertEquals("km/hr", unit.getAbbreviation());
   }
 }

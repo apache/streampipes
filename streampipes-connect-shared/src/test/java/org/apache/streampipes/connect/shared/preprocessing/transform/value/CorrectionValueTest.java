@@ -22,16 +22,15 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CorrectionValueTest {
 
@@ -40,7 +39,7 @@ public class CorrectionValueTest {
   private final String propertyNameBasicValue = "basicValue";
   private final String propertyNameOtherValue = "otherValue";
 
-  @Before
+  @BeforeEach
   public void setUp() {
 
     EventSchema eventSchema = new EventSchema();
@@ -69,8 +68,8 @@ public class CorrectionValueTest {
      );
 
     var resultEvent = correctionRule.apply(event);
-    assertNotNull(resultEvent);
-    assertEquals(110.0, resultEvent.get(propertyNameBasicValue));
+    Assertions.assertNotNull(resultEvent);
+    Assertions.assertEquals(110.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -82,8 +81,8 @@ public class CorrectionValueTest {
         "SUBTRACT"
     );
     var resultEvent = correctionRule.apply(event);
-    assertNotNull(resultEvent);
-    assertEquals(90.0, resultEvent.get(propertyNameBasicValue));
+    Assertions.assertNotNull(resultEvent);
+    Assertions.assertEquals(90.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -95,8 +94,8 @@ public class CorrectionValueTest {
         "MULTIPLY"
     );
     var resultEvent = correctionRule.apply(event);
-    assertNotNull(resultEvent);
-    assertEquals(150.0, resultEvent.get(propertyNameBasicValue));
+    Assertions.assertNotNull(resultEvent);
+    Assertions.assertEquals(150.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -108,8 +107,8 @@ public class CorrectionValueTest {
         "DIVIDE"
     );
     var resultEvent = correctionRule.apply(event);
-    assertNotNull(resultEvent);
-    assertEquals(20.0, resultEvent.get(propertyNameBasicValue));
+    Assertions.assertNotNull(resultEvent);
+    Assertions.assertEquals(20.0, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -121,8 +120,8 @@ public class CorrectionValueTest {
         "DIVIDE"
     );
     var resultEvent = correctionRule.apply(event);
-    assertNotNull(resultEvent);
-    assertEquals(Double.POSITIVE_INFINITY, resultEvent.get(propertyNameBasicValue));
+    Assertions.assertNotNull(resultEvent);
+    Assertions.assertEquals(Double.POSITIVE_INFINITY, resultEvent.get(propertyNameBasicValue));
   }
 
   @Test
@@ -133,8 +132,7 @@ public class CorrectionValueTest {
         10.0,
         "ADD"
     );
-    assertThrows (
-        String.format("Selected property `%s` does not contain a numeric value: `%s", propertyNameOtherValue, "Hello"),
+    assertThrows(
         RuntimeException.class,
         () -> correctionRule.apply(event).get(propertyNameOtherValue)
     );
@@ -151,7 +149,7 @@ public class CorrectionValueTest {
         "TEST"
     );
     var resultEvent = correctionRule.apply(event);
-    assertNotNull(resultEvent);
-    assertEquals(100.0, resultEvent.get(propertyNameBasicValue));
+    Assertions.assertNotNull(resultEvent);
+    Assertions.assertEquals(100.0, resultEvent.get(propertyNameBasicValue));
   }
 }

@@ -27,13 +27,10 @@ import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class MigrateExtensionsResourceTest {
 
@@ -66,10 +63,12 @@ public class MigrateExtensionsResourceTest {
 
     var result = migrationsResource.executeMigration(migrator, dataProcessor);
 
-    assertTrue(result.success());
-    assertEquals("SUCCESS", result.message());
-    assertEquals(1, result.element().getVersion());
-    assertEquals(1, result.element().getStaticProperties().size());
+    Assertions.assertTrue(result.success());
+    Assertions.assertEquals("SUCCESS", result.message());
+    Assertions.assertEquals(1,
+                            result.element().getVersion());
+    Assertions.assertEquals(1,
+                            result.element().getStaticProperties().size());
 
   }
 
@@ -96,9 +95,10 @@ public class MigrateExtensionsResourceTest {
 
     var result = migrationsResource.executeMigration(migrator, dataProcessor);
 
-    assertFalse(result.success());
-    assertEquals("This should fail", result.message());
-    assertEquals(0, result.element().getVersion());
+    Assertions.assertFalse(result.success());
+    Assertions.assertEquals("This should fail", result.message());
+    Assertions.assertEquals(0,
+                            result.element().getVersion());
   }
 
   @Test
@@ -124,8 +124,9 @@ public class MigrateExtensionsResourceTest {
 
     var result = migrationsResource.executeMigration(migrator, dataProcessor);
 
-    assertFalse(result.success());
-    assertTrue(result.message().startsWith("Migration failed due to an unexpected exception:"));
-    assertEquals(0, result.element().getVersion());
+    Assertions.assertFalse(result.success());
+    Assertions.assertTrue(result.message().startsWith("Migration failed due to an unexpected exception:"));
+    Assertions.assertEquals(0,
+                            result.element().getVersion());
   }
 }

@@ -18,14 +18,13 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class DeleteTransformationRuleTest {
 
@@ -38,7 +37,8 @@ public class DeleteTransformationRuleTest {
 
     Map<String, Object> result = deleteRule.apply(event);
 
-    assertEquals(0, result.keySet().size());
+    Assertions.assertEquals(0,
+                            result.keySet().size());
   }
 
   @Test
@@ -52,6 +52,7 @@ public class DeleteTransformationRuleTest {
 
     Map<String, Object> result = deleteRule.apply(event);
 
-    assertEquals(1, result.keySet().size());
+    Assertions.assertEquals(1,
+                            result.keySet().size());
   }
 }

@@ -17,12 +17,10 @@
  */
 package org.apache.streampipes.manager.selector;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
 
 public class TestSelectorGenerator {
 
@@ -32,7 +30,7 @@ public class TestSelectorGenerator {
         , false)
         .generateSelectors();
 
-    assertEquals(10, propertySelectors.size());
+    Assertions.assertEquals(10, propertySelectors.size());
   }
 
   @Test
@@ -41,7 +39,7 @@ public class TestSelectorGenerator {
         , TestSelectorUtils.makeSchema(), false)
         .generateSelectors();
 
-    assertEquals(20, propertySelectors.size());
+    Assertions.assertEquals(20, propertySelectors.size());
   }
 
 }

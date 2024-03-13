@@ -23,13 +23,11 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class TestGroundingMatch {
 
@@ -48,7 +46,7 @@ public class TestGroundingMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new GroundingMatch().match(offeredGrounding, requiredGrounding, errorLog);
-    assertTrue(matches);
+    Assertions.assertTrue(matches);
   }
 
   @Test
@@ -66,7 +64,7 @@ public class TestGroundingMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new GroundingMatch().match(offeredGrounding, requiredGrounding, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 
   @Test
@@ -84,7 +82,7 @@ public class TestGroundingMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new GroundingMatch().match(offeredGrounding, requiredGrounding, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 
   @Test
@@ -102,7 +100,7 @@ public class TestGroundingMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new GroundingMatch().match(offeredGrounding, requiredGrounding, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 
 }

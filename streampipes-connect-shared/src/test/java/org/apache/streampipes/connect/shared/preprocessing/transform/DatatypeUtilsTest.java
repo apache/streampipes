@@ -21,11 +21,10 @@ package org.apache.streampipes.connect.shared.preprocessing.transform;
 import org.apache.streampipes.connect.shared.DatatypeUtils;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
-
-import static org.junit.Assert.assertEquals;
 
 public class DatatypeUtilsTest {
 
@@ -42,46 +41,46 @@ public class DatatypeUtilsTest {
     var floatValue = DatatypeUtils.convertValue(inputValue, XSD.DOUBLE.toString());
     var longValue = DatatypeUtils.convertValue(floatValue, XSD.LONG.toString());
 
-    assertEquals(Long.parseLong(inputValue), longValue);
+    Assertions.assertEquals(Long.parseLong(inputValue), longValue);
   }
 
   String booleanInputValue = "true";
   @Test
   public void getTypeClassNoPrefereFloatingPointBoolean() {
     var result = DatatypeUtils.getTypeClass(booleanInputValue, false);
-    assertEquals(Boolean.class, result);
+    Assertions.assertEquals(Boolean.class, result);
   }
 
   @Test
   public void getTypeClassWithPrefereFloatingPointBoolean() {
     var result = DatatypeUtils.getTypeClass(booleanInputValue, true);
-    assertEquals(Boolean.class, result);
+    Assertions.assertEquals(Boolean.class, result);
   }
 
   String integerInputValue = "1";
   @Test
   public void getTypeClassNoPrefereFloatingPointInteger() {
     var result = DatatypeUtils.getTypeClass(integerInputValue, false);
-    assertEquals(Integer.class, result);
+    Assertions.assertEquals(Integer.class, result);
   }
 
   @Test
   public void getTypeClassWithPrefereFloatingPointInteger() {
     var result = DatatypeUtils.getTypeClass(integerInputValue, true);
-    assertEquals(Float.class, result);
+    Assertions.assertEquals(Float.class, result);
   }
 
   String floatInputValue = "1.0";
   @Test
   public void getTypeClassNoPrefereFloatingPointFloat() {
     var result = DatatypeUtils.getTypeClass(floatInputValue, false);
-    assertEquals(Float.class, result);
+    Assertions.assertEquals(Float.class, result);
   }
 
   @Test
   public void getTypeClassWithPrefereFloatingPointFloat() {
     var result = DatatypeUtils.getTypeClass(floatInputValue, true);
-    assertEquals(Float.class, result);
+    Assertions.assertEquals(Float.class, result);
   }
 
 
@@ -89,13 +88,13 @@ public class DatatypeUtilsTest {
   @Test
   public void getTypeClassNoPrefereFloatingPointDouble() {
     var result = DatatypeUtils.getTypeClass(doubleInputValue, false);
-    assertEquals(Double.class, result);
+    Assertions.assertEquals(Double.class, result);
   }
 
   @Test
   public void getTypeClassWithPrefereFloatingPointDouble() {
     var result = DatatypeUtils.getTypeClass(doubleInputValue, true);
-    assertEquals(Double.class, result);
+    Assertions.assertEquals(Double.class, result);
   }
 
 
@@ -103,13 +102,13 @@ public class DatatypeUtilsTest {
   @Test
   public void getTypeClassNoPrefereFloatingPointLong() {
     var result = DatatypeUtils.getTypeClass(longInputValue, false);
-    assertEquals(Long.class, result);
+    Assertions.assertEquals(Long.class, result);
   }
 
   @Test
   public void getTypeClassWithPrefereFloatingPointLong() {
     var result = DatatypeUtils.getTypeClass(longInputValue, true);
-    assertEquals(Double.class, result);
+    Assertions.assertEquals(Double.class, result);
   }
 
   String stringInputValue = "one";
@@ -117,14 +116,14 @@ public class DatatypeUtilsTest {
   public void getTypeClassNoPrefereFloatingPointString() {
     var result = DatatypeUtils.getTypeClass(stringInputValue, false);
 
-    assertEquals(String.class, result);
+    Assertions.assertEquals(String.class, result);
   }
 
   @Test
   public void getTypeClassWithPrefereFloatingPointString() {
     var result = DatatypeUtils.getTypeClass(stringInputValue, true);
 
-    assertEquals(String.class, result);
+    Assertions.assertEquals(String.class, result);
   }
 
 

@@ -24,11 +24,8 @@ import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
 import org.apache.streampipes.vocabulary.SO;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EventSchemaUtilsTest {
 
@@ -47,7 +44,7 @@ public class EventSchemaUtilsTest {
 
     var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
-    assertFalse(result.isPresent());
+    Assertions.assertFalse(result.isPresent());
   }
 
   @Test
@@ -58,8 +55,8 @@ public class EventSchemaUtilsTest {
 
     var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
-    assertTrue(result.isPresent());
-    assertEquals(result.get(), timestampProperty);
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals(result.get(), timestampProperty);
   }
 
   @Test
@@ -74,7 +71,7 @@ public class EventSchemaUtilsTest {
 
     var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
-    assertTrue(result.isPresent());
-    assertEquals(result.get(), timestampProperty);
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals(result.get(), timestampProperty);
   }
 }

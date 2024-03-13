@@ -21,13 +21,14 @@ import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarParameters;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_HOST_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.TOPIC_KEY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class TestPulsarParameters {
@@ -37,17 +38,17 @@ public class TestPulsarParameters {
     Integer pulsarPort = 6650;
     String topic = "test";
 
-    var params = Mockito.mock(IDataSinkParameters.class);
-    DataSinkParameterExtractor extractor = Mockito.mock(DataSinkParameterExtractor.class);
-    Mockito.when(params.extractor()).thenReturn(extractor);
-    Mockito.when(extractor.singleValueParameter(PULSAR_HOST_KEY, String.class)).thenReturn(pulsarHost);
-    Mockito.when(extractor.singleValueParameter(PULSAR_PORT_KEY, Integer.class)).thenReturn(pulsarPort);
-    Mockito.when(extractor.singleValueParameter(TOPIC_KEY, String.class)).thenReturn(topic);
+    var params = mock(IDataSinkParameters.class);
+    DataSinkParameterExtractor extractor = mock(DataSinkParameterExtractor.class);
+    when(params.extractor()).thenReturn(extractor);
+    when(extractor.singleValueParameter(PULSAR_HOST_KEY, String.class)).thenReturn(pulsarHost);
+    when(extractor.singleValueParameter(PULSAR_PORT_KEY, Integer.class)).thenReturn(pulsarPort);
+    when(extractor.singleValueParameter(TOPIC_KEY, String.class)).thenReturn(topic);
 
     PulsarParameters pulsarParameters = new PulsarParameters(params);
 
-    Assert.assertEquals(pulsarHost, pulsarParameters.getPulsarHost());
-    Assert.assertEquals(pulsarPort, pulsarParameters.getPulsarPort());
-    Assert.assertEquals(topic, pulsarParameters.getTopic());
+    assertEquals(pulsarHost, pulsarParameters.getPulsarHost());
+    assertEquals(pulsarPort, pulsarParameters.getPulsarPort());
+    assertEquals(topic, pulsarParameters.getTopic());
   }
 }

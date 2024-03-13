@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.client.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class StreamPipesApiPathTest {
   Map<String, String> queryParameters = new HashMap();
@@ -40,7 +39,7 @@ public class StreamPipesApiPathTest {
         .withQueryParameters(queryParameters)
         .toString();
 
-    assertEquals(baseRoute, result);
+    Assertions.assertEquals(baseRoute, result);
   }
 
   @Test
@@ -51,7 +50,7 @@ public class StreamPipesApiPathTest {
         .withQueryParameters(queryParameters)
         .toString();
 
-    assertEquals(baseRoute + "?one=v1", result);
+    Assertions.assertEquals(baseRoute + "?one=v1", result);
   }
 
   @Test
@@ -63,7 +62,7 @@ public class StreamPipesApiPathTest {
         .withQueryParameters(queryParameters)
         .toString();
 
-    assertEquals(baseRoute + "?two=v2&one=v1", result);
+    Assertions.assertEquals(baseRoute + "?two=v2&one=v1", result);
   }
 
   @Test
@@ -74,7 +73,7 @@ public class StreamPipesApiPathTest {
         .withQueryParameters(queryParameters)
         .toString();
 
-    assertEquals(baseRoute + "?one=%5Bv1%5D", result);
+    Assertions.assertEquals(baseRoute + "?one=%5Bv1%5D", result);
   }
 
 }

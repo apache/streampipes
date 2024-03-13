@@ -20,14 +20,14 @@ package org.apache.streampipes.extensions.management.locales;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -49,7 +49,7 @@ public class LabelGeneratorTest {
 
     var labelGenerator = getLabelGeneratorWithProperties(properties);
 
-    assertEquals(expectedDescription, labelGenerator.getElementDescription());
+    Assertions.assertEquals(expectedDescription, labelGenerator.getElementDescription());
   }
 
   @Test
@@ -65,7 +65,7 @@ public class LabelGeneratorTest {
 
     var labelGenerator = getLabelGeneratorWithProperties(properties);
 
-    assertEquals(expectedTitle, labelGenerator.getElementTitle());
+    Assertions.assertEquals(expectedTitle, labelGenerator.getElementTitle());
   }
 
 

@@ -23,14 +23,13 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 
 public class ValueEventTransformerTest {
@@ -57,7 +56,7 @@ public class ValueEventTransformerTest {
       event = rule.apply(event);
     }
 
-    assertEquals(0.0, event.get(eventPropertyf.getRuntimeName()));
+    Assertions.assertEquals(0.0, event.get(eventPropertyf.getRuntimeName()));
 
   }
 

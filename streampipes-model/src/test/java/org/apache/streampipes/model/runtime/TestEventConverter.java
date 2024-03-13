@@ -17,12 +17,10 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
-
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 public class TestEventConverter {
 
@@ -33,8 +31,9 @@ public class TestEventConverter {
 
     Map<String, Object> convertedMap = new EventConverter(event).toMap();
 
-    assertEquals(1, convertedMap.keySet().size());
-    assertEquals(1, convertedMap.get("timestamp"));
+    Assertions.assertEquals(1,
+                            convertedMap.keySet().size());
+    Assertions.assertEquals(1, convertedMap.get("timestamp"));
   }
 
   @Test
@@ -44,13 +43,14 @@ public class TestEventConverter {
 
     Map<String, Object> convertedMap = new EventConverter(event).toMap();
 
-    assertEquals(2, convertedMap.keySet().size());
-    assertEquals(1, convertedMap.get("timestamp"));
-    assertTrue(convertedMap.containsKey("nested"));
-    assertTrue(Map.class.isInstance(convertedMap.get("nested")));
+    Assertions.assertEquals(2,
+                            convertedMap.keySet().size());
+    Assertions.assertEquals(1, convertedMap.get("timestamp"));
+    Assertions.assertTrue(convertedMap.containsKey("nested"));
+    Assertions.assertTrue(Map.class.isInstance(convertedMap.get("nested")));
 
     Map<String, Object> nestedMap = (Map<String, Object>) convertedMap.get("nested");
-    assertTrue(nestedMap.containsKey("timestamp2"));
-    assertEquals(2, nestedMap.get("timestamp2"));
+    Assertions.assertTrue(nestedMap.containsKey("timestamp2"));
+    Assertions.assertEquals(2, nestedMap.get("timestamp2"));
   }
 }

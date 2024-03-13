@@ -21,13 +21,11 @@ package org.apache.streampipes.manager.matching.v2;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.grounding.TransportFormat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class TestFormatMatch {
 
@@ -40,7 +38,7 @@ public class TestFormatMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new FormatMatch().match(offeredJson, requiredJson, errorLog);
-    assertTrue(matches);
+    Assertions.assertTrue(matches);
   }
 
   @Test
@@ -52,6 +50,6 @@ public class TestFormatMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new FormatMatch().match(offeredJson, requiredThrift, errorLog);
-    assertFalse(matches);
+    Assertions.assertFalse(matches);
   }
 }

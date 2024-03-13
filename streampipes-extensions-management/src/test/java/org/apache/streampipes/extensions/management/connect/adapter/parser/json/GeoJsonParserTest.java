@@ -28,15 +28,14 @@ import org.apache.streampipes.vocabulary.Geo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -83,7 +82,7 @@ public class GeoJsonParserTest {
 
     var result = parser.getGuessSchema(toEvent(event));
 
-    assertEquals(expected, result);
+    Assertions.assertEquals(expected, result);
   }
 
   @Test
@@ -104,7 +103,7 @@ public class GeoJsonParserTest {
       var s = new ObjectMapper().writeValueAsString(event);
       return IOUtils.toInputStream(s, StandardCharsets.UTF_8);
     } catch (JsonProcessingException e) {
-      fail("Could not convert event to string: " + event);
+      Assertions.fail("Could not convert event to string: " + event);
       return null;
     }
   }

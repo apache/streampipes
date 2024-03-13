@@ -20,15 +20,13 @@ package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
 import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SchemaEventTransformerTest {
 
@@ -50,18 +48,21 @@ public class SchemaEventTransformerTest {
       result = rule.apply(result);
     }
 
-    assertEquals(2, result.keySet().size());
-    assertTrue(result.containsKey("a1"));
-    assertTrue(result.containsKey("c1"));
+    Assertions.assertEquals(2,
+                            result.keySet().size());
+    Assertions.assertTrue(result.containsKey("a1"));
+    Assertions.assertTrue(result.containsKey("c1"));
 
     Map<String, Object> nested = ((Map<String, Object>) result.get("c1"));
 
-    assertEquals(2, nested.keySet().size());
-    assertTrue(nested.containsKey("f"));
+    Assertions.assertEquals(2,
+                            nested.keySet().size());
+    Assertions.assertTrue(nested.containsKey("f"));
 
     nested = (Map<String, Object>) nested.get("f");
-    assertEquals(1, nested.keySet().size());
-    assertEquals("z", nested.get("b1"));
+    Assertions.assertEquals(1,
+                            nested.keySet().size());
+    Assertions.assertEquals("z", nested.get("b1"));
 
   }
 

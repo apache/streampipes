@@ -18,15 +18,14 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("unchecked")
 public class MoveTransformationRuleTest {
@@ -53,9 +52,12 @@ public class MoveTransformationRuleTest {
 
     Map<String, Object> result = moveRule.apply(event);
 
-    assertEquals(2, result.keySet().size());
-    assertEquals(0, ((Map<String, Object>) result.get("old_parent")).keySet().size());
-    assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
+    Assertions.assertEquals(2,
+                            result.keySet().size());
+    Assertions.assertEquals(0,
+                            ((Map<String, Object>) result.get("old_parent")).keySet().size());
+    Assertions.assertEquals(1,
+                            ((Map<String, Object>) result.get("new_parent")).keySet().size());
   }
 
   @Test
@@ -68,8 +70,10 @@ public class MoveTransformationRuleTest {
 
     Map<String, Object> result = moveRule.apply(event);
 
-    assertEquals(1, result.keySet().size());
-    assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
+    Assertions.assertEquals(1,
+                            result.keySet().size());
+    Assertions.assertEquals(1,
+                            ((Map<String, Object>) result.get("new_parent")).keySet().size());
   }
 
   @Test
@@ -84,8 +88,10 @@ public class MoveTransformationRuleTest {
 
     Map<String, Object> result = moveRule.apply(parent);
 
-    assertEquals(2, result.keySet().size());
-    assertEquals(0, ((Map<String, Object>) result.get("parent")).keySet().size());
-    assertEquals("value", result.get("child"));
+    Assertions.assertEquals(2,
+                            result.keySet().size());
+    Assertions.assertEquals(0,
+                            ((Map<String, Object>) result.get("parent")).keySet().size());
+    Assertions.assertEquals("value", result.get("child"));
   }
 }
