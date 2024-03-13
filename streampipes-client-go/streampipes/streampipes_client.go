@@ -33,10 +33,10 @@ import (
 */
 
 type StreamPipesClient struct {
-	Config config.StreamPipesClientConnectConfig
+	Config config.StreamPipesClientConfig
 }
 
-func NewStreamPipesClient(Config config.StreamPipesClientConnectConfig) (*StreamPipesClient, error) {
+func NewStreamPipesClient(Config config.StreamPipesClientConfig) (*StreamPipesClient, error) {
 
 	//NewStreamPipesClient returns an instance of * StreamPipesClient
 	//Temporarily does not support HTTPS connections, nor does it support connecting to port 443
@@ -47,7 +47,7 @@ func NewStreamPipesClient(Config config.StreamPipesClientConnectConfig) (*Stream
 
 	if !utils.CheckUrl(Config.Url) {
 		log.Fatal("Please check if the URL is correct,Must be in the form of A://B:C," +
-			"where A is either HTTP or HTTPS, not case sensitive.B must be the host and C must be the port.")
+			"where A is either HTTP, not case sensitive.B must be the host and C must be the port.")
 	}
 
 	Url, err := url.Parse(Config.Url)
@@ -57,8 +57,7 @@ func NewStreamPipesClient(Config config.StreamPipesClientConnectConfig) (*Stream
 
 	if strings.EqualFold(Url.Scheme, "https") || Url.Port() == "443" {
 		return &StreamPipesClient{}, errors.New(
-			"Invalid configuration passed! The given client configuration has " +
-				"`https` and `port` set to `443`.\n ")
+			"The URL passed in is invalid and does not support HTTPS or port 443.\n ")
 	}
 
 	return &StreamPipesClient{

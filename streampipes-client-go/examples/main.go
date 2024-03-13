@@ -18,10 +18,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
-	"os"
+	"log"
 )
 
 /*
@@ -30,12 +29,28 @@ import (
 */
 
 func main() {
+
 	/*
-		"StreamPipesClientConnectConfig" can be configured through a variety of ways, including the function configuration, and use the struct configuration.
-		For example, using function configuration:
-		config.NewStreamPipesClientConnectConfig("http://localhost:8030",config.NewStreamPipesApiKeyCredentials("<Your-User-Name>","<Your-API-Key>"))
+		StreamPipesClientConfig can be configured in a number of ways.
+		For example：
+
+		First:  		clientConfig := config.StreamPipesClientConfig{
+							Url: "http://localhost:8030",
+							Credential: config.StreamPipesApiKeyCredentials{
+								UserName: "<Your-User-Name>",
+								ApiKey:   "<Your-API-Key>",
+							},
+						}
+
+		The second :    clientConfig := config.NewStreamPipesClientConnectConfig("http://localhost:8030",config.NewStreamPipesApiKeyCredentials("<Your-User-Name>","<Your-API-Key>"))
+
+		The third :     clientConfig := := config.StreamPipesClientConfig{
+							Url: "http://localhost:8030",
+							Credential: config.NewStreamPipesApiKeyCredentials("<Your-User-Name>","<Your-API-Key>"),
+						}
 	*/
-	Config := config.StreamPipesClientConnectConfig{
+
+	clientConfig := config.StreamPipesClientConfig{
 		Url: "http://localhost:8030",
 		Credential: config.StreamPipesApiKeyCredentials{
 			UserName: "<Your-User-Name>",
@@ -43,12 +58,17 @@ func main() {
 		},
 	}
 
-	StreamPipesClient, err := streampipes.NewStreamPipesClient(Config)
+	streamPipesClient, err := streampipes.NewStreamPipesClient(clientConfig)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
-	StreamPipesClient.DataLakeMeasures().GetSingleDataSeries("test_02").Conversion()
+
+	dataSeries, err := streamPipesClient.DataLakeMeasures().GetSingleDataSeries("test_02")
+	if err != nil {
+		log.Fatal(err)
+	}
+	dataSeries.Print()
+
 	/*
 			output format:
 

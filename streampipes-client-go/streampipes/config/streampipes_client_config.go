@@ -17,7 +17,7 @@
 
 package config
 
-type StreamPipesClientConnectConfig struct {
+type StreamPipesClientConfig struct {
 	Url        string
 	Credential StreamPipesApiKeyCredentials
 }
@@ -27,8 +27,8 @@ type StreamPipesApiKeyCredentials struct {
 	ApiKey   string
 }
 
-func NewStreamPipesClientConnectConfig(url string, credentials StreamPipesApiKeyCredentials) StreamPipesClientConnectConfig {
-	return StreamPipesClientConnectConfig{
+func NewStreamPipesClientConnectConfig(url string, credentials StreamPipesApiKeyCredentials) StreamPipesClientConfig {
+	return StreamPipesClientConfig{
 		Url:        url,
 		Credential: credentials,
 	}

@@ -46,7 +46,6 @@ public abstract class EventProperty {
   private String label;
 
   private String description;
-
   private String runtimeName;
 
   private boolean required;

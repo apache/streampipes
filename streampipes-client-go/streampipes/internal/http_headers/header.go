@@ -15,37 +15,40 @@
 // limitations under the License.
 //
 
-package headers
+package http_headers
 
 import (
 	"net/http"
 )
 
 type Headers struct {
-	Req    *http.Request
-	Header http.Header
+	req    *http.Request
+	header http.Header
 }
 
-func (h *Headers) XApiKey(apiKey string) http.Header {
-	h.Header = h.Req.Header
-	h.Header.Set("X-API-KEY", apiKey)
-	return h.Header
+func NewHeaders(req *http.Request) *Headers {
+	return &Headers{
+		req:    req,
+		header: nil,
+	}
 }
 
-func (h *Headers) XApiUser(apiUser string) http.Header {
-	h.Header = h.Req.Header
-	h.Header.Set("X-API-USER", apiUser)
-	return h.Header
+func (h *Headers) SetApiUserAndApiKey(apiUser string, apiKey string) {
+	h.header = h.req.Header
+	h.header.Set("X-API-USER", apiUser)
+	h.header.Set("X-API-KEY", apiKey)
 }
 
-func (h *Headers) AcceptJson() http.Header {
-	h.Header = h.Req.Header
-	h.Header.Set("Accept", "application/json")
-	return h.Header
+func (h *Headers) SetAcceptJson() {
+	h.header = h.req.Header
+	h.header.Set("Accept", "application/json")
 }
 
-func (h *Headers) ContentTypeJson() http.Header {
-	h.Header = h.Req.Header
-	h.Header.Set("Content-type", "application/json")
-	return h.Header
+func (h *Headers) SetContentTypeJson() {
+	h.header = h.req.Header
+	h.header.Set("Content-type", "application/json")
+}
+
+func (h *Headers) GetReq() *http.Request {
+	return h.req
 }

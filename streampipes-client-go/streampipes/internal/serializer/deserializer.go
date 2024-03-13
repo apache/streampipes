@@ -20,52 +20,57 @@ package serializer
 import (
 	"encoding/json"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
-	"log"
 )
 
 type Deserializer interface {
-	GetUnmarshal(body []byte) interface{}
+	GetUnmarshal(body []byte) (interface{}, error)
 }
 
 var _ Deserializer = (*UnmarshalDataLakeMeasures)(nil)
 var _ Deserializer = (*UnmarshalDataSeries)(nil)
 var _ Deserializer = (*UnmarshalDataLakeMeasure)(nil)
 
-type UnmarshalDataLakeMeasures struct {
-	DeSerializerDataLakeMeasures *[]data_lake.DataLakeMeasure
+type UnmarshalDataLakeMeasures struct{}
+
+func NewUnmarshalDataLakeMeasures() *UnmarshalDataLakeMeasures {
+	return &UnmarshalDataLakeMeasures{}
 }
 
-type UnmarshalDataLakeMeasure struct {
-	DeSerializerDataLakeMeasure *data_lake.DataLakeMeasure
-}
-
-type UnmarshalDataSeries struct {
-	DeSerializerDataLakeSeries *data_lake.DataSeries
-}
-
-func (d *UnmarshalDataLakeMeasures) GetUnmarshal(data []byte) interface{} {
-
-	err := json.Unmarshal(data, &d.DeSerializerDataLakeMeasures)
+func (d *UnmarshalDataLakeMeasures) GetUnmarshal(data []byte) (interface{}, error) {
+	var DeSerializerDataLakeMeasures []data_lake.DataLakeMeasure
+	err := json.Unmarshal(data, &DeSerializerDataLakeMeasures)
 	if err != nil {
-		log.Fatalf("Serialization failed,because :%v", err)
+		return nil, err
 	}
-	return *d.DeSerializerDataLakeMeasures
+	return DeSerializerDataLakeMeasures, nil
 }
 
-func (d *UnmarshalDataLakeMeasure) GetUnmarshal(data []byte) interface{} {
+type UnmarshalDataLakeMeasure struct{}
 
-	err := json.Unmarshal(data, &d.DeSerializerDataLakeMeasure)
-	if err != nil {
-		log.Fatalf("Serialization failed,because :%v", err)
-	}
-	return *d.DeSerializerDataLakeMeasure
+func NewUnmarshalDataLakeMeasure() *UnmarshalDataLakeMeasure {
+	return &UnmarshalDataLakeMeasure{}
 }
 
-func (d *UnmarshalDataSeries) GetUnmarshal(data []byte) interface{} {
-	err := json.Unmarshal(data, &d.DeSerializerDataLakeSeries)
-
+func (d *UnmarshalDataLakeMeasure) GetUnmarshal(data []byte) (interface{}, error) {
+	var DeSerializerDataLakeMeasure data_lake.DataLakeMeasure
+	err := json.Unmarshal(data, &DeSerializerDataLakeMeasure)
 	if err != nil {
-		log.Fatalf("Serialization failed,because :%v", err)
+		return nil, err
 	}
-	return *d.DeSerializerDataLakeSeries
+	return DeSerializerDataLakeMeasure, nil
+}
+
+type UnmarshalDataSeries struct{}
+
+func NewUnmarshalDataSeries() *UnmarshalDataSeries {
+	return &UnmarshalDataSeries{}
+}
+
+func (d *UnmarshalDataSeries) GetUnmarshal(data []byte) (interface{}, error) {
+	var DeSerializerDataLakeSeries data_lake.DataSeries
+	err := json.Unmarshal(data, &DeSerializerDataLakeSeries)
+	if err != nil {
+		return nil, err
+	}
+	return DeSerializerDataLakeSeries, nil
 }

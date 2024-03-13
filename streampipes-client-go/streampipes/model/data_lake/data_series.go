@@ -26,13 +26,13 @@ import (
 
 type DataSeries struct {
 	Total         int                `json:"total"`
-	Headers       []string           `json:"headers"`
+	Headers       []string           `json:"http_headers"`
 	AllDataSeries []model.DataSeries `json:"allDataSeries"`
 	SPQueryStatus string             `alias:"spQueryStatus" default:"OK"`
 	ForId         interface{}        `json:"forId"`
 }
 
-func (d DataSeries) Conversion() {
+func (d *DataSeries) Print() {
 	if d.Total == 0 {
 		log.Println("This DataSeries has no data")
 		return

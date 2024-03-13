@@ -22,45 +22,33 @@ import (
 )
 
 type StreamPipesApiPath struct {
-	PathItems []string // PathItems stores URL fragments
+	pathItems []string // PathItems stores URL fragments
 }
 
 func NewStreamPipesApiPath(initialPathItems []string) *StreamPipesApiPath {
 
 	return &StreamPipesApiPath{
-		PathItems: initialPathItems,
+		pathItems: initialPathItems,
 	}
 }
 
 func (s *StreamPipesApiPath) FromStreamPipesBasePath() *StreamPipesApiPath {
 	path := "streampipes-backend"
-	s.PathItems = append(s.PathItems, path)
+	s.pathItems = append(s.pathItems, path)
 	return s
-}
-
-func (s *StreamPipesApiPath) FromStreamPipesBasePathWithSubPaths(allSubPaths []string) *StreamPipesApiPath {
-	return s.FromStreamPipesBasePath().AddToPath(allSubPaths)
 }
 
 func (s *StreamPipesApiPath) AddToPath(pathItem []string) *StreamPipesApiPath {
-	s.PathItems = append(s.PathItems, pathItem...)
+	s.pathItems = append(s.pathItems, pathItem...)
 	return s
 }
 
-func (s *StreamPipesApiPath) ToString() string {
-	//Splicing URLs
-	if len(s.PathItems) == 1 {
-		return s.PathItems[0]
+func (s *StreamPipesApiPath) String() string {
+
+	if len(s.pathItems) == 1 {
+		return s.pathItems[0]
 	}
-	path := strings.Join(s.PathItems, "/")
-	s.PathItems = []string{path}
+	path := strings.Join(s.pathItems, "/")
+	s.pathItems = []string{path}
 	return path
-}
-
-func (s *StreamPipesApiPath) GetBaseUrl(Url string) *StreamPipesApiPath {
-
-	ApiPath := NewStreamPipesApiPath([]string{Url}).FromStreamPipesBasePath()
-	ApiPath.ToString()
-
-	return ApiPath
 }

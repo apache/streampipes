@@ -63,6 +63,6 @@ type EventSchema struct {
 type DataSeries struct {
 	Total   int               `json:"total"`
 	Rows    [][]string        `json:"rows"`
-	Headers []string          `json:"headers"`
+	Headers []string          `json:"http_headers"`
 	Tags    map[string]string `json:"tags"`
 }
