@@ -32,6 +32,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonP
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -48,6 +49,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +77,8 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   private boolean replaceTimestamp;
   private String timestampRuntimeName;
 
+  private String timestampSourceFieldName;
+
   private float speedUp;
 
   private long timestampLastEvent = -1;
@@ -81,118 +86,183 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 0, FileReplayAdapter::new)
-        .withSupportedParsers(
-            new JsonParsers(),
-            new CsvParser(),
-            new XmlParser(),
-            new ImageParser())
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
-        .requiredFile(Labels.withId(FILE_PATH), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
-        .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
-        .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
-        .requiredAlternatives(Labels.withId(SPEED),
-            Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
-            Alternatives.from(Labels.withId(FASTEST)), Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
-                StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
-                    StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP)))))
-        .buildConfiguration();
+                                      .withSupportedParsers(
+                                        new JsonParsers(),
+                                        new CsvParser(),
+                                        new XmlParser(),
+                                        new ImageParser()
+                                      )
+                                      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                                      .withLocales(Locales.EN)
+                                      .withCategory(AdapterType.Generic)
+                                      .requiredFile(
+                                        Labels.withId(FILE_PATH),
+                                        Filetypes.CSV,
+                                        Filetypes.JSON,
+                                        Filetypes.XML
+                                      )
+                                      .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
+                                      .requiredSingleValueSelection(
+                                        Labels.withId(REPLAY_ONCE),
+                                        Options.from("no", "yes")
+                                      )
+                                      .requiredAlternatives(Labels.withId(SPEED),
+                                                            Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
+                                                            Alternatives.from(Labels.withId(FASTEST)),
+                                                            Alternatives.from(
+                                                              Labels.withId(SPEED_UP_FACTOR),
+                                                              StaticProperties.group(
+                                                                Labels.withId(SPEED_UP_FACTOR_GROUP),
+                                                                StaticProperties.doubleFreeTextProperty(Labels.withId(
+                                                                  SPEED_UP))
+                                                              )
+                                                            )
+                                      )
+                                      .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(
+    IAdapterParameterExtractor extractor,
+    IEventCollector collector,
+    IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException {
 
     // extract user input
     executor = Executors.newScheduledThreadPool(1);
     boolean replayOnce = extractor
-        .getStaticPropertyExtractor()
-        .selectedSingleValue(REPLAY_ONCE, String.class)
-        .equals("yes");
+      .getStaticPropertyExtractor()
+      .selectedSingleValue(REPLAY_ONCE, String.class)
+      .equals("yes");
     var replaceTimestampStringList = extractor
-        .getStaticPropertyExtractor()
-        .selectedMultiValues(REPLACE_TIMESTAMP, String.class);
-    replaceTimestamp = replaceTimestampStringList.size() != 0;
+      .getStaticPropertyExtractor()
+      .selectedMultiValues(REPLACE_TIMESTAMP, String.class);
+    replaceTimestamp = !replaceTimestampStringList.isEmpty();
     var speedUpAlternative = extractor
-        .getStaticPropertyExtractor()
-        .selectedAlternativeInternalId(SPEED);
+      .getStaticPropertyExtractor()
+      .selectedAlternativeInternalId(SPEED);
     speedUp = switch (speedUpAlternative) {
       case FASTEST -> Float.MAX_VALUE;
       case SPEED_UP_FACTOR -> extractor
-          .getStaticPropertyExtractor()
-          .singleValueParameter(SPEED_UP, Float.class);
+        .getStaticPropertyExtractor()
+        .singleValueParameter(SPEED_UP, Float.class);
       default -> 1.0f;
     };
 
     // get timestamp field
     var timestampField = extractor
-        .getAdapterDescription()
-        .getEventSchema()
-        .getEventProperties()
-        .stream()
-        .filter(eventProperty ->
-            eventProperty.getDomainProperties().contains(URI.create(SO.DATE_TIME)))
-        .findFirst();
+      .getAdapterDescription()
+      .getEventSchema()
+      .getEventProperties()
+      .stream()
+      .filter(eventProperty ->
+                eventProperty.getDomainProperties()
+                             .contains(URI.create(SO.DATE_TIME)))
+      .findFirst();
 
     if (timestampField.isEmpty()) {
       throw new AdapterException("Could not find a timestamp field in event schema");
     } else {
-      timestampRuntimeName = timestampField.get().getRuntimeName();
+      timestampRuntimeName = timestampField.get()
+                                           .getRuntimeName();
+    }
+
+    // check for renaming rules that affect the timestamp property
+    // if there is one, we need to use the original field name when extracting the timestamp from the raw data
+    var renamingRulesTimestamp = getRenamingRulesTimestamp(extractor);
+    if (!renamingRulesTimestamp.isEmpty()) {
+      if (renamingRulesTimestamp.size() == 1) {
+        timestampSourceFieldName = renamingRulesTimestamp.get(0)
+                                                         .getOldRuntimeKey();
+      } else {
+        throw new AdapterException("Invalid configuration - multiple renaming rules detected which affect the "
+                                     + "timestamp property.");
+      }
+    } else {
+      // no renaming rules can be found, timestamp name does not change
+      timestampSourceFieldName = timestampRuntimeName;
     }
 
     // start replay adapter
     if (replayOnce) {
-      executor.schedule(() -> parseFile(extractor, collector, adapterRuntimeContext),
-          0,
-          TimeUnit.SECONDS);
+      executor.schedule(
+        () -> parseFile(extractor, collector, adapterRuntimeContext),
+        0,
+        TimeUnit.SECONDS
+      );
     } else {
-      executor.scheduleAtFixedRate(() -> parseFile(extractor, collector, adapterRuntimeContext),
-          0,
-          1,
-          TimeUnit.SECONDS);
+      executor.scheduleAtFixedRate(
+        () -> parseFile(extractor, collector, adapterRuntimeContext),
+        0,
+        1,
+        TimeUnit.SECONDS
+      );
     }
   }
 
-  private void parseFile(IAdapterParameterExtractor extractor,
-                         IEventCollector collector,
-                         IAdapterRuntimeContext adapterRuntimeContext) {
+  /**
+   * Retrieves a list of {@link RenameRuleDescription} affecting the timestamp property.
+   *
+   * @param extractor An instance of IAdapterParameterExtractor used to extract adapter description and rules.
+   * @return A list of {@link RenameRuleDescription} containing rules affecting timestamp property.
+   */
+  private List<RenameRuleDescription> getRenamingRulesTimestamp(IAdapterParameterExtractor extractor) {
+    var renamingRules =
+      extractor.getAdapterDescription()
+               .getRules()
+               .stream()
+               .filter(rule -> rule instanceof RenameRuleDescription)
+               .map(rule -> (RenameRuleDescription) rule)
+               .toList();
+
+    return renamingRules.stream()
+                        .filter(rule -> rule.getNewRuntimeKey()
+                                            .equals(timestampRuntimeName))
+                        .toList();
+  }
+
+  private void parseFile(
+    IAdapterParameterExtractor extractor,
+    IEventCollector collector,
+    IAdapterRuntimeContext adapterRuntimeContext
+  ) {
     try {
       InputStream inputStream = getDataFromEndpoint(extractor
-          .getStaticPropertyExtractor()
-          .selectedFilename(FILE_PATH));
+                                                      .getStaticPropertyExtractor()
+                                                      .selectedFilename(FILE_PATH));
 
-      extractor.selectedParser().parse(inputStream, (event) -> {
+      extractor.selectedParser()
+               .parse(inputStream, (event) -> {
 
-        long actualEventTimestamp = -1;
-        if (event.get(timestampRuntimeName) instanceof Long) {
-          actualEventTimestamp = (long) event.get(timestampRuntimeName);
-        } else {
-          LOG.error(
-              "The timestamp field is not a unix timestamp in ms. Value: %s"
-                  .formatted(event.get(timestampRuntimeName)));
-        }
+                 long actualEventTimestamp = -1;
+                 if (event.get(timestampSourceFieldName) instanceof Long) {
+                   actualEventTimestamp = (long) event.get(timestampSourceFieldName);
+                 } else {
+                   LOG.error(
+                     "The timestamp field is not a unix timestamp in ms. Value: %s"
+                       .formatted(event.get(timestampSourceFieldName)));
+                 }
 
-        if (timestampLastEvent != -1) {
-          long sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
-          // speed up is set to Float.MAX_VALUE when user selected fastest option
-          if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
-            try {
-              Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
-              LOG.info("File stream adapter was stopped, the current replay is interuppted", e);
-            }
-          }
-        }
+                 if (timestampLastEvent != -1) {
+                   long sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
+                   // speed up is set to Float.MAX_VALUE when user selected fastest option
+                   if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
+                     try {
+                       Thread.sleep(sleepTime);
+                     } catch (InterruptedException e) {
+                       LOG.info("File stream adapter was stopped, the current replay is interuppted", e);
+                     }
+                   }
+                 }
 
-        timestampLastEvent = actualEventTimestamp;
-        if (replaceTimestamp) {
-          event.put(timestampRuntimeName, System.currentTimeMillis());
-        }
+                 timestampLastEvent = actualEventTimestamp;
+                 if (replaceTimestamp) {
+                   // we can directly use the desired runtime name for the timestamp instead of the original here
+                   event.put(timestampRuntimeName, System.currentTimeMillis());
+                 }
 
-        collector.collect(event);
-      });
+                 collector.collect(event);
+               });
 
     } catch (AdapterException e) {
       adapterRuntimeContext
