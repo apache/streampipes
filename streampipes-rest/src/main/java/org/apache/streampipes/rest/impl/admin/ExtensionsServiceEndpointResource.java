@@ -85,7 +85,6 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   @GetMapping(path = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ExtensionsServiceEndpointItem>> getEndpointContents() {
     List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
-    String username = getAuthenticatedUsername();
 
     var installedExtensions = getAllInstalledExtensions();
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(endpoints);
@@ -93,9 +92,9 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
     // also add installed elements that are currently not running or available
     items.addAll(getAllAdapterEndpoints(items));
-    items.addAll(getAllDataStreamEndpoints(username, items));
-    items.addAll(getAllDataProcessorEndpoints(username, items));
-    items.addAll(getAllDataSinkEndpoints(username, items));
+    items.addAll(getAllDataStreamEndpoints(items));
+    items.addAll(getAllDataProcessorEndpoints(items));
+    items.addAll(getAllDataSinkEndpoints(items));
 
     return ok(items);
   }
@@ -144,7 +143,6 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(
-      String username,
       List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataStreams()
         .stream()
@@ -156,7 +154,6 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
 
   private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(
-      String username,
       List<ExtensionsServiceEndpointItem> existingItems) {
 
     return getAllDataProcessors()
@@ -167,7 +164,6 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(
-      String username,
       List<ExtensionsServiceEndpointItem> existingItems) {
 
     return getAllDataSinks()
