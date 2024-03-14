@@ -26,8 +26,7 @@
     "test-cypress-open": "cypress open",
     "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts'",
     "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts'",
-    "prepare": "cd ../ && husky install ./ui/.husky",
-    "postinstall": "npm run build-libraries"
+    "prepare": "cd ../ && husky install ./ui/.husky"
   },
   "dependencies": {
     "@ali-hm/angular-tree-component": "12.0.5",
@@ -63,8 +62,7 @@
     "datatables.net": "^1.13.1",
     "datatables.net-dt": "^1.13.1",
     "date-fns": "^2.30.0",
-    "echarts": "^5.4.3",
-    "echarts-gl": "^2.0.9",
+    "echarts": "^5.5.0",
     "echarts-simple-transform": "^1.0.0",
     "echarts-wordcloud": "^2.1.0",
     "es-module-shims": "^1.5.12",

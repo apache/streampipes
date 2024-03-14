@@ -39,7 +39,7 @@ import { MatTableModule } from '@angular/material/table';
 import { PipelineNotificationsComponent } from './dialog/pipeline-notifications/pipeline-notifications.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { SharedUiModule } from '../../../projects/streampipes/shared-ui/src/lib/shared-ui.module';
+import { SharedUiModule } from '@streampipes/shared-ui';
 import { EditorModule } from '../editor/editor.module';
 import { PipelineDetailsModule } from '../pipeline-details/pipeline-details.module';
 import { RouterModule } from '@angular/router';

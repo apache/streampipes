@@ -34,7 +34,7 @@ import { EndpointInstallationComponent } from './dialogs/endpoint-installation/e
 import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
 import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
 import { RouterModule } from '@angular/router';
-import { SharedUiModule } from '../../../projects/streampipes/shared-ui/src/lib/shared-ui.module';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
     imports: [
