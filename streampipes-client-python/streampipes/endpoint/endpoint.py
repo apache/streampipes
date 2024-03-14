@@ -44,6 +44,7 @@ logger = logging.getLogger(__name__)
 
 # define custom logging messages for some specific HTTP status
 _error_code_to_message = {
+    400: "\nThe StreamPipes Backend did not accept the request. Please check the logs for details",
     401: "\nThe StreamPipes Backend returned an unauthorized error.\n"
     "Please check your user name and/or password to be correct.",
     403: "\nThere seems to be an issue with the access rights of the given user and the resource you queried.\n"

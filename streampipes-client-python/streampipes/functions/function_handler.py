@@ -19,6 +19,8 @@ import json
 import logging
 from typing import AsyncIterator, Dict, List
 
+from requests import HTTPError
+
 from streampipes.client.client import StreamPipesClient
 from streampipes.functions.broker import Broker, Consumer, get_broker
 from streampipes.functions.registration import Registration
@@ -67,7 +69,14 @@ class FunctionHandler:
         for streampipes_function in self.registration.getFunctions():
             # Create the output data streams for every function
             for stream_id, output_stream in streampipes_function.function_definition.get_output_data_streams().items():
-                self.client.dataStreamApi.post(output_stream)
+                try:
+                    self.client.dataStreamApi.post(output_stream)
+                except HTTPError:
+                    logger.error(
+                        "The data stream could not be created - this is likely caused by "
+                        "an existing data stream with the same name.\n Please use another one."
+                    )
+                    raise RuntimeError
                 logger.info(
                     f'Create output data stream "{stream_id}" '
                     f'for the function "{streampipes_function.getFunctionId().id}"'
