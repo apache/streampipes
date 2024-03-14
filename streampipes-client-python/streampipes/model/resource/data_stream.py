@@ -86,7 +86,7 @@ class DataStream(Resource):
             self.uri = self.element_id
 
     class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
-    element_id: Optional[StrictStr] = None
+    element_id: StrictStr = Field(default="")
     name: StrictStr = Field(default="Unnamed")
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]
