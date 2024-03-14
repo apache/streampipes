@@ -19,6 +19,7 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -34,9 +35,10 @@ import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,50 +48,38 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-
-@RunWith(Parameterized.class)
 public class TestBooleanCounterProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(TestBooleanCounterProcessor.class);
 
-  @org.junit.runners.Parameterized.Parameters
-  public static Iterable<Object[]> data() {
-    return Arrays.asList(new Object[][]{
-            {"Test", "BOTH", Arrays.asList(false, true), 1},
-            {"Test", "BOTH", Arrays.asList(false, true, false), 2},
-            {"Test", "BOTH", Arrays.asList(false), 0},
-            {"Test", "TRUE -> FALSE", Arrays.asList(false, true, false, false, true), 2},
-            {"Test", "TRUE -> FALSE", Arrays.asList(true, false), 1},
-            {"Test", "TRUE -> FALSE", Arrays.asList(false), 1},
-            {"Test", "FALSE -> TRUE", Arrays.asList(false), 0},
-            {"Test", "FALSE -> TRUE", Arrays.asList(false, false, true), 1},
-            {"Test", "FALSE -> TRUE", Arrays.asList(false, true, true, false), 1},
-    });
+  static Stream<Arguments> data() {
+    return Stream.of(
+            Arguments.of("Test", "BOTH", Arrays.asList(false, true), 1),
+            Arguments.of("Test", "BOTH", Arrays.asList(false, true, false), 2),
+            Arguments.of("Test", "BOTH", Arrays.asList(false), 0),
+            Arguments.of("Test", "TRUE -> FALSE", Arrays.asList(false, true, false, false, true), 2),
+            Arguments.of("Test", "TRUE -> FALSE", Arrays.asList(true, false), 1),
+            Arguments.of("Test", "TRUE -> FALSE", Arrays.asList(false), 1),
+            Arguments.of("Test", "FALSE -> TRUE", Arrays.asList(false), 0),
+            Arguments.of("Test", "FALSE -> TRUE", Arrays.asList(false, false, true), 1),
+            Arguments.of("Test", "FALSE -> TRUE", Arrays.asList(false, true, true, false), 1)
+    );
   }
 
-  @org.junit.runners.Parameterized.Parameter
-  public String invertFieldName;
+  @ParameterizedTest
+  @MethodSource("data")
+  public void testBooleanCounter(
+          String invertFieldName,
+          String flankUp,
+          List<Boolean> eventBooleans,
+          Integer expectedBooleanCount
+  ){
 
-  /**
-   * Defines which boolean changes should be counted
-   * 0: BOTH
-   * 1: TRUE -> FALSE
-   * 2: FALSE -> TRUE
-   */
-  @org.junit.runners.Parameterized.Parameter(1)
-  public String flankUp;
-
-  @org.junit.runners.Parameterized.Parameter(2)
-  public List<Boolean> eventBooleans;
-
-  @org.junit.runners.Parameterized.Parameter(3)
-  public Integer expectedBooleanCount;
-
-  @Test
-  public void testBooleanCounter() {
     BooleanCounterProcessor booleanCounter = new BooleanCounterProcessor();
-    DataProcessorDescription originalGraph = booleanCounter.declareConfig().getDescription();
+//    DataProcessorDescription originalGraph = booleanCounter.declareConfig().getDescription();
+    IDataProcessorConfiguration config = booleanCounter.declareConfig();
+    DataProcessorDescription originalGraph = config.getDescription();
     originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
     DataProcessorInvocation graph =
@@ -132,15 +122,22 @@ public class TestBooleanCounterProcessor {
     Integer counter = sendEvents(booleanCounter, spOut);
     LOG.info("Expected match count is {}", expectedBooleanCount);
     LOG.info("Actual match count is {}", counter);
-    assertEquals(expectedBooleanCount, counter);
+    Assertions.assertEquals(expectedBooleanCount, counter);
   }
 
-  private Integer sendEvents(BooleanCounterProcessor booleanCounter, SpOutputCollector spOut) {
+  /**
+   * Defines which boolean changes should be counted
+   * 0: BOTH
+   * 1: TRUE -> FALSE
+   * 2: FALSE -> TRUE
+   */
+
+  private Integer sendEvents(BooleanCounterProcessor booleanCounter, SpOutputCollector spOut, List<Boolean> eventBooleans, String invertFieldName) {
     int counter = 0;
-    List<Event> events = makeEvents();
+    List<Event> events = makeEvents(eventBooleans, invertFieldName);
     for (Event event : events) {
       LOG.info("Sending event with value "
-          + event.getFieldBySelector("s0::" + invertFieldName).getAsPrimitive().getAsBoolean());
+              + event.getFieldBySelector("s0::" + invertFieldName).getAsPrimitive().getAsBoolean());
       booleanCounter.onEvent(event, spOut);
       try {
         Thread.sleep(100);
@@ -159,15 +156,15 @@ public class TestBooleanCounterProcessor {
     return counter;
   }
 
-  private List<Event> makeEvents() {
+  private List<Event> makeEvents(List<Boolean> eventBooleans, String invertFieldName) {
     List<Event> events = new ArrayList<>();
     for (Boolean eventSetting : eventBooleans) {
-      events.add(makeEvent(eventSetting));
+      events.add(makeEvent(eventSetting, invertFieldName));
     }
     return events;
   }
 
-  private Event makeEvent(Boolean value) {
+  private Event makeEvent(Boolean value, String invertFieldName) {
     Map<String, Object> map = new HashMap<>();
     map.put(invertFieldName, value);
     return EventFactory.fromMap(map,
