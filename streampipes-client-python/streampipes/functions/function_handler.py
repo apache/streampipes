@@ -134,7 +134,11 @@ class FunctionHandler:
             if stream_id == "stop":
                 break
             for streampipes_function in self.stream_contexts[stream_id].functions:
-                streampipes_function.onEvent(json.loads(msg.data.decode()), stream_id)
+                msg_str = msg.data.decode()
+                try:
+                    streampipes_function.onEvent(json.loads(msg_str), stream_id)
+                except json.JSONDecodeError:
+                    logger.warn(f"Message isn't in json format: {msg_str}")
 
         # Stop the functions
         self._stop_functions()
