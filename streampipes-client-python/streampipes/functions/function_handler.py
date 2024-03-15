@@ -17,6 +17,7 @@
 import asyncio
 import json
 import logging
+from http import HTTPStatus
 from typing import AsyncIterator, Dict, List
 
 from requests import HTTPError
@@ -71,15 +72,17 @@ class FunctionHandler:
             for stream_id, output_stream in streampipes_function.function_definition.get_output_data_streams().items():
                 try:
                     self.client.dataStreamApi.post(output_stream)
-                except HTTPError:
-                    logger.error(
-                        "The data stream could not be created - this is likely caused by "
-                        "an existing data stream with the same name.\n Please use another one."
-                    )
-                    raise RuntimeError
+                except HTTPError as e:
+                    logger.warning("The data stream could not be created.")
+                    if e.response.status_code == HTTPStatus.BAD_REQUEST:
+                        logger.warning(
+                            "This is due to the fact that this data stream already exists. "
+                            "Continuing with the existing data stream."
+                        )
+                    else:
+                        raise RuntimeError from e
                 logger.info(
-                    f'Create output data stream "{stream_id}" '
-                    f'for the function "{streampipes_function.getFunctionId().id}"'
+                    f"Using output data stream '{stream_id}' for function '{streampipes_function.getFunctionId().id}'"
                 )
             # Choose the broker and collect the schema for every data stream
             for stream_id in streampipes_function.requiredStreamIds():
