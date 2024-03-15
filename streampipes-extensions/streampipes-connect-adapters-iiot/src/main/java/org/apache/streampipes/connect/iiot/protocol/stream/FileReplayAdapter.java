@@ -166,21 +166,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           .getRuntimeName();
     }
 
-    // check for renaming rules that affect the timestamp property
-    // if there is one, we need to use the original field name when extracting the timestamp from the raw data
-    var renamingRulesTimestamp = getRenamingRulesTimestamp(extractor);
-    if (!renamingRulesTimestamp.isEmpty()) {
-      if (renamingRulesTimestamp.size() == 1) {
-        timestampSourceFieldName = renamingRulesTimestamp.get(0)
-            .getOldRuntimeKey();
-      } else {
-        throw new AdapterException("Invalid configuration - multiple renaming rules detected which affect the "
-            + "timestamp property.");
-      }
-    } else {
-      // no renaming rules can be found, timestamp name does not change
-      timestampSourceFieldName = timestampRuntimeName;
-    }
+    determineSourceTimestampField(extractor);
 
     // start replay adapter
     if (replayOnce) {
@@ -196,6 +182,31 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           1,
           TimeUnit.SECONDS
       );
+    }
+  }
+
+  /**
+   * Determines the source field name for the timestamp property based
+   * on any renaming rules configured within the adapter.
+   * It ensures that the correct field name is used when extracting the timestamp from the raw data.
+   *
+   * @param extractor An instance of {@code IAdapterParameterExtractor} used for extracting adapter parameters.
+   * @throws AdapterException If there are multiple renaming rules detected affecting the timestamp property,
+   * indicating an invalid configuration.
+   */
+  private void determineSourceTimestampField(IAdapterParameterExtractor extractor) throws AdapterException {
+    var renamingRulesTimestamp = getRenamingRulesTimestamp(extractor);
+    if (!renamingRulesTimestamp.isEmpty()) {
+      if (renamingRulesTimestamp.size() == 1) {
+        timestampSourceFieldName = renamingRulesTimestamp.get(0)
+            .getOldRuntimeKey();
+      } else {
+        throw new AdapterException("Invalid configuration - multiple renaming rules detected which affect the "
+            + "timestamp property.");
+      }
+    } else {
+      // no renaming rules can be found, timestamp name does not change
+      timestampSourceFieldName = timestampRuntimeName;
     }
   }
 
@@ -256,8 +267,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
             timestampLastEvent = actualEventTimestamp;
             if (replaceTimestamp) {
-              // we can directly use the desired runtime name for the timestamp instead of the original here
-              event.put(timestampRuntimeName, System.currentTimeMillis());
+              event.put(timestampSourceFieldName, System.currentTimeMillis());
             }
 
             collector.collect(event);
