@@ -116,7 +116,7 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         NgxEchartsModule.forChild(),
         RouterModule.forChild([
             {
-                path: 'dataexplorer',
+                path: '',
                 children: [
                     {
                         path: '',

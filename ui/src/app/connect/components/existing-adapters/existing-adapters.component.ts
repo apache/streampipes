@@ -40,7 +40,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
-import { HelpComponent } from '../../../editor/dialog/help/help.component';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
@@ -48,6 +47,7 @@ import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
 import { RestApi } from '../../../services/rest-api.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { HelpComponent } from '../../../core-ui/help/help.component';
 
 @Component({
     selector: 'sp-existing-adapters',

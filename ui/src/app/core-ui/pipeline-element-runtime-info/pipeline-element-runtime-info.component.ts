@@ -21,7 +21,7 @@ import {
     EventPropertyUnion,
     SpDataStream,
 } from '@streampipes/platform-services';
-import { RestService } from '../../services/rest.service';
+import { RestService } from '../../connect/services/rest.service';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',

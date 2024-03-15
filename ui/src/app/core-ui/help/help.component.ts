@@ -17,13 +17,12 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { PipelineElementUnion } from '../../model/editor.model';
 import {
     PipelineElementService,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { PipelineElementTypeUtils } from '../../utils/editor.utils';
+import { PipelineElementUnion } from '../../editor/model/editor.model';
 
 @Component({
     selector: 'sp-pipeline-element-help',
@@ -106,11 +105,5 @@ export class HelpComponent implements OnInit {
         setTimeout(() => {
             this.dialogRef.close();
         });
-    }
-
-    filterTab(tab) {
-        const type = PipelineElementTypeUtils.fromType(this.pipelineElement);
-        const cssShortHand = PipelineElementTypeUtils.toCssShortHand(type);
-        return tab.targets.indexOf(cssShortHand) !== -1;
     }
 }

@@ -69,7 +69,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         SharedUiModule,
         RouterModule.forChild([
             {
-                path: 'files',
+                path: '',
                 children: [
                     {
                         path: '',
