@@ -76,6 +76,10 @@ import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
 import { DateInputComponent } from './date-input/date-input.component';
+import { HelpComponent } from './help/help.component';
+import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
     imports: [
@@ -103,6 +107,7 @@ import { DateInputComponent } from './date-input/date-input.component';
         OverlayModule,
         QuillModule.forRoot(),
         MatTreeModule,
+        MarkdownModule.forRoot(),
     ],
     declarations: [
         DataDownloadDialogComponent,
@@ -111,6 +116,9 @@ import { DateInputComponent } from './date-input/date-input.component';
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplatePipe,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        HelpComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,
@@ -149,6 +157,9 @@ import { DateInputComponent } from './date-input/date-input.component';
         DataDownloadDialogComponent,
         DateInputComponent,
         PipelineElementTemplateConfigComponent,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        HelpComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,

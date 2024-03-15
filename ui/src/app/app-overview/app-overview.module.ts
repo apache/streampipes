@@ -45,7 +45,7 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         SharedUiModule,
         RouterModule.forChild([
             {
-                path: 'apps',
+                path: '',
                 children: [
                     { path: '', component: AppOverviewComponent },
                     ...(AvailableAppsService.apps.map(app => {

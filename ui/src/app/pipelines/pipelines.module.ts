@@ -70,7 +70,7 @@ import { SpFunctionsLogsComponent } from './components/functions-overview/functi
         SharedUiModule,
         RouterModule.forChild([
             {
-                path: 'pipelines',
+                path: '',
                 children: [
                     {
                         path: '',
