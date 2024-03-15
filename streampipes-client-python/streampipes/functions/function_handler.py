@@ -73,9 +73,9 @@ class FunctionHandler:
                 try:
                     self.client.dataStreamApi.post(output_stream)
                 except HTTPError as e:
-                    logger.warning("The data stream could not be created.")
+                    logger.info("The data stream could not be created.")
                     if e.response.status_code == HTTPStatus.BAD_REQUEST:
-                        logger.warning(
+                        logger.info(
                             "This is due to the fact that this data stream already exists. "
                             "Continuing with the existing data stream."
                         )
