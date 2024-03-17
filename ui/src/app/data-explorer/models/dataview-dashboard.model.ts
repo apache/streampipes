@@ -104,6 +104,12 @@ export interface FieldProvider {
     nonNumericFields: DataExplorerField[];
 }
 
+export interface AxisConfig {
+    axisScaleMode: boolean;
+    axisMin: number;
+    axisMax: number;
+}
+
 export interface DataExplorerVisConfig {
     forType?: number | string;
     configurationValid: boolean;

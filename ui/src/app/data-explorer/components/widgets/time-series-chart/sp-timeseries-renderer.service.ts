@@ -39,7 +39,6 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         _widgetSize: WidgetSize,
     ): void {
         this.addAxisOptions(widgetConfig, options);
-
         const finalSeries: SeriesOption[] = [];
 
         widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
@@ -232,6 +231,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             0,
             config.baseAppearanceConfig as WidgetBaseAppearanceConfig,
         );
+
         const yAxisOptions: YAXisOption[] = [];
 
         const uniqueAxes = new Set(
@@ -239,12 +239,20 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 a.localeCompare(b),
             ),
         );
+        let axisIndex = 0;
 
         uniqueAxes.forEach(axis => {
+            const settings =
+                axisIndex === 0
+                    ? config.visualizationConfig.leftAxis
+                    : config.visualizationConfig.rightAxis;
             yAxisOptions.push({
                 type: 'value',
                 position: axis as CartesianAxisPosition,
+                min: settings.axisScaleMode ? undefined : settings.axisMin,
+                max: settings.axisScaleMode ? undefined : settings.axisMax,
             });
+            axisIndex++;
         });
 
         Object.assign(options, {

@@ -16,13 +16,22 @@
  *
  */
 
-.marginColorFieldMore {
-    margin-left: 10px;
-    margin-right: 1px;
-}
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DataExplorerField } from '@streampipes/platform-services';
+import { TimeSeriesChartWidgetModel } from '../../time-series-chart/model/time-series-chart-widget.model';
+import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import { AxisConfig } from '../../../../models/dataview-dashboard.model';
 
-.field-selection-box {
-    border: 1px solid var(--color-bg-3);
-    padding: 5px;
-    margin: 5px;
+@Component({
+    selector: 'sp-select-axis-options',
+    templateUrl: './select-axis-options.component.html',
+    styleUrls: ['./select-axis-options.component.scss'],
+})
+export class SpSelectAxisOptionsComponent {
+    @Input() title: string;
+    @Input() axisConfig: AxisConfig;
+
+    @Output() viewRefreshEmitter: EventEmitter<void> = new EventEmitter<void>();
+
+    constructor() {}
 }

@@ -50,90 +50,7 @@ import { SpTimeseriesRendererService } from '../components/widgets/time-series-c
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
-    widgetTypes: IWidget<any>[] = [
-        {
-            id: 'table',
-            label: 'Table',
-            widgetConfigurationComponent: TableWidgetConfigComponent,
-            widgetComponent: TableWidgetComponent,
-        },
-        {
-            id: 'map',
-            label: 'Map',
-            widgetConfigurationComponent: MapWidgetConfigComponent,
-            widgetComponent: MapWidgetComponent,
-        },
-        {
-            id: 'heatmap',
-            label: 'Time-Series Heatmap',
-            widgetConfigurationComponent: HeatmapWidgetConfigComponent,
-            widgetComponent: SpEchartsWidgetComponent<HeatmapWidgetModel>,
-            chartRenderer: this.heatmapRenderer,
-        },
-        {
-            id: 'time-series-chart',
-            label: 'Time Series Chart',
-            widgetConfigurationComponent: TimeSeriesChartWidgetConfigComponent,
-            widgetComponent:
-                SpEchartsWidgetComponent<TimeSeriesChartWidgetModel>,
-            chartRenderer: this.timeseriesRenderer,
-        },
-        {
-            id: 'image',
-            label: 'Image',
-            widgetConfigurationComponent: ImageWidgetConfigComponent,
-            widgetComponent: ImageWidgetComponent,
-        },
-        {
-            id: 'indicator-chart',
-            label: 'Indicator',
-            widgetConfigurationComponent: IndicatorWidgetConfigComponent,
-            widgetComponent:
-                SpEchartsWidgetComponent<IndicatorChartWidgetModel>,
-            chartRenderer: this.indicatorRenderer,
-        },
-        {
-            id: 'scatter-chart',
-            label: 'Scatter',
-            widgetConfigurationComponent: CorrelationWidgetConfigComponent,
-            widgetComponent:
-                SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
-            chartRenderer: this.scatterRenderer,
-            alias: 'correlation-chart',
-        },
-        {
-            id: 'histogram-chart',
-            label: 'Histogram',
-            widgetConfigurationComponent: SpHistogramChartWidgetConfigComponent,
-            widgetComponent:
-                SpEchartsWidgetComponent<HistogramChartWidgetModel>,
-            chartRenderer: this.histogramRenderer,
-            alias: 'distribution-chart',
-        },
-        {
-            id: 'pie-chart',
-            label: 'Pie',
-            widgetConfigurationComponent: SpPieChartWidgetConfigComponent,
-            widgetComponent: SpEchartsWidgetComponent<PieChartWidgetModel>,
-            chartRenderer: this.pieRenderer,
-        },
-        {
-            id: 'value-heatmap-chart',
-            label: 'Value Distribution Heatmap',
-            widgetConfigurationComponent: SpValueHeatmapWidgetConfigComponent,
-            widgetComponent:
-                SpEchartsWidgetComponent<ValueHeatmapChartWidgetModel>,
-            chartRenderer: this.valueHeatmapRenderer,
-        },
-        {
-            id: 'density-chart',
-            label: '2D Density Contour',
-            widgetConfigurationComponent: CorrelationWidgetConfigComponent,
-            widgetComponent:
-                SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
-            chartRenderer: this.densityRenderer,
-        },
-    ];
+    widgetTypes: IWidget<any>[] = [];
 
     constructor(
         private heatmapRenderer: SpHeatmapRendererService,
@@ -144,7 +61,95 @@ export class DataExplorerWidgetRegistry {
         private densityRenderer: SpDensityRendererService,
         private indicatorRenderer: SpIndicatorRendererService,
         private timeseriesRenderer: SpTimeseriesRendererService,
-    ) {}
+    ) {
+        this.widgetTypes = [
+            {
+                id: 'table',
+                label: 'Table',
+                widgetConfigurationComponent: TableWidgetConfigComponent,
+                widgetComponent: TableWidgetComponent,
+            },
+            {
+                id: 'map',
+                label: 'Map',
+                widgetConfigurationComponent: MapWidgetConfigComponent,
+                widgetComponent: MapWidgetComponent,
+            },
+            {
+                id: 'heatmap',
+                label: 'Time-Series Heatmap',
+                widgetConfigurationComponent: HeatmapWidgetConfigComponent,
+                widgetComponent: SpEchartsWidgetComponent<HeatmapWidgetModel>,
+                chartRenderer: this.heatmapRenderer,
+            },
+            {
+                id: 'time-series-chart',
+                label: 'Time Series Chart',
+                widgetConfigurationComponent:
+                    TimeSeriesChartWidgetConfigComponent,
+                widgetComponent:
+                    SpEchartsWidgetComponent<TimeSeriesChartWidgetModel>,
+                chartRenderer: this.timeseriesRenderer,
+            },
+            {
+                id: 'image',
+                label: 'Image',
+                widgetConfigurationComponent: ImageWidgetConfigComponent,
+                widgetComponent: ImageWidgetComponent,
+            },
+            {
+                id: 'indicator-chart',
+                label: 'Indicator',
+                widgetConfigurationComponent: IndicatorWidgetConfigComponent,
+                widgetComponent:
+                    SpEchartsWidgetComponent<IndicatorChartWidgetModel>,
+                chartRenderer: this.indicatorRenderer,
+            },
+            {
+                id: 'scatter-chart',
+                label: 'Scatter',
+                widgetConfigurationComponent: CorrelationWidgetConfigComponent,
+                widgetComponent:
+                    SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
+                chartRenderer: this.scatterRenderer,
+                alias: 'correlation-chart',
+            },
+            {
+                id: 'histogram-chart',
+                label: 'Histogram',
+                widgetConfigurationComponent:
+                    SpHistogramChartWidgetConfigComponent,
+                widgetComponent:
+                    SpEchartsWidgetComponent<HistogramChartWidgetModel>,
+                chartRenderer: this.histogramRenderer,
+                alias: 'distribution-chart',
+            },
+            {
+                id: 'pie-chart',
+                label: 'Pie',
+                widgetConfigurationComponent: SpPieChartWidgetConfigComponent,
+                widgetComponent: SpEchartsWidgetComponent<PieChartWidgetModel>,
+                chartRenderer: this.pieRenderer,
+            },
+            {
+                id: 'value-heatmap-chart',
+                label: 'Value Distribution Heatmap',
+                widgetConfigurationComponent:
+                    SpValueHeatmapWidgetConfigComponent,
+                widgetComponent:
+                    SpEchartsWidgetComponent<ValueHeatmapChartWidgetModel>,
+                chartRenderer: this.valueHeatmapRenderer,
+            },
+            {
+                id: 'density-chart',
+                label: '2D Density Contour',
+                widgetConfigurationComponent: CorrelationWidgetConfigComponent,
+                widgetComponent:
+                    SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
+                chartRenderer: this.densityRenderer,
+            },
+        ];
+    }
 
     getAvailableWidgetTemplates(): IWidget<any>[] {
         return this.widgetTypes.sort((a, b) => a.label.localeCompare(b.label));

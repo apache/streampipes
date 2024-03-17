@@ -38,23 +38,14 @@ export class SelectColorPropertiesComponent implements OnInit {
         protected widgetConfigurationService: WidgetConfigurationService,
     ) {}
 
-    presetColors: string[] = [
-        '#39B54A',
-        '#1B1464',
-        '#f44336',
-        '#4CAF50',
-        '#FFEB3B',
-        '#FFFFFF',
-        '#000000',
-    ];
-
     ngOnInit(): void {
         if (!this.selectedProperties) {
             this.selectedProperties = [];
         }
     }
 
-    triggerSelectedProperties() {
+    triggerSelectedProperties(selectedProperties: DataExplorerField[]) {
+        this.selectedProperties = selectedProperties;
         this.changeSelectedProperties.emit(this.selectedProperties);
     }
 
@@ -68,32 +59,7 @@ export class SelectColorPropertiesComponent implements OnInit {
 
     selectFields(selected: boolean) {
         this.selectedProperties = selected ? this.availableProperties : [];
-        this.triggerSelectedProperties();
-    }
-
-    isSelected(field: DataExplorerField): boolean {
-        return (
-            this.selectedProperties.find(
-                sp =>
-                    sp.fullDbName === field.fullDbName &&
-                    sp.sourceIndex === field.sourceIndex,
-            ) !== undefined
-        );
-    }
-
-    toggleFieldSelection(field: DataExplorerField) {
-        if (this.isSelected(field)) {
-            this.selectedProperties = this.selectedProperties.filter(
-                sp =>
-                    !(
-                        sp.fullDbName === field.fullDbName &&
-                        sp.sourceIndex === field.sourceIndex
-                    ),
-            );
-        } else {
-            this.selectedProperties.push(field);
-        }
-        this.triggerSelectedProperties();
+        this.triggerSelectedProperties(this.selectedProperties);
     }
 
     triggerViewRefresh() {
@@ -102,12 +68,5 @@ export class SelectColorPropertiesComponent implements OnInit {
             refreshData: false,
             refreshView: true,
         });
-    }
-
-    onFilterChange(searchValue: string, field: DataExplorerField): void {
-        this.currentlyConfiguredWidget.visualizationConfig.displayName[
-            field.fullDbName + field.sourceIndex.toString()
-        ] = searchValue;
-        this.triggerViewRefresh();
     }
 }
