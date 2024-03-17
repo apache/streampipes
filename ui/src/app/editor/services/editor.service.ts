@@ -37,9 +37,9 @@ import {
     PipelineElementUnion,
 } from '../model/editor.model';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { HelpComponent } from '../dialog/help/help.component';
 import { map } from 'rxjs/operators';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
+import { HelpComponent } from '../../core-ui/help/help.component';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {

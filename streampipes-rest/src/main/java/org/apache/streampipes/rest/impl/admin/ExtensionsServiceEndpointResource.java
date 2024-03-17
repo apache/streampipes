@@ -49,7 +49,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/rdfendpoints")
@@ -85,7 +84,6 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   @GetMapping(path = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ExtensionsServiceEndpointItem>> getEndpointContents() {
     List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
-    String username = getAuthenticatedUsername();
 
     var installedExtensions = getAllInstalledExtensions();
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(endpoints);
@@ -93,9 +91,9 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
     // also add installed elements that are currently not running or available
     items.addAll(getAllAdapterEndpoints(items));
-    items.addAll(getAllDataStreamEndpoints(username, items));
-    items.addAll(getAllDataProcessorEndpoints(username, items));
-    items.addAll(getAllDataSinkEndpoints(username, items));
+    items.addAll(getAllDataStreamEndpoints(items));
+    items.addAll(getAllDataProcessorEndpoints(items));
+    items.addAll(getAllDataSinkEndpoints(items));
 
     return ok(items);
   }
@@ -122,6 +120,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
                               String appId) {
     return installedElements
         .stream()
+        .filter(e -> !(e instanceof SpDataStream))  // DataStreams are not getting installed
         .anyMatch(e -> e.getAppId().equals(appId));
   }
 
@@ -140,41 +139,40 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
         .map(adapter -> makeItem(adapter, "adapter"))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(
-      String username,
       List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataStreams()
         .stream()
-        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
+        // compared to similar methods we use the elementId here instead of the appId
+        // because data streams are supposed to do not have an appId
+        .filter(s -> existingItems.stream().noneMatch(item -> s.getElementId().equals(item.getElementId())))
         .filter(s -> !s.isInternallyManaged())
         .map(stream -> makeItem(stream, "stream"))
-        .collect(Collectors.toList());
+        .toList();
   }
 
 
   private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(
-      String username,
       List<ExtensionsServiceEndpointItem> existingItems) {
 
     return getAllDataProcessors()
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
         .map(source -> makeItem(source, "sepa"))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(
-      String username,
       List<ExtensionsServiceEndpointItem> existingItems) {
 
     return getAllDataSinks()
         .stream()
         .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
         .map(source -> makeItem(source, "action"))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private ExtensionsServiceEndpointItem makeItem(NamedStreamPipesEntity entity, String type) {
@@ -182,7 +180,6 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     endpoint.setInstalled(true);
     endpoint.setDescription(entity.getDescription());
     endpoint.setName(entity.getName());
-    endpoint.setAppId(entity.getAppId());
     endpoint.setType(type);
     endpoint.setAvailable(false);
     endpoint.setElementId(entity.getElementId());
@@ -190,6 +187,11 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     endpoint.setEditable(!(entity.isInternallyManaged()));
     endpoint.setIncludesIcon(entity.isIncludesAssets() && entity.getIncludedAssets().contains(Assets.ICON));
     endpoint.setIncludesDocs(entity.isIncludesAssets() && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
+
+    if (!(entity instanceof SpDataStream)) {
+      endpoint.setAppId(entity.getAppId());
+    }
+
     return endpoint;
   }
 

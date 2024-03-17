@@ -88,7 +88,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
         PlatformServicesModule,
         RouterModule.forChild([
             {
-                path: 'configuration',
+                path: '',
                 children: [
                     {
                         path: '',

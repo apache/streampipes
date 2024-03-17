@@ -19,7 +19,7 @@ from itertools import chain
 from typing import Any, Dict, List, Literal, Union
 
 import pandas as pd
-from pydantic import Field, StrictInt, StrictStr
+from pydantic.v1 import Field, StrictInt, StrictStr
 
 from streampipes.model.resource import DataSeries
 from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries

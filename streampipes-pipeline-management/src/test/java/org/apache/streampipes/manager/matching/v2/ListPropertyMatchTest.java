@@ -21,13 +21,12 @@ package org.apache.streampipes.manager.matching.v2;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.schema.EventPropertyList;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 public class ListPropertyMatchTest {
 
@@ -46,7 +45,7 @@ public class ListPropertyMatchTest {
 
     boolean result = new ListPropertyMatch().match(offer, requirement, errorLog);
 
-    assertTrue(result);
+    Assertions.assertTrue(result);
   }
 
   @Test
@@ -59,7 +58,7 @@ public class ListPropertyMatchTest {
 
     boolean result = new ListPropertyMatch().match(offer, requirement, errorLog);
 
-    assertTrue(result);
+    Assertions.assertTrue(result);
   }
 
 }

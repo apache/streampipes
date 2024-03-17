@@ -44,6 +44,7 @@ logger = logging.getLogger(__name__)
 
 # define custom logging messages for some specific HTTP status
 _error_code_to_message = {
+    400: "\nThe StreamPipes Backend did not accept the request. Please check the logs for details.\n",
     401: "\nThe StreamPipes Backend returned an unauthorized error.\n"
     "Please check your user name and/or password to be correct.",
     403: "\nThere seems to be an issue with the access rights of the given user and the resource you queried.\n"
@@ -149,13 +150,14 @@ class APIEndpoint(Endpoint):
             error_message = _error_code_to_message[status_code]
 
             if status_code in [
+                HTTPStatus.BAD_REQUEST.numerator,
                 HTTPStatus.METHOD_NOT_ALLOWED.numerator,
                 HTTPStatus.NOT_FOUND.numerator,
             ]:
                 error_message += f"url: {err.response.url}\nstatus code: {status_code}"
 
             logger.debug(f"HTTP error response: {err.response.text}")
-            raise HTTPError(error_message) from err
+            raise HTTPError(error_message, response=response) from err
 
         else:
             logger.debug("Successfully retrieved resources from %s.", url)

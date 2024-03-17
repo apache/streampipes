@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
@@ -42,28 +43,18 @@ public class FileManager {
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
   }
 
-  public static File getFileByOriginalName(String originalName) throws IOException {
-    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
-
-    var file = allFiles
-            .stream()
-            .filter(fileMetadata -> fileMetadata.getFilename().equals(originalName))
-            .findFirst();
-
-    if (file.isEmpty()){
-      throw new IOException("No file with original name '%s' found".formatted(originalName));
-    }
-    return new FileHandler().getFile(file.get().getFilename());
+  public static File getFile(String filename) {
+    return new FileHandler().getFile(filename);
   }
 
   /**
    * Store a file in the internal file storage.
    * For csv files the bom is removed
    *
-   * @param user            who created the file
-   * @param filename
+   * @param user who created the file
+   * @param filename name of file
    * @param fileInputStream content of file
-   * @return
+   * @return metadata of file
    */
   public static FileMetadata storeFile(String user,
                                        String filename,
@@ -85,16 +76,13 @@ public class FileManager {
     getFileMetadataStorage().deleteFileMetadata(id);
   }
 
-  public static File getFile(String filename) {
-    return new FileHandler().getFile(filename);
-  }
 
   /**
    * Remove Byte Order Mark (BOM) from csv files
    *
-   * @param fileInputStream
-   * @param filetype
-   * @return
+   * @param fileInputStream content of file
+   * @param filetype file of type
+   * @return input stream without BOM
    */
   public static InputStream cleanFile(InputStream fileInputStream, String filetype) {
     if (Filetypes.CSV.getFileExtensions().contains(filetype.toLowerCase())) {
@@ -102,6 +90,11 @@ public class FileManager {
     }
 
     return fileInputStream;
+  }
+
+  public static boolean checkFileContentChanged(String filename, String hash) throws IOException {
+    var fileHash = FileHasher.hash(getFile(filename));
+    return !fileHash.equals(hash);
   }
 
   private static void storeFileMetadata(FileMetadata fileMetadata) {

@@ -16,13 +16,21 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+package org.apache.streampipes.commons.file;
 
-.preview-row,
-.preview-table {
-    background: var(--color-bg-dialog);
-}
+import org.apache.commons.codec.digest.DigestUtils;
 
-.dataTable tbody tr:hover {
-    background: var(--color-bg-1);
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class FileHasher {
+
+  public static String hash(File file) throws IOException {
+    try (InputStream is = Files.newInputStream(Paths.get(file.toURI()))) {
+      return DigestUtils.md5Hex(is);
+    }
+  }
 }

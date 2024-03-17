@@ -18,23 +18,23 @@
 
 package org.apache.streampipes.commons.parser;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FloatParserTest {
   private FloatParser parser;
 
-  @Before
+  @BeforeEach
   public void setup() {
     parser = new FloatParser();
   }
 
   @Test
   public void parseValidFloat() {
-    assertEquals(123.45f, parser.parse("123.45"), 0.0001);
+    Assertions.assertEquals(123.45f, parser.parse("123.45"), 0.0001);
   }
 
   @Test

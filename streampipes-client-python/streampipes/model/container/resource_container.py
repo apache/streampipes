@@ -30,7 +30,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, List, Type
 
 import pandas as pd
-from pydantic import ValidationError
+from pydantic.v1 import ValidationError
 
 __all__ = [
     "ResourceContainer",

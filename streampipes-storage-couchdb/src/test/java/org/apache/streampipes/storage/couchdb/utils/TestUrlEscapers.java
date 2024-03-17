@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
-import org.junit.Test;
-
-import static junit.framework.TestCase.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestUrlEscapers {
 
@@ -30,7 +29,7 @@ public class TestUrlEscapers {
     String test = "startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true";
     String escaped = Utils.escapePathSegment(test);
     String expected = "startkey=%5B%22typeDummy%22%5D&endkey=%5B%22typeDummy%22,%7B%7D%5D&include_docs=true";
-    assertEquals(expected, escaped);
+    Assertions.assertEquals(expected, escaped);
   }
 
   @Test
@@ -39,6 +38,6 @@ public class TestUrlEscapers {
     String test = "startkey=[\"" + from + "\"]&endkey=[\"" + from + "\", {}]&group=true";
     String escaped = Utils.escapePathSegment(test);
     String expected2 = "startkey=%5B%22fromDummy%22%5D&endkey=%5B%22fromDummy%22,%20%7B%7D%5D&group=true";
-    assertEquals(expected2, escaped);
+    Assertions.assertEquals(expected2, escaped);
   }
 }

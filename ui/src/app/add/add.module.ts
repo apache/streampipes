@@ -47,7 +47,7 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         MatProgressSpinnerModule,
         RouterModule.forChild([
             {
-                path: 'add',
+                path: '',
                 children: [
                     {
                         path: '',

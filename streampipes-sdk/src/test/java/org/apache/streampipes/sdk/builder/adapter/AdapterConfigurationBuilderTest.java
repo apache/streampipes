@@ -23,12 +23,11 @@ import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 public class AdapterConfigurationBuilderTest {
@@ -41,12 +40,14 @@ public class AdapterConfigurationBuilderTest {
         .create(id, null)
         .buildConfiguration();
 
-    assertNotNull(adapterConfiguration);
-    assertEquals(id, adapterConfiguration.getAdapterDescription().getAppId());
+    Assertions.assertNotNull(adapterConfiguration);
+    Assertions.assertEquals(id,
+                            adapterConfiguration.getAdapterDescription().getAppId()
+    );
 
     var expected = new AdapterDescription();
     expected.setElementId("sp:" + id);
-    assertEquals(expected, adapterConfiguration.getAdapterDescription());
+    Assertions.assertEquals(expected, adapterConfiguration.getAdapterDescription());
   }
 
   @Test
@@ -57,7 +58,7 @@ public class AdapterConfigurationBuilderTest {
         .withSupportedParsers(expected)
         .buildConfiguration();
 
-    assertEquals(List.of(expected), adapterConfiguration.getSupportedParsers());
+    Assertions.assertEquals(List.of(expected), adapterConfiguration.getSupportedParsers());
   }
 
   @Test
@@ -69,7 +70,7 @@ public class AdapterConfigurationBuilderTest {
         .withSupportedParsers(parser1, parser2)
         .buildConfiguration();
 
-    assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
+    Assertions.assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
   }
 
   @Test
@@ -82,7 +83,7 @@ public class AdapterConfigurationBuilderTest {
         .withSupportedParsers(parser2)
         .buildConfiguration();
 
-    assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
+    Assertions.assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
   }
 
   @Test
@@ -94,8 +95,8 @@ public class AdapterConfigurationBuilderTest {
 
     var actual = adapterConfiguration.getAdapterDescription().getCategory();
 
-    assertEquals(1, actual.size());
-    assertEquals(AdapterType.Manufacturing.getCode(), actual.get(0));
+    Assertions.assertEquals(1, actual.size());
+    Assertions.assertEquals(AdapterType.Manufacturing.getCode(), actual.get(0));
   }
 
 

@@ -89,7 +89,7 @@ import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.gua
         SharedUiModule,
         RouterModule.forChild([
             {
-                path: 'dashboard',
+                path: '',
                 children: [
                     {
                         path: '',

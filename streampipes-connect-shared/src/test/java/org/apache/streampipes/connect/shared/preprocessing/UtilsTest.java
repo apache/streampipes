@@ -22,11 +22,10 @@ import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class UtilsTest {
 
@@ -38,8 +37,8 @@ public class UtilsTest {
     var original = List.of(renameTransformationRule, addTimestampTransformationRule);
     var sorted = Utils.sortByPriority(original);
 
-    assertEquals(2, sorted.size());
-    assertEquals(sorted.get(0).getRulePriority(), 100);
-    assertEquals(sorted.get(1).getRulePriority(), 210);
+    Assertions.assertEquals(2, sorted.size());
+    Assertions.assertEquals(sorted.get(0).getRulePriority(), 100);
+    Assertions.assertEquals(sorted.get(1).getRulePriority(), 210);
   }
 }
