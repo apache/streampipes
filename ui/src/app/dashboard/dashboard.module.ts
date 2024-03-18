@@ -103,7 +103,6 @@ import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.gua
                 ],
             },
         ]),
-        SharedUiModule,
     ],
     declarations: [
         BarRaceWidgetComponent,
